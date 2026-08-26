@@ -172,3 +172,36 @@ heuristic is a single stand-in for that whole ensemble, not a faithful
 reproduction of the interleaving. A real SBFL pass (e.g., an Ochiai-style
 suspiciousness score from pytest coverage) would be the natural first
 addition if this needs to be more defensible than "pipeline validation."
+
+## Fourth pass — graph understanding moved before FlexFL, not just after it
+
+Per the author's direction: use the graph more for bug localization, so the
+model understands the structure before FlexFL starts searching, rather than
+only consulting the graph as a post-hoc refinement.
+
+**Before this change:** `graphlocator_expand()` only ran after Agent4LR's
+Stage 2 finished — the call graph was pure cleanup, never part of what
+FlexFL actually reasoned over while searching.
+
+**After this change:** `graph_structural_briefing()` runs first, using the
+same real call-graph substrate (`graphify_structure.build_call_graph`):
+finds symptom vertices from stack-trace evidence, walks their real
+callers/callees, and produces a compact structural summary. That summary
+now:
+- gets prepended to FlexFL Stage 1's prompt (`localize_with_llm`), so
+  Agent4SR's ReAct loop starts already knowing what's structurally
+  connected to the failure, instead of discovering it cold through
+  `find_class`/`find_method` calls alone;
+- gets folded into the heuristic backend's Stage 1 candidate list directly
+  (`HeuristicBackend.localize`), not just added afterward.
+
+The post-Stage-2 `graphlocator_expand()` call still runs too — it's now a
+second, confirmatory pass on top of an already graph-informed search,
+rather than the only place the graph gets used. Both passes share the same
+symptom-vertex detection (`_symptom_vertices_from_trace`).
+
+Verified against `psf/requests`: given the same `build_connection_pool_key_attributes`
+stack trace, `get_connection_with_tls_context` (a real 1-hop caller) now
+appears in `stage1_candidates` itself — before the final expansion step
+even runs — confirming the graph is informing the search, not just cleaning
+up after it.

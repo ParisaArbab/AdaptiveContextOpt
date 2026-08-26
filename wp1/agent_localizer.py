@@ -227,6 +227,71 @@ class StructureQueryTools:
 # Stage 1: Space Reduction (Agent4SR)
 # ---------------------------------------------------------------------------
 
+def _symptom_vertices_from_trace(tool_output: str, structure_map: Dict[str, dict]) -> List[str]:
+    """Real GraphLocator phase 1 ('symptom vertices locating'): the entities
+    directly implicated by observed failure evidence. Shared by the
+    pre-search briefing below and the post-refinement expansion, so both
+    stages start from the same grounding."""
+    return [
+        key for key in structure_map
+        if any(m.group(3).lower() in key.lower() for m in FRAME_RE.finditer(tool_output))
+    ]
+
+
+def graph_structural_briefing(
+    tool_output: str,
+    structure_map: Dict[str, dict],
+    call_graph: Dict[str, Dict[str, list]],
+    id_to_key: Dict[str, str],
+    max_hops: int = 1,
+) -> tuple[str, List[str]]:
+    """Runs GraphLocator's real graph-substrate analysis BEFORE FlexFL
+    starts searching, instead of only after Agent4LR finishes — this is the
+    'understand the structure first' step. Symptom vertices come straight
+    from stack-trace evidence; their real callers/callees (via Graphify's
+    actual 'calls' edges) become a structural neighborhood that primes
+    Agent4SR's starting context, so the ReAct loop begins already knowing
+    what's structurally connected to the failure instead of discovering it
+    cold through function calls alone.
+
+    Returns (briefing_text, neighbor_keys) — the text goes into Stage 1's
+    prompt, the keys are reused as a scoring boost in the heuristic backend.
+    """
+    symptom_vertices = _symptom_vertices_from_trace(tool_output, structure_map)
+    if not symptom_vertices:
+        return "", []
+
+    neighbor_keys: List[str] = []
+    frontier = list(symptom_vertices)
+    for _hop in range(max_hops):
+        next_frontier = []
+        for vertex_key in frontier:
+            meta = structure_map.get(vertex_key)
+            node_id = meta.get("id") if meta else None
+            if not node_id or node_id not in call_graph:
+                continue
+            for nid in call_graph[node_id]["callers"] + call_graph[node_id]["callees"]:
+                key = id_to_key.get(nid)
+                if key and key not in symptom_vertices and key not in neighbor_keys:
+                    neighbor_keys.append(key)
+                    next_frontier.append(key)
+        frontier = next_frontier
+        if not frontier:
+            break
+
+    lines = ["Structural context (Graphify call graph + GraphLocator symptom analysis, "
+             "gathered before search):"]
+    for sv in symptom_vertices:
+        lines.append(f"- symptom vertex: {sv}")
+    if neighbor_keys:
+        lines.append(f"- structurally connected ({max_hops}-hop callers/callees): "
+                      + ", ".join(neighbor_keys[:15]))
+    return "\n".join(lines), neighbor_keys
+    text_tokens = set(re.findall(r"[a-z0-9]+", text.lower()))
+    key_tokens = set(re.findall(r"[a-z0-9]+", key.lower()))
+    return len(text_tokens & key_tokens)
+
+
 def _lexical_overlap_score(text: str, key: str) -> int:
     text_tokens = set(re.findall(r"[a-z0-9]+", text.lower()))
     key_tokens = set(re.findall(r"[a-z0-9]+", key.lower()))
@@ -503,29 +568,37 @@ class HeuristicBackend:
         repo_root: Optional[Path] = None,
     ) -> LocalizationResult:
         tools = StructureQueryTools(structure_map, repo_root)
+        id_to_key = (
+            {meta["id"]: key for key, meta in structure_map.items() if meta.get("id")}
+            if call_graph else {}
+        )
 
-        # FlexFL Stage 1
+        # Graph structural understanding FIRST, before FlexFL's own search —
+        # this is the "understand the structure better before FlexFL" step.
+        briefing_neighbors: List[str] = []
+        if call_graph:
+            _briefing_text, briefing_neighbors = graph_structural_briefing(
+                tool_output, structure_map, call_graph, id_to_key
+            )
+
+        # FlexFL Stage 1, now with the structural neighborhood as a scoring
+        # boost rather than something only discovered after the fact
         candidates = stage1_space_reduction(tool_output, problem_statement, tools)
+        for key in briefing_neighbors:
+            if key not in candidates and key in structure_map:
+                candidates.append(key)
+        candidates = candidates[:CANDIDATE_LIST_SIZE]
 
         # FlexFL Stage 2 (heuristic Agent4LR: trust Stage 1's ranking as-is —
         # a real LLM pass is where refinement actually happens; see
         # localize_with_llm for that path)
         refined = candidates
 
-        # GraphLocator expansion over the REAL call graph, symptom vertices
-        # = the trace-evidenced subset of the refined candidates
+        # GraphLocator's second pass: further expansion from whatever Stage
+        # 2 actually confirmed, on top of the pre-search briefing above
         graph_expanded: List[str] = []
         if call_graph:
-            id_to_key = {
-                meta["id"]: key for key, meta in structure_map.items() if meta.get("id")
-            }
-            symptom_vertices = [
-                key for key in refined
-                if any(
-                    m.group(3).lower() in key.lower()
-                    for m in FRAME_RE.finditer(tool_output)
-                )
-            ] or refined[:1]
+            symptom_vertices = _symptom_vertices_from_trace(tool_output, structure_map) or refined[:1]
             graph_expanded = graphlocator_expand(
                 symptom_vertices, structure_map, call_graph, id_to_key,
                 confirm_fn=_heuristic_confirm_fn(problem_statement),
@@ -576,6 +649,18 @@ def localize_with_llm(
     rounds_used = 0
     cache_text = raw_tool_output if raw_tool_output is not None else tool_output
 
+    # Graph structural understanding FIRST — before FlexFL's own search
+    # begins, not just as a post-hoc expansion after Agent4LR. This is what
+    # lets Agent4SR start its ReAct loop already knowing the structural
+    # neighborhood of the observed failure.
+    structural_briefing = ""
+    id_to_key: Dict[str, str] = {}
+    if call_graph:
+        id_to_key = {meta["id"]: key for key, meta in structure_map.items() if meta.get("id")}
+        structural_briefing, _ = graph_structural_briefing(
+            tool_output, structure_map, call_graph, id_to_key
+        )
+
     if use_feedback_loop:
         def verify_fn(current_text: str, round_num: int) -> str:
             return chat_fn(
@@ -592,7 +677,8 @@ def localize_with_llm(
     else:
         working_text = tool_output
 
-    # --- FlexFL Stage 1: Agent4SR, real multi-turn ReAct loop ---
+    # --- FlexFL Stage 1: Agent4SR, real multi-turn ReAct loop, primed with
+    # the structural briefing gathered above ---
     stage1_dispatch = {
         "get_paths": lambda _args: tools.get_paths(),
         "get_classes_of_path": lambda args: tools.get_classes_of_path(args),
@@ -601,8 +687,11 @@ def localize_with_llm(
         "find_method": lambda args: tools.find_method(args),
         "get_code_snippet_of_method": lambda args: tools.get_code_snippet_of_method(args) or "not found",
     }
-    stage1_input = f"The trigger test / tool output is as follows:\n```\n{working_text}\n```\n" \
-                    f"The bug report is as follows:\n```\n{problem_statement}\n```"
+    stage1_input = (
+        (f"{structural_briefing}\n\n" if structural_briefing else "")
+        + f"The trigger test / tool output is as follows:\n```\n{working_text}\n```\n"
+        + f"The bug report is as follows:\n```\n{problem_statement}\n```"
+    )
     stage1_final = run_react_loop_with_adaptive_max(
         AGENT4SR_SYSTEM_PROMPT, stage1_input, stage1_dispatch, chat_fn, MAX_FLEXFL_ITERS,
         FINAL_ANSWER_INSTRUCTION_SR, format_kwargs={"top_k": CANDIDATE_LIST_SIZE},
