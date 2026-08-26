@@ -93,3 +93,36 @@ surfaced that exact method from real trace-frame parsing, and GraphLocator
 expansion pulled in `get_connection_with_tls_context` — a real caller in
 `adapters.py` connected via an actual `calls` edge in Graphify's graph, not
 a community-membership coincidence.
+
+## Second pass — checked against the real FlexFL replication package
+
+The author shared the actual FlexFL authors' replication package
+([ParisaArbab/FlexFL_OriginalReplication](https://github.com/ParisaArbab/FlexFL_OriginalReplication)),
+which includes the real `pipeline.py` and `function_call.py`. Reading them
+surfaced three real gaps in the first pass above, now fixed:
+
+1. **Stage 1 and Stage 2 were single-shot, not the real multi-turn ReAct
+   loop.** The real `pipeline.py` calls the model once per turn with a
+   growing transcript, parses one `FunctionName(Argument)` per turn,
+   dispatches it, appends the result, and repeats until `exit()` or
+   `max_try` turns — only then asks for the final formatted answer. The
+   first pass instead made one call and parsed candidates directly out of
+   it, skipping the actual tool-use loop entirely. Fixed: `run_react_loop()`
+   now mirrors this exactly, and `localize_with_llm` runs it once for Stage
+   1 and once for Stage 2.
+2. **Wrong constants.** Real `pipeline.py` uses `max_try = 10`, not 5. Real
+   `rank.py` truncates the Stage 1 -> Stage 2 candidate handoff to
+   `[:20]`, not 10. The final answer format is explicitly "top-5" in the
+   real system prompt. `MAX_FLEXFL_ITERS`, `CANDIDATE_LIST_SIZE`, and the
+   new `FINAL_TOPK` constant now match.
+3. **No fuzzy-search fallback.** The real `function_call.py` falls back to
+   Levenshtein-distance matching (distance <= 5, else the 5 closest) when
+   an exact/token lookup misses — this is what lets the agent recover from
+   a slightly-wrong name instead of just failing. `StructureQueryTools` now
+   has the same fallback via `fuzzy_search()`/`_levenshtein()`.
+
+Also confirmed from the real package but not yet adopted here:
+`eval_FL.py` scores with Top-1/Top-3/Top-5 hit rates plus MAP/MRR, not the
+binary file-level correctness `compression_tax_analyzer.py` currently uses.
+Worth adopting once there's a real result set to score — binary
+correctness is a coarser signal than the paper's own metric.
