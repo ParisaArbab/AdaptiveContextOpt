@@ -118,12 +118,13 @@ def _levenshtein(a: str, b: str) -> int:
 
 def fuzzy_search(query: str, choices: List[str], max_results: int = 5) -> List[str]:
     """Real fuzzy_search from function_call.py: exact-token substring match
-    first (splitting on '.' the way the real one splits on '.'/'$'), and
+    first (splitting on '.'/'/'/'(' the way the real split4search does), and
     only when that returns nothing does it fall back to Levenshtein
-    distance <= 5, else the closest max_results choices. This is what makes
-    find_class/find_method/get_methods_of_class resilient to a slightly
-    wrong name instead of just returning nothing."""
-    query_tokens = re.split(r"[.:]+", query.lower())
+    distance <= 5, else the closest max_results choices. This is Algorithm 1
+    in the paper — used both as a function-call-argument fallback AND, per
+    Section 3.2.1's Step 3, to refine the FINAL Top-k output before it's
+    accepted (see postprocess_topk below)."""
+    query_tokens = re.split(r"[./:()]+", query.lower())
     exact = [c for c in choices if all(t in c.lower() for t in query_tokens if t)]
     if exact:
         return exact
@@ -132,6 +133,27 @@ def fuzzy_search(query: str, choices: List[str], max_results: int = 5) -> List[s
                         key=lambda t: t[1])
     close = [c for c, d in distances if d <= 5]
     return close if close else [c for c, _ in distances[:max_results]]
+
+
+def postprocess_topk(entries: List[str], structure_map: Dict[str, dict]) -> List[str]:
+    """Real Section 3.2.1 Step 3: 'the structured output of LLMs will be
+    further refined using our postprocessing process, which matches the
+    method names provided by LLMs to actual methods in the buggy program.'
+    This was missing from the first pass — Top_k entries were accepted
+    as-is, including hallucinated names that don't exist in structure_map.
+    The paper's own case study (Time-25) shows this mattering: Agent4SR's
+    raw 3rd-place guess was wrong, and postprocessing corrected it via edit
+    distance to the real buggy method before Agent4LR ever saw it."""
+    choices = list(structure_map.keys())
+    resolved: List[str] = []
+    for entry in entries:
+        if entry in structure_map:
+            resolved.append(entry)
+            continue
+        matches = fuzzy_search(entry, choices, max_results=1)
+        if matches and matches[0] not in resolved:
+            resolved.append(matches[0])
+    return resolved
 
 
 class StructureQueryTools:
@@ -356,6 +378,44 @@ def run_react_loop(
     return final_response
 
 
+_CONTEXT_ERROR_MARKERS = ("context", "maximum context length", "token limit", "too many tokens")
+
+
+def run_react_loop_with_adaptive_max(
+    system_prompt_template: str,
+    input_description: str,
+    dispatch: Dict[str, "callable"],
+    chat_fn,
+    max_iters: int,
+    final_instruction_template: str,
+    format_kwargs: dict,
+    min_iters: int = 2,
+) -> str:
+    """Real paper behavior (Section 3.2.1): 'If the whole conversation
+    exceeds the maximum context length of the used LLM, we decrease the
+    value of MAX by 1 and rerun this pipeline.' system_prompt_template and
+    final_instruction_template take {max_iters} via format_kwargs so each
+    retry re-renders them with the smaller MAX. Bottoms out at min_iters
+    rather than retrying forever — a model that can't fit even a minimal
+    loop should fail loudly, not silently degrade to something useless."""
+    iters = max_iters
+    last_error: Optional[Exception] = None
+    while iters >= min_iters:
+        try:
+            system_prompt = system_prompt_template.format(max_iters=iters, **format_kwargs)
+            final_instruction = final_instruction_template.format(**format_kwargs)
+            return run_react_loop(system_prompt, input_description, dispatch, chat_fn,
+                                   iters, final_instruction)
+        except Exception as e:
+            if not any(marker in str(e).lower() for marker in _CONTEXT_ERROR_MARKERS):
+                raise
+            last_error = e
+            iters -= 1
+    raise RuntimeError(
+        f"Ran out of MAX reductions (down to {min_iters}) without fitting context: {last_error}"
+    )
+
+
 def _parse_expand(response: str) -> List[str]:
     for line in response.splitlines():
         if line.upper().startswith("EXPAND:"):
@@ -543,14 +603,11 @@ def localize_with_llm(
     }
     stage1_input = f"The trigger test / tool output is as follows:\n```\n{working_text}\n```\n" \
                     f"The bug report is as follows:\n```\n{problem_statement}\n```"
-    stage1_system = AGENT4SR_SYSTEM_PROMPT.format(
-        top_k=CANDIDATE_LIST_SIZE, max_iters=MAX_FLEXFL_ITERS
+    stage1_final = run_react_loop_with_adaptive_max(
+        AGENT4SR_SYSTEM_PROMPT, stage1_input, stage1_dispatch, chat_fn, MAX_FLEXFL_ITERS,
+        FINAL_ANSWER_INSTRUCTION_SR, format_kwargs={"top_k": CANDIDATE_LIST_SIZE},
     )
-    stage1_final = run_react_loop(
-        stage1_system, stage1_input, stage1_dispatch, chat_fn, MAX_FLEXFL_ITERS,
-        FINAL_ANSWER_INSTRUCTION_SR.format(top_k=CANDIDATE_LIST_SIZE),
-    )
-    candidates = _parse_topk(stage1_final)
+    candidates = postprocess_topk(_parse_topk(stage1_final), structure_map)
     if not candidates:  # model didn't follow the format — fall back to the non-LLM ranking
         candidates = stage1_space_reduction(working_text, problem_statement, tools)
 
@@ -567,12 +624,11 @@ def localize_with_llm(
     stage2_dispatch = {"get_code_snippet_of_method": stage2_get_snippet}
     numbered_candidates = "\n".join(f"{i+1}.{c}" for i, c in enumerate(candidates))
     stage2_input = f"The suggested methods are as follows:\n```\n{numbered_candidates}\n```"
-    stage2_system = AGENT4LR_SYSTEM_PROMPT.format(max_iters=MAX_FLEXFL_ITERS)
-    stage2_final = run_react_loop(
-        stage2_system, stage2_input, stage2_dispatch, chat_fn, MAX_FLEXFL_ITERS,
-        FINAL_ANSWER_INSTRUCTION_LR.format(top_k=FINAL_TOPK),
+    stage2_final = run_react_loop_with_adaptive_max(
+        AGENT4LR_SYSTEM_PROMPT, stage2_input, stage2_dispatch, chat_fn, MAX_FLEXFL_ITERS,
+        FINAL_ANSWER_INSTRUCTION_LR, format_kwargs={"top_k": FINAL_TOPK},
     )
-    functions = _parse_topk(stage2_final)
+    functions = postprocess_topk(_parse_topk(stage2_final), structure_map)
     if not functions:
         functions = candidates[:FINAL_TOPK]
     files = sorted({structure_map[k]["file"] for k in functions if k in structure_map})

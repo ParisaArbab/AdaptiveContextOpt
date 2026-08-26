@@ -126,3 +126,49 @@ Also confirmed from the real package but not yet adopted here:
 binary file-level correctness `compression_tax_analyzer.py` currently uses.
 Worth adopting once there's a real result set to score — binary
 correctness is a coarser signal than the paper's own metric.
+
+## Third pass — checked against the full paper text
+
+The full FlexFL paper (readable this time, not the corrupted PDF extract
+from the first pass) filled in details the replication package's code
+didn't make obvious on its own. Two real gaps found and fixed:
+
+1. **The final Top-k output was never postprocessed.** Section 3.2.1 Step 3
+   is explicit: "the structured output of LLMs will be further refined
+   using our postprocessing process, which matches the method names
+   provided by LLMs to actual methods in the buggy program." The paper's
+   own Time-25 case study shows this mattering — Agent4SR's raw 3rd-place
+   guess was a slightly-wrong name, corrected by edit-distance matching to
+   the real buggy method before Agent4LR ever saw it. The first pass here
+   parsed `Top_i : ...` entries and used them as-is, including anything
+   hallucinated. Fixed: `postprocess_topk()` runs every parsed entry through
+   the same `fuzzy_search()` used for function-call arguments (Algorithm 1
+   in the paper) before accepting it, for both Stage 1 and Stage 2 output.
+2. **No adaptive MAX on context overflow.** Section 3.2.1: "If the whole
+   conversation exceeds the maximum context length of the used LLM, we
+   decrease the value of MAX by 1 and rerun this pipeline." Not implemented
+   before. Fixed: `run_react_loop_with_adaptive_max()` catches
+   context/token-limit errors from `chat_fn`, decrements `MAX_FLEXFL_ITERS`,
+   and retries, down to a floor of 2 turns before giving up loudly.
+
+Also fixed `fuzzy_search`'s tokenizer to split on `./():` (matching the
+real `split4search`'s handling of `.` for names and `(` for signatures)
+instead of just `.` and `:`.
+
+**What's still the biggest documented gap, now precisely specified:**
+Section 4.5's exact candidate-list interleaving formula for Stage 1's
+non-LLM half:
+- Bug report + trigger test both available: top-5 each of SBIR, Ochiai,
+  BoostN, and Agent4SR, concatenated in that order (Agent4SR's results
+  placed *last*, deliberately, since "methods localized by Agent4SR are
+  more likely to be localized by Agent4LR... so we do not need to
+  emphasize them via high ranking").
+- Trigger test only: top-15 Ochiai + top-5 Agent4SR.
+- Bug report only: top-15 BoostN + top-5 Agent4SR.
+
+We don't have Python/SWE-bench equivalents of SBIR, Ochiai, or BoostN
+wired in — `stage1_space_reduction`'s stack-trace + lexical-overlap
+heuristic is a single stand-in for that whole ensemble, not a faithful
+reproduction of the interleaving. A real SBFL pass (e.g., an Ochiai-style
+suspiciousness score from pytest coverage) would be the natural first
+addition if this needs to be more defensible than "pipeline validation."
