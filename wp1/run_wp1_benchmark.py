@@ -56,6 +56,8 @@ def get_chat_fn(backend: str):
             ),
             "qwen",
         )
+    if backend == "local":
+        return agent_localizer.make_local_gpu_chat_fn(), "local"
     return None, "heuristic"
 
 
@@ -125,7 +127,7 @@ def main() -> None:
     ap.add_argument("--local-fallback", action="store_true",
                      help="use local pytest instead of the SWE-bench Docker images")
     ap.add_argument("--backend", type=str, default="heuristic",
-                     choices=["heuristic", "claude", "gpt", "deepseek", "qwen"])
+                     choices=["heuristic", "claude", "gpt", "deepseek", "qwen", "local"])
     ap.add_argument("--out", type=str, default="results/wp1_results.json")
     args = ap.parse_args()
 

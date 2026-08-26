@@ -477,3 +477,49 @@ def make_openai_compatible_chat_fn(
         return resp.choices[0].message.content or ""
 
     return chat_fn
+
+
+def make_local_gpu_chat_fn(
+    base_url: Optional[str] = None,
+    model: Optional[str] = None,
+):
+    """For running an open-source model (DeepSeek, Qwen, etc.) locally on
+    your own NVIDIA GPU instead of a cloud API — the project's stated
+    comparison includes open-source models, and a local vLLM/Ollama/TGI
+    server is the natural way to run those on your own hardware.
+
+    Any OpenAI-compatible local server works (vLLM's `vllm serve`, Ollama's
+    `/v1` endpoint, TGI's OpenAI-compatible mode) since they all implement
+    the same chat-completions shape as make_openai_compatible_chat_fn above
+    — this is a thin convenience wrapper with GPU-friendly defaults:
+
+        LOCAL_LLM_BASE_URL   default http://localhost:8000/v1 (vLLM's default)
+        LOCAL_LLM_MODEL      default reads from env, no built-in default —
+                              must match whatever you served (e.g. the repo
+                              id you passed to `vllm serve`)
+
+    No API key needed — local servers typically don't require one, so this
+    passes a dummy key ("local") since the openai SDK requires the field
+    to be non-empty even when the server ignores it.
+    """
+    import openai
+
+    resolved_base_url = base_url or os.environ.get("LOCAL_LLM_BASE_URL", "http://localhost:8000/v1")
+    resolved_model = model or os.environ.get("LOCAL_LLM_MODEL")
+    if not resolved_model:
+        raise ValueError(
+            "No model specified. Pass model=..., or set LOCAL_LLM_MODEL to "
+            "whatever you served, e.g. 'Qwen/Qwen2.5-Coder-32B-Instruct' or "
+            "'deepseek-ai/DeepSeek-Coder-V2-Instruct'."
+        )
+
+    client = openai.OpenAI(api_key="local", base_url=resolved_base_url)
+
+    def chat_fn(system: str, user: str) -> str:
+        resp = client.chat.completions.create(
+            model=resolved_model,
+            messages=[{"role": "system", "content": system}, {"role": "user", "content": user}],
+        )
+        return resp.choices[0].message.content or ""
+
+    return chat_fn

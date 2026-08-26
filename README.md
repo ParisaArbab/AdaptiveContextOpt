@@ -96,7 +96,9 @@ python wp1/compression_tax_analyzer.py \
 ```
 
 Swap `--backend heuristic` for `--backend claude` (requires
-`ANTHROPIC_API_KEY`), `gpt`, `deepseek`, or `qwen` once credentials are
-available — this switches FlexFL's Agent4SR/Agent4LR from the heuristic
-stand-ins to real LLM-driven ReAct loops. Drop `--local-fallback` to use the
-real SWE-bench Docker images once Docker is available.
+`ANTHROPIC_API_KEY`), `gpt`, `deepseek`, `qwen`, or `local` (a locally-served
+open-source model on your own GPU — see `docs/gpu_setup.md`) once
+credentials/infrastructure are available — this switches FlexFL's
+Agent4SR/Agent4LR from the heuristic stand-ins to real LLM-driven ReAct
+loops. Drop `--local-fallback` to use the real SWE-bench Docker images once
+Docker is available.
