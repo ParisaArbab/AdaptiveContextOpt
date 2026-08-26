@@ -60,6 +60,7 @@ def build_structure_map(repo_path: Path, out_dir: Path | None = None) -> Dict[st
         line = int(loc.lstrip("L")) if loc.startswith("L") and loc[1:].isdigit() else None
         key = f"{source_file}::{label}"
         structure[key] = {
+            "id": node.get("id"),
             "file": source_file,
             "line": line,
             "community": node.get("community"),
@@ -67,6 +68,54 @@ def build_structure_map(repo_path: Path, out_dir: Path | None = None) -> Dict[st
         }
 
     return structure
+
+
+def build_call_graph(repo_path: Path) -> Dict[str, Dict[str, list]]:
+    """Real GraphLocator-style substrate: an adjacency map built from
+    Graphify's actual 'calls' edges (graph.json 'links'), not a proxy like
+    community clustering.
+
+    GraphLocator's real mechanism (verified against the paper): a causal
+    issue graph (CIG) whose vertices are code entities and whose edges are
+    causal/call dependencies; workflow = (1) locate symptom vertices, then
+    (2) dynamically expand the CIG by iteratively reasoning over NEIGHBORING
+    VERTICES ON THE REPOSITORY GRAPH. That repository graph, for us, is
+    exactly Graphify's call graph — so this function returns each node's
+    real callers and callees, which agent_localizer.py walks outward from
+    the symptom vertices (stack-trace-evidenced methods).
+
+    Returns: {node_id: {"callers": [node_id, ...], "callees": [node_id, ...]}}
+    """
+    repo_path = Path(repo_path)
+    graph_json = repo_path / "graphify-out" / "graph.json"
+    if not graph_json.exists():
+        raise RuntimeError(f"{graph_json} missing — run build_structure_map first")
+
+    graph = json.loads(graph_json.read_text())
+    adjacency: Dict[str, Dict[str, list]] = {}
+
+    def ensure(node_id: str):
+        if node_id not in adjacency:
+            adjacency[node_id] = {"callers": [], "callees": []}
+
+    for link in graph.get("links", []):
+        if link.get("relation") != "calls":
+            continue
+        src, dst = link.get("source"), link.get("target")
+        if not src or not dst:
+            continue
+        ensure(src)
+        ensure(dst)
+        adjacency[src]["callees"].append(dst)
+        adjacency[dst]["callers"].append(src)
+
+    return adjacency
+
+
+def id_to_key_map(structure: Dict[str, dict]) -> Dict[str, str]:
+    """structure_map is keyed by 'file::label'; the call graph is keyed by
+    Graphify's internal node id. This inverts structure_map for lookups."""
+    return {meta["id"]: key for key, meta in structure.items() if meta.get("id")}
 
 
 def save_structure_map(repo_path: Path, dest: Path) -> Dict[str, dict]:

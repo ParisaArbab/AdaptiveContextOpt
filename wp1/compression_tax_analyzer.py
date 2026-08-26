@@ -2,9 +2,9 @@
 compression_tax_analyzer.py — WP1
 
 Auto-classifies instances where compression cost localization accuracy,
-now across THREE conditions (raw / rtk / lean-ctx) instead of two, so we can
-show not just "compression hurts" but "does the smarter compressor hurt
-less."
+across TWO conditions: raw (control) and lean-ctx (smart compressor). rtk
+has been dropped entirely per the revised architecture — lean-ctx is the
+sole compression condition under test now, not one of several.
 
 Taxonomy (unchanged from the formal error_taxonomy_report.md):
   T1: Lost value evidence (array/diff dumps)
@@ -112,7 +112,7 @@ def analyze(
         raw_ok = conds.get("raw") and conds["raw"].file_level_correct
         if not raw_ok:
             continue
-        for cond_name in ("rtk", "leanctx"):
+    for cond_name in ("leanctx",):
             cond = conds.get(cond_name)
             if cond and not cond.file_level_correct and not cond.provisional:
                 tax_cases.setdefault(cond_name, []).append(

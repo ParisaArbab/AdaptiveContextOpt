@@ -1,19 +1,19 @@
 """
 run_wp1_benchmark.py — WP1 orchestrator
 
-Revised pipeline order (per the updated architecture):
+Pipeline (rtk removed; lean-ctx is now the sole compression condition):
 
-    Graphify (structure, once per repo)
-        -> compressor (Control/raw, rtk, lean-ctx — three conditions)
-        -> feedback loop (agent double-checks, <=2 rounds, compressed
-           conditions only — raw has nothing to reveal)
+    Graphify (structure map + real call graph, once per repo)
+        -> compressor: raw (control) | lean-ctx (smart)
+        -> feedback loop (agent double-checks fidelity, <=2 rounds, lean-ctx only)
+        -> FlexFL (Agent4SR space reduction -> Agent4LR refinement)
+           + GraphLocator (real call-graph expansion from symptom vertices)
         -> evaluation framework (compression_tax_analyzer.py)
 
-Every condition sees the SAME Graphify structure map and the SAME raw
-pytest capture, so the only variable between conditions is the compressor
-itself — same apples-to-apples discipline as the original rtk-only run
-(where a missing --include='*.py' on one side was caught and fixed for
-exactly this reason).
+Every condition sees the SAME Graphify structure map and call graph, and
+runs through the SAME localization pipeline (agent_localizer.py) — the only
+variable between conditions is what the localizer's input tool_output looks
+like (raw vs lean-ctx-compressed).
 
 Usage:
     python run_wp1_benchmark.py --instances data/instances.json \\
@@ -25,14 +25,14 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
-from typing import Optional
 
 import agent_localizer
 import docker_harness
 import graphify_structure
 import leanctx_compressor
-import rtk_compressor
 from compression_tax_analyzer import InstanceOutcome, classify_taxonomy, score_file_level
+
+CONDITIONS = ("raw", "leanctx")
 
 
 def get_chat_fn(backend: str):
@@ -61,9 +61,11 @@ def get_chat_fn(backend: str):
 
 def run_one_condition(
     instance_id: str,
-    condition: str,  # "raw" | "rtk" | "leanctx"
+    condition: str,  # "raw" | "leanctx"
     raw_output: str,
     structure_map: dict,
+    call_graph: dict,
+    repo_root: Path,
     problem_statement: str,
     ground_truth_files: list[str],
     backend: str,
@@ -72,10 +74,6 @@ def run_one_condition(
     compressor_mode = "n/a"
     if condition == "raw":
         agent_text = raw_output
-    elif condition == "rtk":
-        cr = rtk_compressor.compress(raw_output)
-        agent_text = cr.text
-        compressor_mode = cr.mode
     elif condition == "leanctx":
         cr = leanctx_compressor.compress(raw_output)
         agent_text = cr.text
@@ -83,11 +81,10 @@ def run_one_condition(
     else:
         raise ValueError(condition)
 
-    structure_text = graphify_structure.format_for_agent(structure_map)
-
     if backend == "heuristic":
         result = agent_localizer.HeuristicBackend().localize(
-            agent_text, structure_map, problem_statement
+            agent_text, structure_map, problem_statement,
+            call_graph=call_graph, repo_root=repo_root,
         )
         result.instance_id = instance_id
         rounds_used = 0
@@ -95,10 +92,12 @@ def run_one_condition(
         result = agent_localizer.localize_with_llm(
             instance_id=instance_id,
             tool_output=agent_text,
-            structure_map_text=structure_text,
+            structure_map=structure_map,
             problem_statement=problem_statement,
             chat_fn=chat_fn,
             backend_name=backend,
+            call_graph=call_graph,
+            repo_root=repo_root,
             use_feedback_loop=(condition != "raw"),
             raw_tool_output=raw_output if condition != "raw" else None,
         )
@@ -143,32 +142,31 @@ def main() -> None:
         print(f"=== {instance_id} ===")
 
         repo_local_path = repos_dir / instance_id.replace("/", "_")
-        # NOTE: cloning/checkout for local-fallback happens inside
-        # docker_harness.run_local_fallback; graphify then runs against
-        # that same checkout so the structure map matches the exact
-        # commit the test output came from.
         run_result = docker_harness.run_local_fallback(
             instance_id=instance_id,
             repo=repo,
             base_commit=inst["base_commit"],
-            test_patch="",  # WP1 baseline audit does not need the gold test_patch applied
+            test_patch="",
             workdir=repo_local_path,
         ) if args.local_fallback else docker_harness.run_in_docker(instance_id)
 
         try:
             structure_map = graphify_structure.build_structure_map(repo_local_path)
+            call_graph = graphify_structure.build_call_graph(repo_local_path)
         except Exception as e:
             print(f"  graphify failed ({e}); skipping instance")
             continue
 
         raw_output = run_result.stdout + "\n" + run_result.stderr
 
-        for condition in ("raw", "rtk", "leanctx"):
+        for condition in CONDITIONS:
             outcome = run_one_condition(
                 instance_id=instance_id,
                 condition=condition,
                 raw_output=raw_output,
                 structure_map=structure_map,
+                call_graph=call_graph,
+                repo_root=repo_local_path,
                 problem_statement=inst["problem_statement"],
                 ground_truth_files=inst["files"],
                 backend=backend_name,
