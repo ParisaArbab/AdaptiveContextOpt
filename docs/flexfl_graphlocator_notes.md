@@ -205,3 +205,125 @@ stack trace, `get_connection_with_tls_context` (a real 1-hop caller) now
 appears in `stage1_candidates` itself — before the final expansion step
 even runs — confirming the graph is informing the search, not just cleaning
 up after it.
+
+
+## Fifth pass — experiment harness rebuilt around the four gaps found on review
+
+The FlexFL/GraphLocator implementations above were not the problem; the
+harness around them was. Four fixes, in dependency order:
+
+**1. The trigger test was never running.** `run_wp1_benchmark.py` called the
+harness with `test_patch=""`, and the harness then ran a bare `pytest -v`
+over the whole repo at `base_commit`. The FAIL_TO_PASS test ships *in* the
+test patch, so it wasn't in the tree; the captured text was a whole-suite
+run, not the trigger test's failure. Since Stage 1's non-LLM signal is
+stack-trace evidence from exactly that failure, the input the whole
+compression experiment operated on was largely missing the evidence it was
+meant to compress. `docker_harness.py` now applies the gold test patch (three
+fallback strategies) and runs only the FAIL_TO_PASS ids, in both modes;
+`run_in_docker` executes an actual command inside the image instead of
+`docker run --rm image` with no command, which ran no tests at all. A capture
+with no failure evidence is skipped and recorded, not localized from.
+
+**2. Tokens were never measured.** `CompressionResult` computed a chars/4
+estimate that `run_one_condition` discarded, and `InstanceOutcome` had no
+token fields at all — the project's headline claim was unrecorded.
+`token_meter.py` adds a real tokenizer (tiktoken, or the served model's own
+tokenizer for `--backend local`) and instruments `chat_fn` so every
+prompt/completion is attributed to a pipeline stage. `metrics.py` replaces
+the binary "any predicted file is in ground truth" with FlexFL's own
+`eval_FL.py` metric set (Top-1/3/5, MAP, MRR) plus precision, at method and
+file level. That last part mattered more than it looks: the old metric
+ignored rank *and* rewarded breadth, so GraphLocator expansion — which adds
+entities to the prediction set — could only ever improve the score. Rank
+order is now load-bearing, so `agent_localizer` no longer sorts or set-ifies
+its output anywhere; Agent4LR's refined ranking comes first, causal
+expansions are appended behind it.
+
+**3. There was no ablation.** Two conditions existed (`raw`, `leanctx`).
+`ablation.py` defines the 2³ factorial over graphify / lean-ctx / feedback,
+with `pure_flexfl` as the control and `element_contributions` in the analyzer
+differencing each element's arm pairs. Every comparable pair is reported
+rather than one summary number, because the marginal effect of lean-ctx is
+not guaranteed to be the same with and without graphify — if the pairs
+disagree, the elements interact, and a single number would be hiding that.
+
+**4. The feedback loop only went one way.** It could restore pruned lines but
+never remove useless ones, so it could only ever *add* tokens — a pure cost
+against the project's own metric. It is bidirectional now (`MISSING:` in raw
+`L` coordinates, `USELESS:` in current-text `C` coordinates), with four
+independent termination guards: the round cap, a no-progress stop, an
+idempotence ledger that blocks restore/prune oscillation on the same region,
+and a per-round prune budget. Restores are spliced back at their original
+position rather than appended, because appending would break the stack-frame
+ordering Stage 1 reads causally.
+
+Also fixed while in here: `compression_tax_analyzer.analyze` had its tax-case
+loop indented outside the per-instance loop, so `conds` leaked from the last
+iteration and the entire compression-tax output described one instance; and
+`graph_structural_briefing` had three orphan lines of a clobbered
+`_lexical_overlap_score` body sitting unreachable after its `return`.
+
+**Benchmark generality** (`benchmarks.py`): dataset schema and language
+behaviour are now data, not code. `DatasetSpec.field_map` remaps columns for
+a fork; `LanguageAdapter` owns gold-patch symbol extraction, source suffixes,
+the tree-sitter grammar name, and trigger-test invocation. Python runs pytest
+node ids; Java detects Maven vs Gradle from the checkout and builds the right
+`-Dtest=Class#method` or `--tests Class.method` selector.
+
+## Sixth pass — provider layer, one-command runner, figures
+
+**Every LLM, one contract.** `llm_backends.py` replaces the four hardcoded
+`make_*_chat_fn` constructors with a registry: three provider *kinds*
+(`openai_compatible`, `anthropic`, `heuristic`) covering local servers
+(Ollama, vLLM, LM Studio, TGI, llama.cpp), hosted open-weight endpoints
+(DeepSeek, Qwen/DashScope, OpenRouter, Together, Groq, Mistral, Ollama
+Cloud) and proprietary APIs (OpenAI, Anthropic, Gemini), plus a `custom` row
+for anything OpenAI-shaped. Providers differ only in base URL, key env var
+and default model, so they are rows rather than code, and
+`--llm custom --base-url ... --model ...` covers whatever isn't registered.
+
+Three behaviours matter specifically for the open-source models FlexFL is
+designed around, and they live in the provider layer so no parser downstream
+has to know about them:
+
+- **Reasoning tags.** R1/QwQ/Qwen3-thinking style models emit
+  `<think>…</think>` (and DeepSeek's API returns `reasoning_content`
+  out-of-band). FlexFL parses exactly one `FunctionName(Argument)` per turn
+  and `Top_k : …` lines for the final answer; a reasoning block containing
+  either string breaks both silently — the loop would dispatch a function the
+  model was only *considering*. Stripped from every response, including the
+  unterminated-opener case that happens when a model hits `max_tokens`
+  mid-thought.
+- **Retries.** A local server 503s while a 32B model loads; a hosted one
+  rate-limits. Without retries a single dropped call aborts a ReAct loop and
+  drops that instance from every arm, which biases the comparison toward
+  whichever arm happened not to hit the blip.
+- **Context errors are explicitly NOT retried.** `is_retryable` returns False
+  for them so the exception propagates to
+  `run_react_loop_with_adaptive_max`, which is the paper's §3.2.1 behaviour
+  (decrement MAX, rerun). Retrying the identical oversized prompt would burn
+  the budget and then fail anyway. The marker list is shared between the two
+  modules so they cannot drift apart.
+
+Temperature defaults to 0.0: arms are compared against each other, and
+sampling noise between arms would be indistinguishable from an element's
+effect.
+
+**One command.** `scripts/run_pipeline.sh` runs fetch → every ablation arm →
+evaluation → figures, with `--llm`/`--model` and `--dataset`/`--language` as
+flags. Each invocation writes to `results/<llm>_<model>_<dataset>_<stamp>/`
+so runs never clobber each other and two models remain comparable from the
+artifacts alone. It fails fast on a run that produced zero outcomes, printing
+the deduplicated skip reasons, rather than failing deep inside the plotting
+code where the cause is no longer visible.
+
+**Figures.** `plot_results.py` writes eight, but the load-bearing one is
+`tradeoff_*.png`: tokens on x, accuracy on y, Pareto frontier drawn. The
+whole project is a trade-off claim, and a frontier is the only presentation
+where "saved tokens but lost accuracy" and "strictly better" are visually
+distinguishable. `per_instance_heatmap.png` exists to answer the follow-up
+question a reviewer will ask about any aggregate difference — whether arms
+fail on the *same* instances (hard instances) or different ones (a real
+compression effect). Arm colours are stable across figures and the control
+arm is always neutral grey.

@@ -1,12 +1,14 @@
 """
 graphify_structure.py — WP1, pipeline step 0
 
-Runs BEFORE the control/rtk/lean-ctx comparison. For each instance's repo
-checkout, runs the real `graphify` CLI (Graphify-Labs/graphify, pip package
-`graphifyy`) in --code-only mode: fully local tree-sitter AST parsing, no LLM
-call, nothing leaves the machine. This gives every condition (raw, rtk,
-lean-ctx) the SAME structural map, so Graphify is not an unfair advantage
-specific to one compression condition — it isolates the compression variable.
+Runs before the ablation arms. For each instance's repo checkout, runs the
+real `graphify` CLI (Graphify-Labs/graphify, pip package `graphifyy`) in
+--code-only mode: fully local tree-sitter AST parsing, no LLM call, nothing
+leaves the machine. Every arm gets the SAME structural map, so the arm
+difference is the pipeline element under test and not the structural index.
+`ablation.py`'s graphify arm switches off the GRAPH usage (structural
+briefing + GraphLocator expansion), not this index — FlexFL's own function
+calls need an index in every arm.
 
 Verified real output (tested against psf/requests as a smoke test):
   `graphify extract . --code-only --no-viz` writes graphify-out/graph.json,
@@ -28,8 +30,21 @@ from pathlib import Path
 from typing import Dict
 
 
-def build_structure_map(repo_path: Path, out_dir: Path | None = None) -> Dict[str, dict]:
+def build_structure_map(
+    repo_path: Path,
+    out_dir: Path | None = None,
+    language: str | None = None,
+    force: bool = False,
+) -> Dict[str, dict]:
     """Run graphify extract --code-only on repo_path, return a compact map.
+
+    `language` is passed through as --lang for the multi-language benchmarks
+    (swe-bench-java and friends); left None, graphify auto-detects from file
+    extensions, which is the right behaviour for mixed repos.
+
+    The extraction is cached: a repo checkout is reused across ablation arms
+    and across instances of the same repo, and re-parsing a large tree per
+    arm would dominate wall-clock for no benefit. `force=True` re-runs it.
 
     Raises RuntimeError with the real graphify stderr on failure — no silent
     fallback, since a structure map built from a bad extraction would quietly
@@ -37,17 +52,32 @@ def build_structure_map(repo_path: Path, out_dir: Path | None = None) -> Dict[st
     failing loudly.
     """
     repo_path = Path(repo_path)
-    out_dir = out_dir or (repo_path / "graphify-out")
-    cmd = ["graphify", "extract", str(repo_path), "--code-only", "--no-viz"]
-    result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
-    if result.returncode != 0:
-        raise RuntimeError(
-            f"graphify extract failed for {repo_path}:\n{result.stderr}"
-        )
+    out_dir = Path(out_dir) if out_dir else (repo_path / "graphify-out")
+    graph_json = out_dir / "graph.json"
 
-    graph_json = repo_path / "graphify-out" / "graph.json"
+    if force or not graph_json.exists():
+        cmd = ["graphify", "extract", str(repo_path), "--code-only", "--no-viz",
+               "--output", str(out_dir)]
+        if language:
+            cmd += ["--lang", language]
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
+        if result.returncode != 0:
+            # Older graphify builds don't take --output/--lang; retry with the
+            # documented minimal invocation before giving up, so a flag drift
+            # in the tool doesn't look like a broken pipeline.
+            fallback = ["graphify", "extract", str(repo_path), "--code-only", "--no-viz"]
+            result = subprocess.run(fallback, capture_output=True, text=True, timeout=1800)
+            if result.returncode != 0:
+                raise RuntimeError(
+                    f"graphify extract failed for {repo_path}:\n{result.stderr}"
+                )
+            graph_json = repo_path / "graphify-out" / "graph.json"
     if not graph_json.exists():
-        raise RuntimeError(f"graphify reported success but {graph_json} is missing")
+        alt = repo_path / "graphify-out" / "graph.json"
+        if alt.exists():
+            graph_json = alt
+        else:
+            raise RuntimeError(f"graphify reported success but {graph_json} is missing")
 
     graph = json.loads(graph_json.read_text())
     structure: Dict[str, dict] = {}
@@ -70,7 +100,7 @@ def build_structure_map(repo_path: Path, out_dir: Path | None = None) -> Dict[st
     return structure
 
 
-def build_call_graph(repo_path: Path) -> Dict[str, Dict[str, list]]:
+def build_call_graph(repo_path: Path, out_dir: Path | None = None) -> Dict[str, Dict[str, list]]:
     """Real GraphLocator-style substrate: an adjacency map built from
     Graphify's actual 'calls' edges (graph.json 'links'), not a proxy like
     community clustering.
@@ -87,9 +117,12 @@ def build_call_graph(repo_path: Path) -> Dict[str, Dict[str, list]]:
     Returns: {node_id: {"callers": [node_id, ...], "callees": [node_id, ...]}}
     """
     repo_path = Path(repo_path)
-    graph_json = repo_path / "graphify-out" / "graph.json"
+    graph_json = (Path(out_dir) if out_dir else (repo_path / "graphify-out")) / "graph.json"
     if not graph_json.exists():
-        raise RuntimeError(f"{graph_json} missing — run build_structure_map first")
+        alt = repo_path / "graphify-out" / "graph.json"
+        if not alt.exists():
+            raise RuntimeError(f"{graph_json} missing — run build_structure_map first")
+        graph_json = alt
 
     graph = json.loads(graph_json.read_text())
     adjacency: Dict[str, Dict[str, list]] = {}
@@ -127,7 +160,8 @@ def save_structure_map(repo_path: Path, dest: Path) -> Dict[str, dict]:
 
 def format_for_agent(structure: Dict[str, dict], max_entries: int = 400) -> str:
     """Compact text block handed to the localization agent alongside the
-    (raw / rtk / lean-ctx) tool output. Same text, every condition."""
+    tool output. Identical in every arm that uses it, so the arm difference
+    stays the compressor and not the structural context."""
     lines = ["# Repository structure map (graphify, tree-sitter AST, local-only)"]
     for i, (key, meta) in enumerate(structure.items()):
         if i >= max_entries:

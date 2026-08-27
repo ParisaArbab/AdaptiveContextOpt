@@ -1,32 +1,34 @@
 """
 fetch_instances.py — WP1
 
-Pulls instances from princeton-nlp/SWE-bench_Lite (HuggingFace) and derives
-function-level ground truth (files + function/class names touched) from each
-instance's gold patch diff. This ground truth is what agent_localizer.py's
-output gets scored against.
+Pulls instances from any SWE-bench-shaped dataset and derives ground truth
+(files + function/class symbols touched) from each instance's gold patch.
 
-Real dataset schema (verified against the live dataset):
-    repo, instance_id, base_commit, patch, test_patch, problem_statement,
-    hints_text, created_at, version, FAIL_TO_PASS, PASS_TO_PASS,
-    environment_setup_commit
+Dataset and language are no longer hardcoded: `--dataset` takes a registry
+alias (swe-bench-lite / -verified / swe-bench / swe-bench-java / ...) or a
+raw HuggingFace id, and the matching LanguageAdapter in benchmarks.py owns
+patch parsing. `--field-map logical=column` handles a fork whose schema
+differs without touching code.
+
+The `test_patch` is now carried through to the harness (it holds the
+FAIL_TO_PASS test itself — without it the trigger test doesn't exist in the
+checkout), as is `fail_to_pass`, which selects exactly which tests run.
 
 Usage:
-    python fetch_instances.py --n 15 --seed 42 --out data/instances.json
+    python fetch_instances.py --dataset swe-bench-lite --n 15 --seed 42 \
+        --out data/instances.json
+    python fetch_instances.py --dataset swe-bench-java --language java \
+        --n 15 --out data/java_instances.json
 """
 from __future__ import annotations
 
 import argparse
 import json
-import re
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from pathlib import Path
 from typing import List
 
-
-HUNK_HEADER_RE = re.compile(r"^@@ .* @@\s*(.*)$")
-DEF_RE = re.compile(r"^\s*(?:async\s+)?def\s+([A-Za-z_][A-Za-z0-9_]*)")
-CLASS_RE = re.compile(r"^\s*class\s+([A-Za-z_][A-Za-z0-9_]*)")
+from benchmarks import coerce_list, parse_field_map_args, resolve_dataset, LANGUAGES
 
 
 @dataclass
@@ -35,106 +37,80 @@ class GroundTruth:
     repo: str
     base_commit: str
     files: List[str]
-    functions: List[str]  # "path/to/file.py::func_or_class_name"
+    functions: List[str]          # "path/to/file.ext::SymbolName"
     fail_to_pass: List[str]
     problem_statement: str
-
-
-def parse_gold_patch(patch: str) -> tuple[List[str], List[str]]:
-    """Extract touched files and function/class names from a unified diff.
-
-    Two sources of function names, both real signal from the diff itself:
-      1. The hunk header's trailing context (`@@ ... @@ def foo(...)`) —
-         unified diff format includes the nearest preceding scope line here.
-      2. Any `def`/`class` line appearing inside the hunk body (added or
-         removed), since a patch that touches a function's internals may not
-         always surface it in the hunk header on every hunk.
-    """
-    files: List[str] = []
-    functions: List[str] = []
-    current_file = None
-
-    for line in patch.splitlines():
-        if line.startswith("+++ b/"):
-            current_file = line[6:].strip()
-            if current_file not in files:
-                files.append(current_file)
-            continue
-        if not current_file:
-            continue
-
-        m = HUNK_HEADER_RE.match(line)
-        if m and m.group(1):
-            scope = m.group(1)
-            fm = DEF_RE.match(f" {scope}") or CLASS_RE.match(f" {scope}")
-            # hunk header context strips leading whitespace, so also try raw
-            fm = fm or re.search(r"(?:def|class)\s+([A-Za-z_][A-Za-z0-9_]*)", scope)
-            if fm:
-                name = fm.group(1)
-                key = f"{current_file}::{name}"
-                if key not in functions:
-                    functions.append(key)
-            continue
-
-        if line.startswith(("+", "-")) and not line.startswith(("+++", "---")):
-            body = line[1:]
-            fm = DEF_RE.match(body) or CLASS_RE.match(body)
-            if fm:
-                key = f"{current_file}::{fm.group(1)}"
-                if key not in functions:
-                    functions.append(key)
-
-    return files, functions
+    test_patch: str
+    dataset: str
+    language: str
 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--n", type=int, default=15, help="number of instances to sample")
+    ap.add_argument("--dataset", default="swe-bench-lite",
+                    help="registry alias or raw HuggingFace dataset id")
+    ap.add_argument("--language", default=None, choices=sorted(LANGUAGES) + [None],
+                    help="override the registry's language for this dataset")
+    ap.add_argument("--split", default=None)
+    ap.add_argument("--field-map", action="append", default=[],
+                    help="logical=column override, repeatable (e.g. fail_to_pass=F2P)")
+    ap.add_argument("--n", type=int, default=15)
     ap.add_argument("--seed", type=int, default=42)
-    ap.add_argument("--out", type=str, default="data/instances.json")
-    ap.add_argument(
-        "--instance-ids",
-        type=str,
-        default="",
-        help="comma-separated instance_ids to pin (overrides --n sampling); "
-        "use this to reproduce the exact 12/15-instance pilot set from earlier runs",
-    )
+    ap.add_argument("--out", default="data/instances.json")
+    ap.add_argument("--instance-ids", default="",
+                    help="comma-separated instance_ids to pin (overrides --n sampling)")
     args = ap.parse_args()
 
-    from datasets import load_dataset  # imported lazily so --help doesn't need it
+    spec = resolve_dataset(args.dataset, args.language, parse_field_map_args(args.field_map))
+    if args.split:
+        spec.split = args.split
+    if not spec.verified:
+        print(f"note: {args.dataset} schema is not confirmed in this repo"
+              + (f" — {spec.note}" if spec.note else ""))
+    adapter = spec.adapter
 
-    ds = load_dataset("princeton-nlp/SWE-bench_Lite", split="test")
+    from datasets import load_dataset  # lazy so --help works without it
+
+    ds = load_dataset(spec.hf_id, split=spec.split)
 
     if args.instance_ids:
-        wanted = set(x.strip() for x in args.instance_ids.split(","))
-        rows = [r for r in ds if r["instance_id"] in wanted]
+        wanted = {x.strip() for x in args.instance_ids.split(",")}
+        rows = [r for r in ds if spec.get(r, "instance_id") in wanted]
     else:
-        ds_shuffled = ds.shuffle(seed=args.seed)
-        rows = list(ds_shuffled.select(range(min(args.n, len(ds_shuffled)))))
+        rows = list(ds.shuffle(seed=args.seed).select(range(min(args.n, len(ds)))))
 
     out: List[dict] = []
     for row in rows:
-        files, functions = parse_gold_patch(row["patch"])
-        fail_to_pass = row["FAIL_TO_PASS"]
-        if isinstance(fail_to_pass, str):
-            fail_to_pass = json.loads(fail_to_pass)
+        files, functions = adapter.parse_patch_symbols(spec.get(row, "patch", "") or "")
         gt = GroundTruth(
-            instance_id=row["instance_id"],
-            repo=row["repo"],
-            base_commit=row["base_commit"],
+            instance_id=spec.get(row, "instance_id"),
+            repo=spec.get(row, "repo"),
+            base_commit=spec.get(row, "base_commit"),
             files=files,
             functions=functions,
-            fail_to_pass=fail_to_pass,
-            problem_statement=row["problem_statement"],
+            fail_to_pass=coerce_list(spec.get(row, "fail_to_pass")),
+            problem_statement=spec.get(row, "problem_statement", "") or "",
+            test_patch=spec.get(row, "test_patch", "") or "",
+            dataset=args.dataset,
+            language=spec.language,
         )
         out.append(asdict(gt))
 
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(out, indent=2))
-    print(f"wrote {len(out)} instances -> {out_path}")
+    print(f"wrote {len(out)} instances ({args.dataset}/{spec.language}) -> {out_path}")
+
+    missing_syms = sum(1 for o in out if not o["functions"])
+    missing_tests = sum(1 for o in out if not o["fail_to_pass"])
     for o in out:
-        print(f"  {o['instance_id']}: {len(o['files'])} file(s), {len(o['functions'])} function(s)")
+        print(f"  {o['instance_id']}: {len(o['files'])} file(s), "
+              f"{len(o['functions'])} symbol(s), {len(o['fail_to_pass'])} trigger test(s)")
+    if missing_syms:
+        print(f"warning: {missing_syms} instance(s) yielded no symbols — those are "
+              f"excluded from method-level scoring (file-level still applies)")
+    if missing_tests:
+        print(f"warning: {missing_tests} instance(s) have no FAIL_TO_PASS ids")
 
 
 if __name__ == "__main__":

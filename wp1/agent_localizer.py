@@ -67,7 +67,15 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional, Protocol
 
-from feedback_loop import run_feedback_loop
+import llm_backends
+import metrics
+import token_meter
+from contextlib import nullcontext as _nullcontext
+from feedback_loop import (
+    FIDELITY_SYSTEM_PROMPT,
+    heuristic_verify_fn,
+    run_feedback_loop,
+)
 
 MAX_FLEXFL_ITERS = 10          # real FlexFL pipeline.py: max_try = 10
 MAX_GRAPH_HOPS = 2              # GraphLocator: bounded CIG expansion, not unbounded traversal
@@ -79,6 +87,12 @@ FRAME_RE = re.compile(r'File "([^"]+)", line (\d+), in ([A-Za-z_][A-Za-z0-9_]*)'
 
 @dataclass
 class LocalizationResult:
+    """predicted_functions and predicted_files are RANKED, best first — the
+    Top-k/MAP/MRR metrics in metrics.py read rank, so nothing in this module
+    may sort or set-ify them on the way out. GraphLocator's expansions are
+    appended after the refined FlexFL ranking rather than merged into it,
+    since they are causally-related context, not higher-confidence guesses."""
+
     instance_id: str
     predicted_files: List[str]
     predicted_functions: List[str]
@@ -86,6 +100,24 @@ class LocalizationResult:
     feedback_rounds_used: int = 0
     stage1_candidates: List[str] = field(default_factory=list)   # FlexFL Agent4SR output
     graph_expanded: List[str] = field(default_factory=list)      # GraphLocator CIG additions
+    used_graph: bool = True
+    used_feedback: bool = False
+    feedback_restores: int = 0
+    feedback_prunes: int = 0
+    feedback_stop_reason: str = ""
+    token_report: dict = field(default_factory=dict)
+
+
+def _ordered_dedupe(*sequences: List[str]) -> List[str]:
+    """Concatenate ranked lists, first occurrence wins, order preserved."""
+    seen = set()
+    out: List[str] = []
+    for seq in sequences:
+        for item in seq:
+            if item not in seen:
+                seen.add(item)
+                out.append(item)
+    return out
 
 
 class LLMChatBackend(Protocol):
@@ -287,9 +319,6 @@ def graph_structural_briefing(
         lines.append(f"- structurally connected ({max_hops}-hop callers/callees): "
                       + ", ".join(neighbor_keys[:15]))
     return "\n".join(lines), neighbor_keys
-    text_tokens = set(re.findall(r"[a-z0-9]+", text.lower()))
-    key_tokens = set(re.findall(r"[a-z0-9]+", key.lower()))
-    return len(text_tokens & key_tokens)
 
 
 def _lexical_overlap_score(text: str, key: str) -> int:
@@ -443,7 +472,11 @@ def run_react_loop(
     return final_response
 
 
-_CONTEXT_ERROR_MARKERS = ("context", "maximum context length", "token limit", "too many tokens")
+# Shared with llm_backends so the retry wrapper and this loop agree on what
+# counts as "context overflow": the retry wrapper deliberately re-raises
+# these instead of retrying, because shrinking MAX is the correct response,
+# not trying the same oversized prompt again.
+_CONTEXT_ERROR_MARKERS = llm_backends.CONTEXT_ERROR_MARKERS
 
 
 def run_react_loop_with_adaptive_max(
@@ -566,17 +599,40 @@ class HeuristicBackend:
         problem_statement: str,
         call_graph: Optional[Dict[str, Dict[str, list]]] = None,
         repo_root: Optional[Path] = None,
+        use_graph: bool = True,
+        use_feedback_loop: bool = False,
+        raw_tool_output: Optional[str] = None,
+        meter: Optional["token_meter.TokenMeter"] = None,
     ) -> LocalizationResult:
+        """`use_graph=False` is the graphify ablation: the structural
+        briefing and the GraphLocator expansion are both skipped, leaving
+        FlexFL's own index-driven search. `use_feedback_loop=True` runs the
+        deterministic stand-in verifier from feedback_loop, so the feedback
+        ablation is a real variable on this key-free backend too."""
         tools = StructureQueryTools(structure_map, repo_root)
+        graph_active = bool(call_graph) and use_graph
         id_to_key = (
             {meta["id"]: key for key, meta in structure_map.items() if meta.get("id")}
-            if call_graph else {}
+            if graph_active else {}
         )
+
+        rounds_used = 0
+        fb_restores = fb_prunes = 0
+        fb_stop = ""
+        if use_feedback_loop and raw_tool_output is not None:
+            with (meter.stage(token_meter.STAGE_FEEDBACK) if meter else _nullcontext()):
+                fb = run_feedback_loop(raw_tool_output, tool_output,
+                                       heuristic_verify_fn(raw_tool_output))
+            tool_output = fb.final_text
+            rounds_used, fb_restores, fb_prunes = fb.rounds_used, fb.n_restores, fb.n_prunes
+            fb_stop = fb.stop_reason
+        if meter:
+            meter.record_context("agent_input_tokens", tool_output)
 
         # Graph structural understanding FIRST, before FlexFL's own search —
         # this is the "understand the structure better before FlexFL" step.
         briefing_neighbors: List[str] = []
-        if call_graph:
+        if graph_active:
             _briefing_text, briefing_neighbors = graph_structural_briefing(
                 tool_output, structure_map, call_graph, id_to_key
             )
@@ -597,23 +653,34 @@ class HeuristicBackend:
         # GraphLocator's second pass: further expansion from whatever Stage
         # 2 actually confirmed, on top of the pre-search briefing above
         graph_expanded: List[str] = []
-        if call_graph:
+        if graph_active:
             symptom_vertices = _symptom_vertices_from_trace(tool_output, structure_map) or refined[:1]
             graph_expanded = graphlocator_expand(
                 symptom_vertices, structure_map, call_graph, id_to_key,
                 confirm_fn=_heuristic_confirm_fn(problem_statement),
             )
 
-        all_functions = sorted(set(refined) | set(graph_expanded))
-        files = sorted({structure_map[k]["file"] for k in all_functions if k in structure_map})
+        # Rank order is the metric's input: refined ranking first, causal
+        # expansions after it. Sorting here would destroy Top-k and MRR.
+        all_functions = _ordered_dedupe(refined, graph_expanded)
+        files = metrics.files_from_symbols(
+            k for k in all_functions if k in structure_map
+        )
 
         return LocalizationResult(
             instance_id="",
             predicted_files=files,
             predicted_functions=all_functions,
             backend=self.name,
+            feedback_rounds_used=rounds_used,
             stage1_candidates=candidates,
             graph_expanded=graph_expanded,
+            used_graph=graph_active,
+            used_feedback=bool(use_feedback_loop and raw_tool_output is not None),
+            feedback_restores=fb_restores,
+            feedback_prunes=fb_prunes,
+            feedback_stop_reason=fb_stop,
+            token_report=meter.report() if meter else {},
         )
 
 
@@ -640,42 +707,54 @@ def localize_with_llm(
     repo_root: Optional[Path] = None,
     use_feedback_loop: bool = True,
     raw_tool_output: Optional[str] = None,
+    use_graph: bool = True,
+    meter: Optional["token_meter.TokenMeter"] = None,
 ) -> LocalizationResult:
     """Real two-stage FlexFL + GraphLocator expansion, LLM-driven, now
     running the actual multi-turn ReAct loop from the FlexFL replication
     package's pipeline.py rather than a single-shot call per stage.
     chat_fn is provider-agnostic — Claude/GPT/DeepSeek/Qwen all plug in here."""
     tools = StructureQueryTools(structure_map, repo_root)
+    meter = meter or token_meter.TokenMeter(token_meter.TokenCounter(backend_name))
+    chat_fn = meter.wrap(chat_fn)
     rounds_used = 0
+    fb_restores = fb_prunes = 0
+    fb_stop = ""
     cache_text = raw_tool_output if raw_tool_output is not None else tool_output
+    graph_active = bool(call_graph) and use_graph
+
+    # The feedback loop runs BEFORE the structural briefing, so the briefing
+    # is computed over the text the agent will actually reason about. Doing
+    # it the other way round would let the briefing cite stack frames that
+    # a prune had already removed from the evidence.
+    if use_feedback_loop and raw_tool_output is not None:
+        def verify_fn(payload: str, round_num: int) -> str:
+            return chat_fn(FIDELITY_SYSTEM_PROMPT, payload)
+
+        with meter.stage(token_meter.STAGE_FEEDBACK):
+            fb_result = run_feedback_loop(cache_text, tool_output, verify_fn)
+        working_text = fb_result.final_text
+        rounds_used = fb_result.rounds_used
+        fb_restores, fb_prunes = fb_result.n_restores, fb_result.n_prunes
+        fb_stop = fb_result.stop_reason
+    else:
+        working_text = tool_output
+
+    meter.record_context("agent_input_tokens", working_text)
 
     # Graph structural understanding FIRST — before FlexFL's own search
     # begins, not just as a post-hoc expansion after Agent4LR. This is what
     # lets Agent4SR start its ReAct loop already knowing the structural
-    # neighborhood of the observed failure.
+    # neighborhood of the observed failure. Skipped entirely in the
+    # graphify ablation arm.
     structural_briefing = ""
     id_to_key: Dict[str, str] = {}
-    if call_graph:
+    if graph_active:
         id_to_key = {meta["id"]: key for key, meta in structure_map.items() if meta.get("id")}
         structural_briefing, _ = graph_structural_briefing(
-            tool_output, structure_map, call_graph, id_to_key
+            working_text, structure_map, call_graph, id_to_key
         )
-
-    if use_feedback_loop:
-        def verify_fn(current_text: str, round_num: int) -> str:
-            return chat_fn(
-                "You just localized a bug from a possibly-compressed tool output. "
-                "If it contains enough evidence, respond exactly: OK\n"
-                "If something critical looks missing/truncated, respond exactly: "
-                "MISSING: L<start>-L<end> <reason>",
-                f"CURRENT TEXT:\n{current_text}",
-            )
-
-        fb_result = run_feedback_loop(cache_text, tool_output, verify_fn)
-        working_text = fb_result.final_text
-        rounds_used = fb_result.rounds_used
-    else:
-        working_text = tool_output
+        meter.record_context("structural_briefing_tokens", structural_briefing)
 
     # --- FlexFL Stage 1: Agent4SR, real multi-turn ReAct loop, primed with
     # the structural briefing gathered above ---
@@ -692,10 +771,11 @@ def localize_with_llm(
         + f"The trigger test / tool output is as follows:\n```\n{working_text}\n```\n"
         + f"The bug report is as follows:\n```\n{problem_statement}\n```"
     )
-    stage1_final = run_react_loop_with_adaptive_max(
-        AGENT4SR_SYSTEM_PROMPT, stage1_input, stage1_dispatch, chat_fn, MAX_FLEXFL_ITERS,
-        FINAL_ANSWER_INSTRUCTION_SR, format_kwargs={"top_k": CANDIDATE_LIST_SIZE},
-    )
+    with meter.stage(token_meter.STAGE_STAGE1):
+        stage1_final = run_react_loop_with_adaptive_max(
+            AGENT4SR_SYSTEM_PROMPT, stage1_input, stage1_dispatch, chat_fn, MAX_FLEXFL_ITERS,
+            FINAL_ANSWER_INSTRUCTION_SR, format_kwargs={"top_k": CANDIDATE_LIST_SIZE},
+        )
     candidates = postprocess_topk(_parse_topk(stage1_final), structure_map)
     if not candidates:  # model didn't follow the format — fall back to the non-LLM ranking
         candidates = stage1_space_reduction(working_text, problem_statement, tools)
@@ -713,20 +793,18 @@ def localize_with_llm(
     stage2_dispatch = {"get_code_snippet_of_method": stage2_get_snippet}
     numbered_candidates = "\n".join(f"{i+1}.{c}" for i, c in enumerate(candidates))
     stage2_input = f"The suggested methods are as follows:\n```\n{numbered_candidates}\n```"
-    stage2_final = run_react_loop_with_adaptive_max(
-        AGENT4LR_SYSTEM_PROMPT, stage2_input, stage2_dispatch, chat_fn, MAX_FLEXFL_ITERS,
-        FINAL_ANSWER_INSTRUCTION_LR, format_kwargs={"top_k": FINAL_TOPK},
-    )
+    with meter.stage(token_meter.STAGE_STAGE2):
+        stage2_final = run_react_loop_with_adaptive_max(
+            AGENT4LR_SYSTEM_PROMPT, stage2_input, stage2_dispatch, chat_fn, MAX_FLEXFL_ITERS,
+            FINAL_ANSWER_INSTRUCTION_LR, format_kwargs={"top_k": FINAL_TOPK},
+        )
     functions = postprocess_topk(_parse_topk(stage2_final), structure_map)
     if not functions:
         functions = candidates[:FINAL_TOPK]
-    files = sorted({structure_map[k]["file"] for k in functions if k in structure_map})
 
     # --- GraphLocator expansion over the real call graph ---
     graph_expanded: List[str] = []
-    if call_graph:
-        id_to_key = {meta["id"]: key for key, meta in structure_map.items() if meta.get("id")}
-
+    if graph_active:
         def llm_confirm_fn(vertex_key: str, neighbor_keys: List[str]) -> List[str]:
             resp = chat_fn(
                 GRAPHLOCATOR_EXPAND_PROMPT,
@@ -734,12 +812,16 @@ def localize_with_llm(
             )
             return [k for k in _parse_expand(resp) if k in neighbor_keys]
 
-        graph_expanded = graphlocator_expand(
-            functions[:1] or candidates[:1], structure_map, call_graph, id_to_key,
-            confirm_fn=llm_confirm_fn,
-        )
-        functions = sorted(set(functions) | set(graph_expanded))
-        files = sorted({structure_map[k]["file"] for k in functions if k in structure_map})
+        with meter.stage(token_meter.STAGE_GRAPH):
+            graph_expanded = graphlocator_expand(
+                functions[:1] or candidates[:1], structure_map, call_graph, id_to_key,
+                confirm_fn=llm_confirm_fn,
+            )
+
+    # Ranked, not sorted: Agent4LR's refined ordering is the ranking the
+    # Top-k/MRR metrics score, with causal expansions appended behind it.
+    functions = _ordered_dedupe(functions, graph_expanded)
+    files = metrics.files_from_symbols(k for k in functions if k in structure_map)
 
     return LocalizationResult(
         instance_id=instance_id,
@@ -749,84 +831,53 @@ def localize_with_llm(
         feedback_rounds_used=rounds_used,
         stage1_candidates=candidates,
         graph_expanded=graph_expanded,
+        used_graph=graph_active,
+        used_feedback=bool(use_feedback_loop and raw_tool_output is not None),
+        feedback_restores=fb_restores,
+        feedback_prunes=fb_prunes,
+        feedback_stop_reason=fb_stop,
+        token_report=meter.report(),
     )
 
 
+# ---------------------------------------------------------------------------
+# Backend construction
+#
+# Provider wiring lives in llm_backends.py — one registry covering hosted
+# APIs (OpenAI, Anthropic, Gemini), hosted open-weight models (DeepSeek,
+# Qwen/DashScope, OpenRouter, Together, Groq, Mistral, Ollama Cloud) and
+# locally-served open-weight models (Ollama, vLLM, LM Studio, TGI,
+# llama.cpp). The helpers below are thin compatibility shims so existing
+# call sites keep working.
+# ---------------------------------------------------------------------------
+
+def make_chat_fn(provider: str, **kwargs):
+    """provider is any name or alias from llm_backends.PROVIDERS."""
+    cfg = llm_backends.resolve(provider, **kwargs)
+    return llm_backends.build_chat_fn(cfg), cfg
+
+
 def make_anthropic_chat_fn(model: str = "claude-sonnet-4-6"):
-    import anthropic
-
-    client = anthropic.Anthropic()
-
-    def chat_fn(system: str, user: str) -> str:
-        msg = client.messages.create(
-            model=model, max_tokens=1024, system=system,
-            messages=[{"role": "user", "content": user}],
-        )
-        return "".join(b.text for b in msg.content if hasattr(b, "text"))
-
-    return chat_fn
+    return llm_backends.build_chat_fn(llm_backends.resolve("anthropic", model=model))
 
 
 def make_openai_compatible_chat_fn(
     api_key_env: str, base_url: Optional[str] = None, model: str = "gpt-4o"
 ):
-    """Covers OpenAI, DeepSeek, and Qwen (DashScope's OpenAI-compatible
-    endpoint) — all three speak the same chat-completions shape."""
-    import openai
+    """Covers every OpenAI-shaped endpoint — hosted or local."""
+    return llm_backends.build_chat_fn(
+        llm_backends.resolve("custom", model=model, base_url=base_url,
+                             api_key_env=api_key_env)
+    )
 
-    client = openai.OpenAI(api_key=os.environ[api_key_env], base_url=base_url)
 
-    def chat_fn(system: str, user: str) -> str:
-        resp = client.chat.completions.create(
-            model=model,
-            messages=[{"role": "system", "content": system}, {"role": "user", "content": user}],
+def make_local_gpu_chat_fn(base_url: Optional[str] = None, model: Optional[str] = None):
+    """An open-source model served on your own GPU (vLLM by default; Ollama,
+    LM Studio, TGI and llama.cpp all work by pointing --base-url at them)."""
+    return llm_backends.build_chat_fn(
+        llm_backends.resolve(
+            "vllm",
+            model=model or os.environ.get("LOCAL_LLM_MODEL"),
+            base_url=base_url or os.environ.get("LOCAL_LLM_BASE_URL"),
         )
-        return resp.choices[0].message.content or ""
-
-    return chat_fn
-
-
-def make_local_gpu_chat_fn(
-    base_url: Optional[str] = None,
-    model: Optional[str] = None,
-):
-    """For running an open-source model (DeepSeek, Qwen, etc.) locally on
-    your own NVIDIA GPU instead of a cloud API — the project's stated
-    comparison includes open-source models, and a local vLLM/Ollama/TGI
-    server is the natural way to run those on your own hardware.
-
-    Any OpenAI-compatible local server works (vLLM's `vllm serve`, Ollama's
-    `/v1` endpoint, TGI's OpenAI-compatible mode) since they all implement
-    the same chat-completions shape as make_openai_compatible_chat_fn above
-    — this is a thin convenience wrapper with GPU-friendly defaults:
-
-        LOCAL_LLM_BASE_URL   default http://localhost:8000/v1 (vLLM's default)
-        LOCAL_LLM_MODEL      default reads from env, no built-in default —
-                              must match whatever you served (e.g. the repo
-                              id you passed to `vllm serve`)
-
-    No API key needed — local servers typically don't require one, so this
-    passes a dummy key ("local") since the openai SDK requires the field
-    to be non-empty even when the server ignores it.
-    """
-    import openai
-
-    resolved_base_url = base_url or os.environ.get("LOCAL_LLM_BASE_URL", "http://localhost:8000/v1")
-    resolved_model = model or os.environ.get("LOCAL_LLM_MODEL")
-    if not resolved_model:
-        raise ValueError(
-            "No model specified. Pass model=..., or set LOCAL_LLM_MODEL to "
-            "whatever you served, e.g. 'Qwen/Qwen2.5-Coder-32B-Instruct' or "
-            "'deepseek-ai/DeepSeek-Coder-V2-Instruct'."
-        )
-
-    client = openai.OpenAI(api_key="local", base_url=resolved_base_url)
-
-    def chat_fn(system: str, user: str) -> str:
-        resp = client.chat.completions.create(
-            model=resolved_model,
-            messages=[{"role": "system", "content": system}, {"role": "user", "content": user}],
-        )
-        return resp.choices[0].message.content or ""
-
-    return chat_fn
+    )
