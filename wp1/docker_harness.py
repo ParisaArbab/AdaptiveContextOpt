@@ -29,6 +29,7 @@ Two execution modes, unchanged in intent:
 """
 from __future__ import annotations
 
+import re
 import shlex
 import subprocess
 import tempfile
@@ -132,6 +133,182 @@ def _apply_test_patch(workdir: Path, test_patch: str) -> tuple[bool, Optional[st
     return False, f"test_patch apply failed: {result.stderr[:400]}"
 
 
+def _ensure_dependencies_installed(
+    workdir: Path, adapter: LanguageAdapter, timeout: int = 1800
+) -> tuple[Optional[Path], List[str]]:
+    """Installs the checked-out package plus a test runner into a dedicated
+    per-instance virtualenv, and returns its python executable.
+
+    This was the actual root cause behind every 'no failure evidence'
+    result: the checkout was real and the test patch applied cleanly, but
+    nothing ever ran `pip install -e .` or `pip install pytest`, so pytest
+    couldn't even import the package (confirmed manually: `import sympy`
+    failed with 'SymPy now depends on mpmath as an external library' before
+    this fix, and 'No module named pytest' before that).
+
+    A dedicated venv per instance — not the shared conda env — because
+    consecutive instances from different repos (sympy, django, ...) install
+    conflicting dependency versions into the same environment otherwise;
+    each instance needing its own isolated install is exactly why the
+    official SWE-bench harness uses one container per instance. This is the
+    closest a host without Docker can get to that isolation.
+
+    IMPORTANT CAVEAT, found while testing this fix: the whole-system python3
+    (often 3.11+ on a modern host) is frequently too NEW for older SWE-bench
+    Lite instances. Confirmed directly: sympy 1.5.dev (2019) imports
+    `distutils`, which Python 3.12 removed entirely — `pip install -e .`
+    succeeds, but `import sympy` still fails on a 3.12 interpreter. The
+    original SWE-bench harness handles this with a per-instance,
+    per-repo-version conda spec baked into its Docker images; the
+    currently-installed `swebench` PyPI package no longer even ships that
+    mapping as an importable dict (checked: `swebench.harness.constants` has
+    been restructured and no longer exposes MAP_REPO_VERSION_TO_SPECS or
+    equivalent — modern swebench fully delegates environment fidelity to
+    pre-built Docker images, which is also why `run_in_docker` above is the
+    authoritative path).
+
+    Without that mapping, this function does the best a Docker-less host
+    can: probes a short, honestly-a-heuristic list of Python versions via
+    conda (broadly covering the era most SWE-bench Lite repos predate),
+    stopping at the first one where both install AND import succeed. This
+    is NOT equivalent to the real per-instance environment and is still
+    local_fallback-only — but it resolves the specific distutils-era failure
+    class instead of silently producing 'no failure evidence' for every
+    older instance.
+
+    Only runs for Python; Java's build systems (Maven/Gradle) manage their
+    own dependency resolution and don't need this step.
+    """
+    notes: List[str] = []
+    if adapter.name != "python":
+        return None, notes
+
+    venv_dir = workdir / ".wp1venv"
+    venv_python = venv_dir / "bin" / "python3"
+    if venv_python.exists():
+        return venv_python, notes  # reuse across repeated runs of the same instance
+
+    def _try_install(python_exe: Path) -> tuple[bool, str]:
+        pip = [str(python_exe), "-m", "pip"]
+        subprocess.run(pip + ["install", "--upgrade", "pip"], cwd=workdir,
+                       capture_output=True, text=True, timeout=300)
+        for target in ([".[test]"], [".[dev]"], ["."]):
+            result = subprocess.run(pip + ["install", "-e", *target], cwd=workdir,
+                                     capture_output=True, text=True, timeout=timeout)
+            if result.returncode == 0:
+                break
+        else:
+            return False, f"pip install -e . failed in all variants: {result.stderr[-400:]}"
+
+        pytest_install = subprocess.run(pip + ["install", "pytest"], cwd=workdir,
+                                         capture_output=True, text=True, timeout=300)
+        if pytest_install.returncode != 0:
+            return False, f"pytest install failed: {pytest_install.stderr[-300:]}"
+
+        # Verify via pytest's own conftest-loading path, not a bare `import
+        # <package>` — confirmed these differ: a plain `import sympy`
+        # succeeded here while pytest's conftest.py still hit
+        # 'ModuleNotFoundError: No module named distutils', because
+        # conftest's import chain reaches sympy.external.importtools (which
+        # imports distutils) while a top-level `import sympy` alone doesn't.
+        # --collect-only forces the same conftest chain pytest actually uses,
+        # without running any real tests.
+        collect = subprocess.run(
+            [str(python_exe), "-m", "pytest", "--collect-only", "-q"],
+            cwd=workdir, capture_output=True, text=True, timeout=180,
+        )
+        collect_text = collect.stdout + collect.stderr
+        if "ModuleNotFoundError" in collect_text or "ImportError while loading conftest" in collect_text:
+            return False, f"pytest --collect-only hit an import error post-install: {collect_text[-400:]}"
+        return True, ""
+
+    # 1) try the plain system python3 first — cheapest, and correct for
+    #    instances new enough not to need an older interpreter
+    create = subprocess.run(["python3", "-m", "venv", str(venv_dir)], cwd=workdir,
+                             capture_output=True, text=True, timeout=120)
+    if create.returncode == 0:
+        ok, err = _try_install(venv_python)
+        if ok:
+            return venv_python, notes
+        notes.append(f"system python3 venv failed post-install checks: {err}")
+        subprocess.run(["rm", "-rf", str(venv_dir)], capture_output=True)
+
+    # 2) fall back to a short probe of older interpreters via conda, if
+    #    available — this is the heuristic described above, not a real spec
+    conda_exe = subprocess.run(["which", "conda"], capture_output=True, text=True).stdout.strip()
+    if not conda_exe:
+        notes.append("conda not found; cannot probe alternate Python versions")
+        return None, notes
+
+    for py_version in ("3.8", "3.9", "3.6"):
+        candidate_dir = workdir / f".wp1venv_py{py_version.replace('.', '')}"
+        candidate_python = candidate_dir / "bin" / "python3"
+        make = subprocess.run(
+            ["conda", "create", "-y", "-p", str(candidate_dir), f"python={py_version}"],
+            capture_output=True, text=True, timeout=timeout,
+        )
+        if make.returncode != 0 or not candidate_python.exists():
+            notes.append(f"conda env for python={py_version} failed to create; skipping")
+            continue
+        ok, err = _try_install(candidate_python)
+        if ok:
+            notes.append(f"resolved via conda python={py_version} (heuristic probe, not the "
+                          f"instance's real recorded environment)")
+            return candidate_python, notes
+        notes.append(f"python={py_version} failed post-install checks: {err}")
+        subprocess.run(["rm", "-rf", str(candidate_dir)], capture_output=True)
+
+    notes.append("exhausted all Python-version probes; falling back to system python3 unverified")
+    return None, notes
+
+
+def _resolve_bare_test_ids(test_patch: str, fail_to_pass: Sequence[str]) -> List[str]:
+    """Some SWE-bench datasets record FAIL_TO_PASS as bare test names
+    ('test__TR56') rather than pytest node ids ('path/to/file.py::test__TR56').
+    Confirmed directly against sympy__sympy-17139: passing a bare name as a
+    positional pytest argument doesn't resolve to a specific test — pytest
+    falls back to collecting the whole rootdir, which is what surfaced the
+    conftest import chain instead of the actual targeted test result.
+
+    Resolves each bare name to its real file by searching the SAME gold
+    test_patch diff for a matching `def <name>(` on an added line — mirrors
+    the approach fetch_instances.py already uses for gold-patch symbol
+    extraction from a unified diff, applied here to the test patch instead
+    of the fix patch.
+    """
+    resolved = []
+    file_segments: List[tuple[str, str]] = []
+    current_file, buf = None, []
+    for line in test_patch.splitlines():
+        if line.startswith("+++ b/"):
+            if current_file is not None:
+                file_segments.append((current_file, "\n".join(buf)))
+            current_file, buf = line[6:].strip(), []
+        elif current_file is not None:
+            buf.append(line)
+    if current_file is not None:
+        file_segments.append((current_file, "\n".join(buf)))
+
+    for test_id in fail_to_pass:
+        if "::" in test_id or "/" in test_id:
+            resolved.append(test_id)  # already a real node id, leave as-is
+            continue
+        base_name = re.sub(r"\[.*\]$", "", test_id)  # strip parametrize suffix
+        match = None
+        for file_path, body in file_segments:
+            # Matches whether the test is newly added (a '+' line) or an
+            # existing test being modified (where 'def test_x():' only
+            # appears as unified-diff hunk-header context, e.g.
+            # '@@ -76,6 +76,10 @@ def test__TR56():', never as an added line
+            # itself) — confirmed necessary against sympy__sympy-17139,
+            # where test__TR56 is exactly this second case.
+            if re.search(rf"def\s+{re.escape(base_name)}\s*\(", body):
+                match = file_path
+                break
+        resolved.append(f"{match}::{test_id}" if match else test_id)
+    return resolved
+
+
 def run_local_fallback(
     instance_id: str,
     repo: str,
@@ -141,12 +318,17 @@ def run_local_fallback(
     adapter: Optional[LanguageAdapter] = None,
     workdir: Optional[Path] = None,
     timeout: int = 900,
+    install_timeout: int = 1800,
 ) -> TestRunResult:
     adapter = adapter or PythonAdapter()
     workdir = Path(workdir or tempfile.mkdtemp(prefix=f"wp1_{instance_id.replace('/', '_')}_"))
     notes: List[str] = []
 
     ensure_checkout(repo, base_commit, workdir)
+
+    venv_python, install_notes = _ensure_dependencies_installed(workdir, adapter, install_timeout)
+    notes.extend(install_notes)
+
     applied, note = _apply_test_patch(workdir, test_patch)
     if note:
         notes.append(note)
@@ -154,7 +336,16 @@ def run_local_fallback(
     trigger_tests = list(fail_to_pass)
     if not trigger_tests:
         notes.append("no FAIL_TO_PASS ids; running the adapter's default selection")
+    elif adapter.name == "python":
+        resolved = _resolve_bare_test_ids(test_patch, trigger_tests)
+        unresolved = [t for t, r in zip(trigger_tests, resolved) if t == r and "::" not in r]
+        if unresolved:
+            notes.append(f"could not resolve file path for bare test id(s): {unresolved}; "
+                         f"passed through as-is, pytest may not target them correctly")
+        trigger_tests = resolved
     cmd = adapter.build_test_command(workdir, trigger_tests)
+    if venv_python and cmd and cmd[0] == "python3":
+        cmd[0] = str(venv_python)
 
     try:
         result = subprocess.run(cmd, cwd=workdir, capture_output=True, text=True, timeout=timeout)
@@ -204,6 +395,8 @@ def run_in_docker(
 
     image = SWEBENCH_IMAGE_TEMPLATE.format(instance_id_safe=instance_id.replace("/", "_"))
     trigger_tests = list(fail_to_pass)
+    if adapter.name == "python" and trigger_tests:
+        trigger_tests = _resolve_bare_test_ids(test_patch, trigger_tests)
     test_cmd = shlex.join(adapter.build_test_command(Path("/testbed"), trigger_tests))
 
     with tempfile.TemporaryDirectory() as tmp:
