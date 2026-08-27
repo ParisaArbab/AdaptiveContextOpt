@@ -97,6 +97,7 @@ wp1/
   ablation.py               # the arm matrix
   run_wp1_benchmark.py      # orchestrator
   compression_tax_analyzer.py  # evaluation framework + T1-T5 taxonomy
+CHANGES.md                  # what changed in this version, and why
 docs/
   leanctx_reference_notes.md
   flexfl_graphlocator_notes.md
@@ -115,19 +116,138 @@ Each run lands in its own `results/<llm>_<model>_<dataset>_<timestamp>/`
 directory — instances, outcomes, report, plots, and a full log — so runs
 never overwrite each other and two models stay comparable afterwards.
 
-The model and the benchmark are both flags, so re-running the study
-elsewhere is a flag change, not an edit:
+`--help` lists every flag, `--list-providers` prints the provider table, and
+`--dry-run` shows the commands without running them. Add `--preflight` on any
+real run so a long study doesn't die on call #1.
+
+## Recipes
+
+The model and the benchmark are independent flags, so every combination below
+is the same pipeline with different arguments — nothing to edit.
+
+### Pick a benchmark
 
 ```bash
-./scripts/run_pipeline.sh --llm deepseek --dataset swe-bench-verified --n 30
-./scripts/run_pipeline.sh --llm vllm --model Qwen/Qwen2.5-Coder-32B-Instruct \
-    --dataset swe-bench-java --language java --arms all
-./scripts/run_pipeline.sh --llm openai --model gpt-4o --preflight
+# SWE-bench Lite (default), 15 instances
+./scripts/run_pipeline.sh --llm deepseek
+
+# SWE-bench Verified, larger sample
+./scripts/run_pipeline.sh --llm deepseek --dataset swe-bench-verified --n 50
+
+# full SWE-bench
+./scripts/run_pipeline.sh --llm deepseek --dataset swe-bench --n 100
+
+# SWE-bench Java — switches the diff parser to Java and the test runner
+# to Maven or Gradle, detected from the checkout
+./scripts/run_pipeline.sh --llm deepseek --dataset swe-bench-java --language java
+
+# any other HuggingFace dataset with a SWE-bench-shaped schema
+./scripts/run_pipeline.sh --llm deepseek --dataset some-org/some-swe-dataset
+
+# ... and if that fork names its columns differently
+./scripts/run_pipeline.sh --llm deepseek --dataset some-org/some-swe-dataset \
+    --field-map fail_to_pass=F2P --field-map patch=gold_patch
+```
+
+### Pick a model
+
+```bash
+# local, your own GPU — Ollama
+./scripts/run_pipeline.sh --llm ollama --model qwen2.5-coder:32b
+
+# local, your own GPU — vLLM (exact token counts, since the id is an HF repo)
+./scripts/run_pipeline.sh --llm vllm --model Qwen/Qwen2.5-Coder-32B-Instruct
+
+# local — LM Studio, TGI, or llama.cpp
+./scripts/run_pipeline.sh --llm lmstudio --model deepseek-coder-33b-instruct
+
+# hosted open-weight models
+./scripts/run_pipeline.sh --llm deepseek --model deepseek-chat
+./scripts/run_pipeline.sh --llm qwen     --model qwen-max
+./scripts/run_pipeline.sh --llm groq     --model llama-3.3-70b-versatile
+./scripts/run_pipeline.sh --llm openrouter --model qwen/qwen-2.5-coder-32b-instruct
+
+# hosted proprietary
+./scripts/run_pipeline.sh --llm openai    --model gpt-4o
+./scripts/run_pipeline.sh --llm anthropic --model claude-sonnet-4-6
+
+# any other OpenAI-compatible server
+./scripts/run_pipeline.sh --llm custom \
+    --base-url http://gpu-box.lan:8000/v1 --model my-org/my-model
+
+# no model at all — deterministic stand-in, for checking the plumbing
+./scripts/run_pipeline.sh --llm heuristic --local-fallback
+```
+
+An Ollama tag like `qwen2.5-coder:32b` is not a HuggingFace repo id, so token
+counts fall back to tiktoken. For exact counts, name the underlying model:
+
+```bash
+./scripts/run_pipeline.sh --llm ollama --model qwen2.5-coder:32b \
+    --tokenizer-model Qwen/Qwen2.5-Coder-32B-Instruct
+```
+
+### Pick which arms to run
+
+```bash
+# the five the study asks for (default): full, no_graphify, no_leanctx,
+# no_feedback, pure_flexfl
+./scripts/run_pipeline.sh --llm deepseek --arms default
+
+# every valid combination (6 arms) — adds no_graphify_feedback, which
+# separates interaction effects from main effects. It is 6 rather than 8
+# because a feedback loop with no compressor has nothing to act on, so
+# those two combinations are excluded rather than run as duplicates.
+./scripts/run_pipeline.sh --llm deepseek --arms all
+
+# just one comparison
+./scripts/run_pipeline.sh --llm deepseek --arms full,pure_flexfl
+```
+
+### Everyday variations
+
+```bash
+# quick smoke test before committing to a long run
+./scripts/run_pipeline.sh --llm deepseek --n 3 --limit 3 --preflight
+
+# host pytest instead of the SWE-bench Docker images
+./scripts/run_pipeline.sh --llm deepseek --local-fallback
+
+# reproduce an exact instance set
+./scripts/run_pipeline.sh --llm deepseek \
+    --instance-ids astropy__astropy-12907,sympy__sympy-16792
+
+# reuse instances already fetched, e.g. to run a second model on the same set
+./scripts/run_pipeline.sh --llm openai --model gpt-4o \
+    --instances results/deepseek_swe-bench-lite_20260827_101500/instances.json
+
+# a more aggressive compression target
+./scripts/run_pipeline.sh --llm deepseek --target-density 0.25
+
+# plot the trade-off against Top-5 instead of Top-1
+./scripts/run_pipeline.sh --llm deepseek --metric top5
+
+# see the commands without running anything
 ./scripts/run_pipeline.sh --dry-run --llm groq --model llama-3.3-70b-versatile
 ```
 
-`--help` lists every flag; `--list-providers` prints the provider table;
-`--preflight` makes one cheap call first so a long run doesn't die on call #1.
+### Comparing two models on identical data
+
+Fetch once, then point both runs at the same instances file. Same instances,
+same arms, same seed — the only variable is the model.
+
+```bash
+RUN=results/base
+./scripts/run_pipeline.sh --llm deepseek --n 30 --out-dir $RUN
+./scripts/run_pipeline.sh --llm openai --model gpt-4o \
+    --instances $RUN/instances.json --out-dir results/gpt4o
+./scripts/run_pipeline.sh --llm ollama --model qwen2.5-coder:32b \
+    --instances $RUN/instances.json --out-dir results/qwen32b
+```
+
+Each directory gets its own report and figures; the arm colours and the
+control arm are consistent across runs, so the trade-off plots can be read
+side by side.
 
 ## Models
 
