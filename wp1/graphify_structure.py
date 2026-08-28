@@ -52,32 +52,25 @@ def build_structure_map(
     failing loudly.
     """
     repo_path = Path(repo_path)
-    out_dir = Path(out_dir) if out_dir else (repo_path / "graphify-out")
-    graph_json = out_dir / "graph.json"
+    graph_json = repo_path / "graphify-out" / "graph.json"
 
     if force or not graph_json.exists():
-        cmd = ["graphify", "extract", str(repo_path), "--code-only", "--no-viz",
-               "--output", str(out_dir)]
+        # --output does NOT redirect graph.json's location — confirmed
+        # directly: with --output <dir>, graphify writes the cache tree
+        # under <dir>/graphify-out/cache/... but never a top-level
+        # <dir>/graph.json, so the old --output attempt below always
+        # "succeeded" (exit 0) while writing nowhere we looked. graphify
+        # always writes to <repo>/graphify-out/graph.json regardless of
+        # --output; just run the plain command and read from there.
+        cmd = ["graphify", "extract", str(repo_path), "--code-only", "--no-viz"]
         if language:
             cmd += ["--lang", language]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
         if result.returncode != 0:
-            # Older graphify builds don't take --output/--lang; retry with the
-            # documented minimal invocation before giving up, so a flag drift
-            # in the tool doesn't look like a broken pipeline.
-            fallback = ["graphify", "extract", str(repo_path), "--code-only", "--no-viz"]
-            result = subprocess.run(fallback, capture_output=True, text=True, timeout=1800)
-            if result.returncode != 0:
-                raise RuntimeError(
-                    f"graphify extract failed for {repo_path}:\n{result.stderr}"
-                )
-            graph_json = repo_path / "graphify-out" / "graph.json"
+            raise RuntimeError(f"graphify extract failed for {repo_path}:\n{result.stderr}")
+
     if not graph_json.exists():
-        alt = repo_path / "graphify-out" / "graph.json"
-        if alt.exists():
-            graph_json = alt
-        else:
-            raise RuntimeError(f"graphify reported success but {graph_json} is missing")
+        raise RuntimeError(f"graphify reported success but {graph_json} is missing")
 
     graph = json.loads(graph_json.read_text())
     structure: Dict[str, dict] = {}
@@ -117,12 +110,9 @@ def build_call_graph(repo_path: Path, out_dir: Path | None = None) -> Dict[str, 
     Returns: {node_id: {"callers": [node_id, ...], "callees": [node_id, ...]}}
     """
     repo_path = Path(repo_path)
-    graph_json = (Path(out_dir) if out_dir else (repo_path / "graphify-out")) / "graph.json"
+    graph_json = repo_path / "graphify-out" / "graph.json"
     if not graph_json.exists():
-        alt = repo_path / "graphify-out" / "graph.json"
-        if not alt.exists():
-            raise RuntimeError(f"{graph_json} missing — run build_structure_map first")
-        graph_json = alt
+        raise RuntimeError(f"{graph_json} missing — run build_structure_map first")
 
     graph = json.loads(graph_json.read_text())
     adjacency: Dict[str, Dict[str, list]] = {}
