@@ -1,188 +1,266 @@
-"""
-run_wp1_benchmark.py — WP1 orchestrator
+#!/usr/bin/env python3
+"""Run the AdaptiveContextOpt Defects4J RAW vs LeanCTX benchmark.
 
-Pipeline (rtk removed; lean-ctx is now the sole compression condition):
-
-    Graphify (structure map + real call graph, once per repo)
-        -> compressor: raw (control) | lean-ctx (smart)
-        -> feedback loop (agent double-checks fidelity, <=2 rounds, lean-ctx only)
-        -> FlexFL (Agent4SR space reduction -> Agent4LR refinement)
-           + GraphLocator (real call-graph expansion from symptom vertices)
-        -> evaluation framework (compression_tax_analyzer.py)
-
-Every condition sees the SAME Graphify structure map and call graph, and
-runs through the SAME localization pipeline (agent_localizer.py) — the only
-variable between conditions is what the localizer's input tool_output looks
-like (raw vs lean-ctx-compressed).
-
-Usage:
-    python run_wp1_benchmark.py --instances data/instances.json \\
-        --repos-dir data/repos --local-fallback --backend heuristic \\
-        --out results/wp1_results.json
+Pipeline per bug and model:
+  Defects4J checkout -> Graphify -> one test capture
+  -> RAW / real LeanCTX
+  -> Agent4SR
+  -> merge 5 SBIR + 5 Ochiai + 5 BoostN + 5 Agent4SR
+  -> Agent4LR
+  -> Top-1 / Top-3 / Top-5 / MAP / MRR
 """
 from __future__ import annotations
 
 import argparse
+import csv
+from datetime import datetime, timezone
 import json
 from pathlib import Path
+import sys
+import traceback
 
-import agent_localizer
-import docker_harness
-import graphify_structure
-import leanctx_compressor
-from compression_tax_analyzer import InstanceOutcome, classify_taxonomy, score_file_level
-
-CONDITIONS = ("raw", "leanctx")
-
-
-def get_chat_fn(backend: str):
-    if backend == "claude":
-        return agent_localizer.make_anthropic_chat_fn(), "claude"
-    if backend == "gpt":
-        return agent_localizer.make_openai_compatible_chat_fn("OPENAI_API_KEY"), "gpt"
-    if backend == "deepseek":
-        return (
-            agent_localizer.make_openai_compatible_chat_fn(
-                "DEEPSEEK_API_KEY", base_url="https://api.deepseek.com", model="deepseek-chat"
-            ),
-            "deepseek",
-        )
-    if backend == "qwen":
-        return (
-            agent_localizer.make_openai_compatible_chat_fn(
-                "DASHSCOPE_API_KEY",
-                base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
-                model="qwen-max",
-            ),
-            "qwen",
-        )
-    if backend == "local":
-        return agent_localizer.make_local_gpu_chat_fn(), "local"
-    return None, "heuristic"
+from defects4j_harness import checkout_bug, run_tests_once
+from evaluation import aggregate, evaluate_top5
+from flexfl_data import (
+    TRADITIONAL_METHODS,
+    flexfl_root,
+    merge_top20,
+    read_bug_report,
+    read_ground_truth,
+    read_trigger_test,
+)
+from flexfl_pipeline import run_agent4lr, run_agent4sr
+from graphify_structure import GraphifyIndex
+from leanctx_compressor import compress_captured_shell_output
+from llm_backends import ChatBackend
 
 
-def run_one_condition(
-    instance_id: str,
-    condition: str,  # "raw" | "leanctx"
-    raw_output: str,
-    structure_map: dict,
-    call_graph: dict,
-    repo_root: Path,
-    problem_statement: str,
-    ground_truth_files: list[str],
-    backend: str,
-    chat_fn,
-) -> InstanceOutcome:
-    compressor_mode = "n/a"
-    if condition == "raw":
-        agent_text = raw_output
-    elif condition == "leanctx":
-        cr = leanctx_compressor.compress(raw_output)
-        agent_text = cr.text
-        compressor_mode = cr.mode
+def parse_args() -> argparse.Namespace:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--flexfl-repo", type=Path, default=Path("references/FlexFL_OriginalReplication"))
+    ap.add_argument("--work-root", type=Path, default=Path("data/defects4j"))
+    ap.add_argument("--results-root", type=Path, default=Path("results"))
+    ap.add_argument("--bugs", default="Time-25", help="Comma-separated FlexFL/Defects4J IDs")
+    ap.add_argument("--bug-list", type=Path, default=None, help="One bug ID per line")
+    ap.add_argument("--all-flexfl-bugs", action="store_true", help="Run all bugs having SBIR, Ochiai and BoostN files")
+    ap.add_argument("--backend", choices=["ollama", "openai", "openai-compatible", "vllm", "anthropic"], default="ollama")
+    ap.add_argument("--models", default="llama3:8b,qwen2:7b,mistral:7b", help="Comma-separated model names")
+    ap.add_argument("--base-url", default=None, help="Provider URL, for example Ollama or vLLM endpoint")
+    ap.add_argument("--api-key", default=None)
+    ap.add_argument("--max-agent-steps", type=int, default=12)
+    ap.add_argument("--test-timeout", type=int, default=1800)
+    ap.add_argument("--force-graphify", action="store_true")
+    ap.add_argument("--fresh-checkout", action="store_true")
+    ap.add_argument("--continue-on-error", action="store_true")
+    ap.add_argument("--run-name", default=None)
+    return ap.parse_args()
+
+
+def resolve_bugs(args: argparse.Namespace) -> list[str]:
+    if args.all_flexfl_bugs:
+        root = flexfl_root(args.flexfl_repo)
+        sets: list[set[str]] = []
+        for method in TRADITIONAL_METHODS:
+            folder = root / "data" / "FL_results" / method / "Defects4J"
+            ids = {p.name.removesuffix("_method-susps.csv") for p in folder.glob("*_method-susps.csv")}
+            sets.append(ids)
+        bugs = sorted(set.intersection(*sets)) if sets else []
+    elif args.bug_list:
+        bugs = [
+            line.strip()
+            for line in args.bug_list.read_text().splitlines()
+            if line.strip() and not line.lstrip().startswith("#")
+        ]
     else:
-        raise ValueError(condition)
+        bugs = [x.strip() for x in args.bugs.split(",") if x.strip()]
+    return list(dict.fromkeys(bugs))
 
-    if backend == "heuristic":
-        result = agent_localizer.HeuristicBackend().localize(
-            agent_text, structure_map, problem_statement,
-            call_graph=call_graph, repo_root=repo_root,
+
+def safe_name(value: str) -> str:
+    return value.replace("/", "_").replace(":", "_").replace(" ", "_")
+
+
+def dump_json(path: Path, data: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, indent=2, ensure_ascii=False))
+
+
+def main() -> int:
+    args = parse_args()
+    if not args.flexfl_repo.exists():
+        raise SystemExit(
+            f"FlexFL reference repo not found: {args.flexfl_repo}\n"
+            "Run scripts/clone_reference_repos.sh first, or pass --flexfl-repo."
         )
-        result.instance_id = instance_id
-        rounds_used = 0
-    else:
-        result = agent_localizer.localize_with_llm(
-            instance_id=instance_id,
-            tool_output=agent_text,
-            structure_map=structure_map,
-            problem_statement=problem_statement,
-            chat_fn=chat_fn,
-            backend_name=backend,
-            call_graph=call_graph,
-            repo_root=repo_root,
-            use_feedback_loop=(condition != "raw"),
-            raw_tool_output=raw_output if condition != "raw" else None,
-        )
-        rounds_used = result.feedback_rounds_used
 
-    file_ok = score_file_level(result.predicted_files, ground_truth_files)
-    tags = classify_taxonomy(raw_output, agent_text) if condition != "raw" else []
+    bugs = resolve_bugs(args)
+    models = [x.strip() for x in args.models.split(",") if x.strip()]
+    if not bugs or not models:
+        raise SystemExit("At least one bug and one model are required")
 
-    return InstanceOutcome(
-        instance_id=instance_id,
-        condition=condition,
-        compressor_mode=compressor_mode,
-        predicted_files=result.predicted_files,
-        ground_truth_files=ground_truth_files,
-        file_level_correct=file_ok,
-        taxonomy_tags=tags,
-        provisional=(compressor_mode == "reference"),
+    run_name = args.run_name or datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    run_dir = args.results_root / run_name
+    run_dir.mkdir(parents=True, exist_ok=True)
+    dump_json(
+        run_dir / "config.json",
+        {
+            "bugs": bugs,
+            "backend": args.backend,
+            "models": models,
+            "flexfl_repo": str(args.flexfl_repo.resolve()),
+            "work_root": str(args.work_root.resolve()),
+            "design": "same Defects4J test capture -> RAW vs real LeanCTX ctx_compare shell pipeline",
+        },
     )
 
+    rows: list[dict] = []
+    errors: list[dict] = []
 
-def main() -> None:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--instances", type=str, default="data/instances.json")
-    ap.add_argument("--repos-dir", type=str, default="data/repos")
-    ap.add_argument("--local-fallback", action="store_true",
-                     help="use local pytest instead of the SWE-bench Docker images")
-    ap.add_argument("--backend", type=str, default="heuristic",
-                     choices=["heuristic", "claude", "gpt", "deepseek", "qwen", "local"])
-    ap.add_argument("--out", type=str, default="results/wp1_results.json")
-    args = ap.parse_args()
-
-    instances = json.loads(Path(args.instances).read_text())
-    chat_fn, backend_name = get_chat_fn(args.backend)
-
-    repos_dir = Path(args.repos_dir)
-    repos_dir.mkdir(parents=True, exist_ok=True)
-
-    all_outcomes = []
-    for inst in instances:
-        instance_id = inst["instance_id"]
-        repo = inst["repo"]
-        print(f"=== {instance_id} ===")
-
-        repo_local_path = repos_dir / instance_id.replace("/", "_")
-        run_result = docker_harness.run_local_fallback(
-            instance_id=instance_id,
-            repo=repo,
-            base_commit=inst["base_commit"],
-            test_patch="",
-            workdir=repo_local_path,
-        ) if args.local_fallback else docker_harness.run_in_docker(instance_id)
-
+    for bug in bugs:
+        bug_dir = run_dir / bug
         try:
-            structure_map = graphify_structure.build_structure_map(repo_local_path)
-            call_graph = graphify_structure.build_call_graph(repo_local_path)
-        except Exception as e:
-            print(f"  graphify failed ({e}); skipping instance")
-            continue
+            print(f"\n=== {bug}: checkout ===", flush=True)
+            repo = checkout_bug(bug, args.work_root, reuse=not args.fresh_checkout)
 
-        raw_output = run_result.stdout + "\n" + run_result.stderr
+            print(f"=== {bug}: Graphify ===", flush=True)
+            graph = GraphifyIndex.build(repo, force=args.force_graphify)
+            graph.save_compact(bug_dir / "graphify_structure.json")
 
-        for condition in CONDITIONS:
-            outcome = run_one_condition(
-                instance_id=instance_id,
-                condition=condition,
-                raw_output=raw_output,
-                structure_map=structure_map,
-                call_graph=call_graph,
-                repo_root=repo_local_path,
-                problem_statement=inst["problem_statement"],
-                ground_truth_files=inst["files"],
-                backend=backend_name,
-                chat_fn=chat_fn,
+            print(f"=== {bug}: defects4j test, captured ONCE ===", flush=True)
+            test_capture = run_tests_once(repo, timeout=args.test_timeout)
+            raw_output = test_capture.output
+            (bug_dir / "raw_output.txt").write_text(raw_output)
+            dump_json(bug_dir / "test_capture.json", test_capture.to_dict())
+
+            print(f"=== {bug}: LeanCTX production shell compression ===", flush=True)
+            lean = compress_captured_shell_output(raw_output, repo, command="defects4j test")
+            (bug_dir / "leanctx_output.txt").write_text(lean.text)
+            (bug_dir / "leanctx_preview.txt").write_text(lean.report)
+            dump_json(bug_dir / "compression.json", lean.to_dict())
+
+            bug_report = read_bug_report(args.flexfl_repo, bug)
+            trigger_test = read_trigger_test(args.flexfl_repo, bug)
+            truths = read_ground_truth(args.flexfl_repo, bug)
+            dump_json(
+                bug_dir / "reference_inputs.json",
+                {"ground_truth": truths, "has_bug_report": bool(bug_report), "has_trigger_test": bool(trigger_test)},
             )
-            all_outcomes.append(outcome)
-            print(f"  [{condition:8s}] mode={outcome.compressor_mode:10s} "
-                  f"file_ok={outcome.file_level_correct} tags={outcome.taxonomy_tags}")
 
-    out_path = Path(args.out)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps([o.__dict__ for o in all_outcomes], indent=2))
-    print(f"\nwrote {len(all_outcomes)} outcomes -> {out_path}")
+            arms = {"raw": raw_output, "leanctx": lean.text}
+            for model in models:
+                backend = ChatBackend(
+                    provider=args.backend,
+                    model=model,
+                    base_url=args.base_url,
+                    api_key=args.api_key,
+                )
+                for condition, runtime_output in arms.items():
+                    print(f"=== {bug}: {model}: {condition}: Agent4SR ===", flush=True)
+                    sr = run_agent4sr(
+                        backend,
+                        graph,
+                        bug,
+                        bug_report,
+                        trigger_test,
+                        runtime_output,
+                        max_steps=args.max_agent_steps,
+                    )
+                    candidates, candidate_parts = merge_top20(args.flexfl_repo, bug, sr.predictions)
+
+                    print(f"=== {bug}: {model}: {condition}: Agent4LR ===", flush=True)
+                    lr = run_agent4lr(
+                        backend,
+                        graph,
+                        bug,
+                        bug_report,
+                        trigger_test,
+                        runtime_output,
+                        candidates,
+                        max_steps=args.max_agent_steps,
+                    )
+                    metrics = evaluate_top5(lr.predictions, truths)
+                    model_dir = bug_dir / safe_name(model) / condition
+                    dump_json(model_dir / "agent4sr.json", sr.to_dict())
+                    dump_json(
+                        model_dir / "merged_candidates.json",
+                        {"parts": candidate_parts, "top20": candidates},
+                    )
+                    dump_json(model_dir / "agent4lr.json", lr.to_dict())
+                    dump_json(model_dir / "evaluation.json", {"ground_truth": truths, **metrics})
+
+                    row = {
+                        "bug": bug,
+                        "model": model,
+                        "condition": condition,
+                        "sr_count": len(sr.predictions),
+                        "candidate_count": len(candidates),
+                        "lr_count": len(lr.predictions),
+                        **metrics,
+                        "raw_bytes": len(raw_output.encode()),
+                        "context_bytes": len(runtime_output.encode()),
+                        "compression_saved_percent": lean.saved_percent if condition == "leanctx" else 0.0,
+                    }
+                    rows.append(row)
+                    print(
+                        f"    Top1={metrics['top1']} Top3={metrics['top3']} Top5={metrics['top5']} "
+                        f"rank={metrics['first_relevant_rank']}",
+                        flush=True,
+                    )
+        except Exception as exc:
+            error = {"bug": bug, "error": str(exc), "traceback": traceback.format_exc()}
+            errors.append(error)
+            dump_json(bug_dir / "ERROR.json", error)
+            print(f"ERROR {bug}: {exc}", file=sys.stderr, flush=True)
+            if not args.continue_on_error:
+                dump_json(run_dir / "errors.json", errors)
+                return 2
+
+    write_summary(run_dir, rows, errors)
+    print(f"\nDone. Results: {run_dir}", flush=True)
+    return 0 if not errors else 2
+
+
+def write_summary(run_dir: Path, rows: list[dict], errors: list[dict]) -> None:
+    if rows:
+        fields = list(rows[0].keys())
+        with (run_dir / "per_run.csv").open("w", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=fields)
+            writer.writeheader()
+            writer.writerows(rows)
+
+    grouped: dict[str, dict] = {}
+    for model in sorted({r["model"] for r in rows}):
+        grouped[model] = {}
+        for condition in ("raw", "leanctx"):
+            subset = [r for r in rows if r["model"] == model and r["condition"] == condition]
+            grouped[model][condition] = aggregate(subset)
+
+    compression_tax: list[dict] = []
+    keyed = {(r["bug"], r["model"], r["condition"]): r for r in rows}
+    for bug, model in sorted({(r["bug"], r["model"]) for r in rows}):
+        raw = keyed.get((bug, model, "raw"))
+        lean = keyed.get((bug, model, "leanctx"))
+        if raw and lean and raw["top5"] and not lean["top5"]:
+            compression_tax.append(
+                {
+                    "bug": bug,
+                    "model": model,
+                    "raw_rank": raw["first_relevant_rank"],
+                    "leanctx_rank": lean["first_relevant_rank"],
+                }
+            )
+
+    dump_json(
+        run_dir / "summary.json",
+        {
+            "aggregate_by_model": grouped,
+            "compression_tax_top5": compression_tax,
+            "errors": errors,
+            "row_count": len(rows),
+        },
+    )
+    dump_json(run_dir / "errors.json", errors)
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

@@ -1,152 +1,252 @@
-"""
-graphify_structure.py — WP1, pipeline step 0
+"""Graphify integration used as the repository structure layer for Agent4SR/LR.
 
-Runs BEFORE the control/rtk/lean-ctx comparison. For each instance's repo
-checkout, runs the real `graphify` CLI (Graphify-Labs/graphify, pip package
-`graphifyy`) in --code-only mode: fully local tree-sitter AST parsing, no LLM
-call, nothing leaves the machine. This gives every condition (raw, rtk,
-lean-ctx) the SAME structural map, so Graphify is not an unfair advantage
-specific to one compression condition — it isolates the compression variable.
-
-Verified real output (tested against psf/requests as a smoke test):
-  `graphify extract . --code-only --no-viz` writes graphify-out/graph.json,
-  a networkx node-link JSON: {"nodes": [...], "links": [...], ...}. Each node
-  has: id, label, source_file, source_location ("L84"), community,
-  _callable, _callable_class.
-
-We reduce that full graph down to a compact per-instance structure map:
-  { "path/to/file.py::FuncOrClass": {"file":..., "line": 84, "community": 0} }
-This is what gets attached to the agent's context in every condition, and
-also what agent_localizer.py can point Graphify's own `graphify explain` /
-`graphify path` commands at if deeper traversal is needed mid-run.
+Graphify is run once per Defects4J checkout. Both RAW and LeanCTX conditions use
+exactly the same graph, so the only experimental variable is the tool output.
 """
 from __future__ import annotations
 
+from dataclasses import asdict, dataclass
 import json
-import subprocess
 from pathlib import Path
-from typing import Dict
+import re
+import shutil
+import subprocess
 
 
-def build_structure_map(repo_path: Path, out_dir: Path | None = None) -> Dict[str, dict]:
-    """Run graphify extract --code-only on repo_path, return a compact map.
+@dataclass(frozen=True)
+class GraphNode:
+    node_id: str
+    label: str
+    source_file: str
+    line: int | None = None
+    community: int | str | None = None
+    callable: bool = False
+    callable_class: str | None = None
 
-    Raises RuntimeError with the real graphify stderr on failure — no silent
-    fallback, since a structure map built from a bad extraction would quietly
-    bias every downstream condition the same way, which is worse than
-    failing loudly.
-    """
-    repo_path = Path(repo_path)
-    out_dir = out_dir or (repo_path / "graphify-out")
-    cmd = ["graphify", "extract", str(repo_path), "--code-only", "--no-viz"]
-    result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
-    if result.returncode != 0:
-        raise RuntimeError(
-            f"graphify extract failed for {repo_path}:\n{result.stderr}"
-        )
-
-    graph_json = repo_path / "graphify-out" / "graph.json"
-    if not graph_json.exists():
-        raise RuntimeError(f"graphify reported success but {graph_json} is missing")
-
-    graph = json.loads(graph_json.read_text())
-    structure: Dict[str, dict] = {}
-    for node in graph.get("nodes", []):
-        source_file = node.get("source_file")
-        label = node.get("label")
-        if not source_file or not label:
-            continue
-        loc = node.get("source_location", "")
-        line = int(loc.lstrip("L")) if loc.startswith("L") and loc[1:].isdigit() else None
-        key = f"{source_file}::{label}"
-        structure[key] = {
-            "id": node.get("id"),
-            "file": source_file,
-            "line": line,
-            "community": node.get("community"),
-            "callable": bool(node.get("_callable")),
-        }
-
-    return structure
+    def to_dict(self) -> dict:
+        return asdict(self)
 
 
-def build_call_graph(repo_path: Path) -> Dict[str, Dict[str, list]]:
-    """Real GraphLocator-style substrate: an adjacency map built from
-    Graphify's actual 'calls' edges (graph.json 'links'), not a proxy like
-    community clustering.
+class GraphifyIndex:
+    def __init__(self, repo: Path, nodes: list[GraphNode]):
+        self.repo = Path(repo)
+        self.nodes = nodes
 
-    GraphLocator's real mechanism (verified against the paper): a causal
-    issue graph (CIG) whose vertices are code entities and whose edges are
-    causal/call dependencies; workflow = (1) locate symptom vertices, then
-    (2) dynamically expand the CIG by iteratively reasoning over NEIGHBORING
-    VERTICES ON THE REPOSITORY GRAPH. That repository graph, for us, is
-    exactly Graphify's call graph — so this function returns each node's
-    real callers and callees, which agent_localizer.py walks outward from
-    the symptom vertices (stack-trace-evidenced methods).
+    @classmethod
+    def build(cls, repo: Path, force: bool = False, timeout: int = 900) -> "GraphifyIndex":
+        repo = Path(repo)
+        graph_json = repo / "graphify-out" / "graph.json"
+        if force or not graph_json.exists():
+            if not shutil.which("graphify"):
+                raise RuntimeError(
+                    "graphify is not installed. Install the graphifyy package first."
+                )
+            proc = subprocess.run(
+                ["graphify", "extract", str(repo), "--code-only", "--no-viz"],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                errors="replace",
+                timeout=timeout,
+            )
+            if proc.returncode != 0:
+                raise RuntimeError(f"graphify extract failed:\n{proc.stdout[-10000:]}")
+        if not graph_json.exists():
+            raise RuntimeError(f"Graphify completed but graph is missing: {graph_json}")
+        return cls.from_json(repo, graph_json)
 
-    Returns: {node_id: {"callers": [node_id, ...], "callees": [node_id, ...]}}
-    """
-    repo_path = Path(repo_path)
-    graph_json = repo_path / "graphify-out" / "graph.json"
-    if not graph_json.exists():
-        raise RuntimeError(f"{graph_json} missing — run build_structure_map first")
+    @classmethod
+    def from_json(cls, repo: Path, graph_json: Path) -> "GraphifyIndex":
+        graph = json.loads(Path(graph_json).read_text(errors="replace"))
+        raw_nodes = graph.get("nodes", []) if isinstance(graph, dict) else []
+        nodes: list[GraphNode] = []
+        for raw in raw_nodes:
+            if not isinstance(raw, dict):
+                continue
+            attrs = raw.get("attributes") if isinstance(raw.get("attributes"), dict) else {}
+            data = {**raw, **attrs}
+            node_id = str(data.get("id") or data.get("key") or "")
+            label = str(
+                data.get("label")
+                or data.get("qualified_name")
+                or data.get("qualifiedName")
+                or data.get("name")
+                or ""
+            )
+            source_file = str(
+                data.get("source_file")
+                or data.get("file")
+                or data.get("file_path")
+                or data.get("path")
+                or ""
+            )
+            if not source_file or not label:
+                continue
+            loc = data.get("source_location") or data.get("line") or data.get("start_line")
+            line = _parse_line(loc)
+            kind = str(data.get("type") or data.get("kind") or "").lower()
+            callable_flag = bool(data.get("_callable")) or any(
+                word in kind for word in ("method", "function", "constructor")
+            )
+            nodes.append(
+                GraphNode(
+                    node_id=node_id,
+                    label=label,
+                    source_file=source_file,
+                    line=line,
+                    community=data.get("community"),
+                    callable=callable_flag,
+                    callable_class=data.get("_callable_class"),
+                )
+            )
+        return cls(Path(repo), nodes)
 
-    graph = json.loads(graph_json.read_text())
-    adjacency: Dict[str, Dict[str, list]] = {}
+    def save_compact(self, dest: Path) -> None:
+        dest = Path(dest)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(json.dumps([n.to_dict() for n in self.nodes], indent=2))
 
-    def ensure(node_id: str):
-        if node_id not in adjacency:
-            adjacency[node_id] = {"callers": [], "callees": []}
+    def find_paths(self, query: str, limit: int = 20) -> list[str]:
+        q = query.lower().strip()
+        paths = sorted({n.source_file for n in self.nodes})
+        if not q:
+            return paths[:limit]
+        exactish = [p for p in paths if q in p.lower()]
+        return exactish[:limit]
 
-    for link in graph.get("links", []):
-        if link.get("relation") != "calls":
-            continue
-        src, dst = link.get("source"), link.get("target")
-        if not src or not dst:
-            continue
-        ensure(src)
-        ensure(dst)
-        adjacency[src]["callees"].append(dst)
-        adjacency[dst]["callers"].append(src)
+    def find_classes(self, query: str, limit: int = 20) -> list[str]:
+        q = query.lower().strip()
+        out: list[str] = []
+        seen: set[str] = set()
+        for n in self.nodes:
+            candidates = [n.callable_class, n.label]
+            for value in candidates:
+                if not value:
+                    continue
+                value = str(value)
+                if q and q not in value.lower():
+                    continue
+                classish = _class_part(value)
+                if classish and classish not in seen:
+                    seen.add(classish)
+                    out.append(classish)
+                    if len(out) >= limit:
+                        return out
+        return out
 
-    return adjacency
+    def find_methods(self, query: str, limit: int = 30) -> list[str]:
+        q = _norm(query)
+        ranked: list[tuple[int, str]] = []
+        seen: set[str] = set()
+        for n in self.nodes:
+            if not n.callable and "(" not in n.label:
+                continue
+            label = n.label
+            nl = _norm(label)
+            score = 0
+            if q:
+                if nl == q:
+                    score = 100
+                elif q in nl:
+                    score = 80
+                elif all(piece in nl for piece in q.split(".")[-2:]):
+                    score = 50
+                else:
+                    continue
+            if label in seen:
+                continue
+            seen.add(label)
+            ranked.append((score, label))
+        ranked.sort(key=lambda x: (-x[0], x[1]))
+        return [v for _, v in ranked[:limit]]
+
+    def snippet(self, method_ref: str, radius: int = 35) -> str:
+        target = _norm(method_ref)
+        best: GraphNode | None = None
+        best_score = -1
+        for n in self.nodes:
+            if not n.source_file:
+                continue
+            label = _norm(n.label)
+            score = _similarity_score(target, label)
+            if score > best_score:
+                best_score, best = score, n
+        if best is None or best_score <= 0:
+            return self._filesystem_fallback(method_ref, radius)
+        path = self.repo / best.source_file
+        if not path.exists():
+            return self._filesystem_fallback(method_ref, radius)
+        text = path.read_text(errors="replace").splitlines()
+        line = best.line or 1
+        start = max(1, line - radius)
+        end = min(len(text), line + radius)
+        body = "\n".join(f"{i:>5}: {text[i-1]}" for i in range(start, end + 1))
+        return f"{best.source_file}:{line}\n{body}"
+
+    def _filesystem_fallback(self, method_ref: str, radius: int) -> str:
+        class_name, method_name = _class_and_method(method_ref)
+        simple_class = class_name.rsplit(".", 1)[-1].split("$")[0] if class_name else ""
+        candidates = list(self.repo.rglob(f"{simple_class}.java")) if simple_class else []
+        method_re = re.compile(rf"\b{re.escape(method_name)}\s*\(") if method_name else None
+        for path in candidates[:20]:
+            lines = path.read_text(errors="replace").splitlines()
+            hit = 1
+            if method_re:
+                for i, line in enumerate(lines, 1):
+                    if method_re.search(line):
+                        hit = i
+                        break
+            start, end = max(1, hit - radius), min(len(lines), hit + radius)
+            rel = path.relative_to(self.repo)
+            return f"{rel}:{hit}\n" + "\n".join(
+                f"{i:>5}: {lines[i-1]}" for i in range(start, end + 1)
+            )
+        return f"No source snippet found for {method_ref}"
+
+    def compact_overview(self, max_entries: int = 250) -> str:
+        rows = ["# Graphify repository structure"]
+        for n in self.nodes[:max_entries]:
+            loc = f":{n.line}" if n.line else ""
+            rows.append(f"- {n.source_file}{loc} :: {n.label}")
+        if len(self.nodes) > max_entries:
+            rows.append(f"... {len(self.nodes)-max_entries} more graph nodes")
+        return "\n".join(rows)
 
 
-def id_to_key_map(structure: Dict[str, dict]) -> Dict[str, str]:
-    """structure_map is keyed by 'file::label'; the call graph is keyed by
-    Graphify's internal node id. This inverts structure_map for lookups."""
-    return {meta["id"]: key for key, meta in structure.items() if meta.get("id")}
+def _parse_line(value: object) -> int | None:
+    if isinstance(value, int):
+        return value
+    if isinstance(value, str):
+        m = re.search(r"(\d+)", value)
+        return int(m.group(1)) if m else None
+    return None
 
 
-def save_structure_map(repo_path: Path, dest: Path) -> Dict[str, dict]:
-    structure = build_structure_map(repo_path)
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    dest.write_text(json.dumps(structure, indent=2))
-    return structure
+def _norm(value: str) -> str:
+    return re.sub(r"\s+", "", value or "").replace("#", ".").replace("$", ".").lower()
 
 
-def format_for_agent(structure: Dict[str, dict], max_entries: int = 400) -> str:
-    """Compact text block handed to the localization agent alongside the
-    (raw / rtk / lean-ctx) tool output. Same text, every condition."""
-    lines = ["# Repository structure map (graphify, tree-sitter AST, local-only)"]
-    for i, (key, meta) in enumerate(structure.items()):
-        if i >= max_entries:
-            lines.append(f"... ({len(structure) - max_entries} more entries truncated)")
-            break
-        loc = f"{meta['file']}:{meta['line']}" if meta["line"] else meta["file"]
-        lines.append(f"- {key}  [{loc}]  community={meta['community']}")
-    return "\n".join(lines)
+def _similarity_score(query: str, candidate: str) -> int:
+    if not query or not candidate:
+        return 0
+    if query == candidate:
+        return 100
+    if query in candidate or candidate in query:
+        return 80
+    q_tail = query.split("(", 1)[0].split(".")[-1]
+    c_tail = candidate.split("(", 1)[0].split(".")[-1]
+    return 50 if q_tail and q_tail == c_tail else 0
 
 
-if __name__ == "__main__":
-    import argparse
+def _class_part(value: str) -> str:
+    head = value.split("(", 1)[0]
+    if "." not in head:
+        return head
+    return head.rsplit(".", 1)[0]
 
-    ap = argparse.ArgumentParser()
-    ap.add_argument("repo_path", type=str)
-    ap.add_argument("--out", type=str, default=None)
-    args = ap.parse_args()
 
-    repo = Path(args.repo_path)
-    out = Path(args.out) if args.out else repo / "graphify-out" / "structure_map.json"
-    structure = save_structure_map(repo, out)
-    print(f"wrote {len(structure)} structural entries -> {out}")
+def _class_and_method(ref: str) -> tuple[str, str]:
+    head = ref.split("(", 1)[0].replace("#", ".")
+    if "." not in head:
+        return "", head
+    return head.rsplit(".", 1)
