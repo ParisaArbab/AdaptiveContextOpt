@@ -161,27 +161,262 @@ class GraphifyIndex:
         return [v for _, v in ranked[:limit]]
 
     def snippet(self, method_ref: str, radius: int = 35) -> str:
-        target = _norm(method_ref)
+        """
+        Return source code for a Graphify entity.
+
+        Preferred SWE-bench format:
+
+            path/to/file.py::Entity
+            path/to/file.py::Class.method
+            path/to/file.py::<module>
+
+        IMPORTANT:
+        When a file path is supplied, resolution is restricted to that
+        exact file. We never fuzzy-match an entity into another file.
+        """
+
+        ref = (method_ref or "").strip().strip("`").strip()
+
+        # ----------------------------------------------------------
+        # Helper: render an exact file around a line
+        # ----------------------------------------------------------
+        def render(path: Path, rel: str, line: int) -> str:
+            try:
+                lines = path.read_text(errors="replace").splitlines()
+            except Exception as exc:
+                return f"Could not read {rel}: {exc}"
+
+            if not lines:
+                return f"{rel}:1\n<empty file>"
+
+            line = max(1, min(int(line or 1), len(lines)))
+
+            start_line = max(1, line - radius)
+            end_line = min(len(lines), line + radius)
+
+            body = "\n".join(
+                f"{i:>5}: {lines[i-1]}"
+                for i in range(start_line, end_line + 1)
+            )
+
+            return f"{rel}:{line}\n{body}"
+
+        # ----------------------------------------------------------
+        # Helper: find a Python entity directly in an exact file.
+        # This is useful when a SWE-bench test patch was applied
+        # after Graphify built graph.json.
+        # ----------------------------------------------------------
+        def python_entity_line(path: Path, entity: str) -> int | None:
+            if path.suffix != ".py":
+                return None
+
+            entity = (entity or "").strip()
+
+            if not entity or entity == "<module>":
+                return 1
+
+            clean = entity.strip().strip("`")
+
+            if clean.endswith("()"):
+                clean = clean[:-2]
+
+            clean = clean.lstrip(".")
+
+            try:
+                import ast
+
+                source = path.read_text(errors="replace")
+                tree = ast.parse(source)
+
+                matches = []
+
+                def walk(node, parents):
+                    node_name = getattr(node, "name", None)
+
+                    if isinstance(
+                        node,
+                        (
+                            ast.ClassDef,
+                            ast.FunctionDef,
+                            ast.AsyncFunctionDef,
+                        ),
+                    ):
+                        qual = ".".join(parents + [node.name])
+
+                        # Highest priority: exact qualified name.
+                        if qual == clean:
+                            matches.append((100, node.lineno, qual))
+
+                        # Exact simple name.
+                        elif node.name == clean:
+                            matches.append((90, node.lineno, qual))
+
+                        # Entity such as Symbol.__new__
+                        elif clean.endswith("." + qual):
+                            matches.append((80, node.lineno, qual))
+
+                        # Match final component.
+                        elif node.name == clean.split(".")[-1]:
+                            matches.append((70, node.lineno, qual))
+
+                    new_parents = list(parents)
+
+                    if isinstance(node, ast.ClassDef):
+                        new_parents.append(node.name)
+
+                    for child in ast.iter_child_nodes(node):
+                        walk(child, new_parents)
+
+                walk(tree, [])
+
+                if matches:
+                    matches.sort(key=lambda x: (-x[0], x[1]))
+                    return matches[0][1]
+
+            except Exception:
+                pass
+
+            # Simple textual fallback.
+            import re
+
+            simple = clean.split(".")[-1]
+
+            try:
+                lines = path.read_text(errors="replace").splitlines()
+            except Exception:
+                return None
+
+            patterns = [
+                re.compile(
+                    rf"^\s*class\s+{re.escape(simple)}\b"
+                ),
+                re.compile(
+                    rf"^\s*(?:async\s+)?def\s+{re.escape(simple)}\s*\("
+                ),
+            ]
+
+            for i, line in enumerate(lines, 1):
+                if any(pattern.search(line) for pattern in patterns):
+                    return i
+
+            return None
+
+        # ==========================================================
+        # EXACT file::entity resolution
+        # ==========================================================
+        if "::" in ref:
+            raw_path, entity = ref.split("::", 1)
+
+            rel = (
+                raw_path.strip()
+                .replace("\\", "/")
+                .lstrip("./")
+            )
+
+            entity = entity.strip()
+
+            path = self.repo / rel
+
+            if not path.exists() or not path.is_file():
+                return f"No source file found: {rel}"
+
+            # Security/correctness check: do not escape repo.
+            try:
+                path.resolve().relative_to(self.repo.resolve())
+            except ValueError:
+                return f"Invalid source path outside repository: {rel}"
+
+            # First try the exact current source file.
+            # This correctly finds newly-added SWE-bench test functions too.
+            fs_line = python_entity_line(path, entity)
+
+            if fs_line is not None:
+                return render(path, rel, fs_line)
+
+            # Then search Graphify nodes, but ONLY nodes from this file.
+            exact_nodes = [
+                n
+                for n in self.nodes
+                if n.source_file.replace("\\", "/").lstrip("./") == rel
+            ]
+
+            target = _norm(entity)
+
+            best = None
+            best_score = -1
+
+            for node in exact_nodes:
+                score = _similarity_score(
+                    target,
+                    _norm(node.label),
+                )
+
+                if score > best_score:
+                    best_score = score
+                    best = node
+
+            if best is not None and best_score > 0:
+                return render(
+                    path,
+                    rel,
+                    best.line or 1,
+                )
+
+            if entity == "<module>":
+                return render(path, rel, 1)
+
+            return (
+                f"No exact entity '{entity}' found in {rel}. "
+                f"Importantly, no fuzzy match outside this file was used."
+            )
+
+        # ==========================================================
+        # Exact file-only request
+        # ==========================================================
+        normalized_ref = ref.replace("\\", "/").lstrip("./")
+        exact_file = self.repo / normalized_ref
+
+        if exact_file.exists() and exact_file.is_file():
+            return render(
+                exact_file,
+                normalized_ref,
+                1,
+            )
+
+        # ==========================================================
+        # Legacy Graphify fuzzy entity lookup
+        #
+        # Used only when caller did NOT provide a file path.
+        # ==========================================================
+        target = _norm(ref)
+
         best: GraphNode | None = None
         best_score = -1
+
         for n in self.nodes:
             if not n.source_file:
                 continue
+
             label = _norm(n.label)
             score = _similarity_score(target, label)
+
             if score > best_score:
-                best_score, best = score, n
+                best_score = score
+                best = n
+
         if best is None or best_score <= 0:
-            return self._filesystem_fallback(method_ref, radius)
+            return self._filesystem_fallback(ref, radius)
+
         path = self.repo / best.source_file
+
         if not path.exists():
-            return self._filesystem_fallback(method_ref, radius)
-        text = path.read_text(errors="replace").splitlines()
-        line = best.line or 1
-        start = max(1, line - radius)
-        end = min(len(text), line + radius)
-        body = "\n".join(f"{i:>5}: {text[i-1]}" for i in range(start, end + 1))
-        return f"{best.source_file}:{line}\n{body}"
+            return self._filesystem_fallback(ref, radius)
+
+        return render(
+            path,
+            best.source_file,
+            best.line or 1,
+        )
 
     def _filesystem_fallback(self, method_ref: str, radius: int) -> str:
         class_name, method_name = _class_and_method(method_ref)

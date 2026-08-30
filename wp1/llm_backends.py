@@ -41,11 +41,15 @@ class ChatBackend:
             {
                 "model": self.model,
                 "stream": False,
+                "think": False,
                 "messages": [
                     {"role": "system", "content": system},
                     {"role": "user", "content": user},
                 ],
-                "options": {"temperature": 0},
+                "options": {
+                    "temperature": 0,
+                    "num_predict": 512,
+                },
             }
         ).encode()
         req = urllib.request.Request(
