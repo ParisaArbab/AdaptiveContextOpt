@@ -112,12 +112,55 @@ class PythonAdapter(LanguageAdapter):
     def parse_patch_symbols(self, patch: str) -> Tuple[List[str], List[str]]:
         return self._collect(patch, self._PATTERNS)
 
+    # SWE-bench repositories do not all use pytest, and the ones that don't
+    # were silently broken: passing a Django unittest id as a positional
+    # pytest argument makes pytest ignore it and collect the whole rootdir.
+    # Observed live on django__django-13710, where the harness reported
+    # "could not resolve file path for bare test id" and then ran nothing
+    # useful. This mirrors SWE-bench's own per-repo test-framework mapping.
+    UNITTEST_ID_RE = re.compile(r"^(\w+)\s+\(([\w.]+)\)$")
+
+    @staticmethod
+    def normalize_test_id(test_id: str) -> str:
+        """`test_x (a.b.CaseClass)` -> `a.b.CaseClass.test_x`.
+
+        That parenthesised form is unittest's own repr, and it is what
+        Django-family instances carry in FAIL_TO_PASS. Every runner wants
+        the dotted form instead."""
+        m = PythonAdapter.UNITTEST_ID_RE.match(test_id.strip())
+        return f"{m.group(2)}.{m.group(1)}" if m else test_id.strip()
+
+    @staticmethod
+    def detect_framework(repo_root: Path) -> str:
+        repo_root = Path(repo_root)
+        if (repo_root / "tests" / "runtests.py").is_file():
+            return "django"
+        if (repo_root / "bin" / "test").is_file() and (repo_root / "sympy").is_dir():
+            return "sympy"
+        return "pytest"
+
     def build_test_command(self, repo_root: Path, fail_to_pass: Sequence[str]) -> List[str]:
+        selected = [self.normalize_test_id(t) for t in list(fail_to_pass)[: self.max_trigger_tests]]
+        framework = self.detect_framework(repo_root)
+
+        if framework == "django":
+            # Django's own runner. It needs dotted labels, not node ids, and
+            # a settings module that doesn't require a live database server.
+            cmd = ["python3", "tests/runtests.py", "--verbosity", "2",
+                   "--settings", "test_sqlite", "--noinput"]
+            cmd.extend(t.replace("::", ".") for t in selected)
+            return cmd
+
+        if framework == "sympy":
+            # sympy's bin/test wraps its own runner; it takes file paths.
+            cmd = ["python3", "bin/test", "-C", "--verbose"]
+            cmd.extend(t.split("::", 1)[0] if "::" in t else t for t in selected)
+            return cmd
+
         # -rA + --tb=long is what produces the assertion diffs and stack
         # frames the whole compression experiment is measuring. -p no:randomly
         # keeps repeated runs byte-comparable across conditions.
         cmd = ["python3", "-m", "pytest", "-rA", "--tb=long", "-p", "no:randomly"]
-        selected = list(fail_to_pass)[: self.max_trigger_tests]
         cmd.extend(selected)
         return cmd
 
@@ -204,6 +247,7 @@ DEFAULT_FIELD_MAP = {
     "test_patch": "test_patch",
     "problem_statement": "problem_statement",
     "fail_to_pass": "FAIL_TO_PASS",
+    "pass_to_pass": "PASS_TO_PASS",
     "version": "version",
 }
 

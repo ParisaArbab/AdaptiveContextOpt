@@ -63,6 +63,8 @@ def run_one_arm(
     capture_mode: str,
     target_density: float,
     tokenizer_model: Optional[str] = None,
+    coverage_json: Optional[dict] = None,
+    coverage_error: str = "",
 ) -> InstanceOutcome:
     backend = llm.label
     is_heuristic = llm.spec.kind == "heuristic"
@@ -85,6 +87,8 @@ def run_one_arm(
         result = agent_localizer.HeuristicBackend().localize(
             agent_text, structure_map, instance["problem_statement"],
             call_graph=call_graph, repo_root=repo_root,
+            coverage_json=coverage_json, coverage_error=coverage_error,
+            failing_test_ids=instance.get("fail_to_pass", []),
             use_graph=arm.use_graphify,
             use_feedback_loop=arm.use_feedback,
             raw_tool_output=raw_output if arm.use_feedback else None,
@@ -94,6 +98,9 @@ def run_one_arm(
     else:
         result = agent_localizer.localize_with_llm(
             instance_id=instance["instance_id"],
+            coverage_json=coverage_json,
+            coverage_error=coverage_error,
+            failing_test_ids=instance.get("fail_to_pass", []),
             tool_output=agent_text,
             structure_map=structure_map,
             problem_statement=instance["problem_statement"],
@@ -137,6 +144,10 @@ def run_one_arm(
         graph_expanded=result.graph_expanded,
         taxonomy_tags=tags,
         wall_seconds=elapsed,
+        agent4sr_top5=result.agent4sr_top5,
+        flexfl_merge=result.flexfl_merge,
+        protocol_stats=result.protocol_stats,
+        stage_transcripts=result.stage_transcripts,
         provisional=(compressor_mode == "reference"
                      or capture_mode == "local_fallback"
                      or is_heuristic),
@@ -212,6 +223,7 @@ def main() -> None:
             if args.local_fallback:
                 run_result = docker_harness.run_local_fallback(
                     instance_id=instance_id,
+                    pass_to_pass=inst.get("pass_to_pass", []),
                     repo=inst["repo"],
                     base_commit=inst["base_commit"],
                     test_patch=inst.get("test_patch", ""),
@@ -261,6 +273,8 @@ def main() -> None:
             try:
                 outcome = run_one_arm(
                     arm=arm, instance=inst, raw_output=raw_output,
+                    coverage_json=run_result.coverage_json,
+                    coverage_error=run_result.coverage_error,
                     structure_map=structure_map, call_graph=call_graph,
                     repo_root=repo_local_path, llm=llm, chat_fn=chat_fn,
                     capture_mode=run_result.mode, target_density=args.target_density,
@@ -278,6 +292,31 @@ def main() -> None:
             print(f"  [{arm.name:<12s}] top1={ms.get('top1', 0):.0f} top5={ms.get('top5', 0):.0f} "
                   f"mrr={ms.get('mrr', 0):.2f} | ctx={tok['context_tokens'].get('agent_input_tokens', 0)} "
                   f"llm={tok['llm_total_tokens']} tok | {outcome.wall_seconds}s")
+
+            # Why those candidates. A Top-1 of zero is unattributable without
+            # this: it separates "the model never produced a ranking" from
+            # "Ochiai was unavailable" from "everything ran and still missed".
+            fm = outcome.flexfl_merge or {}
+            if fm:
+                contributing = [
+                    f"{name}:{src.get('n_entries', 0)}"
+                    for name, src in (fm.get("sources") or {}).items()
+                    if src.get("available")
+                ]
+                print(f"       merge: {fm.get('mode', '?')}"
+                      f" | sources[{', '.join(contributing) or 'none'}]"
+                      f" | agent4sr={len(fm.get('agent4sr_used') or [])}"
+                      f" -> {fm.get('n_candidates', 0)} candidates")
+                for miss in (fm.get("unavailable") or []):
+                    print(f"       unavailable: {miss}")
+                if fm.get("note"):
+                    print(f"       note: {fm['note']}")
+            ps = getattr(outcome, "protocol_stats", None) or {}
+            if ps and not ps.get("agent4sr_produced_ranking", True):
+                print("       WARNING: Agent4SR never produced a parseable Top_k block "
+                      "— the model is not following the ReAct/output protocol. "
+                      "This is expected below roughly 7B parameters; the merge ran "
+                      "on the traditional localizers alone.")
 
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)

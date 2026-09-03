@@ -30,6 +30,7 @@ Two execution modes, unchanged in intent:
 from __future__ import annotations
 
 import re
+import os
 import shlex
 import subprocess
 import tempfile
@@ -51,6 +52,10 @@ class TestRunResult:
     test_patch_applied: bool = False
     trigger_tests: List[str] = field(default_factory=list)
     notes: List[str] = field(default_factory=list)
+    coverage_json: Optional[dict] = None
+    coverage_error: str = ""
+    python_exe: Optional[str] = None
+    test_command_argv: List[str] = field(default_factory=list)
 
     @property
     def text(self) -> str:
@@ -99,8 +104,14 @@ def ensure_checkout(repo: str, base_commit: str, workdir: Path, timeout: int = 6
     if (workdir / ".git").exists():
         subprocess.run(["git", "checkout", "--force", base_commit], cwd=workdir,
                        capture_output=True, timeout=120)
-        subprocess.run(["git", "clean", "-fdx", "-e", "graphify-out"], cwd=workdir,
-                       capture_output=True, timeout=120)
+        # `.wp1venv*` must survive the clean. Without the exclusion, the
+        # per-instance venv that _ensure_dependencies_installed builds is
+        # deleted before every run and rebuilt from scratch — its documented
+        # "reuse across repeated runs" never actually happened, and each arm
+        # paid a full dependency install. `graphify-out` is excluded for the
+        # same reason: the extraction is cached per repo.
+        subprocess.run(["git", "clean", "-fdx", "-e", "graphify-out", "-e", ".wp1venv*"],
+                       cwd=workdir, capture_output=True, timeout=120)
         return workdir
 
     workdir.parent.mkdir(parents=True, exist_ok=True)
@@ -190,15 +201,75 @@ def _ensure_dependencies_installed(
 
     def _try_install(python_exe: Path) -> tuple[bool, str]:
         pip = [str(python_exe), "-m", "pip"]
-        subprocess.run(pip + ["install", "--upgrade", "pip"], cwd=workdir,
-                       capture_output=True, text=True, timeout=300)
-        for target in ([".[test]"], [".[dev]"], ["."]):
-            result = subprocess.run(pip + ["install", "-e", *target], cwd=workdir,
-                                     capture_output=True, text=True, timeout=timeout)
-            if result.returncode == 0:
-                break
+        # Upgrading pip is a convenience, not a requirement, so it must not be
+        # able to take the instance down. On a machine without network this
+        # call blocks until its timeout and the raised TimeoutExpired
+        # propagated all the way out, skipping the instance entirely — a
+        # five-minute stall followed by a lost data point, for a step whose
+        # failure does not matter.
+        try:
+            subprocess.run(pip + ["install", "--upgrade", "pip"], cwd=workdir,
+                           capture_output=True, text=True, timeout=60)
+        except subprocess.TimeoutExpired:
+            notes.append("pip self-upgrade timed out (offline?); continuing with the "
+                         "existing pip")
+
+        # Build-toolchain ladder. SWE-bench instances are pinned to commits
+        # from 2019-2022, and modern build tooling breaks them in two
+        # specific, reproducible ways:
+        #
+        #   setuptools >= 74 removed `setuptools.dep_util`. astropy's
+        #   setup.py (through extension-helpers) imports `newer_group` from
+        #   it, so `pip install -e .` dies with ModuleNotFoundError before
+        #   any of the package's own code runs. Seen live on
+        #   astropy__astropy-12907, in every Python-version probe, which is
+        #   why the version ladder alone never rescued it — the interpreter
+        #   was never the problem.
+        #
+        #   setuptools >= 60 vendors its own distutils by default, which
+        #   breaks packages that reach into stdlib distutils internals.
+        #   SETUPTOOLS_USE_DISTUTILS=stdlib restores the old behaviour.
+        #
+        # Pinning setuptools in the venv is not enough on its own: PEP 517
+        # build isolation gives the build its own fresh environment with the
+        # newest setuptools regardless of what the venv holds. The error
+        # surfaces at "Getting requirements to build editable", which is the
+        # isolated build, so the pinned rungs must also pass
+        # --no-build-isolation for the pin to have any effect.
+        toolchains = [
+            ("modern", [], {}),
+            ("setuptools<74", ["setuptools<74", "wheel"], {}),
+            ("setuptools<60 + stdlib distutils", ["setuptools<60", "wheel"],
+             {"SETUPTOOLS_USE_DISTUTILS": "stdlib"}),
+        ]
+
+        attempts: List[str] = []
+        for label, pins, extra_env in toolchains:
+            env = {**os.environ, **extra_env}
+            if pins:
+                pin_result = subprocess.run(
+                    pip + ["install", *pins], cwd=workdir, env=env,
+                    capture_output=True, text=True, timeout=300,
+                )
+                if pin_result.returncode != 0:
+                    attempts.append(f"{label}: could not pin build tools")
+                    continue
+            isolation = [] if not pins else ["--no-build-isolation"]
+            for target in ([".[test]"], [".[dev]"], ["."]):
+                result = subprocess.run(
+                    pip + ["install", "-e", *isolation, *target],
+                    cwd=workdir, env=env, capture_output=True, text=True, timeout=timeout,
+                )
+                if result.returncode == 0:
+                    if label != "modern":
+                        notes.append(f"installed with pinned build toolchain ({label})")
+                    break
+            else:
+                attempts.append(f"{label}: {result.stderr.strip()[-200:]}")
+                continue
+            break
         else:
-            return False, f"pip install -e . failed in all variants: {result.stderr[-400:]}"
+            return False, "pip install -e . failed for every build toolchain: " + " | ".join(attempts)
 
         pytest_install = subprocess.run(pip + ["install", "pytest"], cwd=workdir,
                                          capture_output=True, text=True, timeout=300)
@@ -318,6 +389,8 @@ def run_local_fallback(
     adapter: Optional[LanguageAdapter] = None,
     workdir: Optional[Path] = None,
     timeout: int = 900,
+    pass_to_pass: Sequence[str] = (),
+    collect_coverage: bool = True,
     install_timeout: int = 1800,
 ) -> TestRunResult:
     adapter = adapter or PythonAdapter()
@@ -363,13 +436,68 @@ def run_local_fallback(
         instance_id=instance_id, stdout=stdout, stderr=stderr, returncode=code,
         mode="local_fallback", command=shlex.join(cmd), test_patch_applied=applied,
         trigger_tests=trigger_tests, notes=notes,
+        python_exe=str(venv_python) if venv_python else None,
+        test_command_argv=list(cmd),
     )
     if not run.has_failure_evidence:
         run.notes.append(
             "no failure evidence in captured output — the trigger test likely "
             "never ran (missing deps, wrong runner, or unapplied test patch)"
         )
+
+    # Ochiai's spectrum. Only worth collecting when the tests actually ran —
+    # coverage of a run that never reached the trigger test tells us nothing
+    # about which method is suspicious.
+    if collect_coverage and run.has_failure_evidence:
+        run.coverage_json, run.coverage_error = collect_spectrum(
+            workdir, adapter, venv_python, trigger_tests, pass_to_pass,
+            timeout=timeout,
+        )
+        if run.coverage_error:
+            run.notes.append(f"coverage/Ochiai unavailable: {run.coverage_error}")
+    elif collect_coverage:
+        run.coverage_error = "skipped: the evidence capture produced no failure"
+
     return run
+
+
+def collect_spectrum(
+    workdir: Path,
+    adapter: LanguageAdapter,
+    python_exe: Optional[Path],
+    fail_to_pass: Sequence[str],
+    pass_to_pass: Sequence[str],
+    max_passing: int = 40,
+    timeout: int = 1800,
+) -> tuple[Optional[dict], str]:
+    """Second test run, under coverage, for Ochiai's spectrum.
+
+    Deliberately a separate run from the evidence capture: the capture has
+    to produce exactly the text the compression experiment operates on, and
+    running it under coverage changes both the output and the timing. This
+    run's output is thrown away — only the coverage data matters.
+
+    Passing tests are what make Ochiai discriminating. With failing tests
+    alone every executed method scores identically and the ranking is just
+    "what ran", so PASS_TO_PASS is sampled here too, bounded by max_passing
+    because some instances list thousands and the spectrum saturates long
+    before that.
+    """
+    if python_exe is None:
+        return None, "no verified interpreter; coverage would not import the package"
+    try:
+        import traditional_fl
+    except ImportError as e:
+        return None, f"traditional_fl unavailable: {e}"
+
+    selected = list(fail_to_pass) + list(pass_to_pass)[:max_passing]
+    if not selected:
+        return None, "no tests to profile"
+
+    cmd = adapter.build_test_command(workdir, selected)
+    if cmd and cmd[0] == "python3":
+        cmd[0] = str(python_exe)
+    return traditional_fl.run_coverage(workdir, python_exe, cmd, timeout=timeout)
 
 
 def run_in_docker(

@@ -50,6 +50,43 @@ own `find_method` / `get_code_snippet_of_method` calls need an index in every
 arm, and the real FlexFL builds one itself. Ablating that too would ablate
 FlexFL rather than this project's contribution.
 
+## FlexFL candidate merge
+
+Stage 1 is not Agent4SR alone. Following §4.5 of the paper:
+
+```
+report + test :  5 SBIR  -> 5 Ochiai -> 5 BoostN -> 5 Agent4SR
+test only     : 15 Ochiai -> 5 Agent4SR
+report only   : 15 BoostN -> 5 Agent4SR
+                        |
+                   cap at 20  ->  Agent4LR  ->  Top-5 (final)
+```
+
+Agent4SR is appended **last**, deliberately — the paper's reasoning is that
+methods it finds get found by Agent4LR anyway, so they do not need the
+high-rank slots. Agent4LR **re-ranks and replaces**; it never adds to the
+list, so the final Top-5 is always drawn from the merged 20. Duplicates are
+kept, matching `combine.py`, since deduplicating would change the candidate
+distribution Agent4LR sees.
+
+Where the three traditional rankings come from depends on the benchmark:
+
+| | Defects4J | SWE-bench |
+|---|---|---|
+| Ochiai | replication CSVs | computed: real SBFL from per-test coverage |
+| BoostN | replication CSVs | computed: BM25 (stand-in for BoostNSift) |
+| SBIR | replication CSVs | computed: RRF of the two (stand-in) |
+
+Ochiai needs a spectrum, so PASS_TO_PASS is run alongside the trigger tests
+under `coverage.py` with a per-test dynamic context. This is what reaches
+bugs a traceback cannot: astropy-12907's fault is in `_cstack`, which never
+appears in the failure's stack frames but does execute in the failing test
+and not the passing ones.
+
+A ranker that could not run is recorded as unavailable with a reason rather
+than silently skipped — a merge that ran without Ochiai is a different
+experiment from one where Ochiai returned nothing.
+
 ## Evaluation
 
 Two axes, per arm, in one report (`wp1/compression_tax_analyzer.py`):
@@ -81,7 +118,7 @@ separately from headline numbers.
 how trigger tests are invoked) lives in `wp1/benchmarks.py`: Python runs
 pytest node ids, Java detects Maven vs Gradle and builds the right selector.
 
-## Layout
+## 1. Reference repositories
 
 ```
 wp1/

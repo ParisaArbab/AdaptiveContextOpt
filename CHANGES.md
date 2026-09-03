@@ -253,3 +253,139 @@ Worth stating plainly, because these are the things a reviewer will press on:
   checks, but a real run needs network access, a live model endpoint, and
   `graphify` installed. The first genuine run is where the dataset schema
   assumptions get tested.
+
+
+---
+
+# Second pass — what the first real server run exposed
+
+The pilot on the GPU server produced zero outcomes on astropy and zero
+candidates on django. Four separate causes, none of them the compression
+pipeline, plus the missing piece of FlexFL itself.
+
+## The gold patch installed, but the package did not
+
+`pip install -e .` failed on astropy in every Python version the harness
+probed, always with the same error: `No module named 'setuptools.dep_util'`.
+setuptools 74 removed that module; astropy's setup.py reaches it through
+extension-helpers. The version ladder could never have rescued this, because
+the interpreter was never the problem — the build tooling was.
+
+Pinning setuptools inside the venv is not enough on its own either. PEP 517
+build isolation hands the build its own fresh environment with the newest
+setuptools no matter what the venv holds, and the error surfaces at "Getting
+requirements to build editable", which is that isolated build. So the fix is
+a ladder of toolchains, each rung pairing a pin with `--no-build-isolation`:
+modern first, then `setuptools<74`, then `setuptools<60` with
+`SETUPTOOLS_USE_DISTUTILS=stdlib` for packages that reach into stdlib
+distutils internals.
+
+## Django was being run with the wrong test runner entirely
+
+Django's FAIL_TO_PASS ids look like `test_verbose_name_inline
+(admin_inlines.tests.TestVerboseNameInlineForms)`. That is unittest's own
+repr, not a pytest node id, and Django does not use pytest — it has
+`tests/runtests.py`. Passing that string to pytest as a positional argument
+makes pytest ignore it and collect the whole rootdir, which is exactly what
+the log showed.
+
+The language adapter now detects the framework from the checkout and routes
+accordingly: `tests/runtests.py` for Django, `bin/test` for sympy, pytest for
+everything else, with the unittest id form normalized to the dotted form
+every runner actually wants.
+
+## The FlexFL candidate merge did not exist
+
+This was the substantive one, and it is the thing that was asked about
+directly.
+
+Agent4SR's output was being used alone when the model produced a parseable
+ranking, and thrown away and replaced by a heuristic when it did not. The
+paper does neither. Section 4.5 concatenates top-5 from SBIR, top-5 from
+Ochiai, top-5 from BoostN, then top-5 from Agent4SR, caps the result at 20,
+and hands that to Agent4LR, whose re-ranked top-5 is the final answer.
+
+Two details are easy to get backwards and both are now enforced:
+
+- **Agent4SR goes last**, not first. The paper's own reasoning is that
+  methods Agent4SR finds are likely to be found by Agent4LR anyway, so they
+  do not need the scarce high-rank slots.
+- **Agent4LR does not add to the list.** It re-ranks and replaces. The final
+  answer is always drawn from the merged 20, never a superset of it.
+
+The replication package ships SBIR/Ochiai/BoostN as CSVs, but only for
+Defects4J. On SWE-bench they have to be computed, so:
+
+- **Ochiai is real SBFL.** A second test run under coverage.py with
+  `dynamic_context = test_function` produces a genuine per-test spectrum,
+  which is then scored with the standard Ochiai formula. This required
+  carrying PASS_TO_PASS through the pipeline — with only failing tests every
+  covered method scores identically and the ranking degenerates to "what
+  ran".
+- **BoostN is BM25** over method-level documents, labelled a stand-in for
+  BoostNSift because the sifting stage is not reproduced.
+- **SBIR is reciprocal-rank fusion** of the two, also labelled a stand-in.
+  RRF rather than averaging because Ochiai lives in [0,1] and BM25 is
+  unbounded; combining them numerically would let BM25 win on scale alone.
+
+Why this matters concretely: astropy-12907's bug is in `_cstack`, and the
+test fails on a boolean-matrix assertion whose traceback never names that
+function. Trace-based evidence cannot reach it by construction. Coverage can,
+because `_cstack` runs in the failing test and not in the passing ones. On a
+fixture reproducing exactly that shape, with a model scripted to guess the
+wrong method every single time, `_cstack` now comes back at rank 2 on Ochiai
+alone.
+
+## Agent4LR's short answers were discarding the merge
+
+Related, and only visible once the merge existed. A model that answers with
+`Top_1` and nothing else — very common below about 7B — left four of the five
+final slots empty, throwing away everything the traditional localizers had
+earned. Agent4LR's ranking is now padded up to five from the merged
+candidates, in merge order, with the model's own picks kept ahead of the
+padding.
+
+## Zero was unattributable
+
+A Top-1 of zero could mean the model never produced a ranking, or that Ochiai
+was unavailable, or that everything ran correctly and still missed. Nothing
+in the output distinguished those. Each outcome now records the merge mode,
+what every ranker returned, which ones were unavailable and why, Agent4SR's
+pre-merge top-5 separately from the merged list, whether each stage produced
+a parseable ranking at all, and the tail of each stage's raw model output.
+The console prints the merge provenance per arm as it runs, and warns
+explicitly when Agent4SR never emitted a parseable block — the signature of a
+model too small for the ReAct protocol.
+
+## On the model used in the pilot
+
+`gemma4:e2b` is about 2B parameters. FlexFL requires ten turns of exactly
+`FunctionName(Argument)` followed by a `Top_k :` block. The pilot log shows
+37,448 tokens spent on one instance whose context was 1,455 — the loop ran
+every turn without the model ever calling `exit()`, which is what a model
+that is not following the protocol looks like. The merge makes such a run
+degrade rather than collapse, since the traditional localizers still
+contribute, but a model of roughly 7B or more (14B–32B coder models
+preferably) is the real fix.
+
+## Merging the two branches
+
+`main` had been rebuilt around Defects4J and had the candidate merge; this
+branch had the ablation matrix, token accounting, metrics, feedback loop and
+figures. They were merged rather than chosen between. `graphify_structure.py`
+keeps both views of the graph — this branch's structure map and call graph,
+and main's `GraphifyIndex`, which has a much better `snippet()` that resolves
+through the Python AST. `llm_backends.py` keeps the provider registry, with
+main's `ChatBackend` surviving as a delegating shim so the Defects4J modules
+gain retries and reasoning-tag stripping without an API change.
+
+One thing the merge quietly did that needed undoing: it replaced this
+branch's compressor wholesale, and with it the `compress()` entry point the
+ablation runner calls. main's version is better in the way that matters — it
+drives the real LeanCTX binary rather than a Python re-implementation — so it
+was kept as the authoritative path, with the reference-mode fallback restored
+underneath it. main deliberately had no fallback, which is right for a
+single-arm run; across five arms an uninstalled binary would take out every
+leanctx arm and leave nothing to compare against. The cost is paid in
+labelling instead: reference mode still propagates to `provisional=True` and
+is excluded from the headline table.

@@ -65,8 +65,10 @@ import os
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Optional, Protocol
+from typing import Dict, List, Optional, Protocol, Sequence
 
+import flexfl_merge
+import traditional_fl
 import llm_backends
 import metrics
 import token_meter
@@ -98,7 +100,7 @@ class LocalizationResult:
     predicted_functions: List[str]
     backend: str
     feedback_rounds_used: int = 0
-    stage1_candidates: List[str] = field(default_factory=list)   # FlexFL Agent4SR output
+    stage1_candidates: List[str] = field(default_factory=list)   # merged Stage-1 -> Stage-2 list
     graph_expanded: List[str] = field(default_factory=list)      # GraphLocator CIG additions
     used_graph: bool = True
     used_feedback: bool = False
@@ -106,6 +108,15 @@ class LocalizationResult:
     feedback_prunes: int = 0
     feedback_stop_reason: str = ""
     token_report: dict = field(default_factory=dict)
+    # FlexFL §4.5 provenance. `stage1_candidates` is the MERGED list Agent4LR
+    # re-ranked; `agent4sr_top5` is what Agent4SR alone contributed to it.
+    # Keeping both separate is what makes a zero score attributable: an empty
+    # agent4sr_top5 with a populated merge means the model never produced a
+    # ranking and the traditional localizers carried the instance alone.
+    agent4sr_top5: List[str] = field(default_factory=list)
+    flexfl_merge: dict = field(default_factory=dict)
+    protocol_stats: dict = field(default_factory=dict)
+    stage_transcripts: dict = field(default_factory=dict)
 
 
 def _ordered_dedupe(*sequences: List[str]) -> List[str]:
@@ -346,7 +357,7 @@ def stage1_space_reduction(
         for key in tools.find_method(func_name):
             scored[key] = scored.get(key, 0.0) + 5.0  # direct trace evidence weighted highest
 
-    for key in tools.structure_map:
+    for key in traditional_fl.source_only(tools.structure_map):
         overlap = _lexical_overlap_score(problem_statement, key)
         if overlap:
             scored[key] = scored.get(key, 0.0) + overlap
@@ -431,6 +442,7 @@ def run_react_loop(
     chat_fn,
     max_iters: int,
     final_instruction: str,
+    stats: Optional[dict] = None,
 ) -> str:
     """Mirrors the real FlexFL pipeline.py loop exactly: build a growing
     transcript, ask for one function call per turn, dispatch it, append the
@@ -453,14 +465,20 @@ def run_react_loop(
 
         function_name, arguments = _parse_function_call(response)
         if function_name is None:
+            if stats is not None:
+                stats["format_errors"] = stats.get("format_errors", 0) + 1
             transcript += "\nPlease call functions in the right format `FunctionName(Argument)`."
             continue
         if function_name == "exit":
             break
         if function_name not in dispatch:
+            if stats is not None:
+                stats["unknown_function"] = stats.get("unknown_function", 0) + 1
             transcript += "\nPlease call functions in the right format `FunctionName(Argument)`."
             continue
 
+        if stats is not None:
+            stats["tool_calls"] = stats.get("tool_calls", 0) + 1
         try:
             result = dispatch[function_name](arguments)
         except Exception as e:  # a bad argument shouldn't kill the whole run
@@ -488,6 +506,7 @@ def run_react_loop_with_adaptive_max(
     final_instruction_template: str,
     format_kwargs: dict,
     min_iters: int = 2,
+    stats: Optional[dict] = None,
 ) -> str:
     """Real paper behavior (Section 3.2.1): 'If the whole conversation
     exceeds the maximum context length of the used LLM, we decrease the
@@ -503,7 +522,7 @@ def run_react_loop_with_adaptive_max(
             system_prompt = system_prompt_template.format(max_iters=iters, **format_kwargs)
             final_instruction = final_instruction_template.format(**format_kwargs)
             return run_react_loop(system_prompt, input_description, dispatch, chat_fn,
-                                   iters, final_instruction)
+                                   iters, final_instruction, stats=stats)
         except Exception as e:
             if not any(marker in str(e).lower() for marker in _CONTEXT_ERROR_MARKERS):
                 raise
@@ -603,6 +622,9 @@ class HeuristicBackend:
         use_feedback_loop: bool = False,
         raw_tool_output: Optional[str] = None,
         meter: Optional["token_meter.TokenMeter"] = None,
+        coverage_json: Optional[dict] = None,
+        failing_test_ids: Sequence[str] = (),
+        coverage_error: str = "",
     ) -> LocalizationResult:
         """`use_graph=False` is the graphify ablation: the structural
         briefing and the GraphLocator expansion are both skipped, leaving
@@ -637,13 +659,30 @@ class HeuristicBackend:
                 tool_output, structure_map, call_graph, id_to_key
             )
 
-        # FlexFL Stage 1, now with the structural neighborhood as a scoring
-        # boost rather than something only discovered after the fact
-        candidates = stage1_space_reduction(tool_output, problem_statement, tools)
+        # FlexFL Stage 1. The heuristic ranking stands in for Agent4SR's LLM
+        # reasoning, but it goes through the SAME §4.5 merge as the real
+        # thing — so the traditional localizers (Ochiai from coverage, BM25
+        # IRFL) contribute here too, and the key-free backend exercises the
+        # actual candidate-construction path rather than a shortcut past it.
+        agent4sr_top5 = stage1_space_reduction(tool_output, problem_statement, tools)
         for key in briefing_neighbors:
-            if key not in candidates and key in structure_map:
-                candidates.append(key)
-        candidates = candidates[:CANDIDATE_LIST_SIZE]
+            if key not in agent4sr_top5 and key in structure_map:
+                agent4sr_top5.append(key)
+        agent4sr_top5 = agent4sr_top5[:FINAL_TOPK]
+
+        merge_result = flexfl_merge.merge_for_swebench(
+            agent4sr_top5=agent4sr_top5,
+            problem_statement=problem_statement,
+            structure_map=structure_map,
+            repo_root=repo_root or Path("."),
+            coverage_json=coverage_json,
+            failing_test_ids=failing_test_ids,
+            coverage_error=coverage_error,
+        )
+        candidates = merge_result.candidates[:CANDIDATE_LIST_SIZE]
+        if not candidates:
+            candidates = stage1_space_reduction(tool_output, problem_statement, tools)[
+                :CANDIDATE_LIST_SIZE]
 
         # FlexFL Stage 2 (heuristic Agent4LR: trust Stage 1's ranking as-is —
         # a real LLM pass is where refinement actually happens; see
@@ -676,6 +715,8 @@ class HeuristicBackend:
             stage1_candidates=candidates,
             graph_expanded=graph_expanded,
             used_graph=graph_active,
+            agent4sr_top5=agent4sr_top5,
+            flexfl_merge=merge_result.as_dict(),
             used_feedback=bool(use_feedback_loop and raw_tool_output is not None),
             feedback_restores=fb_restores,
             feedback_prunes=fb_prunes,
@@ -709,6 +750,10 @@ def localize_with_llm(
     raw_tool_output: Optional[str] = None,
     use_graph: bool = True,
     meter: Optional["token_meter.TokenMeter"] = None,
+    coverage_json: Optional[dict] = None,
+    failing_test_ids: Sequence[str] = (),
+    coverage_error: str = "",
+    keep_transcripts: bool = True,
 ) -> LocalizationResult:
     """Real two-stage FlexFL + GraphLocator expansion, LLM-driven, now
     running the actual multi-turn ReAct loop from the FlexFL replication
@@ -772,13 +817,40 @@ def localize_with_llm(
         + f"The bug report is as follows:\n```\n{problem_statement}\n```"
     )
     with meter.stage(token_meter.STAGE_STAGE1):
+        sr_stats: dict = {}
         stage1_final = run_react_loop_with_adaptive_max(
             AGENT4SR_SYSTEM_PROMPT, stage1_input, stage1_dispatch, chat_fn, MAX_FLEXFL_ITERS,
             FINAL_ANSWER_INSTRUCTION_SR, format_kwargs={"top_k": CANDIDATE_LIST_SIZE},
+            stats=sr_stats,
         )
-    candidates = postprocess_topk(_parse_topk(stage1_final), structure_map)
-    if not candidates:  # model didn't follow the format — fall back to the non-LLM ranking
+    # --- FlexFL §4.5: merge Agent4SR with the traditional localizers ---
+    #
+    # This is the step that was missing. Agent4SR's ranking used to be used
+    # alone, or discarded and replaced by a heuristic when the model produced
+    # nothing parseable. The paper does neither: it concatenates top-5 from
+    # SBIR, Ochiai and BoostN, appends Agent4SR LAST, caps at 20, and hands
+    # that to Agent4LR.
+    agent4sr_top5 = postprocess_topk(_parse_topk(stage1_final), structure_map)[:FINAL_TOPK]
+    merge_result = flexfl_merge.merge_for_swebench(
+        agent4sr_top5=agent4sr_top5,
+        problem_statement=problem_statement,
+        structure_map=structure_map,
+        repo_root=repo_root or Path("."),
+        coverage_json=coverage_json,
+        failing_test_ids=failing_test_ids,
+        coverage_error=coverage_error,
+    )
+    candidates = postprocess_topk(merge_result.candidates, structure_map)[:CANDIDATE_LIST_SIZE]
+    if not candidates:
+        # Every source came back empty, Agent4SR included — for a small model
+        # that usually means it never emitted the Top_k format at all. Fall
+        # back so the instance still yields a measurement, and record that
+        # this is no longer FlexFL's Stage 1.
         candidates = stage1_space_reduction(working_text, problem_statement, tools)
+        merge_result.note = (merge_result.note + " | " if merge_result.note else "") + (
+            "all merge sources empty; fell back to the stack-trace + lexical "
+            "heuristic, which is NOT FlexFL's Stage 1"
+        )
 
     # --- FlexFL Stage 2: Agent4LR, real multi-turn ReAct loop over the candidate list ---
     def stage2_get_snippet(args: str):
@@ -794,11 +866,23 @@ def localize_with_llm(
     numbered_candidates = "\n".join(f"{i+1}.{c}" for i, c in enumerate(candidates))
     stage2_input = f"The suggested methods are as follows:\n```\n{numbered_candidates}\n```"
     with meter.stage(token_meter.STAGE_STAGE2):
+        lr_stats: dict = {}
         stage2_final = run_react_loop_with_adaptive_max(
             AGENT4LR_SYSTEM_PROMPT, stage2_input, stage2_dispatch, chat_fn, MAX_FLEXFL_ITERS,
             FINAL_ANSWER_INSTRUCTION_LR, format_kwargs={"top_k": FINAL_TOPK},
+            stats=lr_stats,
         )
-    functions = postprocess_topk(_parse_topk(stage2_final), structure_map)
+    # Agent4LR is asked for five. A model that answers with fewer — very
+    # common below ~7B, which often emits only `Top_1` — would otherwise
+    # throw away the remaining slots, and with them everything the
+    # traditional localizers earned in the merge. The paper's output is a
+    # top-5 drawn from the candidate list, so the short answer is padded
+    # from that same list, in merge order, with Agent4LR's own picks kept
+    # ahead of the padding. Deduplicated here (unlike the merge itself)
+    # because this is a ranking handed to the metrics, where a repeated
+    # entry would occupy a rank slot without adding a distinct prediction.
+    agent4lr_ranking = postprocess_topk(_parse_topk(stage2_final), structure_map)
+    functions = _ordered_dedupe(agent4lr_ranking, candidates)[:FINAL_TOPK]
     if not functions:
         functions = candidates[:FINAL_TOPK]
 
@@ -832,6 +916,23 @@ def localize_with_llm(
         stage1_candidates=candidates,
         graph_expanded=graph_expanded,
         used_graph=graph_active,
+        agent4sr_top5=agent4sr_top5,
+        flexfl_merge=merge_result.as_dict(),
+        protocol_stats={
+            "agent4sr": sr_stats,
+            "agent4lr": lr_stats,
+            # The single most useful diagnostic for a small model: it ran the
+            # whole loop but never emitted a parseable `Top_k :` block, so
+            # Agent4SR contributed nothing and the merge carried the instance
+            # on the traditional localizers alone.
+            "agent4sr_produced_ranking": bool(agent4sr_top5),
+            "agent4lr_produced_ranking": bool(_parse_topk(stage2_final)),
+        },
+        stage_transcripts=(
+            {"agent4sr_final": stage1_final[-4000:],
+             "agent4lr_final": stage2_final[-4000:]}
+            if keep_transcripts else {}
+        ),
         used_feedback=bool(use_feedback_loop and raw_tool_output is not None),
         feedback_restores=fb_restores,
         feedback_prunes=fb_prunes,

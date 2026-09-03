@@ -62,6 +62,14 @@ class InstanceOutcome:
     taxonomy_tags: List[str] = field(default_factory=list)
     wall_seconds: float = 0.0
     provisional: bool = False
+    # FlexFL §4.5 provenance: which localizers contributed to the candidate
+    # list Agent4LR re-ranked, and what each of them returned. Without this,
+    # a Top-1 of zero is unattributable — a merge that ran without Ochiai and
+    # one where Ochiai returned nothing look identical in the scores alone.
+    agent4sr_top5: List[str] = field(default_factory=list)
+    flexfl_merge: Dict[str, object] = field(default_factory=dict)
+    protocol_stats: Dict[str, object] = field(default_factory=dict)
+    stage_transcripts: Dict[str, str] = field(default_factory=dict)
 
     # -- token conveniences -------------------------------------------------
     @property
@@ -85,7 +93,7 @@ class InstanceOutcome:
     def provisional_reasons(self) -> List[str]:
         reasons = []
         if self.compressor_mode == "reference":
-            reasons.append("lean-ctx reference mode (real daemon not reachable)")
+            reasons.append("lean-ctx reference mode (real lean-ctx CLI not reachable)")
         if self.capture_mode == "local_fallback":
             reasons.append("local_fallback capture (not the official SWE-bench image)")
         if self.backend == "heuristic":

@@ -39,6 +39,7 @@ class GroundTruth:
     files: List[str]
     functions: List[str]          # "path/to/file.ext::SymbolName"
     fail_to_pass: List[str]
+    pass_to_pass: List[str]
     problem_statement: str
     test_patch: str
     dataset: str
@@ -89,6 +90,10 @@ def main() -> None:
             files=files,
             functions=functions,
             fail_to_pass=coerce_list(spec.get(row, "fail_to_pass")),
+            # Ochiai needs a spectrum, and a spectrum needs tests that PASS.
+            # Running only the failing tests gives every covered method the
+            # same suspiciousness, which is not fault localization.
+            pass_to_pass=coerce_list(spec.get(row, "pass_to_pass")),
             problem_statement=spec.get(row, "problem_statement", "") or "",
             test_patch=spec.get(row, "test_patch", "") or "",
             dataset=args.dataset,

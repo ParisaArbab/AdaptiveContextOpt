@@ -1,94 +1,139 @@
-"""
-leanctx_compressor.py — WP1
+"""LeanCTX compression of a captured test output.
 
-Replaces rtk_compressor.py as the "Static/Smart" compression condition.
+Two modes, and which one ran is recorded on every result:
 
-IMPORTANT — architecture note (verified against the real yvgude/lean-ctx repo
-and the lean-ctx-sdk 0.3.0 source): lean-ctx is NOT a pure text-in/text-out
-library. It is a local Rust daemon (`lean-ctx serve` / `lean-ctx proxy
-enable`) that exposes an HTTP API; `lean-ctx-sdk`'s `ProxyClient.compress()`
-is a thin client over that daemon's `/v1/compress` endpoint. There is no
-offline "just call a function" path in the shipped SDK — confirmed by
-reading ProxyClient._send(), which raises LeanCtxConnectionError telling you
-to run `lean-ctx proxy enable` if nothing answers at base_url.
+  "cli"       — the real LeanCTX binary, driven through `lean-ctx call
+                ctx_compare` (merged from the Defects4J branch, which got
+                this working first). Authoritative: only these numbers
+                belong in the formal Compression Tax report.
+  "reference" — a Python re-implementation of LeanCTX's *documented*
+                density-mode contract ("keeps the highest-entropy lines
+                until ~X% of the original tokens remain, deterministic").
+                Tagged provisional everywhere downstream and excluded from
+                headline numbers by the analyzer.
 
-This mirrors how rtk was handled: rtk_compressor.py is a Python
-re-implementation of rtk's *documented* heuristics, sourced from its README
-and a GitHub issue, used because running the real Rust binary inside the
-benchmark loop wasn't the point — reproducing its documented behavior
-faithfully was. We do the same thing here, with the same caveat stated
-explicitly in every result this module produces:
+The Defects4J branch deliberately had no fallback: for a single-arm run,
+failing loudly beats silently changing the experiment. That reasoning does
+not carry over to the ablation study, where the compressor is one of three
+variables under test across five or six arms — there, an uninstalled binary
+would take out every leanctx arm and leave nothing to compare the other arms
+against. So the fallback exists, and the cost of using it is paid in
+labelling rather than in silence: `mode="reference"` propagates to
+`provisional=True` on the outcome, the analyzer excludes those arms from its
+headline table, and the plots drop a PROVISIONAL.txt naming the reason.
 
-  MODE "daemon"    — real lean-ctx binary running locally, called via the
-                     official lean-ctx-sdk. This is the authoritative mode
-                     and the only one whose numbers should go in the formal
-                     deliverable. Requires `lean-ctx serve` (or
-                     `lean-ctx proxy enable`) to be running — install via
-                     https://leanctx.com/install.sh, `cargo install lean-ctx`,
-                     or `npm install -g lean-ctx-bin`.
-  MODE "reference" — Python re-implementation of lean-ctx's documented
-                     density-mode algorithm ("target density: SDE-style
-                     budget compression — keeps the highest-entropy lines
-                     until ~X% of original tokens remain, deterministic",
-                     per the lean-ctx README's Compression section). Used
-                     ONLY to validate the rest of the pipeline (agent
-                     interface, feedback loop, scoring) before the daemon is
-                     reachable. Every output is tagged mode="reference" so
-                     compression_tax_analyzer.py can exclude it from final
-                     numbers, exactly like the rtk baseline required a real
-                     Docker capture before its numbers were trusted.
-
-Attempted in this environment: the official installer, `npm install -g
-lean-ctx-bin`, and the GitHub releases API all failed here because of a
-GitHub API rate limit on the sandbox's shared IP (confirmed: 403 on
-api.github.com/repos/yvgude/lean-ctx/releases/latest, "API rate limit
-exceeded"). That's a sandbox network limitation, not a lean-ctx problem —
-running the installer on your own machine or CI runner (unique IP) should
-succeed normally.
+Use `compress()` for the ablation pipeline; `compress_captured_shell_output()`
+is the lower-level real-binary call and raises rather than falling back.
 """
 from __future__ import annotations
 
-import math
+from dataclasses import asdict, dataclass
+import json
+from pathlib import Path
 import re
-from collections import Counter
-from dataclasses import dataclass
-from typing import List, Optional
+import shutil
+import subprocess
+import tempfile
 
-try:
-    from lean_ctx import ProxyClient, LeanCtxConnectionError
-except ImportError:  # pragma: no cover
-    ProxyClient = None
-    LeanCtxConnectionError = Exception
+
+@dataclass
+class LeanCtxResult:
+    text: str
+    original_tokens: int | None
+    compressed_tokens: int | None
+    saved_percent: float | None
+    original_bytes: int
+    compressed_bytes: int
+    report: str
+
+    def to_dict(self) -> dict:
+        data = asdict(self)
+        data.pop("text", None)
+        data.pop("report", None)
+        return data
+
+
+def compress_captured_shell_output(
+    raw_output: str,
+    project_root: Path,
+    command: str = "defects4j test",
+    binary: str = "lean-ctx",
+    timeout: int = 180,
+) -> LeanCtxResult:
+    exe = shutil.which(binary)
+    if not exe:
+        raise RuntimeError(
+            "LeanCTX CLI is not installed or not on PATH. Install yvgude/lean-ctx first."
+        )
+
+    payload = {"command": command, "output": raw_output}
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as handle:
+        json.dump(payload, handle)
+        payload_path = Path(handle.name)
+    try:
+        proc = subprocess.run(
+            [
+                exe,
+                "call",
+                "ctx_compare",
+                "--project-root",
+                str(Path(project_root).resolve()),
+                "--json-file",
+                str(payload_path),
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            errors="replace",
+            timeout=timeout,
+        )
+    finally:
+        payload_path.unlink(missing_ok=True)
+
+    if proc.returncode != 0:
+        raise RuntimeError(f"LeanCTX ctx_compare failed:\n{proc.stdout[-10000:]}")
+    report = proc.stdout or ""
+    if "compress preview" not in report:
+        raise RuntimeError(f"Unexpected LeanCTX ctx_compare output:\n{report[-8000:]}")
+
+    compressed = _reconstruct_from_preview(raw_output, report)
+    original_tokens, compressed_tokens, saved_pct = _parse_token_header(report)
+    return LeanCtxResult(
+        text=compressed,
+        original_tokens=original_tokens,
+        compressed_tokens=compressed_tokens,
+        saved_percent=saved_pct,
+        original_bytes=len(raw_output.encode()),
+        compressed_bytes=len(compressed.encode()),
+        report=report,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Reference mode + the ablation pipeline's entry point
+# ---------------------------------------------------------------------------
+
+import math
+from collections import Counter
+from typing import Optional
 
 
 @dataclass
 class CompressionResult:
     text: str
-    mode: str  # "daemon" | "reference"
+    mode: str                    # "cli" | "reference"
     original_tokens_est: int
     compressed_tokens_est: int
     reduction_pct: float
+    detail: dict | None = None
 
 
 def _estimate_tokens(text: str) -> int:
-    # rough, consistent estimator (chars/4) — same heuristic used throughout
-    # WP1 so raw/rtk/lean-ctx reduction percentages are comparable to each other
+    """Byte-level estimate used only inside this module, so a compression
+    ratio can be reported even when LeanCTX itself reports no token header.
+    The study's real token numbers come from token_meter's tokenizer, not
+    from here."""
     return max(1, len(text) // 4)
-
-
-def _daemon_compress(text: str, model: Optional[str] = None) -> Optional[str]:
-    """Try the real local lean-ctx daemon. Returns None if unreachable."""
-    if ProxyClient is None:
-        return None
-    try:
-        client = ProxyClient(timeout=2.0)
-        messages = [{"role": "tool", "content": text}]
-        result = client.compress(messages, model=model)
-        return result.messages[0]["content"] if result.messages else text
-    except LeanCtxConnectionError:
-        return None
-    except Exception:
-        return None
 
 
 def _line_entropy(line: str) -> float:
@@ -162,49 +207,102 @@ def _reference_density_compress(text: str, target_density: float = 0.4) -> str:
 def compress(
     text: str,
     target_density: float = 0.4,
-    model: Optional[str] = None,
+    project_root: Optional[Path] = None,
+    command: str = "pytest",
     force_reference: bool = False,
 ) -> CompressionResult:
-    """Main entry point used by run_wp1_benchmark.py for the lean-ctx condition."""
-    original_tokens = _estimate_tokens(text)
+    """Entry point for run_wp1_benchmark's leanctx arms.
 
-    compressed_text = None
-    mode = "reference"
+    Tries the real LeanCTX binary first and falls back to reference mode,
+    recording which one ran. A caller that needs the real thing or nothing
+    should call compress_captured_shell_output() directly.
+    """
     if not force_reference:
-        compressed_text = _daemon_compress(text, model=model)
-        if compressed_text is not None:
-            mode = "daemon"
+        try:
+            real = compress_captured_shell_output(
+                text, project_root or Path("."), command=command
+            )
+            original = real.original_tokens or _estimate_tokens(text)
+            compressed = real.compressed_tokens or _estimate_tokens(real.text)
+            reduction = (real.saved_percent
+                         if real.saved_percent is not None
+                         else 100.0 * (1 - compressed / original) if original else 0.0)
+            return CompressionResult(
+                text=real.text, mode="cli",
+                original_tokens_est=original, compressed_tokens_est=compressed,
+                reduction_pct=round(reduction, 1), detail=real.to_dict(),
+            )
+        except Exception:
+            # Binary missing, or ctx_compare rejected this input. Either way
+            # the run continues in reference mode, tagged as such.
+            pass
 
-    if compressed_text is None:
-        compressed_text = _reference_density_compress(text, target_density=target_density)
-        mode = "reference"
-
-    compressed_tokens = _estimate_tokens(compressed_text)
-    reduction = 100.0 * (1 - compressed_tokens / original_tokens) if original_tokens else 0.0
-
+    compressed_text = _reference_density_compress(text, target_density=target_density)
+    original = _estimate_tokens(text)
+    compressed = _estimate_tokens(compressed_text)
     return CompressionResult(
-        text=compressed_text,
-        mode=mode,
-        original_tokens_est=original_tokens,
-        compressed_tokens_est=compressed_tokens,
-        reduction_pct=round(reduction, 1),
+        text=compressed_text, mode="reference",
+        original_tokens_est=original, compressed_tokens_est=compressed,
+        reduction_pct=round(100.0 * (1 - compressed / original) if original else 0.0, 1),
     )
 
 
-if __name__ == "__main__":
-    import sys
+def _parse_token_header(report: str) -> tuple[int | None, int | None, float | None]:
+    m = re.search(
+        r"tokens:\s*(\d+)\s*->\s*(\d+)\s*\(-\d+,\s*([0-9.]+)%\s+saved\)",
+        report,
+    )
+    if not m:
+        return None, None, None
+    return int(m.group(1)), int(m.group(2)), float(m.group(3))
 
-    if "--stdin" in sys.argv:
-        sample = sys.stdin.read()
-    else:
-        sample = (
-            "===== FAILURES =====\n"
-            "test_separable.py::test_coord_matrix FAILED\n"
-            "    assert result.tolist() == expected.tolist()\n"
-            "AssertionError: arrays differ at index [2][1]: True != False\n"
-            "-----------------------------\n"
-        )
-    r = compress(sample)
-    print(f"[mode={r.mode}] {r.original_tokens_est} -> {r.compressed_tokens_est} tok "
-          f"({r.reduction_pct}% reduction)\n")
-    print(r.text)
+
+def _reconstruct_from_preview(original: str, report: str) -> str:
+    """Reconstruct the exact compressed line sequence from LeanCTX's line diff."""
+    marker = "-- diff (original -> compressed) --"
+    if marker not in report:
+        raise RuntimeError("LeanCTX preview is missing its diff section")
+    diff = report.split(marker, 1)[1].strip("\n")
+    if diff.strip() == "(no changes)":
+        return original
+
+    deletes: set[int] = set()
+    additions: dict[int, list[str]] = {}
+    for line in diff.splitlines():
+        if line.startswith("diff +"):
+            break
+        m = re.match(r"^([+-])(\d+):(?:\s?)(.*)$", line)
+        if not m:
+            continue
+        sign, index_s, text = m.groups()
+        index = int(index_s)
+        if sign == "-":
+            deletes.add(index)
+        else:
+            additions.setdefault(index, []).append(text)
+
+    old_lines = original.splitlines()
+    kept = [line for idx, line in enumerate(old_lines, 1) if idx not in deletes]
+    target_len = len(kept) + sum(len(v) for v in additions.values())
+    target: list[str | None] = [None] * target_len
+
+    for one_based, values in sorted(additions.items()):
+        start = max(0, one_based - 1)
+        for offset, value in enumerate(values):
+            pos = start + offset
+            if pos >= len(target):
+                target.extend([None] * (pos - len(target) + 1))
+            if target[pos] is None:
+                target[pos] = value
+            else:
+                target.insert(pos, value)
+
+    kept_iter = iter(kept)
+    for i, value in enumerate(target):
+        if value is None:
+            try:
+                target[i] = next(kept_iter)
+            except StopIteration:
+                target[i] = ""
+    target.extend(list(kept_iter))
+    return "\n".join(str(v) for v in target)

@@ -351,6 +351,72 @@ def preflight(cfg: LLMConfig) -> str:
     return f"{cfg.label} reachable (replied {reply.strip()[:40]!r})"
 
 
+# ---------------------------------------------------------------------------
+# Compatibility layer for the Defects4J modules merged from `main`
+#
+# `flexfl_pipeline.py`, `defects4j_harness.py` and `run_swebench_agent4sr_pair.py`
+# were written against a smaller `ChatBackend` class with a `.complete(system,
+# user)` method. Rather than keep two provider implementations that drift apart
+# — the merged branch had its own Ollama/OpenAI/Anthropic HTTP code, its own
+# `_strip_reasoning`, and no retry handling — `ChatBackend` now delegates to the
+# registry above. Those modules keep their exact API and silently gain retries,
+# the shared reasoning-tag stripping, and the context-error contract that
+# FlexFL's adaptive MAX depends on.
+# ---------------------------------------------------------------------------
+
+class ChatBackend:
+    """`.complete(system, user) -> str`, backed by the provider registry."""
+
+    def __init__(
+        self,
+        provider: str,
+        model: str,
+        base_url: Optional[str] = None,
+        api_key: Optional[str] = None,
+        timeout: int = 180,
+        temperature: float = 0.0,
+        max_tokens: int = 1024,
+    ):
+        self.provider = provider.lower()
+        self.model = model
+        self.base_url = base_url
+        self.timeout = timeout
+        if api_key:
+            # The registry reads keys from the environment by name, so an
+            # explicitly-passed key is published under a private variable
+            # rather than threaded through as a second code path.
+            env_name = f"_CHATBACKEND_KEY_{self.provider.upper().replace('-', '_')}"
+            os.environ[env_name] = api_key
+            self._api_key_env: Optional[str] = env_name
+        else:
+            self._api_key_env = None
+
+        self.config = resolve(
+            self.provider, model=model, base_url=base_url,
+            api_key_env=self._api_key_env, timeout=float(timeout),
+            temperature=temperature, max_tokens=max_tokens,
+        )
+        self._chat_fn = build_chat_fn(self.config)
+
+    @property
+    def label(self) -> str:
+        return self.config.label
+
+    def complete(self, system: str, user: str) -> str:
+        if self._chat_fn is None:
+            raise RuntimeError(
+                "ChatBackend was constructed with the 'heuristic' provider, which has "
+                "no model to call. Pick a real provider, or use the heuristic backend "
+                "through agent_localizer.HeuristicBackend instead."
+            )
+        return self._chat_fn(system, user)
+
+
+def _strip_reasoning(text: str) -> str:
+    """Kept for the merged modules that imported the private name."""
+    return strip_reasoning(text)
+
+
 if __name__ == "__main__":
     import argparse
 

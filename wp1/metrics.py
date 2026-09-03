@@ -38,11 +38,21 @@ def _norm_path(path: str) -> str:
 
 
 def split_symbol(symbol: str) -> tuple[str, str]:
-    """'src/foo.py::Bar.baz' -> ('src/foo.py', 'bar.baz')"""
+    """'src/foo.py::Bar.baz' -> ('src/foo.py', 'bar.baz')
+
+    Graphify labels callables with a trailing call suffix — `normalize()`,
+    and for Java a full signature like `add(int,int)` — while gold-patch
+    parsing yields the bare name. Without stripping it, NOTHING ever
+    matches and every method-level score is zero regardless of how good the
+    localization was. Caught by the smoke test, where the correct method
+    was ranked 3rd and still scored 0."""
     if "::" in symbol:
         path, name = symbol.split("::", 1)
     else:
         path, name = "", symbol
+    name = name.strip()
+    if "(" in name:
+        name = name[: name.index("(")]
     return _norm_path(path), name.strip().lower()
 
 
