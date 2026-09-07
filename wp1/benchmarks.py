@@ -79,9 +79,20 @@ class LanguageAdapter:
             if line.startswith(("+", "-")) and not line.startswith(("+++", "---")):
                 yield current_file, "body", line[1:]
 
+    # A hunk header carries the nearest enclosing scope, which for a method
+    # change is usually `class Foo(Bar):`. Capturing it lets ground truth be
+    # class-qualified, matching the structure map now that its keys are too.
+    CLASS_CONTEXT_RE = re.compile(r"\bclass\s+([A-Za-z_][A-Za-z0-9_]*)")
+
     def _collect(self, patch: str, patterns: Sequence[re.Pattern]) -> Tuple[List[str], List[str]]:
         files: List[str] = []
         functions: List[str] = []
+        class_context: dict[str, str] = {}     # file -> most recent class seen
+
+        def add(key: str) -> None:
+            if key not in functions:
+                functions.append(key)
+
         for current_file, kind, payload in self._walk_diff(patch):
             if kind == "file":
                 if payload not in files:
@@ -89,13 +100,27 @@ class LanguageAdapter:
                 continue
             if self.source_suffixes and not current_file.endswith(self.source_suffixes):
                 continue
+
+            owner = self.CLASS_CONTEXT_RE.search(payload)
+            if owner:
+                class_context[current_file] = owner.group(1)
+
             for pat in patterns:
                 m = pat.search(payload)
-                if m:
-                    key = f"{current_file}::{m.group(1)}"
-                    if key not in functions:
-                        functions.append(key)
-                    break
+                if not m:
+                    continue
+                name = m.group(1)
+                # Both forms are recorded. The qualified one is what actually
+                # matches the structure map for a method like
+                # `InlineModelAdmin.__init__`; the bare one is kept because
+                # class context is only as good as what the hunk header
+                # happened to include, and losing a true match to a missed
+                # class name is worse than a slightly permissive one.
+                cls = class_context.get(current_file)
+                if cls and name != cls:
+                    add(f"{current_file}::{cls}.{name}")
+                add(f"{current_file}::{name}")
+                break
         return files, functions
 
 

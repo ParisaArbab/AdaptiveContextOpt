@@ -271,10 +271,15 @@ def _ensure_dependencies_installed(
         else:
             return False, "pip install -e . failed for every build toolchain: " + " | ".join(attempts)
 
-        pytest_install = subprocess.run(pip + ["install", "pytest"], cwd=workdir,
+        # coverage goes in alongside pytest: Ochiai needs it INSIDE this venv,
+        # not on the host. The django-13710 run reported "coverage produced no
+        # data file" for exactly this reason — the module was absent from the
+        # interpreter the tests actually ran under, so the SBFL column of the
+        # FlexFL merge was empty on every instance.
+        pytest_install = subprocess.run(pip + ["install", "pytest", "coverage"], cwd=workdir,
                                          capture_output=True, text=True, timeout=300)
         if pytest_install.returncode != 0:
-            return False, f"pytest install failed: {pytest_install.stderr[-300:]}"
+            return False, f"pytest/coverage install failed: {pytest_install.stderr[-300:]}"
 
         # Verify via pytest's own conftest-loading path, not a bare `import
         # <package>` — confirmed these differ: a plain `import sympy`

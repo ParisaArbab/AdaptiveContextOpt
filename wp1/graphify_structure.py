@@ -31,7 +31,82 @@ import shutil
 import subprocess
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List, Optional
+
+
+
+# A Graphify node's `label` is usually a symbol name, but for some grammars it
+# is the entity's docstring instead. Those leak into the candidate space and
+# then dominate IR ranking, because a docstring restates the bug report far
+# more literally than any identifier does — the django-13710 run had
+# "Options for inline editing of ``model`` instances. Provide ``fk_name`` to..."
+# sitting at rank 2 in both arms.
+_SYMBOL_LABEL_RE = re.compile(r"^[A-Za-z_.][A-Za-z0-9_.]*(\(.*\))?$")
+
+
+def _is_symbol_label(label: str) -> bool:
+    """True if `label` looks like an identifier rather than prose."""
+    if not label or len(label) > 120:
+        return False
+    if any(ch in label for ch in "`\n\t"):
+        return False
+    head = label.split("(", 1)[0]
+    if " " in head:                       # "Options for inline editing of ..."
+        return False
+    return bool(_SYMBOL_LABEL_RE.match(label))
+
+
+
+def _qualify_members(structure: Dict[str, dict]) -> tuple[Dict[str, dict], int, int]:
+    """Attach each method to its owning class, and drop module nodes.
+
+    Graphify (0.9.x) does not emit a class field. It labels a member with a
+    leading dot — `.__init__()`, `.normalize()` — and emits nodes in source
+    order, so the owner is the nearest preceding non-member entity in the
+    same file. Deriving it matters for two reasons:
+
+      * `calc/core.py::.__init__()` is ambiguous when a file defines several
+        classes, and django/contrib/admin/options.py defines a dozen. The
+        localizer, the LLM reading the candidate list, and the metrics all
+        need to know WHICH `__init__`.
+      * Ground truth from a gold patch is class-qualified where the hunk
+        header allows it, so an unqualified structure map cannot match it
+        except by the permissive last-segment rule.
+
+    Module nodes (label == the file's own name, e.g. `core.py`) are dropped:
+    they are not symbols, they cannot be a fault location, and they occupy
+    rank slots in every ranker that scores the whole map.
+    """
+    by_file: Dict[str, List[tuple]] = {}
+    for key, meta in structure.items():
+        by_file.setdefault(meta["file"], []).append((meta.get("line") or 0, key, meta))
+
+    out: Dict[str, dict] = {}
+    qualified = 0
+    dropped_modules = 0
+    for file, entries in by_file.items():
+        entries.sort(key=lambda t: t[0])
+        basename = Path(file).name
+        owner: Optional[str] = None
+        for _line, key, meta in entries:
+            name = meta.get("name") or key.split("::", 1)[1]
+            if name == basename:
+                dropped_modules += 1
+                continue
+            if name.startswith("."):
+                member = name.lstrip(".")
+                full = f"{owner}.{member}" if owner else member
+                if owner:
+                    qualified += 1
+            else:
+                owner = name.split("(", 1)[0]
+                full = name
+            new_key = f"{file}::{full}"
+            if new_key in out and out[new_key].get("line") != meta.get("line"):
+                new_key = f"{new_key}@L{meta.get('line')}"
+            meta = {**meta, "name": full, "class": owner if name.startswith(".") else None}
+            out[new_key] = meta
+    return out, qualified, dropped_modules
 
 
 def build_structure_map(
@@ -78,22 +153,61 @@ def build_structure_map(
 
     graph = json.loads(graph_json.read_text())
     structure: Dict[str, dict] = {}
+    dropped_prose = 0
+    disambiguated = 0
     for node in graph.get("nodes", []):
         source_file = node.get("source_file")
         label = node.get("label")
         if not source_file or not label:
             continue
+        label = str(label).strip()
+        if not _is_symbol_label(label):
+            dropped_prose += 1
+            continue
+
         loc = node.get("source_location", "")
         line = int(loc.lstrip("L")) if loc.startswith("L") and loc[1:].isdigit() else None
-        key = f"{source_file}::{label}"
+
+        # Qualify a method with its owning class. Without this, every
+        # `__init__` / `save` / `get_queryset` in one file collapses onto a
+        # single dict key and all but the last is silently lost — in
+        # django/contrib/admin/options.py that is most of the file, including
+        # InlineModelAdmin.__init__, which is the actual fault location for
+        # django-13710. The candidate could not be ranked because it was
+        # never in the candidate space to begin with.
+        owner = node.get("_callable_class") or node.get("callable_class")
+        name = label
+        if owner:
+            owner = str(owner).strip()
+            if owner and not label.startswith(f"{owner}."):
+                name = f"{owner}.{label}"
+
+        key = f"{source_file}::{name}"
+        if key in structure and structure[key].get("line") != line:
+            # Same qualified name twice in one file (overloads, nested defs,
+            # conditional definitions). Keep both, keyed by line, rather than
+            # letting the later one silently replace the earlier.
+            key = f"{key}@L{line}" if line is not None else key
+            disambiguated += 1
+
         structure[key] = {
             "id": node.get("id"),
             "file": source_file,
             "line": line,
             "community": node.get("community"),
             "callable": bool(node.get("_callable")),
+            "class": owner or None,
+            "name": label,
         }
 
+    structure, qualified, dropped_modules = _qualify_members(structure)
+
+    if dropped_prose or disambiguated or qualified or dropped_modules:
+        print(f"  structure map: {len(structure)} entities "
+              f"({qualified} methods class-qualified, "
+              f"{dropped_prose} prose nodes dropped, "
+              f"{dropped_modules} module nodes dropped, "
+              f"{disambiguated} residual collisions kept apart)")
     return structure
 
 
