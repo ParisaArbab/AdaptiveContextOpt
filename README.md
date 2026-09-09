@@ -11,6 +11,11 @@ method is applied.
 
 ## Pipeline
 
+For real LeanCTX runs, install the pinned upstream executable with
+`python3 scripts/install_leanctx.py`. Full requires this executable and stops
+on compressor errors. See [the diagnostic run guide](docs/smoke_run_logging.md)
+for the local Ollama command and saved evidence.
+
 ```
 capture the REAL trigger test failing (FAIL_TO_PASS, test patch applied)
     -> graphify: structure map + real call graph          [cached per repo]

@@ -100,10 +100,12 @@ def average_precision(predicted: Sequence[str], truth: Sequence[str]) -> float:
     return precision_sum / len(truth)
 
 
-def score_ranked(predicted: Sequence[str], truth: Sequence[str]) -> Dict[str, float]:
+def score_ranked(predicted: Sequence[str], truth: Sequence[str], *, file_level: bool = False) -> Dict[str, float]:
     """Per-instance scores for one ranked prediction list."""
-    predicted = list(predicted)
-    truth = list(truth)
+    # File paths must occupy the file field: treating them as bare symbols
+    # compares their final dotted segment, making all *.py files match.
+    predicted = [f'{_norm_path(p)}::<file>' for p in predicted] if file_level else list(predicted)
+    truth = [f'{_norm_path(t)}::<file>' for t in truth] if file_level else list(truth)
     rank = _first_hit_rank(predicted, truth)
     matched = sum(1 for p in predicted if any(symbol_matches(p, t) for t in truth))
     out: Dict[str, float] = {}
@@ -144,7 +146,7 @@ def score_instance(
     silently scoring 0 and dragging the mean down."""
     return {
         "method_level": score_ranked(predicted_functions, truth_functions) if truth_functions else None,
-        "file_level": score_ranked(predicted_files, truth_files) if truth_files else None,
+        "file_level": score_ranked(predicted_files, truth_files, file_level=True) if truth_files else None,
     }
 
 

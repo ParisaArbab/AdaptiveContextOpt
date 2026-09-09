@@ -43,6 +43,7 @@ guess line numbers of text it never saw.
 from __future__ import annotations
 
 import re
+from difflib import SequenceMatcher
 from dataclasses import dataclass, field
 from typing import Callable, Dict, List, Optional, Sequence, Tuple
 
@@ -108,15 +109,16 @@ class FeedbackResult:
 def _omitted_ranges(raw_text: str, compressed_text: str) -> List[Tuple[int, int]]:
     """Contiguous 1-based raw line ranges absent from the compressed text.
 
-    Membership is by line content rather than a real diff: the compressor
-    preserves original order and inserts its own marker lines, so a
-    content-set check identifies dropped regions correctly and is far
-    cheaper than an alignment over multi-thousand-line pytest output."""
-    kept = set(compressed_text.splitlines())
+    Align occurrences in source order so repeated stack frames are counted
+    separately and compressor marker lines do not become source anchors."""
+    raw_lines = raw_text.splitlines()
+    kept = set()
+    for match in SequenceMatcher(None, raw_lines, compressed_text.splitlines(), autojunk=False).get_matching_blocks():
+        kept.update(range(match.a, match.a + match.size))
     ranges: List[Tuple[int, int]] = []
     start: Optional[int] = None
-    for i, line in enumerate(raw_text.splitlines(), 1):
-        if line not in kept:
+    for i, line in enumerate(raw_lines, 1):
+        if i - 1 not in kept:
             start = i if start is None else start
         elif start is not None:
             ranges.append((start, i - 1))
@@ -189,7 +191,8 @@ def _restore(current_text: str, raw_text: str,
     Position matters: dumping restored lines at the end would break the
     stack-frame ordering that FlexFL's Stage 1 reads causally. We locate the
     nearest raw line before the range that survives in the current text and
-    splice after it, falling back to appending only when no anchor exists."""
+    splice after it. For a missing prefix, insert before the first surviving
+    following line; with no anchors, insert at the beginning."""
     raw_lines = raw_text.splitlines()
     lo, hi = rng
     block = raw_lines[lo - 1 : hi]
@@ -197,21 +200,19 @@ def _restore(current_text: str, raw_text: str,
         return current_text, None
 
     cur_lines = current_text.splitlines()
-    anchor_idx = None
-    for raw_i in range(lo - 2, -1, -1):
-        anchor = raw_lines[raw_i]
-        if anchor in cur_lines:
-            anchor_idx = len(cur_lines) - 1 - cur_lines[::-1].index(anchor)
-            break
-
-    marker = f"[feedback: restored L{lo}-L{hi}]"
-    if anchor_idx is None:
-        insert_at = len(cur_lines)          # 0-based index of the marker line
-        merged = cur_lines + [marker] + block
+    aligned = {}
+    for match in SequenceMatcher(None, raw_lines, cur_lines, autojunk=False).get_matching_blocks():
+        aligned.update((match.a + i, match.b + i) for i in range(match.size))
+    preceding = [i for i in aligned if i < lo - 1]
+    following = [i for i in aligned if i >= hi]
+    if preceding:
+        insert_at = aligned[max(preceding)] + 1
+    elif following:
+        insert_at = aligned[min(following)]
     else:
-        insert_at = anchor_idx + 1
-        merged = (cur_lines[: anchor_idx + 1] + [marker] + block
-                  + cur_lines[anchor_idx + 1 :])
+        insert_at = 0
+    marker = f"[feedback: restored L{lo}-L{hi}]"
+    merged = cur_lines[:insert_at] + [marker] + block + cur_lines[insert_at:]
     # 1-based C-coordinates the restored block now occupies, so the
     # oscillation guard protects exactly those lines and nothing else.
     span = (insert_at + 1, insert_at + 1 + len(block))
@@ -274,10 +275,17 @@ def run_feedback_loop(
         prunes = sorted([d for d in directives if d[0] == "USELESS"],
                         key=lambda d: d[2], reverse=True)
         restores = [d for d in directives if d[0] == "MISSING"]
+        applied_prunes = []
 
         for _kind, prefix, start, end, reason in prunes:
             if prefix != "C":
                 turn.rejected.append(f"USELESS L{start}-L{end}: prunes must use C-coordinates")
+                continue
+            if not (1 <= start <= end <= n_lines_before):
+                turn.rejected.append(f"USELESS C{start}-C{end}: out of bounds")
+                continue
+            if _overlaps_any((start, end), applied_prunes):
+                turn.rejected.append(f"USELESS C{start}-C{end}: overlaps another prune in this round")
                 continue
             if _overlaps_any((start, end), protected):
                 turn.rejected.append(
@@ -296,6 +304,10 @@ def run_feedback_loop(
                 turn.rejected.append(f"USELESS C{start}-C{end}: out of bounds")
                 continue
             pruned_this_round += span
+            applied_prunes.append((start, end))
+            removed = min(end, len(before.splitlines())) - max(1, start) + 1
+            protected = [(lo - removed, hi - removed) if lo > end else (lo, hi)
+                         for lo, hi in protected]
             chars_pruned += len(before) - len(current)
             turn.pruned.append(f"C{start}-C{end}")
             changed = True
@@ -321,6 +333,10 @@ def run_feedback_loop(
             chars_restored += len(current) - len(before)
             turn.restored.append(f"L{granted[0]}-L{granted[1]}")
             protected.append(span)
+            added = len(current.splitlines()) - len(before.splitlines())
+            protected[:-1] = [(lo + added if lo >= span[0] else lo,
+                               hi + added if hi >= span[0] else hi)
+                              for lo, hi in protected[:-1]]
             changed = True
 
         turn.tokens_after = len(current)
@@ -333,9 +349,7 @@ def run_feedback_loop(
     else:
         # Round cap hit with edits still landing — record whether the agent
         # would have kept going, without applying anything further.
-        final_payload = build_audit_payload(current, _omitted_ranges(raw_text, current),
-                                            MAX_ROUNDS + 1)
-        exhausted = bool(parse_directives(agent_verify_fn(final_payload, MAX_ROUNDS + 1)))
+        exhausted = True
 
     return FeedbackResult(
         final_text=current,

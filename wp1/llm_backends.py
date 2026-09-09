@@ -50,6 +50,14 @@ from typing import Callable, Dict, List, Optional
 
 ChatFn = Callable[[str, str], str]
 
+
+class ChatResponse(str):
+    """String-compatible answer with provider diagnostics for disk traces."""
+    def __new__(cls, text: str, **metadata):
+        response = super().__new__(cls, text)
+        response.metadata = metadata
+        return response
+
 # Markers agent_localizer's adaptive-MAX loop keys off. Kept here so the
 # retry wrapper and the loop agree on what "the context is too long" means.
 CONTEXT_ERROR_MARKERS = (
@@ -183,6 +191,7 @@ class LLMConfig:
     api_key_env: Optional[str] = None
     temperature: float = 0.0        # deterministic by default: arms must be comparable
     max_tokens: int = 1024
+    context_window: int = 16384
     timeout: float = 300.0
     max_retries: int = 4
     extra_headers: Dict[str, str] = field(default_factory=dict)
@@ -286,7 +295,14 @@ def _make_openai_compatible(cfg: LLMConfig) -> ChatFn:
             # inline it instead. Drop both, keep only the answer.
             if not text and getattr(choice, "reasoning_content", None):
                 text = choice.reasoning_content or ""
-            return strip_reasoning(text)
+            usage = getattr(resp, 'usage', None)
+            return ChatResponse(
+                strip_reasoning(text), raw_content=choice.content,
+                reasoning_content=getattr(choice, 'reasoning_content', None),
+                finish_reason=resp.choices[0].finish_reason,
+                model=getattr(resp, 'model', model),
+                usage=usage.model_dump() if usage else None,
+            )
 
         return _with_retries(call, cfg)
 
@@ -312,7 +328,12 @@ def _make_anthropic(cfg: LLMConfig) -> ChatFn:
                 temperature=cfg.temperature,
                 messages=[{"role": "user", "content": user}],
             )
-            return strip_reasoning("".join(b.text for b in msg.content if hasattr(b, "text")))
+            raw_text = ''.join(b.text for b in msg.content if hasattr(b, 'text'))
+            usage = getattr(msg, 'usage', None)
+            return ChatResponse(strip_reasoning(raw_text), raw_content=raw_text,
+                                finish_reason=getattr(msg, 'stop_reason', None),
+                                model=getattr(msg, 'model', model),
+                                usage=usage.model_dump() if usage else None)
 
         return _with_retries(call, cfg)
 
@@ -322,6 +343,8 @@ def _make_anthropic(cfg: LLMConfig) -> ChatFn:
 def build_chat_fn(cfg: LLMConfig) -> Optional[ChatFn]:
     """Returns None for the heuristic backend, which has no model."""
     kind = cfg.spec.kind
+    if cfg.spec.name == 'ollama':
+        return _make_ollama(cfg)
     if kind == "heuristic":
         return None
     if kind == "anthropic":
@@ -329,6 +352,39 @@ def build_chat_fn(cfg: LLMConfig) -> Optional[ChatFn]:
     if kind == "openai_compatible":
         return _make_openai_compatible(cfg)
     raise ValueError(f"unknown provider kind {kind!r}")
+
+
+def _make_ollama(cfg: LLMConfig) -> ChatFn:
+    """Native options explicitly set context capacity; /v1 silently truncates."""
+    import json
+    import urllib.request
+    base = (cfg.base_url or cfg.spec.base_url).rstrip('/').removesuffix('/v1')
+
+    def chat_fn(system, user):
+        def call():
+            payload = {'model': cfg.resolved_model, 'stream': False,
+                       'messages': [{'role': 'system', 'content': system},
+                                    {'role': 'user', 'content': user}],
+                       'options': {'temperature': cfg.temperature, 'num_predict': cfg.max_tokens,
+                                   'num_ctx': cfg.context_window}}
+            request = urllib.request.Request(base + '/api/chat', json.dumps(payload).encode(),
+                                             {'Content-Type': 'application/json'})
+            with urllib.request.urlopen(request, timeout=cfg.timeout) as response:
+                data = json.load(response)
+            if data.get('error'):
+                raise RuntimeError(data['error'])
+            raw = data.get('message', {}).get('content', '')
+            used = data.get('prompt_eval_count', 0)
+            if used >= cfg.context_window:
+                raise RuntimeError('context length reached configured Ollama limit; possible truncation')
+            return ChatResponse(strip_reasoning(raw), raw_content=raw,
+                                reasoning_content=data.get('message', {}).get('thinking'),
+                                model=data.get('model'), finish_reason=data.get('done_reason'),
+                                context_window=cfg.context_window,
+                                usage={'prompt_tokens': used,
+                                       'completion_tokens': data.get('eval_count', 0)})
+        return _with_retries(call, cfg)
+    return chat_fn
 
 
 def resolve(provider: str, **kwargs) -> LLMConfig:

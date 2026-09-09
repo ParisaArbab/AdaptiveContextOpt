@@ -46,6 +46,7 @@ import subprocess
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
+from run_trace import write_json
 from typing import Dict, List, Optional, Sequence, Tuple
 
 TOKEN_RE = re.compile(r"[A-Za-z][A-Za-z0-9]+")
@@ -149,7 +150,8 @@ def method_line_ranges(structure_map: Dict[str, dict]) -> Dict[str, List[Tuple[s
         entries.sort(key=lambda t: t[1])
         out: List[Tuple[str, int, int]] = []
         for i, (key, start) in enumerate(entries):
-            end = entries[i + 1][1] - 1 if i + 1 < len(entries) else start + 400
+            end = structure_map[key].get('end_line') or (
+                entries[i + 1][1] - 1 if i + 1 < len(entries) else start + 400)
             out.append((key, start, max(start, end)))
         ranges[file] = out
     return ranges
@@ -192,20 +194,29 @@ def run_coverage(
     --show-contexts` attributes each line to the individual tests that
     executed it, which is exactly the (method x test) matrix Ochiai needs.
     """
-    repo_root = Path(repo_root)
+    repo_root = Path(repo_root).resolve()
     rcfile = repo_root / ".wp1coveragerc"
+    shutil.copy2(Path(__file__).with_name('coverage_context_plugin.py'),
+                 repo_root / '_wp1_coverage_context.py')
     rcfile.write_text(
         "[run]\n"
         "branch = False\n"
-        "dynamic_context = test_function\n"
+        "plugins = _wp1_coverage_context\n"
         "parallel = False\n"
         "[json]\n"
         "show_contexts = True\n"
     )
     data_file = repo_root / ".wp1coverage"
-    env = {**os.environ, "COVERAGE_FILE": str(data_file)}
+    json_out = repo_root / ".wp1coverage.json"
+    # Never export data from a previous run after this runner failed.
+    data_file.unlink(missing_ok=True)
+    json_out.unlink(missing_ok=True)
+    env = {**os.environ, "COVERAGE_FILE": str(data_file),
+           "PYTHONPATH": str(repo_root) + os.pathsep + os.environ.get('PYTHONPATH', '')}
 
     cmd = list(test_command)
+    if 'bin/test' in cmd and (repo_root / 'sympy').is_dir() and '--no-subprocess' not in cmd:
+        cmd.insert(cmd.index('bin/test') + 1, '--no-subprocess')
     # test_command starts with the interpreter; splice coverage in after it
     # so the runner (pytest, runtests.py, bin/test) is what gets measured.
     if cmd and Path(cmd[0]).name.startswith("python"):
@@ -214,26 +225,43 @@ def run_coverage(
         run_cmd = [str(python_exe), "-m", "coverage", "run", f"--rcfile={rcfile}", *cmd]
 
     try:
-        subprocess.run(run_cmd, cwd=repo_root, env=env, capture_output=True,
-                       text=True, timeout=timeout)
-    except subprocess.TimeoutExpired:
+        run = subprocess.run(run_cmd, cwd=repo_root, env=env, capture_output=True,
+                             text=True, timeout=timeout)
+    except subprocess.TimeoutExpired as exc:
+        def decoded(value):
+            return value.decode(errors='replace') if isinstance(value, bytes) else (value or '')
+        write_json(repo_root / '.wp1coverage-run.json', {
+            'command': run_cmd, 'timeout_seconds': timeout,
+            'stdout': decoded(exc.stdout), 'stderr': decoded(exc.stderr)})
         return None, f"coverage run timed out after {timeout}s"
     except FileNotFoundError as e:
+        write_json(repo_root / '.wp1coverage-run.json', {'command': run_cmd, 'error': str(e)})
         return None, f"coverage runner not found: {e}"
 
-    if not data_file.exists():
-        return None, "coverage produced no data file (the test command likely never started)"
+    write_json(repo_root / '.wp1coverage-run.json', {
+        'command': run_cmd, 'returncode': run.returncode,
+        'stdout': run.stdout, 'stderr': run.stderr})
 
-    json_out = repo_root / ".wp1coverage.json"
+    if not data_file.exists():
+        return None, f"coverage produced no data file (exit {run.returncode}): " + (run.stderr or run.stdout)[-1000:]
+    if '-m' in cmd and 'pytest' in cmd and run.returncode not in (0, 1):
+        return None, f"coverage test collection/runner failed (exit {run.returncode}): " + (run.stderr + run.stdout)[-1000:]
+
     export = subprocess.run(
-        [str(python_exe), "-m", "coverage", "json", f"--rcfile={rcfile}",
-         "-o", str(json_out)],
+        [str(python_exe), str(Path(__file__).with_name('coverage_export.py').resolve()),
+         str(data_file), str(json_out), str(repo_root)],
         cwd=repo_root, env=env, capture_output=True, text=True, timeout=600,
     )
     if export.returncode != 0 or not json_out.exists():
         return None, f"coverage json export failed: {export.stderr.strip()[-200:]}"
     try:
-        return json.loads(json_out.read_text()), ""
+        data = json.loads(json_out.read_text())
+        data['wp1_run'] = {'command': run_cmd, 'returncode': run.returncode,
+                           'stdout_tail': run.stdout[-4000:], 'stderr_tail': run.stderr[-2000:]}
+        if not any(c for f in data.get('files', {}).values()
+                   for contexts in f.get('contexts', {}).values() for c in contexts):
+            return None, f"coverage contains no per-test contexts (exit {run.returncode}): " + (run.stderr + run.stdout)[-1000:]
+        return data, ""
     except json.JSONDecodeError as e:
         return None, f"coverage json was unparseable: {e}"
 
@@ -255,21 +283,24 @@ def ochiai_from_coverage(
     they never participated in.
     """
     ranges = method_line_ranges(source_only(structure_map))
-    failing_markers = [t.split("::")[-1].split(".")[-1].lower() for t in failing_test_ids]
+    def test_name(value):
+        # unittest repr, pytest nodeid, or coverage's module.Class.test_name.
+        if ' (' in value:
+            value = value.split(' (', 1)[0]
+        return value.split('|', 1)[0].split('::')[-1].split('.')[-1].split('[', 1)[0]
+
+    failing_markers = {test_name(t) for t in failing_test_ids}
 
     def context_is_failing(context: str) -> bool:
-        c = context.lower()
-        return any(m and m in c for m in failing_markers)
+        return test_name(context) in failing_markers
 
-    executed_failing: Counter = Counter()
-    executed_passing: Counter = Counter()
+    executed_failing = defaultdict(set)
+    executed_passing = defaultdict(set)
     failing_contexts, passing_contexts = set(), set()
 
     for file_path, file_data in (coverage_json.get("files") or {}).items():
         rel = _relativize(file_path, repo_root)
-        file_ranges = ranges.get(rel)
-        if not file_ranges:
-            continue
+        file_ranges = ranges.get(rel, [])
         contexts_by_line = file_data.get("contexts") or {}
         for line_str, contexts in contexts_by_line.items():
             try:
@@ -277,17 +308,17 @@ def ochiai_from_coverage(
             except ValueError:
                 continue
             key = _method_for_line(file_ranges, line)
-            if not key:
-                continue
             for context in contexts:
                 if not context:
                     continue
                 if context_is_failing(context):
                     failing_contexts.add(context)
-                    executed_failing[key] += 1
+                    if key:
+                        executed_failing[key].add(context)
                 else:
                     passing_contexts.add(context)
-                    executed_passing[key] += 1
+                    if key:
+                        executed_passing[key].add(context)
 
     total_failed = len(failing_contexts)
     if total_failed == 0:
@@ -298,8 +329,9 @@ def ochiai_from_coverage(
         )
 
     scored: List[Tuple[str, float]] = []
-    for key, n_failed in executed_failing.items():
-        n_passed = executed_passing.get(key, 0)
+    for key, tests in executed_failing.items():
+        n_failed = len(tests)
+        n_passed = len(executed_passing.get(key, set()))
         denom = math.sqrt(total_failed * (n_failed + n_passed))
         if denom > 0:
             scored.append((key, n_failed / denom))
@@ -312,6 +344,7 @@ def ochiai_from_coverage(
             "failing_contexts": total_failed,
             "passing_contexts": len(passing_contexts),
             "methods_covered_by_failing_tests": len(executed_failing),
+            "scores": {key: score for key, score in scored[:limit]},
         },
     )
 
@@ -343,7 +376,11 @@ def _method_document(key: str, meta: dict, repo_root: Path, body_lines: int = 40
         path = Path(repo_root) / file
         try:
             src = path.read_text(errors="replace").splitlines()
-            parts.append("\n".join(src[line - 1 : line - 1 + body_lines]))
+            stop = line - 1 + body_lines
+            end_line = meta.get("end_line")
+            if isinstance(end_line, int) and end_line >= line:
+                stop = min(stop, end_line)
+            parts.append("\n".join(src[line - 1 : stop]))
         except OSError:
             pass
     return "\n".join(parts)

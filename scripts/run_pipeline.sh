@@ -18,6 +18,7 @@
 # be compared afterwards from the artifacts alone.
 
 set -euo pipefail
+export PYTHONUNBUFFERED=1
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$HERE/.." && pwd)"
@@ -32,6 +33,7 @@ API_KEY_ENV=""
 TOKENIZER_MODEL=""
 TEMPERATURE="0.0"
 MAX_TOKENS="1024"
+CONTEXT_WINDOW="16384"
 
 DATASET="swe-bench-lite"
 LANGUAGE=""
@@ -71,6 +73,7 @@ MODEL
   --tokenizer-model ID   HF repo id for exact token counts (e.g. with ollama tags)
   --temperature F        default 0.0, keeps arms comparable
   --max-tokens N         default 1024
+  --context-window N    native Ollama context capacity (default 16384)
   --preflight            one cheap test call before the run
   --list-providers       print the provider table and exit
 
@@ -111,6 +114,7 @@ while [[ $# -gt 0 ]]; do
     --tokenizer-model)  TOKENIZER_MODEL="$2"; shift 2 ;;
     --temperature)      TEMPERATURE="$2"; shift 2 ;;
     --max-tokens)       MAX_TOKENS="$2"; shift 2 ;;
+    --context-window)   CONTEXT_WINDOW="$2"; shift 2 ;;
     --preflight)        PREFLIGHT=1; shift ;;
     --list-providers)   "$PYTHON" "$WP1/llm_backends.py"; exit 0 ;;
     --dataset)          DATASET="$2"; shift 2 ;;
@@ -215,6 +219,7 @@ BENCH=("$PYTHON" "$WP1/run_wp1_benchmark.py"
        --llm "$LLM"
        --temperature "$TEMPERATURE"
        --max-tokens "$MAX_TOKENS"
+       --context-window "$CONTEXT_WINDOW"
        --target-density "$TARGET_DENSITY"
        --repos-dir "$ROOT/data/repos"
        --out "$RESULTS_JSON")

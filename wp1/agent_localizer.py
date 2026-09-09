@@ -178,7 +178,7 @@ def fuzzy_search(query: str, choices: List[str], max_results: int = 5) -> List[s
     return close if close else [c for c, _ in distances[:max_results]]
 
 
-def postprocess_topk(entries: List[str], structure_map: Dict[str, dict]) -> List[str]:
+def postprocess_topk(entries: List[str], structure_map: Dict[str, dict], evidence: str = '') -> List[str]:
     """Real Section 3.2.1 Step 3: 'the structured output of LLMs will be
     further refined using our postprocessing process, which matches the
     method names provided by LLMs to actual methods in the buggy program.'
@@ -187,14 +187,31 @@ def postprocess_topk(entries: List[str], structure_map: Dict[str, dict]) -> List
     The paper's own case study (Time-25) shows this mattering: Agent4SR's
     raw 3rd-place guess was wrong, and postprocessing corrected it via edit
     distance to the real buggy method before Agent4LR ever saw it."""
-    choices = list(structure_map.keys())
     resolved: List[str] = []
     for entry in entries:
+        entry = entry.strip().strip('`* ')
+        entry = re.sub(r'(\.py):(?=[^:])', r'\1::', entry)
         if entry in structure_map:
             resolved.append(entry)
             continue
-        matches = fuzzy_search(entry, choices, max_results=1)
-        if matches and matches[0] not in resolved:
+        path, name = metrics.split_symbol(entry)
+        choices = [k for k in structure_map
+                   if not path or metrics.split_symbol(k)[0] == path]
+        matches = [k for k in choices if metrics.split_symbol(k)[1] == name]
+        if not matches:
+            matches = [k for k in choices
+                       if metrics.split_symbol(k)[1].split('.')[-1] == name.split('.')[-1]]
+        if not matches and path and len(name) > 3:
+            # Correct small spelling errors within the supplied file only.
+            # Never manufacture a candidate by choosing an unrelated nearest name.
+            distances = [(k, _levenshtein(name, metrics.split_symbol(k)[1])) for k in choices]
+            best = min((d for _, d in distances), default=99)
+            if best <= 2:
+                matches = [k for k, d in distances if d == best]
+        if len(matches) > 1 and evidence:
+            grounded = set(_symptom_vertices_from_trace(evidence, structure_map))
+            matches = [k for k in matches if k in grounded]
+        if len(matches) == 1:
             resolved.append(matches[0])
     return resolved
 
@@ -209,12 +226,13 @@ class StructureQueryTools:
         self.structure_map = structure_map
         self.repo_root = Path(repo_root) if repo_root else None
 
-    def get_paths(self) -> List[str]:
-        return sorted({meta["file"] for meta in self.structure_map.values()})
+    def get_paths(self, query: str = "") -> List[str]:
+        return sorted({meta["file"] for meta in self.structure_map.values()
+                       if query.lower() in meta["file"].lower()})
 
     def get_classes_of_path(self, path: str) -> List[str]:
         exact = sorted(
-            key.split("::", 1)[1]
+            key
             for key, meta in self.structure_map.items()
             if meta["file"] == path
         )
@@ -240,18 +258,26 @@ class StructureQueryTools:
 
     def find_class(self, name: str) -> List[str]:
         name_lower = name.lower()
+        # Exact qualified/leaf names must survive the output-size cap.
+        # Substring-only lookup of short names such as _f hides these behind
+        # thousands of unrelated symbols containing the same characters.
+        named = [key for key in self.structure_map
+                 if name_lower in (key.lower(), metrics.split_symbol(key)[1],
+                                   metrics.split_symbol(key)[1].split('.')[-1])]
+        if named:
+            return named
         exact = [key for key in self.structure_map if name_lower in key.lower()]
         return exact if exact else fuzzy_search(name, list(self.structure_map.keys()))
 
     def find_method(self, name: str) -> List[str]:
         return self.find_class(name)  # same fuzzy-search mechanism, flat namespace
 
-    def get_code_snippet_of_method(self, key: str, context_lines: int = 8) -> Optional[str]:
+    def get_code_snippet_of_method(self, key: str, context_lines: int = 160) -> Optional[str]:
         meta = self.structure_map.get(key)
         if not meta:
             # real get_code_snippet(): fuzzy-search and offer a "did you
             # mean" style correction instead of failing silently
-            matches = fuzzy_search(key, list(self.structure_map.keys()), max_results=1)
+            matches = postprocess_topk([key], self.structure_map)
             if len(matches) == 1:
                 meta = self.structure_map.get(matches[0])
                 key = matches[0]
@@ -262,7 +288,13 @@ class StructureQueryTools:
             return None
         lines = file_path.read_text(errors="replace").splitlines()
         start = max(0, meta["line"] - 1)
-        end = min(len(lines), start + context_lines)
+        end = min(len(lines), meta.get("end_line") or start + context_lines)
+        if end - start > context_lines:
+            head = context_lines * 3 // 4
+            tail = context_lines - head
+            return "\n".join(lines[start:start + head] +
+                             [f"# ... {end - start - context_lines} lines omitted ..."] +
+                             lines[end - tail:end])
         return "\n".join(lines[start:end])
 
 
@@ -275,10 +307,27 @@ def _symptom_vertices_from_trace(tool_output: str, structure_map: Dict[str, dict
     directly implicated by observed failure evidence. Shared by the
     pre-search briefing below and the post-refinement expansion, so both
     stages start from the same grounding."""
-    return [
-        key for key in structure_map
-        if any(m.group(3).lower() in key.lower() for m in FRAME_RE.finditer(tool_output))
-    ]
+    found = []
+    for frame in FRAME_RE.finditer(tool_output):
+        path, line, name = frame.groups()
+        path = path.replace('\\', '/').removeprefix('./')
+        matches = []
+        for key, meta in structure_map.items():
+            file, symbol = metrics.split_symbol(key)
+            if not (path == file or path.endswith('/' + file)):
+                continue
+            if symbol.split('.')[-1] != name.lower():
+                continue
+            matches.append(key)
+        containing = [k for k in matches
+                      if structure_map[k].get('line', 0) is not None
+                      and structure_map[k].get('line', 0) <= int(line)
+                      <= (structure_map[k].get('end_line') or int(line))]
+        if containing:
+            matches = [max(containing, key=lambda k: structure_map[k].get('line') or 0)]
+        if len(matches) == 1 and matches[0] not in found:
+            found.append(matches[0])
+    return found
 
 
 def graph_structural_briefing(
@@ -324,8 +373,10 @@ def graph_structural_briefing(
 
     lines = ["Structural context (Graphify call graph + GraphLocator symptom analysis, "
              "gathered before search):"]
-    for sv in symptom_vertices:
+    for sv in symptom_vertices[:40]:
         lines.append(f"- symptom vertex: {sv}")
+    if len(symptom_vertices) > 40:
+        lines.append(f"- {len(symptom_vertices) - 40} additional trace vertices omitted; use lookup tools.")
     if neighbor_keys:
         lines.append(f"- structurally connected ({max_hops}-hop callers/callees): "
                       + ", ".join(neighbor_keys[:15]))
@@ -374,16 +425,20 @@ the information you retrieve using given functions.
 Function calls you can use are as follows.
 * find_class(`class_name`) -> Find a class by fuzzy search.
 * find_method(`method_name`) -> Find a method by fuzzy search.
-* get_paths() -> Get the paths of the Python software system.
+* get_paths(`optional_path_filter`) -> Get paths; narrow the filter if results are truncated.
 * get_classes_of_path(`path_name`) -> Get the classes/functions in a path.
 * get_methods_of_class(`class_key`) -> Get the methods belonging to a class.
 * get_code_snippet_of_method(`key`) -> Get the code snippet of a method.
 * exit() -> Exit function calling to give your final answer when confident.
-You have {max_iters} chances to call a function."""
+You have {max_iters} chances to call a function. Do not repeat identical calls.
+Return final rankings as Top_1 : file::name through Top_{top_k} : file::name.
+Use real production methods returned by the tools; never invent paths."""
 
 AGENT4LR_SYSTEM_PROMPT = """You are a debugging assistant of our Python software. \
 You are given a bug report and/or trigger test and a candidate list of suspicious \
-methods suggested by a prior stage. Function calls you can use are as follows.
+methods suggested by a prior stage. Your final ranking MUST select only methods
+from that list. Use the bug report and failure evidence to judge them.
+Function calls you can use are as follows.
 * get_code_snippet_of_method(`method_number`) -> Get the code snippet of the \
 Python method by its number in the suggested list.
 * exit() -> Exit function calling to give your final answer when confident.
@@ -416,23 +471,37 @@ EXPAND: comma-separated file::name entries worth adding (empty if none)"""
 def _parse_function_call(response: str) -> tuple[Optional[str], str]:
     """Parses 'FunctionName(Argument)' from a single line, matching the real
     pipeline.py's parsing: strip quotes, split on first '(' / last ')'."""
-    line = response.strip().splitlines()[-1] if response.strip() else ""
-    cleaned = line.replace("'", "").replace('"', "")
-    if "(" not in cleaned or ")" not in cleaned:
-        return None, ""
-    name = cleaned[: cleaned.find("(")].strip()
-    args = cleaned[cleaned.find("(") + 1 : cleaned.rfind(")")].strip().strip("`")
-    return name or None, args
+    calls = []
+    for line in response.strip().splitlines():
+        m = re.fullmatch(r"([A-Za-z_]\w*)\((.*)\)", line.strip().strip('`').strip())
+        if m:
+            argument = m.group(2).strip()
+            if argument.startswith(('"', "'")):
+                import ast
+                try:
+                    argument = ast.literal_eval(argument)
+                except (ValueError, SyntaxError):
+                    return None, ""
+                if not isinstance(argument, str):
+                    return None, ""
+            else:
+                argument = argument.strip('`')
+                if '(' in argument or ')' in argument or ',' in argument:
+                    return None, ""
+            calls.append((m.group(1), argument))
+    return calls[0] if len(calls) == 1 else (None, "")
 
 
 def _parse_topk(response: str) -> List[str]:
     """Parses the real 'Top_1 : ...' / 'Top_2 : ...' final-answer format."""
     entries = []
     for line in response.splitlines():
-        m = re.match(r"\s*Top_\d+\s*:\s*(.+)", line, re.IGNORECASE)
+        line = line.strip().lstrip('- ').replace('**', '').strip('`')
+        m = re.fullmatch(r"Top[_\s-]?(\d+)\s*:\s*(.+)", line, re.IGNORECASE)
         if m:
-            entries.append(m.group(1).strip())
-    return entries
+            if 1 <= int(m.group(1)) <= FINAL_TOPK:
+                entries.append((int(m.group(1)), m.group(2).strip().strip('`* ')))
+    return [value for _, value in sorted(entries, key=lambda e: e[0])]
 
 
 def run_react_loop(
@@ -457,25 +526,52 @@ def run_react_loop(
         "Now reason and plan how to locate the buggy methods."
     )
     response = chat_fn(system_prompt, transcript)
+    if _parse_topk(response):
+        return response
     transcript += f"\nAssistant: {response}"
+    consecutive_errors = 0
+    seen_calls = set()
+    turns = []
 
     for _ in range(max_iters):
         response = chat_fn(system_prompt, transcript + f"\n{REACT_TURN_INSTRUCTION}")
-        transcript += f"\nAssistant: {response}"
+        turns.append({"assistant": response})
+        if stats is not None:
+            stats["turns"] = turns
+        if _parse_topk(response):
+            return response
 
         function_name, arguments = _parse_function_call(response)
         if function_name is None:
             if stats is not None:
                 stats["format_errors"] = stats.get("format_errors", 0) + 1
+            consecutive_errors += 1
             transcript += "\nPlease call functions in the right format `FunctionName(Argument)`."
+            if consecutive_errors >= 2:
+                break
             continue
         if function_name == "exit":
             break
         if function_name not in dispatch:
             if stats is not None:
                 stats["unknown_function"] = stats.get("unknown_function", 0) + 1
+            consecutive_errors += 1
             transcript += "\nPlease call functions in the right format `FunctionName(Argument)`."
+            if consecutive_errors >= 2:
+                break
             continue
+
+        if (function_name, arguments) in seen_calls:
+            transcript += "\nThat call was already answered. Inspect a different method or call exit()."
+            consecutive_errors += 1
+            if stats is not None:
+                stats["repeated_calls"] = stats.get("repeated_calls", 0) + 1
+            if consecutive_errors >= 2:
+                break
+            continue
+        consecutive_errors = 0
+        seen_calls.add((function_name, arguments))
+        transcript += f"\nAssistant: {response}"
 
         if stats is not None:
             stats["tool_calls"] = stats.get("tool_calls", 0) + 1
@@ -483,10 +579,27 @@ def run_react_loop(
             result = dispatch[function_name](arguments)
         except Exception as e:  # a bad argument shouldn't kill the whole run
             result = f"Error calling {function_name}: {e}"
-        result_str = "\n".join(result) if isinstance(result, list) else str(result)
+        if isinstance(result, list):
+            result_str = "\n".join(result[:40])
+            if len(result) > 40:
+                result_str += f"\n[{len(result) - 40} results omitted; narrow your query.]"
+        else:
+            result_str = str(result)
+        if len(result_str) > 16000:
+            result_str = result_str[:16000] + "\n[tool result truncated]"
+        turns[-1]["tool_result"] = result_str
         transcript += f"\n{result_str}"
 
     final_response = chat_fn(system_prompt, transcript + f"\n{final_instruction}")
+    if not _parse_topk(final_response):
+        if stats is not None:
+            stats["final_format_repairs"] = stats.get("final_format_repairs", 0) + 1
+        final_response = chat_fn(
+            system_prompt,
+            transcript + "\nThe final answer did not contain a valid ranking. "
+            "Return only the requested Top_1..Top_5 lines with real method references. "
+            "Do not call more tools.\n" + final_instruction,
+        )
     return final_response
 
 
@@ -804,7 +917,7 @@ def localize_with_llm(
     # --- FlexFL Stage 1: Agent4SR, real multi-turn ReAct loop, primed with
     # the structural briefing gathered above ---
     stage1_dispatch = {
-        "get_paths": lambda _args: tools.get_paths(),
+        "get_paths": lambda args: tools.get_paths(args),
         "get_classes_of_path": lambda args: tools.get_classes_of_path(args),
         "get_methods_of_class": lambda args: tools.get_methods_of_class(args),
         "find_class": lambda args: tools.find_class(args),
@@ -820,7 +933,7 @@ def localize_with_llm(
         sr_stats: dict = {}
         stage1_final = run_react_loop_with_adaptive_max(
             AGENT4SR_SYSTEM_PROMPT, stage1_input, stage1_dispatch, chat_fn, MAX_FLEXFL_ITERS,
-            FINAL_ANSWER_INSTRUCTION_SR, format_kwargs={"top_k": CANDIDATE_LIST_SIZE},
+            FINAL_ANSWER_INSTRUCTION_SR, format_kwargs={"top_k": FINAL_TOPK},
             stats=sr_stats,
         )
     # --- FlexFL §4.5: merge Agent4SR with the traditional localizers ---
@@ -830,7 +943,8 @@ def localize_with_llm(
     # nothing parseable. The paper does neither: it concatenates top-5 from
     # SBIR, Ochiai and BoostN, appends Agent4SR LAST, caps at 20, and hands
     # that to Agent4LR.
-    agent4sr_top5 = postprocess_topk(_parse_topk(stage1_final), structure_map)[:FINAL_TOPK]
+    agent4sr_top5 = postprocess_topk(_parse_topk(stage1_final), traditional_fl.source_only(structure_map),
+                                   working_text + '\n' + problem_statement)[:FINAL_TOPK]
     merge_result = flexfl_merge.merge_for_swebench(
         agent4sr_top5=agent4sr_top5,
         problem_statement=problem_statement,
@@ -856,6 +970,8 @@ def localize_with_llm(
     def stage2_get_snippet(args: str):
         try:
             idx = int(args.strip()) - 1
+            if not 0 <= idx < len(candidates):
+                raise IndexError(idx)
             key = candidates[idx]
         except (ValueError, IndexError):
             return "Invalid method number. Use a number from the suggested list."
@@ -864,7 +980,11 @@ def localize_with_llm(
 
     stage2_dispatch = {"get_code_snippet_of_method": stage2_get_snippet}
     numbered_candidates = "\n".join(f"{i+1}.{c}" for i, c in enumerate(candidates))
-    stage2_input = f"The suggested methods are as follows:\n```\n{numbered_candidates}\n```"
+    stage2_input = (
+        f"The trigger test / tool output is as follows:\n```\n{working_text}\n```\n"
+        f"The bug report is as follows:\n```\n{problem_statement}\n```\n"
+        f"The suggested methods are as follows:\n```\n{numbered_candidates}\n```"
+    )
     with meter.stage(token_meter.STAGE_STAGE2):
         lr_stats: dict = {}
         stage2_final = run_react_loop_with_adaptive_max(
@@ -881,7 +1001,8 @@ def localize_with_llm(
     # ahead of the padding. Deduplicated here (unlike the merge itself)
     # because this is a ranking handed to the metrics, where a repeated
     # entry would occupy a rank slot without adding a distinct prediction.
-    agent4lr_ranking = postprocess_topk(_parse_topk(stage2_final), structure_map)
+    candidate_map = {k: structure_map[k] for k in candidates if k in structure_map}
+    agent4lr_ranking = postprocess_topk(_parse_topk(stage2_final), candidate_map)
     functions = _ordered_dedupe(agent4lr_ranking, candidates)[:FINAL_TOPK]
     if not functions:
         functions = candidates[:FINAL_TOPK]
@@ -926,7 +1047,8 @@ def localize_with_llm(
             # Agent4SR contributed nothing and the merge carried the instance
             # on the traditional localizers alone.
             "agent4sr_produced_ranking": bool(agent4sr_top5),
-            "agent4lr_produced_ranking": bool(_parse_topk(stage2_final)),
+            "agent4lr_produced_ranking": bool(agent4lr_ranking),
+            "agent4lr_padding_count": len(_ordered_dedupe(agent4lr_ranking, candidates)[:FINAL_TOPK]) - len(_ordered_dedupe(agent4lr_ranking)[:FINAL_TOPK]),
         },
         stage_transcripts=(
             {"agent4sr_final": stage1_final[-4000:],

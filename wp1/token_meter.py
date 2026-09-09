@@ -25,6 +25,7 @@ including its knock-on effect on how much the agent then has to search.
 from __future__ import annotations
 
 import os
+import time
 from contextlib import contextmanager
 from dataclasses import dataclass, field, asdict
 from typing import Callable, Dict, List, Optional
@@ -116,7 +117,7 @@ class TokenCounter:
 
     @property
     def is_exact(self) -> bool:
-        return self.method != "chars_div_4_estimate"
+        return self.method.startswith('huggingface:')
 
 
 @dataclass
@@ -141,11 +142,14 @@ class TokenMeter:
         report = meter.report()
     """
 
-    def __init__(self, counter: TokenCounter):
+    def __init__(self, counter: TokenCounter, trace=None):
         self.counter = counter
         self.stages: Dict[str, StageUsage] = {}
         self.context: Dict[str, int] = {}
         self._current = STAGE_OTHER
+        self.trace = trace
+        self._call_id = 0
+        self._provider_calls = 0
 
     @contextmanager
     def stage(self, name: str):
@@ -168,11 +172,37 @@ class TokenMeter:
             return None
 
         def instrumented(system: str, user: str) -> str:
+            self._call_id += 1
+            call_id = self._call_id
             bucket = self._bucket(self._current)
             bucket.calls += 1
-            bucket.prompt_tokens += self.counter.count(system) + self.counter.count(user)
-            response = chat_fn(system, user)
-            bucket.completion_tokens += self.counter.count(response)
+            prompt_tokens = self.counter.count(system) + self.counter.count(user)
+            bucket.prompt_tokens += prompt_tokens
+            if self.trace:
+                self.trace.emit('llm_request', call_id=call_id, stage=self._current,
+                                system=system, user=user, prompt_tokens=prompt_tokens,
+                                tokenizer=self.counter.method)
+            started = time.monotonic()
+            try:
+                response = chat_fn(system, user)
+            except BaseException as exc:
+                if self.trace:
+                    self.trace.emit('llm_error', call_id=call_id, stage=self._current,
+                                    error_type=type(exc).__name__, error=str(exc),
+                                    elapsed_seconds=time.monotonic() - started)
+                raise
+            completion_tokens = self.counter.count(response)
+            usage = (getattr(response, 'metadata', None) or {}).get('usage') or {}
+            if isinstance(usage.get('prompt_tokens'), int) and isinstance(usage.get('completion_tokens'), int):
+                bucket.prompt_tokens += usage['prompt_tokens'] - prompt_tokens
+                completion_tokens = usage['completion_tokens']
+                self._provider_calls += 1
+            bucket.completion_tokens += completion_tokens
+            if self.trace:
+                self.trace.emit('llm_response', call_id=call_id, stage=self._current,
+                                response=str(response), completion_tokens=completion_tokens,
+                                provider_metadata=getattr(response, 'metadata', None),
+                                elapsed_seconds=time.monotonic() - started)
             return response
 
         return instrumented
@@ -183,6 +213,9 @@ class TokenMeter:
         stage counts are what the agent then actually consumed."""
         n = self.counter.count(text)
         self.context[label] = n
+        if self.trace:
+            self.trace.emit('context', label=label, text=text, tokens=n,
+                            tokenizer=self.counter.method)
         return n
 
     def report(self) -> dict:
@@ -193,6 +226,9 @@ class TokenMeter:
         return {
             "tokenizer": self.counter.method,
             "tokenizer_exact": self.counter.is_exact,
+            "llm_token_source": ('provider_usage' if self._provider_calls and self._provider_calls == self._call_id
+                                 else 'mixed_or_client_estimate'),
+            "provider_usage_calls": self._provider_calls,
             "llm_calls": sum(u.calls for u in self.stages.values()),
             "llm_prompt_tokens": total_prompt,
             "llm_completion_tokens": total_completion,

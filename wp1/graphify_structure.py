@@ -201,6 +201,7 @@ def build_structure_map(
         }
 
     structure, qualified, dropped_modules = _qualify_members(structure)
+    structure = _python_source_scopes(structure, repo_path)
 
     if dropped_prose or disambiguated or qualified or dropped_modules:
         print(f"  structure map: {len(structure)} entities "
@@ -209,6 +210,63 @@ def build_structure_map(
               f"{dropped_modules} module nodes dropped, "
               f"{disambiguated} residual collisions kept apart)")
     return structure
+
+
+def _python_source_scopes(structure: Dict[str, dict], repo_path: Path) -> Dict[str, dict]:
+    """Resolve Python ownership and body spans from source, retaining graph IDs.
+
+    A preceding symbol is not necessarily an enclosing class. In particular,
+    nested helpers such as _TR56._f need their actual scope and end line.
+    """
+    definitions = {}
+    for file in {m['file'] for m in structure.values() if m['file'].endswith('.py')}:
+        try:
+            tree = ast.parse((repo_path / file).read_text(errors='replace'))
+        except (OSError, SyntaxError):
+            continue
+        by_line = {}
+
+        def walk(node, parents=()):
+            for child in ast.iter_child_nodes(node):
+                if isinstance(child, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+                    scope = parents + (child.name,)
+                    callable_ = not isinstance(child, ast.ClassDef)
+                    item = ('.'.join(scope) + ('()' if callable_ else ''), child, callable_)
+                    by_line[child.lineno] = item
+                    for decorator in child.decorator_list:
+                        by_line[decorator.lineno] = item
+                    walk(child, scope)
+                else:
+                    walk(child, parents)
+
+        walk(tree)
+        definitions[file] = by_line
+    out = {}
+    for key, meta in structure.items():
+        definition = definitions.get(meta['file'], {}).get(meta.get('line'))
+        if definition:
+            name, node, callable_ = definition
+            key = f"{meta['file']}::{name}"
+            if key in out and out[key].get('line') != node.lineno:
+                key += f'@L{node.lineno}'
+            meta = {**meta, 'name': name, 'line': node.lineno,
+                    'end_line': node.end_lineno, 'callable': callable_}
+        out[key] = meta
+    # Graphify can omit nested function definitions. Complete the source index
+    # from AST; synthetic IDs have no invented call-graph edges.
+    for file, by_line in definitions.items():
+        indexed_lines = {m.get('line') for m in out.values() if m['file'] == file}
+        for name, node, callable_ in by_line.values():
+            if node.lineno in indexed_lines:
+                continue
+            key = f'{file}::{name}'
+            if key in out:
+                key += f'@L{node.lineno}'
+            out[key] = {'id': f'ast:{file}:{node.lineno}', 'file': file,
+                        'line': node.lineno, 'end_line': node.end_lineno,
+                        'name': name, 'callable': callable_, 'community': None}
+            indexed_lines.add(node.lineno)
+    return out
 
 
 def build_call_graph(repo_path: Path, out_dir: Path | None = None) -> Dict[str, Dict[str, list]]:

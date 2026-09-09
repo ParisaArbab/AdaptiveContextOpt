@@ -1,5 +1,11 @@
 # lean-ctx reference notes
 
+**Historical note:** As of the 2026-09-10 integration, the official 3.10.1
+binary is installed locally and the pipeline invokes its production shell
+engine via `ctx_compare`. The old automatic fallback described below has
+been removed. Use `python3 scripts/install_leanctx.py` to reproduce the
+installation; see `smoke_run_logging.md` for the current contract.
+
 Source of truth: [yvgude/lean-ctx](https://github.com/yvgude/lean-ctx) (README,
 `lean_ctx/client.py`, `lean_ctx/discovery.py` — read directly from the
 installed `lean-ctx-sdk==0.3.0` package on 2026-08-25).

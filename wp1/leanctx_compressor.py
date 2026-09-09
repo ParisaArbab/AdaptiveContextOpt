@@ -1,5 +1,9 @@
 """LeanCTX compression of a captured test output.
 
+Current contract: real CLI compression is required by default. Failure
+raises; reference compression is available only through force_reference=True
+for explicit diagnostic use. Historical fallback rationale follows below.
+
 Two modes, and which one ran is recorded on every result:
 
   "cli"       — the real LeanCTX binary, driven through `lean-ctx call
@@ -29,6 +33,8 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 import json
+import os
+import hashlib
 from pathlib import Path
 import re
 import shutil
@@ -45,11 +51,12 @@ class LeanCtxResult:
     original_bytes: int
     compressed_bytes: int
     report: str
+    executable: str = ""
+    executable_sha256: str = ""
 
     def to_dict(self) -> dict:
         data = asdict(self)
         data.pop("text", None)
-        data.pop("report", None)
         return data
 
 
@@ -60,7 +67,10 @@ def compress_captured_shell_output(
     binary: str = "lean-ctx",
     timeout: int = 180,
 ) -> LeanCtxResult:
-    exe = shutil.which(binary)
+    configured = os.environ.get('LEAN_CTX_BINARY')
+    managed = Path(__file__).resolve().parents[1] / '.tools/leanctx/3.10.1/lean-ctx'
+    exe = (shutil.which(configured) if configured else
+           str(managed) if binary == 'lean-ctx' and managed.is_file() else shutil.which(binary))
     if not exe:
         raise RuntimeError(
             "LeanCTX CLI is not installed or not on PATH. Install yvgude/lean-ctx first."
@@ -97,6 +107,16 @@ def compress_captured_shell_output(
         raise RuntimeError(f"Unexpected LeanCTX ctx_compare output:\n{report[-8000:]}")
 
     compressed = _reconstruct_from_preview(raw_output, report)
+    # The preview's byte count disambiguates the final newline and detects
+    # incomplete/malformed diffs before corrupted text reaches localization.
+    sizes = re.search(r'bytes:\s*(\d+)\s*->\s*(\d+)', report)
+    if not sizes or int(sizes.group(1)) != len(raw_output.encode()):
+        raise RuntimeError('LeanCTX preview has missing or inconsistent input byte counts')
+    expected_bytes = int(sizes.group(2))
+    if len(compressed.encode()) != expected_bytes and len((compressed + '\n').encode()) == expected_bytes:
+        compressed += '\n'
+    if len(compressed.encode()) != expected_bytes:
+        raise RuntimeError('LeanCTX reconstructed output does not match reported byte count')
     original_tokens, compressed_tokens, saved_pct = _parse_token_header(report)
     return LeanCtxResult(
         text=compressed,
@@ -106,6 +126,8 @@ def compress_captured_shell_output(
         original_bytes=len(raw_output.encode()),
         compressed_bytes=len(compressed.encode()),
         report=report,
+        executable=str(Path(exe).resolve()),
+        executable_sha256=hashlib.sha256(Path(exe).read_bytes()).hexdigest(),
     )
 
 
@@ -213,9 +235,9 @@ def compress(
 ) -> CompressionResult:
     """Entry point for run_wp1_benchmark's leanctx arms.
 
-    Tries the real LeanCTX binary first and falls back to reference mode,
-    recording which one ran. A caller that needs the real thing or nothing
-    should call compress_captured_shell_output() directly.
+    Requires real LeanCTX unless force_reference is explicitly requested.
+    target_density belongs to reference mode only; the real shell engine
+    selects its compression from the captured command and output.
     """
     if not force_reference:
         try:
@@ -232,10 +254,8 @@ def compress(
                 original_tokens_est=original, compressed_tokens_est=compressed,
                 reduction_pct=round(reduction, 1), detail=real.to_dict(),
             )
-        except Exception:
-            # Binary missing, or ctx_compare rejected this input. Either way
-            # the run continues in reference mode, tagged as such.
-            pass
+        except Exception as exc:
+            raise RuntimeError(f'Real LeanCTX compression failed: {exc}') from exc
 
     compressed_text = _reference_density_compress(text, target_density=target_density)
     original = _estimate_tokens(text)
@@ -244,6 +264,7 @@ def compress(
         text=compressed_text, mode="reference",
         original_tokens_est=original, compressed_tokens_est=compressed,
         reduction_pct=round(100.0 * (1 - compressed / original) if original else 0.0, 1),
+        detail={'fallback_reason': 'explicit reference mode'},
     )
 
 

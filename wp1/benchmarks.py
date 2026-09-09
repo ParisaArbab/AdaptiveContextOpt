@@ -177,9 +177,14 @@ class PythonAdapter(LanguageAdapter):
             return cmd
 
         if framework == "sympy":
-            # sympy's bin/test wraps its own runner; it takes file paths.
-            cmd = ["python3", "bin/test", "-C", "--verbose"]
-            cmd.extend(t.split("::", 1)[0] if "::" in t else t for t in selected)
+            # Keep the native runner, but preserve the requested test names.
+            # --no-subprocess also lets coverage observe actual test calls.
+            cmd = ["python3", "bin/test", "-C", "--verbose", "--no-subprocess"]
+            paths = list(dict.fromkeys(t.split('::', 1)[0] for t in selected if '::' in t or '/' in t))
+            names = list(dict.fromkeys(t.rsplit('::', 1)[-1] for t in selected if '::' in t or '/' not in t))
+            cmd.extend(paths)
+            if names:
+                cmd.extend(['-k', *names])
             return cmd
 
         # -rA + --tb=long is what produces the assertion diffs and stack

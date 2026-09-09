@@ -338,7 +338,8 @@ def _ensure_dependencies_installed(
     return None, notes
 
 
-def _resolve_bare_test_ids(test_patch: str, fail_to_pass: Sequence[str]) -> List[str]:
+def _resolve_bare_test_ids(test_patch: str, fail_to_pass: Sequence[str],
+                           workdir: Optional[Path] = None) -> List[str]:
     """Some SWE-bench datasets record FAIL_TO_PASS as bare test names
     ('test__TR56') rather than pytest node ids ('path/to/file.py::test__TR56').
     Confirmed directly against sympy__sympy-17139: passing a bare name as a
@@ -381,6 +382,24 @@ def _resolve_bare_test_ids(test_patch: str, fail_to_pass: Sequence[str]) -> List
             if re.search(rf"def\s+{re.escape(base_name)}\s*\(", body):
                 match = file_path
                 break
+        if not match and workdir and '.' not in base_name and ' ' not in base_name:
+            # Passing tests commonly do not appear in the patch. Search the
+            # checkout, preferring the patched test files, never the gold fix.
+            preferred = [Path(workdir) / f for f, _ in file_segments]
+            paths = preferred + sorted(Path(workdir).rglob('test_*.py'))
+            matches = []
+            for path in dict.fromkeys(paths):
+                if any(p.startswith('.') or p in ('graphify-out', '__pycache__')
+                       for p in path.relative_to(workdir).parts):
+                    continue
+                try:
+                    body = path.read_text(errors='replace')
+                except OSError:
+                    continue
+                if re.search(rf'^def\s+{re.escape(base_name)}\s*\(', body, re.M):
+                    matches.append(path.relative_to(workdir).as_posix())
+            if len(matches) == 1:
+                match = matches[0]
         resolved.append(f"{match}::{test_id}" if match else test_id)
     return resolved
 
@@ -399,7 +418,7 @@ def run_local_fallback(
     install_timeout: int = 1800,
 ) -> TestRunResult:
     adapter = adapter or PythonAdapter()
-    workdir = Path(workdir or tempfile.mkdtemp(prefix=f"wp1_{instance_id.replace('/', '_')}_"))
+    workdir = Path(workdir or tempfile.mkdtemp(prefix=f"wp1_{instance_id.replace('/', '_')}_")).resolve()
     notes: List[str] = []
 
     ensure_checkout(repo, base_commit, workdir)
@@ -415,7 +434,7 @@ def run_local_fallback(
     if not trigger_tests:
         notes.append("no FAIL_TO_PASS ids; running the adapter's default selection")
     elif adapter.name == "python":
-        resolved = _resolve_bare_test_ids(test_patch, trigger_tests)
+        resolved = _resolve_bare_test_ids(test_patch, trigger_tests, workdir)
         unresolved = [t for t, r in zip(trigger_tests, resolved) if t == r and "::" not in r]
         if unresolved:
             notes.append(f"could not resolve file path for bare test id(s): {unresolved}; "
@@ -499,7 +518,19 @@ def collect_spectrum(
     if not selected:
         return None, "no tests to profile"
 
-    cmd = adapter.build_test_command(workdir, selected)
+    if adapter.name == 'python':
+        patch_path = workdir / '_wp1_test.patch'
+        selected = _resolve_bare_test_ids(
+            patch_path.read_text() if patch_path.exists() else '', selected, workdir)
+        if PythonAdapter.detect_framework(workdir) == 'pytest':
+            unresolved = [t for t in selected if '::' not in t and '/' not in t]
+            if unresolved:
+                return None, f'coverage cannot resolve test ids: {unresolved}'
+    # The capture cap must not silently discard the requested passing spectrum.
+    import copy
+    spectrum_adapter = copy.copy(adapter)
+    spectrum_adapter.max_trigger_tests = len(selected)
+    cmd = spectrum_adapter.build_test_command(workdir, selected)
     if cmd and cmd[0] == "python3":
         cmd[0] = str(python_exe)
     return traditional_fl.run_coverage(workdir, python_exe, cmd, timeout=timeout)
