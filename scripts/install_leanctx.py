@@ -10,13 +10,21 @@ from pathlib import Path
 VERSION = '3.10.1'
 
 
-def main():
+def release_asset(system_name, machine, libc='glibc'):
     arch = {'arm64': 'aarch64', 'aarch64': 'aarch64',
-            'x86_64': 'x86_64', 'AMD64': 'x86_64'}.get(platform.machine())
-    system = {'Darwin': 'apple-darwin', 'Linux': 'unknown-linux-gnu'}.get(platform.system())
+            'x86_64': 'x86_64', 'AMD64': 'x86_64'}.get(machine)
+    linux = 'unknown-linux-musl' if libc == 'musl' else 'unknown-linux-gnu'
+    system = {'Darwin': 'apple-darwin', 'Linux': linux}.get(system_name)
     if not arch or not system:
-        raise SystemExit('Install the official binary for this platform and set LEAN_CTX_BINARY.')
-    name = f'lean-ctx-{arch}-{system}.tar.gz'
+        raise ValueError('Install the official binary for this platform and set LEAN_CTX_BINARY.')
+    return f'lean-ctx-{arch}-{system}.tar.gz'
+
+
+def main():
+    libc = platform.libc_ver()[0]
+    if not libc and list(Path('/lib').glob('ld-musl-*.so.1')):
+        libc = 'musl'
+    name = release_asset(platform.system(), platform.machine(), libc)
     base = f'https://github.com/yvgude/lean-ctx/releases/download/v{VERSION}/'
     checksums = urllib.request.urlopen(base + 'SHA256SUMS', timeout=60).read().decode()
     expected = next(line.split()[0] for line in checksums.splitlines()

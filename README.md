@@ -11,6 +11,10 @@ method is applied.
 
 ## Pipeline
 
+For A100 and portable Linux execution, see [Docker GPU setup](docs/docker_gpu.md).
+`PIPELINE_DEVICE=nvidia bash scripts/run_docker.sh` builds the environment
+and runs the Full/RAW smoke comparison with persistent models and results.
+
 For real LeanCTX runs, install the pinned upstream executable with
 `python3 scripts/install_leanctx.py`. Full requires this executable and stops
 on compressor errors. See [the diagnostic run guide](docs/smoke_run_logging.md)

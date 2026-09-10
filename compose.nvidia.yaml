@@ -1,0 +1,12 @@
+services:
+  ollama:
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["${GPU_DEVICE:-0}"]
+              capabilities: [gpu]
+  pipeline:
+    environment:
+      REQUIRE_GPU: "1"

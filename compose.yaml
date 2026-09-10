@@ -1,0 +1,41 @@
+services:
+  ollama:
+    image: ${OLLAMA_IMAGE:-ollama/ollama:0.33.3}
+    environment:
+      OLLAMA_HOST: 0.0.0.0:11434
+      OLLAMA_NUM_PARALLEL: "1"
+      OLLAMA_MAX_LOADED_MODELS: "1"
+      OLLAMA_CONTEXT_LENGTH: "${CONTEXT_WINDOW:-16384}"
+      OLLAMA_KEEP_ALIVE: 30m
+    volumes:
+      - ${OLLAMA_MODELS_DIR:-ollama-models}:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 5s
+      timeout: 5s
+      retries: 60
+    restart: unless-stopped
+  pipeline:
+    build:
+      context: .
+      target: runtime
+    image: adaptive-context-pipeline:local
+    init: true
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+      MODEL: "${MODEL:-llama3.1:8b}"
+      CONTEXT_WINDOW: "${CONTEXT_WINDOW:-16384}"
+      REQUIRE_GPU: "${REQUIRE_GPU:-0}"
+    volumes:
+      - ${INPUTS_DIR:-./data}:/inputs:ro
+      - ${RESULTS_DIR:-./results}:/app/results
+      - ${BENCHMARK_REPOS_DIR:-benchmark-repos}:/app/data/repos
+      - huggingface-cache:/root/.cache/huggingface
+    command: ["--instances", "/inputs/smoke_sympy_17139.json", "--arms", "full,pure_flexfl", "--limit", "1"]
+volumes:
+  ollama-models:
+  benchmark-repos:
+  huggingface-cache:

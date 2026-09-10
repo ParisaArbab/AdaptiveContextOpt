@@ -1,5 +1,10 @@
 # Running the small pilot on your own NVIDIA GPU
 
+**Current supported Docker workflow:** see [A100 / portable Docker setup](docker_gpu.md).
+It installs real LeanCTX during the build and runs Ollama with NVIDIA GPU
+access. The direct-host vLLM/daemon instructions below are historical;
+the current shell-compression integration does not need a LeanCTX daemon.
+
 This is for when you clone the repo yourself onto a GPU machine, instead of
 running inside this sandbox. Same benchmark (SWE-bench Lite), same small
 pilot size — nothing about the pilot scope changes, only where it runs and
