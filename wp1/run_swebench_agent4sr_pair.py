@@ -263,6 +263,7 @@ RUNTIME TEST OUTPUT:
     final = ""
     tool_calls = 0
     tool_names_used = set()
+    seen_tool_calls = set()
 
     for step in range(1, max_steps + 1):
         print(f"\\n[Agent4SR] STEP {step}/{max_steps}", flush=True)
@@ -345,13 +346,31 @@ RUNTIME TEST OUTPUT:
 
         if not action:
             history.append({
-                "assistant": response,
+                "assistant": "FORMAT_ERROR_RESPONSE_REJECTED",
+                "assistant_raw": response,
                 "tool": "FORMAT ERROR: use one allowed tool call or Top_1..Top_5",
             })
             continue
 
         name, arg = action
+        tool_key = (name, arg)
 
+        if tool_key in seen_tool_calls:
+            print(
+                f"[Agent4SR] DUPLICATE TOOL CALL REJECTED: {name}({arg})",
+                flush=True,
+            )
+            history.append({
+                "assistant": f"{name}({json.dumps(arg)})",
+                "assistant_raw": response,
+                "tool": (
+                    "DUPLICATE TOOL CALL REJECTED. "
+                    "Choose a different unexplored Graphify query."
+                ),
+            })
+            continue
+
+        seen_tool_calls.add(tool_key)
         tool_calls += 1
         tool_names_used.add(name)
 
@@ -363,7 +382,8 @@ RUNTIME TEST OUTPUT:
         print(result[:5000], flush=True)
 
         history.append({
-            "assistant": response,
+            "assistant": f"{name}({json.dumps(arg)})",
+            "assistant_raw": response,
             "tool": result,
         })
 
