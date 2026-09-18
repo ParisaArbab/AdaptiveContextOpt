@@ -189,7 +189,46 @@ summary.json
 
 `summary.json` reports Top-1, Top-3, Top-5, MAP, and MRR by model and condition. It also lists **compression-tax** cases where RAW finds a faulty method in the final Top-5 but LeanCTX does not.
 
-## 9. Main modules
+## 9. Adaptive feedback research mode
+
+For SWE-bench density experiments, the main branch also includes a gold-free
+adaptive feedback loop. It starts from a compressed LeanCTX context, runs
+Agent4SR with Graphify, asks a separate context-sufficiency evaluator whether
+more runtime context is needed, and can retry with a higher density.
+
+The default schedule is:
+
+```text
+initial density 0.30
+  -> feedback EXPAND -> 0.50
+  -> feedback EXPAND -> 0.70
+  -> feedback EXPAND -> 1.00 (RAW)
+```
+
+`--max-feedback-rounds 3` means one initial Agent4SR run plus at most three
+feedback-driven retries. The feedback evaluator never receives the gold faulty
+entity or patch. Gold remains evaluation-only.
+
+This mode uses the research density helper compiled from the pinned LeanCTX
+source tree. It is intentionally labeled research mode because it calls
+LeanCTX's density algorithm directly rather than the production
+`ctx_compare` shell safety path.
+
+Example:
+
+```bash
+python -m wp1.run_swebench_agent4sr_feedback \
+  --instance sympy__sympy-20590 \
+  --model qwen3.6:27b \
+  --initial-density 0.30 \
+  --density-schedule 0.30,0.50,0.70,1.00 \
+  --max-feedback-rounds 3
+```
+
+Results are written under
+`data/swebench_workspaces/<instance>/outputs/adaptive_feedback/`.
+
+## 10. Main modules
 
 | File | Purpose |
 |---|---|
@@ -201,5 +240,8 @@ summary.json
 | `wp1/evaluation.py` | Top-k, MAP, MRR |
 | `wp1/llm_backends.py` | Ollama, OpenAI-compatible, and Anthropic access |
 | `wp1/run_wp1_benchmark.py` | end-to-end benchmark runner |
+| `wp1/adaptive_feedback.py` | gold-free STOP/EXPAND feedback decisions |
+| `wp1/leanctx_density.py` | wrapper for the pinned LeanCTX density research helper |
+| `wp1/run_swebench_agent4sr_feedback.py` | adaptive SWE-bench Agent4SR density loop |
 
 More details are in `docs/architecture.md` and `docs/reference_alignment.md`.
