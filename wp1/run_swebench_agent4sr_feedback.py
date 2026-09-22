@@ -52,7 +52,16 @@ def main() -> None:
         "--ollama-num-predict",
         type=int,
         default=120,
-        help="Maximum Ollama output tokens per Agent4SR/feedback call.",
+        help="Maximum Ollama output tokens per Agent4SR call.",
+    )
+    parser.add_argument(
+        "--feedback-num-predict",
+        type=int,
+        default=320,
+        help=(
+            "Maximum Ollama output tokens for the structured feedback JSON. "
+            "This is intentionally larger than the Agent4SR tool-call budget."
+        ),
     )
     parser.add_argument("--density-helper", default=None)
     parser.add_argument("--output-dir", type=Path, default=None)
@@ -88,6 +97,12 @@ def main() -> None:
         model=args.model,
         timeout=1800,
         ollama_num_predict=args.ollama_num_predict,
+    )
+    feedback_backend = ChatBackend(
+        provider="ollama",
+        model=args.model,
+        timeout=1800,
+        ollama_num_predict=args.feedback_num_predict,
     )
     helper = resolve_density_helper(args.density_helper)
 
@@ -159,7 +174,7 @@ def main() -> None:
             stop_reason = "max_feedback_rounds"
         else:
             decision = evaluate_context_sufficiency(
-                backend,
+                feedback_backend,
                 problem=problem,
                 failing_test=failing,
                 runtime_output=runtime_output,
@@ -263,6 +278,8 @@ def main() -> None:
     result = {
         "instance_id": args.instance,
         "model": args.model,
+        "agent_ollama_num_predict": args.ollama_num_predict,
+        "feedback_ollama_num_predict": args.feedback_num_predict,
         "gold_used_by_agent_or_feedback": False,
         "feedback_policy": "targeted_evidence_first",
         "initial_density": initial,
