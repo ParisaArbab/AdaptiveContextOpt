@@ -38,8 +38,8 @@ Graphify transcript, or targeted-evidence ledger.
 
 Valid evidence types:
 - runtime_detail: a specific missing test/error/assertion/traceback detail.
-- source_snippet: source for a concrete file::entity.
-- inheritance_chain: the definition of a concrete class and its direct parents.
+- source_snippet: source for a concrete file::entity when only that entity is needed.
+- inheritance_chain: a concrete class plus its parent/ancestor chain and __slots__ status.
 - file_structure: production entities in a concrete source file.
 
 For source requests, anchor_entity must be a concrete path.py::Entity whenever
@@ -63,6 +63,12 @@ Return ONLY one JSON object with exactly these top-level keys:
 Rules:
 - STOP only when the current ranking is sufficiently supported.
 - TARGETED_EXPAND requires at least one concrete missing_evidence item.
+- If the unresolved question mentions a parent, base class, ancestor, MRO, or
+  inheritance relationship, you MUST use inheritance_chain, not source_snippet.
+- If __slots__ or __dict__ may depend on an ancestor, use inheritance_chain.
+- Previous rankings are hypotheses, not ground truth. If the current ranking
+  changes sharply, request evidence that resolves the disagreement rather than
+  discarding the previous state without evidence.
 - EXPAND_DENSITY is a last resort only when the needed information cannot be
   requested concretely.
 - Never use unknown gold correctness as a reason to STOP or expand.
@@ -89,6 +95,26 @@ class FeedbackDecision:
         return asdict(self)
 
 
+def _looks_like_inheritance_request(
+    evidence_type: str,
+    question: str,
+    why_needed: str,
+) -> bool:
+    if evidence_type != "source_snippet":
+        return False
+    text = f"{question} {why_needed}".lower()
+    relation_terms = (
+        "parent",
+        "base class",
+        "base classes",
+        "ancestor",
+        "inherit",
+        "inheritance",
+        "mro",
+    )
+    return any(term in text for term in relation_terms)
+
+
 def _clean_request(item: object) -> dict | None:
     if not isinstance(item, dict):
         return None
@@ -100,6 +126,14 @@ def _clean_request(item: object) -> dict | None:
         return None
     if not anchor or not question or not why_needed:
         return None
+
+    # Normalize a common LLM mistake: asking about parents/ancestors while
+    # labeling the request as a single source snippet. This keeps the controller
+    # evidence-driven and prevents duplicate source-snippet requests from
+    # triggering an unnecessary density increase.
+    if _looks_like_inheritance_request(evidence_type, question, why_needed):
+        evidence_type = "inheritance_chain"
+
     if evidence_type in {"source_snippet", "inheritance_chain"}:
         if ".py::" not in anchor:
             return None
@@ -326,56 +360,127 @@ def _resolve_imported_class_ref(
     return None
 
 
-def _inheritance_evidence(graph, anchor: str) -> str:
-    if "::" not in anchor:
-        return graph.snippet(anchor)
-
-    source_file, entity = anchor.split("::", 1)
-    source_file = source_file.strip().replace("\\", "/").lstrip("./")
-    class_name = entity.strip().split(".")[0]
-    path = Path(graph.repo) / source_file
-
-    primary = graph.snippet(f"{source_file}::{class_name}")
-    if not path.exists() or path.suffix != ".py":
-        return primary
-
-    try:
-        tree = ast.parse(path.read_text(errors="replace"))
-    except Exception:
-        return primary
-
-    node = _find_class_node(tree, class_name)
-    if node is None:
-        return primary
-
-    parent_names = []
+def _class_bases(node: ast.ClassDef) -> list[str]:
+    names: list[str] = []
     for base in node.bases:
         try:
             name = ast.unparse(base)
         except Exception:
             name = ""
         if name:
-            parent_names.append(name)
+            names.append(name)
+    return names
 
-    sections = [f"ANCHOR CLASS:\n{primary}"]
-    for parent_name in parent_names[:5]:
-        ref = _resolve_imported_class_ref(
-            graph,
-            source_file,
-            tree,
-            parent_name,
+
+def _class_slots_summary(node: ast.ClassDef) -> str:
+    for stmt in node.body:
+        if isinstance(stmt, ast.Assign):
+            if any(
+                isinstance(target, ast.Name) and target.id == "__slots__"
+                for target in stmt.targets
+            ):
+                try:
+                    return ast.unparse(stmt.value)
+                except Exception:
+                    return "<declared>"
+        if (
+            isinstance(stmt, ast.AnnAssign)
+            and isinstance(stmt.target, ast.Name)
+            and stmt.target.id == "__slots__"
+        ):
+            if stmt.value is None:
+                return "<declared>"
+            try:
+                return ast.unparse(stmt.value)
+            except Exception:
+                return "<declared>"
+    return "<not declared in this class>"
+
+
+def _inheritance_evidence(
+    graph,
+    anchor: str,
+    *,
+    max_depth: int = 4,
+    max_classes: int = 10,
+) -> str:
+    """Retrieve a bounded transitive class hierarchy with __slots__ status."""
+    if "::" not in anchor:
+        return graph.snippet(anchor)
+
+    start_file, entity = anchor.split("::", 1)
+    start_file = start_file.strip().replace("\\", "/").lstrip("./")
+    start_class = entity.strip().split(".")[0]
+
+    queue: list[tuple[str, str, int]] = [(start_file, start_class, 0)]
+    visited: set[str] = set()
+    sections: list[str] = []
+
+    while queue and len(visited) < max_classes:
+        source_file, class_name, depth = queue.pop(0)
+        ref = f"{source_file}::{class_name}"
+        ref_key = ref.lower()
+        if ref_key in visited:
+            continue
+        visited.add(ref_key)
+
+        try:
+            snippet = graph.snippet(ref)
+        except Exception as exc:
+            sections.append(
+                f"CLASS depth={depth} {ref}\n"
+                f"Retrieval failed: {type(exc).__name__}: {exc}"
+            )
+            continue
+
+        path = Path(graph.repo) / source_file
+        tree = None
+        node = None
+        if path.exists() and path.suffix == ".py":
+            try:
+                tree = ast.parse(path.read_text(errors="replace"))
+                node = _find_class_node(tree, class_name)
+            except Exception:
+                tree = None
+                node = None
+
+        if node is None:
+            sections.append(
+                f"CLASS depth={depth} {ref}\n"
+                "BASES: <unknown>\n"
+                "__slots__: <unknown>\n"
+                f"SOURCE:\n{snippet[:1400]}"
+            )
+            continue
+
+        bases = _class_bases(node)
+        slots = _class_slots_summary(node)
+        sections.append(
+            f"CLASS depth={depth} {ref}\n"
+            f"BASES: {', '.join(bases) if bases else '<none>'}\n"
+            f"__slots__: {slots}\n"
+            f"SOURCE:\n{snippet[:1400]}"
         )
-        if ref:
-            sections.append(
-                f"DIRECT PARENT {parent_name} ({ref}):\n{graph.snippet(ref)}"
-            )
-        else:
-            sections.append(
-                f"DIRECT PARENT {parent_name}: source reference could not be "
-                "resolved automatically."
-            )
-    return "\n\n".join(sections)
 
+        if depth >= max_depth or tree is None:
+            continue
+
+        for parent_name in bases:
+            simple = parent_name.split(".")[-1]
+            if simple in {"object", "type"}:
+                continue
+            parent_ref = _resolve_imported_class_ref(
+                graph,
+                source_file,
+                tree,
+                parent_name,
+            )
+            if not parent_ref or "::" not in parent_ref:
+                continue
+            parent_file, parent_entity = parent_ref.split("::", 1)
+            queue.append((parent_file, parent_entity.split(".")[0], depth + 1))
+
+    return "\n\n".join(sections)
 
 def _file_structure(graph, anchor: str) -> str:
     path = anchor.split("::", 1)[0].strip().replace("\\", "/").lstrip("./")
@@ -484,9 +589,11 @@ def evaluate_context_sufficiency(
     feedback_round: int,
     max_feedback_rounds: int,
     evidence_ledger: list[dict] | None = None,
+    previous_predictions: list[str] | None = None,
 ) -> FeedbackDecision:
     """Return a gold-free evidence-guided feedback decision."""
     predictions = list(agent_result.get("predictions") or [])
+    previous_predictions = list(previous_predictions or [])
     transcript = list(agent_result.get("transcript") or [])
     tools_used = set(agent_result.get("tools_used") or [])
     tool_calls = int(agent_result.get("tool_calls") or 0)
@@ -591,6 +698,15 @@ CURRENT AGENT4SR TOP-5:
         f"{i}. {p}" for i, p in enumerate(predictions, 1)
     ) + """
 
+PREVIOUS AGENT4SR TOP-5 (HYPOTHESIS MEMORY, NOT GROUND TRUTH):
+""" + (
+        "\n".join(
+            f"{i}. {p}" for i, p in enumerate(previous_predictions, 1)
+        )
+        if previous_predictions
+        else "(none)"
+    ) + """
+
 REAL GRAPHIFY TOOL EVIDENCE:
 """ + "\n\n".join(history_lines) + """
 
@@ -598,8 +714,13 @@ TARGETED EVIDENCE ALREADY RETRIEVED:
 """ + _ledger_text(evidence_ledger) + """
 
 Identify the single most useful unresolved evidence need. Prefer a concrete
-TARGETED_EXPAND request. Do not request evidence already shown above. Use
-EXPAND_DENSITY only when no concrete evidence target can be named.
+TARGETED_EXPAND request. Do not request evidence already shown above. If the
+question concerns parents, ancestors, base classes, MRO, __slots__, or __dict__
+across a class hierarchy, request inheritance_chain. Treat the previous ranking
+as hypothesis memory: do not assume it is correct, but if the current ranking
+changed sharply, request evidence that resolves the disagreement instead of
+forgetting the previous state. Use EXPAND_DENSITY only when no concrete
+evidence target can be named.
 """
 
     response = backend.complete(FEEDBACK_SYSTEM, prompt)
