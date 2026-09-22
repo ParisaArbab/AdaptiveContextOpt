@@ -22,6 +22,7 @@ class ChatBackend:
         api_key: str | None = None,
         timeout: int = 180,
         ollama_num_ctx: int | None = None,
+        ollama_num_predict: int | None = None,
         ollama_max_retries: int = 3,
     ):
         self.provider = provider.lower()
@@ -33,6 +34,11 @@ class ChatBackend:
             int(os.getenv("OLLAMA_NUM_CTX", "16384"))
             if ollama_num_ctx is None
             else int(ollama_num_ctx)
+        )
+        self.ollama_num_predict = (
+            int(os.getenv("OLLAMA_NUM_PREDICT", "512"))
+            if ollama_num_predict is None
+            else int(ollama_num_predict)
         )
         self.ollama_max_retries = max(1, int(ollama_max_retries))
 
@@ -58,7 +64,7 @@ class ChatBackend:
                 ],
                 "options": {
                     "temperature": 0,
-                    "num_predict": 512,
+                    "num_predict": self.ollama_num_predict,
                     "num_ctx": self.ollama_num_ctx,
                 },
             }
