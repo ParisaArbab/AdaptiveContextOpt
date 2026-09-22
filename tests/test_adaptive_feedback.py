@@ -56,6 +56,25 @@ def test_feedback_parser_targeted_json():
     )
 
 
+def test_parent_source_request_is_upgraded_to_inheritance_chain():
+    decision = parse_feedback_decision(
+        """{
+          "decision": "TARGETED_EXPAND",
+          "reason": "Need to inspect the parent hierarchy.",
+          "missing_evidence": [
+            {
+              "evidence_type": "source_snippet",
+              "anchor_entity": "sympy/core/symbol.py::Symbol",
+              "question": "Do Symbol or its immediate parents define __slots__?",
+              "why_needed": "A parent class may introduce __dict__."
+            }
+          ]
+        }"""
+    )
+    assert decision.decision == "TARGETED_EXPAND"
+    assert decision.missing_evidence[0]["evidence_type"] == "inheritance_chain"
+
+
 def test_vague_targeted_feedback_falls_back_to_density():
     decision = parse_feedback_decision(
         '{"decision":"TARGETED_EXPAND","reason":"need more","missing_evidence":[]}'
@@ -89,6 +108,8 @@ class _FakeGraph:
     def __init__(self, repo):
         self.repo = Path(repo)
         self.nodes = [
+            _Node("Symbol", "sympy/core/symbol.py"),
+            _Node("AtomicExpr", "sympy/core/expr.py"),
             _Node("Basic", "sympy/core/basic.py"),
             _Node("Printable", "sympy/core/_print_helpers.py"),
         ]
@@ -159,3 +180,55 @@ def test_runtime_targeted_retrieval_extracts_local_failure_block(tmp_path):
 
     assert len(records) == 1
     assert "assert not hasattr" in records[0]["content"]
+
+
+def test_inheritance_targeted_retrieval_walks_transitive_chain(tmp_path):
+    symbol = tmp_path / "sympy/core/symbol.py"
+    expr = tmp_path / "sympy/core/expr.py"
+    basic = tmp_path / "sympy/core/basic.py"
+    printable = tmp_path / "sympy/core/_print_helpers.py"
+    symbol.parent.mkdir(parents=True)
+
+    symbol.write_text(
+        "from .expr import AtomicExpr\n"
+        "class Symbol(AtomicExpr):\n"
+        "    __slots__ = ('name',)\n"
+    )
+    expr.write_text(
+        "from .basic import Basic\n"
+        "class AtomicExpr(Basic):\n"
+        "    __slots__ = ()\n"
+    )
+    basic.write_text(
+        "from ._print_helpers import Printable\n"
+        "class Basic(Printable):\n"
+        "    __slots__ = ('_args',)\n"
+    )
+    printable.write_text(
+        "class Printable:\n"
+        "    def __str__(self):\n"
+        "        return 'x'\n"
+    )
+
+    graph = _FakeGraph(tmp_path)
+    records = retrieve_targeted_evidence(
+        graph,
+        [
+            {
+                "evidence_type": "inheritance_chain",
+                "anchor_entity": "sympy/core/symbol.py::Symbol",
+                "question": "Which ancestor can introduce __dict__?",
+                "why_needed": "Need the full __slots__ inheritance path.",
+            }
+        ],
+        raw_runtime_output="",
+    )
+
+    assert len(records) == 1
+    content = records[0]["content"]
+    assert "sympy/core/symbol.py::Symbol" in content
+    assert "sympy/core/expr.py::AtomicExpr" in content
+    assert "sympy/core/basic.py::Basic" in content
+    assert "sympy/core/_print_helpers.py::Printable" in content
+    assert "__slots__: ('name',)" in content
+    assert "__slots__: <not declared in this class>" in content
