@@ -210,9 +210,17 @@ only if targeted retrieval cannot provide new evidence:
 ```
 
 Targeted evidence can include a local runtime failure excerpt, a concrete
-`file.py::Entity` source snippet, a class plus its direct inheritance
-definitions, or the production entities in a known source file. Retrieved
-evidence is stored in an evidence ledger and is not requested again.
+`file.py::Entity` source snippet, a bounded transitive inheritance chain with
+explicit `__slots__` status, or the production entities in a known source
+file. Requests that mention parents, base classes, ancestors, MRO, or
+inheritance are normalized to `inheritance_chain` even if the evaluator labels
+them as a plain source snippet. Retrieved evidence is stored in an evidence
+ledger and is not requested again.
+
+Each retry also receives the previous Agent4SR Top-5 as hypothesis memory. The
+ranking is not treated as ground truth, but it is carried forward so a new
+search trajectory does not silently discard useful localization state without
+new contradictory evidence.
 
 The default fallback density schedule remains `0.30,0.50,0.70,1.00`, but
 density is no longer increased automatically after every EXPAND decision.
