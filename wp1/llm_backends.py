@@ -8,7 +8,9 @@ from __future__ import annotations
 import json
 import os
 import re
+import urllib.error
 import urllib.request
+import time
 
 
 class ChatBackend:
@@ -19,12 +21,20 @@ class ChatBackend:
         base_url: str | None = None,
         api_key: str | None = None,
         timeout: int = 180,
+        ollama_num_ctx: int | None = None,
+        ollama_max_retries: int = 3,
     ):
         self.provider = provider.lower()
         self.model = model
         self.base_url = base_url
         self.api_key = api_key
         self.timeout = timeout
+        self.ollama_num_ctx = (
+            int(os.getenv("OLLAMA_NUM_CTX", "16384"))
+            if ollama_num_ctx is None
+            else int(ollama_num_ctx)
+        )
+        self.ollama_max_retries = max(1, int(ollama_max_retries))
 
     def complete(self, system: str, user: str) -> str:
         if self.provider == "ollama":
@@ -49,18 +59,43 @@ class ChatBackend:
                 "options": {
                     "temperature": 0,
                     "num_predict": 512,
+                    "num_ctx": self.ollama_num_ctx,
                 },
             }
         ).encode()
-        req = urllib.request.Request(
-            f"{base}/api/chat",
-            data=payload,
-            headers={"Content-Type": "application/json"},
-            method="POST",
-        )
-        with urllib.request.urlopen(req, timeout=self.timeout) as response:
-            data = json.loads(response.read().decode("utf-8", errors="replace"))
-        return _strip_reasoning(str(data.get("message", {}).get("content", "")))
+
+        last_error: Exception | None = None
+        for attempt in range(1, self.ollama_max_retries + 1):
+            req = urllib.request.Request(
+                f"{base}/api/chat",
+                data=payload,
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            try:
+                with urllib.request.urlopen(req, timeout=self.timeout) as response:
+                    data = json.loads(response.read().decode("utf-8", errors="replace"))
+                return _strip_reasoning(str(data.get("message", {}).get("content", "")))
+            except urllib.error.HTTPError as exc:
+                last_error = exc
+                if exc.code not in {500, 502, 503, 504} or attempt == self.ollama_max_retries:
+                    raise
+            except (urllib.error.URLError, TimeoutError) as exc:
+                last_error = exc
+                if attempt == self.ollama_max_retries:
+                    raise
+
+            wait_seconds = min(15, 2 ** (attempt - 1))
+            print(
+                f"[Ollama] transient failure on attempt {attempt}/"
+                f"{self.ollama_max_retries}; retrying in {wait_seconds}s...",
+                flush=True,
+            )
+            time.sleep(wait_seconds)
+
+        if last_error is not None:
+            raise last_error
+        raise RuntimeError("Ollama request failed without an explicit error")
 
     def _openai(self, system: str, user: str) -> str:
         try:
