@@ -156,6 +156,67 @@ def parse_top5(text):
     return [x[1] for x in found][:5]
 
 
+def _previously_seen_entities(final_response, history):
+    """Collect path::entity strings already seen before format finalization."""
+    values = []
+    seen = set()
+    texts = [final_response or ""]
+    for item in history:
+        texts.append(str(item.get("assistant", "")))
+        texts.append(str(item.get("tool", "")))
+
+    pattern = re.compile(
+        r"(?<![\\w./-])([A-Za-z0-9_./-]+\\.py::[A-Za-z0-9_.$<>-]+)"
+    )
+    for text in texts:
+        for match in pattern.finditer(text):
+            value = match.group(1).rstrip(".,;:)")
+            if value not in seen:
+                seen.add(value)
+                values.append(value)
+    return values
+
+
+def finalize_top5_format(backend, final_response, history):
+    """One format-only retry using no new tools, repository data, or gold."""
+    seen_entities = _previously_seen_entities(final_response, history)
+    candidates = "\\n".join(f"- {x}" for x in seen_entities[:40]) or "(none)"
+
+    system = """You are a strict output formatter for an already completed
+software fault-localization run.
+
+You MUST NOT investigate, call tools, use gold information, or introduce new
+repository evidence. Use only the previous conclusion and entities already seen
+during the completed run.
+
+Return exactly five lines and nothing else:
+Top_1 : path/to/file.py::Entity
+Top_2 : path/to/file.py::Entity
+Top_3 : path/to/file.py::Entity
+Top_4 : path/to/file.py::Entity
+Top_5 : path/to/file.py::Entity
+"""
+
+    prompt = f"""PREVIOUS FINAL RESPONSE:
+{final_response}
+
+ENTITIES ALREADY SEEN DURING THIS RUN:
+{candidates}
+
+Rewrite the completed localization result into exactly five Top_1..Top_5 lines.
+Preserve the previous ranking as much as possible. If the previous response was
+truncated before Top_5, choose the missing candidate only from the already-seen
+entities above. Do not add explanation.
+"""
+
+    print("[Agent4SR] FORMAT-ONLY FINALIZATION CALL", flush=True)
+    response = backend.complete(system, prompt)
+    print("[Agent4SR] FORMAT-ONLY RESPONSE:", flush=True)
+    print(response, flush=True)
+    predictions = parse_top5(response)
+    return response, predictions
+
+
 def parse_tool(text):
     """
     Parse Agent4SR tool calls.
@@ -393,12 +454,32 @@ RUNTIME TEST OUTPUT:
             "tool": result,
         })
 
+    predictions = parse_top5(final)
+    format_finalization = None
+
+    if len(predictions) != 5:
+        formatted_response, formatted_predictions = finalize_top5_format(
+            backend,
+            final,
+            history,
+        )
+        format_finalization = {
+            "attempted": True,
+            "original_prediction_count": len(predictions),
+            "response": formatted_response,
+            "prediction_count": len(formatted_predictions),
+        }
+        if len(formatted_predictions) == 5:
+            predictions = formatted_predictions
+            final = formatted_response
+
     return {
-        "predictions": parse_top5(final),
+        "predictions": predictions,
         "steps": max_steps,
         "tool_calls": tool_calls,
         "tools_used": sorted(tool_names_used),
         "final_response": final,
+        "format_finalization": format_finalization,
         "transcript": history,
     }
 
