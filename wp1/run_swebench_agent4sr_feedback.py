@@ -138,9 +138,10 @@ def main() -> None:
     feedback_rounds_used = 0
     stop_reason = ""
 
-    # Evidence persists across retries. This is the evidence ledger.
+    # Evidence and localization hypotheses persist across retries.
     evidence_ledger: list[dict] = []
     evidence_keys: set[str] = set()
+    previous_predictions: list[str] = []
 
     while True:
         runtime_output, compression = context_for_density(density)
@@ -154,6 +155,8 @@ def main() -> None:
             flush=True,
         )
 
+        prior_predictions = list(previous_predictions)
+
         agent = run_agent(
             backend,
             graph,
@@ -162,7 +165,12 @@ def main() -> None:
             runtime_output,
             max_steps=args.max_agent_steps,
             targeted_evidence=evidence_ledger,
+            previous_predictions=prior_predictions,
         )
+
+        current_predictions = list(agent.get("predictions") or [])
+        if current_predictions:
+            previous_predictions = current_predictions
 
         upcoming = next_density(density, schedule)
         decision = None
@@ -184,6 +192,7 @@ def main() -> None:
                 feedback_round=feedback_rounds_used + 1,
                 max_feedback_rounds=args.max_feedback_rounds,
                 evidence_ledger=evidence_ledger,
+                previous_predictions=prior_predictions,
             )
 
             if decision.decision == "STOP":
@@ -249,6 +258,7 @@ def main() -> None:
             "compression": compression,
             "predictions": agent.get("predictions", []),
             "agent": agent,
+            "previous_predictions_supplied": prior_predictions,
             "evidence_ledger_size_before": ledger_size_before,
             "feedback": feedback_dict,
             "retrieved_evidence": retrieved,
@@ -290,7 +300,7 @@ def main() -> None:
         "localization_runs": len(rounds),
         "targeted_evidence_items": len(evidence_ledger),
         "stop_reason": stop_reason,
-        "final_predictions": rounds[-1]["predictions"] if rounds else [],
+        "final_predictions": previous_predictions,
         "evidence_ledger": evidence_ledger,
         "rounds": rounds,
     }
