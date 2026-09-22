@@ -84,6 +84,12 @@ def main() -> None:
     parser.add_argument("--density-stop", type=float, default=0.70)
     parser.add_argument("--density-step", type=float, default=0.01)
     parser.add_argument("--max-agent-steps", type=int, default=20)
+    parser.add_argument(
+        "--ollama-num-predict",
+        type=int,
+        default=120,
+        help="Maximum Ollama output tokens per Agent4SR call.",
+    )
     parser.add_argument("--density-helper", default=None)
     parser.add_argument("--output-dir", type=Path, default=None)
     args = parser.parse_args()
@@ -109,6 +115,7 @@ def main() -> None:
         provider="ollama",
         model=args.model,
         timeout=1800,
+        ollama_num_predict=args.ollama_num_predict,
     )
     helper = resolve_density_helper(args.density_helper)
 
@@ -250,6 +257,7 @@ def main() -> None:
         "density_start": args.density_start,
         "density_stop": args.density_stop,
         "density_step": args.density_step,
+        "ollama_num_predict": args.ollama_num_predict,
         "requested_density_count": len(requested),
         "unique_context_count": len(context_cache),
         "first_exact_gold_miss": first_exact_miss,
