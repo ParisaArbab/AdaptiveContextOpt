@@ -376,7 +376,7 @@ RUNTIME TEST OUTPUT:
 
         predictions = parse_top5(response)
 
-        if predictions:
+        if len(predictions) == 5:
             graphify_ready = (
                 tool_calls >= 2
                 and "get_code_snippet" in tool_names_used
