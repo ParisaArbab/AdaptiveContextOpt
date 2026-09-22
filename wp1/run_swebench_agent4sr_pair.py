@@ -317,6 +317,7 @@ def run_agent(
     runtime_output,
     max_steps=20,
     targeted_evidence=None,
+    previous_predictions=None,
 ):
     history = []
 
@@ -347,6 +348,21 @@ RUNTIME TEST OUTPUT:
                 f"Question: {item.get('question', '')}\n"
                 f"Evidence:\n{item.get('content', '')}\n"
             )
+
+    previous_predictions = list(previous_predictions or [])
+    if previous_predictions:
+        evidence += "\nPREVIOUS LOCALIZATION STATE (NOT GROUND TRUTH):\n"
+        evidence += (
+            "These candidates came from the immediately previous Agent4SR run. "
+            "Carry them forward as hypotheses so the new run does not forget "
+            "useful localization state. Re-evaluate them against the newly "
+            "retrieved evidence and Graphify. Do not blindly copy them, but do "
+            "not discard all previous candidates merely because the search "
+            "trajectory changed. A prior candidate should be dropped only when "
+            "new runtime/source evidence makes it less plausible.\n"
+        )
+        for index, candidate in enumerate(previous_predictions, 1):
+            evidence += f"{index}. {candidate}\n"
 
     final = ""
     tool_calls = 0
@@ -413,6 +429,7 @@ RUNTIME TEST OUTPUT:
                     "tool_calls": tool_calls,
                     "tools_used": sorted(tool_names_used),
                     "final_response": response,
+                    "previous_predictions_supplied": previous_predictions,
                     "transcript": history,
                 }
 
@@ -504,6 +521,7 @@ RUNTIME TEST OUTPUT:
         "tools_used": sorted(tool_names_used),
         "final_response": final,
         "format_finalization": format_finalization,
+        "previous_predictions_supplied": previous_predictions,
         "transcript": history,
     }
 
