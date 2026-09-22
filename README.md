@@ -191,23 +191,34 @@ summary.json
 
 ## 9. Adaptive feedback research mode
 
-For SWE-bench density experiments, the main branch also includes a gold-free
-adaptive feedback loop. It starts from a compressed LeanCTX context, runs
-Agent4SR with Graphify, asks a separate context-sufficiency evaluator whether
-more runtime context is needed, and can retry with a higher density.
+For SWE-bench density experiments, the main branch includes a gold-free,
+evidence-guided adaptive feedback loop. It starts from a compressed LeanCTX
+context, runs Agent4SR with Graphify, and asks a separate evaluator to name the
+specific unresolved evidence needed to support the localization.
 
-The default schedule is:
+The controller now uses a targeted-evidence-first policy:
 
 ```text
-initial density 0.30
-  -> feedback EXPAND -> 0.50
-  -> feedback EXPAND -> 0.70
-  -> feedback EXPAND -> 1.00 (RAW)
+compressed context
+  -> Agent4SR
+  -> feedback identifies concrete missing evidence
+  -> retrieve only that runtime/source/structure evidence
+  -> rerun Agent4SR at the SAME density
+
+only if targeted retrieval cannot provide new evidence:
+  -> move to the next higher LeanCTX density
 ```
 
-`--max-feedback-rounds 3` means one initial Agent4SR run plus at most three
-feedback-driven retries. The feedback evaluator never receives the gold faulty
-entity or patch. Gold remains evaluation-only.
+Targeted evidence can include a local runtime failure excerpt, a concrete
+`file.py::Entity` source snippet, a class plus its direct inheritance
+definitions, or the production entities in a known source file. Retrieved
+evidence is stored in an evidence ledger and is not requested again.
+
+The default fallback density schedule remains `0.30,0.50,0.70,1.00`, but
+density is no longer increased automatically after every EXPAND decision.
+`--max-feedback-rounds 3` still means one initial Agent4SR run plus at most
+three feedback-driven retries. The feedback evaluator and retrieval controller
+never receive the gold faulty entity or patch. Gold remains evaluation-only.
 
 This mode uses the research density helper compiled from the pinned LeanCTX
 source tree. It is intentionally labeled research mode because it calls
@@ -240,8 +251,8 @@ Results are written under
 | `wp1/evaluation.py` | Top-k, MAP, MRR |
 | `wp1/llm_backends.py` | Ollama, OpenAI-compatible, and Anthropic access |
 | `wp1/run_wp1_benchmark.py` | end-to-end benchmark runner |
-| `wp1/adaptive_feedback.py` | gold-free STOP/EXPAND feedback decisions |
+| `wp1/adaptive_feedback.py` | gold-free targeted evidence and density-fallback feedback |
 | `wp1/leanctx_density.py` | wrapper for the pinned LeanCTX density research helper |
-| `wp1/run_swebench_agent4sr_feedback.py` | adaptive SWE-bench Agent4SR density loop |
+| `wp1/run_swebench_agent4sr_feedback.py` | targeted-evidence-first adaptive Agent4SR loop |
 
 More details are in `docs/architecture.md` and `docs/reference_alignment.md`.
