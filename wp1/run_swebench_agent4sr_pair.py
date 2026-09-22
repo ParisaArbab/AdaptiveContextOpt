@@ -309,7 +309,15 @@ def run_tool(graph, name, arg):
     return "Unsupported tool."
 
 
-def run_agent(backend, graph, problem, failing_test, runtime_output, max_steps=20):
+def run_agent(
+    backend,
+    graph,
+    problem,
+    failing_test,
+    runtime_output,
+    max_steps=20,
+    targeted_evidence=None,
+):
     history = []
 
     evidence = f"""SWE-BENCH PROBLEM:
@@ -323,6 +331,22 @@ RUNTIME TEST OUTPUT:
 
 {runtime_output}
 """
+
+    if targeted_evidence:
+        evidence += "\nTARGETED FEEDBACK EVIDENCE:\n"
+        evidence += (
+            "The following evidence was retrieved because a previous feedback "
+            "round identified a concrete unresolved question. It is real "
+            "runtime/source evidence, not gold information. Use it together "
+            "with Graphify and continue investigating as needed.\n"
+        )
+        for index, item in enumerate(targeted_evidence, 1):
+            evidence += (
+                f"\n[{index}] Evidence type: {item.get('evidence_type', '')}\n"
+                f"Anchor: {item.get('anchor_entity', '')}\n"
+                f"Question: {item.get('question', '')}\n"
+                f"Evidence:\n{item.get('content', '')}\n"
+            )
 
     final = ""
     tool_calls = 0
