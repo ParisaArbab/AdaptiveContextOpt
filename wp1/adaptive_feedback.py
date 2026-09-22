@@ -100,6 +100,11 @@ def _clean_request(item: object) -> dict | None:
         return None
     if not anchor or not question or not why_needed:
         return None
+    if evidence_type in {"source_snippet", "inheritance_chain"}:
+        if ".py::" not in anchor:
+            return None
+    if evidence_type == "file_structure" and ".py" not in anchor:
+        return None
     return {
         "evidence_type": evidence_type,
         "anchor_entity": anchor,
@@ -221,11 +226,13 @@ def next_density(current: float, schedule: list[float] | tuple[float, ...]) -> f
 
 
 def _request_key(request: dict) -> str:
+    # Evidence identity is based on what is retrieved, not on wording of the
+    # question. This prevents the feedback model from requesting the same
+    # evidence repeatedly with slightly different prose.
     return "|".join(
         [
             str(request.get("evidence_type", "")).strip().lower(),
             str(request.get("anchor_entity", "")).strip().lower(),
-            str(request.get("question", "")).strip().lower(),
         ]
     )
 
@@ -434,6 +441,7 @@ def retrieve_targeted_evidence(
             not content
             or content.startswith("No source")
             or content.startswith("No Graphify")
+            or content.startswith("No runtime lines matched")
             or content.startswith("Targeted retrieval failed")
         ):
             continue
