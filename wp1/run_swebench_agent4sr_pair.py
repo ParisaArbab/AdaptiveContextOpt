@@ -36,6 +36,9 @@ INVESTIGATION RULES:
    get_functions_of_path(...)
    get_code_snippet(...)
 
+   During investigation steps, output EXACTLY ONE tool call and nothing else.
+   Do not explain your reasoning before or after the tool call.
+   Do not simulate or write a Tool result.
    Do not invent shell commands such as grep, sed, cat, bash, or python.
 
 7. Do not give a final Top_1..Top_5 ranking too early.
@@ -281,7 +284,10 @@ RUNTIME TEST OUTPUT:
             evidence
             + history_text
             + (
-                "\nChoose ONE new investigation tool call."
+                "\nReturn EXACTLY ONE new Graphify tool call and nothing else. "
+                "No explanation. No markdown. No Tool result. "
+                "Use only find_path(...), find_function(...), "
+                "get_functions_of_path(...), or get_code_snippet(...)."
                 if step < max_steps
                 else
                 "\nTHIS IS THE FINAL STEP. "
