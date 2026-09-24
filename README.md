@@ -8,7 +8,7 @@ The `main` branch now runs the Defects4J workflow shown in the project architect
 
 The main research question is simple:
 
-> If LeanCTX reduces noisy debugging output, does fault localization stay correct, improve, or lose the faulty method?
+> How aggressively can LeanCTX compress debugging context while a feedback loop selectively recovers only the localization-critical evidence needed to preserve fault localization?
 
 ## 1. Reference repositories
 
@@ -196,18 +196,23 @@ evidence-guided adaptive feedback loop. It starts from a compressed LeanCTX
 context, runs Agent4SR with Graphify, and asks a separate evaluator to name the
 specific unresolved evidence needed to support the localization.
 
-The controller now uses a targeted-evidence-first policy:
+The controller now uses a feedback-guided targeted-recovery policy:
 
 ```text
 compressed context
   -> Agent4SR
-  -> feedback identifies concrete missing evidence
+  -> feedback identifies one concrete missing evidence need
   -> retrieve only that runtime/source/structure evidence
-  -> rerun Agent4SR at the SAME density
+  -> rerun Agent4SR at the SAME LeanCTX density
+  -> repeat only while new targeted evidence is available
 
-only if targeted retrieval cannot provide new evidence:
-  -> move to the next higher LeanCTX density
+if no concrete new evidence can be named or retrieved:
+  -> stop without restoring more of the original context
 ```
+
+The default research policy is therefore **not** to reconstruct RAW context and
+not to increase LeanCTX density. The feedback loop is designed to recover only
+small, localization-critical evidence units that compression may have removed.
 
 Targeted evidence can include a local runtime failure excerpt, a concrete
 `file.py::Entity` source snippet, a bounded transitive inheritance chain with
@@ -222,11 +227,17 @@ ranking is not treated as ground truth, but it is carried forward so a new
 search trajectory does not silently discard useful localization state without
 new contradictory evidence.
 
-The default fallback density schedule remains `0.30,0.50,0.70,1.00`, but
-density is no longer increased automatically after every EXPAND decision.
-`--max-feedback-rounds 3` still means one initial Agent4SR run plus at most
-three feedback-driven retries. The feedback evaluator and retrieval controller
-never receive the gold faulty entity or patch. Gold remains evaluation-only.
+The default `--recovery-policy targeted_only` keeps the initial LeanCTX density
+fixed for the complete feedback loop. If the evaluator cannot name a concrete
+missing evidence target, or retrieval produces no new evidence, the run stops
+instead of restoring more context. The older density-fallback behavior remains
+available only for comparison with
+`--recovery-policy targeted_then_density`.
+
+`--max-feedback-rounds 3` means one initial Agent4SR run plus at most three
+feedback-driven targeted-recovery retries. The feedback evaluator and retrieval
+controller never receive the gold faulty entity or patch. Gold remains
+evaluation-only.
 
 This mode uses the research density helper compiled from the pinned LeanCTX
 source tree. It is intentionally labeled research mode because it calls
@@ -240,7 +251,8 @@ python -m wp1.run_swebench_agent4sr_feedback \
   --instance sympy__sympy-20590 \
   --model qwen3.6:27b \
   --initial-density 0.30 \
-  --density-schedule 0.30,0.50,0.70,1.00 \
+  --density-schedule 0.30 \
+  --recovery-policy targeted_only \
   --max-feedback-rounds 3
 ```
 
@@ -259,7 +271,7 @@ Results are written under
 | `wp1/evaluation.py` | Top-k, MAP, MRR |
 | `wp1/llm_backends.py` | Ollama, OpenAI-compatible, and Anthropic access |
 | `wp1/run_wp1_benchmark.py` | end-to-end benchmark runner |
-| `wp1/adaptive_feedback.py` | gold-free targeted evidence and density-fallback feedback |
+| `wp1/adaptive_feedback.py` | gold-free feedback evaluator and selective targeted evidence recovery |
 | `wp1/leanctx_density.py` | wrapper for the pinned LeanCTX density research helper |
 | `wp1/run_swebench_agent4sr_feedback.py` | targeted-evidence-first adaptive Agent4SR loop |
 
