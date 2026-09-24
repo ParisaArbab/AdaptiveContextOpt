@@ -1,9 +1,10 @@
-"""Gold-free evidence-guided feedback for adaptive context optimization.
+"""Gold-free feedback-guided targeted context recovery.
 
-The feedback controller never receives fault-localization ground truth. It
-first asks which concrete evidence is still missing, retrieves that evidence
-without changing LeanCTX density, and only falls back to a higher density when
-targeted retrieval cannot satisfy the request.
+The feedback controller never receives fault-localization ground truth. Its
+research goal is to recover only the localization-critical evidence that was
+lost during compression, while keeping the LeanCTX context fixed. Restoring a
+larger fraction of the original context is an optional legacy fallback handled
+by the runner, not the default recovery strategy.
 """
 from __future__ import annotations
 
@@ -32,7 +33,9 @@ method, class, patch, or answer. Never guess, request, or use gold information.
 Your job is to identify the most important unresolved evidence that would make
 the current localization better supported.
 
-Prefer TARGETED_EXPAND over restoring more of the whole runtime context.
+Your goal is NOT to reconstruct the RAW runtime context. Recover the smallest
+concrete piece of evidence needed to distinguish the current localization
+hypotheses. Prefer TARGETED_EXPAND whenever such evidence can be named.
 Request only evidence that is not already present in the runtime context,
 Graphify transcript, or targeted-evidence ledger.
 
@@ -69,8 +72,8 @@ Rules:
 - Previous rankings are hypotheses, not ground truth. If the current ranking
   changes sharply, request evidence that resolves the disagreement rather than
   discarding the previous state without evidence.
-- EXPAND_DENSITY is a last resort only when the needed information cannot be
-  requested concretely.
+- EXPAND_DENSITY is only a signal that no concrete targeted evidence can be
+  named. The controller may stop instead of restoring more context.
 - Never use unknown gold correctness as a reason to STOP or expand.
 """
 
@@ -677,7 +680,7 @@ def evaluate_context_sufficiency(
     next_text = (
         f"{next_density_value:.2f}"
         if next_density_value is not None
-        else "(none; RAW/current maximum)"
+        else "(disabled: targeted recovery only)"
     )
 
     prompt = f"""SWE-BENCH PROBLEM:
@@ -687,7 +690,7 @@ FAILING TEST:
 {failing_test}
 
 CURRENT LEANCTX TARGET DENSITY: {current_density:.2f}
-NEXT AVAILABLE DENSITY IF TARGETED RETRIEVAL FAILS: {next_text}
+OPTIONAL NEXT DENSITY IF THE RUNNER ALLOWS FALLBACK: {next_text}
 FEEDBACK ROUND: {feedback_round}/{max_feedback_rounds}
 
 CURRENT RUNTIME CONTEXT:
@@ -719,8 +722,9 @@ question concerns parents, ancestors, base classes, MRO, __slots__, or __dict__
 across a class hierarchy, request inheritance_chain. Treat the previous ranking
 as hypothesis memory: do not assume it is correct, but if the current ranking
 changed sharply, request evidence that resolves the disagreement instead of
-forgetting the previous state. Use EXPAND_DENSITY only when no concrete
-evidence target can be named.
+forgetting the previous state. Do not request restoration of the full RAW
+context. Use EXPAND_DENSITY only as a signal that no concrete evidence target
+can be named.
 """
 
     response = backend.complete(FEEDBACK_SYSTEM, prompt)
