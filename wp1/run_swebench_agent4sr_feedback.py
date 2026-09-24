@@ -25,8 +25,9 @@ def parse_schedule(value: str) -> list[float]:
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
-            "Run Agent4SR with gold-free evidence-guided feedback. "
-            "Targeted evidence retrieval is attempted before density expansion."
+            "Run Agent4SR with gold-free feedback-guided targeted context recovery. "
+            "By default, the compressed LeanCTX context stays fixed and only "
+            "localization-critical evidence is selectively recovered."
         )
     )
     parser.add_argument("--instance", required=True)
@@ -36,9 +37,19 @@ def main() -> None:
         "--density-schedule",
         default="0.30,0.50,0.70,1.00",
         help=(
-            "Fallback density schedule. A higher density is used only when "
-            "targeted evidence cannot be retrieved or feedback explicitly "
-            "cannot name a concrete evidence target."
+            "Candidate density schedule used only when --recovery-policy "
+            "targeted_then_density is selected. The default targeted_only "
+            "policy never restores a larger fraction of the compressed context."
+        ),
+    )
+    parser.add_argument(
+        "--recovery-policy",
+        choices=("targeted_only", "targeted_then_density"),
+        default="targeted_only",
+        help=(
+            "targeted_only keeps the original compressed context fixed and "
+            "recovers only specifically requested evidence. "
+            "targeted_then_density preserves the older fallback behavior."
         ),
     )
     parser.add_argument(
@@ -173,6 +184,9 @@ def main() -> None:
             previous_predictions = current_predictions
 
         upcoming = next_density(density, schedule)
+        allowed_upcoming = (
+            upcoming if args.recovery_policy == "targeted_then_density" else None
+        )
         decision = None
         action_taken = "stop"
         retrieved: list[dict] = []
@@ -188,7 +202,7 @@ def main() -> None:
                 runtime_output=runtime_output,
                 agent_result=agent,
                 current_density=density,
-                next_density_value=upcoming,
+                next_density_value=allowed_upcoming,
                 feedback_round=feedback_rounds_used + 1,
                 max_feedback_rounds=args.max_feedback_rounds,
                 evidence_ledger=evidence_ledger,
@@ -220,31 +234,45 @@ def main() -> None:
                         f"item(s); keeping density at {density:.2f}.",
                         flush=True,
                     )
-                elif upcoming is not None:
+                elif allowed_upcoming is not None:
                     action_taken = "density_fallback"
-                    next_density_used = upcoming
+                    next_density_used = allowed_upcoming
                     feedback_rounds_used += 1
                     print(
                         "[Feedback] targeted retrieval produced no new evidence; "
-                        f"falling back to density {upcoming:.2f}.",
+                        f"legacy fallback is increasing density to "
+                        f"{allowed_upcoming:.2f}.",
                         flush=True,
                     )
                 else:
-                    stop_reason = "targeted_retrieval_failed_no_higher_density"
+                    stop_reason = "no_new_targeted_evidence"
+                    print(
+                        "[Feedback] no new targeted evidence was retrieved; "
+                        "stopping without restoring more context.",
+                        flush=True,
+                    )
 
             else:
-                # EXPAND_DENSITY is intentionally the fallback path.
-                if upcoming is not None:
+                # In the default targeted-only research policy, a request for
+                # more global context is treated as a stop signal rather than
+                # restoring information that LeanCTX removed.
+                if allowed_upcoming is not None:
                     action_taken = "density_fallback"
-                    next_density_used = upcoming
+                    next_density_used = allowed_upcoming
                     feedback_rounds_used += 1
                     print(
                         "[Feedback] no concrete targeted request was available; "
-                        f"falling back to density {upcoming:.2f}.",
+                        f"legacy fallback is increasing density to "
+                        f"{allowed_upcoming:.2f}.",
                         flush=True,
                     )
                 else:
-                    stop_reason = "no_higher_density"
+                    stop_reason = "no_concrete_targeted_evidence"
+                    print(
+                        "[Feedback] evaluator could not name concrete missing "
+                        "evidence; stopping without restoring more context.",
+                        flush=True,
+                    )
 
         feedback_dict = decision.to_dict() if decision else None
         if feedback_dict is not None:
@@ -291,7 +319,18 @@ def main() -> None:
         "agent_ollama_num_predict": args.ollama_num_predict,
         "feedback_ollama_num_predict": args.feedback_num_predict,
         "gold_used_by_agent_or_feedback": False,
-        "feedback_policy": "targeted_evidence_first",
+        "feedback_policy": args.recovery_policy,
+        "density_changed_from_initial": abs(density - initial) > 1e-9,
+        "full_raw_context_used": any(
+            float(round_record["target_density"]) >= 1.0 - 1e-9
+            for round_record in rounds
+        ),
+        "density_expansion_count": sum(
+            1
+            for round_record in rounds
+            if (round_record.get("feedback") or {}).get("action_taken")
+            == "density_fallback"
+        ),
         "initial_density": initial,
         "final_density": density,
         "density_schedule": schedule,
@@ -309,6 +348,7 @@ def main() -> None:
     result_path.write_text(json.dumps(result, indent=2))
 
     print("\n=== EVIDENCE-GUIDED ADAPTIVE FEEDBACK COMPLETE ===", flush=True)
+    print(f"Recovery policy: {args.recovery_policy}", flush=True)
     print(f"Stop reason: {stop_reason}", flush=True)
     print(f"Feedback retries used: {feedback_rounds_used}", flush=True)
     print(f"Final target density: {density:.2f}", flush=True)
