@@ -22,6 +22,19 @@ def parse_schedule(value: str) -> list[float]:
     )
 
 
+def feedback_next_density(
+    current_density: float,
+    schedule: list[float],
+    recovery_policy: str,
+) -> float | None:
+    """Return a higher density only for the explicit legacy fallback policy."""
+    if recovery_policy == "targeted_only":
+        return None
+    if recovery_policy != "targeted_then_density":
+        raise ValueError(f"unknown recovery policy: {recovery_policy}")
+    return next_density(current_density, schedule)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
@@ -183,9 +196,10 @@ def main() -> None:
         if current_predictions:
             previous_predictions = current_predictions
 
-        upcoming = next_density(density, schedule)
-        allowed_upcoming = (
-            upcoming if args.recovery_policy == "targeted_then_density" else None
+        allowed_upcoming = feedback_next_density(
+            density,
+            schedule,
+            args.recovery_policy,
         )
         decision = None
         action_taken = "stop"
