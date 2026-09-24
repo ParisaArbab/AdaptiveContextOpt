@@ -6,6 +6,7 @@ from wp1.adaptive_feedback import (
     parse_feedback_decision,
     retrieve_targeted_evidence,
 )
+from wp1.run_swebench_agent4sr_feedback import feedback_next_density
 
 
 def test_density_schedule_is_sorted_and_unique():
@@ -23,6 +24,15 @@ def test_next_density_moves_toward_more_context():
     assert next_density(0.5, schedule) == 0.7
     assert next_density(0.7, schedule) == 1.0
     assert next_density(1.0, schedule) is None
+
+
+def test_targeted_only_policy_never_increases_density():
+    schedule = [0.3, 0.5, 0.7, 1.0]
+    assert feedback_next_density(0.3, schedule, "targeted_only") is None
+    assert (
+        feedback_next_density(0.3, schedule, "targeted_then_density")
+        == 0.5
+    )
 
 
 def test_feedback_parser_stop_json():
@@ -152,7 +162,7 @@ def test_inheritance_targeted_retrieval_inspects_direct_parent(tmp_path):
     assert len(records) == 1
     content = records[0]["content"]
     assert "Basic(Printable)" in content
-    assert "DIRECT PARENT Printable" in content
+    assert "CLASS depth=1 sympy/core/_print_helpers.py::Printable" in content
     assert "class Printable" in content
 
 
