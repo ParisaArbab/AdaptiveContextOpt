@@ -276,9 +276,14 @@ The Agent4SR slicing runner keeps those dependency-derived production entities
 as persistent hypotheses. They are not gold labels. The agent is instructed to
 re-evaluate them against source evidence and to prioritize structural evidence
 for symptoms involving object layout, inheritance, `__dict__`, or `__slots__`.
-If all directly inspected slice hypotheses disappear from a proposed Top-5, a
-single regression-guard reconsideration is allowed before accepting the final
-ranking. This prevents search drift without forcing a particular gold answer.
+
+Once every slice-derived hypothesis has been directly inspected, the search is
+bounded. By default, Agent4SR may make at most one additional relevant Graphify
+tool call (`--post-slice-extra-tool-budget 1`). After that, tool use stops and
+a dedicated evidence-only finalizer ranks only entities already seen in the
+failure evidence and completed transcript. No new repository evidence or gold
+information is available to that finalizer. A regression guard remains as a
+fallback when a proposed ranking drops every inspected slice hypothesis.
 
 This is still a research prototype, not a full interprocedural Program
 Dependence Graph or System Dependence Graph implementation. It currently
