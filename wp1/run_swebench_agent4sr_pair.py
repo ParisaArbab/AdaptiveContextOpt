@@ -217,6 +217,74 @@ entities above. Do not add explanation.
     return response, predictions
 
 
+def finalize_slice_evidence_only(
+    backend,
+    *,
+    evidence,
+    history,
+    persistent_hypotheses,
+):
+    """Finalize a slicing run without any additional repository investigation."""
+    seen_entities = _previously_seen_entities("", history)
+    allowed = []
+    seen = set()
+    for value in list(persistent_hypotheses or []) + seen_entities:
+        if value and value not in seen:
+            seen.add(value)
+            allowed.append(value)
+
+    candidates = "\n".join(f"- {x}" for x in allowed[:60]) or "(none)"
+    history_text = ""
+    for item in history:
+        history_text += (
+            f"\nAssistant:\n{item.get('assistant', '')}\n"
+            f"Tool result:\n{item.get('tool', '')}\n"
+        )
+
+    system = """You are the evidence-only final ranking stage for software
+fault localization.
+
+No more tools are available. Do not investigate further. Do not use gold
+information. Do not introduce repository entities that were not already seen.
+
+Use only:
+1. the failure evidence,
+2. dependency-derived slicing hypotheses,
+3. source/tool evidence already present in the transcript,
+4. the allowed entity list.
+
+Dependency-derived hypotheses are not ground truth. Keep them only when the
+inspected evidence supports them.
+
+Return exactly five lines and nothing else:
+Top_1 : path/to/file.py::Entity
+Top_2 : path/to/file.py::Entity
+Top_3 : path/to/file.py::Entity
+Top_4 : path/to/file.py::Entity
+Top_5 : path/to/file.py::Entity
+"""
+
+    prompt = f"""FAILURE AND SLICING EVIDENCE:
+{evidence}
+
+COMPLETED TOOL TRANSCRIPT:
+{history_text}
+
+ALLOWED ENTITIES ALREADY SEEN:
+{candidates}
+
+The investigation phase is finished. Rank the five most suspicious production
+entities using only the evidence above. Do not call a tool. Do not add any
+explanation.
+"""
+
+    print("[Agent4SR] SLICE EVIDENCE-ONLY FINALIZATION", flush=True)
+    response = backend.complete(system, prompt)
+    print("[Agent4SR] SLICE FINAL RESPONSE:", flush=True)
+    print(response, flush=True)
+    return response, parse_top5(response)
+
+
 def parse_tool(text):
     """
     Parse Agent4SR tool calls.
@@ -320,6 +388,7 @@ def run_agent(
     previous_predictions=None,
     persistent_hypotheses=None,
     structural_focus=None,
+    post_slice_extra_tool_budget=1,
 ):
     history = []
 
@@ -389,6 +458,8 @@ RUNTIME TEST OUTPUT:
     seen_tool_calls = set()
     inspected_hypotheses = set()
     regression_guard_used = False
+    slice_ready_tool_calls = None
+    evidence_only_finalizer_used = False
 
     for step in range(1, max_steps + 1):
         print(f"\\n[Agent4SR] STEP {step}/{max_steps}", flush=True)
@@ -409,6 +480,47 @@ RUNTIME TEST OUTPUT:
             and "get_code_snippet" in tool_names_used
         )
 
+        if slice_hypotheses_ready and slice_ready_tool_calls is None:
+            slice_ready_tool_calls = tool_calls
+            print(
+                "[Agent4SR] SLICE HYPOTHESES INSPECTED: post-slice tool budget "
+                f"starts now ({post_slice_extra_tool_budget} extra tool call(s)).",
+                flush=True,
+            )
+
+        extra_tools_after_slice = (
+            0
+            if slice_ready_tool_calls is None
+            else tool_calls - slice_ready_tool_calls
+        )
+
+        if (
+            slice_hypotheses_ready
+            and extra_tools_after_slice >= post_slice_extra_tool_budget
+        ):
+            final_response, final_predictions = finalize_slice_evidence_only(
+                backend,
+                evidence=evidence,
+                history=history,
+                persistent_hypotheses=persistent_hypotheses,
+            )
+            evidence_only_finalizer_used = True
+            if len(final_predictions) == 5:
+                return {
+                    "predictions": final_predictions,
+                    "steps": step - 1,
+                    "tool_calls": tool_calls,
+                    "tools_used": sorted(tool_names_used),
+                    "final_response": final_response,
+                    "previous_predictions_supplied": previous_predictions,
+                    "persistent_hypotheses_supplied": persistent_hypotheses,
+                    "inspected_persistent_hypotheses": sorted(inspected_hypotheses),
+                    "regression_guard_used": regression_guard_used,
+                    "evidence_only_finalizer_used": True,
+                    "post_slice_extra_tool_budget": post_slice_extra_tool_budget,
+                    "transcript": history,
+                }
+
         if step == max_steps:
             step_instruction = (
                 "\nTHIS IS THE FINAL STEP. "
@@ -422,13 +534,18 @@ RUNTIME TEST OUTPUT:
                 "Top_5 : path/to/file.py::Entity"
             )
         elif slice_hypotheses_ready:
+            remaining_extra = max(
+                0,
+                post_slice_extra_tool_budget - extra_tools_after_slice,
+            )
             step_instruction = (
-                "\nThe dependency-derived hypotheses have now been directly "
-                "inspected. If the available source evidence is sufficient, "
-                "STOP SEARCHING and return exactly five ranked production-code "
-                "entities in Top_1..Top_5 format. Otherwise return EXACTLY ONE "
-                "new Graphify tool call that is directly relevant to resolving "
-                "the remaining uncertainty. Do not explore unrelated behavior."
+                "\nThe dependency-derived hypotheses have been directly "
+                "inspected. The search is now bounded. "
+                f"You have at most {remaining_extra} additional relevant "
+                "Graphify tool call(s) before evidence-only final ranking. "
+                "If one unresolved structural question remains, return EXACTLY "
+                "ONE directly relevant Graphify tool call. Otherwise return a "
+                "Top_1..Top_5 ranking now. Do not explore unrelated behavior."
             )
         else:
             step_instruction = (
@@ -552,6 +669,8 @@ RUNTIME TEST OUTPUT:
                     "persistent_hypotheses_supplied": persistent_hypotheses,
                     "inspected_persistent_hypotheses": sorted(inspected_hypotheses),
                     "regression_guard_used": regression_guard_used,
+                    "evidence_only_finalizer_used": evidence_only_finalizer_used,
+                    "post_slice_extra_tool_budget": post_slice_extra_tool_budget,
                     "transcript": history,
                 }
 
@@ -670,6 +789,8 @@ RUNTIME TEST OUTPUT:
         "persistent_hypotheses_supplied": persistent_hypotheses,
         "inspected_persistent_hypotheses": sorted(inspected_hypotheses),
         "regression_guard_used": regression_guard_used,
+        "evidence_only_finalizer_used": evidence_only_finalizer_used,
+        "post_slice_extra_tool_budget": post_slice_extra_tool_budget,
         "transcript": history,
     }
 
