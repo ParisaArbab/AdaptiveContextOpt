@@ -100,3 +100,78 @@ def test_slice_hypotheses_are_added_to_prompt():
     assert printable in first_prompt
     assert "focus on object layout" in first_prompt
     assert result["regression_guard_used"] is False
+
+
+
+def test_slice_agent_can_finalize_early_after_hypotheses_inspected():
+    printable = "sympy/core/_print_helpers.py::Printable"
+    basic = "sympy/core/basic.py::Basic"
+
+    backend = _FakeBackend(
+        [
+            f'get_code_snippet("{printable}")',
+            f'get_code_snippet("{basic}")',
+            (
+                f"Top_1 : {printable}\n"
+                f"Top_2 : {basic}\n"
+                "Top_3 : sympy/core/basic.py::Atom\n"
+                "Top_4 : sympy/core/expr.py::AtomicExpr\n"
+                "Top_5 : sympy/core/symbol.py::Symbol"
+            ),
+        ]
+    )
+
+    result = run_agent(
+        backend,
+        _FakeGraph(),
+        problem="object unexpectedly has __dict__",
+        failing_test="test_immutable",
+        runtime_output="assert not hasattr(b1, '__dict__')",
+        max_steps=20,
+        persistent_hypotheses=[basic, printable],
+        structural_focus="prioritize __slots__ and inheritance",
+    )
+
+    assert result["steps"] == 3
+    assert result["regression_guard_used"] is False
+    assert result["predictions"][0] == printable
+
+
+def test_final_step_regression_guard_can_reconsider():
+    printable = "sympy/core/_print_helpers.py::Printable"
+    basic = "sympy/core/basic.py::Basic"
+
+    backend = _FakeBackend(
+        [
+            f'get_code_snippet("{printable}")',
+            f'get_code_snippet("{basic}")',
+            (
+                "Top_1 : sympy/core/function.py::Derivative._eval_derivative\n"
+                "Top_2 : sympy/core/function.py::Derivative.doit\n"
+                "Top_3 : sympy/core/function.py::Derivative.__new__\n"
+                "Top_4 : sympy/core/function.py::_derivative_dispatch\n"
+                "Top_5 : sympy/core/basic.py::Basic.diff"
+            ),
+            (
+                f"Top_1 : {printable}\n"
+                f"Top_2 : {basic}\n"
+                "Top_3 : sympy/core/basic.py::Atom\n"
+                "Top_4 : sympy/core/expr.py::AtomicExpr\n"
+                "Top_5 : sympy/core/symbol.py::Symbol"
+            ),
+        ]
+    )
+
+    result = run_agent(
+        backend,
+        _FakeGraph(),
+        problem="object unexpectedly has __dict__",
+        failing_test="test_immutable",
+        runtime_output="assert not hasattr(b1, '__dict__')",
+        max_steps=3,
+        persistent_hypotheses=[basic, printable],
+        structural_focus="prioritize __slots__ and inheritance",
+    )
+
+    assert result["regression_guard_used"] is True
+    assert result["predictions"][0] == printable
