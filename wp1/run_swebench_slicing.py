@@ -129,6 +129,21 @@ def main() -> None:
         + (production_context or "(none)")
     )
 
+    slice_hypotheses = [
+        dependency.entity
+        for dependency in result.production_dependencies
+    ]
+
+    structural_focus = (
+        "This run is driven by a program slice. Prioritize the dependency chain "
+        "that explains the failing assertion. For symptoms involving __dict__, "
+        "__slots__, object layout, or inherited object state, prioritize class "
+        "definitions and inheritance relationships over unrelated equality, "
+        "hashing, sorting, comparison, or formatting methods. If direct source "
+        "inspection of the slice-derived hypotheses sufficiently explains the "
+        "failure, finalize the Top-5 instead of continuing unrelated exploration."
+    )
+
     agent = run_agent(
         backend,
         graph,
@@ -136,6 +151,8 @@ def main() -> None:
         failing,
         slicing_context,
         max_steps=args.max_agent_steps,
+        persistent_hypotheses=slice_hypotheses,
+        structural_focus=structural_focus,
     )
 
     agent_path = out_dir / "agent4sr_slicing.json"
@@ -146,6 +163,8 @@ def main() -> None:
                 "model": args.model,
                 "context_mode": "static_backward_cross_scope_with_graphify_dependencies",
                 "gold_used_by_agent": False,
+                "slice_hypotheses": slice_hypotheses,
+                "structural_focus": structural_focus,
                 "slice": result.to_dict(),
                 "agent": agent,
             },
