@@ -257,6 +257,32 @@ def _evidence_only_candidates(history, persistent_hypotheses):
     return allowed
 
 
+def _normalize_evidence_only_top5(predictions, allowed):
+    """Return five unique allowed candidates without any new investigation."""
+    allowed = [x for x in allowed if x]
+    allowed_set = set(allowed)
+    result = []
+    seen = set()
+
+    for value in predictions or []:
+        if value not in allowed_set or value in seen:
+            continue
+        seen.add(value)
+        result.append(value)
+        if len(result) == 5:
+            return result
+
+    for value in allowed:
+        if value in seen:
+            continue
+        seen.add(value)
+        result.append(value)
+        if len(result) == 5:
+            break
+
+    return result
+
+
 def finalize_slice_evidence_only(
     backend,
     *,
@@ -319,7 +345,22 @@ Do not add any explanation.
     response = backend.complete(system, prompt)
     print("[Agent4SR] SLICE FINAL RESPONSE:", flush=True)
     print(response, flush=True)
-    return response, parse_top5(response)
+
+    parsed = parse_top5(response)
+    normalized = _normalize_evidence_only_top5(parsed, allowed)
+
+    if len(normalized) == 5 and normalized != parsed:
+        print(
+            "[Agent4SR] NORMALIZED FINAL TOP-5: removed duplicates/invalid "
+            "entries and filled only from already-seen evidence.",
+            flush=True,
+        )
+        response = "\n".join(
+            f"Top_{index} : {candidate}"
+            for index, candidate in enumerate(normalized, 1)
+        )
+
+    return response, normalized
 
 
 def parse_tool(text):
@@ -544,35 +585,26 @@ RUNTIME TEST OUTPUT:
             evidence_only_finalizer_used = True
             if len(final_predictions) != 5:
                 print(
-                    "[Agent4SR] SLICE FINAL RESPONSE REJECTED: expected five "
-                    "unique evidence-supported entities.",
+                    "[Agent4SR] SLICE FINALIZATION STOPPED: fewer than five "
+                    "unique evidence-supported candidates were available. "
+                    "No further Graphify calls will be made.",
                     flush=True,
                 )
-                repair_system = (
-                    "You are a strict evidence-only ranking formatter. No tools, "
-                    "no gold information, and no new entities are allowed. Return "
-                    "exactly five UNIQUE Top_1..Top_5 candidates chosen only from "
-                    "the allowed list."
-                )
-                allowed = _evidence_only_candidates(
-                    history,
-                    persistent_hypotheses,
-                )
-                repair_prompt = (
-                    "ALLOWED UNIQUE ENTITIES:\n"
-                    + "\n".join(f"- {x}" for x in allowed)
-                    + "\n\nPREVIOUS INVALID RESPONSE:\n"
-                    + final_response
-                    + "\n\nReturn exactly five unique Top_1..Top_5 lines."
-                )
-                repaired_response = backend.complete(
-                    repair_system,
-                    repair_prompt,
-                )
-                repaired_predictions = parse_top5(repaired_response)
-                if len(repaired_predictions) == 5:
-                    final_response = repaired_response
-                    final_predictions = repaired_predictions
+                return {
+                    "predictions": final_predictions,
+                    "steps": step - 1,
+                    "tool_calls": tool_calls,
+                    "tools_used": sorted(tool_names_used),
+                    "final_response": final_response,
+                    "previous_predictions_supplied": previous_predictions,
+                    "persistent_hypotheses_supplied": persistent_hypotheses,
+                    "inspected_persistent_hypotheses": sorted(inspected_hypotheses),
+                    "regression_guard_used": regression_guard_used,
+                    "evidence_only_finalizer_used": True,
+                    "post_slice_extra_tool_budget": post_slice_extra_tool_budget,
+                    "finalization_complete": False,
+                    "transcript": history,
+                }
 
             if len(final_predictions) == 5:
                 return {
