@@ -1,4 +1,4 @@
-from wp1.run_swebench_agent4sr_pair import run_agent
+from wp1.run_swebench_agent4sr_pair import _previously_seen_entities, run_agent
 
 
 class _FakeBackend:
@@ -296,3 +296,22 @@ def test_bounded_finalization_never_resumes_tools_after_invalid_llm_top5():
     assert len(result["predictions"]) == 5
     assert len(set(result["predictions"])) == 5
     assert len(backend.responses) == 0
+
+
+
+def test_seen_entity_regex_captures_method_and_module_candidates():
+    history = [
+        {
+            "assistant": 'get_code_snippet("sympy/core/basic.py::Basic.__slots__")',
+            "tool": "sympy/core/basic.py::Basic.__slots__\nsource",
+        },
+        {
+            "assistant": 'get_code_snippet("sympy/core/_print_helpers.py::Printable")',
+            "tool": "sympy/core/_print_helpers.py::Printable\nsource",
+        },
+    ]
+
+    seen = _previously_seen_entities("", history)
+
+    assert "sympy/core/basic.py::Basic.__slots__" in seen
+    assert "sympy/core/_print_helpers.py::Printable" in seen
