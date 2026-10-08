@@ -259,7 +259,62 @@ python -m wp1.run_swebench_agent4sr_feedback \
 Results are written under
 `data/swebench_workspaces/<instance>/outputs/adaptive_feedback/`.
 
-## 10. Main modules
+
+
+## 10. Program slicing research branch
+
+The `slicing` branch adds a dependency-guided static backward slicing prototype
+for Python SWE-bench tests. The goal is to compare a relevance-based context
+selection method against LeanCTX entropy-based compression.
+
+The slicer starts from the failing assertion or a user-supplied criterion line,
+then walks backward through the failing test and keeps statements that define
+values needed by that failure. It also keeps enclosing control statements and
+imports required by the selected dependency chain.
+
+This is currently an **intra-procedural static slicing prototype**, not a full
+interprocedural Program Dependence Graph or System Dependence Graph
+implementation. That limitation is intentional so the first experiment is
+simple and interpretable.
+
+Example for the SymPy instance:
+
+```bash
+python -m wp1.run_swebench_slicing \
+  --instance sympy__sympy-20590
+```
+
+This creates:
+
+```text
+data/swebench_workspaces/sympy__sympy-20590/outputs/slicing/
+  slice.json
+  slice_context.txt
+```
+
+To use the generated slice as Agent4SR context:
+
+```bash
+python -m wp1.run_swebench_slicing \
+  --instance sympy__sympy-20590 \
+  --run-agent \
+  --model qwen3.6:27b
+```
+
+The research comparison is:
+
+```text
+RAW context
+vs
+LeanCTX entropy-selected context
+vs
+dependency-guided backward-slice context
+```
+
+Gold fault information is never used to construct the slice or by Agent4SR. It
+remains post-hoc evaluation only.
+
+## 11. Main modules
 
 | File | Purpose |
 |---|---|
@@ -273,6 +328,6 @@ Results are written under
 | `wp1/run_wp1_benchmark.py` | end-to-end benchmark runner |
 | `wp1/adaptive_feedback.py` | gold-free feedback evaluator and selective targeted evidence recovery |
 | `wp1/leanctx_density.py` | wrapper for the pinned LeanCTX density research helper |
-| `wp1/run_swebench_agent4sr_feedback.py` | targeted-evidence-first adaptive Agent4SR loop |
+| `wp1/run_swebench_agent4sr_feedback.py` | targeted-evidence-first adaptive Agent4SR loop |\n| `wp1/program_slicing.py` | deterministic dependency-guided Python backward slicing prototype |\n| `wp1/run_swebench_slicing.py` | SWE-bench slicing context builder and optional Agent4SR runner |
 
 More details are in `docs/architecture.md` and `docs/reference_alignment.md`.
