@@ -175,7 +175,7 @@ def _previously_seen_entities(final_response, history):
         texts.append(str(item.get("tool", "")))
 
     pattern = re.compile(
-        r"(?<![\\w./-])([A-Za-z0-9_./-]+\\.py::[A-Za-z0-9_.$<>-]+)"
+        r"(?<![\w./-])([A-Za-z0-9_./-]+\.py::[A-Za-z0-9_.$<>-]+)"
     )
     for text in texts:
         for match in pattern.finditer(text):
