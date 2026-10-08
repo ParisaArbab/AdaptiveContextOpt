@@ -268,14 +268,22 @@ for Python SWE-bench tests. The goal is to compare a relevance-based context
 selection method against LeanCTX entropy-based compression.
 
 The slicer starts from the failing assertion or a user-supplied criterion line,
-then walks backward through the failing test and keeps statements that define
-values needed by that failure. It also keeps enclosing control statements and
-imports required by the selected dependency chain.
+walks backward through the failing test, continues into module-level fixtures
+and imports when necessary, and then expands imported production classes
+through inheritance using Graphify-backed source snippets.
 
-This is currently an **intra-procedural static slicing prototype**, not a full
-interprocedural Program Dependence Graph or System Dependence Graph
-implementation. That limitation is intentional so the first experiment is
-simple and interpretable.
+The Agent4SR slicing runner keeps those dependency-derived production entities
+as persistent hypotheses. They are not gold labels. The agent is instructed to
+re-evaluate them against source evidence and to prioritize structural evidence
+for symptoms involving object layout, inheritance, `__dict__`, or `__slots__`.
+If all directly inspected slice hypotheses disappear from a proposed Top-5, a
+single regression-guard reconsideration is allowed before accepting the final
+ranking. This prevents search drift without forcing a particular gold answer.
+
+This is still a research prototype, not a full interprocedural Program
+Dependence Graph or System Dependence Graph implementation. It currently
+supports cross-scope Python dependency recovery plus bounded production-class
+inheritance expansion.
 
 Example for the SymPy instance:
 
