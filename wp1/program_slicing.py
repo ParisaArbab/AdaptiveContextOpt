@@ -16,7 +16,7 @@ dependencies rather than token entropy.
 from __future__ import annotations
 
 import ast
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Iterable
 
@@ -31,6 +31,16 @@ class SliceLine:
         return asdict(self)
 
 
+@dataclass(frozen=True)
+class ProductionDependency:
+    entity: str
+    relation: str
+    source: str
+
+    def to_dict(self) -> dict:
+        return asdict(self)
+
+
 @dataclass
 class SliceResult:
     source_file: str
@@ -39,7 +49,8 @@ class SliceResult:
     criterion_text: str
     selected_lines: list[SliceLine]
     required_names: list[str]
-    mode: str = "static_backward_intra_procedural"
+    production_dependencies: list[ProductionDependency] = field(default_factory=list)
+    mode: str = "static_backward_cross_scope"
 
     @property
     def text(self) -> str:
@@ -55,6 +66,10 @@ class SliceResult:
             "criterion_text": self.criterion_text,
             "selected_lines": [line.to_dict() for line in self.selected_lines],
             "required_names": self.required_names,
+            "production_dependencies": [
+                dependency.to_dict()
+                for dependency in self.production_dependencies
+            ],
             "mode": self.mode,
         }
 
@@ -223,6 +238,216 @@ def _covering_control_statements(
     return controls
 
 
+def _select_module_dependencies(
+    tree: ast.Module,
+    *,
+    required: set[str],
+    before_line: int,
+    selected: dict[int, str],
+) -> set[str]:
+    """Pull module-scope definitions/imports needed by the failing test slice."""
+    remaining = set(required)
+
+    module_statements = [
+        stmt
+        for stmt in tree.body
+        if isinstance(stmt, ast.stmt)
+        and not isinstance(stmt, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
+        and getattr(stmt, "lineno", 0) < before_line
+    ]
+
+    for stmt in sorted(
+        module_statements,
+        key=lambda node: getattr(node, "lineno", 0),
+        reverse=True,
+    ):
+        defs, uses = _defs_uses(stmt)
+        if defs & remaining:
+            start = getattr(stmt, "lineno", 0)
+            end = getattr(stmt, "end_lineno", start)
+            for line in range(start, end + 1):
+                selected.setdefault(line, "module-level definition used by failure")
+            remaining.difference_update(defs)
+            remaining.update(uses)
+
+    for stmt in tree.body:
+        if not isinstance(stmt, (ast.Import, ast.ImportFrom)):
+            continue
+        defs, _ = _defs_uses(stmt)
+        if defs & remaining:
+            start = getattr(stmt, "lineno", 0)
+            end = getattr(stmt, "end_lineno", start)
+            for line in range(start, end + 1):
+                selected.setdefault(line, "imports symbol used by slice")
+            remaining.difference_update(defs)
+
+    return remaining
+
+
+def _module_name_to_file(repo: Path, module: str) -> str | None:
+    if not module:
+        return None
+    base = Path(repo) / module.replace(".", "/")
+    candidates = [base.with_suffix(".py"), base / "__init__.py"]
+    for candidate in candidates:
+        if candidate.exists():
+            try:
+                return candidate.relative_to(repo).as_posix()
+            except ValueError:
+                return None
+    return None
+
+
+def _imported_entities_for_selected_slice(
+    source: str,
+    *,
+    selected_lines: list[SliceLine],
+    repo: Path,
+) -> list[str]:
+    """Resolve imported production entities referenced by selected slice lines."""
+    tree = ast.parse(source)
+    used_names: set[str] = set()
+    for item in selected_lines:
+        try:
+            line_tree = ast.parse(item.text.strip())
+        except SyntaxError:
+            continue
+        used_names.update(_names(line_tree, ast.Load))
+
+    refs: list[str] = []
+    seen: set[str] = set()
+    for stmt in tree.body:
+        if not isinstance(stmt, ast.ImportFrom):
+            continue
+        module_file = _module_name_to_file(repo, stmt.module or "")
+        if not module_file:
+            continue
+        for alias in stmt.names:
+            visible = alias.asname or alias.name
+            if visible not in used_names:
+                continue
+            ref = f"{module_file}::{alias.name}"
+            if ref not in seen:
+                seen.add(ref)
+                refs.append(ref)
+    return refs
+
+
+def _class_node_for_ref(repo: Path, ref: str) -> tuple[ast.ClassDef | None, ast.Module | None]:
+    if "::" not in ref:
+        return None, None
+    path_text, entity = ref.split("::", 1)
+    path = Path(repo) / path_text
+    if not path.exists() or path.suffix != ".py":
+        return None, None
+    try:
+        tree = ast.parse(path.read_text(errors="replace"))
+    except Exception:
+        return None, None
+    simple = entity.split(".")[-1]
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ClassDef) and node.name == simple:
+            return node, tree
+    return None, tree
+
+
+def _resolve_parent_ref(repo: Path, source_file: str, tree: ast.Module, parent: str) -> str | None:
+    simple = parent.split(".")[-1]
+    for stmt in tree.body:
+        if not isinstance(stmt, ast.ImportFrom):
+            continue
+        for alias in stmt.names:
+            visible = alias.asname or alias.name
+            if visible != simple:
+                continue
+
+            if stmt.level:
+                base = (Path(repo) / source_file).parent
+                for _ in range(max(0, stmt.level - 1)):
+                    base = base.parent
+                module_path = base / (stmt.module or "").replace(".", "/")
+                candidates = [module_path.with_suffix(".py"), module_path / "__init__.py"]
+                for candidate in candidates:
+                    if candidate.exists():
+                        try:
+                            rel = candidate.relative_to(repo).as_posix()
+                        except ValueError:
+                            continue
+                        return f"{rel}::{alias.name}"
+            else:
+                module_file = _module_name_to_file(repo, stmt.module or "")
+                if module_file:
+                    return f"{module_file}::{alias.name}"
+
+    for node in tree.body:
+        if isinstance(node, ast.ClassDef) and node.name == simple:
+            return f"{source_file}::{simple}"
+    return None
+
+
+def expand_production_dependencies(
+    repo: Path,
+    graph,
+    result: SliceResult,
+    *,
+    max_depth: int = 4,
+    max_entities: int = 12,
+) -> list[ProductionDependency]:
+    """Follow imported production classes and inheritance using Graphify snippets."""
+    source_path = Path(repo) / result.source_file
+    source = source_path.read_text(errors="replace")
+    seeds = _imported_entities_for_selected_slice(
+        source,
+        selected_lines=result.selected_lines,
+        repo=Path(repo),
+    )
+
+    queue: list[tuple[str, str, int]] = [
+        (ref, "import used by failure slice", 0) for ref in seeds
+    ]
+    seen: set[str] = set()
+    dependencies: list[ProductionDependency] = []
+
+    while queue and len(dependencies) < max_entities:
+        ref, relation, depth = queue.pop(0)
+        key = ref.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+
+        try:
+            snippet = graph.snippet(ref, radius=12)
+        except TypeError:
+            snippet = graph.snippet(ref)
+        except Exception as exc:
+            snippet = f"Graphify retrieval failed: {type(exc).__name__}: {exc}"
+
+        dependencies.append(
+            ProductionDependency(entity=ref, relation=relation, source=snippet[:3500])
+        )
+
+        if depth >= max_depth:
+            continue
+
+        node, tree = _class_node_for_ref(Path(repo), ref)
+        if node is None or tree is None:
+            continue
+
+        source_file = ref.split("::", 1)[0]
+        for base in node.bases:
+            try:
+                parent = ast.unparse(base)
+            except Exception:
+                continue
+            if parent.split(".")[-1] in {"object", "type"}:
+                continue
+            parent_ref = _resolve_parent_ref(Path(repo), source_file, tree, parent)
+            if parent_ref:
+                queue.append((parent_ref, f"inherited by {ref}", depth + 1))
+
+    result.production_dependencies = dependencies
+    return dependencies
+
 def backward_slice_python(
     source: str,
     *,
@@ -271,16 +496,14 @@ def backward_slice_python(
         _, uses = _defs_uses(stmt)
         required.update(uses)
 
-    # Keep module imports that provide names required by the slice.
-    for stmt in getattr(tree, "body", []):
-        if not isinstance(stmt, (ast.Import, ast.ImportFrom)):
-            continue
-        defs, _ = _defs_uses(stmt)
-        if defs & required:
-            start = getattr(stmt, "lineno", 0)
-            end = getattr(stmt, "end_lineno", start)
-            for line in range(start, end + 1):
-                selected.setdefault(line, "imports symbol used by slice")
+    # Continue beyond the test function. This is essential when the failing
+    # assertion uses module-level fixtures such as b1 = Basic().
+    required = _select_module_dependencies(
+        tree,
+        required=required,
+        before_line=getattr(function, "lineno", criterion_start),
+        selected=selected,
+    )
 
     lines = source.splitlines()
     rendered: list[SliceLine] = []
