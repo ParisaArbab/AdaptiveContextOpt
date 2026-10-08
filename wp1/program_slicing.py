@@ -60,7 +60,7 @@ class SliceResult:
 
 
 def parse_fail_to_pass(value: str) -> tuple[str, str]:
-    """Return (python_file, test_function) from a SWE-bench test identifier."""
+    """Return (python_file, test_function) from a full SWE-bench test id."""
     raw = (value or "").strip()
     if "::" not in raw:
         raise ValueError(f"Expected SWE-bench test id with '::': {raw!r}")
@@ -71,6 +71,54 @@ def parse_fail_to_pass(value: str) -> tuple[str, str]:
     if not function:
         raise ValueError(f"Could not resolve test function from: {raw!r}")
     return path, function
+
+
+def resolve_test_target(repo: Path, test_id: str) -> tuple[str, str]:
+    """Resolve either a full test id or a bare test function name."""
+    raw = (test_id or "").strip()
+
+    if "::" in raw:
+        return parse_fail_to_pass(raw)
+
+    function = raw.split("[", 1)[0]
+    if not function:
+        raise ValueError(f"Empty test id: {test_id!r}")
+
+    matches: list[str] = []
+    for path in Path(repo).rglob("*.py"):
+        try:
+            source = path.read_text(errors="replace")
+            tree = ast.parse(source)
+        except Exception:
+            continue
+
+        if any(
+            isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+            and node.name == function
+            for node in ast.walk(tree)
+        ):
+            try:
+                matches.append(path.relative_to(repo).as_posix())
+            except ValueError:
+                continue
+
+    if not matches:
+        raise ValueError(
+            f"Could not find test function {function!r} in repository"
+        )
+
+    test_matches = [
+        candidate for candidate in matches
+        if "/test" in f"/{candidate}" or candidate.startswith("test")
+    ]
+    candidates = sorted(test_matches or matches)
+
+    if len(candidates) != 1:
+        raise ValueError(
+            f"Test function {function!r} is ambiguous; matches: {candidates}"
+        )
+
+    return candidates[0], function
 
 
 def _names(node: ast.AST, ctx_type: type[ast.expr_context]) -> set[str]:
@@ -267,7 +315,7 @@ def slice_test_file(
     *,
     criterion_line: int | None = None,
 ) -> SliceResult:
-    path, function = parse_fail_to_pass(test_id)
+    path, function = resolve_test_target(repo, test_id)
     absolute = Path(repo) / path
     if not absolute.exists():
         raise FileNotFoundError(absolute)
