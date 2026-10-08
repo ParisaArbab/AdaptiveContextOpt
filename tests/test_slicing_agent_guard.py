@@ -213,3 +213,47 @@ def test_post_slice_tool_budget_forces_evidence_only_finalizer():
     assert result["evidence_only_finalizer_used"] is True
     assert result["post_slice_extra_tool_budget"] == 1
     assert result["predictions"][0] == printable
+
+
+
+def test_evidence_only_finalizer_rejects_duplicate_top5():
+    printable = "sympy/core/_print_helpers.py::Printable"
+    basic = "sympy/core/basic.py::Basic"
+
+    backend = _FakeBackend(
+        [
+            f'get_code_snippet("{printable}")',
+            f'get_code_snippet("{basic}")',
+            'get_code_snippet("sympy/core/basic.py::Basic.__slots__")',
+            (
+                f"Top_1 : {basic}\n"
+                f"Top_2 : {printable}\n"
+                f"Top_3 : {basic}\n"
+                f"Top_4 : {printable}\n"
+                f"Top_5 : {basic}"
+            ),
+            (
+                f"Top_1 : {printable}\n"
+                f"Top_2 : {basic}\n"
+                "Top_3 : sympy/core/basic.py::Basic.__slots__\n"
+                "Top_4 : sympy/core/basic.py::<module>\n"
+                "Top_5 : sympy/core/_print_helpers.py::<module>"
+            ),
+        ]
+    )
+
+    result = run_agent(
+        backend,
+        _FakeGraph(),
+        problem="object unexpectedly has __dict__",
+        failing_test="test_immutable",
+        runtime_output="assert not hasattr(b1, '__dict__')",
+        max_steps=20,
+        persistent_hypotheses=[basic, printable],
+        structural_focus="prioritize __slots__ and inheritance",
+        post_slice_extra_tool_budget=1,
+    )
+
+    assert result["evidence_only_finalizer_used"] is True
+    assert len(result["predictions"]) == 5
+    assert len(set(result["predictions"])) == 5
