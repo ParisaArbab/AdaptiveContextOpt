@@ -1,17 +1,18 @@
 """Dependency-guided static backward slicing for Python SWE-bench tests.
 
-This module is intentionally small and deterministic. It implements an
-intra-procedural backward slice over a failing Python test function:
+This module is intentionally small and deterministic. It implements a
+failure-oriented backward slice for Python SWE-bench tests:
 
 1. choose the failing assertion/raise (or a supplied criterion line),
 2. collect names used by that criterion,
-3. walk earlier statements backward,
-4. retain statements that define currently-needed names,
-5. retain enclosing control statements and relevant imports.
+3. walk earlier statements inside the test,
+4. continue into module-level fixtures/imports when needed,
+5. resolve imported production entities,
+6. follow class inheritance with Graphify-backed source snippets.
 
-It is a research prototype, not a full interprocedural PDG/SDG slicer. The
-important property for our experiments is that selection is based on program
-dependencies rather than token entropy.
+It is a research prototype, not a full Program Dependence Graph or System
+Dependence Graph implementation. The important property for our experiments is
+that selection is based on failure dependencies rather than token entropy.
 """
 from __future__ import annotations
 
