@@ -25,6 +25,15 @@ def main() -> None:
     parser.add_argument("--run-agent", action="store_true")
     parser.add_argument("--model", default="qwen3.6:27b")
     parser.add_argument("--max-agent-steps", type=int, default=20)
+    parser.add_argument(
+        "--post-slice-extra-tool-budget",
+        type=int,
+        default=1,
+        help=(
+            "Maximum additional Graphify tool calls after all dependency-derived "
+            "slice hypotheses have been inspected. Default: 1."
+        ),
+    )
     parser.add_argument("--ollama-num-predict", type=int, default=120)
     parser.add_argument("--output-dir", type=Path, default=None)
     args = parser.parse_args()
@@ -153,6 +162,7 @@ def main() -> None:
         max_steps=args.max_agent_steps,
         persistent_hypotheses=slice_hypotheses,
         structural_focus=structural_focus,
+        post_slice_extra_tool_budget=args.post_slice_extra_tool_budget,
     )
 
     agent_path = out_dir / "agent4sr_slicing.json"
@@ -165,6 +175,7 @@ def main() -> None:
                 "gold_used_by_agent": False,
                 "slice_hypotheses": slice_hypotheses,
                 "structural_focus": structural_focus,
+                "post_slice_extra_tool_budget": args.post_slice_extra_tool_budget,
                 "slice": result.to_dict(),
                 "agent": agent,
             },
