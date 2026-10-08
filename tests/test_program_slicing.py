@@ -1,6 +1,7 @@
 from wp1.program_slicing import (
     backward_slice_python,
     parse_fail_to_pass,
+    resolve_test_target,
 )
 
 
@@ -59,3 +60,18 @@ def test_explicit_criterion_line_is_supported():
     assert "b = a + 2" in result.text
     assert "assert b == 3" in result.text
     assert "assert a == 1" not in result.text
+
+
+def test_resolve_bare_test_name(tmp_path):
+    test_file = tmp_path / "pkg/tests/test_basic.py"
+    test_file.parent.mkdir(parents=True)
+    test_file.write_text(
+        "def test_immutable():\n"
+        "    b1 = object()\n"
+        "    assert not hasattr(b1, '__dict__')\n"
+    )
+
+    path, function = resolve_test_target(tmp_path, "test_immutable")
+
+    assert path == "pkg/tests/test_basic.py"
+    assert function == "test_immutable"
