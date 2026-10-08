@@ -153,7 +153,16 @@ def parse_top5(text):
             found.append((rank, value))
 
     found.sort()
-    return [x[1] for x in found][:5]
+    result = []
+    seen = set()
+    for _, value in found:
+        if value in seen:
+            continue
+        seen.add(value)
+        result.append(value)
+        if len(result) == 5:
+            break
+    return result
 
 
 def _previously_seen_entities(final_response, history):
@@ -217,6 +226,37 @@ entities above. Do not add explanation.
     return response, predictions
 
 
+def _evidence_only_candidates(history, persistent_hypotheses):
+    """Build unique finalization candidates without new repository access."""
+    seen_entities = _previously_seen_entities("", history)
+    allowed = []
+    seen = set()
+
+    def add(value):
+        if value and value not in seen:
+            seen.add(value)
+            allowed.append(value)
+
+    for value in persistent_hypotheses or []:
+        add(value)
+    for value in seen_entities:
+        add(value)
+
+    # Module-level entities are valid Agent4SR candidates and require no new
+    # repository evidence. They are derived only from files already inspected.
+    inspected_files = []
+    for value in list(allowed):
+        if "::" not in value:
+            continue
+        path = value.split("::", 1)[0]
+        if path.endswith(".py") and path not in inspected_files:
+            inspected_files.append(path)
+    for path in inspected_files:
+        add(f"{path}::<module>")
+
+    return allowed
+
+
 def finalize_slice_evidence_only(
     backend,
     *,
@@ -225,14 +265,7 @@ def finalize_slice_evidence_only(
     persistent_hypotheses,
 ):
     """Finalize a slicing run without any additional repository investigation."""
-    seen_entities = _previously_seen_entities("", history)
-    allowed = []
-    seen = set()
-    for value in list(persistent_hypotheses or []) + seen_entities:
-        if value and value not in seen:
-            seen.add(value)
-            allowed.append(value)
-
+    allowed = _evidence_only_candidates(history, persistent_hypotheses)
     candidates = "\n".join(f"- {x}" for x in allowed[:60]) or "(none)"
     history_text = ""
     for item in history:
@@ -256,6 +289,9 @@ Use only:
 Dependency-derived hypotheses are not ground truth. Keep them only when the
 inspected evidence supports them.
 
+Every ranked entity MUST be unique. Never repeat a candidate at two ranks.
+Choose only from the allowed entity list below.
+
 Return exactly five lines and nothing else:
 Top_1 : path/to/file.py::Entity
 Top_2 : path/to/file.py::Entity
@@ -273,9 +309,10 @@ COMPLETED TOOL TRANSCRIPT:
 ALLOWED ENTITIES ALREADY SEEN:
 {candidates}
 
-The investigation phase is finished. Rank the five most suspicious production
-entities using only the evidence above. Do not call a tool. Do not add any
-explanation.
+The investigation phase is finished. Rank the five most suspicious UNIQUE
+production entities using only the evidence above. Every Top-N entry must be
+different and must come from ALLOWED ENTITIES ALREADY SEEN. Do not call a tool.
+Do not add any explanation.
 """
 
     print("[Agent4SR] SLICE EVIDENCE-ONLY FINALIZATION", flush=True)
@@ -505,6 +542,38 @@ RUNTIME TEST OUTPUT:
                 persistent_hypotheses=persistent_hypotheses,
             )
             evidence_only_finalizer_used = True
+            if len(final_predictions) != 5:
+                print(
+                    "[Agent4SR] SLICE FINAL RESPONSE REJECTED: expected five "
+                    "unique evidence-supported entities.",
+                    flush=True,
+                )
+                repair_system = (
+                    "You are a strict evidence-only ranking formatter. No tools, "
+                    "no gold information, and no new entities are allowed. Return "
+                    "exactly five UNIQUE Top_1..Top_5 candidates chosen only from "
+                    "the allowed list."
+                )
+                allowed = _evidence_only_candidates(
+                    history,
+                    persistent_hypotheses,
+                )
+                repair_prompt = (
+                    "ALLOWED UNIQUE ENTITIES:\n"
+                    + "\n".join(f"- {x}" for x in allowed)
+                    + "\n\nPREVIOUS INVALID RESPONSE:\n"
+                    + final_response
+                    + "\n\nReturn exactly five unique Top_1..Top_5 lines."
+                )
+                repaired_response = backend.complete(
+                    repair_system,
+                    repair_prompt,
+                )
+                repaired_predictions = parse_top5(repaired_response)
+                if len(repaired_predictions) == 5:
+                    final_response = repaired_response
+                    final_predictions = repaired_predictions
+
             if len(final_predictions) == 5:
                 return {
                     "predictions": final_predictions,
