@@ -1,5 +1,6 @@
 from wp1.program_slicing import (
     backward_slice_python,
+    expand_production_dependencies,
     parse_fail_to_pass,
     resolve_test_target,
 )
@@ -75,3 +76,81 @@ def test_resolve_bare_test_name(tmp_path):
 
     assert path == "pkg/tests/test_basic.py"
     assert function == "test_immutable"
+
+
+
+def test_backward_slice_crosses_to_module_level_fixture():
+    source = """from pkg.basic import Basic
+from other import unused
+
+b1 = Basic()
+noise = 123
+
+def test_immutable():
+    assert not hasattr(b1, '__dict__')
+"""
+
+    result = backward_slice_python(
+        source,
+        source_file="tests/test_basic.py",
+        function_name="test_immutable",
+    )
+
+    text = result.text
+    assert "from pkg.basic import Basic" in text
+    assert "b1 = Basic()" in text
+    assert "assert not hasattr(b1, '__dict__')" in text
+    assert "noise = 123" not in text
+    assert "from other import unused" not in text
+    assert result.mode == "static_backward_cross_scope"
+
+
+class _FakeGraph:
+    def __init__(self, repo):
+        self.repo = repo
+
+    def snippet(self, ref, radius=12):
+        path, entity = ref.split("::", 1)
+        source = (self.repo / path).read_text()
+        return f"{ref}\n{source}"
+
+
+def test_production_expansion_follows_inheritance(tmp_path):
+    tests = tmp_path / "tests/test_basic.py"
+    basic = tmp_path / "pkg/basic.py"
+    printable = tmp_path / "pkg/printable.py"
+
+    tests.parent.mkdir(parents=True)
+    basic.parent.mkdir(parents=True)
+
+    tests.write_text(
+        "from pkg.basic import Basic\n"
+        "b1 = Basic()\n"
+        "def test_immutable():\n"
+        "    assert not hasattr(b1, '__dict__')\n"
+    )
+    basic.write_text(
+        "from .printable import Printable\n"
+        "class Basic(Printable):\n"
+        "    __slots__ = ('x',)\n"
+    )
+    printable.write_text(
+        "class Printable:\n"
+        "    pass\n"
+    )
+
+    result = backward_slice_python(
+        tests.read_text(),
+        source_file="tests/test_basic.py",
+        function_name="test_immutable",
+    )
+
+    deps = expand_production_dependencies(
+        tmp_path,
+        _FakeGraph(tmp_path),
+        result,
+    )
+
+    entities = [dep.entity for dep in deps]
+    assert "pkg/basic.py::Basic" in entities
+    assert "pkg/printable.py::Printable" in entities
