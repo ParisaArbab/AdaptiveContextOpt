@@ -402,16 +402,15 @@ RUNTIME TEST OUTPUT:
                     f"Tool result:\n{item['tool']}\n"
                 )
 
-        prompt = (
-            evidence
-            + history_text
-            + (
-                "\nReturn EXACTLY ONE new Graphify tool call and nothing else. "
-                "No explanation. No markdown. No Tool result. "
-                "Use only find_path(...), find_function(...), "
-                "get_functions_of_path(...), or get_code_snippet(...)."
-                if step < max_steps
-                else
+        slice_hypotheses_ready = (
+            bool(persistent_hypotheses)
+            and set(persistent_hypotheses).issubset(inspected_hypotheses)
+            and tool_calls >= 2
+            and "get_code_snippet" in tool_names_used
+        )
+
+        if step == max_steps:
+            step_instruction = (
                 "\nTHIS IS THE FINAL STEP. "
                 "DO NOT CALL ANY TOOL. "
                 "Return exactly five ranked production-code entities now, "
@@ -422,6 +421,27 @@ RUNTIME TEST OUTPUT:
                 "Top_4 : path/to/file.py::Entity\n"
                 "Top_5 : path/to/file.py::Entity"
             )
+        elif slice_hypotheses_ready:
+            step_instruction = (
+                "\nThe dependency-derived hypotheses have now been directly "
+                "inspected. If the available source evidence is sufficient, "
+                "STOP SEARCHING and return exactly five ranked production-code "
+                "entities in Top_1..Top_5 format. Otherwise return EXACTLY ONE "
+                "new Graphify tool call that is directly relevant to resolving "
+                "the remaining uncertainty. Do not explore unrelated behavior."
+            )
+        else:
+            step_instruction = (
+                "\nReturn EXACTLY ONE new Graphify tool call and nothing else. "
+                "No explanation. No markdown. No Tool result. "
+                "Use only find_path(...), find_function(...), "
+                "get_functions_of_path(...), or get_code_snippet(...)."
+            )
+
+        prompt = (
+            evidence
+            + history_text
+            + step_instruction
             + (
                 "\nIMPORTANT: This is the LAST available step. "
                 "Stop searching and return your best Top_1..Top_5 ranking now."
@@ -480,6 +500,46 @@ RUNTIME TEST OUTPUT:
                     ),
                 })
                 continue
+
+            if (
+                graphify_ready
+                and dropped_all_supported_hypotheses
+                and not regression_guard_used
+                and step == max_steps
+            ):
+                regression_guard_used = True
+                print(
+                    "[Agent4SR] FINAL SLICE REGRESSION GUARD: dependency "
+                    "hypotheses vanished on the last step; running one "
+                    "evidence-only reconsideration.",
+                    flush=True,
+                )
+                guard_system = (
+                    "You are performing a final evidence-only reconsideration "
+                    "for software fault localization. Do not call tools, do not "
+                    "use gold information, and do not invent repository facts. "
+                    "Use only the dependency-derived hypotheses and source "
+                    "evidence already inspected in the transcript. Return "
+                    "exactly five Top_1..Top_5 lines."
+                )
+                guard_prompt = (
+                    evidence
+                    + history_text
+                    + "\nPROPOSED FINAL RANKING THAT DROPPED ALL INSPECTED "
+                    "SLICE HYPOTHESES:\n"
+                    + response
+                    + "\n\nReconsider whether the inspected dependency-derived "
+                    "hypotheses remain plausible in light of the failure symptom "
+                    "and their source snippets. They are not ground truth and "
+                    "must not be forced into the ranking if contradicted. Return "
+                    "a revised Top-5 using only already-seen entities."
+                )
+                guard_response = backend.complete(guard_system, guard_prompt)
+                guard_predictions = parse_top5(guard_response)
+                if len(guard_predictions) == 5:
+                    predictions = guard_predictions
+                    response = guard_response
+                    final = guard_response
 
             if graphify_ready:
                 return {
