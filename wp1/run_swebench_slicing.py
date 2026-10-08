@@ -12,7 +12,7 @@ from pathlib import Path
 
 from wp1.graphify_structure import GraphifyIndex
 from wp1.llm_backends import ChatBackend
-from wp1.program_slicing import slice_test_file
+from wp1.program_slicing import expand_production_dependencies, slice_test_file
 from wp1.run_swebench_agent4sr_pair import run_agent
 
 
@@ -50,6 +50,12 @@ def main() -> None:
         criterion_line=args.criterion_line,
     )
 
+    graph_path = repo / "graphify-out/graph.json"
+    graph = None
+    if graph_path.exists():
+        graph = GraphifyIndex.from_json(repo, graph_path)
+        expand_production_dependencies(repo, graph, result)
+
     out_dir = args.output_dir or outputs / "slicing"
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -71,8 +77,14 @@ def main() -> None:
     print(f"Failing test: {test_id}")
     print(f"Criterion line: {result.criterion_line}")
     print(f"Selected lines: {len(result.selected_lines)}")
+    print(f"Production dependencies: {len(result.production_dependencies)}")
     print()
     print(result.text)
+    if result.production_dependencies:
+        print()
+        print("=== PRODUCTION DEPENDENCIES ===")
+        for dep in result.production_dependencies:
+            print(f"- {dep.entity} [{dep.relation}]")
     print()
     print(f"Saved: {slice_json}")
     print(f"Saved: {slice_txt}")
@@ -80,11 +92,8 @@ def main() -> None:
     if not args.run_agent:
         return
 
-    graph_path = repo / "graphify-out/graph.json"
-    if not graph_path.exists():
+    if graph is None:
         raise SystemExit(f"Missing Graphify graph: {graph_path}")
-
-    graph = GraphifyIndex.from_json(repo, graph_path)
     backend = ChatBackend(
         provider="ollama",
         model=args.model,
