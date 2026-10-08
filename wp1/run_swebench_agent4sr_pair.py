@@ -318,6 +318,8 @@ def run_agent(
     max_steps=20,
     targeted_evidence=None,
     previous_predictions=None,
+    persistent_hypotheses=None,
+    structural_focus=None,
 ):
     history = []
 
@@ -349,6 +351,23 @@ RUNTIME TEST OUTPUT:
                 f"Evidence:\n{item.get('content', '')}\n"
             )
 
+    persistent_hypotheses = list(persistent_hypotheses or [])
+    if persistent_hypotheses:
+        evidence += "\nDEPENDENCY-DERIVED PERSISTENT HYPOTHESES (NOT GROUND TRUTH):\n"
+        evidence += (
+            "These candidates were derived mechanically from the program slice "
+            "and dependency graph, not from gold labels. Treat them as persistent "
+            "hypotheses. Inspect them directly and keep them in consideration "
+            "unless new source/runtime evidence contradicts them. Do not drift "
+            "toward unrelated methods merely because more tool calls are available.\n"
+        )
+        for index, candidate in enumerate(persistent_hypotheses, 1):
+            evidence += f"{index}. {candidate}\n"
+
+    if structural_focus:
+        evidence += "\nSTRUCTURAL FOCUS FOR THIS RUN:\n"
+        evidence += str(structural_focus).strip() + "\n"
+
     previous_predictions = list(previous_predictions or [])
     if previous_predictions:
         evidence += "\nPREVIOUS LOCALIZATION STATE (NOT GROUND TRUTH):\n"
@@ -368,6 +387,8 @@ RUNTIME TEST OUTPUT:
     tool_calls = 0
     tool_names_used = set()
     seen_tool_calls = set()
+    inspected_hypotheses = set()
+    regression_guard_used = False
 
     for step in range(1, max_steps + 1):
         print(f"\\n[Agent4SR] STEP {step}/{max_steps}", flush=True)
@@ -422,6 +443,44 @@ RUNTIME TEST OUTPUT:
                 and "get_code_snippet" in tool_names_used
             )
 
+            # Slicing-specific regression guard. If dependency-derived
+            # hypotheses were directly inspected but every one disappears from
+            # the final Top-5, allow one corrective reconsideration. This does
+            # not use gold labels and does not force a specific rank.
+            dropped_all_supported_hypotheses = (
+                bool(inspected_hypotheses)
+                and not any(
+                    candidate in predictions
+                    for candidate in inspected_hypotheses
+                )
+            )
+
+            if (
+                graphify_ready
+                and dropped_all_supported_hypotheses
+                and not regression_guard_used
+                and step < max_steps
+            ):
+                regression_guard_used = True
+                print(
+                    "[Agent4SR] SLICE REGRESSION GUARD: inspected dependency "
+                    "hypotheses vanished from Top-5; requesting one reconsideration.",
+                    flush=True,
+                )
+                history.append({
+                    "assistant": response,
+                    "tool": (
+                        "SLICE REGRESSION GUARD. One or more dependency-derived "
+                        "hypotheses were directly inspected earlier, but all were "
+                        "dropped from the proposed Top-5. Reconsider the ranking "
+                        "using the inspected source evidence. Keep a hypothesis "
+                        "only if it remains plausible; if evidence contradicts it, "
+                        "you may still exclude it. Return a revised Top-5 or one "
+                        "new relevant Graphify tool call."
+                    ),
+                })
+                continue
+
             if graphify_ready:
                 return {
                     "predictions": predictions,
@@ -430,6 +489,9 @@ RUNTIME TEST OUTPUT:
                     "tools_used": sorted(tool_names_used),
                     "final_response": response,
                     "previous_predictions_supplied": previous_predictions,
+                    "persistent_hypotheses_supplied": persistent_hypotheses,
+                    "inspected_persistent_hypotheses": sorted(inspected_hypotheses),
+                    "regression_guard_used": regression_guard_used,
                     "transcript": history,
                 }
 
@@ -461,6 +523,24 @@ RUNTIME TEST OUTPUT:
             continue
 
         name, arg = action
+
+        # All Graphify tools in this runner accept exactly one string argument.
+        # Reject accidental multi-argument calls instead of sending a malformed
+        # path such as: get_code_snippet("file.py::Entity", 20, 30).
+        if re.match(r"^['\"].*['\"]\s*,", arg):
+            print(
+                f"[Agent4SR] MULTI-ARG TOOL CALL REJECTED: {name}({arg})",
+                flush=True,
+            )
+            history.append({
+                "assistant": response,
+                "tool": (
+                    "INVALID TOOL CALL. This tool accepts exactly one string "
+                    "argument. Retry with only the path/entity argument."
+                ),
+            })
+            continue
+
         tool_key = (name, arg)
 
         if tool_key in seen_tool_calls:
@@ -485,6 +565,11 @@ RUNTIME TEST OUTPUT:
         print(f"[Agent4SR] TOOL CALL: {name}({arg})", flush=True)
 
         result = run_tool(graph, name, arg)
+
+        if name == "get_code_snippet":
+            for hypothesis in persistent_hypotheses:
+                if arg.strip().strip("'\"") == hypothesis:
+                    inspected_hypotheses.add(hypothesis)
 
         print("[Agent4SR] TOOL RESULT:", flush=True)
         print(result[:5000], flush=True)
@@ -522,6 +607,9 @@ RUNTIME TEST OUTPUT:
         "final_response": final,
         "format_finalization": format_finalization,
         "previous_predictions_supplied": previous_predictions,
+        "persistent_hypotheses_supplied": persistent_hypotheses,
+        "inspected_persistent_hypotheses": sorted(inspected_hypotheses),
+        "regression_guard_used": regression_guard_used,
         "transcript": history,
     }
 
