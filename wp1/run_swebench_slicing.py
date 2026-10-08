@@ -62,6 +62,13 @@ def main() -> None:
     slice_json = out_dir / "slice.json"
     slice_txt = out_dir / "slice_context.txt"
     slice_json.write_text(json.dumps(result.to_dict(), indent=2))
+    production_text = "\n\n".join(
+        f"## {dep.entity}\n"
+        f"# relation: {dep.relation}\n"
+        f"{dep.source}"
+        for dep in result.production_dependencies
+    )
+
     slice_txt.write_text(
         "# Dependency-guided backward slice\n"
         f"# instance: {args.instance}\n"
@@ -69,6 +76,8 @@ def main() -> None:
         f"# criterion line: {result.criterion_line}\n"
         f"# criterion: {result.criterion_text}\n\n"
         + result.text
+        + "\n\n# Production dependencies\n"
+        + (production_text or "(none)")
         + "\n"
     )
 
@@ -104,10 +113,20 @@ def main() -> None:
     problem = metadata.get("problem_statement", "")
     failing = ", ".join(fail_to_pass)
 
-    # The slice is passed as the debugging context. Gold information is not used.
+    # The slice and only dependency-derived production evidence are passed as
+    # context. Gold information is never used to build this context.
+    production_context = "\n\n".join(
+        f"PRODUCTION DEPENDENCY: {dep.entity}\n"
+        f"RELATION: {dep.relation}\n"
+        f"{dep.source}"
+        for dep in result.production_dependencies
+    )
+
     slicing_context = (
         "DEPENDENCY-GUIDED STATIC BACKWARD SLICE OF THE FAILING TEST:\n"
         + result.text
+        + "\n\nDEPENDENCY-GUIDED PRODUCTION CONTEXT:\n"
+        + (production_context or "(none)")
     )
 
     agent = run_agent(
@@ -125,7 +144,7 @@ def main() -> None:
             {
                 "instance_id": args.instance,
                 "model": args.model,
-                "context_mode": "static_backward_slice",
+                "context_mode": "static_backward_cross_scope_with_graphify_dependencies",
                 "gold_used_by_agent": False,
                 "slice": result.to_dict(),
                 "agent": agent,
