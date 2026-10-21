@@ -47,9 +47,12 @@ else
   defects4j checkout -p Time -v 25b -w "$checkout"
 fi
 
+echo "Preparing only the required FlexFL Time-25 ranking and test files..." 
+bash scripts/aiscalar_rave_fl_time25_data.sh
+
 echo "Running source validation without making LLM calls..."
 python -m rave_fl.compare_expanded \
-  --flexfl-repo references/FlexFL_OriginalReplication \
+  --flexfl-repo references/FlexFL_Time25 \
   --checkout "$checkout" \
   --bug Time-25 \
   --top-per-method 10 \
