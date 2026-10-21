@@ -47,7 +47,7 @@ def extract_method(checkout: Path, function_id: str, info: dict) -> tuple[str, s
     if start < 1 or end > len(lines) or start > end:
         raise ValueError(f"{function_id}: lines {start}-{end} outside {path} ({len(lines)} lines)")
     body = "\n".join(lines[start - 1:end])
-    method_name = function_id.rsplit(".", 1)[-1].split("(", 1)[0]
+    method_name = function_id.split("(", 1)[0].rsplit(".", 1)[-1]
     if method_name not in body:
         raise ValueError(
             f"{function_id}: method name absent at CSV lines {start}-{end} in {path}; "
