@@ -6,6 +6,7 @@ uses two paired Ollama arms and reports measured model token usage.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 
@@ -17,12 +18,33 @@ from wp1.evaluation import evaluate_top5
 from wp1.flexfl_data import read_bug_report, read_trigger_test, read_ground_truth
 
 
+def load_context(flexfl_repo: Path, bug: str, evidence_file: Path | None = None) -> tuple[str, dict]:
+    """Load observed failure evidence only; never read gold labels into the prompt.
+
+    A supplied evidence file is authoritative. Missing or empty files fail rather
+    than silently switching to the original short FlexFL input.
+    """
+    if evidence_file is not None:
+        context = evidence_file.read_text(encoding="utf-8")
+        source = "structured_failure_file"
+    else:
+        context = read_bug_report(flexfl_repo, bug) + "\n" + read_trigger_test(flexfl_repo, bug)
+        source = "flexfl_original"
+    if not context.strip():
+        raise ValueError(f"Empty debugging evidence from {evidence_file or source}")
+    meta = {
+        "source": source,
+        "file": str(evidence_file) if evidence_file is not None else None,
+        "sha256": hashlib.sha256(context.encode("utf-8")).hexdigest(),
+        "characters": len(context),
+    }
+    return context, meta
+
+
 def experiment(args) -> dict:
     candidates, metadata = union_pool(args.flexfl_repo, args.bug, args.top_per_method)
     sources, paths = extract_pool_sources(args.checkout, metadata)
-    context = read_bug_report(args.flexfl_repo, args.bug) + "\n" + read_trigger_test(args.flexfl_repo, args.bug)
-    if not context.strip():
-        raise ValueError("Missing real FlexFL bug report and trigger test")
+    context, evidence = load_context(args.flexfl_repo, args.bug, args.evidence_file)
     result = {
         "bug": args.bug,
         "candidate_sources": ["SBIR", "Ochiai", "BoostN"],
@@ -32,6 +54,7 @@ def experiment(args) -> dict:
         "source_checkout": str(args.checkout),
         "model": args.model,
         "dry_run": args.dry_run,
+        "evidence": evidence,
     }
     if args.dry_run:
         result["candidate_ids"] = [c.function_id for c in candidates]
@@ -61,6 +84,7 @@ def experiment(args) -> dict:
             "The source-line spans come from FlexFL CSV files and are checked for signature.",
             "Total token budget uses approximate preflight admission, not a hard cap.",
             "Time-25 is a single bug; do not claim statistical accuracy improvement.",
+            "Changing failure evidence may affect both model scores and token usage; do not equate this with a new policy.",
         ],
     })
     return result
@@ -73,6 +97,7 @@ def main():
     p.add_argument("--bug", required=True)
     p.add_argument("--top-per-method", type=int, default=10)
     p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--evidence-file", type=Path, help="Observed failure evidence; replaces the short FlexFL prompt context")
     p.add_argument("--model")
     p.add_argument("--base-url", default="http://127.0.0.1:11434")
     p.add_argument("--token-budget", type=int, default=16000)
