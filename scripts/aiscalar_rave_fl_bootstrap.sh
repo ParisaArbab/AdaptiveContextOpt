@@ -48,20 +48,11 @@ git config user.email "pa.arbab@gmail.com"
 echo "Running RAVE-FL unit tests..."
 python -m unittest discover -s tests -p 'test_rave_fl*.py'
 
-echo "Fetching only the FlexFL benchmark data needed for Phase 3..."
-mkdir -p references
-REF="references/FlexFL_OriginalReplication"
-if [[ -d "$REF/.git" ]]; then
-  git -C "$REF" pull --ff-only
-elif [[ -e "$REF" ]]; then
-  echo "ERROR: $REF exists but is not a Git checkout" >&2
-  exit 2
-else
-  git clone https://github.com/ParisaArbab/FlexFL_OriginalReplication.git "$REF"
-fi
+echo "Preparing small FlexFL Time-25 sparse reference clone..."
+bash scripts/aiscalar_rave_fl_time25_data.sh
 
 echo "Checking the expanded candidate pool (gold labels used ONLY for this diagnostic)..."
-python -m rave_fl.expanded_pool --flexfl-repo "$REF" --bug Time-25 --top-per-method 10 --diagnose
+python -m rave_fl.expanded_pool --flexfl-repo references/FlexFL_Time25 --bug Time-25 --top-per-method 10 --diagnose
 
 echo
 echo "==== AIScalar prerequisite report ===="
