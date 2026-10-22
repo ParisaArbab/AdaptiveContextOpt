@@ -64,6 +64,14 @@ These are early results from **one bug**, not proof that the approach works on a
 
 More details: [Evidence experiment instructions](docs/rave_fl_phase3c_evidence_ablation.md) | [Real structured failure evidence](results/rave_fl_phase3/time25_failure_evidence.txt)
 
+## Research extension, 22 October 2026
+
+**Code and tests updated:** An optional live base-localizer adapter now accepts real candidate rankings plus normalized semantic and coverage scores; the default SBIR/Ochiai/BoostN CSV mode is kept for reproducibility. New evidence features (`body_failure_relevance`, `numeric_evidence_overlap`, `trace_class_match`) support an opt-in `repair_grounded` baseline. A project-held-out study splitter, guarded **offline** contextual-bandit trainer, paired LLM-latency metrics and hypothetical price-rate accounting were added. GitHub Actions runs focused RAVE-FL unit tests on this branch.
+
+**Research status:** These features do not mean that a full SieveFL implementation, a fitted real multi-project LightGBM model, an online RL/bandit controller or new generalization results are present. The bandit refuses missing propensities and insufficient independent data. The historical Time-25 accuracy/tokens and masked-evidence limitations remain the measured evidence.
+
+See [the step-by-step research upgrade guide](docs/rave_fl_research_upgrade_2026_10_22.md) for the new manifest schema and exact commands, plus [the source-to-flowchart alignment audit](docs/rave_fl_flowchart_alignment_2026_10_22.md).
+
 ## 1. Reference repositories
 
 Clone the three codebases used to build and verify this implementation:
