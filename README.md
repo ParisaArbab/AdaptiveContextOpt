@@ -12,6 +12,16 @@ The main research question is simple:
 
 ## Latest research: RAVE-FL fault localization (October 2026)
 
+The adaptive pilot is now implemented in `python -m rave_fl.pilot`: Java AST
+sketches, budget-aware batch/expand/full/stop feedback, shared prior-preserving
+ranking, paired ablations, real Ollama usage logs, and a leakage-checked
+LightGBM training/calibration path. It starts with explicitly untrained risk
+until independent paired training data is collected. See the
+[adaptive pilot guide](docs/rave_fl_adaptive_pilot.md) and
+[small Time-25 manifest](configs/rave_pilot_time25.json).
+The historical results below remain the fixed-threshold experiment, not results
+of the new adaptive policy.
+
 **Goal:** Help an AI locate buggy code while using fewer tokens (less debugging context).
 
 We tested **Defects4J Time-25** using **Qwen2.5 7B** and **24 candidate functions** gathered from SBIR, Ochiai, and BoostN.
