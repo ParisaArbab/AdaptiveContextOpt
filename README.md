@@ -22,6 +22,14 @@ until independent paired training data is collected. See the
 The historical results below remain the fixed-threshold experiment, not results
 of the new adaptive policy.
 
+The follow-up now implements **L1-first budgeted rank repair**, strict replay
+of measured independent requests, a simple raw-suspicion control, marginal-action
+labels and candidate-name/numeric-evidence ablations. See the
+[rank-repair guide](docs/rave_fl_rank_repair.md) and
+[measured follow-up results](docs/rave_fl_rank_repair_results_2026_10_22.md).
+Time-25 is a previously inspected development bug; these experiments do not
+establish learned-policy quality or generalization.
+
 **Goal:** Help an AI locate buggy code while using fewer tokens (less debugging context).
 
 We tested **Defects4J Time-25** using **Qwen2.5 7B** and **24 candidate functions** gathered from SBIR, Ochiai, and BoostN.

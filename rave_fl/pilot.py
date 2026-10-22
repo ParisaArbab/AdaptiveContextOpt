@@ -23,6 +23,7 @@ from rave_fl.pilot_backend import OllamaPilotBackend
 from rave_fl.pilot_evaluation import evaluate, risk_rows, summarize
 from rave_fl.pilot_types import PolicyConfig
 from rave_fl.risk import BootstrapRisk, LearnedRisk
+from rave_fl.rank_repair import REPAIR_MODES, RepairConfig, RankRepairPilot
 from rave_fl.source_spans import extract_pool_sources
 from wp1.flexfl_data import read_ground_truth
 
@@ -63,18 +64,21 @@ def run_experiment(args):
     if len({c["bug"] for c in cases}) != len(cases):
         raise ValueError("Use one case per bug for paired summaries; separate evidence ablations into separate runs")
     arms = args.arms.split(",")
-    allowed = {"full", "rank_threshold", "fixed_batch", "fixed_sketch", "confidence", "adaptive"}
+    allowed = {"full", "rank_threshold", "fixed_batch", "fixed_sketch", "confidence", "adaptive"} | REPAIR_MODES
     if not arms or len(set(arms)) != len(arms) or set(arms) - allowed:
         raise ValueError("Unknown or duplicate experiment arms")
     if args.collect_risk and "full" not in arms:
         raise ValueError("--collect-risk requires --arms containing full")
     if args.risk_model and args.collect_risk:
         raise ValueError("Collect training probes separately from learned-policy evaluation")
+    if args.risk_model and set(arms) & REPAIR_MODES:
+        raise ValueError("The rank-repair heuristic does not use a trained risk model")
     if not args.dry_run and not args.model:
         raise ValueError("Live experiments require --model")
     config = PolicyConfig(args.token_budget, args.batch_size, args.risk_threshold,
                           args.uncertainty_threshold, early_stop=not args.no_early_stop,
                           max_steps=args.max_steps)
+    repair_config = RepairConfig(getattr(args, "max_full_repairs", 4), getattr(args, "repair_top_k", 5))
     policy_budget = getattr(args, "policy_budget", None)
     if policy_budget is not None and policy_budget < 0:
         raise ValueError("Policy budget must be nonnegative")
@@ -134,7 +138,8 @@ def run_experiment(args):
                         backend.estimate([c], Action.FULL_VERIFY, 2) for c in candidates)}
                     continue
                 backend.preflight()
-                engine = AdaptivePilot(candidates, backend, cfg, risk)
+                engine = (RankRepairPilot(candidates, backend, cfg, repair_config)
+                    if name in REPAIR_MODES else AdaptivePilot(candidates, backend, cfg, risk))
                 result["arms"][name] = engine.execute()
                 result["arms"][name]["model_metadata"] = backend.model_metadata
                 write_json(args.output / bug / (name + ".json"), result["arms"][name])
@@ -200,6 +205,8 @@ def main():
     p.add_argument("--max-bugs", type=int, default=5)
     p.add_argument("--top-per-method", type=int, default=10)
     p.add_argument("--max-steps", type=int, default=200)
+    p.add_argument("--max-full-repairs", type=int, default=4)
+    p.add_argument("--repair-top-k", type=int, default=5)
     p.add_argument("--risk-threshold", type=float, default=.35)
     p.add_argument("--uncertainty-threshold", type=float, default=.45)
     p.add_argument("--no-early-stop", action="store_true")
