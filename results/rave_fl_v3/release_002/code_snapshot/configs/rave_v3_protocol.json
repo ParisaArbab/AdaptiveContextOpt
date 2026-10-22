@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "purpose": "Development diagnostics on Time-25; no held-out or calibration claim",
+  "budgets": [14000, 16000, 18000, 20000],
+  "max_full_values": [0, 1, 2, 4],
+  "primary_budget": 16000,
+  "primary_max_full": 1,
+  "batch_size": 4,
+  "policies": ["fixed_l1", "highest_suspicion", "ranker_disagreement", "ranking_ambiguity", "v2_utility", "uncertainty_aware"],
+  "admission_modes": ["historical_estimate", "strict_reservation"],
+  "ranker": "shared_prior_evidence_fusion_v1",
+  "uncertainty_aware_formula": "(0.4*suspicion + 0.2*disagreement + 0.25*ambiguity + 0.15*(1-evidence_support)) * (0.5+0.5*remaining_fraction) / predicted_cost",
+  "evidence_support": "Mean of recorded lexical failure relevance and trace-match proxy; not calibrated semantic support",
+  "stopping": "Caps and admission constraints apply to every policy. Simple controls additionally stop if a Full top-1 suspicion strictly exceeds every remaining raw L1 score; this is a heuristic, not a certificate. Highest suspicion always attempts the highest raw L1 candidate for its first Full action, without a suspicion cutoff. V2 utility is unchanged and stops on nonpositive proxy gain.",
+  "future_information": "Gold, Full responses and actual future costs are evaluator-only; reveal selected cached action only after selection",
+  "fresh_inference": false
+}

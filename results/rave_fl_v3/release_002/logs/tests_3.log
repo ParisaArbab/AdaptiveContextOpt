@@ -1,0 +1,93 @@
+FFF.                                                                     [100%]
+=================================== FAILURES ===================================
+______________ test_fetch_dependency_fails_before_model_preflight ______________
+
+tmp_path = PosixPath('/private/var/folders/k8/xdc9g2pn7v561ty2fk116vjh0000gn/T/pytest-of-mohammadmahdi/pytest-46/test_fetch_dependency_fails_be0')
+
+    def test_fetch_dependency_fails_before_model_preflight(tmp_path):
+        environment = tmp_path / 'empty-environment'
+        subprocess.run([sys.executable, '-m', 'venv', '--without-pip', str(environment)], check=True)
+        root = Path(__file__).resolve().parents[1]
+        import os
+        run = subprocess.run(
+            ['bash', str(root / 'scripts/run_pipeline.sh'), '--llm', 'ollama',
+             '--preflight', '--skip-plots', '--out-dir', str(tmp_path / 'run')],
+            env={**os.environ, 'PYTHON': str(environment / 'bin/python3')},
+            capture_output=True, text=True,
+        )
+        assert run.returncode != 0
+>       assert 'missing required dependency' in run.stdout
+E       AssertionError: assert 'missing required dependency' in ''
+E        +  where '' = CompletedProcess(args=['bash', '/Users/mohammadmahdi/Documents/Heydar LAB/toke optimization/scripts/run_pipeline.sh', ...ash: /Users/mohammadmahdi/Documents/Heydar LAB/toke optimization/scripts/run_pipeline.sh: No such file or directory\n').stdout
+
+tests/test_pipeline_dependencies.py:19: AssertionError
+____________ test_existing_instances_do_not_require_dataset_fetcher ____________
+
+tmp_path = PosixPath('/private/var/folders/k8/xdc9g2pn7v561ty2fk116vjh0000gn/T/pytest-of-mohammadmahdi/pytest-46/test_existing_instances_do_not0')
+
+    def test_existing_instances_do_not_require_dataset_fetcher(tmp_path):
+        environment = tmp_path / 'empty-environment'
+        subprocess.run([sys.executable, '-m', 'venv', '--without-pip', str(environment)], check=True)
+        instances = tmp_path / 'instances.json'
+        instances.write_text(json.dumps([]))
+        root = Path(__file__).resolve().parents[1]
+        import os
+        run = subprocess.run(
+            ['bash', str(root / 'scripts/run_pipeline.sh'), '--instances', str(instances),
+             '--skip-plots', '--out-dir', str(tmp_path / 'run')],
+            env={**os.environ, 'PYTHON': str(environment / 'bin/python3')},
+            capture_output=True, text=True,
+        )
+        # Empty input is rejected later, but the dependency gate must allow reuse.
+>       assert 'wrote 0 outcomes' in run.stdout, run.stdout + run.stderr
+E       AssertionError: bash: /Users/mohammadmahdi/Documents/Heydar LAB/toke optimization/scripts/run_pipeline.sh: No such file or directory
+E         
+E       assert 'wrote 0 outcomes' in ''
+E        +  where '' = CompletedProcess(args=['bash', '/Users/mohammadmahdi/Documents/Heydar LAB/toke optimization/scripts/run_pipeline.sh', ...ash: /Users/mohammadmahdi/Documents/Heydar LAB/toke optimization/scripts/run_pipeline.sh: No such file or directory\n').stdout
+
+tests/test_pipeline_dependencies.py:39: AssertionError
+_______________ test_format_only_finalization_uses_seen_entities _______________
+
+    def test_format_only_finalization_uses_seen_entities():
+        final_response = """Top_1 : sympy/core/expr.py::Expr
+    Top_2 : sympy/core/basic.py::Basic
+    Top_3 : sympy/core/evalf.py::EvalfMixin
+    Top_4 : sympy/core/symbol.py::Symbol"""
+    
+        history = [
+            {
+                "assistant": 'get_code_snippet("sympy/core/_print_helpers.py::Printable")',
+                "tool": "sympy/core/_print_helpers.py::Printable",
+            }
+        ]
+    
+>       response, predictions = finalize_top5_format(
+            FakeBackend(),
+            final_response,
+            history,
+        )
+
+tests/test_agent4sr_format_finalization.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+wp1/run_swebench_agent4sr_pair.py:213: in finalize_top5_format
+    response = backend.complete(system, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_agent4sr_format_finalization.FakeBackend object at 0x10a1a6c50>
+system = 'You are a strict output formatter for an already completed\nsoftware fault-localization run.\n\nYou MUST NOT investig...o/file.py::Entity\nTop_3 : path/to/file.py::Entity\nTop_4 : path/to/file.py::Entity\nTop_5 : path/to/file.py::Entity\n'
+user = 'PREVIOUS FINAL RESPONSE:\nTop_1 : sympy/core/expr.py::Expr\nTop_2 : sympy/core/basic.py::Basic\nTop_3 : sympy/core/ev...cated before Top_5, choose the missing candidate only from the already-seen\nentities above. Do not add explanation.\n'
+
+    def complete(self, system, user):
+        assert "gold" in system.lower()
+>       assert "sympy/core/_print_helpers.py::Printable" in user
+E       AssertionError: assert 'sympy/core/_print_helpers.py::Printable' in 'PREVIOUS FINAL RESPONSE:\nTop_1 : sympy/core/expr.py::Expr\nTop_2 : sympy/core/basic.py::Basic\nTop_3 : sympy/core/ev...cated before Top_5, choose the missing candidate only from the already-seen\nentities above. Do not add explanation.\n'
+
+tests/test_agent4sr_format_finalization.py:7: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[Agent4SR] FORMAT-ONLY FINALIZATION CALL
+=========================== short test summary info ============================
+FAILED tests/test_pipeline_dependencies.py::test_fetch_dependency_fails_before_model_preflight
+FAILED tests/test_pipeline_dependencies.py::test_existing_instances_do_not_require_dataset_fetcher
+FAILED tests/test_agent4sr_format_finalization.py::test_format_only_finalization_uses_seen_entities
+3 failed, 1 passed in 0.19s

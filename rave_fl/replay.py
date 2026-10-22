@@ -142,6 +142,10 @@ class ReplayBackend:
     def execute(self, candidates, action, level):
         key = (action.value, level, tuple(c.function_id for c in candidates))
         require(key in self._corpus._entries, "No exact cached action; refuse to invent an observation or call the network")
+        canonical = [self._corpus.by_id[c.function_id] for c in candidates]
+        require(build_prompt(candidates, self._planner.context, action, level) ==
+                build_prompt(canonical, self._corpus.context, action, level),
+                "Replay prompt changed for a cached candidate ID")
         self.replayed_calls += 1
         return deepcopy(self._corpus._entries[key])
 

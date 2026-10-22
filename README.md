@@ -12,6 +12,13 @@ The main research question is simple:
 
 ## Latest research: RAVE-FL fault localization (October 2026)
 
+The V3 diagnostic release provides an [English research progress report](reports/RAVE_FL_Research_Progress_Report.md),
+[candidate-level V2 analysis](reports/RAVE_FL_V2_Diagnostic_Analysis.md), and
+[matched controller replay results](reports/RAVE_FL_V3_Experiment_Results.md), with 13 PNG/SVG figures.
+The added uncertainty-aware heuristic does not outperform the strongest original
+single-Full suspicion baseline. Use the [single offline regeneration command](reports/RAVE_FL_Reproducibility.md)
+to rebuild diagnostics, audits, figures, and reports without new model calls.
+
 The adaptive pilot is now implemented in `python -m rave_fl.pilot`: Java AST
 sketches, budget-aware batch/expand/full/stop feedback, shared prior-preserving
 ranking, paired ablations, real Ollama usage logs, and a leakage-checked
