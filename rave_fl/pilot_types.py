@@ -87,7 +87,7 @@ class PolicyConfig:
         if self.token_budget < 0 or self.batch_size < 1 or self.max_steps < 1:
             raise ValueError("Invalid budget, batch size, or step limit")
         if self.mode not in {"adaptive", "confidence", "full", "fixed_batch", "fixed_sketch", "rank_threshold", "probe_l0",
-                             "repair_top", "repair_disagreement", "repair_suspicion", "repair_utility"}:
+                             "repair_top", "repair_disagreement", "repair_suspicion", "repair_utility", "repair_grounded"}:
             raise ValueError("Unknown policy mode")
         if not all(math.isfinite(x) and 0 <= x <= 1 for x in (
                 self.risk_threshold, self.uncertainty_threshold,
