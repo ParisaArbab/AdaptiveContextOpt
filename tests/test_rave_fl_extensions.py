@@ -54,7 +54,10 @@ def test_pilot_prepare_case_uses_live_localizer_with_real_source_spans(tmp_path)
     from rave_fl.pilot import prepare_case
     source = tmp_path / "src/main/java/p/F.java"
     source.parent.mkdir(parents=True)
-    source.write_text("class F {\\npublic int a() { return 3600000; }\\n}\\n")
+    source.write_text("""class F {
+public int a() { return 3600000; }
+}
+""")
     evidence = tmp_path / "failure.txt"
     evidence.write_text("p.F failed: expected 3600000")
     case = _localizer_fixture(tmp_path, [
