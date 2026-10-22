@@ -86,6 +86,12 @@ def run_experiment(args):
                           args.uncertainty_threshold, early_stop=not args.no_early_stop,
                           max_steps=args.max_steps)
     repair_config = RepairConfig(getattr(args, "max_full_repairs", 4), getattr(args, "repair_top_k", 5))
+    input_price = getattr(args, "estimated_input_price_per_million", None)
+    output_price = getattr(args, "estimated_output_price_per_million", None)
+    if (input_price is None) != (output_price is None):
+        raise ValueError("Estimated input/output prices must be supplied together")
+    if input_price is not None and (input_price < 0 or output_price < 0):
+        raise ValueError("Estimated prices cannot be negative")
     policy_budget = getattr(args, "policy_budget", None)
     if policy_budget is not None and policy_budget < 0:
         raise ValueError("Policy budget must be nonnegative")
@@ -109,7 +115,9 @@ def run_experiment(args):
         snapshot.parent.mkdir(parents=True, exist_ok=True)
         snapshot.write_text(source)
     run = {"schema": 1, "dry_run": args.dry_run, "model": args.model, "base_url": args.base_url,
-           "seed": args.seed, "code_revision": revision, "tracked_changes": bool(dirty), "code_sha256": code_hash,
+           "seed": args.seed, "estimated_price_per_million_tokens":
+           {"input": input_price, "output": output_price} if input_price is not None else None,
+           "code_revision": revision, "tracked_changes": bool(dirty), "code_sha256": code_hash,
            "python": sys.version, "platform": platform.platform(), "arms_requested": arms,
            "risk_model_artifact_sha256": digest(json.loads(args.risk_model.read_text())) if args.risk_model else None,
            "config": asdict(config), "policy_budget": policy_budget, "cases": [],
@@ -148,6 +156,11 @@ def run_experiment(args):
                 engine = (RankRepairPilot(candidates, backend, cfg, repair_config)
                     if name in REPAIR_MODES else AdaptivePilot(candidates, backend, cfg, risk))
                 result["arms"][name] = engine.execute()
+                if input_price is not None:
+                    arm = result["arms"][name]
+                    arm["hypothetical_cost_usd_at_supplied_rates"] = round(
+                        (arm["actual_input_tokens"] * input_price +
+                         arm["actual_output_tokens"] * output_price) / 1_000_000, 8)
                 result["arms"][name]["model_metadata"] = backend.model_metadata
                 write_json(args.output / bug / (name + ".json"), result["arms"][name])
                 print(f"{bug} {name}: {result['arms'][name]['call_count']} calls, {result['arms'][name]['actual_tokens']} tokens", flush=True)
@@ -181,14 +194,14 @@ def run_experiment(args):
 def write_report(path, run):
     lines = ["# RAVE-FL adaptive pilot", "", f"Status: {run['status']}. Model: {run['model']}. Seed: {run['seed']}.",
              "", "Verification-stage experiment; shared pilot fusion ranker; no claim of full SieveFL reproduction.", "",
-             "| Bug | Arm | Calls | Screened/full | Actual tokens | Top-1 | Top-5 | MRR | Stop |",
-             "|---|---|---:|---:|---:|---|---|---:|---|"]
+             "| Bug | Arm | Calls | Screened/full | Actual tokens | LLM seconds | Top-1 | Top-5 | MRR | Stop |",
+             "|---|---|---:|---:|---:|---:|---|---|---:|---|"]
     for case in run["cases"]:
         for name, a in case["arms"].items():
             if "accuracy" not in a:
                 continue
             e = a["accuracy"]
-            lines.append(f"| {case['bug']} | {name} | {a['call_count']} | {a['screened_count']}/{a['full_verified_count']} | {a['actual_tokens']} | {e['top1']} | {e['top5']} | {e['MRR']:.3f} | {a['stop_reason']} |")
+            lines.append(f"| {case['bug']} | {name} | {a['call_count']} | {a['screened_count']}/{a['full_verified_count']} | {a['actual_tokens']} | {a['llm_duration_seconds']:.2f} | {e['top1']} | {e['top5']} | {e['MRR']:.3f} | {a['stop_reason']} |")
     lines += ["", "## Limits", ""] + ["- " + s for s in run["limitations"]]
     lines += ["", "Paired confidence intervals are omitted for one bug. No tiny pilot establishes noninferiority or novelty.", ""]
     path.write_text("\n".join(lines))
@@ -218,6 +231,10 @@ def main():
     p.add_argument("--uncertainty-threshold", type=float, default=.45)
     p.add_argument("--no-early-stop", action="store_true")
     p.add_argument("--timeout", type=int, default=180)
+    p.add_argument("--estimated-input-price-per-million", type=float,
+                   help="Hypothetical USD per 1M input tokens, not actual Ollama billing")
+    p.add_argument("--estimated-output-price-per-million", type=float,
+                   help="Hypothetical USD per 1M output tokens, not actual Ollama billing")
     p.add_argument("--seed", type=int, default=0)
     args = p.parse_args()
     try:
