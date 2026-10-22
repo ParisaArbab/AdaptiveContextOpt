@@ -97,10 +97,17 @@ def summarize(runs):
                   for k in ("top1", "top5", "MRR")}
         baseline_tokens = sum(f["actual_tokens"] for f, a in paired)
         arm_tokens = sum(a["actual_tokens"] for f, a in paired)
+        full_seconds = sum(f["llm_duration_seconds"] for f, a in paired)
+        arm_seconds = sum(a["llm_duration_seconds"] for f, a in paired)
         complete = all(f["full_verified_count"] == len(f["states"]) and not f["failed_full_ids"] for f, a in paired)
         summary[name] = {
             "n_bugs": len(paired), "baseline_complete": complete,
             "actual_tokens": arm_tokens, "full_actual_tokens": baseline_tokens,
+            "llm_seconds": arm_seconds, "full_llm_seconds": full_seconds,
+            "llm_time_savings_fraction": 1 - arm_seconds / full_seconds if full_seconds else None,
+            "estimated_cost_usd_at_supplied_rates": (
+                sum(a["hypothetical_cost_usd_at_supplied_rates"] for f, a in paired)
+                if all("hypothetical_cost_usd_at_supplied_rates" in a for f, a in paired) else None),
             "token_savings_fraction": 1 - arm_tokens / baseline_tokens if baseline_tokens else None,
             "mean_accuracy": {k: statistics.mean(float(a["accuracy"][k]) for f, a in paired)
                               for k in ("top1", "top3", "top5", "MRR", "screened_gold_recall", "full_verified_gold_recall")},
