@@ -281,7 +281,7 @@ def run(args):
         backend = OllamaPilotBackend(args.model or "not_configured", context, args.base_url,
                                      args.max_output_tokens, args.timeout,
                                      ledger=args.output / f"{arm}_calls.jsonl",
-                                     context_window=args.context_window)
+                                     context_window=args.context_window, language="Python")
         if args.dry_run:
             result["arms"][arm] = {
                 "llm_called": False,
