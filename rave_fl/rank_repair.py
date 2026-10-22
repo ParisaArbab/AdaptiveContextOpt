@@ -12,7 +12,7 @@ from rave_fl.core import Action
 from rave_fl.pilot_types import Decision
 
 
-REPAIR_MODES = frozenset({"repair_top", "repair_disagreement", "repair_suspicion", "repair_utility"})
+REPAIR_MODES = frozenset({"repair_top", "repair_disagreement", "repair_suspicion", "repair_utility", "repair_grounded"})
 
 
 @dataclass(frozen=True)
@@ -113,6 +113,19 @@ class RankRepairPilot(AdaptivePilot):
                 priority = (0, c.features["ranker_disagreement"], -rank[c.function_id])
             elif self.config.mode == "repair_suspicion":
                 priority = (0, s.observation.suspicion, -rank[c.function_id])
+            elif self.config.mode == "repair_grounded":
+                # Zero projected rank gain does not prove an action is useless.
+                # Rescue uses name-independent numeric/body/class evidence plus
+                # uncertainty and rank disagreement. This is NOT learned utility.
+                f = c.features
+                grounding = (.30 * f["body_failure_relevance"] +
+                             .25 * f["numeric_evidence_overlap"] +
+                             .20 * f["trace_class_match"] +
+                             .15 * f["ranker_disagreement"] +
+                             .10 * s.observation.uncertainty)
+                priority = (0, proxy["utility_per_token"] +
+                            grounding / max(1, decision.estimated_tokens),
+                            -rank[c.function_id])
             else:
                 priority = (0, proxy["utility_per_token"], -rank[c.function_id])
             diagnostics.append({"function_id": c.function_id, "estimate": decision.estimated_tokens,
