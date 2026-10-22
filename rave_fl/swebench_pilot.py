@@ -187,13 +187,17 @@ def prepare_swebench(work: Path, source_package="sympy", top_k=12,
     tests = metadata.get("FAIL_TO_PASS", [])
     if not isinstance(tests, list):
         raise ValueError("FAIL_TO_PASS must be a list")
-    output_filename = {"raw": "raw_test_output.txt", "leanctx": "leanctx_test_output.txt"}[evidence_kind]
-    output = work / "outputs" / output_filename
-    if not output.is_file():
-        raise FileNotFoundError(f"Missing observed test log: {output}")
-    observed = output.read_text(encoding="utf-8", errors="replace")
-    if not observed.strip():
-        raise ValueError(f"Observed {evidence_kind} output was empty")
+    if evidence_kind == "issue_only":
+        # Official issue + failing test names, no manufactured test output.
+        observed = ""
+    else:
+        output_filename = {"raw": "raw_test_output.txt", "leanctx": "leanctx_test_output.txt"}[evidence_kind]
+        output = work / "outputs" / output_filename
+        if not output.is_file():
+            raise FileNotFoundError(f"Missing observed test log: {output}")
+        observed = output.read_text(encoding="utf-8", errors="replace")
+        if not observed.strip():
+            raise ValueError(f"Observed {evidence_kind} output was empty")
     context = ("ISSUE:\n" + issue + "\n\nFAILING TESTS:\n" +
                "\n".join(map(str, tests)) + "\n\nOBSERVED TEST OUTPUT:\n" + observed[:12000])
     indexed = index_python_functions(repo, source_package)
@@ -213,7 +217,8 @@ def prepare_swebench(work: Path, source_package="sympy", top_k=12,
         "instance_id": metadata.get("instance_id", work.name),
         "dataset": "SWE-bench/Python", "candidate_source": "lexical_python_source_v1",
         "gold_used_in_retrieval": False, "gold_used_in_prompt": False,
-        "evidence_kind": evidence_kind, "source_package": source_package,
+        "evidence_kind": evidence_kind, "has_observed_test_output": bool(observed),
+        "source_package": source_package,
         "checkout_commit": revision or None, "candidate_count": len(prepared),
         "candidate_ids": [c.function_id for c in prepared],
         "metadata_keys_read_before_inference": ["instance_id", "problem_statement", "FAIL_TO_PASS"],
@@ -322,7 +327,7 @@ def main():
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--source-package", default="sympy")
     p.add_argument("--top-k", type=int, default=12)
-    p.add_argument("--evidence", choices=("raw", "leanctx"), default="raw")
+    p.add_argument("--evidence", choices=("raw", "leanctx", "issue_only"), default="raw")
     p.add_argument("--model", default="qwen2.5:7b")
     p.add_argument("--base-url", default="http://127.0.0.1:11434")
     p.add_argument("--arms", default="full,fixed_batch,repair_utility,repair_grounded")
