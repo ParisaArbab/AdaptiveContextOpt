@@ -29,16 +29,19 @@ SCREEN_SYSTEM = (
 )
 
 
-def build_prompt(candidates, context, action, level):
+def build_prompt(candidates, context, action, level, language="Java"):
+    if language not in {"Java", "Python"}:
+        raise ValueError("Unsupported verifier language")
     if action == Action.FULL_VERIFY:
         if len(candidates) != 1 or level != 2:
             raise ValueError("Full verification must inspect one complete method")
         c = candidates[0]
         user = f"FAILURE CONTEXT:\n{context}\n\nMETHOD:\n{c.function_id}\n\nSOURCE:\n{c.source}"
-        return SYSTEM, user
+        return SYSTEM if language == "Java" else SYSTEM.replace("Java", "Python"), user
     parts = [{"id": f"c{i}", "method": c.function_id, "level": level,
               "code": c.levels[level]} for i, c in enumerate(candidates)]
-    return SCREEN_SYSTEM, "FAILURE CONTEXT:\n" + context + "\nCANDIDATES:\n" + json.dumps(parts)
+    system = SCREEN_SYSTEM if language == "Java" else SCREEN_SYSTEM.replace("Java", "Python")
+    return system, "FAILURE CONTEXT:\n" + context + "\nCANDIDATES:\n" + json.dumps(parts)
 
 
 def parse_response(raw, candidates, action):
@@ -82,9 +85,12 @@ def number(value):
 class OllamaPilotBackend:
     def __init__(self, model, context, base_url="http://127.0.0.1:11434",
                  output_per_candidate=96, timeout=180, ledger: Path | None = None,
-                 seed=0, context_window=16384):
+                 seed=0, context_window=16384, language="Java"):
         if output_per_candidate < 32 or timeout <= 0 or context_window < 512:
             raise ValueError("Invalid output, timeout, or context window")
+        if language not in {"Java", "Python"}:
+            raise ValueError("Unsupported backend language")
+        self.language = language
         self.model, self.context, self.base_url = model, context, base_url.rstrip("/")
         self.output_per_candidate, self.timeout = output_per_candidate, timeout
         self.ledger, self.seed, self.context_window = ledger, seed, context_window
@@ -101,7 +107,7 @@ class OllamaPilotBackend:
         return found
 
     def estimate(self, candidates, action, level):
-        system, user = build_prompt(candidates, self.context, action, level)
+        system, user = build_prompt(candidates, self.context, action, level, self.language)
         output = self.output_per_candidate * len(candidates)
         # Same conservative estimate as legacy verifier, with complete message text.
         return 2 * approx_tokens(system + user) + output + 96
