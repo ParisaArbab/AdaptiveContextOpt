@@ -77,7 +77,35 @@ def test_real_python_index_and_gold_free_preparation(tmp_path):
     assert "patch" not in provenance["metadata_keys_read_before_inference"]
     truths, label_type = gold_from_patch(work / "metadata.json", indexed)
     assert "sympy/core/symbol.py::Symbol.__new__" in truths
-    assert label_type == "patch_hunk_intersection_proxy"
+    assert label_type == "changed_line_innermost_ast_entity_proxy"
+
+
+def test_class_level_added_slots_is_not_scored_as_adjacent_method(tmp_path):
+    work = _workspace(tmp_path)
+    # This fixture is gold only for the *offline* evaluator, after preparation.
+    metadata_path = work / "metadata.json"
+    metadata = json.loads(metadata_path.read_text())
+    metadata["patch"] = (
+        "diff --git a/sympy/core/symbol.py b/sympy/core/symbol.py\n"
+        "--- a/sympy/core/symbol.py\n"
+        "+++ b/sympy/core/symbol.py\n"
+        "@@ -1,4 +1,5 @@\n"
+        " class Symbol:\n"
+        "     __slots__ = ('name',)\n"
+        "+    __slots_extra__ = ()\n"
+        "     def __new__(cls, value):\n"
+        "         if value == 3600000:\n"
+    )
+    metadata_path.write_text(json.dumps(metadata))
+    source = index_python_functions(work / "repo", "sympy")
+    assert "sympy/core/symbol.py::Symbol" in source
+    sketch, info = python_sketch("sympy/core/symbol.py::Symbol",
+                                 source["sympy/core/symbol.py::Symbol"]["source"])
+    assert info["parser"] == "python-ast-class"
+    assert "__slots__" in sketch[1]
+    labels, label_type = gold_from_patch(metadata_path, source)
+    assert labels == ["sympy/core/symbol.py::Symbol"]
+    assert label_type == "changed_line_innermost_ast_entity_proxy"
 
 
 def test_no_real_test_log_fails_loudly(tmp_path):
