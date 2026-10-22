@@ -93,6 +93,10 @@ Added: reservation backend; all-candidate/action/decision/pair datasets; six-pol
 
 Malformed-response handling and all paid usage remain covered by existing tests. Focused V3 tests cover conservative refusal before revealing a cached answer, model/template identity, byte bounds, visible counter violations, no substitution for an unaffordable maximum, all-option audit completeness, deterministic zero-upgrade controls, leakage boundaries and unverified candidate retention. The three existing unrelated project failures remain documented and unchanged.
 
+## Parallel branch boundary
+
+A final safety fetch found 32 additional collaborator commits on the old remote branch (head `e6e9fd9`), including grounded repair, live-localizer and offline bandit/SWE-bench extensions. They are preserved unmerged and are not part of this six-policy experiment. See the progress report and `provenance/parallel_remote_branch.json`; do not interpret the evaluated branch's absent capabilities as an assertion about those parallel modules.
+
 ## Research decision
 
 Continue with the L1-first architecture and the simplest strong controls. The new heuristic is a negative development result. Prioritize reproducible buggy-test evidence and candidate-span compatibility on independent bugs before training utility or adding a complex optimizer. Preserve oracle labels for diagnosis, keep them out of features, and require a measurable advantage over Highest Suspicion and Fixed L1 at fair actual cost before advancing a learned-policy claim.

@@ -173,6 +173,14 @@ Implementation status:
 | Independent local buggy-test evidence execution | Absent in saved local runs; new protocol blocked on tooling/checkouts |
 | Large held-out evaluation and statistical noninferiority | Planned, not performed |
 
+### Parallel remote work discovered in the final safety check
+
+A fresh remote fetch found **32 collaborator commits beyond the evaluated base `635a316`**, ending at `e6e9fd9ffde1c396c347f2c7322ca3606534749b`. They remain on `origin/codex/rave-fl-adaptive-pilot` and were not merged into this evaluated branch. The exact commit list and changed files are saved in [provenance/parallel_remote_branch.json](provenance/parallel_remote_branch.json). They must be reviewed and coordinated for integration/migration before deleting the old remote branch; its additional work must not be overwritten.
+
+The parallel changes add an optional live-localizer bridge, measured input scores/body/numeric/class support features, an opt-in `repair_grounded` control, project-disjoint split utilities, gated offline logged-bandit tooling, latency/hypothetical-rate reporting, and a Python SWE-bench adapter/class-level gold correction. Source/diff and saved remote documentation establish that these modules exist **on that branch**; this V3 experiment did not merge, test, or validate them. Thus “implemented”, “absent”, and “current architecture” elsewhere here refer specifically to the evaluated branch lineage, not every parallel repository branch. Offline bandit utilities on the parallel branch do not establish a real trained/deployed policy.
+
+Its `docs/rave_fl_swebench_20590_results_2026_10_22.md` also reports a separate CPU `qwen2.5:0.5b`, issue-only, eight-function SymPy smoke run and a corrected class-granularity retrieval/gold failure. Those are historical remote documentation, not fresh inference here; its workflow ledgers were not locally audited. They use a different dataset/model/environment and are excluded from every Time-25 controller table and Pareto comparison. These parallel changes are an integration item, not evidence that a Time-25 heuristic succeeded.
+
 Documented Git history:
 
 {{GIT}}
