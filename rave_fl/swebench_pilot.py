@@ -36,12 +36,33 @@ def python_sketch(function_id: str, source: str, max_chars: int = 2200):
     try:
         tree = ast.parse(source)
         functions = [n for n in tree.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
-        if not functions:
-            # Class-contained snippets may come from a class-aware extractor.
+        classes = [n for n in tree.body if isinstance(n, ast.ClassDef)]
+        if not functions and not classes:
             functions = [n for n in ast.walk(tree) if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
         fn = functions[0] if functions else None
+        if fn is None and classes:
+            cls = classes[0]
+            bases = ", ".join(ast.unparse(b) for b in cls.bases)
+            l0 = f"CLASS: {function_id}\nDECLARATION: class {cls.name}({bases})"
+            attributes = []
+            calls = 0
+            for n in cls.body:
+                if isinstance(n, (ast.Assign, ast.AnnAssign, ast.AugAssign)):
+                    attributes.append(ast.unparse(n))
+                elif isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    attributes.append("METHOD SIGNATURE: " + n.name + "(" + ast.unparse(n.args) + ")")
+                    calls += 1
+            l1 = l0 + "\nCLASS STRUCTURE (lossy):\n" + "\n".join(attributes)
+            truncated = len(l1) > max_chars
+            if truncated:
+                l1 = l1[:max_chars] + "\n[SKETCH TRUNCATED: verify full class]"
+            return (l0, l1, source), {
+                "parser": "python-ast-class", "parse_error": False,
+                "truncated": truncated, "complexity": 1 + calls,
+                "call_count": calls, "literal_count": 0,
+            }
         if fn is None:
-            raise ValueError("No Python function in the provided source")
+            raise ValueError("No Python callable or class in the provided source")
         prefix = "async def " if isinstance(fn, ast.AsyncFunctionDef) else "def "
         signature = prefix + fn.name + "(" + ast.unparse(fn.args) + ")"
         if fn.returns:
@@ -110,6 +131,15 @@ def index_python_functions(repo: Path, source_package: str):
         def walk(body, parents=()):
             for n in body:
                 if isinstance(n, ast.ClassDef):
+                    ident = rel + "::" + ".".join((*parents, n.name))
+                    import textwrap
+                    start = min([n.lineno] + [d.lineno for d in n.decorator_list])
+                    indexed[ident] = {
+                        "source": textwrap.dedent("".join(lines[start - 1:n.end_lineno])),
+                        "path": rel, "start": start, "end": n.end_lineno,
+                        "doc": ast.get_docstring(n) or "",
+                        "entity_type": "class",
+                    }
                     walk(n.body, (*parents, n.name))
                 elif isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)):
                     ident = rel + "::" + ".".join((*parents, n.name))
@@ -281,33 +311,49 @@ def prepare_swebench(work: Path, source_package="sympy", top_k=12,
 
 
 def gold_from_patch(metadata_path: Path, indexed: dict):
-    """Read patch ONLY after model arms complete; map old-side hunks to source AST."""
+    """Offline gold proxy: map actual changed old-side lines to *innermost* AST entity.
+
+    IMPORTANT: additive class attributes are class-level gold, NOT an adjacent
+    method merely because it appears inside a unified-diff context hunk.
+    """
     metadata = json.loads(metadata_path.read_text())
     patch = metadata.get("patch")
     if not isinstance(patch, str) or not patch.strip():
         return [], "patch_unavailable"
-    labels, current_file = set(), None
+    labels, current_file, old_line = set(), None, None
+    changed = []
     for line in patch.splitlines():
         if line.startswith("+++ b/"):
             current_file = line[6:]
-        match = re.match(r"@@ -(\d+)(?:,(\d+))? \+\d+(?:,\d+)? @@", line)
-        if match and current_file:
-            start = int(match.group(1))
-            count = int(match.group(2) or 1)
-            # Changed hunk boundaries may include unchanged context; this is a
-            # conservative approximation, not official SWE-bench function gold.
-            for ident, item in indexed.items():
-                if item["path"] == current_file and item["start"] <= start + max(1, count) - 1 \
-                        and item["end"] >= start:
-                    labels.add(ident)
-    return sorted(labels), "patch_hunk_intersection_proxy"
+        hunk = re.match(r"@@ -(\d+)(?:,(\d+))? \+\d+(?:,\d+)? @@", line)
+        if hunk:
+            old_line = int(hunk.group(1))
+            continue
+        if old_line is None or current_file is None:
+            continue
+        if line.startswith("\\ No newline at end of file"):
+            continue
+        if line.startswith("-") and not line.startswith("---"):
+            changed.append((current_file, old_line))
+            old_line += 1
+        elif line.startswith("+") and not line.startswith("+++"):
+            changed.append((current_file, old_line))
+        elif line.startswith(" "):
+            old_line += 1
+    for filename, lineno in changed:
+        possible = [(item["end"] - item["start"], ident)
+                    for ident, item in indexed.items()
+                    if item["path"] == filename and item["start"] <= lineno <= item["end"]]
+        if possible:
+            labels.add(min(possible)[1])
+    return sorted(labels), "changed_line_innermost_ast_entity_proxy"
 
 
 def score_ranking(ranking, labels):
     rank = next((i for i, ident in enumerate(ranking, 1) if ident in labels), None)
     return {"first_relevant_rank": rank, "top1": rank == 1, "top5": bool(rank and rank <= 5),
             "MRR": 1.0 / rank if rank else 0.0,
-            "label_type": "patch_hunk_intersection_proxy",
+            "label_type": "changed_line_innermost_ast_entity_proxy",
             "candidate_gold_recall": any(c in labels for c in ranking)}
 
 
