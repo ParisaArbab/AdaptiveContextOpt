@@ -337,7 +337,9 @@ def gold_from_patch(metadata_path: Path, indexed: dict):
             changed.append((current_file, old_line))
             old_line += 1
         elif line.startswith("+") and not line.startswith("+++"):
-            changed.append((current_file, old_line))
+            # For added-only lines, the preceding old-side line is the
+            # containing scope; the following line may begin a new method.
+            changed.append((current_file, max(1, old_line - 1)))
         elif line.startswith(" "):
             old_line += 1
     for filename, lineno in changed:
