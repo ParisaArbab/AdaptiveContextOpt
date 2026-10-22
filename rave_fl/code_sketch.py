@@ -17,12 +17,39 @@ FEATURE_NAMES = (
     "source_tokens", "l0_tokens", "l1_tokens", "compression_ratio", "parse_error",
     "sketch_truncated", "level", "suspicion", "uncertainty", "valid_feedback",
     "remaining_fraction", "inspected_fraction",
+    "semantic_score", "coverage_score", "body_failure_relevance",
+    "numeric_evidence_overlap", "trace_class_match",
 )
 
 
 def words(text):
     text = re.sub(r"([a-z])([A-Z])", r"\1 \2", text)
     return {w.lower() for w in re.findall(r"[A-Za-z][A-Za-z0-9]*", text) if len(w) > 2}
+
+
+
+def _numeric_anchors(text):
+    """Keep informative integer literals, excluding common zero/one noise."""
+    return {part for part in re.findall(r"(?<![\w.])-?\d+(?![\w.])", text)
+            if len(part.lstrip("-")) >= 2 and part not in {"-1"}}
+
+
+def grounding_features(function_id: str, source: str, context: str):
+    """Cheap evidence anchors not dependent on a matching method name.
+
+    Scores show observable overlap, never ground-truth fault probability.
+    """
+    context_words = words(context)
+    leaf = function_id.split("(")[0].rsplit(".", 1)[-1]
+    body_words = words(source) - words(leaf)
+    source_digits, evidence_digits = _numeric_anchors(source), _numeric_anchors(context)
+    class_name = function_id.split("(")[0].rsplit(".", 1)[0].rsplit(".", 1)[-1]
+    return {
+        "body_failure_relevance": len(context_words & body_words) / max(1, len(context_words)),
+        "numeric_evidence_overlap": len(source_digits & evidence_digits) / max(1, len(evidence_digits)),
+        "trace_class_match": float(bool(class_name and re.search(
+            r"\b" + re.escape(class_name) + r"\b", context))),
+    }
 
 
 def java_sketch(function_id: str, source: str, max_chars: int = 2200):
@@ -96,15 +123,20 @@ def prepare_candidates(candidates, sources, metadata, context):
         levels, sketch_meta = java_sketch(c.function_id, source)
         item = metadata.get(c.function_id, {})
         ranks = list(item.get("ranks", {}).values())
-        agreement = len(item.get("methods", [])) / 3
-        disagreement = ((max(ranks) - min(ranks)) / max(1, item.get("top_per_method", 10))
-                        if len(ranks) > 1 else 1 - agreement)
+        actual_scores = item.get("ranker_scores", {})
+        if actual_scores:
+            agreement = 1 - (max(actual_scores.values()) - min(actual_scores.values()))
+            disagreement = 1 - agreement
+        else:
+            agreement = len(item.get("methods", [])) / 3
+            disagreement = ((max(ranks) - min(ranks)) / max(1, item.get("top_per_method", 10))
+                            if len(ranks) > 1 else 1 - agreement)
         # Lexical runtime relevance is a feature, never a mandatory selection rule.
         source_words = words(c.function_id + "\n" + source)
         relevance = len(context_words & source_words) / max(1, len(source_words))
         leaf = c.function_id.split("(")[0].rsplit(".", 1)[-1]
         f = {
-            "prior": c.semantic_score,  # explicitly a rank proxy, not semantic similarity
+            "prior": float(item.get("prior", c.semantic_score)),  # ordinal proxy or measured-signal fusion
             "rank_fraction": (i + 1) / max(1, count),
             "ranking_gap": max(0, c.semantic_score - (candidates[i + 1].semantic_score if i + 1 < count else 0)),
             "ranker_agreement": agreement, "ranker_disagreement": disagreement,
@@ -119,8 +151,11 @@ def prepare_candidates(candidates, sources, metadata, context):
             "compression_ratio": min(1, approx_tokens(levels[1]) / max(1, approx_tokens(source))),
             "parse_error": float(sketch_meta["parse_error"]),
             "sketch_truncated": float(sketch_meta["truncated"]),
+            "semantic_score": float(item.get("semantic_score", 0)),
+            "coverage_score": float(item.get("coverage_score", 0)),
+            **grounding_features(c.function_id, source, context),
         }
-        prepared.append(PilotCandidate(c.function_id, source, c.semantic_score, i + 1,
+        prepared.append(PilotCandidate(c.function_id, source, f["prior"], i + 1,
                                        levels, f, sketch_meta))
     if len({c.function_id for c in prepared}) != count:
         raise ValueError("Candidate IDs must be unique")
