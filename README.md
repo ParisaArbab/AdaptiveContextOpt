@@ -12,6 +12,9 @@ The main research question is simple:
 
 ## Latest research: RAVE-FL fault localization (October 2026)
 
+> **Flowchart alignment (22 Oct 2026):** The closed-loop verification MVP is implemented, but the complete diagram is **not yet fully implemented or validated**. The current pilot reads precomputed SBIR/Ochiai/BoostN candidates rather than running a live SieveFL localizer; risk is untrained on real independent bugs, and the decision controller is heuristic rather than contextual-bandit/RL. The measured results do not yet establish accuracy preservation. See the [block-by-block flowchart/code audit](docs/rave_fl_flowchart_alignment_2026_10_22.md) before using the diagram as an implementation claim.
+
+
 The adaptive pilot is now implemented in `python -m rave_fl.pilot`: Java AST
 sketches, budget-aware batch/expand/full/stop feedback, shared prior-preserving
 ranking, paired ablations, real Ollama usage logs, and a leakage-checked
