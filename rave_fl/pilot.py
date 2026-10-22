@@ -19,6 +19,7 @@ from rave_fl.adaptive import AdaptivePilot
 from rave_fl.code_sketch import prepare_candidates
 from rave_fl.compare_expanded import load_context
 from rave_fl.expanded_pool import union_pool
+from rave_fl.localizer_bridge import run_localizer
 from rave_fl.pilot_backend import OllamaPilotBackend
 from rave_fl.pilot_evaluation import evaluate, risk_rows, summarize
 from rave_fl.pilot_types import PolicyConfig
@@ -41,13 +42,19 @@ def write_json(path, value):
 
 def prepare_case(case, top_per_method=10):
     repo = Path(case["flexfl_repo"])
-    candidates, metadata = union_pool(repo, case["bug"], top_per_method)
+    if case.get("localizer_command") is not None:
+        candidates, metadata, localizer = run_localizer(case)
+    else:
+        candidates, metadata = union_pool(repo, case["bug"], top_per_method)
+        localizer = {"mode": "precomputed_csv", "name": "SBIR/Ochiai/BoostN",
+                     "runtime_pruning": "not_available",
+                     "measurement_note": "Original ranks are proxies, not measured semantic/coverage scores."}
     sources, paths = extract_pool_sources(Path(case["checkout"]), metadata)
     context, evidence = load_context(repo, case["bug"], Path(case["evidence_file"]) if case.get("evidence_file") else None)
     prepared = prepare_candidates(candidates, sources, metadata, context)
     revision = subprocess.run(["git", "-C", str(case["checkout"]), "rev-parse", "HEAD"],
                               capture_output=True, text=True).stdout.strip() or None
-    provenance = {"bug": case["bug"], "candidate_ids": [c.function_id for c in prepared],
+    provenance = {"bug": case["bug"], "base_localizer": localizer, "candidate_ids": [c.function_id for c in prepared],
                   "source_paths": paths, "sources_sha256": digest(sources), "evidence": evidence,
                   "source_revision": revision,
                   "top_per_method": top_per_method,
