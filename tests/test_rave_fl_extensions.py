@@ -50,6 +50,25 @@ def test_live_localizer_preserves_measured_semantic_and_coverage(tmp_path):
     assert prepared[0].features["numeric_evidence_overlap"] == 1
 
 
+def test_pilot_prepare_case_uses_live_localizer_with_real_source_spans(tmp_path):
+    from rave_fl.pilot import prepare_case
+    source = tmp_path / "src/main/java/p/F.java"
+    source.parent.mkdir(parents=True)
+    source.write_text("class F {\\npublic int a() { return 3600000; }\\n}\\n")
+    evidence = tmp_path / "failure.txt"
+    evidence.write_text("p.F failed: expected 3600000")
+    case = _localizer_fixture(tmp_path, [
+        {"function_id": "p.F.a()", "file_class": "p.F", "start_line": 2,
+         "end_line": 2, "semantic_score": .8, "coverage_score": .2}])
+    case.update({"flexfl_repo": str(tmp_path), "evidence_file": str(evidence)})
+    candidates, context, provenance = prepare_case(case)
+    assert len(candidates) == 1
+    assert "return 3600000" in candidates[0].source
+    assert provenance["base_localizer"]["mode"] == "live_external"
+    assert provenance["candidate_features"]["p.F.a()"]["coverage_score"] == .2
+    assert "expected 3600000" in context
+
+
 def test_live_localizer_fails_on_invalid_or_duplicated_scores(tmp_path):
     row = {"function_id": "p.F.a()", "file_class": "p.F", "start_line": 10,
            "end_line": 20, "semantic_score": .8, "coverage_score": 1.1}
