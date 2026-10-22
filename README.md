@@ -72,6 +72,12 @@ More details: [Evidence experiment instructions](docs/rave_fl_phase3c_evidence_a
 
 See [the step-by-step research upgrade guide](docs/rave_fl_research_upgrade_2026_10_22.md) for the new manifest schema and exact commands, plus [the source-to-flowchart alignment audit](docs/rave_fl_flowchart_alignment_2026_10_22.md).
 
+## SWE-bench Python pilot (22 October 2026)
+
+The Python-specific `python -m rave_fl.swebench_pilot` runner supports real SWE-bench workspaces and the same Full, Fixed Batch, and risk-aware repair policies. It indexes Python functions **and classes**, uses AST-derived L0/L1/L2 evidence, and keeps official gold patches out of inference inputs. See [SWE-bench run instructions](docs/rave_fl_swebench_sympy20590.md).
+
+A **real CPU Ollama smoke test** on `sympy__sympy-20590` used the exact official buggy SymPy commit and **issue-only evidence**, not the earlier raw logs. It measured 11,472 Full tokens, 4,288 Fixed Batch tokens, and 5,573 Grounded Repair tokens. This first gold-free lexical candidate pool **missed the actual class-level fix**. After inspecting the official patch, the original function-level gold mapping was also found to be wrong and has been corrected. See the [measured results and correction](docs/rave_fl_swebench_20590_results_2026_10_22.md). No accuracy-preservation claim is supported by this run.
+
 ## 1. Reference repositories
 
 Clone the three codebases used to build and verify this implementation:
