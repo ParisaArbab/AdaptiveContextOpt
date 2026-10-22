@@ -52,3 +52,16 @@ See `docs/rave_fl_pilot_results_2026_10_22.md` and `docs/rave_fl_rank_repair_res
 ### Important implementation distinction
 
 `rave_fl/core.py:RaveFL` is a **minimal earlier demonstration** with an injectable stub verifier. The executable measured closed-loop policy is `python -m rave_fl.pilot` backed by `rave_fl/adaptive.py:AdaptivePilot` and `rave_fl/pilot_backend.py:OllamaPilotBackend`. Do not treat the demonstration as proof of model-backed behavior.
+
+## Implementation update after the initial audit (22 October 2026)
+
+The following **new code** was committed after this audit was first written:
+
+- `rave_fl/localizer_bridge.py` and `rave_fl/pilot.py` now support optional live external localizer execution, measured semantic/coverage scores and recorded provenance. **No actual SieveFL model is bundled**; default CSV candidates still use rank proxies.
+- `rave_fl/code_sketch.py` now exposes body-word overlap, numeric-literal overlap and class-name evidence. `rave_fl/rank_repair.py` adds `repair_grounded` as a separate untrained rescue arm. It has **not** been shown to solve masked-name failure on real independent bugs.
+- `rave_fl/study.py` freezes project-disjoint train/calibration/test splits from explicit real-case manifests, but **does not create the required real bug observations**.
+- `rave_fl/bandit.py` provides offline logged contextual-bandit training and off-policy evaluation, with minimum data requirements and propensity checks; **there is no deployed or fitted online bandit**.
+- `rave_fl/pilot_evaluation.py` includes paired LLM call duration and `rave_fl/pilot.py` optionally reports hypothetical user-rate USD costs, **not actual provider charges**.
+- New `tests/test_rave_fl_extensions.py` and branch GitHub Actions workflow. The first scoped CI run passed at commit `0a10e09`: https://github.com/ParisaArbab/AdaptiveContextOpt/actions/runs/39811941061 .
+
+See `docs/rave_fl_research_upgrade_2026_10_22.md` for full instructions. The table above retains the **initial** implementation audit status to preserve the chronology; use this section for the updated code status.
