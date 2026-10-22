@@ -1,0 +1,125 @@
+name: RAVE-FL one SWE-bench issue
+on:
+  push:
+    branches:
+      - codex/rave-fl-adaptive-pilot
+    paths:
+      - rave_fl/swebench_pilot.py
+      - rave_fl/code_sketch.py
+      - rave_fl/pilot_backend.py
+      - .github/workflows/rave-swebench-one-bug.yml
+  workflow_dispatch:
+
+jobs:
+  sympy-real-issue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install runner dependencies
+        run: |
+          python -m pip install -r requirements-rave-pilot.txt
+          python -m pip install 'datasets>=3,<5'
+      - name: Download official SWE-bench metadata and exact buggy checkout
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import subprocess
+          from datasets import load_dataset
+          instance = "sympy__sympy-20590"
+          data = load_dataset("SWE-bench/SWE-bench_Lite", split="test")
+          matched = [dict(row) for row in data if row["instance_id"] == instance]
+          if len(matched) != 1:
+              raise SystemExit(f"Expected one {instance} in official SWE-bench Lite test split; got {len(matched)}")
+          row = matched[0]
+          work = Path("data/swebench_workspaces") / instance
+          work.mkdir(parents=True, exist_ok=True)
+          tests = row["FAIL_TO_PASS"]
+          if isinstance(tests, str):
+              tests = json.loads(tests)
+          (work / "metadata.json").write_text(json.dumps({
+              "instance_id": instance,
+              "problem_statement": row["problem_statement"],
+              "FAIL_TO_PASS": tests,
+              "patch": row["patch"],
+              "base_commit": row["base_commit"],
+          }, indent=2))
+          repo = work / "repo"
+          subprocess.run(["git", "clone", "--filter=blob:none", "--no-checkout",
+                          "https://github.com/sympy/sympy.git", str(repo)], check=True)
+          subprocess.run(["git", "fetch", "--depth=1", "origin", row["base_commit"]],
+                         cwd=repo, check=True)
+          subprocess.run(["git", "checkout", "--detach", "FETCH_HEAD"], cwd=repo, check=True)
+          actual = subprocess.check_output(["git","rev-parse","HEAD"], cwd=repo, text=True).strip()
+          if actual != row["base_commit"]:
+              raise SystemExit("Buggy checkout commit mismatch")
+          print("REAL_SWEBENCH_CASE", instance, "BASE_COMMIT", actual)
+          print("GOLD_NOT_USED_IN_CANDIDATE_SELECTION", True)
+          PY
+      - name: Real-checkout gold-free RAVE-FL preflight
+        run: |
+          python -m rave_fl.swebench_pilot \
+            --work data/swebench_workspaces/sympy__sympy-20590 \
+            --evidence issue_only --source-package sympy --top-k 8 \
+            --model qwen2.5:0.5b --arms full,fixed_batch,repair_grounded \
+            --full-budget 60000 --policy-budget 16000 \
+            --output results/swebench_sympy20590_preflight --dry-run
+          python - <<'PY'
+          import json
+          d = json.load(open("results/swebench_sympy20590_preflight/run.json"))
+          print("PREFLIGHT", json.dumps({"status": d["status"], "candidate_count": d["provenance"]["candidate_count"],
+                                        "candidate_ids": d["provenance"]["candidate_ids"],
+                                        "gold_read": d["gold_read"],
+                                        "has_observed_test_output": d["provenance"]["has_observed_test_output"]}, indent=2))
+          PY
+      - name: Install lightweight Ollama model (CPU smoke test)
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          nohup ollama serve > /tmp/rave_ollama.log 2>&1 &
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:11434/api/tags >/dev/null; then break; fi
+            sleep 3
+          done
+          ollama pull qwen2.5:0.5b
+          ollama list
+      - name: Real Ollama verification, limited one-bug pilot
+        run: |
+          python -m rave_fl.swebench_pilot \
+            --work data/swebench_workspaces/sympy__sympy-20590 \
+            --evidence issue_only --source-package sympy --top-k 8 \
+            --model qwen2.5:0.5b --arms full,fixed_batch,repair_grounded \
+            --full-budget 60000 --policy-budget 16000 \
+            --max-full-repairs 2 --max-output-tokens 160 \
+            --context-window 32768 --timeout 600 \
+            --output results/swebench_sympy20590_real
+          python - <<'PY'
+          import json
+          data=json.load(open("results/swebench_sympy20590_real/run.json"))
+          print("ONE_BUG_RESULTS",json.dumps({
+              "case":data["provenance"]["instance_id"],
+              "model":data["model"],
+              "provenance":data["provenance"],
+              "gold_entities":data.get("gold_entities"),
+              "label_type":data.get("gold_label_type"),
+              "arms":{k:{"tokens":v["actual_tokens"],"calls":v["call_count"],
+                           "ranked_functions":v["ranked_functions"],
+                           "accuracy":v.get("accuracy")}
+                      for k,v in data["arms"].items()}},indent=2))
+          PY
+      - name: Upload audited result ledgers
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: swebench-sympy20590-rave-fl
+          path: |
+            results/swebench_sympy20590_preflight/
+            results/swebench_sympy20590_real/
+            /tmp/rave_ollama.log
+          if-no-files-found: warn
+          retention-days: 7
