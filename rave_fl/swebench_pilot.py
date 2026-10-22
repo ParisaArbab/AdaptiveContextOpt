@@ -174,8 +174,52 @@ def lexical_pool(indexed, context: str, limit=12):
     return candidates, sources, meta
 
 
+
+def existing_pool(indexed: dict, pool_file: Path, condition="raw", limit=20):
+    """Reuse the existing SWE-bench Agent4LR pool without gold access.
+
+    The upstream file may have duplicate *positions*; verification requires
+    unique functions. Preserve their first appearance and source provenance.
+    Missing source is a hard error, not a replacement with a gold candidate.
+    """
+    content = json.loads(pool_file.read_text())
+    rows = content.get(condition, {}).get("candidates")
+    if not isinstance(rows, list) or not rows:
+        raise ValueError(f"{pool_file}: missing {condition} candidate list")
+    unique, seen, missing = [], set(), []
+    for row in rows:
+        ident = row.get("entity") if isinstance(row, dict) else None
+        if not isinstance(ident, str) or not ident:
+            raise ValueError("Malformed candidate-pool entity")
+        if ident in seen:
+            continue
+        seen.add(ident)
+        if ident not in indexed:
+            missing.append(ident)
+            continue
+        unique.append((ident, row.get("source", "unknown")))
+        if len(unique) >= limit:
+            break
+    if missing:
+        raise ValueError(f"Candidate source absent from Python AST index ({len(missing)}): {missing[:5]}")
+    if not unique:
+        raise ValueError("No resolvable Python callable candidates in existing pool")
+    candidates, sources, metadata = [], {}, {}
+    for rank, (ident, origin) in enumerate(unique, 1):
+        prior = 1 - (rank - 1) / max(1, len(unique))
+        candidates.append(Candidate(ident, ident, semantic_score=prior))
+        sources[ident] = indexed[ident]["source"]
+        metadata[ident] = {"prior": prior, "methods": [str(origin)],
+                           "ranks": {str(origin): rank}, "top_per_method": len(unique),
+                           "source_file": indexed[ident]["path"],
+                           "source_start": indexed[ident]["start"],
+                           "source_end": indexed[ident]["end"]}
+    return candidates, sources, metadata
+
+
 def prepare_swebench(work: Path, source_package="sympy", top_k=12,
-                     evidence_kind="raw"):
+                     evidence_kind="raw", candidate_source="lexical",
+                     pool_condition="raw"):
     repo = work / "repo"
     metadata_path = work / "metadata.json"
     if not metadata_path.is_file():
@@ -201,7 +245,14 @@ def prepare_swebench(work: Path, source_package="sympy", top_k=12,
     context = ("ISSUE:\n" + issue + "\n\nFAILING TESTS:\n" +
                "\n".join(map(str, tests)) + "\n\nOBSERVED TEST OUTPUT:\n" + observed[:12000])
     indexed = index_python_functions(repo, source_package)
-    cs, sources, meta = lexical_pool(indexed, context, limit=top_k)
+    if candidate_source == "lexical":
+        cs, sources, meta = lexical_pool(indexed, context, limit=top_k)
+    elif candidate_source == "existing_pool":
+        cs, sources, meta = existing_pool(
+            indexed, work / "outputs" / "agent4lr" / "candidate_pools.json",
+            condition=pool_condition, limit=top_k)
+    else:
+        raise ValueError("candidate_source must be lexical or existing_pool")
     # Reuse the shared RAVE-FL feature/risk pipeline, substituting Python AST
     # sketches only for this explicit SWE-bench runner. Never mutate global parser.
     import rave_fl.code_sketch as sketches
@@ -215,7 +266,8 @@ def prepare_swebench(work: Path, source_package="sympy", top_k=12,
                               capture_output=True, text=True).stdout.strip()
     return prepared, context, indexed, {
         "instance_id": metadata.get("instance_id", work.name),
-        "dataset": "SWE-bench/Python", "candidate_source": "lexical_python_source_v1",
+        "dataset": "SWE-bench/Python", "candidate_source": candidate_source,
+        "pool_condition": pool_condition if candidate_source == "existing_pool" else None,
         "gold_used_in_retrieval": False, "gold_used_in_prompt": False,
         "evidence_kind": evidence_kind, "has_observed_test_output": bool(observed),
         "source_package": source_package,
@@ -262,7 +314,8 @@ def score_ranking(ranking, labels):
 def run(args):
     work = args.work.resolve()
     candidates, context, indexed, provenance = prepare_swebench(
-        work, args.source_package, args.top_k, args.evidence)
+        work, args.source_package, args.top_k, args.evidence,
+        getattr(args, "candidate_source", "lexical"), getattr(args, "pool_condition", "raw"))
     arms = args.arms.split(",")
     valid_arms = {"full", "fixed_batch", "confidence", "adaptive"} | REPAIR_MODES
     if not arms or len(arms) != len(set(arms)) or any(a not in valid_arms for a in arms):
@@ -327,6 +380,9 @@ def main():
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--source-package", default="sympy")
     p.add_argument("--top-k", type=int, default=12)
+    p.add_argument("--candidate-source", choices=("lexical", "existing_pool"), default="lexical",
+                   help="For existing_pool require the genuine saved Agent4LR candidate_pools.json")
+    p.add_argument("--pool-condition", choices=("raw", "leanctx"), default="raw")
     p.add_argument("--evidence", choices=("raw", "leanctx", "issue_only"), default="raw")
     p.add_argument("--model", default="qwen2.5:7b")
     p.add_argument("--base-url", default="http://127.0.0.1:11434")
