@@ -43,6 +43,8 @@ class AdaptivePilot:
         self.spent = self.input_tokens = self.output_tokens = 0
         self.calls, self.trace, self.snapshots = [], [], []
         self.duration = 0.0
+        self.fusion = None
+        self.cost_aware = True
 
     @property
     def remaining(self):
@@ -60,8 +62,18 @@ class AdaptivePilot:
             raise ValueError("Risk model must return a finite value in [0,1]")
         return value
 
+    def scores(self):
+        if self.fusion is not None:
+            return self.fusion.scores(self.candidates, self.status)
+        return {c.function_id: fused_score(c, self.status[c.function_id]) for c in self.candidates}
+
+    def ordered(self, scores):
+        if self.fusion is not None:
+            return self.fusion.order(self.candidates, scores)
+        return sorted(self.candidates, key=lambda c: (-scores[c.function_id], c.rank))
+
     def ranked(self):
-        return sorted(self.candidates, key=lambda c: (-fused_score(c, self.status[c.function_id]), c.rank))
+        return self.ordered(self.scores())
 
     def needs_more(self, c):
         s, cfg = self.status[c.function_id], self.config
@@ -119,8 +131,8 @@ class AdaptivePilot:
         if not pending:
             return Decision(Action.STOP, reason="all_required_checks_complete")
         ranking = self.ranked()
-        gap = (fused_score(ranking[0], self.status[ranking[0].function_id]) -
-               fused_score(ranking[1], self.status[ranking[1].function_id])) if len(ranking) > 1 else 1
+        gap = (self.scores()[ranking[0].function_id] -
+               self.scores()[ranking[1].function_id]) if len(ranking) > 1 else 1
         threshold = self.risk.threshold if self.risk.threshold is not None else cfg.risk_threshold
         # Learned candidate harm is not a calibrated issue-level stop model.
         # Require full confirmation and no invalid/uncertain/high-risk pending item.
@@ -137,7 +149,7 @@ class AdaptivePilot:
             direct = c.features["parse_error"] or (s.observation and not s.observation.valid)
             level = 2 if s.level >= 1 or direct else 1
             decision_reason = "feedback_escalation"
-            if cfg.mode == "adaptive" and level == 1:
+            if cfg.mode == "adaptive" and self.cost_aware and level == 1:
                 expanded_cost = self.backend.estimate([c], Action.EXPAND_CONTEXT, 1)
                 full_cost = self.backend.estimate([c], Action.FULL_VERIFY, 2)
                 # Avoid buying a sketch that is already as expensive as full
@@ -209,8 +221,8 @@ class AdaptivePilot:
         return {
             "mode": self.config.mode, "config": asdict(self.config),
             "risk_model": self.risk.name, "risk_calibrated": self.risk.calibrated,
-            "ranker": "shared_prior_evidence_fusion_v1", "ranked_functions": [c.function_id for c in ranking],
-            "ranking_scores": {c.function_id: fused_score(c, self.status[c.function_id]) for c in ranking},
+            "ranker": self.fusion.name if self.fusion is not None else "shared_prior_evidence_fusion_v1", "ranked_functions": [c.function_id for c in ranking],
+            "ranking_scores": self.scores(),
             "actual_input_tokens": self.input_tokens, "actual_output_tokens": self.output_tokens,
             "actual_tokens": self.spent, "tokens_remaining": self.remaining,
             "budget_exceeded": self.remaining < 0, "budget_is_estimated_admission": True,

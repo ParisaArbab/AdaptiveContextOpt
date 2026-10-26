@@ -30,9 +30,9 @@ def rank_percentiles(ranks, depths):
     return [ranks[m] / (depths[m] + 1) if m in ranks else 1.0 for m in RANKERS]
 
 
-def cheap_features(candidates, states, metadata, depths):
-    scores = {c.function_id: fused_score(c, states[c.function_id]) for c in candidates}
-    order = sorted(candidates, key=lambda c: (-scores[c.function_id], c.rank))
+def cheap_features(candidates, states, metadata, depths, fusion=None):
+    scores = fusion.scores(candidates, states) if fusion is not None else {c.function_id: fused_score(c, states[c.function_id]) for c in candidates}
+    order = fusion.order(candidates, scores) if fusion is not None else sorted(candidates, key=lambda c: (-scores[c.function_id], c.rank))
     gaps = [scores[a.function_id] - scores[b.function_id] for a, b in zip(order, order[1:])]
     scale = statistics.median([g for g in gaps if g > 1e-12]) if any(g > 1e-12 for g in gaps) else 1.0
     n = len(order)
@@ -77,7 +77,7 @@ class SelectionControl(RankRepairPilot):
         if self.initial_l1 is None:
             self.initial_l1 = {"ranked_functions": [c.function_id for c in self.ranked()],
                                "tokens_used": self.spent,
-                               "scores": {c.function_id: fused_score(c, self.status[c.function_id]) for c in self.candidates}}
+                               "scores": self.scores()}
         if sum(s.level == 2 for s in self.status.values()) >= self.repair_config.max_full:
             return Decision(Action.STOP, reason="full_repair_limit")
         pending = [c for c in self.candidates if self.status[c.function_id].level < 2]
@@ -87,7 +87,7 @@ class SelectionControl(RankRepairPilot):
                 all(self.status[c.function_id].observation and self.status[c.function_id].observation.valid and
                     incumbent.observation.suspicion > self.status[c.function_id].observation.suspicion for c in pending)):
             return Decision(Action.STOP, reason="full_incumbent_above_remaining_l1_heuristic")
-        features = cheap_features(self.candidates, self.status, self.metadata, self.depths)
+        features = cheap_features(self.candidates, self.status, self.metadata, self.depths, self.fusion)
         highest = max(pending, key=lambda c: (self.status[c.function_id].observation.suspicion
                       if self.status[c.function_id].observation else .5,
                       -features[c.function_id]['current_rank'], -c.rank)).function_id

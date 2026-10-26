@@ -48,7 +48,7 @@ class RankRepairPilot(AdaptivePilot):
         return replace(decision, risks={}) if decision else None
 
     def ranking_proxy(self, candidate, estimate):
-        scores = {c.function_id: fused_score(c, self.status[c.function_id]) for c in self.candidates}
+        scores = self.scores()
         order = [c.function_id for c in self.ranked()]
         beliefs = {}
         for c in self.candidates:
@@ -67,7 +67,9 @@ class RankRepairPilot(AdaptivePilot):
             return {"gain_proxy": 0.0, "utility_per_token": 0.0, "invalid_l1": True}
         hypothetical = dict(scores)
         hypothetical[candidate.function_id] = obs.suspicion
-        possible_order = sorted(self.candidates, key=lambda c: (-hypothetical[c.function_id], c.rank))
+        if self.fusion is not None:
+            hypothetical = self.fusion.project(self.candidates, self.status, candidate)
+        possible_order = self.ordered(hypothetical)
         base = discounted_belief(order, beliefs, self.repair_config.top_k)
         projected = discounted_belief([c.function_id for c in possible_order], beliefs, self.repair_config.top_k)
         gain = projected - base
@@ -90,7 +92,7 @@ class RankRepairPilot(AdaptivePilot):
         if self.initial_l1 is None:
             self.initial_l1 = {"ranked_functions": [c.function_id for c in self.ranked()],
                                "tokens_used": self.spent,
-                               "scores": {c.function_id: fused_score(c, self.status[c.function_id]) for c in self.candidates}}
+                               "scores": self.scores()}
         if sum(s.level == 2 for s in self.status.values()) >= self.repair_config.max_full:
             return Decision(Action.STOP, reason="full_repair_limit")
         rank = {c.function_id: i for i, c in enumerate(self.ranked(), 1)}

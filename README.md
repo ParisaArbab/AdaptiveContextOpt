@@ -12,6 +12,13 @@ The main research question is simple:
 
 ## Latest research: RAVE-FL fault localization (October 2026)
 
+The [universal multi-dataset evaluation guide](docs/RAVE_FL_MULTI_DATASET_EVALUATION.md)
+documents the executable `scripts/rave_fl_run.sh` runner, seven local-export
+dataset adapters, existing controller wrappers, four fusion strategies,
+strict accounting, exact caching, resume, and automatic English reports.
+Development validation uses synthetic fixtures and saved observations;
+it does not establish new benchmark accuracy or A100 performance.
+
 The V3 diagnostic release provides an [English research progress report](reports/RAVE_FL_Research_Progress_Report.md),
 [candidate-level V2 analysis](reports/RAVE_FL_V2_Diagnostic_Analysis.md), and
 [matched controller replay results](reports/RAVE_FL_V3_Experiment_Results.md), with 13 PNG/SVG figures.
