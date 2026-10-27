@@ -62,9 +62,12 @@ fi
 
 # Divide the compressed stream into files comfortably below the 2 GiB
 # per-asset release ceiling. This also avoids staging an extra giant tarball.
+echo "Compressing ${#INPUTS[@]} source trees (including all saved runs)."
+echo "The compression stage can be CPU/disk intensive; original files are untouched."
 tar -czf - "${INPUTS[@]}" \
   | split -b 900m -d -a 3 - "$DEST/RAVE_FL_ALL_RESULTS_LOGS.tar.gz.part-"
 
+echo "Verifying archive SHA-256 checksums and gzip integrity."
 (
   cd "$DEST"
   sha256sum RAVE_FL_ALL_RESULTS_LOGS.tar.gz.part-* > SHA256SUMS.txt
