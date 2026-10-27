@@ -207,7 +207,7 @@ def main() -> int:
             status.update(status="skipped", reason=str(exc))
             print(f"SKIPPED {bug}: {exc}", file=sys.stderr, flush=True)
         # Save progress after every bug, even on interrupted long preparations.
-        (logs / "preparation_status.json").write_text(json.dumps(statuses, indent=2) + "\\n")
+        (logs / "preparation_status.json").write_text(json.dumps(statuses, indent=2) + "\n")
 
     manifest = {"version": "defects4j-observed-multibug-v1",
                 "path_base": "cwd", "instances": rows}
