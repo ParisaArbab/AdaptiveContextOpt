@@ -11,6 +11,7 @@ MODEL="${RAVE_MODEL:-qwen2.5:7b}"
 # Set RAVE_BATCH_SIZE=1 to test robust singleton screening as a separate arm.
 BATCH_SIZE="${RAVE_BATCH_SIZE:-2}"
 OUTPUT_TOKENS="${RAVE_OUTPUT_TOKENS:-160}"
+POLICIES="${RAVE_POLICIES:-full,fixed_l1,v2_utility}"
 if ! [[ "$BATCH_SIZE" =~ ^[1-9][0-9]*$ && "$OUTPUT_TOKENS" =~ ^[1-9][0-9]*$ ]]; then
   echo "ERROR: RAVE_BATCH_SIZE and RAVE_OUTPUT_TOKENS must be positive integers" >&2
   exit 2
@@ -28,7 +29,7 @@ if ! curl --max-time 5 --fail --silent "$ENDPOINT/api/version" >/dev/null; then
   exit 2
 fi
 mkdir -p "$LOGROOT"
-echo "Batch configuration: model=$MODEL, endpoint=$ENDPOINT, L1 batch size=$BATCH_SIZE, output tokens per candidate=$OUTPUT_TOKENS" | tee -a "$LOGROOT/progress.log"
+echo "Batch configuration: model=$MODEL, endpoint=$ENDPOINT, policies=$POLICIES, L1 batch size=$BATCH_SIZE, output tokens per candidate=$OUTPUT_TOKENS" | tee -a "$LOGROOT/progress.log"
 printf 'bug\texit_code\trun_dir\n' > "$LOGROOT/run_status.tsv"
 mapfile -t BUGS < <(python3 - "$MANIFEST" <<'PY'
 import json, sys
@@ -58,7 +59,7 @@ for BUG in "${BUGS[@]}"; do
       --model "$MODEL" \
       --endpoint "$ENDPOINT" \
       --device a100 \
-      --policies full,fixed_l1,v2_utility \
+      --policies "$POLICIES" \
       --fusions shared_prior_evidence_fusion_v1 \
       --context-window 8192 \
       --batch-size "$BATCH_SIZE" \
