@@ -82,8 +82,15 @@ def setup_reference(ref: Path, bugs: list[str], log: Path) -> None:
     for bug in bugs:
         for method in RANKERS:
             patterns.append(f"FlexFL/data/FL_results/{method}/Defects4J/{bug}_method-susps.csv")
-    if command(["git", "-C", str(ref), "sparse-checkout", "set", "--no-cone", *patterns],
-               log.with_name("flexfl_sparse.log"), timeout=900):
+    # Retain rankings from previous batches. Never shrink an existing sparse
+    # checkout: old experiment manifests must remain reproducible.
+    sparse_rules = ref / ".git/info/sparse-checkout"
+    existing = sparse_rules.read_text(errors="replace") if sparse_rules.is_file() else ""
+    if "FlexFL/data/FL_results/" in existing:
+        sparse_args = ["git", "-C", str(ref), "sparse-checkout", "add", *patterns]
+    else:
+        sparse_args = ["git", "-C", str(ref), "sparse-checkout", "set", "--no-cone", *patterns]
+    if command(sparse_args, log.with_name("flexfl_sparse.log"), timeout=900):
         raise RuntimeError("FlexFL sparse checkout failed")
     if not (ref / patterns[0]).is_file():
         raise RuntimeError("Missing FlexFL offline ground truth file")
