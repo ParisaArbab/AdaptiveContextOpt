@@ -108,3 +108,50 @@ Do not discard unsuccessful bugs silently; show attempted vs completed
 denominators, and count all selected independent bugs. Record whether ground
 truth falls in the candidate pool. Run at least three bugs before interpreting
 aggregate performance, then expand across projects after validating setup.
+
+## Scale to 100 bugs across projects
+
+The official Defects4J version and installed active-bug IDs may differ from
+FlexFL's saved candidate ranking coverage. Do **not** assume all available
+ranking CSVs are runnable bugs. Select the intersection of the three CSV lists
+and locally installed Defects4J active IDs without reading gold labels:
+
+```bash
+conda activate rave-fl
+cd ~/RAVE_FL_Research/AdaptiveContextOpt_AdaptivePilot
+git pull --ff-only origin rave-fl-adaptive-pilot
+export PATH="$HOME/defects4j/framework/bin:$PATH"
+
+python scripts/aiscalar_select_d4j_cohort.py \
+  --count 100 --seed 2026 --max-per-project 15 \
+  --output configs/aiscalar_d4j_100_selected.txt \
+  --summary logs/d4j_cohort_selection.json
+wc -l configs/aiscalar_d4j_100_selected.txt
+```
+
+Before preparation, inspect the old failure, disk quota and Java/Defects4J
+setup: `tail -n 40 logs/multi_d4j_prepare.log`, `quota -s` and
+`defects4j pids`. Avoid filling your quota: check the disk consumption of
+`data/rave_fl_checkouts/multi` periodically and monitor remaining quota.
+
+```bash
+mkdir -p logs
+nohup python -u scripts/aiscalar_prepare_d4j_batch.py \
+  --bugs-file configs/aiscalar_d4j_100_selected.txt \
+  --manifest configs/aiscalar_d4j_100.json \
+  --test-timeout 900 \
+  > logs/d4j_100_prepare.log 2>&1 < /dev/null &
+echo "$!" > logs/d4j_100_prepare.pid
+```
+
+Track `tail -n 40 logs/d4j_100_prepare.log` and the checkpoint
+`logs/d4j_batch_preparation/preparation_status.json`. The final manifest
+contains only prepared bugs and should be used only after preparation finishes.
+The 100 selected IDs are the **attempted denominator** even if some checkouts
+or test reproductions fail. Do not change the selection based on ground truth.
+
+Then run `scripts/rave_fl_run.sh prepare` against
+`configs/aiscalar_d4j_100.json`; only after it succeeds and GPU/endpoint checks
+pass, run `scripts/aiscalar_run_d4j_batch.sh configs/aiscalar_d4j_100.json`.
+Run and error results remain per bug. Track the original selected list, skipped
+bugs and successfully evaluated bugs separately.
