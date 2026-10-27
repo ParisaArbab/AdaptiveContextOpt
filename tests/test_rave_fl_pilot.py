@@ -180,7 +180,7 @@ def test_screen_prompt_requires_exact_candidate_ids_and_count():
         assert f"Return exactly {n} results" in user
         assert json.dumps(ids) in user
         assert "one object" in system.lower()
-        shape = user.split("Example response SHAPE ONLY", 1)[1].split("\\n", 1)[-1]
+        shape = user.splitlines()[-1]
         example = json.loads(shape)
         assert [r["id"] for r in example["results"]] == ids
         assert len(example["results"]) == n
