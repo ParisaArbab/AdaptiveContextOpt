@@ -9,6 +9,13 @@ import argparse
 import csv
 import json
 from pathlib import Path
+import sys
+
+# Permit both `python -m scripts.aiscalar_audit_v2_top5_changes` and
+# `python scripts/aiscalar_audit_v2_top5_changes.py` from any cwd.
+# The latter normally puts scripts/, not the repository root, on sys.path.
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from wp1.evaluation import method_matches
 
