@@ -98,8 +98,10 @@ def setup_reference(ref: Path, bugs: list[str], log: Path) -> None:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--bugs", nargs="+", required=True,
+    ap.add_argument("--bugs", nargs="*", default=[],
                     help="Explicit IDs such as Time-24 Lang-1 Math-1; no cherry-picking by gold")
+    ap.add_argument("--bugs-file", type=Path,
+                    help="One preselected bug ID per line; enables large, reproducible cohorts")
     ap.add_argument("--reference", default="references/FlexFL_Multi")
     ap.add_argument("--checkout-root", default="data/rave_fl_checkouts/multi")
     ap.add_argument("--evidence-root", default="data/rave_fl_observed_failures")
@@ -108,9 +110,16 @@ def main() -> int:
     ap.add_argument("--reuse-failing-tests", action="store_true",
                     help="Do not rerun tests if a previous failing_tests file exists")
     args = ap.parse_args()
-    bugs = args.bugs
-    if len(set(bugs)) != len(bugs) or any(not D4J_PATTERN.fullmatch(b) for b in bugs):
-        ap.error("Provide unique Defects4J IDs such as Time-24, Lang-1")
+    if args.bugs_file and args.bugs:
+        ap.error("Use either --bugs or --bugs-file, not both")
+    bugs = list(args.bugs)
+    if args.bugs_file:
+        if not args.bugs_file.is_file():
+            ap.error(f"Selected bug list missing: {args.bugs_file}")
+        bugs = [line.strip() for line in args.bugs_file.read_text().splitlines()
+                if line.strip() and not line.lstrip().startswith("#")]
+    if not bugs or len(set(bugs)) != len(bugs) or any(not D4J_PATTERN.fullmatch(b) for b in bugs):
+        ap.error("Provide at least one unique Defects4J ID such as Time-24, Lang-1")
     if args.test_timeout < 60:
         ap.error("--test-timeout must be at least 60 seconds")
     root = Path.cwd()
