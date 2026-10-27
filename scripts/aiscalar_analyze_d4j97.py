@@ -115,6 +115,7 @@ def compute(cases, granularity):
                 k: mean(
                     metrics(r, granularity, k)
                     if r and r.get("status") == "completed"
+                       and isinstance(metrics(r, granularity, k), (int, float))
                     else 0.0
                     for r in end2end
                 ) if end2end else None
