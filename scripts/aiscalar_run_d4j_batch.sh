@@ -45,7 +45,7 @@ PY
 for BUG in "${BUGS[@]}"; do
   ID="d4j_${BUG}_v2_${STAMP}"
   OUTPUT="$ROOT/$BUG"
-  echo "=== Starting $BUG: Full / Fixed L1 / V2 Utility ===" | tee -a "$LOGROOT/progress.log"
+  echo "=== Starting $BUG: $POLICIES (L1 batch size $BATCH_SIZE) ===" | tee -a "$LOGROOT/progress.log"
   # The runner invokes the same real inference provider for every selected bug.
   # Do not resume a failed request with unknown usage or delete past ledgers.
   if bash scripts/rave_fl_run.sh run \
