@@ -169,6 +169,37 @@ def test_reversed_batch_response_maps_ids_correctly():
     assert obs[0].suspicion == .1 and obs[1].suspicion == .9
 
 
+def test_screen_prompt_requires_exact_candidate_ids_and_count():
+    from rave_fl.pilot_backend import build_prompt
+
+    for n in (1, 2, 4):
+        candidates = pool(n)
+        system, user = build_prompt(candidates, "observed failure", Action.BATCH_SCREEN, 1)
+        ids = [f"c{i}" for i in range(n)]
+        assert f"THIS BATCH HAS EXACTLY {n} CANDIDATES" in user
+        assert f"Return exactly {n} results" in user
+        assert json.dumps(ids) in user
+        assert "one object" in system.lower()
+        shape = user.split("Example response SHAPE ONLY", 1)[1].split("\\n", 1)[-1]
+        example = json.loads(shape)
+        assert [r["id"] for r in example["results"]] == ids
+        assert len(example["results"]) == n
+
+
+def test_incomplete_screen_batch_remains_invalid_even_with_count_prompt():
+    from rave_fl.pilot_backend import build_prompt
+
+    candidates = pool(2)
+    system, user = build_prompt(candidates, "observed failure", Action.BATCH_SCREEN, 1)
+    assert "Return exactly 2 results" in user
+    missing_second = json.dumps({"results": [
+        {"id": "c0", "suspicion": 0.3, "uncertainty": 0.6}
+    ]})
+    observations, error = parse_response(missing_second, candidates, Action.BATCH_SCREEN)
+    assert "Wrong number of results" in error
+    assert len(observations) == 2 and not any(o.valid for o in observations)
+
+
 def test_full_matches_original_verifier_prompt():
     from rave_fl.pilot_backend import build_prompt
     from rave_fl.ollama_verify import SYSTEM
