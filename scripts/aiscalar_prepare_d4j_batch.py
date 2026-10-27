@@ -160,7 +160,9 @@ def main() -> int:
             if dirty:
                 raise RuntimeError("Buggy checkout has modified tracked files")
             failure = checkout / "failing_tests"
-            if not (args.reuse_failing_tests and failure.is_file() and failure.stat().st_size):
+            previous_stamp = failure.stat().st_mtime_ns if failure.is_file() else None
+            reused = bool(args.reuse_failing_tests and failure.is_file() and failure.stat().st_size)
+            if not reused:
                 rc = command([d4j, "test", "-w", str(checkout)],
                              logs / f"{bug}_test.log", timeout=args.test_timeout,
                              cwd=checkout)
@@ -169,6 +171,8 @@ def main() -> int:
                     raise RuntimeError("Defects4J test timed out")
             if not failure.is_file() or not failure.stat().st_size:
                 raise RuntimeError("Missing observed failing_tests after running Defects4J tests")
+            if not reused and previous_stamp is not None and failure.stat().st_mtime_ns == previous_stamp:
+                raise RuntimeError("Defects4J did not refresh failing_tests; refusing stale evidence")
             evidence, n = collect_failure_text(failure.read_text(errors="replace"))
             evidence_root.mkdir(parents=True, exist_ok=True)
             summary = evidence_root / f"{bug}_failure_evidence.txt"
