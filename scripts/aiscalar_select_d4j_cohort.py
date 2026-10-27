@@ -106,9 +106,14 @@ def main() -> int:
         if len(chosen) >= args.count:
             break
     if len(chosen) < args.count:
+        # Do not hide Defects4J/Perl errors behind a misleading "zero eligible" message.
+        print(f"FlexFL triple-ranking bugs: {len(triple)}", file=sys.stderr)
+        print(f"Projects with usable active IDs: {len(by_project)}", file=sys.stderr)
+        for name, reason in sorted(skipped_projects.items()):
+            print(f"  Defects4J {name}: {reason}", file=sys.stderr)
         raise SystemExit(
-            f"Insufficient eligible bugs: requested {args.count}, selected {len(chosen)}; "
-            "increase --max-per-project or inspect Defects4J project support."
+            f"Insufficient eligible bugs: requested {args.count}, selected {len(chosen)}. "
+            "Fix Defects4J metadata access first if all projects failed."
         )
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
