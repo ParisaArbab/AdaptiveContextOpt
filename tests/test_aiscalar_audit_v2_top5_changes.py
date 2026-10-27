@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 from scripts.aiscalar_audit_v2_top5_changes import analyze, audit_case
 
@@ -66,3 +67,19 @@ def test_analyze_skips_cases_without_gold_and_never_writes(tmp_path):
     assert rows == []
     assert skipped == ["Foo-1"]
     assert not list(root.rglob("*.csv"))
+
+
+def test_direct_script_invocation_loads_repository_packages():
+    # Regression: executing as a standalone script previously could not import wp1.
+    import subprocess
+    import sys
+
+    root = Path(__file__).resolve().parents[1]
+    result = subprocess.run(
+        [sys.executable, str(root / 'scripts' / 'aiscalar_audit_v2_top5_changes.py'), '--help'],
+        cwd=root,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stderr
+    assert '--root' in result.stdout
