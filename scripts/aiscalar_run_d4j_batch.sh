@@ -7,6 +7,14 @@ cd "$(dirname "$0")/.."
 MANIFEST="${1:-configs/aiscalar_multi_d4j.json}"
 ENDPOINT="${RAVE_OLLAMA_ENDPOINT:-http://127.0.0.1:11437}"
 MODEL="${RAVE_MODEL:-qwen2.5:7b}"
+# Keep the original two-method batch as the default for reproducibility.
+# Set RAVE_BATCH_SIZE=1 to test robust singleton screening as a separate arm.
+BATCH_SIZE="${RAVE_BATCH_SIZE:-2}"
+OUTPUT_TOKENS="${RAVE_OUTPUT_TOKENS:-160}"
+if ! [[ "$BATCH_SIZE" =~ ^[1-9][0-9]*$ && "$OUTPUT_TOKENS" =~ ^[1-9][0-9]*$ ]]; then
+  echo "ERROR: RAVE_BATCH_SIZE and RAVE_OUTPUT_TOKENS must be positive integers" >&2
+  exit 2
+fi
 STAMP="${RAVE_BATCH_STAMP:-$(date +%Y%m%d_%H%M%S)}"
 ROOT="results/d4j_multibug/${STAMP}"
 LOGROOT="logs/d4j_multibug/${STAMP}"
@@ -20,6 +28,7 @@ if ! curl --max-time 5 --fail --silent "$ENDPOINT/api/version" >/dev/null; then
   exit 2
 fi
 mkdir -p "$LOGROOT"
+echo "Batch configuration: model=$MODEL, endpoint=$ENDPOINT, L1 batch size=$BATCH_SIZE, output tokens per candidate=$OUTPUT_TOKENS" | tee -a "$LOGROOT/progress.log"
 printf 'bug\texit_code\trun_dir\n' > "$LOGROOT/run_status.tsv"
 mapfile -t BUGS < <(python3 - "$MANIFEST" <<'PY'
 import json, sys
@@ -52,8 +61,8 @@ for BUG in "${BUGS[@]}"; do
       --policies full,fixed_l1,v2_utility \
       --fusions shared_prior_evidence_fusion_v1 \
       --context-window 8192 \
-      --batch-size 2 \
-      --output-tokens 160 \
+      --batch-size "$BATCH_SIZE" \
+      --output-tokens "$OUTPUT_TOKENS" \
       --timeout 900 \
       --admission strict \
       --budget 120000 \
