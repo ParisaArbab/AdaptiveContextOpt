@@ -12,6 +12,40 @@ The main research question is simple:
 
 ## Latest research: RAVE-FL fault localization (October 2026)
 
+**Goal:** Help an AI locate buggy code while using fewer tokens (less debugging context).
+
+We tested **Defects4J Time-25** using **Qwen2.5 7B** and **24 candidate functions** gathered from SBIR, Ochiai, and BoostN.
+
+We compared two types of error-log evidence:
+
+- **A = Original:** A short description of one failing test (about 492 characters).
+- **B = Structured:** A compact summary of all three failing tests (1,510 characters).
+
+For each type, we tested two ways to use the LLM:
+
+- **Full:** The LLM checks all 24 candidate functions.
+- **Selective:** The LLM checks only 14 higher-ranked functions to save tokens. This is currently a simple rank threshold, **not** a learned risk model.
+
+### Results
+
+| Experiment | LLM checks | Tokens used | Actual bug's rank |
+|---|---:|---:|---:|
+| A-Full | 24 | 15,049 | 4 |
+| A-Selective | 14 | 9,147 | 22 |
+| **B-Full** | **24** | **24,029** | **1 (best)** |
+| B-Selective | 14 | 14,426 | 22 |
+
+**What we learned:** Better failure evidence helped the LLM rank the actual bug **first** (B-Full). Selective verification saved about **40% of tokens** compared with B-Full, but missed the bug because it never checked that function.
+
+**Next goal:** Keep B-Full's accuracy while checking fewer functions and spending fewer tokens.
+
+These are early results from **one bug**, not proof that the approach works on all projects. Ground truth was used only to score the results, not to select the candidates.
+
+More details: [Evidence experiment instructions](docs/rave_fl_phase3c_evidence_ablation.md) | [Real structured failure evidence](results/rave_fl_phase3/time25_failure_evidence.txt)
+
+
+### Extended RAVE-FL adaptive pilot and multi-dataset evaluation
+
 The [universal multi-dataset evaluation guide](docs/RAVE_FL_MULTI_DATASET_EVALUATION.md)
 documents the executable `scripts/rave_fl_run.sh` runner, seven local-export
 dataset adapters, existing controller wrappers, four fusion strategies,
@@ -43,37 +77,6 @@ labels and candidate-name/numeric-evidence ablations. See the
 [measured follow-up results](docs/rave_fl_rank_repair_results_2026_10_22.md).
 Time-25 is a previously inspected development bug; these experiments do not
 establish learned-policy quality or generalization.
-
-**Goal:** Help an AI locate buggy code while using fewer tokens (less debugging context).
-
-We tested **Defects4J Time-25** using **Qwen2.5 7B** and **24 candidate functions** gathered from SBIR, Ochiai, and BoostN.
-
-We compared two types of error-log evidence:
-
-- **A = Original:** A short description of one failing test (about 492 characters).
-- **B = Structured:** A compact summary of all three failing tests (1,510 characters).
-
-For each type, we tested two ways to use the LLM:
-
-- **Full:** The LLM checks all 24 candidate functions.
-- **Selective:** The LLM checks only 14 higher-ranked functions to save tokens. This is currently a simple rank threshold, **not** a learned risk model.
-
-### Results
-
-| Experiment | LLM checks | Tokens used | Actual bug's rank |
-|---|---:|---:|---:|
-| A-Full | 24 | 15,049 | 4 |
-| A-Selective | 14 | 9,147 | 22 |
-| **B-Full** | **24** | **24,029** | **1 (best)** |
-| B-Selective | 14 | 14,426 | 22 |
-
-**What we learned:** Better failure evidence helped the LLM rank the actual bug **first** (B-Full). Selective verification saved about **40% of tokens** compared with B-Full, but missed the bug because it never checked that function.
-
-**Next goal:** Keep B-Full's accuracy while checking fewer functions and spending fewer tokens.
-
-These are early results from **one bug**, not proof that the approach works on all projects. Ground truth was used only to score the results, not to select the candidates.
-
-More details: [Evidence experiment instructions](docs/rave_fl_phase3c_evidence_ablation.md) | [Real structured failure evidence](results/rave_fl_phase3/time25_failure_evidence.txt)
 
 ## 1. Reference repositories
 
