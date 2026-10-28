@@ -67,9 +67,11 @@ def union_pool(repo: Path, bug: str, top_per_method: int = 10) -> tuple[list[Can
     """
     merged: dict[str, RankedMethod] = {}
     methods: dict[str, list[str]] = {}
+    ranks: dict[str, dict[str, int]] = {}
     for method in TRADITIONAL_METHODS:
         for item in read_ranked(repo, method, bug, top_per_method):
             methods.setdefault(item.function_id, []).append(method)
+            ranks.setdefault(item.function_id, {})[method] = item.local_rank
             old = merged.get(item.function_id)
             if old is None or item.prior > old.prior:
                 merged[item.function_id] = item
@@ -86,6 +88,7 @@ def union_pool(repo: Path, bug: str, top_per_method: int = 10) -> tuple[list[Can
             "file_class": item.file_class, "start_line": item.start_line,
             "end_line": item.end_line, "methods": methods[item.function_id],
             "rank_proxy": item.prior,
+            "ranks": ranks[item.function_id], "top_per_method": top_per_method,
         }
         for item in ordered
     }

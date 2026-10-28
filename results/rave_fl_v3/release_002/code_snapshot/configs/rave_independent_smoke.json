@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "selection_rule": "Before inspecting outcomes: smallest active numeric Defects4J bug ID in each of Time, Lang, Math, excluding Time-25. No replacement based on gold recall or model outcomes. Input incompatibility is reported, not silently replaced.",
+  "selection_recorded_at": "2026-10-22",
+  "cases": [
+    {"bug": "Time-1", "flexfl_repo": "references/FlexFL_Time25", "checkout": "data/rave_fl_checkouts/Time-1", "buggy_revision": "8612f9e5b88c1bea933ef9ab1e431f5db3006b48", "source_repository": "https://github.com/JodaOrg/joda-time.git"},
+    {"bug": "Lang-1", "flexfl_repo": "references/FlexFL_Time25", "checkout": "data/rave_fl_checkouts/Lang-1", "buggy_revision": "396afc3e4693cfee182efe582455f2d97058c068", "source_repository": "https://github.com/apache/commons-lang.git"},
+    {"bug": "Math-1", "flexfl_repo": "references/FlexFL_Time25", "checkout": "data/rave_fl_checkouts/Math-1", "buggy_revision": "d7fd760eb8c5ba8dc7bc30fd565575f2547e0c86", "source_repository": "https://github.com/apache/commons-math.git"}
+  ],
+  "held_out_reservation": "IDs 2..5 in these projects are not evaluated by this manifest; future train/calibration/test splits must use disjoint bugs and avoid all development cases",
+  "top_per_method": 10,
+  "model": "llama3.1:8b",
+  "seed": 0,
+  "context_window": 16384,
+  "output_per_candidate": 160,
+  "batch_size": 4,
+  "policy_budget": 20000,
+  "pre_inference_budget_note": "Raised from initial 16k plan to 20k after source-only preflight (25 candidates and estimated L1 totals 24,254 / 19,606); no model response or gold outcome had been inspected. Full has a separate completion-reference budget.",
+  "full_reference_budget": 60000,
+  "max_full": 1,
+  "global_provider_token_cap": 80000,
+  "max_new_calls": 100,
+  "global_admission": "Reserve num_ctx + num_predict for each uncached request, a conservative bound on provider prompt plus output counters. Abort on any bound violation or unknown usage. Never lower the reservation by consulting cached future costs.",
+  "policies": ["fixed_l1", "highest_suspicion", "ranker_disagreement", "ranking_ambiguity", "v2_utility"],
+  "failure_evidence": "Existing FlexFL trigger-test text; Java tests are not rerun locally. Identical text across paired arms. No post-hoc Time-25 variants."
+}

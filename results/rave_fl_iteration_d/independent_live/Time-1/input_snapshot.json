@@ -1,0 +1,1992 @@
+{
+  "candidates": [
+    {
+      "function_id": "org.joda.time.field.UnsupportedDurationField.compareTo(DurationField)",
+      "source": "    /**\n     * Always returns zero, indicating that sort order is not relevent.\n     *\n     * @return zero always\n     */\n    public int compareTo(DurationField durationField) {\n        if (durationField.isSupported()) {\n            return 1;\n        }\n        return 0;\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: org.joda.time.field.UnsupportedDurationField.compareTo(DurationField)\nSIGNATURE: public int compareTo(DurationField durationField)",
+        "METHOD: org.joda.time.field.UnsupportedDurationField.compareTo(DurationField)\nSIGNATURE: public int compareTo(DurationField durationField)\nSTRUCTURE (lossy):\nif (durationField.isSupported())\nCALL durationField.isSupported()\nreturn 1;\nreturn 0;",
+        "    /**\n     * Always returns zero, indicating that sort order is not relevent.\n     *\n     * @return zero always\n     */\n    public int compareTo(DurationField durationField) {\n        if (durationField.isSupported()) {\n            return 1;\n        }\n        return 0;\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.04,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.0,
+        "failure_relevance": 0.35,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 2.0,
+        "source_tokens": 69.0,
+        "l0_tokens": 35.0,
+        "l1_tokens": 61.0,
+        "compression_ratio": 0.8840579710144928,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "org.joda.time.chrono.BuddhistChronology.assemble(Fields)",
+      "source": "    protected void assemble(Fields fields) {\n        if (getParam() == null) {\n            // force init as used below\n            fields.eras = UnsupportedDurationField.getInstance(DurationFieldType.eras());\n            \n            // julian chrono removed zero, but we need to put it back\n            DateTimeField field = fields.year;\n            fields.year = new OffsetDateTimeField(\n                    new SkipUndoDateTimeField(this, field), BUDDHIST_OFFSET);\n            \n            // one era, so yearOfEra is the same\n            field = fields.yearOfEra;\n            fields.yearOfEra = new DelegatedDateTimeField(\n                fields.year, fields.eras, DateTimeFieldType.yearOfEra());\n            \n            // julian chrono removed zero, but we need to put it back\n            field = fields.weekyear;\n            fields.weekyear = new OffsetDateTimeField(\n                    new SkipUndoDateTimeField(this, field), BUDDHIST_OFFSET);\n            \n            field = new OffsetDateTimeField(fields.yearOfEra, 99);\n            fields.centuryOfEra = new DividedDateTimeField(\n                field, fields.eras, DateTimeFieldType.centuryOfEra(), 100);\n            fields.centuries = fields.centuryOfEra.getDurationField();\n            \n            field = new RemainderDateTimeField(\n                (DividedDateTimeField) fields.centuryOfEra);\n            fields.yearOfCentury = new OffsetDateTimeField(\n                field, DateTimeFieldType.yearOfCentury(), 1);\n            \n            field = new RemainderDateTimeField(\n                fields.weekyear, fields.centuries, DateTimeFieldType.weekyearOfCentury(), 100);\n            fields.weekyearOfCentury = new OffsetDateTimeField(\n                field, DateTimeFieldType.weekyearOfCentury(), 1);\n            \n            fields.era = ERA_FIELD;\n        }\n    }",
+      "prior": 1.0,
+      "rank": 2,
+      "levels": [
+        "METHOD: org.joda.time.chrono.BuddhistChronology.assemble(Fields)\nSIGNATURE: protected void assemble(Fields fields)",
+        "METHOD: org.joda.time.chrono.BuddhistChronology.assemble(Fields)\nSIGNATURE: protected void assemble(Fields fields)\nSTRUCTURE (lossy):\nif (getParam() == null)\nCALL getParam()\nfields.eras = UnsupportedDurationField.getInstance(DurationFieldType.eras())\nCALL UnsupportedDurationField.getInstance(DurationFieldType.eras())\nCALL DurationFieldType.eras()\nDateTimeField field = fields.year;\nfields.year = new OffsetDateTimeField( new SkipUndoDateTimeField(this, field), BUDDHIST_OFFSET)\nfield = fields.yearOfEra\nfields.yearOfEra = new DelegatedDateTimeField( fields.year, fields.eras, DateTimeFieldType.yearOfEra())\nCALL DateTimeFieldType.yearOfEra()\nfield = fields.weekyear\nfields.weekyear = new OffsetDateTimeField( new SkipUndoDateTimeField(this, field), BUDDHIST_OFFSET)\nfield = new OffsetDateTimeField(fields.yearOfEra, 99)\nfields.centuryOfEra = new DividedDateTimeField( field, fields.eras, DateTimeFieldType.centuryOfEra(), 100)\nCALL DateTimeFieldType.centuryOfEra()\nfields.centuries = fields.centuryOfEra.getDurationField()\nCALL fields.centuryOfEra.getDurationField()\nfield = new RemainderDateTimeField( (DividedDateTimeField) fields.centuryOfEra)\nfields.yearOfCentury = new OffsetDateTimeField( field, DateTimeFieldType.yearOfCentury(), 1)\nCALL DateTimeFieldType.yearOfCentury()\nfield = new RemainderDateTimeField( fields.weekyear, fields.centuries, DateTimeFieldType.weekyearOfCentury(), 100)\nCALL DateTimeFieldType.weekyearOfCentury()\nfields.weekyearOfCentury = new OffsetDateTimeField( field, DateTimeFieldType.weekyearOfCentury(), 1)\nfields.era = ERA_FIELD",
+        "    protected void assemble(Fields fields) {\n        if (getParam() == null) {\n            // force init as used below\n            fields.eras = UnsupportedDurationField.getInstance(DurationFieldType.eras());\n            \n            // julian chrono removed zero, but we need to put it back\n            DateTimeField field = fields.year;\n            fields.year = new OffsetDateTimeField(\n                    new SkipUndoDateTimeField(this, field), BUDDHIST_OFFSET);\n            \n            // one era, so yearOfEra is the same\n            field = fields.yearOfEra;\n            fields.yearOfEra = new DelegatedDateTimeField(\n                fields.year, fields.eras, DateTimeFieldType.yearOfEra());\n            \n            // julian chrono removed zero, but we need to put it back\n            field = fields.weekyear;\n            fields.weekyear = new OffsetDateTimeField(\n                    new SkipUndoDateTimeField(this, field), BUDDHIST_OFFSET);\n            \n            field = new OffsetDateTimeField(fields.yearOfEra, 99);\n            fields.centuryOfEra = new DividedDateTimeField(\n                field, fields.eras, DateTimeFieldType.centuryOfEra(), 100);\n            fields.centuries = fields.centuryOfEra.getDurationField();\n            \n            field = new RemainderDateTimeField(\n                (DividedDateTimeField) fields.centuryOfEra);\n            fields.yearOfCentury = new OffsetDateTimeField(\n                field, DateTimeFieldType.yearOfCentury(), 1);\n            \n            field = new RemainderDateTimeField(\n                fields.weekyear, fields.centuries, DateTimeFieldType.weekyearOfCentury(), 100);\n            fields.weekyearOfCentury = new OffsetDateTimeField(\n                field, DateTimeFieldType.weekyearOfCentury(), 1);\n            \n            fields.era = ERA_FIELD;\n        }\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.08,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.23404255319148937,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 9.0,
+        "literal_count": 6.0,
+        "source_tokens": 459.0,
+        "l0_tokens": 29.0,
+        "l1_tokens": 391.0,
+        "compression_ratio": 0.8518518518518519,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 9,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "org.joda.time.Partial.Partial(DateTimeFieldType[],int[],Chronology)",
+      "source": "    /**\n     * Constructs a Partial with the specified fields and values.\n     * The fields must be specified in the order largest to smallest.\n     * <p>\n     * The constructor uses the specified chronology.\n     * \n     * @param types  the types to create the partial from, not null\n     * @param values  the values to store, not null\n     * @param chronology  the chronology, null means ISO\n     * @throws IllegalArgumentException if the types or values are invalid\n     */\n    public Partial(DateTimeFieldType[] types, int[] values, Chronology chronology) {\n        super();\n        chronology = DateTimeUtils.getChronology(chronology).withUTC();\n        iChronology = chronology;\n        if (types == null) {\n            throw new IllegalArgumentException(\"Types array must not be null\");\n        }\n        if (values == null) {\n            throw new IllegalArgumentException(\"Values array must not be null\");\n        }\n        if (values.length != types.length) {\n            throw new IllegalArgumentException(\"Values array must be the same length as the types array\");\n        }\n        if (types.length == 0) {\n            iTypes = types;\n            iValues = values;\n            return;\n        }\n        for (int i = 0; i < types.length; i++) {\n            if (types[i] == null) {\n                throw new IllegalArgumentException(\"Types array must not contain null: index \" + i);\n            }\n        }\n        DurationField lastUnitField = null;\n        for (int i = 0; i < types.length; i++) {\n            DateTimeFieldType loopType = types[i];\n            DurationField loopUnitField = loopType.getDurationType().getField(iChronology);\n            if (i > 0) {\n                int compare = lastUnitField.compareTo(loopUnitField);\n                if (compare < 0) {\n                    throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                            types[i - 1].getName() + \" < \" + loopType.getName());\n                } else if (compare == 0) {\n                    if (types[i - 1].getRangeDurationType() == null) {\n                        if (loopType.getRangeDurationType() == null) {\n                            throw new IllegalArgumentException(\"Types array must not contain duplicate: \" +\n                                            types[i - 1].getName() + \" and \" + loopType.getName());\n                        }\n                    } else {\n                        if (loopType.getRangeDurationType() == null) {\n                            throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                                    types[i - 1].getName() + \" < \" + loopType.getName());\n                        }\n                        DurationField lastRangeField = types[i - 1].getRangeDurationType().getField(iChronology);\n                        DurationField loopRangeField = loopType.getRangeDurationType().getField(iChronology);\n                        if (lastRangeField.compareTo(loopRangeField) < 0) {\n                            throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                                    types[i - 1].getName() + \" < \" + loopType.getName());\n                        }\n                        if (lastRangeField.compareTo(loopRangeField) == 0) {\n                            throw new IllegalArgumentException(\"Types array must not contain duplicate: \" +\n                                            types[i - 1].getName() + \" and \" + loopType.getName());\n                        }\n                    }\n                }\n            }\n            lastUnitField = loopUnitField;\n        }\n        \n        iTypes = (DateTimeFieldType[]) types.clone();\n        chronology.validate(this, values);\n        iValues = (int[]) values.clone();\n    }",
+      "prior": 0.9,
+      "rank": 3,
+      "levels": [
+        "METHOD: org.joda.time.Partial.Partial(DateTimeFieldType[],int[],Chronology)\nSIGNATURE: public Partial(DateTimeFieldType[] types, int[] values, Chronology chronology)",
+        "METHOD: org.joda.time.Partial.Partial(DateTimeFieldType[],int[],Chronology)\nSIGNATURE: public Partial(DateTimeFieldType[] types, int[] values, Chronology chronology)\nSTRUCTURE (lossy):\nchronology = DateTimeUtils.getChronology(chronology).withUTC()\nCALL DateTimeUtils.getChronology(chronology).withUTC()\nCALL DateTimeUtils.getChronology(chronology)\niChronology = chronology\nif (types == null)\nthrow new IllegalArgumentException(\"Types array must not be null\");\nif (values == null)\nthrow new IllegalArgumentException(\"Values array must not be null\");\nif (values.length != types.length)\nthrow new IllegalArgumentException(\"Values array must be the same length as the types array\");\nif (types.length == 0)\niTypes = types\niValues = values\nreturn;\nfor (int i = 0; i < types.length; i++)\nint i = 0;\ni++\nif (types[i] == null)\nthrow new IllegalArgumentException(\"Types array must not contain null: index \" + i);\nDurationField lastUnitField = null;\nDateTimeFieldType loopType = types[i];\nDurationField loopUnitField = loopType.getDurationType().getField(iChronology);\nCALL loopType.getDurationType().getField(iChronology)\nCALL loopType.getDurationType()\nif (i > 0)\nint compare = lastUnitField.compareTo(loopUnitField);\nCALL lastUnitField.compareTo(loopUnitField)\nif (compare < 0)\nthrow new IllegalArgumentException(\"Types array must be in order largest-smallest: \" + types[i - 1].getName() + \" < \" + loopType.getName());\nCALL types[i - 1].getName()\nCALL loopType.getName()\nif (compare == 0)\nif (types[i - 1].getRangeDurationType() == null)\nCALL types[i - 1].getRangeDurationType()\nif (loopType.getRangeDurationType() == null)\nCALL loopType.getRangeDurationType()\nthrow new IllegalArgumentException(\"Types array must not contain duplicate: \" + types[i - 1].getName() + \" and \" + loopType.getName());\nDurationField lastRangeField = types[i - 1].getRangeDurationType().getField(iChronology);\nCALL types[i - 1].getRangeDurationType().getField(iChronology)\nDurationField loopRangeField = loopType.getRangeDurationType().getField(iChronology);\nCALL loopType.getRangeDurationType().getField(iChronology)\nif (lastRangeField.compareTo(loopRangeField) < 0)\nCALL lastRangeField.compareTo(loopRangeField)\nif (lastRangeFiel\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "    /**\n     * Constructs a Partial with the specified fields and values.\n     * The fields must be specified in the order largest to smallest.\n     * <p>\n     * The constructor uses the specified chronology.\n     * \n     * @param types  the types to create the partial from, not null\n     * @param values  the values to store, not null\n     * @param chronology  the chronology, null means ISO\n     * @throws IllegalArgumentException if the types or values are invalid\n     */\n    public Partial(DateTimeFieldType[] types, int[] values, Chronology chronology) {\n        super();\n        chronology = DateTimeUtils.getChronology(chronology).withUTC();\n        iChronology = chronology;\n        if (types == null) {\n            throw new IllegalArgumentException(\"Types array must not be null\");\n        }\n        if (values == null) {\n            throw new IllegalArgumentException(\"Values array must not be null\");\n        }\n        if (values.length != types.length) {\n            throw new IllegalArgumentException(\"Values array must be the same length as the types array\");\n        }\n        if (types.length == 0) {\n            iTypes = types;\n            iValues = values;\n            return;\n        }\n        for (int i = 0; i < types.length; i++) {\n            if (types[i] == null) {\n                throw new IllegalArgumentException(\"Types array must not contain null: index \" + i);\n            }\n        }\n        DurationField lastUnitField = null;\n        for (int i = 0; i < types.length; i++) {\n            DateTimeFieldType loopType = types[i];\n            DurationField loopUnitField = loopType.getDurationType().getField(iChronology);\n            if (i > 0) {\n                int compare = lastUnitField.compareTo(loopUnitField);\n                if (compare < 0) {\n                    throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                            types[i - 1].getName() + \" < \" + loopType.getName());\n                } else if (compare == 0) {\n                    if (types[i - 1].getRangeDurationType() == null) {\n                        if (loopType.getRangeDurationType() == null) {\n                            throw new IllegalArgumentException(\"Types array must not contain duplicate: \" +\n                                            types[i - 1].getName() + \" and \" + loopType.getName());\n                        }\n                    } else {\n                        if (loopType.getRangeDurationType() == null) {\n                            throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                                    types[i - 1].getName() + \" < \" + loopType.getName());\n                        }\n                        DurationField lastRangeField = types[i - 1].getRangeDurationType().getField(iChronology);\n                        DurationField loopRangeField = loopType.getRangeDurationType().getField(iChronology);\n                        if (lastRangeField.compareTo(loopRangeField) < 0) {\n                            throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                                    types[i - 1].getName() + \" < \" + loopType.getName());\n                        }\n                        if (lastRangeField.compareTo(loopRangeField) == 0) {\n                            throw new IllegalArgumentException(\"Types array must not contain duplicate: \" +\n                                            types[i - 1].getName() + \" and \" + loopType.getName());\n                        }\n                    }\n                }\n            }\n            lastUnitField = loopUnitField;\n        }\n        \n        iTypes = (DateTimeFieldType[]) types.clone();\n        chronology.validate(this, values);\n        iValues = (int[]) values.clone();\n    }"
+      ],
+      "features": {
+        "prior": 0.9,
+        "rank_fraction": 0.12,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.4,
+        "failure_relevance": 0.3968253968253968,
+        "trace_match": 1.0,
+        "complexity": 16.0,
+        "call_count": 27.0,
+        "literal_count": 36.0,
+        "source_tokens": 957.0,
+        "l0_tokens": 42.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.5945663531870429,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 16,
+        "call_count": 27,
+        "literal_count": 36
+      }
+    },
+    {
+      "function_id": "org.joda.time.chrono.BasicChronology.assemble(Fields)",
+      "source": "    protected void assemble(Fields fields) {\n        // First copy fields that are the same for all Gregorian and Julian\n        // chronologies.\n\n        fields.millis = cMillisField;\n        fields.seconds = cSecondsField;\n        fields.minutes = cMinutesField;\n        fields.hours = cHoursField;\n        fields.halfdays = cHalfdaysField;\n        fields.days = cDaysField;\n        fields.weeks = cWeeksField;\n\n        fields.millisOfSecond = cMillisOfSecondField;\n        fields.millisOfDay = cMillisOfDayField;\n        fields.secondOfMinute = cSecondOfMinuteField;\n        fields.secondOfDay = cSecondOfDayField;\n        fields.minuteOfHour = cMinuteOfHourField;\n        fields.minuteOfDay = cMinuteOfDayField;\n        fields.hourOfDay = cHourOfDayField;\n        fields.hourOfHalfday = cHourOfHalfdayField;\n        fields.clockhourOfDay = cClockhourOfDayField;\n        fields.clockhourOfHalfday = cClockhourOfHalfdayField;\n        fields.halfdayOfDay = cHalfdayOfDayField;\n\n        // Now create fields that have unique behavior for Gregorian and Julian\n        // chronologies.\n\n        fields.year = new BasicYearDateTimeField(this);\n        fields.yearOfEra = new GJYearOfEraDateTimeField(fields.year, this);\n\n        // Define one-based centuryOfEra and yearOfCentury.\n        DateTimeField field = new OffsetDateTimeField(\n            fields.yearOfEra, 99);\n        fields.centuryOfEra = new DividedDateTimeField(\n            field, DateTimeFieldType.centuryOfEra(), 100);\n        fields.centuries = fields.centuryOfEra.getDurationField();\n        \n        field = new RemainderDateTimeField(\n            (DividedDateTimeField) fields.centuryOfEra);\n        fields.yearOfCentury = new OffsetDateTimeField(\n            field, DateTimeFieldType.yearOfCentury(), 1);\n\n        fields.era = new GJEraDateTimeField(this);\n        fields.dayOfWeek = new GJDayOfWeekDateTimeField(this, fields.days);\n        fields.dayOfMonth = new BasicDayOfMonthDateTimeField(this, fields.days);\n        fields.dayOfYear = new BasicDayOfYearDateTimeField(this, fields.days);\n        fields.monthOfYear = new GJMonthOfYearDateTimeField(this);\n        fields.weekyear = new BasicWeekyearDateTimeField(this);\n        fields.weekOfWeekyear = new BasicWeekOfWeekyearDateTimeField(this, fields.weeks);\n        \n        field = new RemainderDateTimeField(\n            fields.weekyear, fields.centuries, DateTimeFieldType.weekyearOfCentury(), 100);\n        fields.weekyearOfCentury = new OffsetDateTimeField(\n            field, DateTimeFieldType.weekyearOfCentury(), 1);\n        \n        // The remaining (imprecise) durations are available from the newly\n        // created datetime fields.\n        fields.years = fields.year.getDurationField();\n        fields.months = fields.monthOfYear.getDurationField();\n        fields.weekyears = fields.weekyear.getDurationField();\n    }",
+      "prior": 0.9,
+      "rank": 4,
+      "levels": [
+        "METHOD: org.joda.time.chrono.BasicChronology.assemble(Fields)\nSIGNATURE: protected void assemble(Fields fields)",
+        "METHOD: org.joda.time.chrono.BasicChronology.assemble(Fields)\nSIGNATURE: protected void assemble(Fields fields)\nSTRUCTURE (lossy):\nfields.millis = cMillisField\nfields.seconds = cSecondsField\nfields.minutes = cMinutesField\nfields.hours = cHoursField\nfields.halfdays = cHalfdaysField\nfields.days = cDaysField\nfields.weeks = cWeeksField\nfields.millisOfSecond = cMillisOfSecondField\nfields.millisOfDay = cMillisOfDayField\nfields.secondOfMinute = cSecondOfMinuteField\nfields.secondOfDay = cSecondOfDayField\nfields.minuteOfHour = cMinuteOfHourField\nfields.minuteOfDay = cMinuteOfDayField\nfields.hourOfDay = cHourOfDayField\nfields.hourOfHalfday = cHourOfHalfdayField\nfields.clockhourOfDay = cClockhourOfDayField\nfields.clockhourOfHalfday = cClockhourOfHalfdayField\nfields.halfdayOfDay = cHalfdayOfDayField\nfields.year = new BasicYearDateTimeField(this)\nfields.yearOfEra = new GJYearOfEraDateTimeField(fields.year, this)\nDateTimeField field = new OffsetDateTimeField( fields.yearOfEra, 99);\nfields.centuryOfEra = new DividedDateTimeField( field, DateTimeFieldType.centuryOfEra(), 100)\nCALL DateTimeFieldType.centuryOfEra()\nfields.centuries = fields.centuryOfEra.getDurationField()\nCALL fields.centuryOfEra.getDurationField()\nfield = new RemainderDateTimeField( (DividedDateTimeField) fields.centuryOfEra)\nfields.yearOfCentury = new OffsetDateTimeField( field, DateTimeFieldType.yearOfCentury(), 1)\nCALL DateTimeFieldType.yearOfCentury()\nfields.era = new GJEraDateTimeField(this)\nfields.dayOfWeek = new GJDayOfWeekDateTimeField(this, fields.days)\nfields.dayOfMonth = new BasicDayOfMonthDateTimeField(this, fields.days)\nfields.dayOfYear = new BasicDayOfYearDateTimeField(this, fields.days)\nfields.monthOfYear = new GJMonthOfYearDateTimeField(this)\nfields.weekyear = new BasicWeekyearDateTimeField(this)\nfields.weekOfWeekyear = new BasicWeekOfWeekyearDateTimeField(this, fields.weeks)\nfield = new RemainderDateTimeField( fields.weekyear, fields.centuries, DateTimeFieldType.weekyearOfCentury(), 100)\nCALL DateTimeFieldType.weekyearOfCentury()\nfields.weekyearOfCentury = new OffsetDateTimeField( field, DateTimeFieldType.weekyearOfCentury(), 1)\nfields.years = fields.year.getDurationField()\nCALL fields.year.getD\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "    protected void assemble(Fields fields) {\n        // First copy fields that are the same for all Gregorian and Julian\n        // chronologies.\n\n        fields.millis = cMillisField;\n        fields.seconds = cSecondsField;\n        fields.minutes = cMinutesField;\n        fields.hours = cHoursField;\n        fields.halfdays = cHalfdaysField;\n        fields.days = cDaysField;\n        fields.weeks = cWeeksField;\n\n        fields.millisOfSecond = cMillisOfSecondField;\n        fields.millisOfDay = cMillisOfDayField;\n        fields.secondOfMinute = cSecondOfMinuteField;\n        fields.secondOfDay = cSecondOfDayField;\n        fields.minuteOfHour = cMinuteOfHourField;\n        fields.minuteOfDay = cMinuteOfDayField;\n        fields.hourOfDay = cHourOfDayField;\n        fields.hourOfHalfday = cHourOfHalfdayField;\n        fields.clockhourOfDay = cClockhourOfDayField;\n        fields.clockhourOfHalfday = cClockhourOfHalfdayField;\n        fields.halfdayOfDay = cHalfdayOfDayField;\n\n        // Now create fields that have unique behavior for Gregorian and Julian\n        // chronologies.\n\n        fields.year = new BasicYearDateTimeField(this);\n        fields.yearOfEra = new GJYearOfEraDateTimeField(fields.year, this);\n\n        // Define one-based centuryOfEra and yearOfCentury.\n        DateTimeField field = new OffsetDateTimeField(\n            fields.yearOfEra, 99);\n        fields.centuryOfEra = new DividedDateTimeField(\n            field, DateTimeFieldType.centuryOfEra(), 100);\n        fields.centuries = fields.centuryOfEra.getDurationField();\n        \n        field = new RemainderDateTimeField(\n            (DividedDateTimeField) fields.centuryOfEra);\n        fields.yearOfCentury = new OffsetDateTimeField(\n            field, DateTimeFieldType.yearOfCentury(), 1);\n\n        fields.era = new GJEraDateTimeField(this);\n        fields.dayOfWeek = new GJDayOfWeekDateTimeField(this, fields.days);\n        fields.dayOfMonth = new BasicDayOfMonthDateTimeField(this, fields.days);\n        fields.dayOfYear = new BasicDayOfYearDateTimeField(this, fields.days);\n        fields.monthOfYear = new GJMonthOfYearDateTimeField(this);\n        fields.weekyear = new BasicWeekyearDateTimeField(this);\n        fields.weekOfWeekyear = new BasicWeekOfWeekyearDateTimeField(this, fields.weeks);\n        \n        field = new RemainderDateTimeField(\n            fields.weekyear, fields.centuries, DateTimeFieldType.weekyearOfCentury(), 100);\n        fields.weekyearOfCentury = new OffsetDateTimeField(\n            field, DateTimeFieldType.weekyearOfCentury(), 1);\n        \n        // The remaining (imprecise) durations are available from the newly\n        // created datetime fields.\n        fields.years = fields.year.getDurationField();\n        fields.months = fields.monthOfYear.getDurationField();\n        fields.weekyears = fields.weekyear.getDurationField();\n    }"
+      ],
+      "features": {
+        "prior": 0.9,
+        "rank_fraction": 0.16,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.17333333333333334,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 8.0,
+        "literal_count": 5.0,
+        "source_tokens": 715.0,
+        "l0_tokens": 28.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.7958041958041958,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 1,
+        "call_count": 8,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "org.joda.time.chrono.GJEraDateTimeField.getMinimumValue()",
+      "source": "    public int getMinimumValue() {\n        return DateTimeConstants.BCE;\n    }",
+      "prior": 0.9,
+      "rank": 5,
+      "levels": [
+        "METHOD: org.joda.time.chrono.GJEraDateTimeField.getMinimumValue()\nSIGNATURE: public int getMinimumValue()",
+        "METHOD: org.joda.time.chrono.GJEraDateTimeField.getMinimumValue()\nSIGNATURE: public int getMinimumValue()\nSTRUCTURE (lossy):\nreturn DateTimeConstants.BCE;",
+        "    public int getMinimumValue() {\n        return DateTimeConstants.BCE;\n    }"
+      ],
+      "features": {
+        "prior": 0.9,
+        "rank_fraction": 0.2,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.4666666666666667,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 20.0,
+        "l0_tokens": 27.0,
+        "l1_tokens": 39.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.joda.time.DateTimeZone.getDefaultProvider()",
+      "source": "    /**\n     * Gets the default zone provider.\n     * <p>\n     * Tries the system property <code>org.joda.time.DateTimeZone.Provider</code>.\n     * Then tries a <code>ZoneInfoProvider</code> using the data in <code>org/joda/time/tz/data</code>.\n     * Then uses <code>UTCProvider</code>.\n     * \n     * @return the default name provider\n     */\n    private static Provider getDefaultProvider() {\n        Provider provider = null;\n\n        try {\n            String providerClass = System.getProperty(\"org.joda.time.DateTimeZone.Provider\");\n            if (providerClass != null) {\n                try {\n                    provider = (Provider) Class.forName(providerClass).newInstance();\n                } catch (Exception ex) {\n                    throw new RuntimeException(ex);\n                }\n            }\n        } catch (SecurityException ex) {\n            // ignored\n        }\n\n        if (provider == null) {\n            try {\n                provider = new ZoneInfoProvider(\"org/joda/time/tz/data\");\n            } catch (Exception ex) {\n                ex.printStackTrace();\n            }\n        }\n\n        if (provider == null) {\n            provider = new UTCProvider();\n        }\n\n        return provider;\n    }",
+      "prior": 0.8,
+      "rank": 6,
+      "levels": [
+        "METHOD: org.joda.time.DateTimeZone.getDefaultProvider()\nSIGNATURE: private static Provider getDefaultProvider()",
+        "METHOD: org.joda.time.DateTimeZone.getDefaultProvider()\nSIGNATURE: private static Provider getDefaultProvider()\nSTRUCTURE (lossy):\nProvider provider = null;\nString providerClass = System.getProperty(\"org.joda.time.DateTimeZone.Provider\");\nCALL System.getProperty(\"org.joda.time.DateTimeZone.Provider\")\nif (providerClass != null)\nprovider = (Provider) Class.forName(providerClass).newInstance()\nCALL Class.forName(providerClass).newInstance()\nCALL Class.forName(providerClass)\ncatch (Exception ex)\nthrow new RuntimeException(ex);\ncatch (SecurityException ex)\nif (provider == null)\nprovider = new ZoneInfoProvider(\"org/joda/time/tz/data\")\nCALL ex.printStackTrace()\nprovider = new UTCProvider()\nreturn provider;",
+        "    /**\n     * Gets the default zone provider.\n     * <p>\n     * Tries the system property <code>org.joda.time.DateTimeZone.Provider</code>.\n     * Then tries a <code>ZoneInfoProvider</code> using the data in <code>org/joda/time/tz/data</code>.\n     * Then uses <code>UTCProvider</code>.\n     * \n     * @return the default name provider\n     */\n    private static Provider getDefaultProvider() {\n        Provider provider = null;\n\n        try {\n            String providerClass = System.getProperty(\"org.joda.time.DateTimeZone.Provider\");\n            if (providerClass != null) {\n                try {\n                    provider = (Provider) Class.forName(providerClass).newInstance();\n                } catch (Exception ex) {\n                    throw new RuntimeException(ex);\n                }\n            }\n        } catch (SecurityException ex) {\n            // ignored\n        }\n\n        if (provider == null) {\n            try {\n                provider = new ZoneInfoProvider(\"org/joda/time/tz/data\");\n            } catch (Exception ex) {\n                ex.printStackTrace();\n            }\n        }\n\n        if (provider == null) {\n            provider = new UTCProvider();\n        }\n\n        return provider;\n    }"
+      ],
+      "features": {
+        "prior": 0.8,
+        "rank_fraction": 0.24,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.275,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 4.0,
+        "literal_count": 6.0,
+        "source_tokens": 307.0,
+        "l0_tokens": 28.0,
+        "l1_tokens": 177.0,
+        "compression_ratio": 0.5765472312703583,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 4,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "org.joda.time.chrono.GJEraDateTimeField.getMaximumValue()",
+      "source": "    public int getMaximumValue() {\n        return DateTimeConstants.CE;\n    }",
+      "prior": 0.8,
+      "rank": 7,
+      "levels": [
+        "METHOD: org.joda.time.chrono.GJEraDateTimeField.getMaximumValue()\nSIGNATURE: public int getMaximumValue()",
+        "METHOD: org.joda.time.chrono.GJEraDateTimeField.getMaximumValue()\nSIGNATURE: public int getMaximumValue()\nSTRUCTURE (lossy):\nreturn DateTimeConstants.CE;",
+        "    public int getMaximumValue() {\n        return DateTimeConstants.CE;\n    }"
+      ],
+      "features": {
+        "prior": 0.8,
+        "rank_fraction": 0.28,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 20.0,
+        "l0_tokens": 27.0,
+        "l1_tokens": 39.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.joda.time.chrono.ISOChronology.assemble(Fields)",
+      "source": "    protected void assemble(Fields fields) {\n        if (getBase().getZone() == DateTimeZone.UTC) {\n            // Use zero based century and year of century.\n            fields.centuryOfEra = new DividedDateTimeField(\n                ISOYearOfEraDateTimeField.INSTANCE, DateTimeFieldType.centuryOfEra(), 100);\n            fields.centuries = fields.centuryOfEra.getDurationField();\n            \n            fields.yearOfCentury = new RemainderDateTimeField(\n                (DividedDateTimeField) fields.centuryOfEra, DateTimeFieldType.yearOfCentury());\n            fields.weekyearOfCentury = new RemainderDateTimeField(\n                (DividedDateTimeField) fields.centuryOfEra, fields.weekyears, DateTimeFieldType.weekyearOfCentury());\n        }\n    }",
+      "prior": 0.8,
+      "rank": 8,
+      "levels": [
+        "METHOD: org.joda.time.chrono.ISOChronology.assemble(Fields)\nSIGNATURE: protected void assemble(Fields fields)",
+        "METHOD: org.joda.time.chrono.ISOChronology.assemble(Fields)\nSIGNATURE: protected void assemble(Fields fields)\nSTRUCTURE (lossy):\nif (getBase().getZone() == DateTimeZone.UTC)\nCALL getBase().getZone()\nCALL getBase()\nfields.centuryOfEra = new DividedDateTimeField( ISOYearOfEraDateTimeField.INSTANCE, DateTimeFieldType.centuryOfEra(), 100)\nCALL DateTimeFieldType.centuryOfEra()\nfields.centuries = fields.centuryOfEra.getDurationField()\nCALL fields.centuryOfEra.getDurationField()\nfields.yearOfCentury = new RemainderDateTimeField( (DividedDateTimeField) fields.centuryOfEra, DateTimeFieldType.yearOfCentury())\nCALL DateTimeFieldType.yearOfCentury()\nfields.weekyearOfCentury = new RemainderDateTimeField( (DividedDateTimeField) fields.centuryOfEra, fields.weekyears, DateTimeFieldType.weekyearOfCentury())\nCALL DateTimeFieldType.weekyearOfCentury()",
+        "    protected void assemble(Fields fields) {\n        if (getBase().getZone() == DateTimeZone.UTC) {\n            // Use zero based century and year of century.\n            fields.centuryOfEra = new DividedDateTimeField(\n                ISOYearOfEraDateTimeField.INSTANCE, DateTimeFieldType.centuryOfEra(), 100);\n            fields.centuries = fields.centuryOfEra.getDurationField();\n            \n            fields.yearOfCentury = new RemainderDateTimeField(\n                (DividedDateTimeField) fields.centuryOfEra, DateTimeFieldType.yearOfCentury());\n            fields.weekyearOfCentury = new RemainderDateTimeField(\n                (DividedDateTimeField) fields.centuryOfEra, fields.weekyears, DateTimeFieldType.weekyearOfCentury());\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.8,
+        "rank_fraction": 0.32,
+        "ranking_gap": 0.10000000000000009,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.3125,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 6.0,
+        "literal_count": 1.0,
+        "source_tokens": 189.0,
+        "l0_tokens": 28.0,
+        "l1_tokens": 211.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 6,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "org.joda.time.Partial.Partial(DateTimeFieldType[],int[])",
+      "source": "    /**\n     * Constructs a Partial with the specified fields and values.\n     * The fields must be specified in the order largest to smallest.\n     * <p>\n     * The constructor uses the specified chronology.\n     * \n     * @param types  the types to create the partial from, not null\n     * @param values  the values to store, not null\n     * @throws IllegalArgumentException if the types or values are invalid\n     */\n    public Partial(DateTimeFieldType[] types, int[] values) {\n        this(types, values, null);\n    }",
+      "prior": 0.7,
+      "rank": 9,
+      "levels": [
+        "METHOD: org.joda.time.Partial.Partial(DateTimeFieldType[],int[])\nSIGNATURE: public Partial(DateTimeFieldType[] types, int[] values)",
+        "METHOD: org.joda.time.Partial.Partial(DateTimeFieldType[],int[])\nSIGNATURE: public Partial(DateTimeFieldType[] types, int[] values)\nSTRUCTURE (lossy):\n",
+        "    /**\n     * Constructs a Partial with the specified fields and values.\n     * The fields must be specified in the order largest to smallest.\n     * <p>\n     * The constructor uses the specified chronology.\n     * \n     * @param types  the types to create the partial from, not null\n     * @param values  the values to store, not null\n     * @throws IllegalArgumentException if the types or values are invalid\n     */\n    public Partial(DateTimeFieldType[] types, int[] values) {\n        this(types, values, null);\n    }"
+      ],
+      "features": {
+        "prior": 0.7,
+        "rank_fraction": 0.36,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.0,
+        "failure_relevance": 0.5945945945945946,
+        "trace_match": 1.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 1.0,
+        "source_tokens": 131.0,
+        "l0_tokens": 33.0,
+        "l1_tokens": 38.0,
+        "compression_ratio": 0.2900763358778626,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "org.joda.time.chrono.GJChronology.assemble(Fields)",
+      "source": "    protected void assemble(Fields fields) {\n        Object[] params = (Object[])getParam();\n\n        JulianChronology julian = (JulianChronology)params[0];\n        GregorianChronology gregorian = (GregorianChronology)params[1];\n        Instant cutoverInstant = (Instant)params[2];\n        iCutoverMillis = cutoverInstant.getMillis();\n\n        iJulianChronology = julian;\n        iGregorianChronology = gregorian;\n        iCutoverInstant = cutoverInstant;\n\n        if (getBase() != null) {\n            return;\n        }\n\n        if (julian.getMinimumDaysInFirstWeek() != gregorian.getMinimumDaysInFirstWeek()) {\n            throw new IllegalArgumentException();\n        }\n\n        // Compute difference between the chronologies at the cutover instant\n        iGapDuration = iCutoverMillis - julianToGregorianByYear(iCutoverMillis);\n\n        // Begin field definitions.\n\n        // First just copy all the Gregorian fields and then override those\n        // that need special attention.\n        fields.copyFieldsFrom(gregorian);\n        \n        // Assuming cutover is at midnight, all time of day fields can be\n        // gregorian since they are unaffected by cutover.\n\n        // Verify assumption.\n        if (gregorian.millisOfDay().get(iCutoverMillis) == 0) {\n            // Cutover is sometime in the day, so cutover fields are required\n            // for time of day.\n\n            fields.millisOfSecond = new CutoverField(julian.millisOfSecond(), fields.millisOfSecond, iCutoverMillis);\n            fields.millisOfDay = new CutoverField(julian.millisOfDay(), fields.millisOfDay, iCutoverMillis);\n            fields.secondOfMinute = new CutoverField(julian.secondOfMinute(), fields.secondOfMinute, iCutoverMillis);\n            fields.secondOfDay = new CutoverField(julian.secondOfDay(), fields.secondOfDay, iCutoverMillis);\n            fields.minuteOfHour = new CutoverField(julian.minuteOfHour(), fields.minuteOfHour, iCutoverMillis);\n            fields.minuteOfDay = new CutoverField(julian.minuteOfDay(), fields.minuteOfDay, iCutoverMillis);\n            fields.hourOfDay = new CutoverField(julian.hourOfDay(), fields.hourOfDay, iCutoverMillis);\n            fields.hourOfHalfday = new CutoverField(julian.hourOfHalfday(), fields.hourOfHalfday, iCutoverMillis);\n            fields.clockhourOfDay = new CutoverField(julian.clockhourOfDay(), fields.clockhourOfDay, iCutoverMillis);\n            fields.clockhourOfHalfday = new CutoverField(julian.clockhourOfHalfday(),\n                                                         fields.clockhourOfHalfday, iCutoverMillis);\n            fields.halfdayOfDay = new CutoverField(julian.halfdayOfDay(), fields.halfdayOfDay, iCutoverMillis);\n        }\n\n        // These fields just require basic cutover support.\n        {\n            fields.era = new CutoverField(julian.era(), fields.era, iCutoverMillis);\n        }\n\n        // These fields are special because they have imprecise durations. The\n        // family of addition methods need special attention. Override affected\n        // duration fields as well.\n        {\n            fields.year = new ImpreciseCutoverField(\n                julian.year(), fields.year, iCutoverMillis);\n            fields.years = fields.year.getDurationField();\n            fields.yearOfEra = new ImpreciseCutoverField(\n                julian.yearOfEra(), fields.yearOfEra, fields.years, iCutoverMillis);\n            \n            fields.centuryOfEra = new ImpreciseCutoverField(\n                julian.centuryOfEra(), fields.centuryOfEra, iCutoverMillis);\n            fields.centuries = fields.centuryOfEra.getDurationField();\n            \n            fields.yearOfCentury = new ImpreciseCutoverField(\n                julian.yearOfCentury(), fields.yearOfCentury, fields.years, fields.centuries, iCutoverMillis);\n            \n            fields.monthOfYear = new ImpreciseCutoverField(\n                julian.monthOfYear(), fields.monthOfYear, null, fields.years, iCutoverMillis);\n            fields.months = fields.monthOfYear.getDurationField();\n            \n            fields.weekyear = new ImpreciseCutoverField(\n                julian.weekyear(), fields.weekyear, null, iCutoverMillis, true);\n            fields.weekyears = fields.weekyear.getDurationField();\n            fields.weekyearOfCentury = new ImpreciseCutoverField(\n                julian.weekyearOfCentury(), fields.weekyearOfCentury, fields.weekyears, fields.centuries, iCutoverMillis);\n        }\n\n        // DayOfYear and weekOfWeekyear require special handling since cutover\n        // year has fewer days and weeks. Extend the cutover to the start of\n        // the next year or weekyear. This keeps the sequence unbroken during\n        // the cutover year.\n\n        {\n            long cutover = gregorian.year().roundCeiling(iCutoverMillis);\n            fields.dayOfYear = new CutoverField(\n                julian.dayOfYear(), fields.dayOfYear, fields.years, cutover, false);\n        }\n\n        {\n            long cutover = gregorian.weekyear().roundCeiling(iCutoverMillis);\n            fields.weekOfWeekyear = new CutoverField(\n                julian.weekOfWeekyear(), fields.weekOfWeekyear, fields.weekyears, cutover, true);\n        }\n\n        // These fields require basic cutover support, except they must link to\n        // imprecise durations.\n        {\n            CutoverField cf = new CutoverField\n                (julian.dayOfMonth(), fields.dayOfMonth, iCutoverMillis);\n            cf.iRangeDurationField = fields.months;\n            fields.dayOfMonth = cf;\n        }\n    }",
+      "prior": 0.7,
+      "rank": 10,
+      "levels": [
+        "METHOD: org.joda.time.chrono.GJChronology.assemble(Fields)\nSIGNATURE: protected void assemble(Fields fields)",
+        "METHOD: org.joda.time.chrono.GJChronology.assemble(Fields)\nSIGNATURE: protected void assemble(Fields fields)\nSTRUCTURE (lossy):\nObject[] params = (Object[])getParam();\nCALL getParam()\nJulianChronology julian = (JulianChronology)params[0];\nGregorianChronology gregorian = (GregorianChronology)params[1];\nInstant cutoverInstant = (Instant)params[2];\niCutoverMillis = cutoverInstant.getMillis()\nCALL cutoverInstant.getMillis()\niJulianChronology = julian\niGregorianChronology = gregorian\niCutoverInstant = cutoverInstant\nif (getBase() != null)\nCALL getBase()\nreturn;\nif (julian.getMinimumDaysInFirstWeek() != gregorian.getMinimumDaysInFirstWeek())\nCALL julian.getMinimumDaysInFirstWeek()\nCALL gregorian.getMinimumDaysInFirstWeek()\nthrow new IllegalArgumentException();\niGapDuration = iCutoverMillis - julianToGregorianByYear(iCutoverMillis)\nCALL julianToGregorianByYear(iCutoverMillis)\nCALL fields.copyFieldsFrom(gregorian)\nif (gregorian.millisOfDay().get(iCutoverMillis) == 0)\nCALL gregorian.millisOfDay().get(iCutoverMillis)\nCALL gregorian.millisOfDay()\nfields.millisOfSecond = new CutoverField(julian.millisOfSecond(), fields.millisOfSecond, iCutoverMillis)\nCALL julian.millisOfSecond()\nfields.millisOfDay = new CutoverField(julian.millisOfDay(), fields.millisOfDay, iCutoverMillis)\nCALL julian.millisOfDay()\nfields.secondOfMinute = new CutoverField(julian.secondOfMinute(), fields.secondOfMinute, iCutoverMillis)\nCALL julian.secondOfMinute()\nfields.secondOfDay = new CutoverField(julian.secondOfDay(), fields.secondOfDay, iCutoverMillis)\nCALL julian.secondOfDay()\nfields.minuteOfHour = new CutoverField(julian.minuteOfHour(), fields.minuteOfHour, iCutoverMillis)\nCALL julian.minuteOfHour()\nfields.minuteOfDay = new CutoverField(julian.minuteOfDay(), fields.minuteOfDay, iCutoverMillis)\nCALL julian.minuteOfDay()\nfields.hourOfDay = new CutoverField(julian.hourOfDay(), fields.hourOfDay, iCutoverMillis)\nCALL julian.hourOfDay()\nfields.hourOfHalfday = new CutoverField(julian.hourOfHalfday(), fields.hourOfHalfday, iCutoverMillis)\nCALL julian.hourOfHalfday()\nfields.clockhourOfDay = new CutoverField(julian.clockhourOfDay(), fields.clockhourOfDay, iCutoverMillis)\nCALL julian.clockhourOfDay()\nfields.clo\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "    protected void assemble(Fields fields) {\n        Object[] params = (Object[])getParam();\n\n        JulianChronology julian = (JulianChronology)params[0];\n        GregorianChronology gregorian = (GregorianChronology)params[1];\n        Instant cutoverInstant = (Instant)params[2];\n        iCutoverMillis = cutoverInstant.getMillis();\n\n        iJulianChronology = julian;\n        iGregorianChronology = gregorian;\n        iCutoverInstant = cutoverInstant;\n\n        if (getBase() != null) {\n            return;\n        }\n\n        if (julian.getMinimumDaysInFirstWeek() != gregorian.getMinimumDaysInFirstWeek()) {\n            throw new IllegalArgumentException();\n        }\n\n        // Compute difference between the chronologies at the cutover instant\n        iGapDuration = iCutoverMillis - julianToGregorianByYear(iCutoverMillis);\n\n        // Begin field definitions.\n\n        // First just copy all the Gregorian fields and then override those\n        // that need special attention.\n        fields.copyFieldsFrom(gregorian);\n        \n        // Assuming cutover is at midnight, all time of day fields can be\n        // gregorian since they are unaffected by cutover.\n\n        // Verify assumption.\n        if (gregorian.millisOfDay().get(iCutoverMillis) == 0) {\n            // Cutover is sometime in the day, so cutover fields are required\n            // for time of day.\n\n            fields.millisOfSecond = new CutoverField(julian.millisOfSecond(), fields.millisOfSecond, iCutoverMillis);\n            fields.millisOfDay = new CutoverField(julian.millisOfDay(), fields.millisOfDay, iCutoverMillis);\n            fields.secondOfMinute = new CutoverField(julian.secondOfMinute(), fields.secondOfMinute, iCutoverMillis);\n            fields.secondOfDay = new CutoverField(julian.secondOfDay(), fields.secondOfDay, iCutoverMillis);\n            fields.minuteOfHour = new CutoverField(julian.minuteOfHour(), fields.minuteOfHour, iCutoverMillis);\n            fields.minuteOfDay = new CutoverField(julian.minuteOfDay(), fields.minuteOfDay, iCutoverMillis);\n            fields.hourOfDay = new CutoverField(julian.hourOfDay(), fields.hourOfDay, iCutoverMillis);\n            fields.hourOfHalfday = new CutoverField(julian.hourOfHalfday(), fields.hourOfHalfday, iCutoverMillis);\n            fields.clockhourOfDay = new CutoverField(julian.clockhourOfDay(), fields.clockhourOfDay, iCutoverMillis);\n            fields.clockhourOfHalfday = new CutoverField(julian.clockhourOfHalfday(),\n                                                         fields.clockhourOfHalfday, iCutoverMillis);\n            fields.halfdayOfDay = new CutoverField(julian.halfdayOfDay(), fields.halfdayOfDay, iCutoverMillis);\n        }\n\n        // These fields just require basic cutover support.\n        {\n            fields.era = new CutoverField(julian.era(), fields.era, iCutoverMillis);\n        }\n\n        // These fields are special because they have imprecise durations. The\n        // family of addition methods need special attention. Override affected\n        // duration fields as well.\n        {\n            fields.year = new ImpreciseCutoverField(\n                julian.year(), fields.year, iCutoverMillis);\n            fields.years = fields.year.getDurationField();\n            fields.yearOfEra = new ImpreciseCutoverField(\n                julian.yearOfEra(), fields.yearOfEra, fields.years, iCutoverMillis);\n            \n            fields.centuryOfEra = new ImpreciseCutoverField(\n                julian.centuryOfEra(), fields.centuryOfEra, iCutoverMillis);\n            fields.centuries = fields.centuryOfEra.getDurationField();\n            \n            fields.yearOfCentury = new ImpreciseCutoverField(\n                julian.yearOfCentury(), fields.yearOfCentury, fields.years, fields.centuries, iCutoverMillis);\n            \n            fields.monthOfYear = new ImpreciseCutoverField(\n                julian.monthOfYear(), fields.monthOfYear, null, fields.years, iCutoverMillis);\n            fields.months = fields.monthOfYear.getDurationField();\n            \n            fields.weekyear = new ImpreciseCutoverField(\n                julian.weekyear(), fields.weekyear, null, iCutoverMillis, true);\n            fields.weekyears = fields.weekyear.getDurationField();\n            fields.weekyearOfCentury = new ImpreciseCutoverField(\n                julian.weekyearOfCentury(), fields.weekyearOfCentury, fields.weekyears, fields.centuries, iCutoverMillis);\n        }\n\n        // DayOfYear and weekOfWeekyear require special handling since cutover\n        // year has fewer days and weeks. Extend the cutover to the start of\n        // the next year or weekyear. This keeps the sequence unbroken during\n        // the cutover year.\n\n        {\n            long cutover = gregorian.year().roundCeiling(iCutoverMillis);\n            fields.dayOfYear = new CutoverField(\n                julian.dayOfYear(), fields.dayOfYear, fields.years, cutover, false);\n        }\n\n        {\n            long cutover = gregorian.weekyear().roundCeiling(iCutoverMillis);\n            fields.weekOfWeekyear = new CutoverField(\n                julian.weekOfWeekyear(), fields.weekOfWeekyear, fields.weekyears, cutover, true);\n        }\n\n        // These fields require basic cutover support, except they must link to\n        // imprecise durations.\n        {\n            CutoverField cf = new CutoverField\n                (julian.dayOfMonth(), fields.dayOfMonth, iCutoverMillis);\n            cf.iRangeDurationField = fields.months;\n            fields.dayOfMonth = cf;\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.7,
+        "rank_fraction": 0.4,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.13157894736842105,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 39.0,
+        "literal_count": 7.0,
+        "source_tokens": 1384.0,
+        "l0_tokens": 27.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.4111271676300578,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 4,
+        "call_count": 39,
+        "literal_count": 7
+      }
+    },
+    {
+      "function_id": "org.joda.time.DateTimeFieldType.StandardDateTimeFieldType.readResolve()",
+      "source": "        /**\n         * Ensure a singleton is returned.\n         * \n         * @return the singleton type\n         */\n        private Object readResolve() {\n            switch (iOrdinal) {\n                case ERA:\n                    return ERA_TYPE;\n                case YEAR_OF_ERA:\n                    return YEAR_OF_ERA_TYPE;\n                case CENTURY_OF_ERA:\n                    return CENTURY_OF_ERA_TYPE;\n                case YEAR_OF_CENTURY:\n                    return YEAR_OF_CENTURY_TYPE;\n                case YEAR:\n                    return YEAR_TYPE;\n                case DAY_OF_YEAR:\n                    return DAY_OF_YEAR_TYPE;\n                case MONTH_OF_YEAR:\n                    return MONTH_OF_YEAR_TYPE;\n                case DAY_OF_MONTH:\n                    return DAY_OF_MONTH_TYPE;\n                case WEEKYEAR_OF_CENTURY:\n                    return WEEKYEAR_OF_CENTURY_TYPE;\n                case WEEKYEAR:\n                    return WEEKYEAR_TYPE;\n                case WEEK_OF_WEEKYEAR:\n                    return WEEK_OF_WEEKYEAR_TYPE;\n                case DAY_OF_WEEK:\n                    return DAY_OF_WEEK_TYPE;\n                case HALFDAY_OF_DAY:\n                    return HALFDAY_OF_DAY_TYPE;\n                case HOUR_OF_HALFDAY:\n                    return HOUR_OF_HALFDAY_TYPE;\n                case CLOCKHOUR_OF_HALFDAY:\n                    return CLOCKHOUR_OF_HALFDAY_TYPE;\n                case CLOCKHOUR_OF_DAY:\n                    return CLOCKHOUR_OF_DAY_TYPE;\n                case HOUR_OF_DAY:\n                    return HOUR_OF_DAY_TYPE;\n                case MINUTE_OF_DAY:\n                    return MINUTE_OF_DAY_TYPE;\n                case MINUTE_OF_HOUR:\n                    return MINUTE_OF_HOUR_TYPE;\n                case SECOND_OF_DAY:\n                    return SECOND_OF_DAY_TYPE;\n                case SECOND_OF_MINUTE:\n                    return SECOND_OF_MINUTE_TYPE;\n                case MILLIS_OF_DAY:\n                    return MILLIS_OF_DAY_TYPE;\n                case MILLIS_OF_SECOND:\n                    return MILLIS_OF_SECOND_TYPE;\n                default:\n                    // Shouldn't happen.\n                    return this;\n            }\n        }",
+      "prior": 0.6,
+      "rank": 11,
+      "levels": [
+        "METHOD: org.joda.time.DateTimeFieldType.StandardDateTimeFieldType.readResolve()\nSIGNATURE: private Object readResolve()",
+        "METHOD: org.joda.time.DateTimeFieldType.StandardDateTimeFieldType.readResolve()\nSIGNATURE: private Object readResolve()\nSTRUCTURE (lossy):\nswitch (iOrdinal) { case ERA: return ERA_TYPE; case YEAR_OF_ERA: return YEAR_OF_ERA_TYPE; case CENTURY_OF_ERA: return CENTURY_OF_ERA_TYPE; case YEAR_OF_CENTURY: return YEAR_OF_CENTURY_TYPE; case YEAR: return YEAR_TYPE; case DAY_OF_YEAR: return DAY_OF_YEAR_TYPE; case MONTH_OF_YEAR: return MONTH_OF_YEAR_TYPE; case DAY_OF_MONTH: return DAY_OF_MONTH_TYPE; case WEEKYEAR_OF_CENTURY: return WEEKYEAR_OF_CENTURY_TYPE; case WEEKYEAR: return WEEKYEAR_TYPE; case WEEK_OF_WEEKYEAR: return WEEK_OF_WEEKYEAR_TYPE; case DAY_OF_WEEK: return DAY_OF_WEEK_TYPE; case HALFDAY_OF_DAY: return HALFDAY_OF_DAY_TYPE; case HOUR_OF_HALFDAY: return HOUR_OF_HALFDAY_TYPE; case CLOCKHOUR_OF_HALFDAY: return CLOCKHOUR_OF_HALFDAY_TYPE; case CLOCKHOUR_OF_DAY: return CLOCKHOUR_OF_DAY_TYPE; case HOUR_OF_DAY: return HOUR_OF_DAY_TYPE; case MINUTE_OF_DAY: return MINUTE_OF_DAY_TYPE; case MINUTE_OF_HOUR: return MINUTE_OF_HOUR_TYPE; case SECOND_OF_DAY: return SECOND_OF_DAY_TYPE; case SECOND_OF_MINUTE: return SECOND_OF_MINUTE_TYPE; case MILLIS_OF_DAY: return MILLIS_OF_DAY_TYPE; case MILLIS_OF_SECOND: return MILLIS_OF_SECOND_TYPE; default: // Shouldn't happen. return this; }\nreturn ERA_TYPE;\nreturn YEAR_OF_ERA_TYPE;\nreturn CENTURY_OF_ERA_TYPE;\nreturn YEAR_OF_CENTURY_TYPE;\nreturn YEAR_TYPE;\nreturn DAY_OF_YEAR_TYPE;\nreturn MONTH_OF_YEAR_TYPE;\nreturn DAY_OF_MONTH_TYPE;\nreturn WEEKYEAR_OF_CENTURY_TYPE;\nreturn WEEKYEAR_TYPE;\nreturn WEEK_OF_WEEKYEAR_TYPE;\nreturn DAY_OF_WEEK_TYPE;\nreturn HALFDAY_OF_DAY_TYPE;\nreturn HOUR_OF_HALFDAY_TYPE;\nreturn CLOCKHOUR_OF_HALFDAY_TYPE;\nreturn CLOCKHOUR_OF_DAY_TYPE;\nreturn HOUR_OF_DAY_TYPE;\nreturn MINUTE_OF_DAY_TYPE;\nreturn MINUTE_OF_HOUR_TYPE;\nreturn SECOND_OF_DAY_TYPE;\nreturn SECOND_OF_MINUTE_TYPE;\nreturn MILLIS_OF_DAY_TYPE;\nreturn MILLIS_OF_SECOND_TYPE;\nreturn this;",
+        "        /**\n         * Ensure a singleton is returned.\n         * \n         * @return the singleton type\n         */\n        private Object readResolve() {\n            switch (iOrdinal) {\n                case ERA:\n                    return ERA_TYPE;\n                case YEAR_OF_ERA:\n                    return YEAR_OF_ERA_TYPE;\n                case CENTURY_OF_ERA:\n                    return CENTURY_OF_ERA_TYPE;\n                case YEAR_OF_CENTURY:\n                    return YEAR_OF_CENTURY_TYPE;\n                case YEAR:\n                    return YEAR_TYPE;\n                case DAY_OF_YEAR:\n                    return DAY_OF_YEAR_TYPE;\n                case MONTH_OF_YEAR:\n                    return MONTH_OF_YEAR_TYPE;\n                case DAY_OF_MONTH:\n                    return DAY_OF_MONTH_TYPE;\n                case WEEKYEAR_OF_CENTURY:\n                    return WEEKYEAR_OF_CENTURY_TYPE;\n                case WEEKYEAR:\n                    return WEEKYEAR_TYPE;\n                case WEEK_OF_WEEKYEAR:\n                    return WEEK_OF_WEEKYEAR_TYPE;\n                case DAY_OF_WEEK:\n                    return DAY_OF_WEEK_TYPE;\n                case HALFDAY_OF_DAY:\n                    return HALFDAY_OF_DAY_TYPE;\n                case HOUR_OF_HALFDAY:\n                    return HOUR_OF_HALFDAY_TYPE;\n                case CLOCKHOUR_OF_HALFDAY:\n                    return CLOCKHOUR_OF_HALFDAY_TYPE;\n                case CLOCKHOUR_OF_DAY:\n                    return CLOCKHOUR_OF_DAY_TYPE;\n                case HOUR_OF_DAY:\n                    return HOUR_OF_DAY_TYPE;\n                case MINUTE_OF_DAY:\n                    return MINUTE_OF_DAY_TYPE;\n                case MINUTE_OF_HOUR:\n                    return MINUTE_OF_HOUR_TYPE;\n                case SECOND_OF_DAY:\n                    return SECOND_OF_DAY_TYPE;\n                case SECOND_OF_MINUTE:\n                    return SECOND_OF_MINUTE_TYPE;\n                case MILLIS_OF_DAY:\n                    return MILLIS_OF_DAY_TYPE;\n                case MILLIS_OF_SECOND:\n                    return MILLIS_OF_SECOND_TYPE;\n                default:\n                    // Shouldn't happen.\n                    return this;\n            }\n        }"
+      ],
+      "features": {
+        "prior": 0.6,
+        "rank_fraction": 0.44,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.3055555555555556,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 555.0,
+        "l0_tokens": 30.0,
+        "l1_tokens": 479.0,
+        "compression_ratio": 0.863063063063063,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.joda.time.Partial.getField(int,Chronology)",
+      "source": "    /**\n     * Gets the field for a specific index in the chronology specified.\n     * \n     * @param index  the index to retrieve\n     * @param chrono  the chronology to use\n     * @return the field\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */\n    protected DateTimeField getField(int index, Chronology chrono) {\n        return iTypes[index].getField(chrono);\n    }",
+      "prior": 0.6,
+      "rank": 12,
+      "levels": [
+        "METHOD: org.joda.time.Partial.getField(int,Chronology)\nSIGNATURE: protected DateTimeField getField(int index, Chronology chrono)",
+        "METHOD: org.joda.time.Partial.getField(int,Chronology)\nSIGNATURE: protected DateTimeField getField(int index, Chronology chrono)\nSTRUCTURE (lossy):\nreturn iTypes[index].getField(chrono);\nCALL iTypes[index].getField(chrono)",
+        "    /**\n     * Gets the field for a specific index in the chronology specified.\n     * \n     * @param index  the index to retrieve\n     * @param chrono  the chronology to use\n     * @return the field\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */\n    protected DateTimeField getField(int index, Chronology chrono) {\n        return iTypes[index].getField(chrono);\n    }"
+      ],
+      "features": {
+        "prior": 0.6,
+        "rank_fraction": 0.48,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.4074074074074074,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 99.0,
+        "l0_tokens": 32.0,
+        "l1_tokens": 56.0,
+        "compression_ratio": 0.5656565656565656,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.joda.time.format.DateTimeFormatterBuilder.printTo(Writer,ReadablePartial,Locale)",
+      "source": "        public void printTo(Writer out, ReadablePartial partial, Locale locale) throws IOException {\n            // no zone info\n        }",
+      "prior": 0.6,
+      "rank": 13,
+      "levels": [
+        "METHOD: org.joda.time.format.DateTimeFormatterBuilder.printTo(Writer,ReadablePartial,Locale)\nSIGNATURE: public void printTo(Writer out, ReadablePartial partial, Locale locale) throws IOException",
+        "METHOD: org.joda.time.format.DateTimeFormatterBuilder.printTo(Writer,ReadablePartial,Locale)\nSIGNATURE: public void printTo(Writer out, ReadablePartial partial, Locale locale) throws IOException\nSTRUCTURE (lossy):\n",
+        "        public void printTo(Writer out, ReadablePartial partial, Locale locale) throws IOException {\n            // no zone info\n        }"
+      ],
+      "features": {
+        "prior": 0.6,
+        "rank_fraction": 0.52,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.42105263157894735,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 35.0,
+        "l0_tokens": 49.0,
+        "l1_tokens": 54.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.joda.time.DateTimeZone.getDefaultNameProvider()",
+      "source": "    /**\n     * Gets the default name provider.\n     * <p>\n     * Tries the system property <code>org.joda.time.DateTimeZone.NameProvider</code>.\n     * Then uses <code>DefaultNameProvider</code>.\n     * \n     * @return the default name provider\n     */\n    private static NameProvider getDefaultNameProvider() {\n        NameProvider nameProvider = null;\n        try {\n            String providerClass = System.getProperty(\"org.joda.time.DateTimeZone.NameProvider\");\n            if (providerClass != null) {\n                try {\n                    nameProvider = (NameProvider) Class.forName(providerClass).newInstance();\n                } catch (Exception ex) {\n                    throw new RuntimeException(ex);\n                }\n            }\n        } catch (SecurityException ex) {\n            // ignore\n        }\n\n        if (nameProvider == null) {\n            nameProvider = new DefaultNameProvider();\n        }\n\n        return nameProvider;\n    }",
+      "prior": 0.5,
+      "rank": 14,
+      "levels": [
+        "METHOD: org.joda.time.DateTimeZone.getDefaultNameProvider()\nSIGNATURE: private static NameProvider getDefaultNameProvider()",
+        "METHOD: org.joda.time.DateTimeZone.getDefaultNameProvider()\nSIGNATURE: private static NameProvider getDefaultNameProvider()\nSTRUCTURE (lossy):\nNameProvider nameProvider = null;\nString providerClass = System.getProperty(\"org.joda.time.DateTimeZone.NameProvider\");\nCALL System.getProperty(\"org.joda.time.DateTimeZone.NameProvider\")\nif (providerClass != null)\nnameProvider = (NameProvider) Class.forName(providerClass).newInstance()\nCALL Class.forName(providerClass).newInstance()\nCALL Class.forName(providerClass)\ncatch (Exception ex)\nthrow new RuntimeException(ex);\ncatch (SecurityException ex)\nif (nameProvider == null)\nnameProvider = new DefaultNameProvider()\nreturn nameProvider;",
+        "    /**\n     * Gets the default name provider.\n     * <p>\n     * Tries the system property <code>org.joda.time.DateTimeZone.NameProvider</code>.\n     * Then uses <code>DefaultNameProvider</code>.\n     * \n     * @return the default name provider\n     */\n    private static NameProvider getDefaultNameProvider() {\n        NameProvider nameProvider = null;\n        try {\n            String providerClass = System.getProperty(\"org.joda.time.DateTimeZone.NameProvider\");\n            if (providerClass != null) {\n                try {\n                    nameProvider = (NameProvider) Class.forName(providerClass).newInstance();\n                } catch (Exception ex) {\n                    throw new RuntimeException(ex);\n                }\n            }\n        } catch (SecurityException ex) {\n            // ignore\n        }\n\n        if (nameProvider == null) {\n            nameProvider = new DefaultNameProvider();\n        }\n\n        return nameProvider;\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.56,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.2727272727272727,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 3.0,
+        "literal_count": 4.0,
+        "source_tokens": 240.0,
+        "l0_tokens": 31.0,
+        "l1_tokens": 171.0,
+        "compression_ratio": 0.7125,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 3,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "org.joda.time.chrono.AssembledChronology.setFields()",
+      "source": "    private void setFields() {\n        Fields fields = new Fields();\n        if (iBase != null) {\n            fields.copyFieldsFrom(iBase);\n        }\n        assemble(fields);\n\n        {\n            DurationField f;\n            iMillis    = (f = fields.millis)    != null ? f : super.millis();\n            iSeconds   = (f = fields.seconds)   != null ? f : super.seconds();\n            iMinutes   = (f = fields.minutes)   != null ? f : super.minutes();\n            iHours     = (f = fields.hours)     != null ? f : super.hours();\n            iHalfdays  = (f = fields.halfdays)  != null ? f : super.halfdays();\n            iDays      = (f = fields.days)      != null ? f : super.days();\n            iWeeks     = (f = fields.weeks)     != null ? f : super.weeks();\n            iWeekyears = (f = fields.weekyears) != null ? f : super.weekyears();\n            iMonths    = (f = fields.months)    != null ? f : super.months();\n            iYears     = (f = fields.years)     != null ? f : super.years();\n            iCenturies = (f = fields.centuries) != null ? f : super.centuries();\n            iEras      = (f = fields.eras)      != null ? f : super.eras();\n        }\n\n        {\n            DateTimeField f;\n            iMillisOfSecond     = (f = fields.millisOfSecond)     != null ? f : super.millisOfSecond();\n            iMillisOfDay        = (f = fields.millisOfDay)        != null ? f : super.millisOfDay();\n            iSecondOfMinute     = (f = fields.secondOfMinute)     != null ? f : super.secondOfMinute();\n            iSecondOfDay        = (f = fields.secondOfDay)        != null ? f : super.secondOfDay();\n            iMinuteOfHour       = (f = fields.minuteOfHour)       != null ? f : super.minuteOfHour();\n            iMinuteOfDay        = (f = fields.minuteOfDay)        != null ? f : super.minuteOfDay();\n            iHourOfDay          = (f = fields.hourOfDay)          != null ? f : super.hourOfDay();\n            iClockhourOfDay     = (f = fields.clockhourOfDay)     != null ? f : super.clockhourOfDay();\n            iHourOfHalfday      = (f = fields.hourOfHalfday)      != null ? f : super.hourOfHalfday();\n            iClockhourOfHalfday = (f = fields.clockhourOfHalfday) != null ? f : super.clockhourOfHalfday();\n            iHalfdayOfDay       = (f = fields.halfdayOfDay)       != null ? f : super.halfdayOfDay();\n            iDayOfWeek          = (f = fields.dayOfWeek)          != null ? f : super.dayOfWeek();\n            iDayOfMonth         = (f = fields.dayOfMonth)         != null ? f : super.dayOfMonth();\n            iDayOfYear          = (f = fields.dayOfYear)          != null ? f : super.dayOfYear();\n            iWeekOfWeekyear     = (f = fields.weekOfWeekyear)     != null ? f : super.weekOfWeekyear();\n            iWeekyear           = (f = fields.weekyear)           != null ? f : super.weekyear();\n            iWeekyearOfCentury  = (f = fields.weekyearOfCentury)  != null ? f : super.weekyearOfCentury();\n            iMonthOfYear        = (f = fields.monthOfYear)        != null ? f : super.monthOfYear();\n            iYear               = (f = fields.year)               != null ? f : super.year();\n            iYearOfEra          = (f = fields.yearOfEra)          != null ? f : super.yearOfEra();\n            iYearOfCentury      = (f = fields.yearOfCentury)      != null ? f : super.yearOfCentury();\n            iCenturyOfEra       = (f = fields.centuryOfEra)       != null ? f : super.centuryOfEra();\n            iEra                = (f = fields.era)                != null ? f : super.era();\n        }\n\n        int flags;\n        if (iBase == null) {\n            flags = 0;\n        } else {\n            flags = \n                ((iHourOfDay      == iBase.hourOfDay()      &&\n                  iMinuteOfHour   == iBase.minuteOfHour()   &&\n                  iSecondOfMinute == iBase.secondOfMinute() &&\n                  iMillisOfSecond == iBase.millisOfSecond()   ) ? 1 : 0) |\n\n                ((iMillisOfDay == iBase.millisOfDay()) ? 2 : 0) |\n\n                ((iYear        == iBase.year()        &&\n                  iMonthOfYear == iBase.monthOfYear() &&\n                  iDayOfMonth  == iBase.dayOfMonth()    ) ? 4 : 0);\n        }\n\n        iBaseFlags = flags;\n    }",
+      "prior": 0.5,
+      "rank": 15,
+      "levels": [
+        "METHOD: org.joda.time.chrono.AssembledChronology.setFields()\nSIGNATURE: private void setFields()",
+        "METHOD: org.joda.time.chrono.AssembledChronology.setFields()\nSIGNATURE: private void setFields()\nSTRUCTURE (lossy):\nFields fields = new Fields();\nif (iBase != null)\nCALL fields.copyFieldsFrom(iBase)\nCALL assemble(fields)\nDurationField f;\niMillis = (f = fields.millis) != null ? f : super.millis()\nf = fields.millis\nCALL super.millis()\niSeconds = (f = fields.seconds) != null ? f : super.seconds()\nf = fields.seconds\nCALL super.seconds()\niMinutes = (f = fields.minutes) != null ? f : super.minutes()\nf = fields.minutes\nCALL super.minutes()\niHours = (f = fields.hours) != null ? f : super.hours()\nf = fields.hours\nCALL super.hours()\niHalfdays = (f = fields.halfdays) != null ? f : super.halfdays()\nf = fields.halfdays\nCALL super.halfdays()\niDays = (f = fields.days) != null ? f : super.days()\nf = fields.days\nCALL super.days()\niWeeks = (f = fields.weeks) != null ? f : super.weeks()\nf = fields.weeks\nCALL super.weeks()\niWeekyears = (f = fields.weekyears) != null ? f : super.weekyears()\nf = fields.weekyears\nCALL super.weekyears()\niMonths = (f = fields.months) != null ? f : super.months()\nf = fields.months\nCALL super.months()\niYears = (f = fields.years) != null ? f : super.years()\nf = fields.years\nCALL super.years()\niCenturies = (f = fields.centuries) != null ? f : super.centuries()\nf = fields.centuries\nCALL super.centuries()\niEras = (f = fields.eras) != null ? f : super.eras()\nf = fields.eras\nCALL super.eras()\nDateTimeField f;\niMillisOfSecond = (f = fields.millisOfSecond) != null ? f : super.millisOfSecond()\nf = fields.millisOfSecond\nCALL super.millisOfSecond()\niMillisOfDay = (f = fields.millisOfDay) != null ? f : super.millisOfDay()\nf = fields.millisOfDay\nCALL super.millisOfDay()\niSecondOfMinute = (f = fields.secondOfMinute) != null ? f : super.secondOfMinute()\nf = fields.secondOfMinute\nCALL super.secondOfMinute()\niSecondOfDay = (f = fields.secondOfDay) != null ? f : super.secondOfDay()\nf = fields.secondOfDay\nCALL super.secondOfDay()\niMinuteOfHour = (f = fields.minuteOfHour) != null ? f : super.minuteOfHour()\nf = fields.minuteOfHour\nCALL super.minuteOfHour()\niMinuteOfDay = (f = fields.minuteOfDay) != null ? f : super.minuteOfDay()\nf = fields.minuteOfDay\nCALL super.minuteOfDay()\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "    private void setFields() {\n        Fields fields = new Fields();\n        if (iBase != null) {\n            fields.copyFieldsFrom(iBase);\n        }\n        assemble(fields);\n\n        {\n            DurationField f;\n            iMillis    = (f = fields.millis)    != null ? f : super.millis();\n            iSeconds   = (f = fields.seconds)   != null ? f : super.seconds();\n            iMinutes   = (f = fields.minutes)   != null ? f : super.minutes();\n            iHours     = (f = fields.hours)     != null ? f : super.hours();\n            iHalfdays  = (f = fields.halfdays)  != null ? f : super.halfdays();\n            iDays      = (f = fields.days)      != null ? f : super.days();\n            iWeeks     = (f = fields.weeks)     != null ? f : super.weeks();\n            iWeekyears = (f = fields.weekyears) != null ? f : super.weekyears();\n            iMonths    = (f = fields.months)    != null ? f : super.months();\n            iYears     = (f = fields.years)     != null ? f : super.years();\n            iCenturies = (f = fields.centuries) != null ? f : super.centuries();\n            iEras      = (f = fields.eras)      != null ? f : super.eras();\n        }\n\n        {\n            DateTimeField f;\n            iMillisOfSecond     = (f = fields.millisOfSecond)     != null ? f : super.millisOfSecond();\n            iMillisOfDay        = (f = fields.millisOfDay)        != null ? f : super.millisOfDay();\n            iSecondOfMinute     = (f = fields.secondOfMinute)     != null ? f : super.secondOfMinute();\n            iSecondOfDay        = (f = fields.secondOfDay)        != null ? f : super.secondOfDay();\n            iMinuteOfHour       = (f = fields.minuteOfHour)       != null ? f : super.minuteOfHour();\n            iMinuteOfDay        = (f = fields.minuteOfDay)        != null ? f : super.minuteOfDay();\n            iHourOfDay          = (f = fields.hourOfDay)          != null ? f : super.hourOfDay();\n            iClockhourOfDay     = (f = fields.clockhourOfDay)     != null ? f : super.clockhourOfDay();\n            iHourOfHalfday      = (f = fields.hourOfHalfday)      != null ? f : super.hourOfHalfday();\n            iClockhourOfHalfday = (f = fields.clockhourOfHalfday) != null ? f : super.clockhourOfHalfday();\n            iHalfdayOfDay       = (f = fields.halfdayOfDay)       != null ? f : super.halfdayOfDay();\n            iDayOfWeek          = (f = fields.dayOfWeek)          != null ? f : super.dayOfWeek();\n            iDayOfMonth         = (f = fields.dayOfMonth)         != null ? f : super.dayOfMonth();\n            iDayOfYear          = (f = fields.dayOfYear)          != null ? f : super.dayOfYear();\n            iWeekOfWeekyear     = (f = fields.weekOfWeekyear)     != null ? f : super.weekOfWeekyear();\n            iWeekyear           = (f = fields.weekyear)           != null ? f : super.weekyear();\n            iWeekyearOfCentury  = (f = fields.weekyearOfCentury)  != null ? f : super.weekyearOfCentury();\n            iMonthOfYear        = (f = fields.monthOfYear)        != null ? f : super.monthOfYear();\n            iYear               = (f = fields.year)               != null ? f : super.year();\n            iYearOfEra          = (f = fields.yearOfEra)          != null ? f : super.yearOfEra();\n            iYearOfCentury      = (f = fields.yearOfCentury)      != null ? f : super.yearOfCentury();\n            iCenturyOfEra       = (f = fields.centuryOfEra)       != null ? f : super.centuryOfEra();\n            iEra                = (f = fields.era)                != null ? f : super.era();\n        }\n\n        int flags;\n        if (iBase == null) {\n            flags = 0;\n        } else {\n            flags = \n                ((iHourOfDay      == iBase.hourOfDay()      &&\n                  iMinuteOfHour   == iBase.minuteOfHour()   &&\n                  iSecondOfMinute == iBase.secondOfMinute() &&\n                  iMillisOfSecond == iBase.millisOfSecond()   ) ? 1 : 0) |\n\n                ((iMillisOfDay == iBase.millisOfDay()) ? 2 : 0) |\n\n                ((iYear        == iBase.year()        &&\n                  iMonthOfYear == iBase.monthOfYear() &&\n                  iDayOfMonth  == iBase.dayOfMonth()    ) ? 4 : 0);\n        }\n\n        iBaseFlags = flags;\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.6,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.2553191489361702,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 45.0,
+        "literal_count": 44.0,
+        "source_tokens": 1053.0,
+        "l0_tokens": 24.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.540360873694207,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 3,
+        "call_count": 45,
+        "literal_count": 44
+      }
+    },
+    {
+      "function_id": "org.joda.time.Partial.getChronology()",
+      "source": "    /**\n     * Gets the chronology of the partial which is never null.\n     * <p>\n     * The {@link Chronology} is the calculation engine behind the partial and\n     * provides conversion and validation of the fields in a particular calendar system.\n     * \n     * @return the chronology, never null\n     */\n    public Chronology getChronology() {\n        return iChronology;\n    }",
+      "prior": 0.4,
+      "rank": 16,
+      "levels": [
+        "METHOD: org.joda.time.Partial.getChronology()\nSIGNATURE: public Chronology getChronology()",
+        "METHOD: org.joda.time.Partial.getChronology()\nSIGNATURE: public Chronology getChronology()\nSTRUCTURE (lossy):\nreturn iChronology;",
+        "    /**\n     * Gets the chronology of the partial which is never null.\n     * <p>\n     * The {@link Chronology} is the calculation engine behind the partial and\n     * provides conversion and validation of the fields in a particular calendar system.\n     * \n     * @return the chronology, never null\n     */\n    public Chronology getChronology() {\n        return iChronology;\n    }"
+      ],
+      "features": {
+        "prior": 0.4,
+        "rank_fraction": 0.64,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.2,
+        "failure_relevance": 0.24,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 96.0,
+        "l0_tokens": 23.0,
+        "l1_tokens": 33.0,
+        "compression_ratio": 0.34375,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.joda.time.DateTimeUtils.isContiguous(ReadablePartial)",
+      "source": "    /**\n     * Checks whether the partial is contiguous.\n     * <p>\n     * A partial is contiguous if one field starts where another ends.\n     * <p>\n     * For example <code>LocalDate</code> is contiguous because DayOfMonth has\n     * the same range (Month) as the unit of the next field (MonthOfYear), and\n     * MonthOfYear has the same range (Year) as the unit of the next field (Year).\n     * <p>\n     * Similarly, <code>LocalTime</code> is contiguous, as it consists of\n     * MillisOfSecond, SecondOfMinute, MinuteOfHour and HourOfDay (note how\n     * the names of each field 'join up').\n     * <p>\n     * However, a Year/HourOfDay partial is not contiguous because the range\n     * field Day is not equal to the next field Year.\n     * Similarly, a DayOfWeek/DayOfMonth partial is not contiguous because\n     * the range Month is not equal to the next field Day.\n     * \n     * @param partial  the partial to check\n     * @return true if the partial is contiguous\n     * @throws IllegalArgumentException if the partial is null\n     * @since 1.1\n     */\n    public static final boolean isContiguous(ReadablePartial partial) {\n        if (partial == null) {\n            throw new IllegalArgumentException(\"Partial must not be null\");\n        }\n        DurationFieldType lastType = null;\n        for (int i = 0; i < partial.size(); i++) {\n            DateTimeField loopField = partial.getField(i);\n            if (i > 0) {\n                if (loopField.getRangeDurationField() == null || loopField.getRangeDurationField().getType() != lastType) {\n                    return false;\n                }\n            }\n            lastType = loopField.getDurationField().getType();\n        }\n        return true;\n    }",
+      "prior": 0.4,
+      "rank": 17,
+      "levels": [
+        "METHOD: org.joda.time.DateTimeUtils.isContiguous(ReadablePartial)\nSIGNATURE: public static final boolean isContiguous(ReadablePartial partial)",
+        "METHOD: org.joda.time.DateTimeUtils.isContiguous(ReadablePartial)\nSIGNATURE: public static final boolean isContiguous(ReadablePartial partial)\nSTRUCTURE (lossy):\nif (partial == null)\nthrow new IllegalArgumentException(\"Partial must not be null\");\nDurationFieldType lastType = null;\nfor (int i = 0; i < partial.size(); i++)\nint i = 0;\nCALL partial.size()\ni++\nDateTimeField loopField = partial.getField(i);\nCALL partial.getField(i)\nif (i > 0)\nif (loopField.getRangeDurationField() == null || loopField.getRangeDurationField().getType() != lastType)\nCALL loopField.getRangeDurationField()\nCALL loopField.getRangeDurationField().getType()\nreturn false;\nlastType = loopField.getDurationField().getType()\nCALL loopField.getDurationField().getType()\nCALL loopField.getDurationField()\nreturn true;",
+        "    /**\n     * Checks whether the partial is contiguous.\n     * <p>\n     * A partial is contiguous if one field starts where another ends.\n     * <p>\n     * For example <code>LocalDate</code> is contiguous because DayOfMonth has\n     * the same range (Month) as the unit of the next field (MonthOfYear), and\n     * MonthOfYear has the same range (Year) as the unit of the next field (Year).\n     * <p>\n     * Similarly, <code>LocalTime</code> is contiguous, as it consists of\n     * MillisOfSecond, SecondOfMinute, MinuteOfHour and HourOfDay (note how\n     * the names of each field 'join up').\n     * <p>\n     * However, a Year/HourOfDay partial is not contiguous because the range\n     * field Day is not equal to the next field Year.\n     * Similarly, a DayOfWeek/DayOfMonth partial is not contiguous because\n     * the range Month is not equal to the next field Day.\n     * \n     * @param partial  the partial to check\n     * @return true if the partial is contiguous\n     * @throws IllegalArgumentException if the partial is null\n     * @since 1.1\n     */\n    public static final boolean isContiguous(ReadablePartial partial) {\n        if (partial == null) {\n            throw new IllegalArgumentException(\"Partial must not be null\");\n        }\n        DurationFieldType lastType = null;\n        for (int i = 0; i < partial.size(); i++) {\n            DateTimeField loopField = partial.getField(i);\n            if (i > 0) {\n                if (loopField.getRangeDurationField() == null || loopField.getRangeDurationField().getType() != lastType) {\n                    return false;\n                }\n            }\n            lastType = loopField.getDurationField().getType();\n        }\n        return true;\n    }"
+      ],
+      "features": {
+        "prior": 0.4,
+        "rank_fraction": 0.68,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.28169014084507044,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 7.0,
+        "literal_count": 6.0,
+        "source_tokens": 430.0,
+        "l0_tokens": 36.0,
+        "l1_tokens": 198.0,
+        "compression_ratio": 0.4604651162790698,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 7,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "org.joda.time.format.DateTimeFormatterBuilder.printTo(StringBuffer,ReadablePartial,Locale)",
+      "source": "        public void printTo(StringBuffer buf, ReadablePartial partial, Locale locale) {\n            // no zone info\n        }",
+      "prior": 0.4,
+      "rank": 18,
+      "levels": [
+        "METHOD: org.joda.time.format.DateTimeFormatterBuilder.printTo(StringBuffer,ReadablePartial,Locale)\nSIGNATURE: public void printTo(StringBuffer buf, ReadablePartial partial, Locale locale)",
+        "METHOD: org.joda.time.format.DateTimeFormatterBuilder.printTo(StringBuffer,ReadablePartial,Locale)\nSIGNATURE: public void printTo(StringBuffer buf, ReadablePartial partial, Locale locale)\nSTRUCTURE (lossy):\n",
+        "        public void printTo(StringBuffer buf, ReadablePartial partial, Locale locale) {\n            // no zone info\n        }"
+      ],
+      "features": {
+        "prior": 0.4,
+        "rank_fraction": 0.72,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.3888888888888889,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 32.0,
+        "l0_tokens": 47.0,
+        "l1_tokens": 52.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.joda.time.Partial.size()",
+      "source": "    /**\n     * Gets the number of fields in this partial.\n     * \n     * @return the field count\n     */\n    public int size() {\n        return iTypes.length;\n    }",
+      "prior": 0.30000000000000004,
+      "rank": 19,
+      "levels": [
+        "METHOD: org.joda.time.Partial.size()\nSIGNATURE: public int size()",
+        "METHOD: org.joda.time.Partial.size()\nSIGNATURE: public int size()\nSTRUCTURE (lossy):\nreturn iTypes.length;",
+        "    /**\n     * Gets the number of fields in this partial.\n     * \n     * @return the field count\n     */\n    public int size() {\n        return iTypes.length;\n    }"
+      ],
+      "features": {
+        "prior": 0.30000000000000004,
+        "rank_fraction": 0.76,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.2,
+        "failure_relevance": 0.5294117647058824,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 41.0,
+        "l0_tokens": 17.0,
+        "l1_tokens": 27.0,
+        "compression_ratio": 0.6585365853658537,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.joda.time.chrono.AssembledChronology.Fields.copyFieldsFrom(Chronology)",
+      "source": "        /**\n         * Copy the supported fields from a chronology into this container.\n         */\n        public void copyFieldsFrom(Chronology chrono) {\n            {\n                DurationField f;\n                if (isSupported(f = chrono.millis())) {\n                    millis = f;\n                }\n                if (isSupported(f = chrono.seconds())) {\n                    seconds = f;\n                }\n                if (isSupported(f = chrono.minutes())) {\n                    minutes = f;\n                }\n                if (isSupported(f = chrono.hours())) {\n                    hours = f;\n                }\n                if (isSupported(f = chrono.halfdays())) {\n                    halfdays = f;\n                }\n                if (isSupported(f = chrono.days())) {\n                    days = f;\n                }\n                if (isSupported(f = chrono.weeks())) {\n                    weeks = f;\n                }\n                if (isSupported(f = chrono.weekyears())) {\n                    weekyears = f;\n                }\n                if (isSupported(f = chrono.months())) {\n                    months = f;\n                }\n                if (isSupported(f = chrono.years())) {\n                    years = f;\n                }\n                if (isSupported(f = chrono.centuries())) {\n                    centuries = f;\n                }\n                if (isSupported(f = chrono.eras())) {\n                    eras = f;\n                }\n            }\n\n            {\n                DateTimeField f;\n                if (isSupported(f = chrono.millisOfSecond())) {\n                    millisOfSecond = f;\n                }\n                if (isSupported(f = chrono.millisOfDay())) {\n                    millisOfDay = f;\n                }\n                if (isSupported(f = chrono.secondOfMinute())) {\n                    secondOfMinute = f;\n                }\n                if (isSupported(f = chrono.secondOfDay())) {\n                    secondOfDay = f;\n                }\n                if (isSupported(f = chrono.minuteOfHour())) {\n                    minuteOfHour = f;\n                }\n                if (isSupported(f = chrono.minuteOfDay())) {\n                    minuteOfDay = f;\n                }\n                if (isSupported(f = chrono.hourOfDay())) {\n                    hourOfDay = f;\n                }\n                if (isSupported(f = chrono.clockhourOfDay())) {\n                    clockhourOfDay = f;\n                }\n                if (isSupported(f = chrono.hourOfHalfday())) {\n                    hourOfHalfday = f;\n                }\n                if (isSupported(f = chrono.clockhourOfHalfday())) {\n                    clockhourOfHalfday = f;\n                }\n                if (isSupported(f = chrono.halfdayOfDay())) {\n                    halfdayOfDay = f;\n                }\n                if (isSupported(f = chrono.dayOfWeek())) {\n                    dayOfWeek = f;\n                }\n                if (isSupported(f = chrono.dayOfMonth())) {\n                    dayOfMonth = f;\n                }\n                if (isSupported(f = chrono.dayOfYear())) {\n                    dayOfYear = f;\n                }\n                if (isSupported(f = chrono.weekOfWeekyear())) {\n                    weekOfWeekyear = f;\n                }\n                if (isSupported(f = chrono.weekyear())) {\n                    weekyear = f;\n                }\n                if (isSupported(f = chrono.weekyearOfCentury())) {\n                    weekyearOfCentury = f;\n                }\n                if (isSupported(f = chrono.monthOfYear())) {\n                    monthOfYear = f;\n                }\n                if (isSupported(f = chrono.year())) {\n                    year = f;\n                }\n                if (isSupported(f = chrono.yearOfEra())) {\n                    yearOfEra = f;\n                }\n                if (isSupported(f = chrono.yearOfCentury())) {\n                    yearOfCentury = f;\n                }\n                if (isSupported(f = chrono.centuryOfEra())) {\n                    centuryOfEra = f;\n                }\n                if (isSupported(f = chrono.era())) {\n                    era = f;\n                }\n            }\n        }",
+      "prior": 0.30000000000000004,
+      "rank": 20,
+      "levels": [
+        "METHOD: org.joda.time.chrono.AssembledChronology.Fields.copyFieldsFrom(Chronology)\nSIGNATURE: public void copyFieldsFrom(Chronology chrono)",
+        "METHOD: org.joda.time.chrono.AssembledChronology.Fields.copyFieldsFrom(Chronology)\nSIGNATURE: public void copyFieldsFrom(Chronology chrono)\nSTRUCTURE (lossy):\nDurationField f;\nif (isSupported(f = chrono.millis()))\nCALL isSupported(f = chrono.millis())\nf = chrono.millis()\nCALL chrono.millis()\nmillis = f\nif (isSupported(f = chrono.seconds()))\nCALL isSupported(f = chrono.seconds())\nf = chrono.seconds()\nCALL chrono.seconds()\nseconds = f\nif (isSupported(f = chrono.minutes()))\nCALL isSupported(f = chrono.minutes())\nf = chrono.minutes()\nCALL chrono.minutes()\nminutes = f\nif (isSupported(f = chrono.hours()))\nCALL isSupported(f = chrono.hours())\nf = chrono.hours()\nCALL chrono.hours()\nhours = f\nif (isSupported(f = chrono.halfdays()))\nCALL isSupported(f = chrono.halfdays())\nf = chrono.halfdays()\nCALL chrono.halfdays()\nhalfdays = f\nif (isSupported(f = chrono.days()))\nCALL isSupported(f = chrono.days())\nf = chrono.days()\nCALL chrono.days()\ndays = f\nif (isSupported(f = chrono.weeks()))\nCALL isSupported(f = chrono.weeks())\nf = chrono.weeks()\nCALL chrono.weeks()\nweeks = f\nif (isSupported(f = chrono.weekyears()))\nCALL isSupported(f = chrono.weekyears())\nf = chrono.weekyears()\nCALL chrono.weekyears()\nweekyears = f\nif (isSupported(f = chrono.months()))\nCALL isSupported(f = chrono.months())\nf = chrono.months()\nCALL chrono.months()\nmonths = f\nif (isSupported(f = chrono.years()))\nCALL isSupported(f = chrono.years())\nf = chrono.years()\nCALL chrono.years()\nyears = f\nif (isSupported(f = chrono.centuries()))\nCALL isSupported(f = chrono.centuries())\nf = chrono.centuries()\nCALL chrono.centuries()\ncenturies = f\nif (isSupported(f = chrono.eras()))\nCALL isSupported(f = chrono.eras())\nf = chrono.eras()\nCALL chrono.eras()\neras = f\nDateTimeField f;\nif (isSupported(f = chrono.millisOfSecond()))\nCALL isSupported(f = chrono.millisOfSecond())\nf = chrono.millisOfSecond()\nCALL chrono.millisOfSecond()\nmillisOfSecond = f\nif (isSupported(f = chrono.millisOfDay()))\nCALL isSupported(f = chrono.millisOfDay())\nf = chrono.millisOfDay()\nCALL chrono.millisOfDay()\nmillisOfDay = f\nif (isSupported(f = chrono.secondOfMinute()))\nCALL isSupported(f = chrono.secondOfMinute())\nf = chrono.secondOfMinute()\nCALL chrono.sec\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "        /**\n         * Copy the supported fields from a chronology into this container.\n         */\n        public void copyFieldsFrom(Chronology chrono) {\n            {\n                DurationField f;\n                if (isSupported(f = chrono.millis())) {\n                    millis = f;\n                }\n                if (isSupported(f = chrono.seconds())) {\n                    seconds = f;\n                }\n                if (isSupported(f = chrono.minutes())) {\n                    minutes = f;\n                }\n                if (isSupported(f = chrono.hours())) {\n                    hours = f;\n                }\n                if (isSupported(f = chrono.halfdays())) {\n                    halfdays = f;\n                }\n                if (isSupported(f = chrono.days())) {\n                    days = f;\n                }\n                if (isSupported(f = chrono.weeks())) {\n                    weeks = f;\n                }\n                if (isSupported(f = chrono.weekyears())) {\n                    weekyears = f;\n                }\n                if (isSupported(f = chrono.months())) {\n                    months = f;\n                }\n                if (isSupported(f = chrono.years())) {\n                    years = f;\n                }\n                if (isSupported(f = chrono.centuries())) {\n                    centuries = f;\n                }\n                if (isSupported(f = chrono.eras())) {\n                    eras = f;\n                }\n            }\n\n            {\n                DateTimeField f;\n                if (isSupported(f = chrono.millisOfSecond())) {\n                    millisOfSecond = f;\n                }\n                if (isSupported(f = chrono.millisOfDay())) {\n                    millisOfDay = f;\n                }\n                if (isSupported(f = chrono.secondOfMinute())) {\n                    secondOfMinute = f;\n                }\n                if (isSupported(f = chrono.secondOfDay())) {\n                    secondOfDay = f;\n                }\n                if (isSupported(f = chrono.minuteOfHour())) {\n                    minuteOfHour = f;\n                }\n                if (isSupported(f = chrono.minuteOfDay())) {\n                    minuteOfDay = f;\n                }\n                if (isSupported(f = chrono.hourOfDay())) {\n                    hourOfDay = f;\n                }\n                if (isSupported(f = chrono.clockhourOfDay())) {\n                    clockhourOfDay = f;\n                }\n                if (isSupported(f = chrono.hourOfHalfday())) {\n                    hourOfHalfday = f;\n                }\n                if (isSupported(f = chrono.clockhourOfHalfday())) {\n                    clockhourOfHalfday = f;\n                }\n                if (isSupported(f = chrono.halfdayOfDay())) {\n                    halfdayOfDay = f;\n                }\n                if (isSupported(f = chrono.dayOfWeek())) {\n                    dayOfWeek = f;\n                }\n                if (isSupported(f = chrono.dayOfMonth())) {\n                    dayOfMonth = f;\n                }\n                if (isSupported(f = chrono.dayOfYear())) {\n                    dayOfYear = f;\n                }\n                if (isSupported(f = chrono.weekOfWeekyear())) {\n                    weekOfWeekyear = f;\n                }\n                if (isSupported(f = chrono.weekyear())) {\n                    weekyear = f;\n                }\n                if (isSupported(f = chrono.weekyearOfCentury())) {\n                    weekyearOfCentury = f;\n                }\n                if (isSupported(f = chrono.monthOfYear())) {\n                    monthOfYear = f;\n                }\n                if (isSupported(f = chrono.year())) {\n                    year = f;\n                }\n                if (isSupported(f = chrono.yearOfEra())) {\n                    yearOfEra = f;\n                }\n                if (isSupported(f = chrono.yearOfCentury())) {\n                    yearOfCentury = f;\n                }\n                if (isSupported(f = chrono.centuryOfEra())) {\n                    centuryOfEra = f;\n                }\n                if (isSupported(f = chrono.era())) {\n                    era = f;\n                }\n            }\n        }"
+      ],
+      "features": {
+        "prior": 0.30000000000000004,
+        "rank_fraction": 0.8,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.27906976744186046,
+        "trace_match": 0.0,
+        "complexity": 36.0,
+        "call_count": 70.0,
+        "literal_count": 0.0,
+        "source_tokens": 1061.0,
+        "l0_tokens": 35.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.5362865221489161,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 36,
+        "call_count": 70,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.joda.time.format.DateTimeFormatterBuilder.appendCenturyOfEra(int,int)",
+      "source": "    /**\n     * Instructs the printer to emit a numeric century of era field.\n     *\n     * @param minDigits  minimum number of digits to print\n     * @param maxDigits  maximum number of digits to <i>parse</i>, or the estimated\n     * maximum number of digits to print\n     * @return this DateTimeFormatterBuilder, for chaining\n     */\n    public DateTimeFormatterBuilder appendCenturyOfEra(int minDigits, int maxDigits) {\n        return appendSignedDecimal(DateTimeFieldType.centuryOfEra(), minDigits, maxDigits);\n    }",
+      "prior": 0.30000000000000004,
+      "rank": 21,
+      "levels": [
+        "METHOD: org.joda.time.format.DateTimeFormatterBuilder.appendCenturyOfEra(int,int)\nSIGNATURE: public DateTimeFormatterBuilder appendCenturyOfEra(int minDigits, int maxDigits)",
+        "METHOD: org.joda.time.format.DateTimeFormatterBuilder.appendCenturyOfEra(int,int)\nSIGNATURE: public DateTimeFormatterBuilder appendCenturyOfEra(int minDigits, int maxDigits)\nSTRUCTURE (lossy):\nreturn appendSignedDecimal(DateTimeFieldType.centuryOfEra(), minDigits, maxDigits);\nCALL appendSignedDecimal(DateTimeFieldType.centuryOfEra(), minDigits, maxDigits)\nCALL DateTimeFieldType.centuryOfEra()",
+        "    /**\n     * Instructs the printer to emit a numeric century of era field.\n     *\n     * @param minDigits  minimum number of digits to print\n     * @param maxDigits  maximum number of digits to <i>parse</i>, or the estimated\n     * maximum number of digits to print\n     * @return this DateTimeFormatterBuilder, for chaining\n     */\n    public DateTimeFormatterBuilder appendCenturyOfEra(int minDigits, int maxDigits) {\n        return appendSignedDecimal(DateTimeFieldType.centuryOfEra(), minDigits, maxDigits);\n    }"
+      ],
+      "features": {
+        "prior": 0.30000000000000004,
+        "rank_fraction": 0.84,
+        "ranking_gap": 0.10000000000000009,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.2857142857142857,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 130.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 99.0,
+        "compression_ratio": 0.7615384615384615,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.joda.time.DateTimeFieldType.StandardDateTimeFieldType.getField(Chronology)",
+      "source": "        /** @inheritdoc */\n        public DateTimeField getField(Chronology chronology) {\n            chronology = DateTimeUtils.getChronology(chronology);\n\n            switch (iOrdinal) {\n                case ERA:\n                    return chronology.era();\n                case YEAR_OF_ERA:\n                    return chronology.yearOfEra();\n                case CENTURY_OF_ERA:\n                    return chronology.centuryOfEra();\n                case YEAR_OF_CENTURY:\n                    return chronology.yearOfCentury();\n                case YEAR:\n                    return chronology.year();\n                case DAY_OF_YEAR:\n                    return chronology.dayOfYear();\n                case MONTH_OF_YEAR:\n                    return chronology.monthOfYear();\n                case DAY_OF_MONTH:\n                    return chronology.dayOfMonth();\n                case WEEKYEAR_OF_CENTURY:\n                    return chronology.weekyearOfCentury();\n                case WEEKYEAR:\n                    return chronology.weekyear();\n                case WEEK_OF_WEEKYEAR:\n                    return chronology.weekOfWeekyear();\n                case DAY_OF_WEEK:\n                    return chronology.dayOfWeek();\n                case HALFDAY_OF_DAY:\n                    return chronology.halfdayOfDay();\n                case HOUR_OF_HALFDAY:\n                    return chronology.hourOfHalfday();\n                case CLOCKHOUR_OF_HALFDAY:\n                    return chronology.clockhourOfHalfday();\n                case CLOCKHOUR_OF_DAY:\n                    return chronology.clockhourOfDay();\n                case HOUR_OF_DAY:\n                    return chronology.hourOfDay();\n                case MINUTE_OF_DAY:\n                    return chronology.minuteOfDay();\n                case MINUTE_OF_HOUR:\n                    return chronology.minuteOfHour();\n                case SECOND_OF_DAY:\n                    return chronology.secondOfDay();\n                case SECOND_OF_MINUTE:\n                    return chronology.secondOfMinute();\n                case MILLIS_OF_DAY:\n                    return chronology.millisOfDay();\n                case MILLIS_OF_SECOND:\n                    return chronology.millisOfSecond();\n                default:\n                    // Shouldn't happen.\n                    throw new InternalError();\n            }\n        }",
+      "prior": 0.19999999999999996,
+      "rank": 22,
+      "levels": [
+        "METHOD: org.joda.time.DateTimeFieldType.StandardDateTimeFieldType.getField(Chronology)\nSIGNATURE: public DateTimeField getField(Chronology chronology)",
+        "METHOD: org.joda.time.DateTimeFieldType.StandardDateTimeFieldType.getField(Chronology)\nSIGNATURE: public DateTimeField getField(Chronology chronology)\nSTRUCTURE (lossy):\nchronology = DateTimeUtils.getChronology(chronology)\nCALL DateTimeUtils.getChronology(chronology)\nswitch (iOrdinal) { case ERA: return chronology.era(); case YEAR_OF_ERA: return chronology.yearOfEra(); case CENTURY_OF_ERA: return chronology.centuryOfEra(); case YEAR_OF_CENTURY: return chronology.yearOfCentury(); case YEAR: return chronology.year(); case DAY_OF_YEAR: return chronology.dayOfYear(); case MONTH_OF_YEAR: return chronology.monthOfYear(); case DAY_OF_MONTH: return chronology.dayOfMonth(); case WEEKYEAR_OF_CENTURY: return chronology.weekyearOfCentury(); case WEEKYEAR: return chronology.weekyear(); case WEEK_OF_WEEKYEAR: return chronology.weekOfWeekyear(); case DAY_OF_WEEK: return chronology.dayOfWeek(); case HALFDAY_OF_DAY: return chronology.halfdayOfDay(); case HOUR_OF_HALFDAY: return chronology.hourOfHalfday(); case CLOCKHOUR_OF_HALFDAY: return chronology.clockhourOfHalfday(); case CLOCKHOUR_OF_DAY: return chronology.clockhourOfDay(); case HOUR_OF_DAY: return chronology.hourOfDay(); case MINUTE_OF_DAY: return chronology.minuteOfDay(); case MINUTE_OF_HOUR: return chronology.minuteOfHour(); case SECOND_OF_DAY: return chronology.secondOfDay(); case SECOND_OF_MINUTE: return chronology.secondOfMinute(); case MILLIS_OF_DAY: return chronology.millisOfDay(); case MILLIS_OF_SECOND: return chronology.millisOfSecond(); default: // Shouldn't happen. throw new InternalError(); }\nreturn chronology.era();\nCALL chronology.era()\nreturn chronology.yearOfEra();\nCALL chronology.yearOfEra()\nreturn chronology.centuryOfEra();\nCALL chronology.centuryOfEra()\nreturn chronology.yearOfCentury();\nCALL chronology.yearOfCentury()\nreturn chronology.year();\nCALL chronology.year()\nreturn chronology.dayOfYear();\nCALL chronology.dayOfYear()\nreturn chronology.monthOfYear();\nCALL chronology.monthOfYear()\nreturn chronology.dayOfMonth();\nCALL chronology.dayOfMonth()\nreturn chronology.weekyearOfCentury();\nCALL chronology.weekyearOfCentury()\nreturn chronology.weekyear();\nCALL chronology.weekyear()\nreturn chronology.weekOfWeek\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "        /** @inheritdoc */\n        public DateTimeField getField(Chronology chronology) {\n            chronology = DateTimeUtils.getChronology(chronology);\n\n            switch (iOrdinal) {\n                case ERA:\n                    return chronology.era();\n                case YEAR_OF_ERA:\n                    return chronology.yearOfEra();\n                case CENTURY_OF_ERA:\n                    return chronology.centuryOfEra();\n                case YEAR_OF_CENTURY:\n                    return chronology.yearOfCentury();\n                case YEAR:\n                    return chronology.year();\n                case DAY_OF_YEAR:\n                    return chronology.dayOfYear();\n                case MONTH_OF_YEAR:\n                    return chronology.monthOfYear();\n                case DAY_OF_MONTH:\n                    return chronology.dayOfMonth();\n                case WEEKYEAR_OF_CENTURY:\n                    return chronology.weekyearOfCentury();\n                case WEEKYEAR:\n                    return chronology.weekyear();\n                case WEEK_OF_WEEKYEAR:\n                    return chronology.weekOfWeekyear();\n                case DAY_OF_WEEK:\n                    return chronology.dayOfWeek();\n                case HALFDAY_OF_DAY:\n                    return chronology.halfdayOfDay();\n                case HOUR_OF_HALFDAY:\n                    return chronology.hourOfHalfday();\n                case CLOCKHOUR_OF_HALFDAY:\n                    return chronology.clockhourOfHalfday();\n                case CLOCKHOUR_OF_DAY:\n                    return chronology.clockhourOfDay();\n                case HOUR_OF_DAY:\n                    return chronology.hourOfDay();\n                case MINUTE_OF_DAY:\n                    return chronology.minuteOfDay();\n                case MINUTE_OF_HOUR:\n                    return chronology.minuteOfHour();\n                case SECOND_OF_DAY:\n                    return chronology.secondOfDay();\n                case SECOND_OF_MINUTE:\n                    return chronology.secondOfMinute();\n                case MILLIS_OF_DAY:\n                    return chronology.millisOfDay();\n                case MILLIS_OF_SECOND:\n                    return chronology.millisOfSecond();\n                default:\n                    // Shouldn't happen.\n                    throw new InternalError();\n            }\n        }"
+      ],
+      "features": {
+        "prior": 0.19999999999999996,
+        "rank_fraction": 0.88,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.3611111111111111,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 24.0,
+        "literal_count": 0.0,
+        "source_tokens": 594.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.9579124579124579,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 2,
+        "call_count": 24,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.joda.time.DateTimeFieldType.getName()",
+      "source": "    /**\n     * Get the name of the field.\n     * <p>\n     * By convention, names follow a pattern of \"dddOfRrr\", where \"ddd\" represents\n     * the (singular) duration unit field name and \"Rrr\" represents the (singular)\n     * duration range field name. If the range field is not applicable, then\n     * the name of the field is simply the (singular) duration field name.\n     * \n     * @return field name\n     */\n    public String getName() {\n        return iName;\n    }",
+      "prior": 0.19999999999999996,
+      "rank": 23,
+      "levels": [
+        "METHOD: org.joda.time.DateTimeFieldType.getName()\nSIGNATURE: public String getName()",
+        "METHOD: org.joda.time.DateTimeFieldType.getName()\nSIGNATURE: public String getName()\nSTRUCTURE (lossy):\nreturn iName;",
+        "    /**\n     * Get the name of the field.\n     * <p>\n     * By convention, names follow a pattern of \"dddOfRrr\", where \"ddd\" represents\n     * the (singular) duration unit field name and \"Rrr\" represents the (singular)\n     * duration range field name. If the range field is not applicable, then\n     * the name of the field is simply the (singular) duration field name.\n     * \n     * @return field name\n     */\n    public String getName() {\n        return iName;\n    }"
+      ],
+      "features": {
+        "prior": 0.19999999999999996,
+        "rank_fraction": 0.92,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.27586206896551724,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 118.0,
+        "l0_tokens": 21.0,
+        "l1_tokens": 30.0,
+        "compression_ratio": 0.2542372881355932,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.joda.time.chrono.BasicMonthOfYearDateTimeField.getMinimumValue()",
+      "source": "    public int getMinimumValue() {\n        return MIN;\n    }",
+      "prior": 0.09999999999999998,
+      "rank": 24,
+      "levels": [
+        "METHOD: org.joda.time.chrono.BasicMonthOfYearDateTimeField.getMinimumValue()\nSIGNATURE: public int getMinimumValue()",
+        "METHOD: org.joda.time.chrono.BasicMonthOfYearDateTimeField.getMinimumValue()\nSIGNATURE: public int getMinimumValue()\nSTRUCTURE (lossy):\nreturn MIN;",
+        "    public int getMinimumValue() {\n        return MIN;\n    }"
+      ],
+      "features": {
+        "prior": 0.09999999999999998,
+        "rank_fraction": 0.96,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.5625,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 15.0,
+        "l0_tokens": 29.0,
+        "l1_tokens": 37.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.joda.time.chrono.BasicWeekOfWeekyearDateTimeField.getMaximumValue(ReadablePartial)",
+      "source": "    public int getMaximumValue(ReadablePartial partial) {\n        if (partial.isSupported(DateTimeFieldType.weekyear())) {\n            int weekyear = partial.get(DateTimeFieldType.weekyear());\n            return iChronology.getWeeksInYear(weekyear);\n        }\n        return 53;\n    }",
+      "prior": 0.09999999999999998,
+      "rank": 25,
+      "levels": [
+        "METHOD: org.joda.time.chrono.BasicWeekOfWeekyearDateTimeField.getMaximumValue(ReadablePartial)\nSIGNATURE: public int getMaximumValue(ReadablePartial partial)",
+        "METHOD: org.joda.time.chrono.BasicWeekOfWeekyearDateTimeField.getMaximumValue(ReadablePartial)\nSIGNATURE: public int getMaximumValue(ReadablePartial partial)\nSTRUCTURE (lossy):\nif (partial.isSupported(DateTimeFieldType.weekyear()))\nCALL partial.isSupported(DateTimeFieldType.weekyear())\nCALL DateTimeFieldType.weekyear()\nint weekyear = partial.get(DateTimeFieldType.weekyear());\nCALL partial.get(DateTimeFieldType.weekyear())\nreturn iChronology.getWeeksInYear(weekyear);\nCALL iChronology.getWeeksInYear(weekyear)\nreturn 53;",
+        "    public int getMaximumValue(ReadablePartial partial) {\n        if (partial.isSupported(DateTimeFieldType.weekyear())) {\n            int weekyear = partial.get(DateTimeFieldType.weekyear());\n            return iChronology.getWeeksInYear(weekyear);\n        }\n        return 53;\n    }"
+      ],
+      "features": {
+        "prior": 0.09999999999999998,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.45454545454545453,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 5.0,
+        "literal_count": 1.0,
+        "source_tokens": 71.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 131.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 5,
+        "literal_count": 1
+      }
+    }
+  ],
+  "context": "\npublic void testConstructorEx7_TypeArray_intArray() throws Throwable {\n        int[] values = new int[] {1, 1, 1};\n        DateTimeFieldType[] types = new DateTimeFieldType[] {\n            DateTimeFieldType.dayOfMonth(), DateTimeFieldType.year(), DateTimeFieldType.monthOfYear() };\n        try {\n            new Partial(types, values);\n            fail();\n        } catch (IllegalArgumentException ex) {\n            assertMessageContains(ex, \"must be in order\", \"largest-smallest\");\n        }\n        \n        types = new DateTimeFieldType[] {\n            DateTimeFieldType.year(), DateTimeFieldType.dayOfMonth(), DateTimeFieldType.monthOfYear() };\n        try {\n            new Partial(types, values);\n            fail();\n        } catch (IllegalArgumentException ex) {\n            assertMessageContains(ex, \"must be in order\", \"largest-smallest\");\n        }\n        \n        types = new DateTimeFieldType[] {\n            DateTimeFieldType.year(), DateTimeFieldType.era(), DateTimeFieldType.monthOfYear() };\n        try {\n            new Partial(types, values);\n            fail();\nThe last line shown above failed with the following stack trace.\njunit.framework.AssertionFailedError\n\tat org.joda.time.TestPartial_Constructors.testConstructorEx7_TypeArray_intArray(TestPartial_Constructors.java:284)",
+  "provenance": {
+    "bug": "Time-1",
+    "candidate_ids": [
+      "org.joda.time.field.UnsupportedDurationField.compareTo(DurationField)",
+      "org.joda.time.chrono.BuddhistChronology.assemble(Fields)",
+      "org.joda.time.Partial.Partial(DateTimeFieldType[],int[],Chronology)",
+      "org.joda.time.chrono.BasicChronology.assemble(Fields)",
+      "org.joda.time.chrono.GJEraDateTimeField.getMinimumValue()",
+      "org.joda.time.DateTimeZone.getDefaultProvider()",
+      "org.joda.time.chrono.GJEraDateTimeField.getMaximumValue()",
+      "org.joda.time.chrono.ISOChronology.assemble(Fields)",
+      "org.joda.time.Partial.Partial(DateTimeFieldType[],int[])",
+      "org.joda.time.chrono.GJChronology.assemble(Fields)",
+      "org.joda.time.DateTimeFieldType.StandardDateTimeFieldType.readResolve()",
+      "org.joda.time.Partial.getField(int,Chronology)",
+      "org.joda.time.format.DateTimeFormatterBuilder.printTo(Writer,ReadablePartial,Locale)",
+      "org.joda.time.DateTimeZone.getDefaultNameProvider()",
+      "org.joda.time.chrono.AssembledChronology.setFields()",
+      "org.joda.time.Partial.getChronology()",
+      "org.joda.time.DateTimeUtils.isContiguous(ReadablePartial)",
+      "org.joda.time.format.DateTimeFormatterBuilder.printTo(StringBuffer,ReadablePartial,Locale)",
+      "org.joda.time.Partial.size()",
+      "org.joda.time.chrono.AssembledChronology.Fields.copyFieldsFrom(Chronology)",
+      "org.joda.time.format.DateTimeFormatterBuilder.appendCenturyOfEra(int,int)",
+      "org.joda.time.DateTimeFieldType.StandardDateTimeFieldType.getField(Chronology)",
+      "org.joda.time.DateTimeFieldType.getName()",
+      "org.joda.time.chrono.BasicMonthOfYearDateTimeField.getMinimumValue()",
+      "org.joda.time.chrono.BasicWeekOfWeekyearDateTimeField.getMaximumValue(ReadablePartial)"
+    ],
+    "source_paths": {
+      "org.joda.time.field.UnsupportedDurationField.compareTo(DurationField)": "src/main/java/org/joda/time/field/UnsupportedDurationField.java",
+      "org.joda.time.chrono.BuddhistChronology.assemble(Fields)": "src/main/java/org/joda/time/chrono/BuddhistChronology.java",
+      "org.joda.time.Partial.Partial(DateTimeFieldType[],int[],Chronology)": "src/main/java/org/joda/time/Partial.java",
+      "org.joda.time.chrono.BasicChronology.assemble(Fields)": "src/main/java/org/joda/time/chrono/BasicChronology.java",
+      "org.joda.time.chrono.GJEraDateTimeField.getMinimumValue()": "src/main/java/org/joda/time/chrono/GJEraDateTimeField.java",
+      "org.joda.time.DateTimeZone.getDefaultProvider()": "src/main/java/org/joda/time/DateTimeZone.java",
+      "org.joda.time.chrono.GJEraDateTimeField.getMaximumValue()": "src/main/java/org/joda/time/chrono/GJEraDateTimeField.java",
+      "org.joda.time.chrono.ISOChronology.assemble(Fields)": "src/main/java/org/joda/time/chrono/ISOChronology.java",
+      "org.joda.time.Partial.Partial(DateTimeFieldType[],int[])": "src/main/java/org/joda/time/Partial.java",
+      "org.joda.time.chrono.GJChronology.assemble(Fields)": "src/main/java/org/joda/time/chrono/GJChronology.java",
+      "org.joda.time.DateTimeFieldType.StandardDateTimeFieldType.readResolve()": "src/main/java/org/joda/time/DateTimeFieldType.java",
+      "org.joda.time.Partial.getField(int,Chronology)": "src/main/java/org/joda/time/Partial.java",
+      "org.joda.time.format.DateTimeFormatterBuilder.printTo(Writer,ReadablePartial,Locale)": "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java",
+      "org.joda.time.DateTimeZone.getDefaultNameProvider()": "src/main/java/org/joda/time/DateTimeZone.java",
+      "org.joda.time.chrono.AssembledChronology.setFields()": "src/main/java/org/joda/time/chrono/AssembledChronology.java",
+      "org.joda.time.Partial.getChronology()": "src/main/java/org/joda/time/Partial.java",
+      "org.joda.time.DateTimeUtils.isContiguous(ReadablePartial)": "src/main/java/org/joda/time/DateTimeUtils.java",
+      "org.joda.time.format.DateTimeFormatterBuilder.printTo(StringBuffer,ReadablePartial,Locale)": "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java",
+      "org.joda.time.Partial.size()": "src/main/java/org/joda/time/Partial.java",
+      "org.joda.time.chrono.AssembledChronology.Fields.copyFieldsFrom(Chronology)": "src/main/java/org/joda/time/chrono/AssembledChronology.java",
+      "org.joda.time.format.DateTimeFormatterBuilder.appendCenturyOfEra(int,int)": "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java",
+      "org.joda.time.DateTimeFieldType.StandardDateTimeFieldType.getField(Chronology)": "src/main/java/org/joda/time/DateTimeFieldType.java",
+      "org.joda.time.DateTimeFieldType.getName()": "src/main/java/org/joda/time/DateTimeFieldType.java",
+      "org.joda.time.chrono.BasicMonthOfYearDateTimeField.getMinimumValue()": "src/main/java/org/joda/time/chrono/BasicMonthOfYearDateTimeField.java",
+      "org.joda.time.chrono.BasicWeekOfWeekyearDateTimeField.getMaximumValue(ReadablePartial)": "src/main/java/org/joda/time/chrono/BasicWeekOfWeekyearDateTimeField.java"
+    },
+    "sources_sha256": "a00d7a7143b11423edccbedb7ce939b50804576af1575f5a5f8fc9645a100075",
+    "evidence": {
+      "source": "flexfl_original",
+      "file": null,
+      "sha256": "112e961c5a1a159e9cff9561404f19b558e116777e05f7ed87ec496c56f1bd4f",
+      "characters": 1301
+    },
+    "source_revision": "8612f9e5b88c1bea933ef9ab1e431f5db3006b48",
+    "top_per_method": 10,
+    "candidate_features": {
+      "org.joda.time.field.UnsupportedDurationField.compareTo(DurationField)": {
+        "prior": 1.0,
+        "rank_fraction": 0.04,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.0,
+        "failure_relevance": 0.35,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 2.0,
+        "source_tokens": 69.0,
+        "l0_tokens": 35.0,
+        "l1_tokens": 61.0,
+        "compression_ratio": 0.8840579710144928,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.joda.time.chrono.BuddhistChronology.assemble(Fields)": {
+        "prior": 1.0,
+        "rank_fraction": 0.08,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.23404255319148937,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 9.0,
+        "literal_count": 6.0,
+        "source_tokens": 459.0,
+        "l0_tokens": 29.0,
+        "l1_tokens": 391.0,
+        "compression_ratio": 0.8518518518518519,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.joda.time.Partial.Partial(DateTimeFieldType[],int[],Chronology)": {
+        "prior": 0.9,
+        "rank_fraction": 0.12,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.4,
+        "failure_relevance": 0.3968253968253968,
+        "trace_match": 1.0,
+        "complexity": 16.0,
+        "call_count": 27.0,
+        "literal_count": 36.0,
+        "source_tokens": 957.0,
+        "l0_tokens": 42.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.5945663531870429,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "org.joda.time.chrono.BasicChronology.assemble(Fields)": {
+        "prior": 0.9,
+        "rank_fraction": 0.16,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.17333333333333334,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 8.0,
+        "literal_count": 5.0,
+        "source_tokens": 715.0,
+        "l0_tokens": 28.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.7958041958041958,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "org.joda.time.chrono.GJEraDateTimeField.getMinimumValue()": {
+        "prior": 0.9,
+        "rank_fraction": 0.2,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.4666666666666667,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 20.0,
+        "l0_tokens": 27.0,
+        "l1_tokens": 39.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.joda.time.DateTimeZone.getDefaultProvider()": {
+        "prior": 0.8,
+        "rank_fraction": 0.24,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.275,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 4.0,
+        "literal_count": 6.0,
+        "source_tokens": 307.0,
+        "l0_tokens": 28.0,
+        "l1_tokens": 177.0,
+        "compression_ratio": 0.5765472312703583,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.joda.time.chrono.GJEraDateTimeField.getMaximumValue()": {
+        "prior": 0.8,
+        "rank_fraction": 0.28,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 20.0,
+        "l0_tokens": 27.0,
+        "l1_tokens": 39.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.joda.time.chrono.ISOChronology.assemble(Fields)": {
+        "prior": 0.8,
+        "rank_fraction": 0.32,
+        "ranking_gap": 0.10000000000000009,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.3125,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 6.0,
+        "literal_count": 1.0,
+        "source_tokens": 189.0,
+        "l0_tokens": 28.0,
+        "l1_tokens": 211.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.joda.time.Partial.Partial(DateTimeFieldType[],int[])": {
+        "prior": 0.7,
+        "rank_fraction": 0.36,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.0,
+        "failure_relevance": 0.5945945945945946,
+        "trace_match": 1.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 1.0,
+        "source_tokens": 131.0,
+        "l0_tokens": 33.0,
+        "l1_tokens": 38.0,
+        "compression_ratio": 0.2900763358778626,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.joda.time.chrono.GJChronology.assemble(Fields)": {
+        "prior": 0.7,
+        "rank_fraction": 0.4,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.13157894736842105,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 39.0,
+        "literal_count": 7.0,
+        "source_tokens": 1384.0,
+        "l0_tokens": 27.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.4111271676300578,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "org.joda.time.DateTimeFieldType.StandardDateTimeFieldType.readResolve()": {
+        "prior": 0.6,
+        "rank_fraction": 0.44,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.3055555555555556,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 555.0,
+        "l0_tokens": 30.0,
+        "l1_tokens": 479.0,
+        "compression_ratio": 0.863063063063063,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.joda.time.Partial.getField(int,Chronology)": {
+        "prior": 0.6,
+        "rank_fraction": 0.48,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.4074074074074074,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 99.0,
+        "l0_tokens": 32.0,
+        "l1_tokens": 56.0,
+        "compression_ratio": 0.5656565656565656,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.joda.time.format.DateTimeFormatterBuilder.printTo(Writer,ReadablePartial,Locale)": {
+        "prior": 0.6,
+        "rank_fraction": 0.52,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.42105263157894735,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 35.0,
+        "l0_tokens": 49.0,
+        "l1_tokens": 54.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.joda.time.DateTimeZone.getDefaultNameProvider()": {
+        "prior": 0.5,
+        "rank_fraction": 0.56,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.2727272727272727,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 3.0,
+        "literal_count": 4.0,
+        "source_tokens": 240.0,
+        "l0_tokens": 31.0,
+        "l1_tokens": 171.0,
+        "compression_ratio": 0.7125,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.joda.time.chrono.AssembledChronology.setFields()": {
+        "prior": 0.5,
+        "rank_fraction": 0.6,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.2553191489361702,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 45.0,
+        "literal_count": 44.0,
+        "source_tokens": 1053.0,
+        "l0_tokens": 24.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.540360873694207,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "org.joda.time.Partial.getChronology()": {
+        "prior": 0.4,
+        "rank_fraction": 0.64,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.2,
+        "failure_relevance": 0.24,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 96.0,
+        "l0_tokens": 23.0,
+        "l1_tokens": 33.0,
+        "compression_ratio": 0.34375,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.joda.time.DateTimeUtils.isContiguous(ReadablePartial)": {
+        "prior": 0.4,
+        "rank_fraction": 0.68,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.28169014084507044,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 7.0,
+        "literal_count": 6.0,
+        "source_tokens": 430.0,
+        "l0_tokens": 36.0,
+        "l1_tokens": 198.0,
+        "compression_ratio": 0.4604651162790698,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.joda.time.format.DateTimeFormatterBuilder.printTo(StringBuffer,ReadablePartial,Locale)": {
+        "prior": 0.4,
+        "rank_fraction": 0.72,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.3888888888888889,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 32.0,
+        "l0_tokens": 47.0,
+        "l1_tokens": 52.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.joda.time.Partial.size()": {
+        "prior": 0.30000000000000004,
+        "rank_fraction": 0.76,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.2,
+        "failure_relevance": 0.5294117647058824,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 41.0,
+        "l0_tokens": 17.0,
+        "l1_tokens": 27.0,
+        "compression_ratio": 0.6585365853658537,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.joda.time.chrono.AssembledChronology.Fields.copyFieldsFrom(Chronology)": {
+        "prior": 0.30000000000000004,
+        "rank_fraction": 0.8,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.27906976744186046,
+        "trace_match": 0.0,
+        "complexity": 36.0,
+        "call_count": 70.0,
+        "literal_count": 0.0,
+        "source_tokens": 1061.0,
+        "l0_tokens": 35.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.5362865221489161,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "org.joda.time.format.DateTimeFormatterBuilder.appendCenturyOfEra(int,int)": {
+        "prior": 0.30000000000000004,
+        "rank_fraction": 0.84,
+        "ranking_gap": 0.10000000000000009,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.2857142857142857,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 130.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 99.0,
+        "compression_ratio": 0.7615384615384615,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.joda.time.DateTimeFieldType.StandardDateTimeFieldType.getField(Chronology)": {
+        "prior": 0.19999999999999996,
+        "rank_fraction": 0.88,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.3611111111111111,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 24.0,
+        "literal_count": 0.0,
+        "source_tokens": 594.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.9579124579124579,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "org.joda.time.DateTimeFieldType.getName()": {
+        "prior": 0.19999999999999996,
+        "rank_fraction": 0.92,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.27586206896551724,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 118.0,
+        "l0_tokens": 21.0,
+        "l1_tokens": 30.0,
+        "compression_ratio": 0.2542372881355932,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.joda.time.chrono.BasicMonthOfYearDateTimeField.getMinimumValue()": {
+        "prior": 0.09999999999999998,
+        "rank_fraction": 0.96,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.5625,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 15.0,
+        "l0_tokens": 29.0,
+        "l1_tokens": 37.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.joda.time.chrono.BasicWeekOfWeekyearDateTimeField.getMaximumValue(ReadablePartial)": {
+        "prior": 0.09999999999999998,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.45454545454545453,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 5.0,
+        "literal_count": 1.0,
+        "source_tokens": 71.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 131.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      }
+    },
+    "sketch_metadata": {
+      "org.joda.time.field.UnsupportedDurationField.compareTo(DurationField)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 2
+      },
+      "org.joda.time.chrono.BuddhistChronology.assemble(Fields)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 9,
+        "literal_count": 6
+      },
+      "org.joda.time.Partial.Partial(DateTimeFieldType[],int[],Chronology)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 16,
+        "call_count": 27,
+        "literal_count": 36
+      },
+      "org.joda.time.chrono.BasicChronology.assemble(Fields)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 1,
+        "call_count": 8,
+        "literal_count": 5
+      },
+      "org.joda.time.chrono.GJEraDateTimeField.getMinimumValue()": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      },
+      "org.joda.time.DateTimeZone.getDefaultProvider()": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 4,
+        "literal_count": 6
+      },
+      "org.joda.time.chrono.GJEraDateTimeField.getMaximumValue()": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      },
+      "org.joda.time.chrono.ISOChronology.assemble(Fields)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 6,
+        "literal_count": 1
+      },
+      "org.joda.time.Partial.Partial(DateTimeFieldType[],int[])": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 1
+      },
+      "org.joda.time.chrono.GJChronology.assemble(Fields)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 4,
+        "call_count": 39,
+        "literal_count": 7
+      },
+      "org.joda.time.DateTimeFieldType.StandardDateTimeFieldType.readResolve()": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 0,
+        "literal_count": 0
+      },
+      "org.joda.time.Partial.getField(int,Chronology)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      },
+      "org.joda.time.format.DateTimeFormatterBuilder.printTo(Writer,ReadablePartial,Locale)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      },
+      "org.joda.time.DateTimeZone.getDefaultNameProvider()": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 3,
+        "literal_count": 4
+      },
+      "org.joda.time.chrono.AssembledChronology.setFields()": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 3,
+        "call_count": 45,
+        "literal_count": 44
+      },
+      "org.joda.time.Partial.getChronology()": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      },
+      "org.joda.time.DateTimeUtils.isContiguous(ReadablePartial)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 7,
+        "literal_count": 6
+      },
+      "org.joda.time.format.DateTimeFormatterBuilder.printTo(StringBuffer,ReadablePartial,Locale)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      },
+      "org.joda.time.Partial.size()": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      },
+      "org.joda.time.chrono.AssembledChronology.Fields.copyFieldsFrom(Chronology)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 36,
+        "call_count": 70,
+        "literal_count": 0
+      },
+      "org.joda.time.format.DateTimeFormatterBuilder.appendCenturyOfEra(int,int)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      },
+      "org.joda.time.DateTimeFieldType.StandardDateTimeFieldType.getField(Chronology)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 2,
+        "call_count": 24,
+        "literal_count": 0
+      },
+      "org.joda.time.DateTimeFieldType.getName()": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      },
+      "org.joda.time.chrono.BasicMonthOfYearDateTimeField.getMinimumValue()": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      },
+      "org.joda.time.chrono.BasicWeekOfWeekyearDateTimeField.getMaximumValue(ReadablePartial)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 5,
+        "literal_count": 1
+      }
+    }
+  },
+  "rank_metadata": {
+    "org.joda.time.field.UnsupportedDurationField.compareTo(DurationField)": {
+      "file_class": "org.joda.time.field.UnsupportedDurationField",
+      "start_line": 221,
+      "end_line": 231,
+      "methods": [
+        "SBIR",
+        "Ochiai"
+      ],
+      "rank_proxy": 1.0,
+      "ranks": {
+        "SBIR": 1,
+        "Ochiai": 1
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.chrono.BuddhistChronology.assemble(Fields)": {
+      "file_class": "org.joda.time.chrono.BuddhistChronology",
+      "start_line": 216,
+      "end_line": 253,
+      "methods": [
+        "BoostN"
+      ],
+      "rank_proxy": 1.0,
+      "ranks": {
+        "BoostN": 1
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.Partial.Partial(DateTimeFieldType[],int[],Chronology)": {
+      "file_class": "org.joda.time.Partial",
+      "start_line": 178,
+      "end_line": 251,
+      "methods": [
+        "SBIR",
+        "Ochiai"
+      ],
+      "rank_proxy": 0.9,
+      "ranks": {
+        "SBIR": 2,
+        "Ochiai": 6
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.chrono.BasicChronology.assemble(Fields)": {
+      "file_class": "org.joda.time.chrono.BasicChronology",
+      "start_line": 246,
+      "end_line": 306,
+      "methods": [
+        "BoostN"
+      ],
+      "rank_proxy": 0.9,
+      "ranks": {
+        "BoostN": 2
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.chrono.GJEraDateTimeField.getMinimumValue()": {
+      "file_class": "org.joda.time.chrono.GJEraDateTimeField",
+      "start_line": 135,
+      "end_line": 137,
+      "methods": [
+        "Ochiai"
+      ],
+      "rank_proxy": 0.9,
+      "ranks": {
+        "Ochiai": 2
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.DateTimeZone.getDefaultProvider()": {
+      "file_class": "org.joda.time.DateTimeZone",
+      "start_line": 461,
+      "end_line": 499,
+      "methods": [
+        "SBIR"
+      ],
+      "rank_proxy": 0.8,
+      "ranks": {
+        "SBIR": 3
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.chrono.GJEraDateTimeField.getMaximumValue()": {
+      "file_class": "org.joda.time.chrono.GJEraDateTimeField",
+      "start_line": 139,
+      "end_line": 141,
+      "methods": [
+        "Ochiai"
+      ],
+      "rank_proxy": 0.8,
+      "ranks": {
+        "Ochiai": 3
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.chrono.ISOChronology.assemble(Fields)": {
+      "file_class": "org.joda.time.chrono.ISOChronology",
+      "start_line": 168,
+      "end_line": 180,
+      "methods": [
+        "BoostN"
+      ],
+      "rank_proxy": 0.8,
+      "ranks": {
+        "BoostN": 3
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.Partial.Partial(DateTimeFieldType[],int[])": {
+      "file_class": "org.joda.time.Partial",
+      "start_line": 164,
+      "end_line": 176,
+      "methods": [
+        "SBIR",
+        "Ochiai"
+      ],
+      "rank_proxy": 0.7,
+      "ranks": {
+        "SBIR": 4,
+        "Ochiai": 4
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.chrono.GJChronology.assemble(Fields)": {
+      "file_class": "org.joda.time.chrono.GJChronology",
+      "start_line": 477,
+      "end_line": 586,
+      "methods": [
+        "BoostN"
+      ],
+      "rank_proxy": 0.7,
+      "ranks": {
+        "BoostN": 4
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.DateTimeFieldType.StandardDateTimeFieldType.readResolve()": {
+      "file_class": "org.joda.time.DateTimeFieldType.StandardDateTimeFieldType",
+      "start_line": 535,
+      "end_line": 592,
+      "methods": [
+        "BoostN"
+      ],
+      "rank_proxy": 0.6,
+      "ranks": {
+        "BoostN": 5
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.Partial.getField(int,Chronology)": {
+      "file_class": "org.joda.time.Partial",
+      "start_line": 326,
+      "end_line": 336,
+      "methods": [
+        "Ochiai"
+      ],
+      "rank_proxy": 0.6,
+      "ranks": {
+        "Ochiai": 5
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.format.DateTimeFormatterBuilder.printTo(Writer,ReadablePartial,Locale)": {
+      "file_class": "org.joda.time.format.DateTimeFormatterBuilder",
+      "start_line": 2578,
+      "end_line": 2580,
+      "methods": [
+        "SBIR"
+      ],
+      "rank_proxy": 0.6,
+      "ranks": {
+        "SBIR": 5
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.DateTimeZone.getDefaultNameProvider()": {
+      "file_class": "org.joda.time.DateTimeZone",
+      "start_line": 545,
+      "end_line": 573,
+      "methods": [
+        "SBIR"
+      ],
+      "rank_proxy": 0.5,
+      "ranks": {
+        "SBIR": 6
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.chrono.AssembledChronology.setFields()": {
+      "file_class": "org.joda.time.chrono.AssembledChronology",
+      "start_line": 318,
+      "end_line": 386,
+      "methods": [
+        "BoostN"
+      ],
+      "rank_proxy": 0.5,
+      "ranks": {
+        "BoostN": 6
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.Partial.getChronology()": {
+      "file_class": "org.joda.time.Partial",
+      "start_line": 314,
+      "end_line": 324,
+      "methods": [
+        "SBIR",
+        "Ochiai"
+      ],
+      "rank_proxy": 0.4,
+      "ranks": {
+        "SBIR": 9,
+        "Ochiai": 7
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.DateTimeUtils.isContiguous(ReadablePartial)": {
+      "file_class": "org.joda.time.DateTimeUtils",
+      "start_line": 342,
+      "end_line": 380,
+      "methods": [
+        "BoostN"
+      ],
+      "rank_proxy": 0.4,
+      "ranks": {
+        "BoostN": 7
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.format.DateTimeFormatterBuilder.printTo(StringBuffer,ReadablePartial,Locale)": {
+      "file_class": "org.joda.time.format.DateTimeFormatterBuilder",
+      "start_line": 2574,
+      "end_line": 2576,
+      "methods": [
+        "SBIR"
+      ],
+      "rank_proxy": 0.4,
+      "ranks": {
+        "SBIR": 7
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.Partial.size()": {
+      "file_class": "org.joda.time.Partial",
+      "start_line": 305,
+      "end_line": 312,
+      "methods": [
+        "SBIR",
+        "Ochiai"
+      ],
+      "rank_proxy": 0.30000000000000004,
+      "ranks": {
+        "SBIR": 10,
+        "Ochiai": 8
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.chrono.AssembledChronology.Fields.copyFieldsFrom(Chronology)": {
+      "file_class": "org.joda.time.chrono.AssembledChronology.Fields",
+      "start_line": 439,
+      "end_line": 555,
+      "methods": [
+        "BoostN"
+      ],
+      "rank_proxy": 0.30000000000000004,
+      "ranks": {
+        "BoostN": 8
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.format.DateTimeFormatterBuilder.appendCenturyOfEra(int,int)": {
+      "file_class": "org.joda.time.format.DateTimeFormatterBuilder",
+      "start_line": 936,
+      "end_line": 946,
+      "methods": [
+        "SBIR"
+      ],
+      "rank_proxy": 0.30000000000000004,
+      "ranks": {
+        "SBIR": 8
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.DateTimeFieldType.StandardDateTimeFieldType.getField(Chronology)": {
+      "file_class": "org.joda.time.DateTimeFieldType.StandardDateTimeFieldType",
+      "start_line": 478,
+      "end_line": 533,
+      "methods": [
+        "BoostN"
+      ],
+      "rank_proxy": 0.19999999999999996,
+      "ranks": {
+        "BoostN": 9
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.DateTimeFieldType.getName()": {
+      "file_class": "org.joda.time.DateTimeFieldType",
+      "start_line": 367,
+      "end_line": 379,
+      "methods": [
+        "Ochiai"
+      ],
+      "rank_proxy": 0.19999999999999996,
+      "ranks": {
+        "Ochiai": 9
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.chrono.BasicMonthOfYearDateTimeField.getMinimumValue()": {
+      "file_class": "org.joda.time.chrono.BasicMonthOfYearDateTimeField",
+      "start_line": 339,
+      "end_line": 341,
+      "methods": [
+        "Ochiai"
+      ],
+      "rank_proxy": 0.09999999999999998,
+      "ranks": {
+        "Ochiai": 10
+      },
+      "top_per_method": 10
+    },
+    "org.joda.time.chrono.BasicWeekOfWeekyearDateTimeField.getMaximumValue(ReadablePartial)": {
+      "file_class": "org.joda.time.chrono.BasicWeekOfWeekyearDateTimeField",
+      "start_line": 92,
+      "end_line": 98,
+      "methods": [
+        "BoostN"
+      ],
+      "rank_proxy": 0.09999999999999998,
+      "ranks": {
+        "BoostN": 10
+      },
+      "top_per_method": 10
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "purpose": "Exploratory controls on the already inspected development bug; not calibration or held-out evaluation",
+  "budgets": [14000, 16000, 18000, 20000],
+  "max_full_values": [1, 2, 3, 4],
+  "primary_budget": 16000,
+  "primary_max_full": 1,
+  "batch_size": 4,
+  "policies": ["fixed_l1", "highest_suspicion", "ranker_disagreement", "ranking_ambiguity", "v2_utility"],
+  "ranker": "shared_prior_evidence_fusion_v1",
+  "stopping": "No affordable action, cap, nonpositive selection score, or a Full top-1 strictly above every remaining raw L1 score. Highest suspicion also stops below the existing 0.50 suspicion threshold. This is an uncalibrated heuristic, not a correctness certificate.",
+  "disagreement": "range of three censored rank percentiles: observed r/(depth+1), missing=1; per-ranker depth recorded independently",
+  "ambiguity": "mean of adjacent-score closeness, prior/current rank movement, normalized rank-signal dispersion, top-1/top-5 boundary proximity, and reported L1 uncertainty; no probabilities",
+  "no_new_time25_evidence": true,
+  "no_trained_model": true
+}

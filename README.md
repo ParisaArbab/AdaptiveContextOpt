@@ -43,6 +43,41 @@ These are early results from **one bug**, not proof that the approach works on a
 
 More details: [Evidence experiment instructions](docs/rave_fl_phase3c_evidence_ablation.md) | [Real structured failure evidence](results/rave_fl_phase3/time25_failure_evidence.txt)
 
+
+### Extended RAVE-FL adaptive pilot and multi-dataset evaluation
+
+The [universal multi-dataset evaluation guide](docs/RAVE_FL_MULTI_DATASET_EVALUATION.md)
+documents the executable `scripts/rave_fl_run.sh` runner, seven local-export
+dataset adapters, existing controller wrappers, four fusion strategies,
+strict accounting, exact caching, resume, and automatic English reports.
+Development validation uses synthetic fixtures and saved observations;
+it does not establish new benchmark accuracy or A100 performance.
+
+The V3 diagnostic release provides an [English research progress report](reports/RAVE_FL_Research_Progress_Report.md),
+[candidate-level V2 analysis](reports/RAVE_FL_V2_Diagnostic_Analysis.md), and
+[matched controller replay results](reports/RAVE_FL_V3_Experiment_Results.md), with 13 PNG/SVG figures.
+The added uncertainty-aware heuristic does not outperform the strongest original
+single-Full suspicion baseline. Use the [single offline regeneration command](reports/RAVE_FL_Reproducibility.md)
+to rebuild diagnostics, audits, figures, and reports without new model calls.
+
+The adaptive pilot is now implemented in `python -m rave_fl.pilot`: Java AST
+sketches, budget-aware batch/expand/full/stop feedback, shared prior-preserving
+ranking, paired ablations, real Ollama usage logs, and a leakage-checked
+LightGBM training/calibration path. It starts with explicitly untrained risk
+until independent paired training data is collected. See the
+[adaptive pilot guide](docs/rave_fl_adaptive_pilot.md) and
+[small Time-25 manifest](configs/rave_pilot_time25.json).
+The historical results below remain the fixed-threshold experiment, not results
+of the new adaptive policy.
+
+The follow-up now implements **L1-first budgeted rank repair**, strict replay
+of measured independent requests, a simple raw-suspicion control, marginal-action
+labels and candidate-name/numeric-evidence ablations. See the
+[rank-repair guide](docs/rave_fl_rank_repair.md) and
+[measured follow-up results](docs/rave_fl_rank_repair_results_2026_10_22.md).
+Time-25 is a previously inspected development bug; these experiments do not
+establish learned-policy quality or generalization.
+
 ## 1. Reference repositories
 
 Clone the three codebases used to build and verify this implementation:

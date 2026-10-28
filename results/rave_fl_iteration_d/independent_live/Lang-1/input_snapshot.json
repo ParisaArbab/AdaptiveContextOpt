@@ -1,0 +1,1992 @@
+{
+  "candidates": [
+    {
+      "function_id": "org.apache.commons.lang3.math.NumberUtils.createInteger(String)",
+      "source": "    /**\n     * <p>Convert a <code>String</code> to a <code>Integer</code>, handling\n     * hex and octal notations.</p>\n     *\n     * <p>Returns <code>null</code> if the string is <code>null</code>.</p>\n     * \n     * @param str  a <code>String</code> to convert, may be null\n     * @return converted <code>Integer</code> (or null if the input is null)\n     * @throws NumberFormatException if the value cannot be converted\n     */\n    public static Integer createInteger(final String str) {\n        if (str == null) {\n            return null;\n        }\n        // decode() handles 0xAABD and 0777 (hex and octal) as well.\n        return Integer.decode(str);\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.math.NumberUtils.createInteger(String)\nSIGNATURE: public static Integer createInteger(final String str)",
+        "METHOD: org.apache.commons.lang3.math.NumberUtils.createInteger(String)\nSIGNATURE: public static Integer createInteger(final String str)\nSTRUCTURE (lossy):\nif (str == null)\nreturn null;\nreturn Integer.decode(str);\nCALL Integer.decode(str)",
+        "    /**\n     * <p>Convert a <code>String</code> to a <code>Integer</code>, handling\n     * hex and octal notations.</p>\n     *\n     * <p>Returns <code>null</code> if the string is <code>null</code>.</p>\n     * \n     * @param str  a <code>String</code> to convert, may be null\n     * @return converted <code>Integer</code> (or null if the input is null)\n     * @throws NumberFormatException if the value cannot be converted\n     */\n    public static Integer createInteger(final String str) {\n        if (str == null) {\n            return null;\n        }\n        // decode() handles 0xAABD and 0777 (hex and octal) as well.\n        return Integer.decode(str);\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.04,
+        "ranking_gap": 0,
+        "ranker_agreement": 1.0,
+        "ranker_disagreement": 0.1,
+        "failure_relevance": 0.42105263157894735,
+        "trace_match": 1.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 2.0,
+        "source_tokens": 166.0,
+        "l0_tokens": 34.0,
+        "l1_tokens": 60.0,
+        "compression_ratio": 0.3614457831325301,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.math.NumberUtils.createNumber(String)",
+      "source": "    /**\n     * <p>Turns a string value into a java.lang.Number.</p>\n     *\n     * <p>If the string starts with {@code 0x} or {@code -0x} (lower or upper case) or {@code #} or {@code -#}, it\n     * will be interpreted as a hexadecimal Integer - or Long, if the number of digits after the\n     * prefix is more than 8 - or BigInteger if there are more than 16 digits.\n     * </p>\n     * <p>Then, the value is examined for a type qualifier on the end, i.e. one of\n     * <code>'f','F','d','D','l','L'</code>.  If it is found, it starts \n     * trying to create successively larger types from the type specified\n     * until one is found that can represent the value.</p>\n     *\n     * <p>If a type specifier is not found, it will check for a decimal point\n     * and then try successively larger types from <code>Integer</code> to\n     * <code>BigInteger</code> and from <code>Float</code> to\n    * <code>BigDecimal</code>.</p>\n    * \n     * <p>\n     * Integral values with a leading {@code 0} will be interpreted as octal; the returned number will\n     * be Integer, Long or BigDecimal as appropriate.\n     * </p>\n     *\n     * <p>Returns <code>null</code> if the string is <code>null</code>.</p>\n     *\n     * <p>This method does not trim the input string, i.e., strings with leading\n     * or trailing spaces will generate NumberFormatExceptions.</p>\n     *\n     * @param str  String containing a number, may be null\n     * @return Number created from the string (or null if the input is null)\n     * @throws NumberFormatException if the value cannot be converted\n     */\n    public static Number createNumber(final String str) throws NumberFormatException {\n        if (str == null) {\n            return null;\n        }\n        if (StringUtils.isBlank(str)) {\n            throw new NumberFormatException(\"A blank string is not a valid number\");\n        }\n        // Need to deal with all possible hex prefixes here\n        final String[] hex_prefixes = {\"0x\", \"0X\", \"-0x\", \"-0X\", \"#\", \"-#\"};\n        int pfxLen = 0;\n        for(final String pfx : hex_prefixes) {\n            if (str.startsWith(pfx)) {\n                pfxLen += pfx.length();\n                break;\n            }\n        }\n        if (pfxLen > 0) { // we have a hex number\n            final int hexDigits = str.length() - pfxLen;\n            if (hexDigits > 16) { // too many for Long\n                return createBigInteger(str);\n            }\n            if (hexDigits > 8) { // too many for an int\n                return createLong(str);\n            }\n            return createInteger(str);\n        }\n        final char lastChar = str.charAt(str.length() - 1);\n        String mant;\n        String dec;\n        String exp;\n        final int decPos = str.indexOf('.');\n        final int expPos = str.indexOf('e') + str.indexOf('E') + 1; // assumes both not present\n        // if both e and E are present, this is caught by the checks on expPos (which prevent IOOBE)\n        // and the parsing which will detect if e or E appear in a number due to using the wrong offset\n\n        int numDecimals = 0; // Check required precision (LANG-693)\n        if (decPos > -1) { // there is a decimal point\n\n            if (expPos > -1) { // there is an exponent\n                if (expPos < decPos || expPos > str.length()) { // prevents double exponent causing IOOBE\n                    throw new NumberFormatException(str + \" is not a valid number.\");\n                }\n                dec = str.substring(decPos + 1, expPos);\n            } else {\n                dec = str.substring(decPos + 1);\n            }\n            mant = str.substring(0, decPos);\n            numDecimals = dec.length(); // gets number of digits past the decimal to ensure no loss of precision for floating point numbers.\n        } else {\n            if (expPos > -1) {\n                if (expPos > str.length()) { // prevents double exponent causing IOOBE\n                    throw new NumberFormatException(str + \" is not a valid number.\");\n                }\n                mant = str.substring(0, expPos);\n            } else {\n                mant = str;\n            }\n            dec = null;\n        }\n        if (!Character.isDigit(lastChar) && lastChar != '.') {\n            if (expPos > -1 && expPos < str.length() - 1) {\n                exp = str.substring(expPos + 1, str.length() - 1);\n            } else {\n                exp = null;\n            }\n            //Requesting a specific type..\n            final String numeric = str.substring(0, str.length() - 1);\n            final boolean allZeros = isAllZeros(mant) && isAllZeros(exp);\n            switch (lastChar) {\n                case 'l' :\n                case 'L' :\n                    if (dec == null\n                        && exp == null\n                        && (numeric.charAt(0) == '-' && isDigits(numeric.substring(1)) || isDigits(numeric))) {\n                        try {\n                            return createLong(numeric);\n                        } catch (final NumberFormatException nfe) { // NOPMD\n                            // Too big for a long\n                        }\n                        return createBigInteger(numeric);\n\n                    }\n                    throw new NumberFormatException(str + \" is not a valid number.\");\n                case 'f' :\n                case 'F' :\n                    try {\n                        final Float f = NumberUtils.createFloat(numeric);\n                        if (!(f.isInfinite() || (f.floatValue() == 0.0F && !allZeros))) {\n                            //If it's too big for a float or the float value = 0 and the string\n                            //has non-zeros in it, then float does not have the precision we want\n                            return f;\n                        }\n\n                    } catch (final NumberFormatException nfe) { // NOPMD\n                        // ignore the bad number\n                    }\n                    //$FALL-THROUGH$\n                case 'd' :\n                case 'D' :\n                    try {\n                        final Double d = NumberUtils.createDouble(numeric);\n                        if (!(d.isInfinite() || (d.floatValue() == 0.0D && !allZeros))) {\n                            return d;\n                        }\n                    } catch (final NumberFormatException nfe) { // NOPMD\n                        // ignore the bad number\n                    }\n                    try {\n                        return createBigDecimal(numeric);\n                    } catch (final NumberFormatException e) { // NOPMD\n                        // ignore the bad number\n                    }\n                    //$FALL-THROUGH$\n                default :\n                    throw new NumberFormatException(str + \" is not a valid number.\");\n\n            }\n        }\n        //User doesn't have a preference on the return type, so let's start\n        //small and go from there...\n        if (expPos > -1 && expPos < str.length() - 1) {\n            exp = str.substring(expPos + 1, str.length());\n        } else {\n            exp = null;\n        }\n        if (dec == null && exp == null) { // no decimal point and no exponent\n            //Must be an Integer, Long, Biginteger\n            try {\n                return createInteger(str);\n            } catch (final NumberFormatException nfe) { // NOPMD\n                // ignore the bad number\n            }\n            try {\n                return createLong(str);\n            } catch (final NumberFormatException nfe) { // NOPMD\n                // ignore the bad number\n            }\n            return createBigInteger(str);\n        }\n\n        //Must be a Float, Double, BigDecimal\n        final boolean allZeros = isAllZeros(mant) && isAllZeros(exp);\n        try {\n            if(numDecimals <= 7){// If number has 7 or fewer digits past the decimal point then make it a float\n                final Float f = createFloat(str);\n                if (!(f.isInfinite() || (f.floatValue() == 0.0F && !allZeros))) {\n                    return f;\n                }\n            }\n        } catch (final NumberFormatException nfe) { // NOPMD\n            // ignore the bad number\n        }\n        try {\n            if(numDecimals <= 16){// If number has between 8 and 16 digits past the decimal point then make it a double\n                final Double d = createDouble(str);\n                if (!(d.isInfinite() || (d.doubleValue() == 0.0D && !allZeros))) {\n                    return d;\n                }\n            }\n        } catch (final NumberFormatException nfe) { // NOPMD\n            // ignore the bad number\n        }\n\n        return createBigDecimal(str);\n    }",
+      "prior": 1.0,
+      "rank": 2,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.math.NumberUtils.createNumber(String)\nSIGNATURE: public static Number createNumber(final String str) throws NumberFormatException",
+        "METHOD: org.apache.commons.lang3.math.NumberUtils.createNumber(String)\nSIGNATURE: public static Number createNumber(final String str) throws NumberFormatException\nSTRUCTURE (lossy):\nif (str == null)\nreturn null;\nif (StringUtils.isBlank(str))\nCALL StringUtils.isBlank(str)\nthrow new NumberFormatException(\"A blank string is not a valid number\");\nfinal String[] hex_prefixes = {\"0x\", \"0X\", \"-0x\", \"-0X\", \"#\", \"-#\"};\nint pfxLen = 0;\nfor(final String pfx : hex_prefixes)\nif (str.startsWith(pfx))\nCALL str.startsWith(pfx)\npfxLen += pfx.length()\nCALL pfx.length()\nif (pfxLen > 0)\nfinal int hexDigits = str.length() - pfxLen;\nCALL str.length()\nif (hexDigits > 16)\nreturn createBigInteger(str);\nCALL createBigInteger(str)\nif (hexDigits > 8)\nreturn createLong(str);\nCALL createLong(str)\nreturn createInteger(str);\nCALL createInteger(str)\nfinal char lastChar = str.charAt(str.length() - 1);\nCALL str.charAt(str.length() - 1)\nString mant;\nString dec;\nString exp;\nfinal int decPos = str.indexOf('.');\nCALL str.indexOf('.')\nfinal int expPos = str.indexOf('e') + str.indexOf('E') + 1;\nCALL str.indexOf('e')\nCALL str.indexOf('E')\nint numDecimals = 0;\nif (decPos > -1)\nif (expPos > -1)\nif (expPos < decPos || expPos > str.length())\nthrow new NumberFormatException(str + \" is not a valid number.\");\ndec = str.substring(decPos + 1, expPos)\nCALL str.substring(decPos + 1, expPos)\ndec = str.substring(decPos + 1)\nCALL str.substring(decPos + 1)\nmant = str.substring(0, decPos)\nCALL str.substring(0, decPos)\nnumDecimals = dec.length()\nCALL dec.length()\nif (expPos > str.length())\nmant = str.substring(0, expPos)\nCALL str.substring(0, expPos)\nmant = str\ndec = null\nif (!Character.isDigit(lastChar) && lastChar != '.')\nCALL Character.isDigit(lastChar)\nif (expPos > -1 && expPos < str.length() - 1)\nexp = str.substring(expPos + 1, str.length() - 1)\nCALL str.substring(expPos + 1, str.length() - 1)\nexp = null\nfinal String numeric = str.substring(0, str.length() - 1);\nCALL str.substring(0, str.length() - 1)\nfinal boolean allZeros = isAllZeros(mant) && isAllZeros(exp);\nCALL isAllZeros(mant)\nCALL isAllZeros(exp)\nswitch (lastChar) { case 'l' : case 'L' : if (dec == null && exp == null && (numeric.charAt(0) == '-' && isDigit\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "    /**\n     * <p>Turns a string value into a java.lang.Number.</p>\n     *\n     * <p>If the string starts with {@code 0x} or {@code -0x} (lower or upper case) or {@code #} or {@code -#}, it\n     * will be interpreted as a hexadecimal Integer - or Long, if the number of digits after the\n     * prefix is more than 8 - or BigInteger if there are more than 16 digits.\n     * </p>\n     * <p>Then, the value is examined for a type qualifier on the end, i.e. one of\n     * <code>'f','F','d','D','l','L'</code>.  If it is found, it starts \n     * trying to create successively larger types from the type specified\n     * until one is found that can represent the value.</p>\n     *\n     * <p>If a type specifier is not found, it will check for a decimal point\n     * and then try successively larger types from <code>Integer</code> to\n     * <code>BigInteger</code> and from <code>Float</code> to\n    * <code>BigDecimal</code>.</p>\n    * \n     * <p>\n     * Integral values with a leading {@code 0} will be interpreted as octal; the returned number will\n     * be Integer, Long or BigDecimal as appropriate.\n     * </p>\n     *\n     * <p>Returns <code>null</code> if the string is <code>null</code>.</p>\n     *\n     * <p>This method does not trim the input string, i.e., strings with leading\n     * or trailing spaces will generate NumberFormatExceptions.</p>\n     *\n     * @param str  String containing a number, may be null\n     * @return Number created from the string (or null if the input is null)\n     * @throws NumberFormatException if the value cannot be converted\n     */\n    public static Number createNumber(final String str) throws NumberFormatException {\n        if (str == null) {\n            return null;\n        }\n        if (StringUtils.isBlank(str)) {\n            throw new NumberFormatException(\"A blank string is not a valid number\");\n        }\n        // Need to deal with all possible hex prefixes here\n        final String[] hex_prefixes = {\"0x\", \"0X\", \"-0x\", \"-0X\", \"#\", \"-#\"};\n        int pfxLen = 0;\n        for(final String pfx : hex_prefixes) {\n            if (str.startsWith(pfx)) {\n                pfxLen += pfx.length();\n                break;\n            }\n        }\n        if (pfxLen > 0) { // we have a hex number\n            final int hexDigits = str.length() - pfxLen;\n            if (hexDigits > 16) { // too many for Long\n                return createBigInteger(str);\n            }\n            if (hexDigits > 8) { // too many for an int\n                return createLong(str);\n            }\n            return createInteger(str);\n        }\n        final char lastChar = str.charAt(str.length() - 1);\n        String mant;\n        String dec;\n        String exp;\n        final int decPos = str.indexOf('.');\n        final int expPos = str.indexOf('e') + str.indexOf('E') + 1; // assumes both not present\n        // if both e and E are present, this is caught by the checks on expPos (which prevent IOOBE)\n        // and the parsing which will detect if e or E appear in a number due to using the wrong offset\n\n        int numDecimals = 0; // Check required precision (LANG-693)\n        if (decPos > -1) { // there is a decimal point\n\n            if (expPos > -1) { // there is an exponent\n                if (expPos < decPos || expPos > str.length()) { // prevents double exponent causing IOOBE\n                    throw new NumberFormatException(str + \" is not a valid number.\");\n                }\n                dec = str.substring(decPos + 1, expPos);\n            } else {\n                dec = str.substring(decPos + 1);\n            }\n            mant = str.substring(0, decPos);\n            numDecimals = dec.length(); // gets number of digits past the decimal to ensure no loss of precision for floating point numbers.\n        } else {\n            if (expPos > -1) {\n                if (expPos > str.length()) { // prevents double exponent causing IOOBE\n                    throw new NumberFormatException(str + \" is not a valid number.\");\n                }\n                mant = str.substring(0, expPos);\n            } else {\n                mant = str;\n            }\n            dec = null;\n        }\n        if (!Character.isDigit(lastChar) && lastChar != '.') {\n            if (expPos > -1 && expPos < str.length() - 1) {\n                exp = str.substring(expPos + 1, str.length() - 1);\n            } else {\n                exp = null;\n            }\n            //Requesting a specific type..\n            final String numeric = str.substring(0, str.length() - 1);\n            final boolean allZeros = isAllZeros(mant) && isAllZeros(exp);\n            switch (lastChar) {\n                case 'l' :\n                case 'L' :\n                    if (dec == null\n                        && exp == null\n                        && (numeric.charAt(0) == '-' && isDigits(numeric.substring(1)) || isDigits(numeric))) {\n                        try {\n                            return createLong(numeric);\n                        } catch (final NumberFormatException nfe) { // NOPMD\n                            // Too big for a long\n                        }\n                        return createBigInteger(numeric);\n\n                    }\n                    throw new NumberFormatException(str + \" is not a valid number.\");\n                case 'f' :\n                case 'F' :\n                    try {\n                        final Float f = NumberUtils.createFloat(numeric);\n                        if (!(f.isInfinite() || (f.floatValue() == 0.0F && !allZeros))) {\n                            //If it's too big for a float or the float value = 0 and the string\n                            //has non-zeros in it, then float does not have the precision we want\n                            return f;\n                        }\n\n                    } catch (final NumberFormatException nfe) { // NOPMD\n                        // ignore the bad number\n                    }\n                    //$FALL-THROUGH$\n                case 'd' :\n                case 'D' :\n                    try {\n                        final Double d = NumberUtils.createDouble(numeric);\n                        if (!(d.isInfinite() || (d.floatValue() == 0.0D && !allZeros))) {\n                            return d;\n                        }\n                    } catch (final NumberFormatException nfe) { // NOPMD\n                        // ignore the bad number\n                    }\n                    try {\n                        return createBigDecimal(numeric);\n                    } catch (final NumberFormatException e) { // NOPMD\n                        // ignore the bad number\n                    }\n                    //$FALL-THROUGH$\n                default :\n                    throw new NumberFormatException(str + \" is not a valid number.\");\n\n            }\n        }\n        //User doesn't have a preference on the return type, so let's start\n        //small and go from there...\n        if (expPos > -1 && expPos < str.length() - 1) {\n            exp = str.substring(expPos + 1, str.length());\n        } else {\n            exp = null;\n        }\n        if (dec == null && exp == null) { // no decimal point and no exponent\n            //Must be an Integer, Long, Biginteger\n            try {\n                return createInteger(str);\n            } catch (final NumberFormatException nfe) { // NOPMD\n                // ignore the bad number\n            }\n            try {\n                return createLong(str);\n            } catch (final NumberFormatException nfe) { // NOPMD\n                // ignore the bad number\n            }\n            return createBigInteger(str);\n        }\n\n        //Must be a Float, Double, BigDecimal\n        final boolean allZeros = isAllZeros(mant) && isAllZeros(exp);\n        try {\n            if(numDecimals <= 7){// If number has 7 or fewer digits past the decimal point then make it a float\n                final Float f = createFloat(str);\n                if (!(f.isInfinite() || (f.floatValue() == 0.0F && !allZeros))) {\n                    return f;\n                }\n            }\n        } catch (final NumberFormatException nfe) { // NOPMD\n            // ignore the bad number\n        }\n        try {\n            if(numDecimals <= 16){// If number has between 8 and 16 digits past the decimal point then make it a double\n                final Double d = createDouble(str);\n                if (!(d.isInfinite() || (d.doubleValue() == 0.0D && !allZeros))) {\n                    return d;\n                }\n            }\n        } catch (final NumberFormatException nfe) { // NOPMD\n            // ignore the bad number\n        }\n\n        return createBigDecimal(str);\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.08,
+        "ranking_gap": 0.19999999999999996,
+        "ranker_agreement": 1.0,
+        "ranker_disagreement": 0.1,
+        "failure_relevance": 0.12222222222222222,
+        "trace_match": 1.0,
+        "complexity": 33.0,
+        "call_count": 55.0,
+        "literal_count": 62.0,
+        "source_tokens": 2162.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.2631822386679001,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 33,
+        "call_count": 55,
+        "literal_count": 62
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.StringUtils.isBlank(CharSequence)",
+      "source": "    /**\n     * <p>Checks if a CharSequence is whitespace, empty (\"\") or null.</p>\n     *\n     * <pre>\n     * StringUtils.isBlank(null)      = true\n     * StringUtils.isBlank(\"\")        = true\n     * StringUtils.isBlank(\" \")       = true\n     * StringUtils.isBlank(\"bob\")     = false\n     * StringUtils.isBlank(\"  bob  \") = false\n     * </pre>\n     *\n     * @param cs  the CharSequence to check, may be null\n     * @return {@code true} if the CharSequence is null, empty or whitespace\n     * @since 2.0\n     * @since 3.0 Changed signature from isBlank(String) to isBlank(CharSequence)\n     */\n    public static boolean isBlank(final CharSequence cs) {\n        int strLen;\n        if (cs == null || (strLen = cs.length()) == 0) {\n            return true;\n        }\n        for (int i = 0; i < strLen; i++) {\n            if (Character.isWhitespace(cs.charAt(i)) == false) {\n                return false;\n            }\n        }\n        return true;\n    }",
+      "prior": 0.8,
+      "rank": 3,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.StringUtils.isBlank(CharSequence)\nSIGNATURE: public static boolean isBlank(final CharSequence cs)",
+        "METHOD: org.apache.commons.lang3.StringUtils.isBlank(CharSequence)\nSIGNATURE: public static boolean isBlank(final CharSequence cs)\nSTRUCTURE (lossy):\nint strLen;\nif (cs == null || (strLen = cs.length()) == 0)\nstrLen = cs.length()\nCALL cs.length()\nreturn true;\nfor (int i = 0; i < strLen; i++)\nint i = 0;\ni++\nif (Character.isWhitespace(cs.charAt(i)) == false)\nCALL Character.isWhitespace(cs.charAt(i))\nCALL cs.charAt(i)\nreturn false;",
+        "    /**\n     * <p>Checks if a CharSequence is whitespace, empty (\"\") or null.</p>\n     *\n     * <pre>\n     * StringUtils.isBlank(null)      = true\n     * StringUtils.isBlank(\"\")        = true\n     * StringUtils.isBlank(\" \")       = true\n     * StringUtils.isBlank(\"bob\")     = false\n     * StringUtils.isBlank(\"  bob  \") = false\n     * </pre>\n     *\n     * @param cs  the CharSequence to check, may be null\n     * @return {@code true} if the CharSequence is null, empty or whitespace\n     * @since 2.0\n     * @since 3.0 Changed signature from isBlank(String) to isBlank(CharSequence)\n     */\n    public static boolean isBlank(final CharSequence cs) {\n        int strLen;\n        if (cs == null || (strLen = cs.length()) == 0) {\n            return true;\n        }\n        for (int i = 0; i < strLen; i++) {\n            if (Character.isWhitespace(cs.charAt(i)) == false) {\n                return false;\n            }\n        }\n        return true;\n    }"
+      ],
+      "features": {
+        "prior": 0.8,
+        "rank_fraction": 0.12,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.0,
+        "failure_relevance": 0.24324324324324326,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 3.0,
+        "literal_count": 3.0,
+        "source_tokens": 238.0,
+        "l0_tokens": 33.0,
+        "l1_tokens": 108.0,
+        "compression_ratio": 0.453781512605042,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 3,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.math.NumberUtils.createBigInteger(String)",
+      "source": "    /**\n     * <p>Convert a <code>String</code> to a <code>BigInteger</code>;\n     * since 3.2 it handles hex (0x or #) and octal (0) notations.</p>\n     *\n     * <p>Returns <code>null</code> if the string is <code>null</code>.</p>\n     * \n     * @param str  a <code>String</code> to convert, may be null\n     * @return converted <code>BigInteger</code> (or null if the input is null)\n     * @throws NumberFormatException if the value cannot be converted\n     */\n    public static BigInteger createBigInteger(final String str) {\n        if (str == null) {\n            return null;\n        }\n        int pos = 0; // offset within string\n        int radix = 10;\n        boolean negate = false; // need to negate later?\n        if (str.startsWith(\"-\")) {\n            negate = true;\n            pos = 1;\n        }\n        if (str.startsWith(\"0x\", pos) || str.startsWith(\"0x\", pos)) { // hex\n            radix = 16;\n            pos += 2;\n        } else if (str.startsWith(\"#\", pos)) { // alternative hex (allowed by Long/Integer)\n            radix = 16;\n            pos ++;\n        } else if (str.startsWith(\"0\", pos) && str.length() > pos + 1) { // octal; so long as there are additional digits\n            radix = 8;\n            pos ++;\n        } // default is to treat as decimal\n\n        final BigInteger value = new BigInteger(str.substring(pos), radix);\n        return negate ? value.negate() : value;\n    }",
+      "prior": 0.8,
+      "rank": 4,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.math.NumberUtils.createBigInteger(String)\nSIGNATURE: public static BigInteger createBigInteger(final String str)",
+        "METHOD: org.apache.commons.lang3.math.NumberUtils.createBigInteger(String)\nSIGNATURE: public static BigInteger createBigInteger(final String str)\nSTRUCTURE (lossy):\nif (str == null)\nreturn null;\nint pos = 0;\nint radix = 10;\nboolean negate = false;\nif (str.startsWith(\"-\"))\nCALL str.startsWith(\"-\")\nnegate = true\npos = 1\nif (str.startsWith(\"0x\", pos) || str.startsWith(\"0x\", pos))\nCALL str.startsWith(\"0x\", pos)\nradix = 16\npos += 2\nif (str.startsWith(\"#\", pos))\nCALL str.startsWith(\"#\", pos)\npos ++\nif (str.startsWith(\"0\", pos) && str.length() > pos + 1)\nCALL str.startsWith(\"0\", pos)\nCALL str.length()\nradix = 8\nfinal BigInteger value = new BigInteger(str.substring(pos), radix);\nCALL str.substring(pos)\nreturn negate ? value.negate() : value;\nCALL value.negate()",
+        "    /**\n     * <p>Convert a <code>String</code> to a <code>BigInteger</code>;\n     * since 3.2 it handles hex (0x or #) and octal (0) notations.</p>\n     *\n     * <p>Returns <code>null</code> if the string is <code>null</code>.</p>\n     * \n     * @param str  a <code>String</code> to convert, may be null\n     * @return converted <code>BigInteger</code> (or null if the input is null)\n     * @throws NumberFormatException if the value cannot be converted\n     */\n    public static BigInteger createBigInteger(final String str) {\n        if (str == null) {\n            return null;\n        }\n        int pos = 0; // offset within string\n        int radix = 10;\n        boolean negate = false; // need to negate later?\n        if (str.startsWith(\"-\")) {\n            negate = true;\n            pos = 1;\n        }\n        if (str.startsWith(\"0x\", pos) || str.startsWith(\"0x\", pos)) { // hex\n            radix = 16;\n            pos += 2;\n        } else if (str.startsWith(\"#\", pos)) { // alternative hex (allowed by Long/Integer)\n            radix = 16;\n            pos ++;\n        } else if (str.startsWith(\"0\", pos) && str.length() > pos + 1) { // octal; so long as there are additional digits\n            radix = 8;\n            pos ++;\n        } // default is to treat as decimal\n\n        final BigInteger value = new BigInteger(str.substring(pos), radix);\n        return negate ? value.negate() : value;\n    }"
+      ],
+      "features": {
+        "prior": 0.8,
+        "rank_fraction": 0.16,
+        "ranking_gap": 0.10000000000000009,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.2857142857142857,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 8.0,
+        "literal_count": 15.0,
+        "source_tokens": 352.0,
+        "l0_tokens": 37.0,
+        "l1_tokens": 191.0,
+        "compression_ratio": 0.5426136363636364,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 8,
+        "literal_count": 15
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.StringUtils.StringUtils()",
+      "source": "    /**\n     * <p>{@code StringUtils} instances should NOT be constructed in\n     * standard programming. Instead, the class should be used as\n     * {@code StringUtils.trim(\" foo \");}.</p>\n     *\n     * <p>This constructor is public to permit tools that require a JavaBean\n     * instance to operate.</p>\n     */\n    public StringUtils() {\n        super();\n    }",
+      "prior": 0.7,
+      "rank": 5,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.StringUtils.StringUtils()\nSIGNATURE: public StringUtils()",
+        "METHOD: org.apache.commons.lang3.StringUtils.StringUtils()\nSIGNATURE: public StringUtils()\nSTRUCTURE (lossy):\n",
+        "    /**\n     * <p>{@code StringUtils} instances should NOT be constructed in\n     * standard programming. Instead, the class should be used as\n     * {@code StringUtils.trim(\" foo \");}.</p>\n     *\n     * <p>This constructor is public to permit tools that require a JavaBean\n     * instance to operate.</p>\n     */\n    public StringUtils() {\n        super();\n    }"
+      ],
+      "features": {
+        "prior": 0.7,
+        "rank_fraction": 0.2,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.2903225806451613,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 91.0,
+        "l0_tokens": 23.0,
+        "l1_tokens": 28.0,
+        "compression_ratio": 0.3076923076923077,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.math.NumberUtils.createBigDecimal(String)",
+      "source": "    /**\n     * <p>Convert a <code>String</code> to a <code>BigDecimal</code>.</p>\n     * \n     * <p>Returns <code>null</code> if the string is <code>null</code>.</p>\n     *\n     * @param str  a <code>String</code> to convert, may be null\n     * @return converted <code>BigDecimal</code> (or null if the input is null)\n     * @throws NumberFormatException if the value cannot be converted\n     */\n    public static BigDecimal createBigDecimal(final String str) {\n        if (str == null) {\n            return null;\n        }\n        // handle JDK1.3.1 bug where \"\" throws IndexOutOfBoundsException\n        if (StringUtils.isBlank(str)) {\n            throw new NumberFormatException(\"A blank string is not a valid number\");\n        }\n        if (str.trim().startsWith(\"--\")) {\n            // this is protection for poorness in java.lang.BigDecimal.\n            // it accepts this as a legal value, but it does not appear \n            // to be in specification of class. OS X Java parses it to \n            // a wrong value.\n            throw new NumberFormatException(str + \" is not a valid number.\");\n        }\n        return new BigDecimal(str);\n    }",
+      "prior": 0.7,
+      "rank": 6,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.math.NumberUtils.createBigDecimal(String)\nSIGNATURE: public static BigDecimal createBigDecimal(final String str)",
+        "METHOD: org.apache.commons.lang3.math.NumberUtils.createBigDecimal(String)\nSIGNATURE: public static BigDecimal createBigDecimal(final String str)\nSTRUCTURE (lossy):\nif (str == null)\nreturn null;\nif (StringUtils.isBlank(str))\nCALL StringUtils.isBlank(str)\nthrow new NumberFormatException(\"A blank string is not a valid number\");\nif (str.trim().startsWith(\"--\"))\nCALL str.trim().startsWith(\"--\")\nCALL str.trim()\nthrow new NumberFormatException(str + \" is not a valid number.\");\nreturn new BigDecimal(str);",
+        "    /**\n     * <p>Convert a <code>String</code> to a <code>BigDecimal</code>.</p>\n     * \n     * <p>Returns <code>null</code> if the string is <code>null</code>.</p>\n     *\n     * @param str  a <code>String</code> to convert, may be null\n     * @return converted <code>BigDecimal</code> (or null if the input is null)\n     * @throws NumberFormatException if the value cannot be converted\n     */\n    public static BigDecimal createBigDecimal(final String str) {\n        if (str == null) {\n            return null;\n        }\n        // handle JDK1.3.1 bug where \"\" throws IndexOutOfBoundsException\n        if (StringUtils.isBlank(str)) {\n            throw new NumberFormatException(\"A blank string is not a valid number\");\n        }\n        if (str.trim().startsWith(\"--\")) {\n            // this is protection for poorness in java.lang.BigDecimal.\n            // it accepts this as a legal value, but it does not appear \n            // to be in specification of class. OS X Java parses it to \n            // a wrong value.\n            throw new NumberFormatException(str + \" is not a valid number.\");\n        }\n        return new BigDecimal(str);\n    }"
+      ],
+      "features": {
+        "prior": 0.7,
+        "rank_fraction": 0.24,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.31666666666666665,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 3.0,
+        "literal_count": 5.0,
+        "source_tokens": 288.0,
+        "l0_tokens": 37.0,
+        "l1_tokens": 126.0,
+        "compression_ratio": 0.4375,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 3,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.math.NumberUtils.createLong(String)",
+      "source": "    /**\n     * <p>Convert a <code>String</code> to a <code>Long</code>; \n     * since 3.1 it handles hex and octal notations.</p>\n     * \n     * <p>Returns <code>null</code> if the string is <code>null</code>.</p>\n     *\n     * @param str  a <code>String</code> to convert, may be null\n     * @return converted <code>Long</code> (or null if the input is null)\n     * @throws NumberFormatException if the value cannot be converted\n     */\n    public static Long createLong(final String str) {\n        if (str == null) {\n            return null;\n        }\n        return Long.decode(str);\n    }",
+      "prior": 0.7,
+      "rank": 7,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.math.NumberUtils.createLong(String)\nSIGNATURE: public static Long createLong(final String str)",
+        "METHOD: org.apache.commons.lang3.math.NumberUtils.createLong(String)\nSIGNATURE: public static Long createLong(final String str)\nSTRUCTURE (lossy):\nif (str == null)\nreturn null;\nreturn Long.decode(str);\nCALL Long.decode(str)",
+        "    /**\n     * <p>Convert a <code>String</code> to a <code>Long</code>; \n     * since 3.1 it handles hex and octal notations.</p>\n     * \n     * <p>Returns <code>null</code> if the string is <code>null</code>.</p>\n     *\n     * @param str  a <code>String</code> to convert, may be null\n     * @return converted <code>Long</code> (or null if the input is null)\n     * @throws NumberFormatException if the value cannot be converted\n     */\n    public static Long createLong(final String str) {\n        if (str == null) {\n            return null;\n        }\n        return Long.decode(str);\n    }"
+      ],
+      "features": {
+        "prior": 0.7,
+        "rank_fraction": 0.28,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.4444444444444444,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 2.0,
+        "source_tokens": 148.0,
+        "l0_tokens": 32.0,
+        "l1_tokens": 56.0,
+        "compression_ratio": 0.3783783783783784,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.RandomStringUtils.random(int,int,int,boolean,boolean,char[],Random)",
+      "source": "    /**\n     * <p>Creates a random string based on a variety of options, using\n     * supplied source of randomness.</p>\n     *\n     * <p>If start and end are both {@code 0}, start and end are set\n     * to {@code ' '} and {@code 'z'}, the ASCII printable\n     * characters, will be used, unless letters and numbers are both\n     * {@code false}, in which case, start and end are set to\n     * {@code 0} and {@code Integer.MAX_VALUE}.\n     *\n     * <p>If set is not {@code null}, characters between start and\n     * end are chosen.</p>\n     *\n     * <p>This method accepts a user-supplied {@link Random}\n     * instance to use as a source of randomness. By seeding a single \n     * {@link Random} instance with a fixed seed and using it for each call,\n     * the same random sequence of strings can be generated repeatedly\n     * and predictably.</p>\n     *\n     * @param count  the length of random string to create\n     * @param start  the position in set of chars to start at\n     * @param end  the position in set of chars to end before\n     * @param letters  only allow letters?\n     * @param numbers  only allow numbers?\n     * @param chars  the set of chars to choose randoms from, must not be empty.\n     *  If {@code null}, then it will use the set of all chars.\n     * @param random  a source of randomness.\n     * @return the random string\n     * @throws ArrayIndexOutOfBoundsException if there are not\n     *  {@code (end - start) + 1} characters in the set array.\n     * @throws IllegalArgumentException if {@code count} &lt; 0 or the provided chars array is empty.\n     * @since 2.0\n     */\n    public static String random(int count, int start, int end, final boolean letters, final boolean numbers,\n                                final char[] chars, final Random random) {\n        if (count == 0) {\n            return \"\";\n        } else if (count < 0) {\n            throw new IllegalArgumentException(\"Requested random string length \" + count + \" is less than 0.\");\n        }\n        if (chars != null && chars.length == 0) {\n            throw new IllegalArgumentException(\"The chars array must not be empty\");\n        }\n\n        if (start == 0 && end == 0) {\n            if (chars != null) {\n                end = chars.length;\n            } else {\n                if (!letters && !numbers) {\n                    end = Integer.MAX_VALUE;\n                } else {\n                    end = 'z' + 1;\n                    start = ' ';                \n                }\n            }\n        } else {\n            if (end <= start) {\n                throw new IllegalArgumentException(\"Parameter end (\" + end + \") must be greater than start (\" + start + \")\");\n            }\n        }\n\n        final char[] buffer = new char[count];\n        final int gap = end - start;\n\n        while (count-- != 0) {\n            char ch;\n            if (chars == null) {\n                ch = (char) (random.nextInt(gap) + start);\n            } else {\n                ch = chars[random.nextInt(gap) + start];\n            }\n            if (letters && Character.isLetter(ch)\n                    || numbers && Character.isDigit(ch)\n                    || !letters && !numbers) {\n                if(ch >= 56320 && ch <= 57343) {\n                    if(count == 0) {\n                        count++;\n                    } else {\n                        // low surrogate, insert high surrogate after putting it in\n                        buffer[count] = ch;\n                        count--;\n                        buffer[count] = (char) (55296 + random.nextInt(128));\n                    }\n                } else if(ch >= 55296 && ch <= 56191) {\n                    if(count == 0) {\n                        count++;\n                    } else {\n                        // high surrogate, insert low surrogate before putting it in\n                        buffer[count] = (char) (56320 + random.nextInt(128));\n                        count--;\n                        buffer[count] = ch;\n                    }\n                } else if(ch >= 56192 && ch <= 56319) {\n                    // private high surrogate, no effing clue, so skip it\n                    count++;\n                } else {\n                    buffer[count] = ch;\n                }\n            } else {\n                count++;\n            }\n        }\n        return new String(buffer);\n    }",
+      "prior": 0.6,
+      "rank": 8,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.RandomStringUtils.random(int,int,int,boolean,boolean,char[],Random)\nSIGNATURE: public static String random(int count, int start, int end, final boolean letters, final boolean numbers,\n                                final char[] chars, final Random random)",
+        "METHOD: org.apache.commons.lang3.RandomStringUtils.random(int,int,int,boolean,boolean,char[],Random)\nSIGNATURE: public static String random(int count, int start, int end, final boolean letters, final boolean numbers,\n                                final char[] chars, final Random random)\nSTRUCTURE (lossy):\nif (count == 0)\nreturn \"\";\nif (count < 0)\nthrow new IllegalArgumentException(\"Requested random string length \" + count + \" is less than 0.\");\nif (chars != null && chars.length == 0)\nthrow new IllegalArgumentException(\"The chars array must not be empty\");\nif (start == 0 && end == 0)\nif (chars != null)\nend = chars.length\nif (!letters && !numbers)\nend = Integer.MAX_VALUE\nend = 'z' + 1\nstart = ' '\nif (end <= start)\nthrow new IllegalArgumentException(\"Parameter end (\" + end + \") must be greater than start (\" + start + \")\");\nfinal char[] buffer = new char[count];\nfinal int gap = end - start;\nwhile (count-- != 0)\ncount--\nchar ch;\nif (chars == null)\nch = (char) (random.nextInt(gap) + start)\nCALL random.nextInt(gap)\nch = chars[random.nextInt(gap) + start]\nif (letters && Character.isLetter(ch) || numbers && Character.isDigit(ch) || !letters && !numbers)\nCALL Character.isLetter(ch)\nCALL Character.isDigit(ch)\nif(ch >= 56320 && ch <= 57343)\nif(count == 0)\ncount++\nbuffer[count] = ch\nbuffer[count] = (char) (55296 + random.nextInt(128))\nCALL random.nextInt(128)\nif(ch >= 55296 && ch <= 56191)\nbuffer[count] = (char) (56320 + random.nextInt(128))\nif(ch >= 56192 && ch <= 56319)\nreturn new String(buffer);",
+        "    /**\n     * <p>Creates a random string based on a variety of options, using\n     * supplied source of randomness.</p>\n     *\n     * <p>If start and end are both {@code 0}, start and end are set\n     * to {@code ' '} and {@code 'z'}, the ASCII printable\n     * characters, will be used, unless letters and numbers are both\n     * {@code false}, in which case, start and end are set to\n     * {@code 0} and {@code Integer.MAX_VALUE}.\n     *\n     * <p>If set is not {@code null}, characters between start and\n     * end are chosen.</p>\n     *\n     * <p>This method accepts a user-supplied {@link Random}\n     * instance to use as a source of randomness. By seeding a single \n     * {@link Random} instance with a fixed seed and using it for each call,\n     * the same random sequence of strings can be generated repeatedly\n     * and predictably.</p>\n     *\n     * @param count  the length of random string to create\n     * @param start  the position in set of chars to start at\n     * @param end  the position in set of chars to end before\n     * @param letters  only allow letters?\n     * @param numbers  only allow numbers?\n     * @param chars  the set of chars to choose randoms from, must not be empty.\n     *  If {@code null}, then it will use the set of all chars.\n     * @param random  a source of randomness.\n     * @return the random string\n     * @throws ArrayIndexOutOfBoundsException if there are not\n     *  {@code (end - start) + 1} characters in the set array.\n     * @throws IllegalArgumentException if {@code count} &lt; 0 or the provided chars array is empty.\n     * @since 2.0\n     */\n    public static String random(int count, int start, int end, final boolean letters, final boolean numbers,\n                                final char[] chars, final Random random) {\n        if (count == 0) {\n            return \"\";\n        } else if (count < 0) {\n            throw new IllegalArgumentException(\"Requested random string length \" + count + \" is less than 0.\");\n        }\n        if (chars != null && chars.length == 0) {\n            throw new IllegalArgumentException(\"The chars array must not be empty\");\n        }\n\n        if (start == 0 && end == 0) {\n            if (chars != null) {\n                end = chars.length;\n            } else {\n                if (!letters && !numbers) {\n                    end = Integer.MAX_VALUE;\n                } else {\n                    end = 'z' + 1;\n                    start = ' ';                \n                }\n            }\n        } else {\n            if (end <= start) {\n                throw new IllegalArgumentException(\"Parameter end (\" + end + \") must be greater than start (\" + start + \")\");\n            }\n        }\n\n        final char[] buffer = new char[count];\n        final int gap = end - start;\n\n        while (count-- != 0) {\n            char ch;\n            if (chars == null) {\n                ch = (char) (random.nextInt(gap) + start);\n            } else {\n                ch = chars[random.nextInt(gap) + start];\n            }\n            if (letters && Character.isLetter(ch)\n                    || numbers && Character.isDigit(ch)\n                    || !letters && !numbers) {\n                if(ch >= 56320 && ch <= 57343) {\n                    if(count == 0) {\n                        count++;\n                    } else {\n                        // low surrogate, insert high surrogate after putting it in\n                        buffer[count] = ch;\n                        count--;\n                        buffer[count] = (char) (55296 + random.nextInt(128));\n                    }\n                } else if(ch >= 55296 && ch <= 56191) {\n                    if(count == 0) {\n                        count++;\n                    } else {\n                        // high surrogate, insert low surrogate before putting it in\n                        buffer[count] = (char) (56320 + random.nextInt(128));\n                        count--;\n                        buffer[count] = ch;\n                    }\n                } else if(ch >= 56192 && ch <= 56319) {\n                    // private high surrogate, no effing clue, so skip it\n                    count++;\n                } else {\n                    buffer[count] = ch;\n                }\n            } else {\n                count++;\n            }\n        }\n        return new String(buffer);\n    }"
+      ],
+      "features": {
+        "prior": 0.6,
+        "rank_fraction": 0.32,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.11475409836065574,
+        "trace_match": 0.0,
+        "complexity": 16.0,
+        "call_count": 6.0,
+        "literal_count": 31.0,
+        "source_tokens": 1087.0,
+        "l0_tokens": 73.0,
+        "l1_tokens": 378.0,
+        "compression_ratio": 0.34774609015639374,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 16,
+        "call_count": 6,
+        "literal_count": 31
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.StringUtils.isEmpty(CharSequence)",
+      "source": "    /**\n     * <p>Checks if a CharSequence is empty (\"\") or null.</p>\n     *\n     * <pre>\n     * StringUtils.isEmpty(null)      = true\n     * StringUtils.isEmpty(\"\")        = true\n     * StringUtils.isEmpty(\" \")       = false\n     * StringUtils.isEmpty(\"bob\")     = false\n     * StringUtils.isEmpty(\"  bob  \") = false\n     * </pre>\n     *\n     * <p>NOTE: This method changed in Lang version 2.0.\n     * It no longer trims the CharSequence.\n     * That functionality is available in isBlank().</p>\n     *\n     * @param cs  the CharSequence to check, may be null\n     * @return {@code true} if the CharSequence is empty or null\n     * @since 3.0 Changed signature from isEmpty(String) to isEmpty(CharSequence)\n     */\n    public static boolean isEmpty(final CharSequence cs) {\n        return cs == null || cs.length() == 0;\n    }",
+      "prior": 0.6,
+      "rank": 9,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.StringUtils.isEmpty(CharSequence)\nSIGNATURE: public static boolean isEmpty(final CharSequence cs)",
+        "METHOD: org.apache.commons.lang3.StringUtils.isEmpty(CharSequence)\nSIGNATURE: public static boolean isEmpty(final CharSequence cs)\nSTRUCTURE (lossy):\nreturn cs == null || cs.length() == 0;\nCALL cs.length()",
+        "    /**\n     * <p>Checks if a CharSequence is empty (\"\") or null.</p>\n     *\n     * <pre>\n     * StringUtils.isEmpty(null)      = true\n     * StringUtils.isEmpty(\"\")        = true\n     * StringUtils.isEmpty(\" \")       = false\n     * StringUtils.isEmpty(\"bob\")     = false\n     * StringUtils.isEmpty(\"  bob  \") = false\n     * </pre>\n     *\n     * <p>NOTE: This method changed in Lang version 2.0.\n     * It no longer trims the CharSequence.\n     * That functionality is available in isBlank().</p>\n     *\n     * @param cs  the CharSequence to check, may be null\n     * @return {@code true} if the CharSequence is empty or null\n     * @since 3.0 Changed signature from isEmpty(String) to isEmpty(CharSequence)\n     */\n    public static boolean isEmpty(final CharSequence cs) {\n        return cs == null || cs.length() == 0;\n    }"
+      ],
+      "features": {
+        "prior": 0.6,
+        "rank_fraction": 0.36,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.21951219512195122,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 2.0,
+        "source_tokens": 207.0,
+        "l0_tokens": 33.0,
+        "l1_tokens": 52.0,
+        "compression_ratio": 0.25120772946859904,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.math.NumberUtils.toLong(String,long)",
+      "source": "    /**\n     * <p>Convert a <code>String</code> to a <code>long</code>, returning a\n     * default value if the conversion fails.</p>\n     *\n     * <p>If the string is <code>null</code>, the default value is returned.</p>\n     *\n     * <pre>\n     *   NumberUtils.toLong(null, 1L) = 1L\n     *   NumberUtils.toLong(\"\", 1L)   = 1L\n     *   NumberUtils.toLong(\"1\", 0L)  = 1L\n     * </pre>\n     *\n     * @param str  the string to convert, may be null\n     * @param defaultValue  the default value\n     * @return the long represented by the string, or the default if conversion fails\n     * @since 2.1\n     */\n    public static long toLong(final String str, final long defaultValue) {\n        if (str == null) {\n            return defaultValue;\n        }\n        try {\n            return Long.parseLong(str);\n        } catch (final NumberFormatException nfe) {\n            return defaultValue;\n        }\n    }",
+      "prior": 0.6,
+      "rank": 10,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.math.NumberUtils.toLong(String,long)\nSIGNATURE: public static long toLong(final String str, final long defaultValue)",
+        "METHOD: org.apache.commons.lang3.math.NumberUtils.toLong(String,long)\nSIGNATURE: public static long toLong(final String str, final long defaultValue)\nSTRUCTURE (lossy):\nif (str == null)\nreturn defaultValue;\nreturn Long.parseLong(str);\nCALL Long.parseLong(str)\ncatch (final NumberFormatException nfe)",
+        "    /**\n     * <p>Convert a <code>String</code> to a <code>long</code>, returning a\n     * default value if the conversion fails.</p>\n     *\n     * <p>If the string is <code>null</code>, the default value is returned.</p>\n     *\n     * <pre>\n     *   NumberUtils.toLong(null, 1L) = 1L\n     *   NumberUtils.toLong(\"\", 1L)   = 1L\n     *   NumberUtils.toLong(\"1\", 0L)  = 1L\n     * </pre>\n     *\n     * @param str  the string to convert, may be null\n     * @param defaultValue  the default value\n     * @return the long represented by the string, or the default if conversion fails\n     * @since 2.1\n     */\n    public static long toLong(final String str, final long defaultValue) {\n        if (str == null) {\n            return defaultValue;\n        }\n        try {\n            return Long.parseLong(str);\n        } catch (final NumberFormatException nfe) {\n            return defaultValue;\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.6,
+        "rank_fraction": 0.4,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.4,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 226.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 75.0,
+        "compression_ratio": 0.33185840707964603,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.Conversion.hexToLong(String,int,long,int,int)",
+      "source": "    /**\n     * <p>\n     * Converts an array of Char into a long using the default (little endian, Lsb0) byte and\n     * bit ordering.\n     * </p>\n     * \n     * @param src the hex string to convert\n     * @param srcPos the position in {@code src}, in Char unit, from where to start the\n     *            conversion\n     * @param dstInit initial value of the destination long\n     * @param dstPos the position of the lsb, in bits, in the result long\n     * @param nHex the number of Chars to convert\n     * @return a long containing the selected bits\n     * @throws IllegalArgumentException if {@code (nHexs-1)*4+dstPos >= 64}\n     */\n    public static long hexToLong(final String src, final int srcPos, final long dstInit, final int dstPos, final int nHex) {\n        if (0 == nHex) {\n            return dstInit;\n        }\n        if ((nHex - 1) * 4 + dstPos >= 64) {\n            throw new IllegalArgumentException(\n                \"(nHexs-1)*4+dstPos is greather or equal to than 64\");\n        }\n        long out = dstInit;\n        int shift = 0;\n        for (int i = 0; i < nHex; i++ ) {\n            shift = i * 4 + dstPos;\n            final long bits = (0xfL & hexDigitToInt(src.charAt(i + srcPos))) << shift;\n            final long mask = 0xfL << shift;\n            out = (out & ~mask) | bits;\n        }\n        return out;\n    }",
+      "prior": 0.5,
+      "rank": 11,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.Conversion.hexToLong(String,int,long,int,int)\nSIGNATURE: public static long hexToLong(final String src, final int srcPos, final long dstInit, final int dstPos, final int nHex)",
+        "METHOD: org.apache.commons.lang3.Conversion.hexToLong(String,int,long,int,int)\nSIGNATURE: public static long hexToLong(final String src, final int srcPos, final long dstInit, final int dstPos, final int nHex)\nSTRUCTURE (lossy):\nif (0 == nHex)\nreturn dstInit;\nif ((nHex - 1) * 4 + dstPos >= 64)\nthrow new IllegalArgumentException( \"(nHexs-1)*4+dstPos is greather or equal to than 64\");\nlong out = dstInit;\nint shift = 0;\nfor (int i = 0; i < nHex; i++ )\nint i = 0;\ni++\nshift = i * 4 + dstPos\nfinal long bits = (0xfL & hexDigitToInt(src.charAt(i + srcPos))) << shift;\nCALL hexDigitToInt(src.charAt(i + srcPos))\nCALL src.charAt(i + srcPos)\nfinal long mask = 0xfL << shift;\nout = (out & ~mask) | bits\nreturn out;",
+        "    /**\n     * <p>\n     * Converts an array of Char into a long using the default (little endian, Lsb0) byte and\n     * bit ordering.\n     * </p>\n     * \n     * @param src the hex string to convert\n     * @param srcPos the position in {@code src}, in Char unit, from where to start the\n     *            conversion\n     * @param dstInit initial value of the destination long\n     * @param dstPos the position of the lsb, in bits, in the result long\n     * @param nHex the number of Chars to convert\n     * @return a long containing the selected bits\n     * @throws IllegalArgumentException if {@code (nHexs-1)*4+dstPos >= 64}\n     */\n    public static long hexToLong(final String src, final int srcPos, final long dstInit, final int dstPos, final int nHex) {\n        if (0 == nHex) {\n            return dstInit;\n        }\n        if ((nHex - 1) * 4 + dstPos >= 64) {\n            throw new IllegalArgumentException(\n                \"(nHexs-1)*4+dstPos is greather or equal to than 64\");\n        }\n        long out = dstInit;\n        int shift = 0;\n        for (int i = 0; i < nHex; i++ ) {\n            shift = i * 4 + dstPos;\n            final long bits = (0xfL & hexDigitToInt(src.charAt(i + srcPos))) << shift;\n            final long mask = 0xfL << shift;\n            out = (out & ~mask) | bits;\n        }\n        return out;\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.44,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.1875,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 2.0,
+        "literal_count": 10.0,
+        "source_tokens": 333.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 177.0,
+        "compression_ratio": 0.5315315315315315,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 2,
+        "literal_count": 10
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.StringUtils.isNotEmpty(CharSequence)",
+      "source": "    /**\n     * <p>Checks if a CharSequence is not empty (\"\") and not null.</p>\n     *\n     * <pre>\n     * StringUtils.isNotEmpty(null)      = false\n     * StringUtils.isNotEmpty(\"\")        = false\n     * StringUtils.isNotEmpty(\" \")       = true\n     * StringUtils.isNotEmpty(\"bob\")     = true\n     * StringUtils.isNotEmpty(\"  bob  \") = true\n     * </pre>\n     *\n     * @param cs  the CharSequence to check, may be null\n     * @return {@code true} if the CharSequence is not empty and not null\n     * @since 3.0 Changed signature from isNotEmpty(String) to isNotEmpty(CharSequence)\n     */\n    public static boolean isNotEmpty(final CharSequence cs) {\n        return !StringUtils.isEmpty(cs);\n    }",
+      "prior": 0.5,
+      "rank": 12,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.StringUtils.isNotEmpty(CharSequence)\nSIGNATURE: public static boolean isNotEmpty(final CharSequence cs)",
+        "METHOD: org.apache.commons.lang3.StringUtils.isNotEmpty(CharSequence)\nSIGNATURE: public static boolean isNotEmpty(final CharSequence cs)\nSTRUCTURE (lossy):\nreturn !StringUtils.isEmpty(cs);\nCALL StringUtils.isEmpty(cs)",
+        "    /**\n     * <p>Checks if a CharSequence is not empty (\"\") and not null.</p>\n     *\n     * <pre>\n     * StringUtils.isNotEmpty(null)      = false\n     * StringUtils.isNotEmpty(\"\")        = false\n     * StringUtils.isNotEmpty(\" \")       = true\n     * StringUtils.isNotEmpty(\"bob\")     = true\n     * StringUtils.isNotEmpty(\"  bob  \") = true\n     * </pre>\n     *\n     * @param cs  the CharSequence to check, may be null\n     * @return {@code true} if the CharSequence is not empty and not null\n     * @since 3.0 Changed signature from isNotEmpty(String) to isNotEmpty(CharSequence)\n     */\n    public static boolean isNotEmpty(final CharSequence cs) {\n        return !StringUtils.isEmpty(cs);\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.48,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.25806451612903225,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 175.0,
+        "l0_tokens": 34.0,
+        "l1_tokens": 55.0,
+        "compression_ratio": 0.3142857142857143,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.text.translate.UnicodeUnescaper.translate(CharSequence,int,Writer)",
+      "source": "    /**\n     * {@inheritDoc}\n     */\n    @Override\n    public int translate(final CharSequence input, final int index, final Writer out) throws IOException {\n        if (input.charAt(index) == '\\\\' && index + 1 < input.length() && input.charAt(index + 1) == 'u') {\n            // consume optional additional 'u' chars\n            int i = 2;\n            while (index + i < input.length() && input.charAt(index + i) == 'u') {\n                i++;\n            }\n\n            if (index + i < input.length() && input.charAt(index + i) == '+') {\n                i++;\n            }\n\n            if (index + i + 4 <= input.length()) {\n                // Get 4 hex digits\n                final CharSequence unicode = input.subSequence(index + i, index + i + 4);\n\n                try {\n                    final int value = Integer.parseInt(unicode.toString(), 16);\n                    out.write((char) value);\n                } catch (final NumberFormatException nfe) {\n                    throw new IllegalArgumentException(\"Unable to parse unicode value: \" + unicode, nfe);\n                }\n                return i + 4;\n            } else {\n                throw new IllegalArgumentException(\"Less than 4 hex digits in unicode value: '\" + input.subSequence(index, input.length())\n                        + \"' due to end of CharSequence\");\n            }\n        }\n        return 0;\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.text.translate.UnicodeUnescaper.translate(CharSequence,int,Writer)\nSIGNATURE: @Override\n    public int translate(final CharSequence input, final int index, final Writer out) throws IOException",
+        "METHOD: org.apache.commons.lang3.text.translate.UnicodeUnescaper.translate(CharSequence,int,Writer)\nSIGNATURE: @Override\n    public int translate(final CharSequence input, final int index, final Writer out) throws IOException\nSTRUCTURE (lossy):\nif (input.charAt(index) == '\\\\' && index + 1 < input.length() && input.charAt(index + 1) == 'u')\nCALL input.charAt(index)\nCALL input.length()\nCALL input.charAt(index + 1)\nint i = 2;\nwhile (index + i < input.length() && input.charAt(index + i) == 'u')\nCALL input.charAt(index + i)\ni++\nif (index + i < input.length() && input.charAt(index + i) == '+')\nif (index + i + 4 <= input.length())\nfinal CharSequence unicode = input.subSequence(index + i, index + i + 4);\nCALL input.subSequence(index + i, index + i + 4)\nfinal int value = Integer.parseInt(unicode.toString(), 16);\nCALL Integer.parseInt(unicode.toString(), 16)\nCALL unicode.toString()\nCALL out.write((char) value)\ncatch (final NumberFormatException nfe)\nthrow new IllegalArgumentException(\"Unable to parse unicode value: \" + unicode, nfe);\nreturn i + 4;\nthrow new IllegalArgumentException(\"Less than 4 hex digits in unicode value: '\" + input.subSequence(index, input.length()) + \"' due to end of CharSequence\");\nCALL input.subSequence(index, input.length())\nreturn 0;",
+        "    /**\n     * {@inheritDoc}\n     */\n    @Override\n    public int translate(final CharSequence input, final int index, final Writer out) throws IOException {\n        if (input.charAt(index) == '\\\\' && index + 1 < input.length() && input.charAt(index + 1) == 'u') {\n            // consume optional additional 'u' chars\n            int i = 2;\n            while (index + i < input.length() && input.charAt(index + i) == 'u') {\n                i++;\n            }\n\n            if (index + i < input.length() && input.charAt(index + i) == '+') {\n                i++;\n            }\n\n            if (index + i + 4 <= input.length()) {\n                // Get 4 hex digits\n                final CharSequence unicode = input.subSequence(index + i, index + i + 4);\n\n                try {\n                    final int value = Integer.parseInt(unicode.toString(), 16);\n                    out.write((char) value);\n                } catch (final NumberFormatException nfe) {\n                    throw new IllegalArgumentException(\"Unable to parse unicode value: \" + unicode, nfe);\n                }\n                return i + 4;\n            } else {\n                throw new IllegalArgumentException(\"Less than 4 hex digits in unicode value: '\" + input.subSequence(index, input.length())\n                        + \"' due to end of CharSequence\");\n            }\n        }\n        return 0;\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.52,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.2222222222222222,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 14.0,
+        "literal_count": 15.0,
+        "source_tokens": 346.0,
+        "l0_tokens": 57.0,
+        "l1_tokens": 317.0,
+        "compression_ratio": 0.9161849710982659,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 14,
+        "literal_count": 15
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.StringUtils.isNotBlank(CharSequence)",
+      "source": "    /**\n     * <p>Checks if a CharSequence is not empty (\"\"), not null and not whitespace only.</p>\n     *\n     * <pre>\n     * StringUtils.isNotBlank(null)      = false\n     * StringUtils.isNotBlank(\"\")        = false\n     * StringUtils.isNotBlank(\" \")       = false\n     * StringUtils.isNotBlank(\"bob\")     = true\n     * StringUtils.isNotBlank(\"  bob  \") = true\n     * </pre>\n     *\n     * @param cs  the CharSequence to check, may be null\n     * @return {@code true} if the CharSequence is\n     *  not empty and not null and not whitespace\n     * @since 2.0\n     * @since 3.0 Changed signature from isNotBlank(String) to isNotBlank(CharSequence)\n     */\n    public static boolean isNotBlank(final CharSequence cs) {\n        return !StringUtils.isBlank(cs);\n    }",
+      "prior": 0.4,
+      "rank": 14,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.StringUtils.isNotBlank(CharSequence)\nSIGNATURE: public static boolean isNotBlank(final CharSequence cs)",
+        "METHOD: org.apache.commons.lang3.StringUtils.isNotBlank(CharSequence)\nSIGNATURE: public static boolean isNotBlank(final CharSequence cs)\nSTRUCTURE (lossy):\nreturn !StringUtils.isBlank(cs);\nCALL StringUtils.isBlank(cs)",
+        "    /**\n     * <p>Checks if a CharSequence is not empty (\"\"), not null and not whitespace only.</p>\n     *\n     * <pre>\n     * StringUtils.isNotBlank(null)      = false\n     * StringUtils.isNotBlank(\"\")        = false\n     * StringUtils.isNotBlank(\" \")       = false\n     * StringUtils.isNotBlank(\"bob\")     = true\n     * StringUtils.isNotBlank(\"  bob  \") = true\n     * </pre>\n     *\n     * @param cs  the CharSequence to check, may be null\n     * @return {@code true} if the CharSequence is\n     *  not empty and not null and not whitespace\n     * @since 2.0\n     * @since 3.0 Changed signature from isNotBlank(String) to isNotBlank(CharSequence)\n     */\n    public static boolean isNotBlank(final CharSequence cs) {\n        return !StringUtils.isBlank(cs);\n    }"
+      ],
+      "features": {
+        "prior": 0.4,
+        "rank_fraction": 0.56,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.23529411764705882,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 191.0,
+        "l0_tokens": 34.0,
+        "l1_tokens": 55.0,
+        "compression_ratio": 0.2879581151832461,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.math.NumberUtils.toDouble(String,double)",
+      "source": "    /**\n     * <p>Convert a <code>String</code> to a <code>double</code>, returning a\n     * default value if the conversion fails.</p>\n     *\n     * <p>If the string <code>str</code> is <code>null</code>, the default\n     * value is returned.</p>\n     *\n     * <pre>\n     *   NumberUtils.toDouble(null, 1.1d)   = 1.1d\n     *   NumberUtils.toDouble(\"\", 1.1d)     = 1.1d\n     *   NumberUtils.toDouble(\"1.5\", 0.0d)  = 1.5d\n     * </pre>\n     *\n     * @param str the string to convert, may be <code>null</code>\n     * @param defaultValue the default value\n     * @return the double represented by the string, or defaultValue\n     *  if conversion fails\n     * @since 2.1\n     */\n    public static double toDouble(final String str, final double defaultValue) {\n      if (str == null) {\n          return defaultValue;\n      }\n      try {\n          return Double.parseDouble(str);\n      } catch (final NumberFormatException nfe) {\n          return defaultValue;\n      }\n    }",
+      "prior": 0.4,
+      "rank": 15,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.math.NumberUtils.toDouble(String,double)\nSIGNATURE: public static double toDouble(final String str, final double defaultValue)",
+        "METHOD: org.apache.commons.lang3.math.NumberUtils.toDouble(String,double)\nSIGNATURE: public static double toDouble(final String str, final double defaultValue)\nSTRUCTURE (lossy):\nif (str == null)\nreturn defaultValue;\nreturn Double.parseDouble(str);\nCALL Double.parseDouble(str)\ncatch (final NumberFormatException nfe)",
+        "    /**\n     * <p>Convert a <code>String</code> to a <code>double</code>, returning a\n     * default value if the conversion fails.</p>\n     *\n     * <p>If the string <code>str</code> is <code>null</code>, the default\n     * value is returned.</p>\n     *\n     * <pre>\n     *   NumberUtils.toDouble(null, 1.1d)   = 1.1d\n     *   NumberUtils.toDouble(\"\", 1.1d)     = 1.1d\n     *   NumberUtils.toDouble(\"1.5\", 0.0d)  = 1.5d\n     * </pre>\n     *\n     * @param str the string to convert, may be <code>null</code>\n     * @param defaultValue the default value\n     * @return the double represented by the string, or defaultValue\n     *  if conversion fails\n     * @since 2.1\n     */\n    public static double toDouble(final String str, final double defaultValue) {\n      if (str == null) {\n          return defaultValue;\n      }\n      try {\n          return Double.parseDouble(str);\n      } catch (final NumberFormatException nfe) {\n          return defaultValue;\n      }\n    }"
+      ],
+      "features": {
+        "prior": 0.4,
+        "rank_fraction": 0.6,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.37142857142857144,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 243.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 80.0,
+        "compression_ratio": 0.3292181069958848,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.text.translate.NumericEntityUnescaper.translate(CharSequence,int,Writer)",
+      "source": "    /**\n     * {@inheritDoc}\n     */\n    @Override\n    public int translate(final CharSequence input, final int index, final Writer out) throws IOException {\n        final int seqEnd = input.length();\n        // Uses -2 to ensure there is something after the &#\n        if(input.charAt(index) == '&' && index < seqEnd - 2 && input.charAt(index + 1) == '#') {\n            int start = index + 2;\n            boolean isHex = false;\n\n            final char firstChar = input.charAt(start);\n            if(firstChar == 'x' || firstChar == 'X') {\n                start++;\n                isHex = true;\n\n                // Check there's more than just an x after the &#\n                if(start == seqEnd) {\n                    return 0;\n                }\n            }\n\n            int end = start;\n            // Note that this supports character codes without a ; on the end\n            while(end < seqEnd && ( input.charAt(end) >= '0' && input.charAt(end) <= '9' ||\n                                    input.charAt(end) >= 'a' && input.charAt(end) <= 'f' ||\n                                    input.charAt(end) >= 'A' && input.charAt(end) <= 'F' ) )\n            {\n                end++;\n            }\n\n            final boolean semiNext = end != seqEnd && input.charAt(end) == ';';\n\n            if(!semiNext) {\n                if(isSet(OPTION.semiColonRequired)) {\n                    return 0;\n                } else\n                if(isSet(OPTION.errorIfNoSemiColon)) {\n                    throw new IllegalArgumentException(\"Semi-colon required at end of numeric entity\");\n                }\n            }\n\n            int entityValue;\n            try {\n                if(isHex) {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 16);\n                } else {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 10);\n                }\n            } catch(final NumberFormatException nfe) {\n                return 0;\n            }\n\n            if(entityValue > 0xFFFF) {\n                final char[] chrs = Character.toChars(entityValue);\n                out.write(chrs[0]);\n                out.write(chrs[1]);\n            } else {\n                out.write(entityValue);\n            }\n\n            return 2 + end - start + (isHex ? 1 : 0) + (semiNext ? 1 : 0);\n        }\n        return 0;\n    }",
+      "prior": 0.4,
+      "rank": 16,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.text.translate.NumericEntityUnescaper.translate(CharSequence,int,Writer)\nSIGNATURE: @Override\n    public int translate(final CharSequence input, final int index, final Writer out) throws IOException",
+        "METHOD: org.apache.commons.lang3.text.translate.NumericEntityUnescaper.translate(CharSequence,int,Writer)\nSIGNATURE: @Override\n    public int translate(final CharSequence input, final int index, final Writer out) throws IOException\nSTRUCTURE (lossy):\nfinal int seqEnd = input.length();\nCALL input.length()\nif(input.charAt(index) == '&' && index < seqEnd - 2 && input.charAt(index + 1) == '#')\nCALL input.charAt(index)\nCALL input.charAt(index + 1)\nint start = index + 2;\nboolean isHex = false;\nfinal char firstChar = input.charAt(start);\nCALL input.charAt(start)\nif(firstChar == 'x' || firstChar == 'X')\nstart++\nisHex = true\nif(start == seqEnd)\nreturn 0;\nint end = start;\nwhile(end < seqEnd && ( input.charAt(end) >= '0' && input.charAt(end) <= '9' || input.charAt(end) >= 'a' && input.charAt(end) <= 'f' || input.charAt(end) >= 'A' && input.charAt(end) <= 'F' ) )\nCALL input.charAt(end)\nend++\nfinal boolean semiNext = end != seqEnd && input.charAt(end) == ';';\nif(!semiNext)\nif(isSet(OPTION.semiColonRequired))\nCALL isSet(OPTION.semiColonRequired)\nif(isSet(OPTION.errorIfNoSemiColon))\nCALL isSet(OPTION.errorIfNoSemiColon)\nthrow new IllegalArgumentException(\"Semi-colon required at end of numeric entity\");\nint entityValue;\nif(isHex)\nentityValue = Integer.parseInt(input.subSequence(start, end).toString(), 16)\nCALL Integer.parseInt(input.subSequence(start, end).toString(), 16)\nCALL input.subSequence(start, end).toString()\nCALL input.subSequence(start, end)\nentityValue = Integer.parseInt(input.subSequence(start, end).toString(), 10)\nCALL Integer.parseInt(input.subSequence(start, end).toString(), 10)\ncatch(final NumberFormatException nfe)\nif(entityValue > 0xFFFF)\nfinal char[] chrs = Character.toChars(entityValue);\nCALL Character.toChars(entityValue)\nCALL out.write(chrs[0])\nCALL out.write(chrs[1])\nCALL out.write(entityValue)\nreturn 2 + end - start + (isHex ? 1 : 0) + (semiNext ? 1 : 0);",
+        "    /**\n     * {@inheritDoc}\n     */\n    @Override\n    public int translate(final CharSequence input, final int index, final Writer out) throws IOException {\n        final int seqEnd = input.length();\n        // Uses -2 to ensure there is something after the &#\n        if(input.charAt(index) == '&' && index < seqEnd - 2 && input.charAt(index + 1) == '#') {\n            int start = index + 2;\n            boolean isHex = false;\n\n            final char firstChar = input.charAt(start);\n            if(firstChar == 'x' || firstChar == 'X') {\n                start++;\n                isHex = true;\n\n                // Check there's more than just an x after the &#\n                if(start == seqEnd) {\n                    return 0;\n                }\n            }\n\n            int end = start;\n            // Note that this supports character codes without a ; on the end\n            while(end < seqEnd && ( input.charAt(end) >= '0' && input.charAt(end) <= '9' ||\n                                    input.charAt(end) >= 'a' && input.charAt(end) <= 'f' ||\n                                    input.charAt(end) >= 'A' && input.charAt(end) <= 'F' ) )\n            {\n                end++;\n            }\n\n            final boolean semiNext = end != seqEnd && input.charAt(end) == ';';\n\n            if(!semiNext) {\n                if(isSet(OPTION.semiColonRequired)) {\n                    return 0;\n                } else\n                if(isSet(OPTION.errorIfNoSemiColon)) {\n                    throw new IllegalArgumentException(\"Semi-colon required at end of numeric entity\");\n                }\n            }\n\n            int entityValue;\n            try {\n                if(isHex) {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 16);\n                } else {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 10);\n                }\n            } catch(final NumberFormatException nfe) {\n                return 0;\n            }\n\n            if(entityValue > 0xFFFF) {\n                final char[] chrs = Character.toChars(entityValue);\n                out.write(chrs[0]);\n                out.write(chrs[1]);\n            } else {\n                out.write(entityValue);\n            }\n\n            return 2 + end - start + (isHex ? 1 : 0) + (semiNext ? 1 : 0);\n        }\n        return 0;\n    }"
+      ],
+      "features": {
+        "prior": 0.4,
+        "rank_fraction": 0.64,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.16666666666666666,
+        "trace_match": 0.0,
+        "complexity": 11.0,
+        "call_count": 23.0,
+        "literal_count": 29.0,
+        "source_tokens": 596.0,
+        "l0_tokens": 58.0,
+        "l1_tokens": 474.0,
+        "compression_ratio": 0.7953020134228188,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 11,
+        "call_count": 23,
+        "literal_count": 29
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.StringUtils.trim(String)",
+      "source": "    /**\n     * <p>Removes control characters (char &lt;= 32) from both\n     * ends of this String, handling {@code null} by returning\n     * {@code null}.</p>\n     *\n     * <p>The String is trimmed using {@link String#trim()}.\n     * Trim removes start and end characters &lt;= 32.\n     * To strip whitespace use {@link #strip(String)}.</p>\n     *\n     * <p>To trim your choice of characters, use the\n     * {@link #strip(String, String)} methods.</p>\n     *\n     * <pre>\n     * StringUtils.trim(null)          = null\n     * StringUtils.trim(\"\")            = \"\"\n     * StringUtils.trim(\"     \")       = \"\"\n     * StringUtils.trim(\"abc\")         = \"abc\"\n     * StringUtils.trim(\"    abc    \") = \"abc\"\n     * </pre>\n     *\n     * @param str  the String to be trimmed, may be null\n     * @return the trimmed string, {@code null} if null String input\n     */\n    public static String trim(final String str) {\n        return str == null ? null : str.trim();\n    }",
+      "prior": 0.30000000000000004,
+      "rank": 17,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.StringUtils.trim(String)\nSIGNATURE: public static String trim(final String str)",
+        "METHOD: org.apache.commons.lang3.StringUtils.trim(String)\nSIGNATURE: public static String trim(final String str)\nSTRUCTURE (lossy):\nreturn str == null ? null : str.trim();\nCALL str.trim()",
+        "    /**\n     * <p>Removes control characters (char &lt;= 32) from both\n     * ends of this String, handling {@code null} by returning\n     * {@code null}.</p>\n     *\n     * <p>The String is trimmed using {@link String#trim()}.\n     * Trim removes start and end characters &lt;= 32.\n     * To strip whitespace use {@link #strip(String)}.</p>\n     *\n     * <p>To trim your choice of characters, use the\n     * {@link #strip(String, String)} methods.</p>\n     *\n     * <pre>\n     * StringUtils.trim(null)          = null\n     * StringUtils.trim(\"\")            = \"\"\n     * StringUtils.trim(\"     \")       = \"\"\n     * StringUtils.trim(\"abc\")         = \"abc\"\n     * StringUtils.trim(\"    abc    \") = \"abc\"\n     * </pre>\n     *\n     * @param str  the String to be trimmed, may be null\n     * @return the trimmed string, {@code null} if null String input\n     */\n    public static String trim(final String str) {\n        return str == null ? null : str.trim();\n    }"
+      ],
+      "features": {
+        "prior": 0.30000000000000004,
+        "rank_fraction": 0.68,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.21428571428571427,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 2.0,
+        "source_tokens": 240.0,
+        "l0_tokens": 28.0,
+        "l1_tokens": 47.0,
+        "compression_ratio": 0.19583333333333333,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.math.NumberUtils.isNumber(String)",
+      "source": "    /**\n     * <p>Checks whether the String a valid Java number.</p>\n     *\n     * <p>Valid numbers include hexadecimal marked with the <code>0x</code>\n     * qualifier, scientific notation and numbers marked with a type\n     * qualifier (e.g. 123L).</p>\n     *\n     * <p><code>Null</code> and empty String will return\n     * <code>false</code>.</p>\n     *\n     * @param str  the <code>String</code> to check\n     * @return <code>true</code> if the string is a correctly formatted number\n     */\n    public static boolean isNumber(final String str) {\n        if (StringUtils.isEmpty(str)) {\n            return false;\n        }\n        final char[] chars = str.toCharArray();\n        int sz = chars.length;\n        boolean hasExp = false;\n        boolean hasDecPoint = false;\n        boolean allowSigns = false;\n        boolean foundDigit = false;\n        // deal with any possible sign up front\n        final int start = (chars[0] == '-') ? 1 : 0;\n        if (sz > start + 1 && chars[start] == '0' && chars[start + 1] == 'x') {\n            int i = start + 2;\n            if (i == sz) {\n                return false; // str == \"0x\"\n            }\n            // checking hex (it can't be anything else)\n            for (; i < chars.length; i++) {\n                if ((chars[i] < '0' || chars[i] > '9')\n                    && (chars[i] < 'a' || chars[i] > 'f')\n                    && (chars[i] < 'A' || chars[i] > 'F')) {\n                    return false;\n                }\n            }\n            return true;\n        }\n        sz--; // don't want to loop to the last char, check it afterwords\n              // for type qualifiers\n        int i = start;\n        // loop to the next to last char or to the last char if we need another digit to\n        // make a valid number (e.g. chars[0..5] = \"1234E\")\n        while (i < sz || (i < sz + 1 && allowSigns && !foundDigit)) {\n            if (chars[i] >= '0' && chars[i] <= '9') {\n                foundDigit = true;\n                allowSigns = false;\n\n            } else if (chars[i] == '.') {\n                if (hasDecPoint || hasExp) {\n                    // two decimal points or dec in exponent   \n                    return false;\n                }\n                hasDecPoint = true;\n            } else if (chars[i] == 'e' || chars[i] == 'E') {\n                // we've already taken care of hex.\n                if (hasExp) {\n                    // two E's\n                    return false;\n                }\n                if (!foundDigit) {\n                    return false;\n                }\n                hasExp = true;\n                allowSigns = true;\n            } else if (chars[i] == '+' || chars[i] == '-') {\n                if (!allowSigns) {\n                    return false;\n                }\n                allowSigns = false;\n                foundDigit = false; // we need a digit after the E\n            } else {\n                return false;\n            }\n            i++;\n        }\n        if (i < chars.length) {\n            if (chars[i] >= '0' && chars[i] <= '9') {\n                // no type qualifier, OK\n                return true;\n            }\n            if (chars[i] == 'e' || chars[i] == 'E') {\n                // can't have an E at the last byte\n                return false;\n            }\n            if (chars[i] == '.') {\n                if (hasDecPoint || hasExp) {\n                    // two decimal points or dec in exponent\n                    return false;\n                }\n                // single trailing decimal point after non-exponent is ok\n                return foundDigit;\n            }\n            if (!allowSigns\n                && (chars[i] == 'd'\n                    || chars[i] == 'D'\n                    || chars[i] == 'f'\n                    || chars[i] == 'F')) {\n                return foundDigit;\n            }\n            if (chars[i] == 'l'\n                || chars[i] == 'L') {\n                // not allowing L with an exponent or decimal point\n                return foundDigit && !hasExp && !hasDecPoint;\n            }\n            // last character is illegal\n            return false;\n        }\n        // allowSigns is true iff the val ends in 'E'\n        // found digit it to make sure weird stuff like '.' and '1E-' doesn't pass\n        return !allowSigns && foundDigit;\n    }",
+      "prior": 0.30000000000000004,
+      "rank": 18,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.math.NumberUtils.isNumber(String)\nSIGNATURE: public static boolean isNumber(final String str)",
+        "METHOD: org.apache.commons.lang3.math.NumberUtils.isNumber(String)\nSIGNATURE: public static boolean isNumber(final String str)\nSTRUCTURE (lossy):\nif (StringUtils.isEmpty(str))\nCALL StringUtils.isEmpty(str)\nreturn false;\nfinal char[] chars = str.toCharArray();\nCALL str.toCharArray()\nint sz = chars.length;\nboolean hasExp = false;\nboolean hasDecPoint = false;\nboolean allowSigns = false;\nboolean foundDigit = false;\nfinal int start = (chars[0] == '-') ? 1 : 0;\nif (sz > start + 1 && chars[start] == '0' && chars[start + 1] == 'x')\nint i = start + 2;\nif (i == sz)\nfor (; i < chars.length; i++)\ni++\nif ((chars[i] < '0' || chars[i] > '9') && (chars[i] < 'a' || chars[i] > 'f') && (chars[i] < 'A' || chars[i] > 'F'))\nreturn true;\nsz--\nint i = start;\nwhile (i < sz || (i < sz + 1 && allowSigns && !foundDigit))\nif (chars[i] >= '0' && chars[i] <= '9')\nfoundDigit = true\nallowSigns = false\nif (chars[i] == '.')\nif (hasDecPoint || hasExp)\nhasDecPoint = true\nif (chars[i] == 'e' || chars[i] == 'E')\nif (hasExp)\nif (!foundDigit)\nhasExp = true\nallowSigns = true\nif (chars[i] == '+' || chars[i] == '-')\nif (!allowSigns)\nfoundDigit = false\nif (i < chars.length)\nreturn foundDigit;\nif (!allowSigns && (chars[i] == 'd' || chars[i] == 'D' || chars[i] == 'f' || chars[i] == 'F'))\nif (chars[i] == 'l' || chars[i] == 'L')\nreturn foundDigit && !hasExp && !hasDecPoint;\nreturn !allowSigns && foundDigit;",
+        "    /**\n     * <p>Checks whether the String a valid Java number.</p>\n     *\n     * <p>Valid numbers include hexadecimal marked with the <code>0x</code>\n     * qualifier, scientific notation and numbers marked with a type\n     * qualifier (e.g. 123L).</p>\n     *\n     * <p><code>Null</code> and empty String will return\n     * <code>false</code>.</p>\n     *\n     * @param str  the <code>String</code> to check\n     * @return <code>true</code> if the string is a correctly formatted number\n     */\n    public static boolean isNumber(final String str) {\n        if (StringUtils.isEmpty(str)) {\n            return false;\n        }\n        final char[] chars = str.toCharArray();\n        int sz = chars.length;\n        boolean hasExp = false;\n        boolean hasDecPoint = false;\n        boolean allowSigns = false;\n        boolean foundDigit = false;\n        // deal with any possible sign up front\n        final int start = (chars[0] == '-') ? 1 : 0;\n        if (sz > start + 1 && chars[start] == '0' && chars[start + 1] == 'x') {\n            int i = start + 2;\n            if (i == sz) {\n                return false; // str == \"0x\"\n            }\n            // checking hex (it can't be anything else)\n            for (; i < chars.length; i++) {\n                if ((chars[i] < '0' || chars[i] > '9')\n                    && (chars[i] < 'a' || chars[i] > 'f')\n                    && (chars[i] < 'A' || chars[i] > 'F')) {\n                    return false;\n                }\n            }\n            return true;\n        }\n        sz--; // don't want to loop to the last char, check it afterwords\n              // for type qualifiers\n        int i = start;\n        // loop to the next to last char or to the last char if we need another digit to\n        // make a valid number (e.g. chars[0..5] = \"1234E\")\n        while (i < sz || (i < sz + 1 && allowSigns && !foundDigit)) {\n            if (chars[i] >= '0' && chars[i] <= '9') {\n                foundDigit = true;\n                allowSigns = false;\n\n            } else if (chars[i] == '.') {\n                if (hasDecPoint || hasExp) {\n                    // two decimal points or dec in exponent   \n                    return false;\n                }\n                hasDecPoint = true;\n            } else if (chars[i] == 'e' || chars[i] == 'E') {\n                // we've already taken care of hex.\n                if (hasExp) {\n                    // two E's\n                    return false;\n                }\n                if (!foundDigit) {\n                    return false;\n                }\n                hasExp = true;\n                allowSigns = true;\n            } else if (chars[i] == '+' || chars[i] == '-') {\n                if (!allowSigns) {\n                    return false;\n                }\n                allowSigns = false;\n                foundDigit = false; // we need a digit after the E\n            } else {\n                return false;\n            }\n            i++;\n        }\n        if (i < chars.length) {\n            if (chars[i] >= '0' && chars[i] <= '9') {\n                // no type qualifier, OK\n                return true;\n            }\n            if (chars[i] == 'e' || chars[i] == 'E') {\n                // can't have an E at the last byte\n                return false;\n            }\n            if (chars[i] == '.') {\n                if (hasDecPoint || hasExp) {\n                    // two decimal points or dec in exponent\n                    return false;\n                }\n                // single trailing decimal point after non-exponent is ok\n                return foundDigit;\n            }\n            if (!allowSigns\n                && (chars[i] == 'd'\n                    || chars[i] == 'D'\n                    || chars[i] == 'f'\n                    || chars[i] == 'F')) {\n                return foundDigit;\n            }\n            if (chars[i] == 'l'\n                || chars[i] == 'L') {\n                // not allowing L with an exponent or decimal point\n                return foundDigit && !hasExp && !hasDecPoint;\n            }\n            // last character is illegal\n            return false;\n        }\n        // allowSigns is true iff the val ends in 'E'\n        // found digit it to make sure weird stuff like '.' and '1E-' doesn't pass\n        return !allowSigns && foundDigit;\n    }"
+      ],
+      "features": {
+        "prior": 0.30000000000000004,
+        "rank_fraction": 0.72,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.13861386138613863,
+        "trace_match": 0.0,
+        "complexity": 22.0,
+        "call_count": 2.0,
+        "literal_count": 34.0,
+        "source_tokens": 1077.0,
+        "l0_tokens": 32.0,
+        "l1_tokens": 346.0,
+        "compression_ratio": 0.3212627669452182,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 22,
+        "call_count": 2,
+        "literal_count": 34
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.math.NumberUtils.toByte(String,byte)",
+      "source": "    /**\n     * <p>Convert a <code>String</code> to a <code>byte</code>, returning a\n     * default value if the conversion fails.</p>\n     *\n     * <p>If the string is <code>null</code>, the default value is returned.</p>\n     *\n     * <pre>\n     *   NumberUtils.toByte(null, 1) = 1\n     *   NumberUtils.toByte(\"\", 1)   = 1\n     *   NumberUtils.toByte(\"1\", 0)  = 1\n     * </pre>\n     *\n     * @param str  the string to convert, may be null\n     * @param defaultValue  the default value\n     * @return the byte represented by the string, or the default if conversion fails\n     * @since 2.5\n     */\n    public static byte toByte(final String str, final byte defaultValue) {\n        if(str == null) {\n            return defaultValue;\n        }\n        try {\n            return Byte.parseByte(str);\n        } catch (final NumberFormatException nfe) {\n            return defaultValue;\n        }\n    }",
+      "prior": 0.30000000000000004,
+      "rank": 19,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.math.NumberUtils.toByte(String,byte)\nSIGNATURE: public static byte toByte(final String str, final byte defaultValue)",
+        "METHOD: org.apache.commons.lang3.math.NumberUtils.toByte(String,byte)\nSIGNATURE: public static byte toByte(final String str, final byte defaultValue)\nSTRUCTURE (lossy):\nif(str == null)\nreturn defaultValue;\nreturn Byte.parseByte(str);\nCALL Byte.parseByte(str)\ncatch (final NumberFormatException nfe)",
+        "    /**\n     * <p>Convert a <code>String</code> to a <code>byte</code>, returning a\n     * default value if the conversion fails.</p>\n     *\n     * <p>If the string is <code>null</code>, the default value is returned.</p>\n     *\n     * <pre>\n     *   NumberUtils.toByte(null, 1) = 1\n     *   NumberUtils.toByte(\"\", 1)   = 1\n     *   NumberUtils.toByte(\"1\", 0)  = 1\n     * </pre>\n     *\n     * @param str  the string to convert, may be null\n     * @param defaultValue  the default value\n     * @return the byte represented by the string, or the default if conversion fails\n     * @since 2.5\n     */\n    public static byte toByte(final String str, final byte defaultValue) {\n        if(str == null) {\n            return defaultValue;\n        }\n        try {\n            return Byte.parseByte(str);\n        } catch (final NumberFormatException nfe) {\n            return defaultValue;\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.30000000000000004,
+        "rank_fraction": 0.76,
+        "ranking_gap": 0.10000000000000009,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.37142857142857144,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 224.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 75.0,
+        "compression_ratio": 0.33482142857142855,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.ObjectUtils.identityToString(Appendable,Object)",
+      "source": "    /**\n     * <p>Appends the toString that would be produced by {@code Object}\n     * if a class did not override toString itself. {@code null}\n     * will throw a NullPointerException for either of the two parameters. </p>\n     *\n     * <pre>\n     * ObjectUtils.identityToString(appendable, \"\")            = appendable.append(\"java.lang.String@1e23\"\n     * ObjectUtils.identityToString(appendable, Boolean.TRUE)  = appendable.append(\"java.lang.Boolean@7fa\"\n     * ObjectUtils.identityToString(appendable, Boolean.TRUE)  = appendable.append(\"java.lang.Boolean@7fa\")\n     * </pre>\n     *\n     * @param appendable  the appendable to append to\n     * @param object  the object to create a toString for\n     * @throws IOException \n     * @since 3.2\n     */\n    public static void identityToString(final Appendable appendable, final Object object) throws IOException {\n        if (object == null) {\n            throw new NullPointerException(\"Cannot get the toString of a null identity\");\n        }\n        appendable.append(object.getClass().getName())\n              .append('@')\n              .append(Integer.toHexString(System.identityHashCode(object)));\n    }",
+      "prior": 0.19999999999999996,
+      "rank": 20,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.ObjectUtils.identityToString(Appendable,Object)\nSIGNATURE: public static void identityToString(final Appendable appendable, final Object object) throws IOException",
+        "METHOD: org.apache.commons.lang3.ObjectUtils.identityToString(Appendable,Object)\nSIGNATURE: public static void identityToString(final Appendable appendable, final Object object) throws IOException\nSTRUCTURE (lossy):\nif (object == null)\nthrow new NullPointerException(\"Cannot get the toString of a null identity\");\nCALL appendable.append(object.getClass().getName()) .append('@') .append(Integer.toHexString(System.identityHashCode(object)))\nCALL appendable.append(object.getClass().getName()) .append('@')\nCALL appendable.append(object.getClass().getName())\nCALL object.getClass().getName()\nCALL object.getClass()\nCALL Integer.toHexString(System.identityHashCode(object))\nCALL System.identityHashCode(object)",
+        "    /**\n     * <p>Appends the toString that would be produced by {@code Object}\n     * if a class did not override toString itself. {@code null}\n     * will throw a NullPointerException for either of the two parameters. </p>\n     *\n     * <pre>\n     * ObjectUtils.identityToString(appendable, \"\")            = appendable.append(\"java.lang.String@1e23\"\n     * ObjectUtils.identityToString(appendable, Boolean.TRUE)  = appendable.append(\"java.lang.Boolean@7fa\"\n     * ObjectUtils.identityToString(appendable, Boolean.TRUE)  = appendable.append(\"java.lang.Boolean@7fa\")\n     * </pre>\n     *\n     * @param appendable  the appendable to append to\n     * @param object  the object to create a toString for\n     * @throws IOException \n     * @since 3.2\n     */\n    public static void identityToString(final Appendable appendable, final Object object) throws IOException {\n        if (object == null) {\n            throw new NullPointerException(\"Cannot get the toString of a null identity\");\n        }\n        appendable.append(object.getClass().getName())\n              .append('@')\n              .append(Integer.toHexString(System.identityHashCode(object)));\n    }"
+      ],
+      "features": {
+        "prior": 0.19999999999999996,
+        "rank_fraction": 0.8,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.2830188679245283,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 7.0,
+        "literal_count": 3.0,
+        "source_tokens": 290.0,
+        "l0_tokens": 49.0,
+        "l1_tokens": 177.0,
+        "compression_ratio": 0.6103448275862069,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 7,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.StringUtils.trimToNull(String)",
+      "source": "    /**\n     * <p>Removes control characters (char &lt;= 32) from both\n     * ends of this String returning {@code null} if the String is\n     * empty (\"\") after the trim or if it is {@code null}.\n     *\n     * <p>The String is trimmed using {@link String#trim()}.\n     * Trim removes start and end characters &lt;= 32.\n     * To strip whitespace use {@link #stripToNull(String)}.</p>\n     *\n     * <pre>\n     * StringUtils.trimToNull(null)          = null\n     * StringUtils.trimToNull(\"\")            = null\n     * StringUtils.trimToNull(\"     \")       = null\n     * StringUtils.trimToNull(\"abc\")         = \"abc\"\n     * StringUtils.trimToNull(\"    abc    \") = \"abc\"\n     * </pre>\n     *\n     * @param str  the String to be trimmed, may be null\n     * @return the trimmed String,\n     *  {@code null} if only chars &lt;= 32, empty or null String input\n     * @since 2.0\n     */\n    public static String trimToNull(final String str) {\n        final String ts = trim(str);\n        return isEmpty(ts) ? null : ts;\n    }",
+      "prior": 0.19999999999999996,
+      "rank": 21,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.StringUtils.trimToNull(String)\nSIGNATURE: public static String trimToNull(final String str)",
+        "METHOD: org.apache.commons.lang3.StringUtils.trimToNull(String)\nSIGNATURE: public static String trimToNull(final String str)\nSTRUCTURE (lossy):\nfinal String ts = trim(str);\nCALL trim(str)\nreturn isEmpty(ts) ? null : ts;\nCALL isEmpty(ts)",
+        "    /**\n     * <p>Removes control characters (char &lt;= 32) from both\n     * ends of this String returning {@code null} if the String is\n     * empty (\"\") after the trim or if it is {@code null}.\n     *\n     * <p>The String is trimmed using {@link String#trim()}.\n     * Trim removes start and end characters &lt;= 32.\n     * To strip whitespace use {@link #stripToNull(String)}.</p>\n     *\n     * <pre>\n     * StringUtils.trimToNull(null)          = null\n     * StringUtils.trimToNull(\"\")            = null\n     * StringUtils.trimToNull(\"     \")       = null\n     * StringUtils.trimToNull(\"abc\")         = \"abc\"\n     * StringUtils.trimToNull(\"    abc    \") = \"abc\"\n     * </pre>\n     *\n     * @param str  the String to be trimmed, may be null\n     * @return the trimmed String,\n     *  {@code null} if only chars &lt;= 32, empty or null String input\n     * @since 2.0\n     */\n    public static String trimToNull(final String str) {\n        final String ts = trim(str);\n        return isEmpty(ts) ? null : ts;\n    }"
+      ],
+      "features": {
+        "prior": 0.19999999999999996,
+        "rank_fraction": 0.84,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.20930232558139536,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 254.0,
+        "l0_tokens": 31.0,
+        "l1_tokens": 59.0,
+        "compression_ratio": 0.23228346456692914,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.math.NumberUtils.toFloat(String,float)",
+      "source": "    /**\n     * <p>Convert a <code>String</code> to a <code>float</code>, returning a\n     * default value if the conversion fails.</p>\n     *\n     * <p>If the string <code>str</code> is <code>null</code>, the default\n     * value is returned.</p>\n     *\n     * <pre>\n     *   NumberUtils.toFloat(null, 1.1f)   = 1.0f\n     *   NumberUtils.toFloat(\"\", 1.1f)     = 1.1f\n     *   NumberUtils.toFloat(\"1.5\", 0.0f)  = 1.5f\n     * </pre>\n     *\n     * @param str the string to convert, may be <code>null</code>\n     * @param defaultValue the default value\n     * @return the float represented by the string, or defaultValue\n     *  if conversion fails\n     * @since 2.1\n     */\n    public static float toFloat(final String str, final float defaultValue) {\n      if (str == null) {\n          return defaultValue;\n      }     \n      try {\n          return Float.parseFloat(str);\n      } catch (final NumberFormatException nfe) {\n          return defaultValue;\n      }\n    }",
+      "prior": 0.19999999999999996,
+      "rank": 22,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.math.NumberUtils.toFloat(String,float)\nSIGNATURE: public static float toFloat(final String str, final float defaultValue)",
+        "METHOD: org.apache.commons.lang3.math.NumberUtils.toFloat(String,float)\nSIGNATURE: public static float toFloat(final String str, final float defaultValue)\nSTRUCTURE (lossy):\nif (str == null)\nreturn defaultValue;\nreturn Float.parseFloat(str);\nCALL Float.parseFloat(str)\ncatch (final NumberFormatException nfe)",
+        "    /**\n     * <p>Convert a <code>String</code> to a <code>float</code>, returning a\n     * default value if the conversion fails.</p>\n     *\n     * <p>If the string <code>str</code> is <code>null</code>, the default\n     * value is returned.</p>\n     *\n     * <pre>\n     *   NumberUtils.toFloat(null, 1.1f)   = 1.0f\n     *   NumberUtils.toFloat(\"\", 1.1f)     = 1.1f\n     *   NumberUtils.toFloat(\"1.5\", 0.0f)  = 1.5f\n     * </pre>\n     *\n     * @param str the string to convert, may be <code>null</code>\n     * @param defaultValue the default value\n     * @return the float represented by the string, or defaultValue\n     *  if conversion fails\n     * @since 2.1\n     */\n    public static float toFloat(final String str, final float defaultValue) {\n      if (str == null) {\n          return defaultValue;\n      }     \n      try {\n          return Float.parseFloat(str);\n      } catch (final NumberFormatException nfe) {\n          return defaultValue;\n      }\n    }"
+      ],
+      "features": {
+        "prior": 0.19999999999999996,
+        "rank_fraction": 0.88,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.37142857142857144,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 241.0,
+        "l0_tokens": 39.0,
+        "l1_tokens": 77.0,
+        "compression_ratio": 0.31950207468879666,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.Conversion.shortToHex(short,int,String,int,int)",
+      "source": "    /**\n     * <p>\n     * Converts a short into an array of Char using the default (little endian, Lsb0) byte and\n     * bit ordering.\n     * </p>\n     * \n     * @param src the short to convert\n     * @param srcPos the position in {@code src}, in bits, from where to start the conversion\n     * @param dstInit the initial value for the result String\n     * @param dstPos the position in {@code dst} where to copy the result\n     * @param nHexs the number of Chars to copy to {@code dst}, must be smaller or equal to the\n     *            width of the input (from srcPos to msb)\n     * @return {@code dst}\n     * @throws IllegalArgumentException if {@code (nHexs-1)*4+srcPos >= 16}\n     * @throws StringIndexOutOfBoundsException if {@code dst.init.length() < dstPos}\n     */\n    public static String shortToHex(final short src, final int srcPos, final String dstInit, final int dstPos, final int nHexs) {\n        if (0 == nHexs) {\n            return dstInit;\n        }\n        if ((nHexs - 1) * 4 + srcPos >= 16) {\n            throw new IllegalArgumentException(\n                \"(nHexs-1)*4+srcPos is greather or equal to than 16\");\n        }\n        final StringBuilder sb = new StringBuilder(dstInit);\n        int shift = 0;\n        int append = sb.length();\n        for (int i = 0; i < nHexs; i++ ) {\n            shift = i * 4 + srcPos;\n            final int bits = 0xF & (src >> shift);\n            if (dstPos + i == append) {\n                ++append;\n                sb.append(intToHexDigit(bits));\n            } else {\n                sb.setCharAt(dstPos + i, intToHexDigit(bits));\n            }\n        }\n        return sb.toString();\n    }",
+      "prior": 0.09999999999999998,
+      "rank": 23,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.Conversion.shortToHex(short,int,String,int,int)\nSIGNATURE: public static String shortToHex(final short src, final int srcPos, final String dstInit, final int dstPos, final int nHexs)",
+        "METHOD: org.apache.commons.lang3.Conversion.shortToHex(short,int,String,int,int)\nSIGNATURE: public static String shortToHex(final short src, final int srcPos, final String dstInit, final int dstPos, final int nHexs)\nSTRUCTURE (lossy):\nif (0 == nHexs)\nreturn dstInit;\nif ((nHexs - 1) * 4 + srcPos >= 16)\nthrow new IllegalArgumentException( \"(nHexs-1)*4+srcPos is greather or equal to than 16\");\nfinal StringBuilder sb = new StringBuilder(dstInit);\nint shift = 0;\nint append = sb.length();\nCALL sb.length()\nfor (int i = 0; i < nHexs; i++ )\nint i = 0;\ni++\nshift = i * 4 + srcPos\nfinal int bits = 0xF & (src >> shift);\nif (dstPos + i == append)\n++append\nCALL sb.append(intToHexDigit(bits))\nCALL intToHexDigit(bits)\nCALL sb.setCharAt(dstPos + i, intToHexDigit(bits))\nreturn sb.toString();\nCALL sb.toString()",
+        "    /**\n     * <p>\n     * Converts a short into an array of Char using the default (little endian, Lsb0) byte and\n     * bit ordering.\n     * </p>\n     * \n     * @param src the short to convert\n     * @param srcPos the position in {@code src}, in bits, from where to start the conversion\n     * @param dstInit the initial value for the result String\n     * @param dstPos the position in {@code dst} where to copy the result\n     * @param nHexs the number of Chars to copy to {@code dst}, must be smaller or equal to the\n     *            width of the input (from srcPos to msb)\n     * @return {@code dst}\n     * @throws IllegalArgumentException if {@code (nHexs-1)*4+srcPos >= 16}\n     * @throws StringIndexOutOfBoundsException if {@code dst.init.length() < dstPos}\n     */\n    public static String shortToHex(final short src, final int srcPos, final String dstInit, final int dstPos, final int nHexs) {\n        if (0 == nHexs) {\n            return dstInit;\n        }\n        if ((nHexs - 1) * 4 + srcPos >= 16) {\n            throw new IllegalArgumentException(\n                \"(nHexs-1)*4+srcPos is greather or equal to than 16\");\n        }\n        final StringBuilder sb = new StringBuilder(dstInit);\n        int shift = 0;\n        int append = sb.length();\n        for (int i = 0; i < nHexs; i++ ) {\n            shift = i * 4 + srcPos;\n            final int bits = 0xF & (src >> shift);\n            if (dstPos + i == append) {\n                ++append;\n                sb.append(intToHexDigit(bits));\n            } else {\n                sb.setCharAt(dstPos + i, intToHexDigit(bits));\n            }\n        }\n        return sb.toString();\n    }"
+      ],
+      "features": {
+        "prior": 0.09999999999999998,
+        "rank_fraction": 0.92,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.16901408450704225,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 6.0,
+        "literal_count": 9.0,
+        "source_tokens": 412.0,
+        "l0_tokens": 54.0,
+        "l1_tokens": 201.0,
+        "compression_ratio": 0.4878640776699029,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 6,
+        "literal_count": 9
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.ObjectUtils.identityToString(StrBuilder,Object)",
+      "source": "    /**\n     * <p>Appends the toString that would be produced by {@code Object}\n     * if a class did not override toString itself. {@code null}\n     * will throw a NullPointerException for either of the two parameters. </p>\n     *\n     * <pre>\n     * ObjectUtils.identityToString(builder, \"\")            = builder.append(\"java.lang.String@1e23\"\n     * ObjectUtils.identityToString(builder, Boolean.TRUE)  = builder.append(\"java.lang.Boolean@7fa\"\n     * ObjectUtils.identityToString(builder, Boolean.TRUE)  = builder.append(\"java.lang.Boolean@7fa\")\n     * </pre>\n     *\n     * @param builder  the builder to append to\n     * @param object  the object to create a toString for\n     * @since 3.2\n     */\n    public static void identityToString(final StrBuilder builder, final Object object) {\n        if (object == null) {\n            throw new NullPointerException(\"Cannot get the toString of a null identity\");\n        }\n        builder.append(object.getClass().getName())\n              .append('@')\n              .append(Integer.toHexString(System.identityHashCode(object)));\n    }",
+      "prior": 0.09999999999999998,
+      "rank": 24,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.ObjectUtils.identityToString(StrBuilder,Object)\nSIGNATURE: public static void identityToString(final StrBuilder builder, final Object object)",
+        "METHOD: org.apache.commons.lang3.ObjectUtils.identityToString(StrBuilder,Object)\nSIGNATURE: public static void identityToString(final StrBuilder builder, final Object object)\nSTRUCTURE (lossy):\nif (object == null)\nthrow new NullPointerException(\"Cannot get the toString of a null identity\");\nCALL builder.append(object.getClass().getName()) .append('@') .append(Integer.toHexString(System.identityHashCode(object)))\nCALL builder.append(object.getClass().getName()) .append('@')\nCALL builder.append(object.getClass().getName())\nCALL object.getClass().getName()\nCALL object.getClass()\nCALL Integer.toHexString(System.identityHashCode(object))\nCALL System.identityHashCode(object)",
+        "    /**\n     * <p>Appends the toString that would be produced by {@code Object}\n     * if a class did not override toString itself. {@code null}\n     * will throw a NullPointerException for either of the two parameters. </p>\n     *\n     * <pre>\n     * ObjectUtils.identityToString(builder, \"\")            = builder.append(\"java.lang.String@1e23\"\n     * ObjectUtils.identityToString(builder, Boolean.TRUE)  = builder.append(\"java.lang.Boolean@7fa\"\n     * ObjectUtils.identityToString(builder, Boolean.TRUE)  = builder.append(\"java.lang.Boolean@7fa\")\n     * </pre>\n     *\n     * @param builder  the builder to append to\n     * @param object  the object to create a toString for\n     * @since 3.2\n     */\n    public static void identityToString(final StrBuilder builder, final Object object) {\n        if (object == null) {\n            throw new NullPointerException(\"Cannot get the toString of a null identity\");\n        }\n        builder.append(object.getClass().getName())\n              .append('@')\n              .append(Integer.toHexString(System.identityHashCode(object)));\n    }"
+      ],
+      "features": {
+        "prior": 0.09999999999999998,
+        "rank_fraction": 0.96,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.28846153846153844,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 7.0,
+        "literal_count": 3.0,
+        "source_tokens": 271.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 170.0,
+        "compression_ratio": 0.6273062730627307,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 7,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "org.apache.commons.lang3.StringUtils.trimToEmpty(String)",
+      "source": "    /**\n     * <p>Removes control characters (char &lt;= 32) from both\n     * ends of this String returning an empty String (\"\") if the String\n     * is empty (\"\") after the trim or if it is {@code null}.\n     *\n     * <p>The String is trimmed using {@link String#trim()}.\n     * Trim removes start and end characters &lt;= 32.\n     * To strip whitespace use {@link #stripToEmpty(String)}.</p>\n     *\n     * <pre>\n     * StringUtils.trimToEmpty(null)          = \"\"\n     * StringUtils.trimToEmpty(\"\")            = \"\"\n     * StringUtils.trimToEmpty(\"     \")       = \"\"\n     * StringUtils.trimToEmpty(\"abc\")         = \"abc\"\n     * StringUtils.trimToEmpty(\"    abc    \") = \"abc\"\n     * </pre>\n     *\n     * @param str  the String to be trimmed, may be null\n     * @return the trimmed String, or an empty String if {@code null} input\n     * @since 2.0\n     */\n    public static String trimToEmpty(final String str) {\n        return str == null ? EMPTY : str.trim();\n    }",
+      "prior": 0.09999999999999998,
+      "rank": 25,
+      "levels": [
+        "METHOD: org.apache.commons.lang3.StringUtils.trimToEmpty(String)\nSIGNATURE: public static String trimToEmpty(final String str)",
+        "METHOD: org.apache.commons.lang3.StringUtils.trimToEmpty(String)\nSIGNATURE: public static String trimToEmpty(final String str)\nSTRUCTURE (lossy):\nreturn str == null ? EMPTY : str.trim();\nCALL str.trim()",
+        "    /**\n     * <p>Removes control characters (char &lt;= 32) from both\n     * ends of this String returning an empty String (\"\") if the String\n     * is empty (\"\") after the trim or if it is {@code null}.\n     *\n     * <p>The String is trimmed using {@link String#trim()}.\n     * Trim removes start and end characters &lt;= 32.\n     * To strip whitespace use {@link #stripToEmpty(String)}.</p>\n     *\n     * <pre>\n     * StringUtils.trimToEmpty(null)          = \"\"\n     * StringUtils.trimToEmpty(\"\")            = \"\"\n     * StringUtils.trimToEmpty(\"     \")       = \"\"\n     * StringUtils.trimToEmpty(\"abc\")         = \"abc\"\n     * StringUtils.trimToEmpty(\"    abc    \") = \"abc\"\n     * </pre>\n     *\n     * @param str  the String to be trimmed, may be null\n     * @return the trimmed String, or an empty String if {@code null} input\n     * @since 2.0\n     */\n    public static String trimToEmpty(final String str) {\n        return str == null ? EMPTY : str.trim();\n    }"
+      ],
+      "features": {
+        "prior": 0.09999999999999998,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.21951219512195122,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 242.0,
+        "l0_tokens": 32.0,
+        "l1_tokens": 51.0,
+        "compression_ratio": 0.21074380165289255,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    }
+  ],
+  "context": "\npublic void TestLang747() {\n        assertEquals(Integer.valueOf(0x8000),      NumberUtils.createNumber(\"0x8000\"));\n        assertEquals(Integer.valueOf(0x80000),     NumberUtils.createNumber(\"0x80000\"));\n        assertEquals(Integer.valueOf(0x800000),    NumberUtils.createNumber(\"0x800000\"));\n        assertEquals(Integer.valueOf(0x8000000),   NumberUtils.createNumber(\"0x8000000\"));\n        assertEquals(Integer.valueOf(0x7FFFFFFF),  NumberUtils.createNumber(\"0x7FFFFFFF\"));\n        assertEquals(Long.valueOf(0x80000000L),    NumberUtils.createNumber(\"0x80000000\"));\nThe last line shown above failed with the following stack trace.\njava.lang.NumberFormatException: For input string: \"80000000\"\n\tat org.apache.commons.lang3.math.NumberUtils.createInteger(NumberUtils.java:684)\n\tat org.apache.commons.lang3.math.NumberUtils.createNumber(NumberUtils.java:474)\n\tat org.apache.commons.lang3.math.NumberUtilsTest.TestLang747(NumberUtilsTest.java:256)",
+  "provenance": {
+    "bug": "Lang-1",
+    "candidate_ids": [
+      "org.apache.commons.lang3.math.NumberUtils.createInteger(String)",
+      "org.apache.commons.lang3.math.NumberUtils.createNumber(String)",
+      "org.apache.commons.lang3.StringUtils.isBlank(CharSequence)",
+      "org.apache.commons.lang3.math.NumberUtils.createBigInteger(String)",
+      "org.apache.commons.lang3.StringUtils.StringUtils()",
+      "org.apache.commons.lang3.math.NumberUtils.createBigDecimal(String)",
+      "org.apache.commons.lang3.math.NumberUtils.createLong(String)",
+      "org.apache.commons.lang3.RandomStringUtils.random(int,int,int,boolean,boolean,char[],Random)",
+      "org.apache.commons.lang3.StringUtils.isEmpty(CharSequence)",
+      "org.apache.commons.lang3.math.NumberUtils.toLong(String,long)",
+      "org.apache.commons.lang3.Conversion.hexToLong(String,int,long,int,int)",
+      "org.apache.commons.lang3.StringUtils.isNotEmpty(CharSequence)",
+      "org.apache.commons.lang3.text.translate.UnicodeUnescaper.translate(CharSequence,int,Writer)",
+      "org.apache.commons.lang3.StringUtils.isNotBlank(CharSequence)",
+      "org.apache.commons.lang3.math.NumberUtils.toDouble(String,double)",
+      "org.apache.commons.lang3.text.translate.NumericEntityUnescaper.translate(CharSequence,int,Writer)",
+      "org.apache.commons.lang3.StringUtils.trim(String)",
+      "org.apache.commons.lang3.math.NumberUtils.isNumber(String)",
+      "org.apache.commons.lang3.math.NumberUtils.toByte(String,byte)",
+      "org.apache.commons.lang3.ObjectUtils.identityToString(Appendable,Object)",
+      "org.apache.commons.lang3.StringUtils.trimToNull(String)",
+      "org.apache.commons.lang3.math.NumberUtils.toFloat(String,float)",
+      "org.apache.commons.lang3.Conversion.shortToHex(short,int,String,int,int)",
+      "org.apache.commons.lang3.ObjectUtils.identityToString(StrBuilder,Object)",
+      "org.apache.commons.lang3.StringUtils.trimToEmpty(String)"
+    ],
+    "source_paths": {
+      "org.apache.commons.lang3.math.NumberUtils.createInteger(String)": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java",
+      "org.apache.commons.lang3.math.NumberUtils.createNumber(String)": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java",
+      "org.apache.commons.lang3.StringUtils.isBlank(CharSequence)": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "org.apache.commons.lang3.math.NumberUtils.createBigInteger(String)": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java",
+      "org.apache.commons.lang3.StringUtils.StringUtils()": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "org.apache.commons.lang3.math.NumberUtils.createBigDecimal(String)": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java",
+      "org.apache.commons.lang3.math.NumberUtils.createLong(String)": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java",
+      "org.apache.commons.lang3.RandomStringUtils.random(int,int,int,boolean,boolean,char[],Random)": "src/main/java/org/apache/commons/lang3/RandomStringUtils.java",
+      "org.apache.commons.lang3.StringUtils.isEmpty(CharSequence)": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "org.apache.commons.lang3.math.NumberUtils.toLong(String,long)": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java",
+      "org.apache.commons.lang3.Conversion.hexToLong(String,int,long,int,int)": "src/main/java/org/apache/commons/lang3/Conversion.java",
+      "org.apache.commons.lang3.StringUtils.isNotEmpty(CharSequence)": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "org.apache.commons.lang3.text.translate.UnicodeUnescaper.translate(CharSequence,int,Writer)": "src/main/java/org/apache/commons/lang3/text/translate/UnicodeUnescaper.java",
+      "org.apache.commons.lang3.StringUtils.isNotBlank(CharSequence)": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "org.apache.commons.lang3.math.NumberUtils.toDouble(String,double)": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java",
+      "org.apache.commons.lang3.text.translate.NumericEntityUnescaper.translate(CharSequence,int,Writer)": "src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java",
+      "org.apache.commons.lang3.StringUtils.trim(String)": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "org.apache.commons.lang3.math.NumberUtils.isNumber(String)": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java",
+      "org.apache.commons.lang3.math.NumberUtils.toByte(String,byte)": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java",
+      "org.apache.commons.lang3.ObjectUtils.identityToString(Appendable,Object)": "src/main/java/org/apache/commons/lang3/ObjectUtils.java",
+      "org.apache.commons.lang3.StringUtils.trimToNull(String)": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "org.apache.commons.lang3.math.NumberUtils.toFloat(String,float)": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java",
+      "org.apache.commons.lang3.Conversion.shortToHex(short,int,String,int,int)": "src/main/java/org/apache/commons/lang3/Conversion.java",
+      "org.apache.commons.lang3.ObjectUtils.identityToString(StrBuilder,Object)": "src/main/java/org/apache/commons/lang3/ObjectUtils.java",
+      "org.apache.commons.lang3.StringUtils.trimToEmpty(String)": "src/main/java/org/apache/commons/lang3/StringUtils.java"
+    },
+    "sources_sha256": "affb4a29f34d2b189556b851e9e499ae13ac3d621d4865c38559dfd95bd31f66",
+    "evidence": {
+      "source": "flexfl_original",
+      "file": null,
+      "sha256": "168a9f34121f67b88f1389d9f4a742717d58751f4ad3de22a424578e3ddec5ad",
+      "characters": 948
+    },
+    "source_revision": "396afc3e4693cfee182efe582455f2d97058c068",
+    "top_per_method": 10,
+    "candidate_features": {
+      "org.apache.commons.lang3.math.NumberUtils.createInteger(String)": {
+        "prior": 1.0,
+        "rank_fraction": 0.04,
+        "ranking_gap": 0,
+        "ranker_agreement": 1.0,
+        "ranker_disagreement": 0.1,
+        "failure_relevance": 0.42105263157894735,
+        "trace_match": 1.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 2.0,
+        "source_tokens": 166.0,
+        "l0_tokens": 34.0,
+        "l1_tokens": 60.0,
+        "compression_ratio": 0.3614457831325301,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.math.NumberUtils.createNumber(String)": {
+        "prior": 1.0,
+        "rank_fraction": 0.08,
+        "ranking_gap": 0.19999999999999996,
+        "ranker_agreement": 1.0,
+        "ranker_disagreement": 0.1,
+        "failure_relevance": 0.12222222222222222,
+        "trace_match": 1.0,
+        "complexity": 33.0,
+        "call_count": 55.0,
+        "literal_count": 62.0,
+        "source_tokens": 2162.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.2631822386679001,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "org.apache.commons.lang3.StringUtils.isBlank(CharSequence)": {
+        "prior": 0.8,
+        "rank_fraction": 0.12,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.0,
+        "failure_relevance": 0.24324324324324326,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 3.0,
+        "literal_count": 3.0,
+        "source_tokens": 238.0,
+        "l0_tokens": 33.0,
+        "l1_tokens": 108.0,
+        "compression_ratio": 0.453781512605042,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.math.NumberUtils.createBigInteger(String)": {
+        "prior": 0.8,
+        "rank_fraction": 0.16,
+        "ranking_gap": 0.10000000000000009,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.2857142857142857,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 8.0,
+        "literal_count": 15.0,
+        "source_tokens": 352.0,
+        "l0_tokens": 37.0,
+        "l1_tokens": 191.0,
+        "compression_ratio": 0.5426136363636364,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.StringUtils.StringUtils()": {
+        "prior": 0.7,
+        "rank_fraction": 0.2,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.2903225806451613,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 91.0,
+        "l0_tokens": 23.0,
+        "l1_tokens": 28.0,
+        "compression_ratio": 0.3076923076923077,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.math.NumberUtils.createBigDecimal(String)": {
+        "prior": 0.7,
+        "rank_fraction": 0.24,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.31666666666666665,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 3.0,
+        "literal_count": 5.0,
+        "source_tokens": 288.0,
+        "l0_tokens": 37.0,
+        "l1_tokens": 126.0,
+        "compression_ratio": 0.4375,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.math.NumberUtils.createLong(String)": {
+        "prior": 0.7,
+        "rank_fraction": 0.28,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.4444444444444444,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 2.0,
+        "source_tokens": 148.0,
+        "l0_tokens": 32.0,
+        "l1_tokens": 56.0,
+        "compression_ratio": 0.3783783783783784,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.RandomStringUtils.random(int,int,int,boolean,boolean,char[],Random)": {
+        "prior": 0.6,
+        "rank_fraction": 0.32,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.11475409836065574,
+        "trace_match": 0.0,
+        "complexity": 16.0,
+        "call_count": 6.0,
+        "literal_count": 31.0,
+        "source_tokens": 1087.0,
+        "l0_tokens": 73.0,
+        "l1_tokens": 378.0,
+        "compression_ratio": 0.34774609015639374,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.StringUtils.isEmpty(CharSequence)": {
+        "prior": 0.6,
+        "rank_fraction": 0.36,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.21951219512195122,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 2.0,
+        "source_tokens": 207.0,
+        "l0_tokens": 33.0,
+        "l1_tokens": 52.0,
+        "compression_ratio": 0.25120772946859904,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.math.NumberUtils.toLong(String,long)": {
+        "prior": 0.6,
+        "rank_fraction": 0.4,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.4,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 226.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 75.0,
+        "compression_ratio": 0.33185840707964603,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.Conversion.hexToLong(String,int,long,int,int)": {
+        "prior": 0.5,
+        "rank_fraction": 0.44,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.1875,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 2.0,
+        "literal_count": 10.0,
+        "source_tokens": 333.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 177.0,
+        "compression_ratio": 0.5315315315315315,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.StringUtils.isNotEmpty(CharSequence)": {
+        "prior": 0.5,
+        "rank_fraction": 0.48,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.25806451612903225,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 175.0,
+        "l0_tokens": 34.0,
+        "l1_tokens": 55.0,
+        "compression_ratio": 0.3142857142857143,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.text.translate.UnicodeUnescaper.translate(CharSequence,int,Writer)": {
+        "prior": 0.5,
+        "rank_fraction": 0.52,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.2222222222222222,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 14.0,
+        "literal_count": 15.0,
+        "source_tokens": 346.0,
+        "l0_tokens": 57.0,
+        "l1_tokens": 317.0,
+        "compression_ratio": 0.9161849710982659,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.StringUtils.isNotBlank(CharSequence)": {
+        "prior": 0.4,
+        "rank_fraction": 0.56,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.23529411764705882,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 191.0,
+        "l0_tokens": 34.0,
+        "l1_tokens": 55.0,
+        "compression_ratio": 0.2879581151832461,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.math.NumberUtils.toDouble(String,double)": {
+        "prior": 0.4,
+        "rank_fraction": 0.6,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.37142857142857144,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 243.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 80.0,
+        "compression_ratio": 0.3292181069958848,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.text.translate.NumericEntityUnescaper.translate(CharSequence,int,Writer)": {
+        "prior": 0.4,
+        "rank_fraction": 0.64,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.16666666666666666,
+        "trace_match": 0.0,
+        "complexity": 11.0,
+        "call_count": 23.0,
+        "literal_count": 29.0,
+        "source_tokens": 596.0,
+        "l0_tokens": 58.0,
+        "l1_tokens": 474.0,
+        "compression_ratio": 0.7953020134228188,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.StringUtils.trim(String)": {
+        "prior": 0.30000000000000004,
+        "rank_fraction": 0.68,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.21428571428571427,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 2.0,
+        "source_tokens": 240.0,
+        "l0_tokens": 28.0,
+        "l1_tokens": 47.0,
+        "compression_ratio": 0.19583333333333333,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.math.NumberUtils.isNumber(String)": {
+        "prior": 0.30000000000000004,
+        "rank_fraction": 0.72,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.13861386138613863,
+        "trace_match": 0.0,
+        "complexity": 22.0,
+        "call_count": 2.0,
+        "literal_count": 34.0,
+        "source_tokens": 1077.0,
+        "l0_tokens": 32.0,
+        "l1_tokens": 346.0,
+        "compression_ratio": 0.3212627669452182,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.math.NumberUtils.toByte(String,byte)": {
+        "prior": 0.30000000000000004,
+        "rank_fraction": 0.76,
+        "ranking_gap": 0.10000000000000009,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.37142857142857144,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 224.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 75.0,
+        "compression_ratio": 0.33482142857142855,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.ObjectUtils.identityToString(Appendable,Object)": {
+        "prior": 0.19999999999999996,
+        "rank_fraction": 0.8,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.2830188679245283,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 7.0,
+        "literal_count": 3.0,
+        "source_tokens": 290.0,
+        "l0_tokens": 49.0,
+        "l1_tokens": 177.0,
+        "compression_ratio": 0.6103448275862069,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.StringUtils.trimToNull(String)": {
+        "prior": 0.19999999999999996,
+        "rank_fraction": 0.84,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.20930232558139536,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 254.0,
+        "l0_tokens": 31.0,
+        "l1_tokens": 59.0,
+        "compression_ratio": 0.23228346456692914,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.math.NumberUtils.toFloat(String,float)": {
+        "prior": 0.19999999999999996,
+        "rank_fraction": 0.88,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.37142857142857144,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 241.0,
+        "l0_tokens": 39.0,
+        "l1_tokens": 77.0,
+        "compression_ratio": 0.31950207468879666,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.Conversion.shortToHex(short,int,String,int,int)": {
+        "prior": 0.09999999999999998,
+        "rank_fraction": 0.92,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.16901408450704225,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 6.0,
+        "literal_count": 9.0,
+        "source_tokens": 412.0,
+        "l0_tokens": 54.0,
+        "l1_tokens": 201.0,
+        "compression_ratio": 0.4878640776699029,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.ObjectUtils.identityToString(StrBuilder,Object)": {
+        "prior": 0.09999999999999998,
+        "rank_fraction": 0.96,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.28846153846153844,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 7.0,
+        "literal_count": 3.0,
+        "source_tokens": 271.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 170.0,
+        "compression_ratio": 0.6273062730627307,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "org.apache.commons.lang3.StringUtils.trimToEmpty(String)": {
+        "prior": 0.09999999999999998,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.21951219512195122,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 242.0,
+        "l0_tokens": 32.0,
+        "l1_tokens": 51.0,
+        "compression_ratio": 0.21074380165289255,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      }
+    },
+    "sketch_metadata": {
+      "org.apache.commons.lang3.math.NumberUtils.createInteger(String)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 2
+      },
+      "org.apache.commons.lang3.math.NumberUtils.createNumber(String)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 33,
+        "call_count": 55,
+        "literal_count": 62
+      },
+      "org.apache.commons.lang3.StringUtils.isBlank(CharSequence)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 3,
+        "literal_count": 3
+      },
+      "org.apache.commons.lang3.math.NumberUtils.createBigInteger(String)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 8,
+        "literal_count": 15
+      },
+      "org.apache.commons.lang3.StringUtils.StringUtils()": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      },
+      "org.apache.commons.lang3.math.NumberUtils.createBigDecimal(String)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 3,
+        "literal_count": 5
+      },
+      "org.apache.commons.lang3.math.NumberUtils.createLong(String)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 2
+      },
+      "org.apache.commons.lang3.RandomStringUtils.random(int,int,int,boolean,boolean,char[],Random)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 16,
+        "call_count": 6,
+        "literal_count": 31
+      },
+      "org.apache.commons.lang3.StringUtils.isEmpty(CharSequence)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 2
+      },
+      "org.apache.commons.lang3.math.NumberUtils.toLong(String,long)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 1,
+        "literal_count": 1
+      },
+      "org.apache.commons.lang3.Conversion.hexToLong(String,int,long,int,int)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 2,
+        "literal_count": 10
+      },
+      "org.apache.commons.lang3.StringUtils.isNotEmpty(CharSequence)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      },
+      "org.apache.commons.lang3.text.translate.UnicodeUnescaper.translate(CharSequence,int,Writer)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 14,
+        "literal_count": 15
+      },
+      "org.apache.commons.lang3.StringUtils.isNotBlank(CharSequence)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      },
+      "org.apache.commons.lang3.math.NumberUtils.toDouble(String,double)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 1,
+        "literal_count": 1
+      },
+      "org.apache.commons.lang3.text.translate.NumericEntityUnescaper.translate(CharSequence,int,Writer)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 11,
+        "call_count": 23,
+        "literal_count": 29
+      },
+      "org.apache.commons.lang3.StringUtils.trim(String)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 2
+      },
+      "org.apache.commons.lang3.math.NumberUtils.isNumber(String)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 22,
+        "call_count": 2,
+        "literal_count": 34
+      },
+      "org.apache.commons.lang3.math.NumberUtils.toByte(String,byte)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 1,
+        "literal_count": 1
+      },
+      "org.apache.commons.lang3.ObjectUtils.identityToString(Appendable,Object)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 7,
+        "literal_count": 3
+      },
+      "org.apache.commons.lang3.StringUtils.trimToNull(String)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 1
+      },
+      "org.apache.commons.lang3.math.NumberUtils.toFloat(String,float)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 1,
+        "literal_count": 1
+      },
+      "org.apache.commons.lang3.Conversion.shortToHex(short,int,String,int,int)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 6,
+        "literal_count": 9
+      },
+      "org.apache.commons.lang3.ObjectUtils.identityToString(StrBuilder,Object)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 7,
+        "literal_count": 3
+      },
+      "org.apache.commons.lang3.StringUtils.trimToEmpty(String)": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    }
+  },
+  "rank_metadata": {
+    "org.apache.commons.lang3.math.NumberUtils.createInteger(String)": {
+      "file_class": "org.apache.commons.lang3.math.NumberUtils",
+      "start_line": 669,
+      "end_line": 685,
+      "methods": [
+        "SBIR",
+        "Ochiai",
+        "BoostN"
+      ],
+      "rank_proxy": 1.0,
+      "ranks": {
+        "SBIR": 2,
+        "Ochiai": 1,
+        "BoostN": 2
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.math.NumberUtils.createNumber(String)": {
+      "file_class": "org.apache.commons.lang3.math.NumberUtils",
+      "start_line": 419,
+      "end_line": 614,
+      "methods": [
+        "SBIR",
+        "Ochiai",
+        "BoostN"
+      ],
+      "rank_proxy": 1.0,
+      "ranks": {
+        "SBIR": 1,
+        "Ochiai": 2,
+        "BoostN": 1
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.StringUtils.isBlank(CharSequence)": {
+      "file_class": "org.apache.commons.lang3.StringUtils",
+      "start_line": 239,
+      "end_line": 266,
+      "methods": [
+        "SBIR",
+        "Ochiai"
+      ],
+      "rank_proxy": 0.8,
+      "ranks": {
+        "SBIR": 3,
+        "Ochiai": 3
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.math.NumberUtils.createBigInteger(String)": {
+      "file_class": "org.apache.commons.lang3.math.NumberUtils",
+      "start_line": 704,
+      "end_line": 738,
+      "methods": [
+        "BoostN"
+      ],
+      "rank_proxy": 0.8,
+      "ranks": {
+        "BoostN": 3
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.StringUtils.StringUtils()": {
+      "file_class": "org.apache.commons.lang3.StringUtils",
+      "start_line": 183,
+      "end_line": 193,
+      "methods": [
+        "Ochiai"
+      ],
+      "rank_proxy": 0.7,
+      "ranks": {
+        "Ochiai": 4
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.math.NumberUtils.createBigDecimal(String)": {
+      "file_class": "org.apache.commons.lang3.math.NumberUtils",
+      "start_line": 740,
+      "end_line": 765,
+      "methods": [
+        "SBIR"
+      ],
+      "rank_proxy": 0.7,
+      "ranks": {
+        "SBIR": 4
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.math.NumberUtils.createLong(String)": {
+      "file_class": "org.apache.commons.lang3.math.NumberUtils",
+      "start_line": 687,
+      "end_line": 702,
+      "methods": [
+        "BoostN"
+      ],
+      "rank_proxy": 0.7,
+      "ranks": {
+        "BoostN": 4
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.RandomStringUtils.random(int,int,int,boolean,boolean,char[],Random)": {
+      "file_class": "org.apache.commons.lang3.RandomStringUtils",
+      "start_line": 190,
+      "end_line": 293,
+      "methods": [
+        "BoostN"
+      ],
+      "rank_proxy": 0.6,
+      "ranks": {
+        "BoostN": 5
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.StringUtils.isEmpty(CharSequence)": {
+      "file_class": "org.apache.commons.lang3.StringUtils",
+      "start_line": 197,
+      "end_line": 218,
+      "methods": [
+        "Ochiai"
+      ],
+      "rank_proxy": 0.6,
+      "ranks": {
+        "Ochiai": 5
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.math.NumberUtils.toLong(String,long)": {
+      "file_class": "org.apache.commons.lang3.math.NumberUtils",
+      "start_line": 152,
+      "end_line": 178,
+      "methods": [
+        "SBIR"
+      ],
+      "rank_proxy": 0.6,
+      "ranks": {
+        "SBIR": 5
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.Conversion.hexToLong(String,int,long,int,int)": {
+      "file_class": "org.apache.commons.lang3.Conversion",
+      "start_line": 887,
+      "end_line": 919,
+      "methods": [
+        "SBIR"
+      ],
+      "rank_proxy": 0.5,
+      "ranks": {
+        "SBIR": 6
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.StringUtils.isNotEmpty(CharSequence)": {
+      "file_class": "org.apache.commons.lang3.StringUtils",
+      "start_line": 220,
+      "end_line": 237,
+      "methods": [
+        "Ochiai"
+      ],
+      "rank_proxy": 0.5,
+      "ranks": {
+        "Ochiai": 6
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.text.translate.UnicodeUnescaper.translate(CharSequence,int,Writer)": {
+      "file_class": "org.apache.commons.lang3.text.translate.UnicodeUnescaper",
+      "start_line": 32,
+      "end_line": 65,
+      "methods": [
+        "BoostN"
+      ],
+      "rank_proxy": 0.5,
+      "ranks": {
+        "BoostN": 6
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.StringUtils.isNotBlank(CharSequence)": {
+      "file_class": "org.apache.commons.lang3.StringUtils",
+      "start_line": 268,
+      "end_line": 287,
+      "methods": [
+        "Ochiai"
+      ],
+      "rank_proxy": 0.4,
+      "ranks": {
+        "Ochiai": 7
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.math.NumberUtils.toDouble(String,double)": {
+      "file_class": "org.apache.commons.lang3.math.NumberUtils",
+      "start_line": 254,
+      "end_line": 282,
+      "methods": [
+        "SBIR"
+      ],
+      "rank_proxy": 0.4,
+      "ranks": {
+        "SBIR": 7
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.text.translate.NumericEntityUnescaper.translate(CharSequence,int,Writer)": {
+      "file_class": "org.apache.commons.lang3.text.translate.NumericEntityUnescaper",
+      "start_line": 74,
+      "end_line": 138,
+      "methods": [
+        "BoostN"
+      ],
+      "rank_proxy": 0.4,
+      "ranks": {
+        "BoostN": 7
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.StringUtils.trim(String)": {
+      "file_class": "org.apache.commons.lang3.StringUtils",
+      "start_line": 291,
+      "end_line": 316,
+      "methods": [
+        "Ochiai"
+      ],
+      "rank_proxy": 0.30000000000000004,
+      "ranks": {
+        "Ochiai": 8
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.math.NumberUtils.isNumber(String)": {
+      "file_class": "org.apache.commons.lang3.math.NumberUtils",
+      "start_line": 1312,
+      "end_line": 1425,
+      "methods": [
+        "BoostN"
+      ],
+      "rank_proxy": 0.30000000000000004,
+      "ranks": {
+        "BoostN": 8
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.math.NumberUtils.toByte(String,byte)": {
+      "file_class": "org.apache.commons.lang3.math.NumberUtils",
+      "start_line": 306,
+      "end_line": 332,
+      "methods": [
+        "SBIR"
+      ],
+      "rank_proxy": 0.30000000000000004,
+      "ranks": {
+        "SBIR": 8
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.ObjectUtils.identityToString(Appendable,Object)": {
+      "file_class": "org.apache.commons.lang3.ObjectUtils",
+      "start_line": 261,
+      "end_line": 284,
+      "methods": [
+        "BoostN"
+      ],
+      "rank_proxy": 0.19999999999999996,
+      "ranks": {
+        "BoostN": 9
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.StringUtils.trimToNull(String)": {
+      "file_class": "org.apache.commons.lang3.StringUtils",
+      "start_line": 318,
+      "end_line": 343,
+      "methods": [
+        "Ochiai"
+      ],
+      "rank_proxy": 0.19999999999999996,
+      "ranks": {
+        "Ochiai": 9
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.math.NumberUtils.toFloat(String,float)": {
+      "file_class": "org.apache.commons.lang3.math.NumberUtils",
+      "start_line": 202,
+      "end_line": 230,
+      "methods": [
+        "SBIR"
+      ],
+      "rank_proxy": 0.19999999999999996,
+      "ranks": {
+        "SBIR": 9
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.Conversion.shortToHex(short,int,String,int,int)": {
+      "file_class": "org.apache.commons.lang3.Conversion",
+      "start_line": 1451,
+      "end_line": 1489,
+      "methods": [
+        "SBIR"
+      ],
+      "rank_proxy": 0.09999999999999998,
+      "ranks": {
+        "SBIR": 10
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.ObjectUtils.identityToString(StrBuilder,Object)": {
+      "file_class": "org.apache.commons.lang3.ObjectUtils",
+      "start_line": 286,
+      "end_line": 308,
+      "methods": [
+        "BoostN"
+      ],
+      "rank_proxy": 0.09999999999999998,
+      "ranks": {
+        "BoostN": 10
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.lang3.StringUtils.trimToEmpty(String)": {
+      "file_class": "org.apache.commons.lang3.StringUtils",
+      "start_line": 345,
+      "end_line": 368,
+      "methods": [
+        "Ochiai"
+      ],
+      "rank_proxy": 0.09999999999999998,
+      "ranks": {
+        "Ochiai": 10
+      },
+      "top_per_method": 10
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  }
+}
