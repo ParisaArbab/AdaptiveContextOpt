@@ -30,6 +30,7 @@ def reachable(adjacency,sources,selected):
 def shortest_path(adjacency,sources,target,node_costs,max_hops=4,cost_weight=1.):
     if type(max_hops) is not int or not 1<=max_hops<=12 or not math.isfinite(cost_weight) or cost_weight<0:raise ValueError('Invalid bounded path configuration')
     if target not in adjacency or not set(sources)<=set(adjacency):raise ValueError('Unknown path terminal')
+    if any(not math.isfinite(v) or v<0 for v in node_costs.values()):raise ValueError('Nonnegative finite path node costs required')
     heap=[(0.,0,s,(s,)) for s in sorted(sources)];heapq.heapify(heap);best={}
     while heap:
         cost,hops,u,path=heapq.heappop(heap)

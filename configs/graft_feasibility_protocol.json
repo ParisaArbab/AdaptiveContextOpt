@@ -1,0 +1,93 @@
+{
+  "schema": "graft-feasibility-protocol-v1",
+  "execution_status": "prepared_not_executed",
+  "preselected_smoke_bugs": [
+    "Lang-54",
+    "Math-80",
+    "Closure-61"
+  ],
+  "selection_basis": "Different Defects4J projects; no hits for these IDs in the inspected 97-bug archive or existing configs/docs/reports. Check external experiment registers before asserting previously unused.",
+  "split_role": "exploratory feasibility, never held-out claims after tuning",
+  "required_before_execution": [
+    "Official buggy revision pinned to full Git SHA",
+    "Clean tracked checkout",
+    "Observed failing-test log with checksum and test command/Java version",
+    "One identical gold-free candidate-generation procedure for all arms",
+    "Separate reliable evaluation-only labels",
+    "Installed provider model with immutable digest and supported context",
+    "Local exact-text dense/sparse bundles for topo conditions"
+  ],
+  "initial_model": "qwen2.5:7b to match archived generation where practical; record digest, quantization and actual server hardware",
+  "additional_models": "Separate runs per installed open-weight model; Qwen/DeepSeek/Llama parameter counts and context limits remain explicit, not inferred from names",
+  "logical_policy_budgets": [
+    16000,
+    24000,
+    32000
+  ],
+  "primary_budget": 24000,
+  "input_allowance": 4096,
+  "input_counter": "UTF-8 message bytes + 256 proxy unless an explicit local chat-template tokenizer is supplied",
+  "context_conditions": [
+    8192,
+    16384
+  ],
+  "context_note": "Do not silently change context mid-comparison; larger context needs a separate condition and reservation analysis",
+  "output_per_candidate": 160,
+  "temperature": 0,
+  "seed": 0,
+  "batch_size": 2,
+  "controls": [
+    "prior",
+    "fixed_l1",
+    "highest_suspicion",
+    "v2_utility",
+    "full_equal_budget",
+    "l1_graph",
+    "graft_adaptive"
+  ],
+  "reference_only": "Optional Full at 120000 tokens, clearly separate from equal-budget arms",
+  "fusion_conditions": [
+    "rrf",
+    "shared_prior_evidence_fusion_v1"
+  ],
+  "full_call_caps": [
+    0,
+    1,
+    2
+  ],
+  "graph_call_caps": [
+    0,
+    1,
+    2
+  ],
+  "ordered_ablations": [
+    "BM25 relevance only, repair off, paths off",
+    "BM25 plus observable repair",
+    "Same target schedule and allowance with real dense/sparse selector and propagation off",
+    "Same selector with propagation on",
+    "Typed topology edges opt-in",
+    "Paths then repair, report infeasible cases",
+    "Adaptive routing only after fixed schedules"
+  ],
+  "hard_resource_limits": {
+    "smoke_bugs": 3,
+    "whole_run_provider_tokens": 150000,
+    "per_bug_provider_tokens": 60000,
+    "new_calls": 180,
+    "workers": 1
+  },
+  "cost_interpretation": "Hard bounded cap, not an expected bill. Preflight before launch. Stop if unknown usage. Embedding time and memory recorded separately; no automatic downloads.",
+  "metrics": [
+    "Known-labeled operational and joint-complete denominators",
+    "Candidate recall, strict Java and historical profiles",
+    "Top-1/Top-5/MRR",
+    "Logical input+output tokens including paid invalid requests",
+    "Physical provider counters and unresolved reservations",
+    "Package infeasibility and incomplete runs",
+    "Per-action selected/rejected trace",
+    "Held-out independent-bug provenance"
+  ],
+  "subsequent_exploratory_set": "Preselect 10-15 independent bugs across at least 4 projects before results; exclude all prior development/smoke bugs and freeze split hashes",
+  "held_out_stage": "A larger untouched set after development choices freeze; estimate defect-level uncertainty only with independent bugs",
+  "lightgbm_gate": "Only after multiple independent bugs, grouped splits, full-cost/action labels and calibration data exist; never train/calibrate on synthetic fixtures and call it learned real risk"
+}

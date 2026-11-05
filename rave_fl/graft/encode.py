@@ -27,6 +27,7 @@ def export(graph,model_dir,revision,output,device='cpu',batch_size=8,max_length=
         if any(len(tokenizer.encode(t,truncation=False))>max_length for t in texts):raise ValueError('Embedding truncation would occur; reduce coherent source units first')
         start=time.monotonic();model=BGEM3FlagModel(str(model_dir),devices=[device],use_fp16=device.startswith('cuda'))
         encoded=model.encode(texts,batch_size=batch_size,max_length=max_length,return_dense=True,return_sparse=True,return_colbert_vecs=False)
+        if len(encoded['dense_vecs'])!=len(texts) or len(encoded['lexical_weights'])!=len(texts):raise ValueError('Encoder returned an incomplete text batch')
         hashes={str(p.relative_to(model_dir)):file_hash(p) for p in sorted(model_dir.rglob('*')) if p.is_file() and p.suffix in {'.json','.safetensors','.bin'}}
         value={'schema':'graft-embeddings-v1','model_id':'BGE-M3:'+revision,'synthetic':False,
                'texts':{text_hash(t):{'dense':[float(x) for x in d],'sparse':{str(k):float(v) for k,v in s.items()},'truncated':False} for t,d,s in zip(texts,encoded['dense_vecs'],encoded['lexical_weights'])},

@@ -1,0 +1,57 @@
+{
+  "benchmark": {
+    "dataset": "defects4j",
+    "dataset_file": "data/graft_smoke/instances.json",
+    "bugs": [
+      "Lang-54",
+      "Math-80",
+      "Closure-61"
+    ],
+    "candidate_provider": "flexfl",
+    "model": "qwen2.5:7b",
+    "model_digest": null,
+    "backend": "ollama",
+    "endpoint": "http://127.0.0.1:11434",
+    "device": "a100",
+    "context_window": 8192,
+    "output_tokens": 160,
+    "temperature": 0.0,
+    "seed": 0,
+    "batch_size": 2,
+    "budget": 24000,
+    "policies": [
+      "fixed_l1",
+      "highest_suspicion",
+      "v2_utility",
+      "full"
+    ],
+    "fusions": [
+      "rrf"
+    ],
+    "max_full": 1,
+    "physical_budget": 150000,
+    "per_bug_physical_budget": 60000,
+    "max_new_calls": 180,
+    "timeout": 900,
+    "admission": "strict",
+    "require_observed_failure": true
+  },
+  "graft": {
+    "selector": "bm25",
+    "input_budget": 4096,
+    "paths": false,
+    "repair": true,
+    "max_graph": 2,
+    "max_full": 1,
+    "uncertainty_threshold": 0.45,
+    "top_k": 5,
+    "typed_topology": false,
+    "propagation": true
+  },
+  "graft_policies": [
+    "l1_graph",
+    "graft_adaptive"
+  ],
+  "embeddings_dir": null,
+  "tokenizer_dir": null
+}

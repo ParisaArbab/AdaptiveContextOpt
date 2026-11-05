@@ -60,6 +60,8 @@ class Graph:
     diagnostics: tuple = ()
     schema: str = 'graft-graph-v1'
     def __post_init__(self):
+        object.__setattr__(self,'nodes',tuple(self.nodes))
+        object.__setattr__(self,'edges',tuple(self.edges))
         object.__setattr__(self,'targets',MappingProxyType(dict(self.targets)))
         object.__setattr__(self,'sources',MappingProxyType({k:MappingProxyType(dict(v)) for k,v in self.sources.items()}))
         object.__setattr__(self,'diagnostics',tuple(MappingProxyType(dict(v)) for v in self.diagnostics))
@@ -76,7 +78,7 @@ class Graph:
     @cached_property
     def hash(self):return fingerprint(self.to_dict())
     @cached_property
-    def by_id(self):return {n.id:n for n in self.nodes}
+    def by_id(self):return MappingProxyType({n.id:n for n in self.nodes})
     @classmethod
     def from_dict(cls,value):
         value=dict(value);value['nodes']=tuple(Node(**{**n,'origin':Origin(**n['origin'])}) for n in value['nodes']);value['edges']=tuple(Edge(**e) for e in value['edges'])
