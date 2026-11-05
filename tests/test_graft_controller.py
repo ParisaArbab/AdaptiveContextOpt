@@ -185,3 +185,65 @@ def test_graph_rejects_non_string_explanations_after_charging(tmp_path):
     call = next(c for c in result['calls'] if c['stage'] == 'graph')
     assert not call['observations'][0]['valid'] and 'strings' in call['error']
     assert call['input_tokens'] + call['output_tokens'] > 0
+
+
+def test_unsupported_graph_downgrade_keeps_valid_l1_score_and_audit(tmp_path, monkeypatch):
+    candidates, session, _ = setup(tmp_path, GraftConfig(max_graph=1, max_full=0))
+    candidate = candidates[0]
+    router = Router(candidates, session, Fusion("rrf"), "l1_graph")
+    router.observe([candidate], EvidenceStage.SKETCH)
+    original = router.states[candidate.function_id].observation
+    assert original.valid
+    # Preserve the same result type as the real backend while simulating an
+    # explicitly unsupported lower graph verdict.
+    from dataclasses import dataclass, replace as dc_replace
+
+    low = dc_replace(
+        original,
+        suspicion=max(0.0, original.suspicion - 0.2),
+        missing_evidence="No specific code fragment for failure",
+    )
+
+    @dataclass
+    class StubResult:
+        observations: list
+        input_tokens: int = 10
+        output_tokens: int = 2
+
+    monkeypatch.setattr(session, "execute", lambda *_args: StubResult([low]))
+    router.observe([candidate], EvidenceStage.GRAPH)
+    state = router.states[candidate.function_id]
+    assert state.level == 1
+    assert state.observation.suspicion == original.suspicion
+    assert state.history[-1]["suspicion"] == low.suspicion
+    assert state.history[-1]["applied_to_ranking"] is False
+    assert state.history[-1]["guard_reason"] == "unsupported_graph_downgrade"
+
+
+def test_graph_guard_is_explicitly_ablatable(tmp_path, monkeypatch):
+    from dataclasses import dataclass
+
+    config = GraftConfig(
+        max_graph=1, max_full=0, guard_unsupported_graph_downgrade=False
+    )
+    candidates, session, _ = setup(tmp_path, config)
+    candidate = candidates[0]
+    router = Router(candidates, session, Fusion("rrf"), "l1_graph")
+    router.observe([candidate], EvidenceStage.SKETCH)
+    original = router.states[candidate.function_id].observation
+    low = replace(
+        original,
+        suspicion=max(0.0, original.suspicion - 0.2),
+        missing_evidence="Missing supporting code",
+    )
+
+    @dataclass
+    class StubResult:
+        observations: list
+        input_tokens: int = 10
+        output_tokens: int = 2
+
+    monkeypatch.setattr(session, "execute", lambda *_args: StubResult([low]))
+    router.observe([candidate], EvidenceStage.GRAPH)
+    assert router.states[candidate.function_id].observation.suspicion == low.suspicion
+    assert router.states[candidate.function_id].history[-1]["applied_to_ranking"] is True
