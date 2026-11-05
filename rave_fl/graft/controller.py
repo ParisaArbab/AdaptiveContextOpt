@@ -272,7 +272,7 @@ class Router:
     """Transparent development heuristic; no calibrated gain or trained policy."""
 
     def __init__(self, candidates, session, fusion, policy="graft_adaptive", embeddings=None):
-        if policy not in {"l1_graph", "graft_adaptive"}:
+        if policy not in {"l1_anchor", "l1_graph", "graft_adaptive"}:
             raise ValueError("Unknown GRAFT policy")
         if len({c.function_id for c in candidates}) != len(candidates) or not candidates:
             raise ValueError("Nonempty unique candidate pool required")
@@ -378,6 +378,11 @@ class Router:
                     stop = "incomplete_l1_budget_or_context"
                     return self.result(stop)
                 self.observe(cs, EvidenceStage.SKETCH)
+            if self.policy == "l1_anchor":
+                # Pure L1 plus the configured name anchor. Graph construction
+                # supplies the same initial evidence but NO graph or Full call
+                # is allowed, ensuring a clean ranking-only ablation.
+                return self.result("l1_anchor_only")
             for step in range(self.config.max_graph + self.config.max_full + 1):
                 scores = self.scores()
                 ordered = self.order()
