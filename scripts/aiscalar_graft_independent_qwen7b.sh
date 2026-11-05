@@ -33,9 +33,19 @@ for arm in control anchored; do
   config="$ROOT/config_$arm.json"
   output="$ROOT/$arm"
   echo "Starting $arm..."
+  set +e
   python -m rave_fl.graft.cli run \
     --config "$config" --output "$output" --allow-inference \
     2>&1 | tee "$ROOT/$arm.log"
+  status=${PIPESTATUS[0]}
+  set -e
+  if [[ "$status" -ne 0 && "$status" -ne 3 ]]; then
+    echo "Fatal GRAFT runner exit $status for $arm" >&2
+    exit "$status"
+  fi
+  if [[ "$status" -eq 3 ]]; then
+    echo "INCOMPLETE $arm, retained for operational evaluation"
+  fi
   python -m rave_fl.graft.cli report --run-dir "$output" \
     2>&1 | tee "$ROOT/${arm}_report.log"
 done
