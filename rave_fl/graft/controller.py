@@ -248,18 +248,23 @@ def failing_test_name_anchors(failure_text, function_ids):
 
     Full method names only; this is not proof of execution or calibrated risk.
     """
-    tests = []
+    tests = set()
     for line in failure_text.splitlines():
         if line.startswith("TEST:"):
             name = line[5:].strip().split("(", 1)[0]
-            tests.append(re.sub(r"[^a-z0-9]", "", name.lower()))
+            parts = re.split(r"[^a-zA-Z0-9]+", name)
+            tests.update(part.lower() for part in parts if part)
+            # Also handle common Java testGetOffsetFromLocal naming.
+            tests.update(
+                part[4:].lower()
+                for part in parts
+                if part.startswith("test") and len(part) > 8
+            )
     result = {}
     for function_id in function_ids:
         method = function_id.rsplit(".", 1)[-1].split("(", 1)[0]
         name = re.sub(r"[^a-z0-9]", "", method.lower())
-        result[function_id] = bool(
-            len(name) >= 8 and any(name in test for test in tests)
-        )
+        result[function_id] = len(name) >= 8 and name in tests
     return result
 
 
