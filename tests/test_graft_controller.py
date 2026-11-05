@@ -290,3 +290,47 @@ def test_failure_anchor_ablation_changes_only_router_scores(tmp_path):
 def test_failure_anchor_config_rejects_non_boolean():
     with pytest.raises(ValueError, match="Boolean"):
         GraftConfig(failure_name_anchor=1)
+
+
+def test_l1_anchor_never_invokes_graph_or_full(tmp_path):
+    config = GraftConfig(failure_name_anchor=True, max_graph=2, max_full=1)
+    candidates, session, store = setup(tmp_path, config)
+    arm = Router(candidates, session, Fusion("rrf"), "l1_anchor").execute()
+    assert arm["stop_reason"] == "l1_anchor_only"
+    assert arm["calls"]
+    assert {call["stage"] for call in arm["calls"]} == {"sketch"}
+    assert all(state["level"] == 1 for state in arm["states"].values())
+    assert arm["actual_tokens"] > 0
+    assert arm["ranked_functions"]
+    assert len(arm["ranked_functions"]) == len(candidates)
+    assert all(state["observation"]["valid"] for state in arm["states"].values())
+
+
+def test_l1_anchor_and_graph_share_exact_initial_evidence(tmp_path):
+    config = GraftConfig(failure_name_anchor=True, max_graph=1, max_full=0)
+    candidates, session, store = setup(tmp_path, config)
+    baseline = Router(candidates, session, Fusion("rrf"), "l1_anchor").execute()
+    initial = set(baseline["states"])
+    graph_session = Session(
+        session.legacy.instance,
+        session.legacy.entities,
+        session.legacy.provider,
+        store,
+        session.legacy.opts,
+        16000,
+        session.graph,
+        config,
+    )
+    with_graph = Router(candidates, graph_session, Fusion("rrf"), "l1_graph").execute()
+    assert with_graph["calls"]
+    assert [c["candidate_ids"] for c in baseline["calls"]] == [
+        c["candidate_ids"] for c in with_graph["calls"] if c["stage"] == "sketch"
+    ]
+    assert all(
+        e["reuse"] == "journal"
+        for e in graph_session.events
+        if e["stage"] == "sketch"
+    )
+    assert any(c["stage"] == "graph" for c in with_graph["calls"])
+    for key in initial:
+        assert baseline["stage_histories"][key][0] == with_graph["stage_histories"][key][0]
