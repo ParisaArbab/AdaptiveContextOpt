@@ -5,6 +5,7 @@ from collections import defaultdict
 import hashlib
 import re
 import textwrap
+from functools import cached_property
 from rave_fl.eval.schema import CodeEntity,OnlineInstance,fingerprint,relative_path
 from rave_fl.eval.representations import java_tree
 from rave_fl.graft.evaluation import parse_identity
@@ -62,9 +63,9 @@ class Graph:
         if any(e.source not in ids or e.target not in ids for e in self.edges):raise ValueError('Dangling graph edge')
         if any(i not in ids for i in self.targets.values()) or set(self.targets)-set(self.sources):raise ValueError('Invalid target mapping')
     def to_dict(self):return asdict(self)
-    @property
+    @cached_property
     def hash(self):return fingerprint(self.to_dict())
-    @property
+    @cached_property
     def by_id(self):return {n.id:n for n in self.nodes}
     @classmethod
     def from_dict(cls,value):
