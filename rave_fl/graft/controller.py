@@ -8,6 +8,7 @@ from dataclasses import dataclass, asdict, replace
 from enum import Enum
 import json
 import math
+import re
 from rave_fl.core import Action
 from rave_fl.pilot_types import CandidateState
 from rave_fl.eval.backend import Backend, ExecutionLimit, Provider
@@ -61,6 +62,7 @@ class GraftConfig:
     typed_topology: bool = False
     propagation: bool = True
     guard_unsupported_graph_downgrade: bool = True
+    failure_name_anchor: bool = False
 
     def __post_init__(self):
         if self.selector not in {"bm25", "topo"}:
@@ -83,7 +85,7 @@ class GraftConfig:
             type(v) is not bool
             for v in [
                 self.paths, self.repair, self.typed_topology, self.propagation,
-                self.guard_unsupported_graph_downgrade,
+                self.guard_unsupported_graph_downgrade, self.failure_name_anchor,
             ]
         ):
             raise ValueError("Boolean ablation flags required")
@@ -241,6 +243,26 @@ class Session:
             )
 
 
+def failing_test_name_anchors(failure_text, function_ids):
+    """Exact name cues from observed failing TEST headers, never gold labels.
+
+    Full method names only; this is not proof of execution or calibrated risk.
+    """
+    tests = []
+    for line in failure_text.splitlines():
+        if line.startswith("TEST:"):
+            name = line[5:].strip().split("(", 1)[0]
+            tests.append(re.sub(r"[^a-z0-9]", "", name.lower()))
+    result = {}
+    for function_id in function_ids:
+        method = function_id.rsplit(".", 1)[-1].split("(", 1)[0]
+        name = re.sub(r"[^a-z0-9]", "", method.lower())
+        result[function_id] = bool(
+            len(name) >= 8 and any(name in test for test in tests)
+        )
+    return result
+
+
 class Router:
     """Transparent development heuristic; no calibrated gain or trained policy."""
 
@@ -260,9 +282,26 @@ class Router:
         self.states = {c.function_id: CandidateState() for c in candidates}
         self.history = {c.function_id: [] for c in candidates}
         self.packages, self.trace, self.calls = {}, [], []
+        failures = [n.text for n in self.graph.nodes if n.kind == "failure"]
+        self.failure_anchors = failing_test_name_anchors(
+            "\n".join(failures), [c.function_id for c in candidates]
+        )
+
+    def scores(self):
+        scores = self.fusion.scores(self.candidates, self.states)
+        if self.config.failure_name_anchor and self.fusion.name == "rrf":
+            # One quarter of an RRF rank contribution, a transparent heuristic.
+            # No gold label, patch or future outcome is used.
+            bonus = 0.25 / (self.fusion.rrf_k + 1)
+            scores = {
+                ident: value + (bonus if self.failure_anchors[ident] else 0.0)
+                for ident, value in scores.items()
+            }
+        return scores
 
     def order(self):
-        return self.fusion.order(self.candidates, self.fusion.scores(self.candidates, self.states))
+        return self.fusion.order(self.candidates, self.scores())
+
 
     def observe(self, candidates, stage, selection=None):
         result = self.session.execute(candidates, stage, selection)
@@ -335,7 +374,7 @@ class Router:
                     return self.result(stop)
                 self.observe(cs, EvidenceStage.SKETCH)
             for step in range(self.config.max_graph + self.config.max_full + 1):
-                scores = self.fusion.scores(self.candidates, self.states)
+                scores = self.scores()
                 ordered = self.order()
                 differences = [
                     abs(scores[a.function_id] - scores[b.function_id])
@@ -415,6 +454,7 @@ class Router:
                             + 0.30 * obs.uncertainty
                             + 0.20 * closeness
                             + 0.15 * novelty
+                            + (0.40 if self.config.failure_name_anchor and self.failure_anchors[ident] else 0.0)
                         )
                         priority = (
                             value
@@ -442,6 +482,7 @@ class Router:
                                 "predicted_tokens": predicted,
                                 "reserved_tokens": reserved,
                                 "current_score": scores[ident],
+                                "failure_name_anchor": self.failure_anchors[ident],
                                 "current_rank": position + 1,
                                 "reported_uncertainty": obs.uncertainty,
                                 "suspicion": obs.suspicion,
@@ -514,7 +555,9 @@ class Router:
             "graft_config": asdict(self.config),
             "ranker": self.fusion.config(),
             "ranked_functions": [c.function_id for c in self.order()],
-            "ranking_scores": self.fusion.scores(self.candidates, self.states),
+            "ranking_scores": self.scores(),
+            "failure_name_anchors": self.failure_anchors,
+            "failure_anchor_is_calibrated": False,
             "actual_tokens": self.session.spent,
             "tokens_remaining": self.session.budget - self.session.spent,
             "budget_exceeded": self.session.spent > self.session.budget,
