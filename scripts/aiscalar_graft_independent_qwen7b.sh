@@ -5,6 +5,7 @@ cd "$(dirname "$0")/.."
 ROOT="results/graft_independent_qwen7b_$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$ROOT"
 echo "Results directory: $ROOT"
+python scripts/prepare_graft_independent_checkouts.py --fetch-pinned
 python scripts/prepare_graft_independent_inputs.py --output "$ROOT" --expand-flexfl
 
 for arm in control anchored; do
@@ -36,7 +37,7 @@ for arm in control anchored; do
     --config "$config" --output "$output" --allow-inference \
     2>&1 | tee "$ROOT/$arm.log"
   python -m rave_fl.graft.cli report --run-dir "$output" \
-    2>&1 | tee "$ROOT/$arm_report.log"
+    2>&1 | tee "$ROOT/${arm}_report.log"
 done
 
 python - "$ROOT" <<'PY'
