@@ -34,7 +34,7 @@ for arm in control anchored; do
     --config "$config" --output "$output" --allow-inference \
     2>&1 | tee "$ROOT/$arm.log"
   python -m rave_fl.graft.cli report --run-dir "$output" \
-    2>&1 | tee "$ROOT/arm_report.log"
+    2>&1 | tee "$ROOT/$arm_report.log"
 done
 
 python - "$ROOT" <<'PY'
