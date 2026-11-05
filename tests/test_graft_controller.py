@@ -168,3 +168,20 @@ def test_graph_uncertainty_is_required_and_missing_fields_still_cost_tokens(tmp_
     graph = next(call for call in result["calls"] if call["stage"] == "graph")
     assert graph["input_tokens"] + graph["output_tokens"] > 0
     assert not graph["observations"][0]["valid"] and "uncertainty" in graph["error"]
+
+
+def test_graph_rejects_non_string_explanations_after_charging(tmp_path):
+    class ArrayProvider(GraftProvider):
+        def execute(self, payload, ids, action):
+            result = super().execute(payload, ids, action)
+            from rave_fl.graft.selection import SYSTEM
+            if payload['messages'][0]['content'] == SYSTEM:
+                value = json.loads(result['message']['content'])
+                value['explanation'] = ['wrong schema']
+                result['message']['content'] = json.dumps(value)
+            return result
+    candidates, session, _ = setup(tmp_path, GraftConfig(max_graph=1, max_full=0), provider_class=ArrayProvider)
+    result = Router(candidates, session, Fusion(), 'l1_graph').execute()
+    call = next(c for c in result['calls'] if c['stage'] == 'graph')
+    assert not call['observations'][0]['valid'] and 'strings' in call['error']
+    assert call['input_tokens'] + call['output_tokens'] > 0

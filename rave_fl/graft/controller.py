@@ -152,7 +152,7 @@ class GraphBackend(Backend):
         identity = super().request_identity(cs, action, level, payload)
         return {
             **identity,
-            "prompt_version": "graft-graph-verdict-v1",
+            "prompt_version": "graft-graph-verdict-v2-short-strings",
             "evidence_stage": EvidenceStage.GRAPH.value,
             "graph_hash": self.graph.hash,
             "selection_hash": self.selection.hash,
@@ -164,16 +164,20 @@ class GraphBackend(Backend):
         result = super().execute(cs, Action.FULL_VERIFY, 2)
         if result.observations[0].valid:
             value = json.loads(result.raw_response)
-            if "uncertainty" not in value:
+            schema_error = ('Graph response omitted required uncertainty' if 'uncertainty' not in value else
+                            'Graph explanation/missing_evidence must be strings' if
+                            not isinstance(value.get('explanation'), str) or
+                            not isinstance(value.get('missing_evidence'), str) else None)
+            if schema_error:
                 # Preserve the single-verdict legacy parser but do not convert
                 # absent graph uncertainty into a confident observed judgment.
                 result.observations[0] = replace(
                     result.observations[0],
                     valid=False,
                     uncertainty=1.0,
-                    reason="Graph response omitted required uncertainty",
+                    reason=schema_error,
                 )
-                result.error = "Graph response omitted required uncertainty"
+                result.error = schema_error
                 self.events[-1]["error"] = result.error
             else:
                 result.observations[0] = replace(
