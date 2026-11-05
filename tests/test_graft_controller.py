@@ -247,3 +247,46 @@ def test_graph_guard_is_explicitly_ablatable(tmp_path, monkeypatch):
     router.observe([candidate], EvidenceStage.GRAPH)
     assert router.states[candidate.function_id].observation.suspicion == low.suspicion
     assert router.states[candidate.function_id].history[-1]["applied_to_ranking"] is True
+
+
+def test_failure_name_anchor_from_observed_test_names_only():
+    from rave_fl.graft.controller import failing_test_name_anchors
+
+    evidence = (
+        "TEST: org.joda.time.TestDateTimeZoneCutover::test_getOffsetFromLocal_Moscow_Autumn\n"
+        "FAILURE: Expected +04:00 but received +03:00\n"
+        "PROJECT FRAMES: some irrelevant code\n"
+    )
+    names = [
+        "org.joda.time.DateTimeZone.getOffsetFromLocal(long)",
+        "org.joda.time.DateTimeZone.getOffset(long)",
+        "org.joda.time.DateTime.toString()",
+    ]
+    hits = failing_test_name_anchors(evidence, names)
+    assert hits == {names[0]: True, names[1]: False, names[2]: False}
+    assert not any(failing_test_name_anchors("No TEST header", names).values())
+
+
+def test_failure_anchor_ablation_changes_only_router_scores(tmp_path):
+    from rave_fl.graft.controller import failing_test_name_anchors
+
+    candidates, session, _ = setup(tmp_path, GraftConfig(failure_name_anchor=True))
+    router = Router(candidates, session, Fusion("rrf"))
+    # Same online evidence in both arms; no gold labels are consulted.
+    target = candidates[0].function_id
+    router.failure_anchors = {c.function_id: c.function_id == target for c in candidates}
+    anchored = router.scores()
+    standard = router.fusion.scores(candidates, router.states)
+    assert anchored[target] > standard[target]
+    assert all(
+        anchored[c.function_id] == standard[c.function_id]
+        for c in candidates[1:]
+    )
+    session.config = replace(session.config, failure_name_anchor=False)
+    router.config = session.config
+    assert router.scores() == standard
+
+
+def test_failure_anchor_config_rejects_non_boolean():
+    with pytest.raises(ValueError, match="Boolean"):
+        GraftConfig(failure_name_anchor=1)
