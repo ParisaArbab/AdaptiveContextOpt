@@ -61,9 +61,10 @@ def render(graph,target,ids):
     units=[];references=[]
     for n in sorted((known[i] for i in selected if known[i].kind!='failure'),key=lambda n:(n.document,n.owner,n.origin.start_line,n.id)):
         # Stack frames already occur verbatim in the mandatory failure evidence.
-        if n.kind=='frame' and n.text in failure:references.append(n.id);continue
+        if n.kind=='frame' and n.text in failure:references.append({'id':n.id,'failure_line':n.origin.start_line});continue
         units.append({'id':n.id,'owner':n.owner,'path':n.origin.path,'lines':[n.origin.start_line,n.origin.end_line],'text':n.text})
-    return json.dumps({'schema':'graft-evidence-v1','target':target,'failure':failure,'units':units,'frame_references_in_failure':references},ensure_ascii=False,sort_keys=True,separators=(',',':'))
+    links=[{'from':e.source,'to':e.target,'type':e.relation,'basis':e.provenance} for e in graph.edges if e.source in selected and e.target in selected and e.relation not in {'ADJACENT','PART_OF','OBSERVED_FRAME','STACK_NEXT'}]
+    return json.dumps({'evidence_links':links,'schema':'graft-evidence-v1','target':target,'failure':failure,'units':units,'frame_references_in_failure':references},ensure_ascii=False,sort_keys=True,separators=(',',':'))
 
 
 def package(graph,target,ids,budget,counter=None,selector='manual',scores=None,diagnostics=None,reason=''):
