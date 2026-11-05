@@ -461,16 +461,8 @@ class Backend:
         # budget reservation while enforcing prompt fit separately at execute.
         return reserved
 
-    def execute(self, cs, action, level):
-        predicted, reserved = self.planning(cs, action, level)
-        if reserved > self.budget - self.spent:
-            raise ExecutionLimit("Per-policy reservation cannot admit selected action")
-        if predicted > self.opts["context_window"]:
-            raise CompatibilityError(
-                "Conservative prompt/context estimate too large; raise context or reduce pool/batch"
-            )
-        payload = self.payload(cs, action, level)
-        identity = {
+    def request_identity(self, cs, action, level, payload):
+        return {
             "payload": payload,
             "provider": self.provider.kind,
             "model_digest": self.provider.metadata["digest"],
@@ -486,6 +478,17 @@ class Backend:
             "representation": self.opts["representation"],
             "prompt_version": "rave-universal-v1 (Java method content preserves legacy prompt)",
         }
+
+    def execute(self, cs, action, level):
+        predicted, reserved = self.planning(cs, action, level)
+        if reserved > self.budget - self.spent:
+            raise ExecutionLimit("Per-policy reservation cannot admit selected action")
+        if predicted > self.opts["context_window"]:
+            raise CompatibilityError(
+                "Conservative prompt/context estimate too large; raise context or reduce pool/batch"
+            )
+        payload = self.payload(cs, action, level)
+        identity = self.request_identity(cs, action, level, payload)
         key = fingerprint(identity)
         start = time.monotonic()
         try:
