@@ -60,6 +60,7 @@ class GraftConfig:
     top_k: int = 5
     typed_topology: bool = False
     propagation: bool = True
+    guard_unsupported_graph_downgrade: bool = True
 
     def __post_init__(self):
         if self.selector not in {"bm25", "topo"}:
@@ -80,7 +81,10 @@ class GraftConfig:
             raise ValueError("Invalid uncertainty threshold")
         if any(
             type(v) is not bool
-            for v in [self.paths, self.repair, self.typed_topology, self.propagation]
+            for v in [
+                self.paths, self.repair, self.typed_topology, self.propagation,
+                self.guard_unsupported_graph_downgrade,
+            ]
         ):
             raise ValueError("Boolean ablation flags required")
 
@@ -275,16 +279,29 @@ class Router:
         } or len(result.observations) != len(candidates):
             raise CompatibilityError("Paid backend observation IDs differ from selected targets")
         for obs in result.observations:
+            previous = self.states[obs.function_id].observation
+            # A graph response that admits missing evidence is not enough to
+            # override stronger, valid L1 evidence with a lower suspicion.
+            # Preserve the paid response in history for audit and ablation.
+            guard = (
+                self.config.guard_unsupported_graph_downgrade
+                and stage == EvidenceStage.GRAPH
+                and previous is not None and previous.valid
+                and obs.valid and obs.suspicion < previous.suspicion
+                and obs.missing_evidence.strip().lower() not in {"", "none", "n/a"}
+            )
             event = {
                 "stage": stage.value,
                 "evidence_ids": list(selection.ids) if selection else [],
                 **asdict(obs),
+                "applied_to_ranking": not guard,
+                "guard_reason": "unsupported_graph_downgrade" if guard else None,
             }
             self.history[obs.function_id].append(event)
             # Historical Full bonus applies only to actual complete methods.
             self.states[obs.function_id] = CandidateState(
                 2 if stage == EvidenceStage.METHOD_FULL else 1,
-                obs,
+                previous if guard else obs,
                 list(self.history[obs.function_id]),
             )
 
