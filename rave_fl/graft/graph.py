@@ -12,7 +12,7 @@ from rave_fl.eval.representations import java_tree
 from rave_fl.graft.evaluation import parse_identity
 
 NODE_KINDS={'failure','frame','method','code','test','value'}
-RELATIONS={'PART_OF','ADJACENT','OBSERVED_FRAME','STACK_NEXT','STACK_AT','MAY_CALL','REQUIRES','EXECUTES','SEMANTIC'}
+RELATIONS={'PART_OF','ADJACENT','OBSERVED_FRAME','STACK_NEXT','STACK_AT','MAY_CALL','REQUIRES','EXECUTES','SEMANTIC','FAILS_TEST'}
 
 @dataclass(frozen=True)
 class Origin:
@@ -215,5 +215,8 @@ def build_graph(instance,entities,coverage=(),max_nodes=3000):
         if fact.method not in targets:diagnostics.append({'kind':'coverage_outside_pool','method':fact.method});continue
         test=add('test',fact.raw_evidence,fact.origin,document=fact.test)
         edges.append(Edge(test.id,targets[fact.method],'EXECUTES','supplied observed coverage: '+fact.test))
+        tests={line[len('TEST:'):].strip() for line in instance.evidence.text.splitlines() if line.startswith('TEST:')}
+        if instance.evidence.kind=='observed_failure' and fact.test in tests:
+            edges.append(Edge(failure.id,test.id,'FAILS_TEST','exact supplied failing TEST identity matches observed coverage test'))
     diagnostics.append({'kind':'coverage_status','detail':'observed facts supplied' if coverage else 'not supplied; ranker scores do not create coverage edges'})
     return Graph(tuple(nodes),tuple(dict.fromkeys(edges)),targets,sources,instance.language,instance.revision,tuple(diagnostics))
