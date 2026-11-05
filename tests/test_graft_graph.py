@@ -42,3 +42,9 @@ def test_python_structural_units_and_missing_parser_are_explicit():
     es=[CodeEntity('a.py::f','a.py',1,4,'def f(x):\n    value = x + 1\n    return value\n',.5)]
     g=build_graph(i,es);assert any(e.relation=='REQUIRES' for e in g.edges)
     assert not any(e.relation=='MAY_CALL' for e in g.edges)
+
+def test_graph_sources_are_immutable_and_checksums_validated():
+    _,_,g=fixture_graph()
+    with pytest.raises(TypeError):g.sources['x.A.a()']['source']='changed'
+    data=g.to_dict();data['sources']['x.A.a()']['source']='changed'
+    with pytest.raises(ValueError,match='hash'):Graph.from_dict(data)

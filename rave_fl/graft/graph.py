@@ -6,6 +6,7 @@ import hashlib
 import re
 import textwrap
 from functools import cached_property
+from types import MappingProxyType
 from rave_fl.eval.schema import CodeEntity,OnlineInstance,fingerprint,relative_path
 from rave_fl.eval.representations import java_tree
 from rave_fl.graft.evaluation import parse_identity
@@ -35,6 +36,7 @@ class Node:
     defines: tuple = ()
     uses: tuple = ()
     def __post_init__(self):
+        object.__setattr__(self,'defines',tuple(self.defines));object.__setattr__(self,'uses',tuple(self.uses))
         if self.kind not in NODE_KINDS or not self.id or not self.text.strip():raise ValueError('Invalid evidence node')
 
 @dataclass(frozen=True)
@@ -58,11 +60,19 @@ class Graph:
     diagnostics: tuple = ()
     schema: str = 'graft-graph-v1'
     def __post_init__(self):
+        object.__setattr__(self,'targets',MappingProxyType(dict(self.targets)))
+        object.__setattr__(self,'sources',MappingProxyType({k:MappingProxyType(dict(v)) for k,v in self.sources.items()}))
+        object.__setattr__(self,'diagnostics',tuple(MappingProxyType(dict(v)) for v in self.diagnostics))
         ids={n.id for n in self.nodes}
         if self.schema!='graft-graph-v1' or len(ids)!=len(self.nodes):raise ValueError('Duplicate IDs or unsupported graph schema')
         if any(e.source not in ids or e.target not in ids for e in self.edges):raise ValueError('Dangling graph edge')
-        if any(i not in ids for i in self.targets.values()) or set(self.targets)-set(self.sources):raise ValueError('Invalid target mapping')
-    def to_dict(self):return asdict(self)
+        if any(i not in ids for i in self.targets.values()) or set(self.targets)!=set(self.sources):raise ValueError('Invalid target mapping')
+        for value in self.sources.values():
+            if hashlib.sha256(value['source'].encode()).hexdigest()!=value['sha256']:raise ValueError('Graph source hash mismatch')
+    def to_dict(self):
+        return {'nodes':[asdict(n) for n in self.nodes],'edges':[asdict(e) for e in self.edges],
+                'targets':dict(self.targets),'sources':{k:dict(v) for k,v in self.sources.items()},
+                'language':self.language,'revision':self.revision,'diagnostics':[dict(v) for v in self.diagnostics],'schema':self.schema}
     @cached_property
     def hash(self):return fingerprint(self.to_dict())
     @cached_property
