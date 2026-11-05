@@ -8,8 +8,6 @@ from collections import Counter, defaultdict
 from pathlib import Path
 import sys
 
-from rave_fl.core import Action
-from rave_fl.pilot_backend import parse_response
 
 
 def analyze(root: Path):
