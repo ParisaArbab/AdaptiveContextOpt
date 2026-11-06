@@ -25,3 +25,20 @@ jobs:
         run: python -m unittest discover -s tests -p 'test_aitech_*.py' -v
       - name: Print deterministic demonstration
         run: python -m aitech.demo
+      - name: Run archived SymPy trace pilot
+        run: python -m aitech.sympy_trace_pilot --output /tmp/aitech-sympy-trace.json
+      - name: Verify matched-budget trace result
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path("/tmp/aitech-sympy-trace.json").read_text())
+          a = result["conditions"]["relevance_only"]
+          b = result["conditions"]["dependency_aware"]
+          assert result["evidence_items"] == 7
+          assert result["budget_tokens_proxy"] == 36
+          assert a["tokens_proxy"] == b["tokens_proxy"] == 35
+          assert a["known_dependency_violations"] == 1
+          assert b["known_dependency_violations"] == 0
+          print("Archived real-trace dependency microcase validated")
+          PY
