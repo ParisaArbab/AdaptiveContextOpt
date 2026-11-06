@@ -54,7 +54,7 @@ def run_pilot(trace: str, budget: int | None = None) -> dict:
     evidence = extract(trace)
     total = sum(e.tokens for e in evidence)
     if budget is None:
-        budget = (total * 65) // 100
+        budget = (total * 75) // 100
     outputs = {}
     for name, preserve in (("relevance_only", False), ("dependency_aware", True)):
         selection = select_evidence(evidence, DEPENDENCIES, budget,
