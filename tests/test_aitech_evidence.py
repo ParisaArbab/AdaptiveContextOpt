@@ -15,7 +15,7 @@ class TestDependencySelection(unittest.TestCase):
         self.items = [
             Evidence("failure", "AssertionError in test_parse", 4, 10),
             Evidence("bridge", "test_parse calls parse_expression", 4, 1),
-            Evidence("noise", "unrelated warning", 4, 8),
+            Evidence("noise", "unrelated warning", 4, 5),
         ]
         self.links = {"failure": ("bridge",)}
 
