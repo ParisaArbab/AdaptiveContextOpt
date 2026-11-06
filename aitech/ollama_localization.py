@@ -1,7 +1,7 @@
-"""Run the same local Ollama fault-localization model on matched AITECH contexts.
+"""Run local Ollama localization on four AITECH evidence conditions.
 
 Uses archived SymPy tool-output evidence, not a fresh SWE-bench execution.
-This exploratory *localization-only* test does NOT apply patches. Requires an
+The provenance arm adds source path/line metadata, so its *full prompt* is\nnot token-matched to the non-provenance arm. Report measured model tokens.\nThis exploratory *localization-only* test does NOT apply patches. Requires an
 Ollama server; any gold labels are used only in the evaluator after inference.
 
 Example:
@@ -19,6 +19,7 @@ import urllib.request
 from pathlib import Path
 
 from .evidence import select_evidence
+from .provenance import capture_locations, render_with_provenance
 from .sympy_trace_pilot import DEFAULT_TRACE, DEPENDENCIES, extract
 
 SYSTEM = (
@@ -103,9 +104,11 @@ def experiment(
     timeout: int = 180,
     seed: int = 42,
     infer=call_ollama,
+    only: tuple[str, ...] | None = None,
 ) -> dict:
     items = extract(trace)
     full = sum(x.tokens for x in items)
+    locations = capture_locations(trace, items)
     budget = (full * 75) // 100 if budget is None else budget
     out = {
         "instance": "sympy__sympy-20590",
@@ -113,20 +116,33 @@ def experiment(
         "model": model, "seed": seed, "temperature": 0,
         "budget_proxy": budget, "raw_proxy_tokens": full,
         "conditions": {},
+        "source_provenance": "file/line obtained from archived tool snippet; no gold labels",
     }
-    for name, preserve in (("raw_excerpt", None),
-                           ("relevance_only", False),
-                           ("dependency_aware", True)):
+    arm_definitions = (("raw_excerpt", None),
+                       ("relevance_only", False),
+                       ("dependency_aware", True),
+                       ("dependency_aware_provenance", True))
+    valid_names = {name for name, _ in arm_definitions}
+    if only is not None and any(name not in valid_names for name in only):
+        raise ValueError(f"unknown condition in {only}")
+    for name, preserve in arm_definitions:
+        if only is not None and name not in only:
+            continue
         limit = full if preserve is None else budget
         selected = select_evidence(items, DEPENDENCIES, limit,
                                    preserve_dependencies=bool(preserve))
-        context = make_context(items, selected)
+        context = (render_with_provenance(items, selected.ids, locations)
+                   if name == "dependency_aware_provenance"
+                   else make_context(items, selected))
         prompt = f"Issue:\n{ISSUE}\n\nEvidence:\n{context}\n"
         result = infer(endpoint, model, prompt, timeout, seed)
         prediction = parse_prediction(result)
         out["conditions"][name] = {
             "selected_ids": list(selected.ids),
             "tokens_proxy": selected.tokens,
+            "evidence_format": ("source_file_and_line" if name == "dependency_aware_provenance" else "plain"),
+            "provenance_extra_prompt_chars": (len(context) - len(make_context(items, selected))
+                                              if name == "dependency_aware_provenance" else 0),
             "dangling_ids": list(selected.dangling),
             "prompt_chars": len(prompt),
             "prompt_eval_count": result.get("prompt_eval_count"),
@@ -146,14 +162,18 @@ def main() -> None:
     parser.add_argument("--timeout", type=int, default=180)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--only", nargs="+", choices=[
+        "raw_excerpt", "relevance_only", "dependency_aware",
+        "dependency_aware_provenance"], help="Run chosen conditions, default all four")
     args = parser.parse_args()
     try:
         result = experiment(
             args.trace.read_text(encoding="utf-8"),
             model=args.model, endpoint=args.endpoint, budget=args.budget,
             timeout=args.timeout, seed=args.seed,
+            only=tuple(args.only) if args.only else None,
         )
-    except (urllib.error.URLError, TimeoutError) as exc:
+    except (urllib.error.URLError, TimeoutError, ValueError) as exc:
         parser.exit(2, f"Ollama connection failed: {exc}\n")
     rendered = json.dumps(result, indent=2)
     if args.output:
