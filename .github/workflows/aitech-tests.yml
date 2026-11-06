@@ -1,0 +1,27 @@
+name: AITECH evidence selector tests
+
+on:
+  push:
+    branches: [AITECH]
+    paths:
+      - "aitech/**"
+      - "tests/test_aitech_*.py"
+      - ".github/workflows/aitech-tests.yml"
+  pull_request:
+    paths:
+      - "aitech/**"
+      - "tests/test_aitech_*.py"
+      - ".github/workflows/aitech-tests.yml"
+
+jobs:
+  aitech-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run dependency selection unit tests
+        run: python -m unittest discover -s tests -p 'test_aitech_*.py' -v
+      - name: Print deterministic demonstration
+        run: python -m aitech.demo
