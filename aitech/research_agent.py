@@ -10,7 +10,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -108,7 +107,7 @@ def render_report(result: dict, papers: dict) -> str:
     report = [
         "# AITECH autonomous CPU evidence-ablation report",
         "",
-        f"Bug: \`{result['instance']}\`", "",
+        f"Bug: `{result['instance']}`", "",
         "**Scope:** one seven-line real-source microcase, not independent SWE-bench evaluation.",
         "**Method:** fixed manual relevance scores and a regex-token proxy.",
         "**No LLM was run.** Gold was not used to select evidence.", "",
@@ -135,8 +134,8 @@ def render_report(result: dict, papers: dict) -> str:
     for p in papers["papers"]:
         report.append(f"- {p['title']} ({p['published']}): {p['url']}")
     report += ["", "## Reproducibility",
-               f"Archived trace SHA-256: \`{result['source_sha256']}\`",
-               "Reproduce with \`python -m aitech.research_agent --no-search --output-dir /tmp/aitech-agent\`.",
+               f"Archived trace SHA-256: `{result['source_sha256']}`",
+               "Reproduce with `python -m aitech.research_agent --no-search --output-dir /tmp/aitech-agent`.",
                "", "## Limitations",
                "Single previously inspected bug; no held-out data; only known manually supplied links; "
                "no downstream LLM, graph construction, actual tokenizer, or patch validation.",
