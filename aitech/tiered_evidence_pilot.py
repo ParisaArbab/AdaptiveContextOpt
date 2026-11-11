@@ -21,7 +21,7 @@ from .risk_gated_pilot import SOURCES, BUDGETS
 def select_tiers(snapshot: dict, budget: int, mode: str) -> dict:
     items = snapshot["candidates"]
     ids = [x["function_id"] for x in items]
-    if mode not in ("l1_only", "tiered_l0", "tiered_upgrade", "anchor_detail_first"):
+    if mode not in ("l1_only", "tiered_l0", "tiered_upgrade", "anchor_detail_first", "anchor_rank_detail"):
         raise ValueError("invalid representation policy")
     if budget < 0:
         raise ValueError("negative budget")
@@ -37,7 +37,7 @@ def select_tiers(snapshot: dict, budget: int, mode: str) -> dict:
     choices: dict[int, str] = {}
     used = 0
     order = list(dict.fromkeys(anchors + list(range(len(items)))))
-    if mode == "anchor_detail_first":
+    if mode in ("anchor_detail_first", "anchor_rank_detail"):
         # Keep failure anchor identity coverage before paying for detail.
         for i in anchors:
             if used + l0[i] <= budget:
@@ -48,6 +48,16 @@ def select_tiers(snapshot: dict, budget: int, mode: str) -> dict:
             if choices.get(i) == "L0" and used + l1[i] - l0[i] <= budget:
                 choices[i] = "L1"
                 used += l1[i] - l0[i]
+        if mode == "anchor_rank_detail":
+            # Give the highest-ranked suspicious non-anchor one L1 sketch
+            # before using capacity for a long tail of method signatures.
+            # Its rank is frozen by the prior fault localizer, never by gold.
+            for i in range(len(items)):
+                if i not in choices:
+                    if used + l1[i] <= budget:
+                        choices[i] = "L1"
+                        used += l1[i]
+                    break
         for i in range(len(items)):
             if i not in choices and used + l0[i] <= budget:
                 choices[i] = "L0"
@@ -101,7 +111,7 @@ def experiment(sources: dict[str, Path] = SOURCES) -> dict:
         })
     return {
         "scope": "Three previously examined Defects4J archived source pools, tier-selection only",
-        "methods": ["l1_only", "tiered_l0", "tiered_upgrade", "anchor_detail_first"],
+        "methods": ["l1_only", "tiered_l0", "tiered_upgrade", "anchor_detail_first", "anchor_rank_detail"],
         "gold_labels_read": False,
         "llm_executed": False,
         "budget_unit": "precomputed L0/L1 token proxy, NOT model tokenizer",
