@@ -18,6 +18,7 @@ from pathlib import Path
 
 from .java_compiler_graph import audit_source_directory
 from .verified_graph_evidence import map_calls
+from .compiler_graph_ablation import compare_policies
 
 
 def export(checkout: Path, key: str) -> str:
@@ -82,6 +83,11 @@ def run(checkout: Path, *, timeout: int = 240, max_files: int = 300,
             "ambiguous_caller_count": len(mapped.ambiguous_callers),
             "ambiguous_target_count": len(mapped.ambiguous_targets),
             "mapped_calls": mapped.mapped_calls,
+            "selection_comparison": compare_policies(
+                [c["function_id"] for c in candidates],
+                [int(c["features"]["l1_tokens"]) for c in candidates],
+                snapshot["context"], list(mapped.edges),
+            ),
         }
     return {
         "candidate_mapping": graph_mapping,
