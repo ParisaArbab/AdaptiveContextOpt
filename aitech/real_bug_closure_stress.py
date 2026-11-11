@@ -16,6 +16,7 @@ import re
 from pathlib import Path
 
 from .anchor_budget import anchor_first_selection, disambiguate_lexical_edges
+from .java_call_audit import sketch_call_audit
 
 ROOT = Path("results/rave_fl_iteration_d/independent_live")
 BUGS = ("Lang-1", "Time-1")
@@ -65,19 +66,22 @@ def run_one(data: dict, bug: str) -> dict:
     costs = [int(item["features"]["l1_tokens"]) for item in candidates]
     resolved, ambiguous = disambiguate_lexical_edges(
         [item["function_id"] for item in candidates], edges)
+    call_audit = sketch_call_audit(candidates)
+    arity_edges = set(call_audit.edges)
     rows = []
     for budget in BUDGETS:
-        for method in ("rank_fill", "closure", "anchor_reserved", "anchor_first_audited"):
+        for method in ("rank_fill", "closure", "anchor_reserved", "anchor_first_audited", "anchor_first_arity"):
             selected: set[int] = set()
-            if method == "anchor_first_audited":
-                audited = anchor_first_selection(costs, sorted(anchors), resolved, budget)
+            if method in ("anchor_first_audited", "anchor_first_arity"):
+                graph = arity_edges if method == "anchor_first_arity" else resolved
+                audited = anchor_first_selection(costs, sorted(anchors), graph, budget)
                 selected = set(audited.selected)
             if method == "anchor_reserved":
                 for i in sorted(anchors)[:2]:
                     expanded = closure(i, edges)
                     if sum(costs[j] for j in selected | expanded) <= budget:
                         selected.update(expanded)
-            if method != "anchor_first_audited":
+            if method not in ("anchor_first_audited", "anchor_first_arity"):
                 for i in range(len(candidates)):
                     expanded = {i} if method == "rank_fill" else closure(i, edges)
                     if sum(costs[j] for j in selected | expanded) <= budget:
@@ -91,6 +95,9 @@ def run_one(data: dict, bug: str) -> dict:
                 "failure_name_anchors_kept": len(selected & anchors),
                 "failure_name_anchors_total": len(anchors),
                 "ambiguous_edges_rejected": len(ambiguous),
+                "arity_audited_missing_support": sum(
+                    1 for src, dst in arity_edges if src in selected and dst not in selected
+                ),
                 "unambiguous_missing_support": sum(
                     1 for src, dst in resolved if src in selected and dst not in selected
                 ),
@@ -105,6 +112,13 @@ def run_one(data: dict, bug: str) -> dict:
         "failure_name_anchors": [candidates[i]["function_id"] for i in sorted(anchors)],
         "ambiguous_lexical_edges_rejected": len(ambiguous),
         "unambiguous_lexical_edges": len(resolved),
+        "arity_call_edges": [
+            [candidates[a]["function_id"], candidates[b]["function_id"]]
+            for a, b in sorted(arity_edges)
+        ],
+        "arity_ambiguous_calls": list(call_audit.ambiguous),
+        "arity_unresolved_calls_count": len(call_audit.unresolved),
+        "arity_inspected_call_lines": call_audit.inspected_calls,
         "lexical_edges": [
             [candidates[a]["function_id"], candidates[b]["function_id"]]
             for a, b in sorted(edges)
@@ -122,7 +136,7 @@ def experiment(root: Path = ROOT) -> dict:
     return {
         "scope": "two archived independent Defects4J inputs, development-only",
         "bugs": list(BUGS),
-        "methods": ["rank_fill", "closure", "anchor_reserved", "anchor_first_audited"],
+        "methods": ["rank_fill", "closure", "anchor_reserved", "anchor_first_audited", "anchor_first_arity"],
         "budget_unit": "precomputed L1 token proxy, not Ollama input tokens",
         "source_path_pattern": str(root / "{bug}" / "input_snapshot.json"),
         "limitations": [
@@ -132,6 +146,7 @@ def experiment(root: Path = ROOT) -> dict:
             "Same-class approximate edges exclude cross-class dependencies",
             "The anchor-reservation approach is naive and may fail if closure cannot fit",
             "Anchor-first can retain anchors with unresolved support; violations are reported, not hidden",
+            "Arity-aware calls still cannot resolve Java receiver types, inheritance, varargs or same-arity overloads",
         ],
         "results": results,
     }
