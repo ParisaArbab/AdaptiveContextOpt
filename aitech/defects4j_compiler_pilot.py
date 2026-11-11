@@ -82,6 +82,8 @@ def run(checkout: Path, *, timeout: int = 240, max_files: int = 300,
             "unmatched_target_count": len(mapped.unmatched_targets),
             "ambiguous_caller_count": len(mapped.ambiguous_callers),
             "ambiguous_target_count": len(mapped.ambiguous_targets),
+            "ambiguous_short_type_identity_count": len(mapped.ambiguous_type_identities),
+            "ambiguous_short_type_identities": list(mapped.ambiguous_type_identities),
             "mapped_calls": mapped.mapped_calls,
             "selection_comparison": compare_policies(
                 [c["function_id"] for c in candidates],
