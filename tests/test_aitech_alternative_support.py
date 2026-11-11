@@ -51,12 +51,22 @@ class TestAlternativeSupport(unittest.TestCase):
         self.assertEqual(loose.dangling_ids, ("failure",))
         self.assertEqual(complete.ids, ("failure", "required"))
 
-    def test_cycles_are_allowed_only_when_jointly_satisfied(self):
+    def test_circular_only_support_is_not_sufficient(self):
         items = [Evidence("a", "", 2, 2), Evidence("b", "", 2, 2)]
         support = {"a": (("b",),), "b": (("a",),)}
         result = exact_select(items, support, 4)
-        self.assertEqual(result.ids, ("a", "b"))
-        self.assertFalse(result.dangling_ids)
+        self.assertEqual(result.ids, ())
+        self.assertEqual(dangling_evidence(["a", "b"], support), ("a", "b"))
+
+    def test_grounded_support_chain_is_accepted(self):
+        items = [
+            Evidence("anchor", "", 2, 6),
+            Evidence("bridge", "", 2, 1),
+            Evidence("root", "", 2, 1),
+        ]
+        supports = {"anchor": (("bridge",),), "bridge": (("root",),)}
+        self.assertEqual(exact_select(items, supports, 6).ids,
+                         ("anchor", "bridge", "root"))
 
     def test_unknown_support_rejected(self):
         with self.assertRaisesRegex(ValueError, "unknown support"):
