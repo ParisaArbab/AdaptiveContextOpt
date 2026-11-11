@@ -1,0 +1,49 @@
+name: AITECH autonomous CPU research
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [AITECH]
+    paths:
+      - "aitech/**"
+      - "tests/test_aitech_*.py"
+      - ".github/workflows/aitech-research-agent.yml"
+  schedule:
+    # GitHub schedules execute ONLY from the default branch.
+    # This becomes active after the workflow and code reach main.
+    - cron: "17 14 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aitech-research-agent
+  cancel-in-progress: false
+
+jobs:
+  cpu-research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact triggering revision
+        uses: actions/checkout@v4
+      - name: Configure Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run AITECH unit tests
+        run: python -m unittest discover -s tests -p 'test_aitech_*.py' -v
+      - name: Run archived-source CPU comparison
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            python -m aitech.research_agent --no-search --output-dir agent-output
+          else
+            python -m aitech.research_agent --output-dir agent-output
+          fi
+      - name: Save raw results and report (no automatic merge)
+        uses: actions/upload-artifact@v4
+        with:
+          name: aitech-research-${{ github.run_id }}
+          path: agent-output/
+          retention-days: 30
