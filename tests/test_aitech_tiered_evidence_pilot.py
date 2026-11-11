@@ -26,6 +26,12 @@ class TestTieredEvidence(unittest.TestCase):
         self.assertEqual(case["anchors_with_l1_details"],0)
         self.assertEqual(case["candidate_id_tier"]["pkg.X.small()"],"L1")
 
+    def test_anchor_detail_before_optional_identifiers(self):
+        result=select_tiers(self.snapshot(),120,"anchor_detail_first")
+        self.assertEqual(result["candidate_id_tier"]["pkg.X.big()"],"L1")
+        self.assertEqual(result["anchors_with_l1_details"],1)
+        self.assertLessEqual(result["used_proxy_tokens"],120)
+
     def test_rejects_invalid_costs(self):
         s=self.snapshot()
         s["candidates"][0]["features"]["l1_tokens"]=3
@@ -38,7 +44,7 @@ class TestTieredEvidence(unittest.TestCase):
         result=experiment()
         self.assertEqual(len(result["cases"]),3)
         for case in result["cases"]:
-            self.assertEqual(len(case["rows"]),12)
+            self.assertEqual(len(case["rows"]),16)
             for row in case["rows"]:
                 self.assertLessEqual(row["used_proxy_tokens"],row["budget_proxy"])
                 self.assertLessEqual(row["anchors_with_l1_details"],
