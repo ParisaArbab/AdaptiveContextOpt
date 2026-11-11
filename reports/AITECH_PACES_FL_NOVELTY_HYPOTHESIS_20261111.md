@@ -91,6 +91,34 @@ The improvement is fragile to different rankings, anchor definitions,
 token costs and bugs. All three bugs were studied earlier; there is
 no independent held-out evaluation in this comparison.
 
+
+## Reproducible Pareto audit result
+
+GitHub Actions unit-test job `130723453720` (run `43078122982`)
+completed successfully with **129 passing tests**. The independent
+`aitech/tiered_pareto_analysis.py` check compared each tiered policy
+to L1-only across 12 matched conditions:
+
+| Tiered strategy | No worse on both ID and L1 recall | Strict gain without detail loss | ID gain that sacrifices L1 detail |
+|---|---:|---:|---:|
+| L0-only | 4/12 | 4/12 | 4/12 |
+| Upgrade-after-L0 | 4/12 | 4/12 | 4/12 |
+| Anchor-detail-first | 8/12 | 4/12 | 4/12 |
+| **Anchor + Rank Detail** | **12/12** | **8/12** | **0/12** |
+
+**Interpretation:** Anchor + Rank Detail was a weak Pareto
+improvement in all 12 observed development cases, strictly improving
+changed-method signature coverage in 8 without reducing changed-method
+L1 evidence coverage. This is not a performance guarantee on unseen
+bugs, and does not measure model predictions or patch success.
+
+Reproduce:
+```bash
+python -m aitech.tiered_evidence_pilot --output results/aitech/tiered.json
+python -m aitech.score_tiered_posthoc --output results/aitech/tiered_posthoc.json
+python -m aitech.tiered_pareto_analysis --output-dir results/aitech/tiered_pareto
+```
+
 ## Novelty status and related work
 
 Graph-based bug localization, adaptive retrieval, bounded agentic RAG,
