@@ -35,9 +35,9 @@ class TestDefects4JCompilerPilot(unittest.TestCase):
             checkout = self.make_checkout(temp)
             snapshot = checkout / "candidates.json"
             snapshot.write_text(json.dumps({"candidates": [
-                {"function_id": "Demo.run()"},
-                {"function_id": "Demo.helper()"},
-            ]}), encoding="utf-8")
+                {"function_id": "Demo.run()", "features": {"l1_tokens": 10}},
+                {"function_id": "Demo.helper()", "features": {"l1_tokens": 10}},
+            ], "context": "run() failed"}), encoding="utf-8")
             fake = ResolutionAudit(
                 calls=(ResolvedCall("Demo.java", "Demo", "run", "METHOD",
                                     "Demo", "helper", ""),),
@@ -53,6 +53,7 @@ class TestDefects4JCompilerPilot(unittest.TestCase):
                     result = run(checkout, candidate_snapshot=snapshot)
             self.assertEqual(result["candidate_mapping"]["edges"], [[0, 1]])
             self.assertEqual(result["candidate_mapping"]["mapped_calls"], 1)
+            self.assertEqual(len(result["candidate_mapping"]["selection_comparison"]), 12)
 
     def test_missing_checkout_rejected_before_external_commands(self):
         with tempfile.TemporaryDirectory() as temp:
