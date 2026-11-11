@@ -226,7 +226,8 @@ def main() -> None:
     predictions = []
     for record in frozen:
         prompt = record["_prompt"]
-        inputs = tokenizer(prompt, return_tensors="pt")
+        # Chat template already includes special tokens; avoid duplicate BOS/EOS.
+        inputs = tokenizer(prompt, return_tensors="pt", add_special_tokens=False)
         if inputs["input_ids"].shape[1] > args.max_input_tokens:
             raise RuntimeError(f"model input too long: {record['bug']}/{record['policy']}")
         started = time.perf_counter()
