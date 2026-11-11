@@ -57,22 +57,34 @@ public final class ResolvedCallExtractor {
             new TreePathScanner<Void, Void>() {
                 private String callerOwner = "";
                 private String callerMethod = "";
+                private String callerParameters = "";
 
                 @Override public Void visitMethod(MethodTree node, Void p) {
                     TreePath path = getCurrentPath();
                     Element el = trees.getElement(path);
                     String oldOwner = callerOwner, oldMethod = callerMethod;
+                    String oldParameters = callerParameters;
                     if (el instanceof ExecutableElement) {
                         callerMethod = el.getSimpleName().toString();
+                        List<String> callerParams = new ArrayList<>();
+                        for (VariableElement param : ((ExecutableElement) el).getParameters()) {
+                            callerParams.add(param.asType().toString());
+                        }
+                        callerParameters = String.join(",", callerParams);
                         Element encl = el.getEnclosingElement();
                         callerOwner = (encl instanceof TypeElement)
                             ? ((TypeElement) encl).getQualifiedName().toString()
                             : encl.toString();
                     } else {
                         callerMethod = node.getName().toString();
+                        callerParameters = "";
                     }
                     try { return super.visitMethod(node, p); }
-                    finally { callerOwner = oldOwner; callerMethod = oldMethod; }
+                    finally {
+                        callerOwner = oldOwner;
+                        callerMethod = oldMethod;
+                        callerParameters = oldParameters;
+                    }
                 }
 
                 private void emit(TreePath path, String kind) {
@@ -94,7 +106,8 @@ public final class ResolvedCallExtractor {
                         + "\t" + safe(callerOwner) + "\t" + safe(callerMethod)
                         + "\t" + kind + "\t" + safe(targetOwner)
                         + "\t" + safe(method.getSimpleName().toString())
-                        + "\t" + safe(String.join(",", params)));
+                        + "\t" + safe(String.join(",", params))
+                        + "\t" + safe(callerParameters));
                 }
                 @Override public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
                     emit(getCurrentPath(), "METHOD");
