@@ -5,9 +5,9 @@ from aitech.java_compiler_graph import ResolvedCall
 from aitech.verified_graph_evidence import map_calls
 
 
-def call(owner, method, target_owner, target, types="", kind="METHOD"):
+def call(owner, method, target_owner, target, types="", kind="METHOD", caller_types=None):
     return ResolvedCall("src/X.java", owner, method, kind,
-                        target_owner, target, types)
+                        target_owner, target, types, caller_types)
 
 
 class TestVerifiedGraphEvidence(unittest.TestCase):
@@ -37,6 +37,31 @@ class TestVerifiedGraphEvidence(unittest.TestCase):
         ])
         self.assertFalse(result.edges)
         self.assertEqual(result.ambiguous_callers, ("pkg.Num.use",))
+
+    def test_resolves_overloaded_callers_using_compiler_signature(self):
+        ids = [
+            "pkg.Num.use(String)",
+            "pkg.Num.use(Object)",
+            "pkg.Num.convert(String)",
+            "pkg.Num.convert(Object)",
+        ]
+        result = map_calls(ids, [
+            call("pkg.Num", "use", "pkg.Num", "convert",
+                 "java.lang.String", caller_types="java.lang.String"),
+            call("pkg.Num", "use", "pkg.Num", "convert",
+                 "java.lang.Object", caller_types="java.lang.Object"),
+        ])
+        self.assertEqual(result.edges, ((0, 2), (1, 3)))
+        self.assertFalse(result.ambiguous_callers)
+        self.assertEqual(result.mapped_calls, 2)
+
+    def test_unknown_caller_signature_still_abstains(self):
+        ids = ["pkg.Num.use(String)", "pkg.Num.use(Object)", "pkg.Num.convert(String)"]
+        result = map_calls(ids, [
+            call("pkg.Num", "use", "pkg.Num", "convert", "java.lang.String")
+        ])
+        self.assertEqual(result.edges, ())
+        self.assertIn("pkg.Num.use", result.ambiguous_callers)
 
     def test_excludes_target_missing_from_evidence_pool(self):
         ids = ["pkg.Num.use(String)"]
