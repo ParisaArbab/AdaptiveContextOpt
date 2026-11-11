@@ -29,6 +29,18 @@ jobs:
         run: python -m unittest discover -s tests -p 'test_aitech_*.py' -v
       - name: Run risk-gated context experiment on archived Defects4J inputs
         run: python -m aitech.risk_gated_pilot --output /tmp/aitech-risk-gated-pilot.json
+      - name: Analyze paired risk-gated outcomes without gold labels
+        run: |
+          python -m aitech.analyze_risk_gated_pilot \
+            --input /tmp/aitech-risk-gated-pilot.json \
+            --output-dir agent-output/risk_gated
+          cp /tmp/aitech-risk-gated-pilot.json agent-output/risk_gated/results.json
+      - name: Upload paired real-archive selector results
+        uses: actions/upload-artifact@v4
+        with:
+          name: aitech-risk-gated-${{ github.run_id }}
+          path: agent-output/risk_gated/
+          retention-days: 30
       - name: Print deterministic demonstration
         run: python -m aitech.demo
       - name: Run archived SymPy trace pilot
