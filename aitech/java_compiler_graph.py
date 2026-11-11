@@ -31,6 +31,7 @@ class ResolvedCall:
     target_owner: str
     target_method: str
     parameter_types: str
+    caller_parameter_types: str | None = None
 
 
 @dataclass(frozen=True)
@@ -76,10 +77,14 @@ def audit_source_directory(source_root: Path, *, classpath: str | None = None, t
         fields = line.split("\t")
         if fields[0] == "UNRESOLVED":
             unresolved += 1
-        elif fields[0] == "RESOLVED" and len(fields) == 8:
-            _, path, owner, method, kind, dest_owner, dest_method, param_types = fields
+        elif fields[0] == "RESOLVED" and len(fields) in (8, 9):
+            _, path, owner, method, kind, dest_owner, dest_method, param_types = fields[:8]
+            # New JDK helper supplies the caller signature. The old 8-column
+            # format is accepted but its caller overload remains unknown.
+            caller_types = fields[8] if len(fields) == 9 else None
             calls.append(ResolvedCall(path, owner, method, kind,
-                                      dest_owner, dest_method, param_types))
+                                      dest_owner, dest_method, param_types,
+                                      caller_types))
         else:
             raise RuntimeError(f"Unexpected compiler output: {line[:200]}")
     return ResolutionAudit(tuple(calls), unresolved, len(files), hashes)
