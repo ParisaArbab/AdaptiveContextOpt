@@ -108,6 +108,36 @@ class TestCompilerGraph(unittest.TestCase):
             self.assertTrue(any(c.target_owner == "foo.Library" and
                                 c.target_method == "answer" for c in audit.calls))
 
+    def test_real_compiler_distinguishes_same_short_class_names(self):
+        from aitech.verified_graph_evidence import map_calls
+        from aitech.compiler_attribution_acceptance import SOURCE_ROOT
+        calls = audit_source_directory(SOURCE_ROOT).calls
+        calls = [c for c in calls
+                 if c.caller_owner == "aitech.fixture.PackageCollisionDemo"
+                 and c.caller_method == "use"
+                 and c.target_method == "convert"]
+        self.assertEqual(len(calls), 2)
+        self.assertEqual({c.parameter_types for c in calls},
+                         {"aitech.fixture.first.Date", "aitech.fixture.second.Date"})
+        # An old short-only candidate signature is unsafe and must abstain.
+        short_ids = [
+            "aitech.fixture.PackageCollisionDemo.use(Date)",
+            "aitech.fixture.PackageCollisionDemo.convert(Date)",
+        ]
+        short_graph = map_calls(short_ids, calls)
+        self.assertEqual(short_graph.edges, ())
+        self.assertTrue(short_graph.ambiguous_type_identities)
+        # Fully qualified candidate types are distinguishable.
+        ids = [
+            "aitech.fixture.PackageCollisionDemo.use(aitech.fixture.first.Date)",
+            "aitech.fixture.PackageCollisionDemo.use(aitech.fixture.second.Date)",
+            "aitech.fixture.PackageCollisionDemo.convert(aitech.fixture.first.Date)",
+            "aitech.fixture.PackageCollisionDemo.convert(aitech.fixture.second.Date)",
+        ]
+        exact = map_calls(ids, calls)
+        self.assertEqual(exact.edges, ((0, 2), (1, 3)))
+        self.assertFalse(exact.ambiguous_type_identities)
+
     def test_missing_types_fail_closed(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
