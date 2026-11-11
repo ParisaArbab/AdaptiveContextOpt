@@ -23,6 +23,7 @@ class MappedGraph:
     ambiguous_callers: tuple[str, ...]
     ambiguous_targets: tuple[str, ...]
     mapped_calls: int
+    ambiguous_type_identities: tuple[str, ...] = ()
 
 
 def _strip_generics(value: str) -> str:
@@ -72,46 +73,105 @@ def _candidate_signature(function_id: str) -> tuple[str, str, tuple[str, ...]]:
     return owner, name, tuple(map(_simple_type, _split_params(parameters)))
 
 
+def _canonical_type(value: str) -> str:
+    """Compiler signature with erased generics but preserved package names."""
+    return _strip_generics(value).replace("...", "[]").strip()
+
+
+def _types_match(candidate_types: tuple[str, ...], compiler_types: tuple[str, ...]) -> bool:
+    if len(candidate_types) != len(compiler_types):
+        return False
+    for candidate, actual in zip(candidate_types, compiler_types):
+        named = _canonical_type(candidate)
+        resolved = _canonical_type(actual)
+        # The candidate's qualified package name is authoritative.
+        # Only an unqualified candidate type may use short-name matching.
+        if "." in named and named != resolved:
+            return False
+        if "." not in named and _simple_type(named) != _simple_type(resolved):
+            return False
+    return True
+
+
 def map_calls(candidates: list[str], calls: Iterable[ResolvedCall]) -> MappedGraph:
-    signatures = [_candidate_signature(identifier) for identifier in candidates]
+    """Match full types when known; abstain on short-name collisions.
+
+    This only establishes candidate identity if the available signatures
+    uniquely identify it. A short-name match remains approximate and is
+    never allowed to conflate two distinct compiler-qualified signatures.
+    """
+    candidate_signatures = []
+    for function_id in candidates:
+        prefix, suffix = function_id.split("(", 1)
+        owner, method = prefix.rsplit(".", 1)
+        types = tuple(_split_params(suffix.rsplit(")", 1)[0]))
+        candidate_signatures.append((owner, method, types))
+
+    calls = list(calls)
     edges: set[tuple[int, int]] = set()
     missing: set[str] = set()
     amb_caller: set[str] = set()
     amb_target: set[str] = set()
+    ambiguous_type_ids: set[str] = set()
     mapped = 0
+
+    # Track every compiler-qualified signature that can match a candidate.
+    # Collisions mean a shortened Java name cannot distinguish its identity.
+    seen_types: dict[int, set[tuple[str, ...]]] = {
+        i: set() for i in range(len(candidates))
+    }
     for call in calls:
-        # Prefer compiler-attributed caller parameter types, not just
-        # caller method names. The old 8-column format has no caller
-        # signature, so it can map only a unique caller name.
-        caller_params = (
-            tuple(map(_simple_type, _split_params(call.caller_parameter_types)))
-            if call.caller_parameter_types is not None else None
-        )
-        callers = [
-            i for i, (owner, name, params) in enumerate(signatures)
-            if owner == call.caller_owner and name == call.caller_method
-            and (caller_params is None or params == caller_params)
-        ]
+        for owner, method, raw, is_caller in (
+            (call.caller_owner, call.caller_method,
+             call.caller_parameter_types, True),
+            (call.target_owner, call.target_method,
+             call.parameter_types, False),
+        ):
+            if raw is None:
+                continue
+            compiler_types = tuple(_split_params(raw))
+            compiler_canonical = tuple(map(_canonical_type, compiler_types))
+            for i, (candidate_owner, candidate_method, candidate_types) in enumerate(candidate_signatures):
+                if (owner == candidate_owner and method == candidate_method
+                        and _types_match(candidate_types, compiler_types)):
+                    seen_types[i].add(compiler_canonical)
+    conflicting = {i for i, values in seen_types.items() if len(values) > 1}
+
+    for call in calls:
         call_label = f"{call.caller_owner}.{call.caller_method}"
+        caller_types = (tuple(_split_params(call.caller_parameter_types))
+                        if call.caller_parameter_types is not None else None)
+        callers = [
+            i for i, (owner, name, types) in enumerate(candidate_signatures)
+            if owner == call.caller_owner and name == call.caller_method
+            and (caller_types is None or _types_match(types, caller_types))
+        ]
         if len(callers) != 1:
             amb_caller.add(call_label)
             continue
-        desired = (
-            call.target_owner,
-            call.target_method,
-            tuple(map(_simple_type, _split_params(call.parameter_types))),
-        )
-        targets = [i for i, signature in enumerate(signatures)
-                   if signature == desired]
+        caller = callers[0]
+        if caller in conflicting:
+            ambiguous_type_ids.add(candidates[caller])
+            continue
+
+        callee_types = tuple(_split_params(call.parameter_types))
+        targets = [
+            i for i, (owner, name, types) in enumerate(candidate_signatures)
+            if owner == call.target_owner and name == call.target_method
+            and _types_match(types, callee_types)
+        ]
         target_label = f"{call.target_owner}.{call.target_method}({call.parameter_types})"
         if not targets:
             missing.add(target_label)
         elif len(targets) > 1:
             amb_target.add(target_label)
+        elif targets[0] in conflicting:
+            ambiguous_type_ids.add(candidates[targets[0]])
         else:
-            edges.add((callers[0], targets[0]))
+            edges.add((caller, targets[0]))
             mapped += 1
     return MappedGraph(
         tuple(sorted(edges)), tuple(sorted(missing)),
-        tuple(sorted(amb_caller)), tuple(sorted(amb_target)), mapped
+        tuple(sorted(amb_caller)), tuple(sorted(amb_target)), mapped,
+        tuple(sorted(ambiguous_type_ids))
     )
