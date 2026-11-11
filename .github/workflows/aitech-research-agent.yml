@@ -52,6 +52,24 @@ jobs:
         run: python -m aitech.real_bug_closure_stress --output agent-output/anchor_first_real_bug_stress.json
       - name: Audit JDK AST calls on two archived Java bugs
         run: python -m aitech.java_ast_real_bug --output agent-output/java_ast_real_bug.json
+      - name: Verify compiler-bound overloads and save proof artifact
+        run: |
+          python -m aitech.java_compiler_graph \
+            --sources aitech/fixtures/java_compiler_verified \
+            --output agent-output/compiler_verified_fixture.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("agent-output/compiler_verified_fixture.json").read_text())
+          calls = [x for x in report["calls"] if x["caller_method"] == "run"
+                   and x["target_method"] == "translate"]
+          assert len(calls) == 2, calls
+          assert {x["parameter_types"] for x in calls} == {
+              "java.lang.String", "java.lang.Object"
+          }, calls
+          assert report["unresolved_count"] == 0
+          print("Compiler resolved both same-arity overloads distinctly")
+          PY
       - name: Save raw results and report (no automatic merge)
         uses: actions/upload-artifact@v4
         with:
