@@ -74,6 +74,11 @@ jobs:
           python -m aitech.changed_method_oracle_ceiling \
             --frozen /tmp/aitech-evidence/multiresolution.json \
             --output /tmp/aitech-evidence/changed_method_oracle.json
+      - name: Compare against strong pre-existing tiered source-detail baselines
+        run: |
+          python -m aitech.compare_strong_tiered_baselines \
+            --frozen /tmp/aitech-evidence/multiresolution.json \
+            --output /tmp/aitech-evidence/strong_tiered_comparison.json
       - name: Upload raw exploratory selection results
         uses: actions/upload-artifact@v4
         with:
