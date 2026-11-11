@@ -34,6 +34,7 @@ python -m aitech.defects4j_compiler_pilot \
   --checkout data/rave_fl_checkouts/Lang-1 \
   --max-files 1000 \
   --timeout 600 \
+  --candidate-snapshot results/rave_fl_iteration_d/independent_live/Lang-1/input_snapshot.json \
   --output results/aitech/lang1_compiler_graph.json
 ```
 
@@ -70,3 +71,19 @@ complete source tree can be attributed successfully and the number
 of unresolved/ambiguous calls is reported. Then compare at equal
 model-token budgets against rank-fill and Anchor-First, preserving a
 separate unseen test set and freezing selections before gold scoring.
+
+## Compiler graph to ranked evidence (added)
+
+When `--candidate-snapshot` is supplied, the pilot matches compiler-resolved
+target owner, method and parameter types to pre-existing ranked evidence
+candidate IDs. An edge is accepted only with a unique caller candidate and
+a unique target candidate. Ambiguous callers, ambiguous target overloads and
+targets absent from the candidate pool are counted, not invented.
+
+The snapshot's SHA-256 is recorded. Matching short/simple parameter type names
+to compiler-qualified names is an **approximate normalization step**,
+not independent proof that the candidate source is identical. The original
+compiler target is still preserved in the graph so this can be audited.
+
+This stage does not use gold patch labels and does not make LLM calls. Actual
+fault-localization gains require separate paired evaluation.
