@@ -57,6 +57,19 @@ jobs:
         run: python -m aitech.score_tiered_posthoc --output agent-output/risk_gated/tiered_posthoc.json
       - name: Audit identity versus detailed-code Pareto tradeoffs
         run: python -m aitech.tiered_pareto_analysis --output-dir agent-output/risk_gated/tiered_pareto
+      - name: Run frozen three-bug evidence ablations (CPU only)
+        run: |
+          mkdir -p /tmp/aitech-evidence
+          python -m aitech.failure_conditioned_study \
+            --output /tmp/aitech-evidence/failure_conditioned.json
+          python -m aitech.multiresolution_study \
+            --output /tmp/aitech-evidence/multiresolution.json
+      - name: Upload raw exploratory selection results
+        uses: actions/upload-artifact@v4
+        with:
+          name: aitech-three-bug-cpu-${{ github.run_id }}
+          path: /tmp/aitech-evidence/
+          retention-days: 30
       - name: Print deterministic demonstration
         run: python -m aitech.demo
       - name: Run archived SymPy trace pilot
