@@ -68,6 +68,12 @@ jobs:
             --candidate-snapshot results/rave_fl_iteration_d/independent_live/Lang-1/input_snapshot.json \
             --output agent-output/lang1_compiler_graph.json \
             2>&1 | tee agent-output/lang1_run.log
+      - name: Validate real compiler output provenance and budget safety
+        shell: bash
+        run: |
+          python -m aitech.validate_real_bug_graph \
+            --input agent-output/lang1_compiler_graph.json \
+            --output agent-output/lang1_validation.json
       - name: Archive evidence and setup diagnostics, even on failure
         if: always()
         uses: actions/upload-artifact@v4
