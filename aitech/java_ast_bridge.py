@@ -49,8 +49,14 @@ def extract_ast_calls(candidates: list[dict], *, timeout: int = 90) -> AstAudit:
             # duplicate method names from corrupting AST extraction.
             path = sources / f"Snippet{i:04d}.java"
             snippet = item["source"]
+            # A constructor declaration must match its class name for
+            # javac to parse it as a constructor, not a malformed method.
+            function_id = item["function_id"]
+            owner, method = function_id.split("(", 1)[0].rsplit(".", 1)
+            owner_class = owner.rsplit(".", 1)[-1]
+            wrapper_name = owner_class if method == owner_class else f"Snippet{i:04d}"
             path.write_text(
-                f"class Snippet{i:04d} {{\n" + snippet + "\n}\n",
+                f"class {wrapper_name} {{\n" + snippet + "\n}\n",
                 encoding="utf-8",
             )
         compile_result = subprocess.run(
