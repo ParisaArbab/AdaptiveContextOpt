@@ -14,7 +14,7 @@ class TestRealBugClosureStress(unittest.TestCase):
         self.assertEqual(len(output["results"]), 2)
         for case in output["results"]:
             self.assertEqual(case["source_candidate_count"], 25)
-            self.assertEqual(len(case["rows"]), 16)
+            self.assertEqual(len(case["rows"]), 20)
             for row in case["rows"]:
                 self.assertLessEqual(row["used_proxy_tokens"], row["budget"])
                 self.assertLessEqual(row["failure_name_anchors_kept"],
@@ -31,6 +31,16 @@ class TestRealBugClosureStress(unittest.TestCase):
                                     baseline["failure_name_anchors_kept"])
             self.assertLessEqual(guarded["used_proxy_tokens"], budget)
             self.assertIn("unambiguous_missing_support", guarded)
+
+    def test_arity_graph_is_audited(self):
+        cases = {case["bug"]: case for case in experiment()["results"]}
+        for case in cases.values():
+            self.assertIn("arity_call_edges", case)
+            self.assertIn("arity_unresolved_calls_count", case)
+            rows = {(r["budget"], r["method"]): r for r in case["rows"]}
+            for budget in (200, 300, 450, 600):
+                self.assertIn("arity_audited_missing_support",
+                              rows[(budget, "anchor_first_arity")])
 
     def test_closure_can_drop_anchor(self):
         cases = {case["bug"]: case for case in experiment()["results"]}
