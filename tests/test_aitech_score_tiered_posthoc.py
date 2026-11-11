@@ -12,6 +12,8 @@ class TestTieredPosthoc(unittest.TestCase):
              "candidate_id_tier":{"A.bug()":"L0","A.other()":"L0"}},
             {"method":"tiered_upgrade","budget_proxy":50,"used_proxy_tokens":30,
              "candidate_id_tier":{"A.bug()":"L0","A.other()":"L1"}},
+            {"method":"anchor_detail_first","budget_proxy":50,"used_proxy_tokens":50,
+             "candidate_id_tier":{"A.bug()":"L1","A.other()":"L0"}},
         ]}]}
         labels={"scoring_only":True,"selection_frozen_before_labels":True,
                 "bugs":{"Toy-1":{"changed_methods":["A.bug()"]}}}
@@ -23,8 +25,8 @@ class TestTieredPosthoc(unittest.TestCase):
         upgrade=next(r for r in result["rows"] if r["method"]=="tiered_upgrade")
         self.assertEqual(upgrade["identity_recall"],1.0)
         self.assertEqual(upgrade["detailed_source_recall"],0.0)
-        self.assertEqual(result["identity_gain_conditions"],2)
-        self.assertEqual(result["detail_gain_conditions"],0)
+        self.assertEqual(result["identity_gain_conditions"],3)
+        self.assertEqual(result["detail_gain_conditions"],1)
 
     def test_scoring_never_changes_frozen_selection(self):
         frozen,labels=self.fixture()
