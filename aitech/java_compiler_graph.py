@@ -42,7 +42,7 @@ class ResolutionAudit:
     status: str = "compiler_attributed_static_targets"
 
 
-def audit_source_directory(source_root: Path, *, timeout: int = 120) -> ResolutionAudit:
+def audit_source_directory(source_root: Path, *, classpath: str | None = None, timeout: int = 120) -> ResolutionAudit:
     """Parse and attribute a complete Java source tree, with no paid APIs."""
     if not shutil.which("javac") or not shutil.which("java"):
         raise RuntimeError("JDK javac and java must be available")
@@ -62,7 +62,7 @@ def audit_source_directory(source_root: Path, *, timeout: int = 120) -> Resoluti
             check=True, text=True, capture_output=True, timeout=timeout,
         )
         run = subprocess.run(
-            ["java", "-cp", td, "ResolvedCallExtractor", str(source_root)],
+            ["java", "-cp", td, "ResolvedCallExtractor", str(source_root)] + ([classpath] if classpath else []),
             text=True, capture_output=True, timeout=timeout, check=False,
         )
     if run.returncode != 0:
@@ -90,8 +90,9 @@ def main() -> None:
     parser.add_argument("--sources", required=True, type=Path,
                         help="Complete Java source tree including required source dependencies")
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--classpath", default=None, help="Defects4J export cp.compile")
     args = parser.parse_args()
-    result = audit_source_directory(args.sources)
+    result = audit_source_directory(args.sources, classpath=args.classpath)
     record = {
         "status": result.status,
         "source_files": result.source_files,
