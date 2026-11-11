@@ -51,6 +51,10 @@ jobs:
         run: python -m aitech.time1_posthoc_scoring --output agent-output/risk_gated/time1_posthoc_patch_recall.json
       - name: Score frozen three-bug selection against official Defects4J patches
         run: python -m aitech.three_bug_posthoc_scoring --output agent-output/risk_gated/three_bug_posthoc_recall.json
+      - name: Select hierarchical L0 signatures and L1 code evidence
+        run: python -m aitech.tiered_evidence_pilot --output agent-output/risk_gated/tiered_evidence.json
+      - name: Score frozen L0 identity and L1 source separately
+        run: python -m aitech.score_tiered_posthoc --output agent-output/risk_gated/tiered_posthoc.json
       - name: Print deterministic demonstration
         run: python -m aitech.demo
       - name: Run archived SymPy trace pilot
