@@ -11,7 +11,7 @@ for the probability interface, or the policy abstains by default.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from math import isfinite
+from math import isfinite, log1p
 from typing import Protocol
 
 
@@ -30,6 +30,11 @@ class EvidenceAction:
     compiler_binding_verified: bool = False
     requires_call_binding: bool = False
     support_sufficiency_audited: bool = False
+    failure_relevance: float = 0.0
+    semantic_similarity: float = 0.0
+    rank_fraction: float = 1.0
+    failure_anchor: bool = False
+    context_fill_fraction: float = 0.0
 
     def validate(self) -> None:
         if self.kind not in ACTIONS:
@@ -42,6 +47,35 @@ class EvidenceAction:
             raise ValueError("invalid latency estimate")
         if not self.source_revision.strip() or not self.provenance.strip():
             raise ValueError("action requires reproducible provenance")
+        for value in (self.failure_relevance, self.semantic_similarity,
+                      self.rank_fraction, self.context_fill_fraction):
+            if not isfinite(value) or not 0 <= value <= 1:
+                raise ValueError("invalid pre-action feature")
+
+
+FEATURE_NAMES = (
+    "action_RETRIEVE", "action_GRAPH", "action_UPGRADE_L1",
+    "action_UPGRADE_FULL", "log_incremental_tokens",
+    "log_incremental_latency", "compiler_binding_verified",
+    "support_sufficiency_audited", "failure_relevance",
+    "semantic_similarity", "rank_fraction", "failure_anchor",
+    "context_fill_fraction",
+)
+
+
+def action_feature_vector(action: EvidenceAction) -> tuple[float, ...]:
+    """Only pre-retrieval values, never patch labels or post-action outputs."""
+    action.validate()
+    return (
+        *(float(action.kind == kind) for kind in ACTIONS),
+        log1p(action.incremental_input_tokens),
+        log1p(action.incremental_latency_ms),
+        float(action.compiler_binding_verified),
+        float(action.support_sufficiency_audited),
+        action.failure_relevance, action.semantic_similarity,
+        action.rank_fraction, float(action.failure_anchor),
+        action.context_fill_fraction,
+    )
 
 
 @dataclass(frozen=True)
