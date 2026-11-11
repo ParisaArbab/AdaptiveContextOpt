@@ -49,7 +49,7 @@ class TestCpuActionCounterfactual(unittest.TestCase):
 
     def test_skip_if_no_room_for_detail(self):
         frozen = freeze_upgrade_pair(self.snapshot(), TinyTokenizer(),
-                                     evidence_budget=2, max_total_input=200)
+                                     evidence_budget=9, max_total_input=200)
         self.assertEqual(frozen["skip_reason"],
                          "no_positive_cost_L1_upgrade_fits_same_budget")
 
