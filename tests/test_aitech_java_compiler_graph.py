@@ -4,6 +4,7 @@ This is a *controlled compiler validation fixture*, not a benchmark bug.
 No network access, LLM or gold fault labels.
 """
 import shutil
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -58,6 +59,32 @@ class TestCompilerGraph(unittest.TestCase):
                 encoding="utf-8")
             audit = audit_source_directory(root)
             self.assertTrue(any(c.target_owner == "sample.B" and
+                                c.target_method == "answer" for c in audit.calls))
+
+    def test_external_compilation_classpath_changes_resolution(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            ext = root / "external"
+            pkg = ext / "foo"
+            pkg.mkdir(parents=True)
+            (pkg / "Library.java").write_text(
+                "package foo; public class Library { "
+                "public static int answer() { return 42; } }",
+                encoding="utf-8")
+            binary = root / "classes"
+            binary.mkdir()
+            subprocess.run(
+                ["javac", "-d", str(binary), str(pkg / "Library.java")],
+                capture_output=True, text=True, check=True)
+            app = root / "app"
+            app.mkdir()
+            (app / "User.java").write_text(
+                "class User { int run() { return foo.Library.answer(); } }",
+                encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "Compiler attribution failed"):
+                audit_source_directory(app)
+            audit = audit_source_directory(app, classpath=str(binary))
+            self.assertTrue(any(c.target_owner == "foo.Library" and
                                 c.target_method == "answer" for c in audit.calls))
 
     def test_missing_types_fail_closed(self):
