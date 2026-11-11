@@ -148,3 +148,12 @@ inference API, and no artificial backdated commits.
 **Overall decision:** No publishable localization improvement has been
 demonstrated yet. Preserve negative evidence and move to independent
 paired LLM experiments before training or claiming novelty.
+
+## Figure: detailed changed-method evidence at fixed budgets
+
+![Oracle, single-L1 baseline and rejected multi-resolution policy](figures/aitech_changed_method_L1_coverage_20261111.svg)
+
+Each bar counts how many of the four proxy-token budgets retained at least
+one officially changed method at L1. The oracle has access to patch labels
+and is **not** a deployable selector. The figure must not be interpreted as
+model prediction accuracy or an independent test result.
