@@ -24,8 +24,8 @@ public final class ResolvedCallExtractor {
     }
 
     public static void main(String[] args) throws Exception {
-        if (args.length != 1) {
-            System.err.println("Usage: ResolvedCallExtractor <complete-source-root>");
+        if (args.length < 1 || args.length > 2) {
+            System.err.println("Usage: ResolvedCallExtractor <complete-source-root> [compile-classpath]");
             System.exit(2);
         }
         Path root = Paths.get(args[0]).toAbsolutePath().normalize();
@@ -40,11 +40,15 @@ public final class ResolvedCallExtractor {
         DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
         StandardJavaFileManager manager = compiler.getStandardFileManager(diagnostics, null, null);
         Iterable<? extends JavaFileObject> units = manager.getJavaFileObjectsFromFiles(files);
+        Path classes = Files.createTempDirectory("aitech_javac_classes_");
+        List<String> options = new ArrayList<>(Arrays.asList(
+            "-proc:none", "-implicit:none", "-d", classes.toString()));
+        if (args.length == 2 && !args[1].isEmpty()) {
+            options.add("-classpath");
+            options.add(args[1]);
+        }
         JavacTask task = (JavacTask) compiler.getTask(
-            null, manager, diagnostics,
-            Arrays.asList("-proc:none", "-implicit:none", "-d",
-                          Files.createTempDirectory("aitech_javac_classes_").toString()),
-            null, units);
+            null, manager, diagnostics, options, null, units);
         Iterable<? extends CompilationUnitTree> parsed = task.parse();
         task.analyze();
         Trees trees = Trees.instance(task);
