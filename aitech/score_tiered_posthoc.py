@@ -43,10 +43,10 @@ def score(selections: dict, labels: dict) -> dict:
         groups.setdefault((row["bug"],row["budget_proxy"]),{})[row["method"]]=row
     paired=[]
     for (bug,budget), group in sorted(groups.items()):
-        if set(group)!={"l1_only","tiered_l0","tiered_upgrade"}:
+        if set(group)!={"l1_only","tiered_l0","tiered_upgrade","anchor_detail_first"}:
             raise ValueError("missing tiered comparison policy")
         baseline=group["l1_only"]
-        for policy in ("tiered_l0","tiered_upgrade"):
+        for policy in ("tiered_l0","tiered_upgrade","anchor_detail_first"):
             current=group[policy]
             paired.append({
                 "bug":bug,"budget_proxy":budget,"method":policy,
