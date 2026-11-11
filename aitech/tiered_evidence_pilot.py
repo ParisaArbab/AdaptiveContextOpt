@@ -106,7 +106,7 @@ def experiment(sources: dict[str, Path] = SOURCES) -> dict:
             "rows": [
                 {"bug": bug, **select_tiers(snapshot, budget, mode)}
                 for budget in BUDGETS
-                for mode in ("l1_only", "tiered_l0", "tiered_upgrade", "anchor_detail_first")
+                for mode in ("l1_only", "tiered_l0", "tiered_upgrade", "anchor_detail_first", "anchor_rank_detail")
             ],
         })
     return {
