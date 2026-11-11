@@ -15,6 +15,8 @@ import json
 import re
 from pathlib import Path
 
+from .anchor_budget import anchor_first_selection, disambiguate_lexical_edges
+
 ROOT = Path("results/rave_fl_iteration_d/independent_live")
 BUGS = ("Lang-1", "Time-1")
 BUDGETS = (200, 300, 450, 600)
@@ -61,19 +63,25 @@ def run_one(data: dict, bug: str) -> dict:
         if simple_name(item["function_id"]) + "(" in context
     }
     costs = [int(item["features"]["l1_tokens"]) for item in candidates]
+    resolved, ambiguous = disambiguate_lexical_edges(
+        [item["function_id"] for item in candidates], edges)
     rows = []
     for budget in BUDGETS:
-        for method in ("rank_fill", "closure", "anchor_reserved"):
+        for method in ("rank_fill", "closure", "anchor_reserved", "anchor_first_audited"):
             selected: set[int] = set()
+            if method == "anchor_first_audited":
+                audited = anchor_first_selection(costs, sorted(anchors), resolved, budget)
+                selected = set(audited.selected)
             if method == "anchor_reserved":
                 for i in sorted(anchors)[:2]:
                     expanded = closure(i, edges)
                     if sum(costs[j] for j in selected | expanded) <= budget:
                         selected.update(expanded)
-            for i in range(len(candidates)):
-                expanded = {i} if method == "rank_fill" else closure(i, edges)
-                if sum(costs[j] for j in selected | expanded) <= budget:
-                    selected.update(expanded)
+            if method != "anchor_first_audited":
+                for i in range(len(candidates)):
+                    expanded = {i} if method == "rank_fill" else closure(i, edges)
+                    if sum(costs[j] for j in selected | expanded) <= budget:
+                        selected.update(expanded)
             rows.append({
                 "bug": bug,
                 "budget": budget,
@@ -82,6 +90,10 @@ def run_one(data: dict, bug: str) -> dict:
                 "used_proxy_tokens": sum(costs[j] for j in selected),
                 "failure_name_anchors_kept": len(selected & anchors),
                 "failure_name_anchors_total": len(anchors),
+                "ambiguous_edges_rejected": len(ambiguous),
+                "unambiguous_missing_support": sum(
+                    1 for src, dst in resolved if src in selected and dst not in selected
+                ),
                 "known_lexical_dangling": sum(
                     1 for src, dst in edges if src in selected and dst not in selected
                 ),
@@ -91,6 +103,8 @@ def run_one(data: dict, bug: str) -> dict:
         "bug": bug,
         "source_candidate_count": len(candidates),
         "failure_name_anchors": [candidates[i]["function_id"] for i in sorted(anchors)],
+        "ambiguous_lexical_edges_rejected": len(ambiguous),
+        "unambiguous_lexical_edges": len(resolved),
         "lexical_edges": [
             [candidates[a]["function_id"], candidates[b]["function_id"]]
             for a, b in sorted(edges)
@@ -108,7 +122,7 @@ def experiment(root: Path = ROOT) -> dict:
     return {
         "scope": "two archived independent Defects4J inputs, development-only",
         "bugs": list(BUGS),
-        "methods": ["rank_fill", "closure", "anchor_reserved"],
+        "methods": ["rank_fill", "closure", "anchor_reserved", "anchor_first_audited"],
         "budget_unit": "precomputed L1 token proxy, not Ollama input tokens",
         "source_path_pattern": str(root / "{bug}" / "input_snapshot.json"),
         "limitations": [
@@ -117,6 +131,7 @@ def experiment(root: Path = ROOT) -> dict:
             "No gold labels, no direct fault-localization or downstream model accuracy",
             "Same-class approximate edges exclude cross-class dependencies",
             "The anchor-reservation approach is naive and may fail if closure cannot fit",
+            "Anchor-first can retain anchors with unresolved support; violations are reported, not hidden",
         ],
         "results": results,
     }
