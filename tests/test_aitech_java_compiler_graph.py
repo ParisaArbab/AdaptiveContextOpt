@@ -48,6 +48,27 @@ class TestCompilerGraph(unittest.TestCase):
             self.assertEqual(result.source_files, 1)
             self.assertIn("Example.java", result.source_hashes)
 
+    def test_compiler_emits_distinct_overloaded_caller_signatures(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            (root / "Overloads.java").write_text(
+                """
+                class Overloads {
+                    static String convert(String x) { return x; }
+                    static String convert(Object x) { return x.toString(); }
+                    String use(String value) { return convert(value); }
+                    String use(Object value) { return convert(value); }
+                }
+                """, encoding="utf-8")
+            audit = audit_source_directory(root)
+            calls = [c for c in audit.calls
+                     if c.caller_method == "use" and c.target_method == "convert"]
+            self.assertEqual(len(calls), 2)
+            self.assertEqual({c.caller_parameter_types for c in calls},
+                             {"java.lang.String", "java.lang.Object"})
+            self.assertEqual({c.parameter_types for c in calls},
+                             {"java.lang.String", "java.lang.Object"})
+
     def test_cross_file_static_call_target(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
