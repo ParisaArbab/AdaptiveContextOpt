@@ -24,9 +24,6 @@ def score(selections: dict, labels: dict) -> dict:
         gold = set(label_info["changed_methods"])
         if not gold:
             raise ValueError(f"missing gold labels: {bug}")
-        all_ids = {x for row in case["rows"] for x in row["selected_ids"]}
-        # An unselectable gold candidate is a pool-recall miss, not a
-        # budget miss. Here all labels should originate from candidate pool.
         for row in case["rows"]:
             selected = set(row["selected_ids"])
             hits = selected & gold
@@ -39,7 +36,6 @@ def score(selections: dict, labels: dict) -> dict:
                 "changed_method_recall": len(hits) / len(gold),
                 "retained_changed_methods": sorted(hits),
                 "selected_proxy_tokens": row["used_proxy_tokens"],
-                "gold_candidate_pool_recall_upper_bound": len(all_ids & gold) / len(gold),
             })
     by_group: dict[tuple[str, int], dict[str, dict]] = {}
     for row in rows:
