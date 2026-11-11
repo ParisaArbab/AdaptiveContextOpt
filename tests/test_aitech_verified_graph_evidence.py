@@ -82,6 +82,43 @@ class TestVerifiedGraphEvidence(unittest.TestCase):
         ])
         self.assertEqual(result.edges, ((0, 1),))
 
+    def test_rejects_two_different_java_date_types_with_same_short_name(self):
+        ids = ["pkg.Num.use(String)", "pkg.Num.parse(Date)"]
+        records = [
+            call("pkg.Num", "use", "pkg.Num", "parse",
+                 "java.util.Date", caller_types="java.lang.String"),
+            call("pkg.Num", "use", "pkg.Num", "parse",
+                 "java.sql.Date", caller_types="java.lang.String"),
+        ]
+        mapped = map_calls(ids, records)
+        self.assertEqual(mapped.edges, ())
+        self.assertEqual(mapped.ambiguous_type_identities, ("pkg.Num.parse(Date)",))
+
+    def test_fully_qualified_date_type_matches_only_its_package(self):
+        ids = ["pkg.Num.use(String)", "pkg.Num.parse(java.util.Date)"]
+        records = [
+            call("pkg.Num", "use", "pkg.Num", "parse",
+                 "java.util.Date", caller_types="java.lang.String"),
+            call("pkg.Num", "use", "pkg.Num", "parse",
+                 "java.sql.Date", caller_types="java.lang.String"),
+        ]
+        mapped = map_calls(ids, records)
+        self.assertEqual(mapped.edges, ((0, 1),))
+        self.assertFalse(mapped.ambiguous_type_identities)
+        self.assertIn("pkg.Num.parse(java.sql.Date)", mapped.unmatched_targets)
+
+    def test_rejects_short_name_collision_in_caller_identity(self):
+        ids = ["pkg.Num.run(Date)", "pkg.Num.target()"]
+        records = [
+            call("pkg.Num", "run", "pkg.Num", "target",
+                 caller_types="java.sql.Date"),
+            call("pkg.Num", "run", "pkg.Num", "target",
+                 caller_types="java.util.Date"),
+        ]
+        mapped = map_calls(ids, records)
+        self.assertFalse(mapped.edges)
+        self.assertIn("pkg.Num.run(Date)", mapped.ambiguous_type_identities)
+
     def test_rejects_duplicate_candidate_signature(self):
         ids = ["pkg.Num.use(String)", "pkg.Num.convert(String)",
                "pkg.Num.convert(String)"]
