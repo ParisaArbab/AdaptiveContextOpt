@@ -1,0 +1,63 @@
+name: AITECH paired CPU LLM evidence-fidelity ablation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [AITECH]
+    paths:
+      - ".github/workflows/aitech-cpu-llm-paired-v2.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aitech-cpu-llm-paired-v2
+  cancel-in-progress: false
+
+jobs:
+  paired-cpu-localization:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+    env:
+      HF_HOME: ${{ runner.temp }}/aitech-hf-cache
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      TOKENIZERS_PARALLELISM: "false"
+      OMP_NUM_THREADS: "2"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Freeze environment and package versions
+        shell: bash
+        run: |
+          mkdir -p agent-output/cpu-llm-v2
+          git rev-parse HEAD > agent-output/cpu-llm-v2/git_commit.txt
+          python --version > agent-output/cpu-llm-v2/python.txt
+      - name: Install public open-source CPU model runtime
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m pip install --no-cache-dir torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install --no-cache-dir transformers==4.51.3 huggingface_hub==0.30.2 safetensors
+          python -m pip freeze > agent-output/cpu-llm-v2/pip-freeze.txt
+      - name: Run paired real-model evidence selection comparison
+        shell: bash
+        timeout-minutes: 18
+        run: |
+          set -o pipefail
+          python -m aitech.cpu_llm_localization \
+            --bugs Lang-1 Time-25 \
+            --budget 500 \
+            --max-input-tokens 1800 \
+            --max-new-tokens 24 \
+            --output-dir agent-output/cpu-llm-v2 \
+            2>&1 | tee agent-output/cpu-llm-v2/console.log
+      - name: Upload frozen model predictions, evidence and posthoc scores
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aitech-cpu-llm-v2-${{ github.run_id }}
+          path: agent-output/cpu-llm-v2/
+          retention-days: 30
+          if-no-files-found: warn
