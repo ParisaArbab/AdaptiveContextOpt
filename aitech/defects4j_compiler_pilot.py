@@ -17,6 +17,7 @@ import subprocess
 from pathlib import Path
 
 from .java_compiler_graph import audit_source_directory
+from .verified_graph_evidence import map_calls
 
 
 def export(checkout: Path, key: str) -> str:
@@ -55,7 +56,8 @@ def resolve_metadata(checkout: Path) -> dict:
     }
 
 
-def run(checkout: Path, *, timeout: int = 240, max_files: int = 300) -> dict:
+def run(checkout: Path, *, timeout: int = 240, max_files: int = 300,
+        candidate_snapshot: Path | None = None) -> dict:
     info = resolve_metadata(checkout)
     source = Path(info["source_directory"])
     count = sum(1 for _ in source.rglob("*.java"))
@@ -67,7 +69,22 @@ def run(checkout: Path, *, timeout: int = 240, max_files: int = 300) -> dict:
         )
     audit = audit_source_directory(
         source, classpath=info["compile_classpath"], timeout=timeout)
+    graph_mapping = None
+    if candidate_snapshot is not None:
+        snapshot = json.loads(candidate_snapshot.read_text(encoding="utf-8"))
+        candidates = snapshot["candidates"]
+        mapped = map_calls([c["function_id"] for c in candidates], audit.calls)
+        graph_mapping = {
+            "candidate_source_sha256": hashlib.sha256(candidate_snapshot.read_bytes()).hexdigest(),
+            "candidate_count": len(candidates),
+            "edges": [list(x) for x in mapped.edges],
+            "unmatched_target_count": len(mapped.unmatched_targets),
+            "ambiguous_caller_count": len(mapped.ambiguous_callers),
+            "ambiguous_target_count": len(mapped.ambiguous_targets),
+            "mapped_calls": mapped.mapped_calls,
+        }
     return {
+        "candidate_mapping": graph_mapping,
         "status": audit.status,
         "checkout": info["checkout"],
         "source_directory": info["source_directory"],
@@ -95,8 +112,11 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--timeout", type=int, default=240)
     parser.add_argument("--max-files", type=int, default=300)
+    parser.add_argument("--candidate-snapshot", type=Path,
+                        help="Optional frozen ranked candidate snapshot to match against compiler targets")
     args = parser.parse_args()
-    result = run(args.checkout, timeout=args.timeout, max_files=args.max_files)
+    result = run(args.checkout, timeout=args.timeout, max_files=args.max_files,
+                 candidate_snapshot=args.candidate_snapshot)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     print(f"Saved {result['resolved_static_calls']} static call targets "
