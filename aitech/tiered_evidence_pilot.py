@@ -21,7 +21,7 @@ from .risk_gated_pilot import SOURCES, BUDGETS
 def select_tiers(snapshot: dict, budget: int, mode: str) -> dict:
     items = snapshot["candidates"]
     ids = [x["function_id"] for x in items]
-    if mode not in ("l1_only", "tiered_l0", "tiered_upgrade"):
+    if mode not in ("l1_only", "tiered_l0", "tiered_upgrade", "anchor_detail_first"):
         raise ValueError("invalid representation policy")
     if budget < 0:
         raise ValueError("negative budget")
@@ -37,19 +37,40 @@ def select_tiers(snapshot: dict, budget: int, mode: str) -> dict:
     choices: dict[int, str] = {}
     used = 0
     order = list(dict.fromkeys(anchors + list(range(len(items)))))
-    for i in order:
-        cost = l1[i] if mode == "l1_only" else l0[i]
-        if used + cost <= budget:
-            choices[i] = "L1" if mode == "l1_only" else "L0"
-            used += cost
-    if mode == "tiered_upgrade":
-        for i in order:
-            if choices.get(i) != "L0":
-                continue
-            incremental = l1[i] - l0[i]
-            if used + incremental <= budget:
+    if mode == "anchor_detail_first":
+        # Keep failure anchor identity coverage before paying for detail.
+        for i in anchors:
+            if used + l0[i] <= budget:
+                choices[i] = "L0"
+                used += l0[i]
+        # Upgrade only anchored methods before admitting optional L0 names.
+        for i in anchors:
+            if choices.get(i) == "L0" and used + l1[i] - l0[i] <= budget:
                 choices[i] = "L1"
-                used += incremental
+                used += l1[i] - l0[i]
+        for i in range(len(items)):
+            if i not in choices and used + l0[i] <= budget:
+                choices[i] = "L0"
+                used += l0[i]
+        # Later affordable upgrades are optional.
+        for i in range(len(items)):
+            if choices.get(i) == "L0" and used + l1[i] - l0[i] <= budget:
+                choices[i] = "L1"
+                used += l1[i] - l0[i]
+    else:
+        for i in order:
+            cost = l1[i] if mode == "l1_only" else l0[i]
+            if used + cost <= budget:
+                choices[i] = "L1" if mode == "l1_only" else "L0"
+                used += cost
+        if mode == "tiered_upgrade":
+            for i in order:
+                if choices.get(i) != "L0":
+                    continue
+                incremental = l1[i] - l0[i]
+                if used + incremental <= budget:
+                    choices[i] = "L1"
+                    used += incremental
     return {
         "method": mode,
         "budget_proxy": budget,
@@ -75,12 +96,12 @@ def experiment(sources: dict[str, Path] = SOURCES) -> dict:
             "rows": [
                 {"bug": bug, **select_tiers(snapshot, budget, mode)}
                 for budget in BUDGETS
-                for mode in ("l1_only", "tiered_l0", "tiered_upgrade")
+                for mode in ("l1_only", "tiered_l0", "tiered_upgrade", "anchor_detail_first")
             ],
         })
     return {
         "scope": "Three previously examined Defects4J archived source pools, tier-selection only",
-        "methods": ["l1_only", "tiered_l0", "tiered_upgrade"],
+        "methods": ["l1_only", "tiered_l0", "tiered_upgrade", "anchor_detail_first"],
         "gold_labels_read": False,
         "llm_executed": False,
         "budget_unit": "precomputed L0/L1 token proxy, NOT model tokenizer",
