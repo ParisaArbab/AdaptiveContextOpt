@@ -68,6 +68,12 @@ jobs:
             --candidate-snapshot results/rave_fl_iteration_d/independent_live/Lang-1/input_snapshot.json \
             --output agent-output/lang1_compiler_graph.json \
             2>&1 | tee agent-output/lang1_run.log
+      - name: Report graph coverage and matched-budget selections
+        shell: bash
+        run: |
+          python -m aitech.report_compiler_graph \
+            --input agent-output/lang1_compiler_graph.json \
+            --output agent-output/lang1_diagnostic.md
       - name: Validate real compiler output provenance and budget safety
         shell: bash
         run: |
