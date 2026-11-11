@@ -38,15 +38,23 @@ class AlternativeSelection:
 def dangling_evidence(
     selected: Sequence[str], support_sets: SupportMap
 ) -> tuple[str, ...]:
-    """Return selected items without any fully retained support alternative."""
+    """Return items lacking a grounded, fully retained support alternative.
+
+    Derive support from unconstrained selected evidence upward. Requiring
+    support paths to terminate at such evidence prevents purely circular
+    claims (a supports b and b supports a) from counting as complete.
+    """
     chosen = set(selected)
-    return tuple(sorted(
-        evidence_id for evidence_id in chosen
-        if evidence_id in support_sets and not any(
-            set(option).issubset(chosen)
-            for option in support_sets[evidence_id]
-        )
-    ))
+    supported = {item for item in chosen if item not in support_sets}
+    for _ in range(len(chosen)):
+        before = len(supported)
+        for item in sorted(chosen - supported):
+            if any(set(option).issubset(supported)
+                   for option in support_sets[item]):
+                supported.add(item)
+        if len(supported) == before:
+            break
+    return tuple(sorted(chosen - supported))
 
 
 def _validate(items: list[Evidence], support_sets: SupportMap, budget: int) -> None:
