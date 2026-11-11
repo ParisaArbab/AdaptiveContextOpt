@@ -1,0 +1,71 @@
+name: AITECH unscheduled CPU LLM localization pilot
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [AITECH]
+    paths:
+      - ".github/workflows/aitech-cpu-llm-pilot.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aitech-cpu-llm-one-shot
+  cancel-in-progress: false
+
+jobs:
+  localize-with-tiny-code-model:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 28
+    env:
+      TOKENIZERS_PARALLELISM: "false"
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      OMP_NUM_THREADS: "4"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Prepare output and record environment
+        shell: bash
+        run: |
+          mkdir -p agent-output
+          python --version | tee agent-output/python-version.txt
+          git rev-parse HEAD | tee agent-output/repository-commit.txt
+          uname -a > agent-output/runner-system.txt
+      - name: Install CPU-only PyTorch
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m pip install --no-cache-dir torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu 2>&1 | tee agent-output/install-torch.log
+      - name: Install pinned text-model libraries
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m pip install --no-cache-dir transformers==4.51.3 huggingface_hub==0.30.2 safetensors 2>&1 | tee agent-output/install-model-libraries.log
+          python -m pip freeze > agent-output/pip-freeze.txt
+      - name: Freeze actual model prompts and predictions, without patch labels
+        shell: bash
+        timeout-minutes: 16
+        run: |
+          set -o pipefail
+          python -m aitech.time1_cpu_llm_localization \
+            --output agent-output/time1_cpu_llm_predictions.json \
+            --max-new-tokens 72 2>&1 | tee agent-output/inference.log
+      - name: Score frozen model output against official patch
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m aitech.score_time1_cpu_llm \
+            --predictions agent-output/time1_cpu_llm_predictions.json \
+            --output agent-output/time1_cpu_llm_scored.json \
+            2>&1 | tee agent-output/scoring.log
+      - name: Archive successful or failed experimental diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aitech-time1-cpu-llm-${{ github.run_id }}
+          path: agent-output/
+          retention-days: 30
+          if-no-files-found: warn
