@@ -18,6 +18,8 @@ negative results, **not yet a validated new localization method**.
 | Which L0/L1 hierarchy preserves patched code? | `aitech/tiered_evidence_pilot.py` | `reports/AITECH_PACES_FL_NOVELTY_HYPOTHESIS_20261111.md` | identity gains, not model gains |
 | Does new marginal-utility selection outperform strong tiered controls? | `aitech/compare_strong_tiered_baselines.py` | `reports/AITECH_VERIFIED_RESEARCH_DECISION_LEDGER_20261111.md` | **rejected: 0 wins, 4 losses** |
 | What L1 source could have been retained with gold knowledge? | `aitech/changed_method_oracle_ceiling.py` | decision ledger and SVG figure | posthoc gold-aware oracle, not inference |
+| Can any one of several sufficient support paths prevent dangling evidence? | `aitech/alternative_support_ablation.py` | `reports/AITECH_ALTERNATIVE_SUPPORT_PATHS_20261111.md` | controlled synthetic exact small-case result, not real localization |
+| Can javac calls suggest support without claiming causality? | `aitech/compiler_support_proposals.py` | provenance-gated source-backed candidate proposals | implemented, unverified sufficiency; no LLM |
 | Does a small code LLM actually localize more bugs? | `aitech/cpu_llm_localization.py` | one-shot Actions `aitech-cpu-llm-paired-v2.yml` | configured, result NOT verified |
 
 ## Figures
