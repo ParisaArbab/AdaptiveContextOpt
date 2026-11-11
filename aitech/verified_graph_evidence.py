@@ -80,11 +80,18 @@ def map_calls(candidates: list[str], calls: Iterable[ResolvedCall]) -> MappedGra
     amb_target: set[str] = set()
     mapped = 0
     for call in calls:
-        # The current compiler helper supplies caller owner+name, but
-        # not caller parameter types. Only unique caller identities
-        # within the candidate pool can be mapped safely.
-        callers = [i for i, (owner, name, _) in enumerate(signatures)
-                   if owner == call.caller_owner and name == call.caller_method]
+        # Prefer compiler-attributed caller parameter types, not just
+        # caller method names. The old 8-column format has no caller
+        # signature, so it can map only a unique caller name.
+        caller_params = (
+            tuple(map(_simple_type, _split_params(call.caller_parameter_types)))
+            if call.caller_parameter_types is not None else None
+        )
+        callers = [
+            i for i, (owner, name, params) in enumerate(signatures)
+            if owner == call.caller_owner and name == call.caller_method
+            and (caller_params is None or params == caller_params)
+        ]
         call_label = f"{call.caller_owner}.{call.caller_method}"
         if len(callers) != 1:
             amb_caller.add(call_label)
