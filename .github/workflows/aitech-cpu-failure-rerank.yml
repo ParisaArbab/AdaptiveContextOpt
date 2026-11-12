@@ -1,0 +1,87 @@
+name: AITECH one-shot trace-aligned reranking CPU ablation
+
+on:
+  push:
+    branches: [AITECH]
+    paths:
+      - ".github/workflows/aitech-cpu-failure-rerank.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: aitech-trace-rerank-cpu-one-shot
+  cancel-in-progress: false
+
+jobs:
+  rerank:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 32
+    env:
+      HF_HOME: "/tmp/aitech-trace-rerank-hf"
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      TOKENIZERS_PARALLELISM: "false"
+      OMP_NUM_THREADS: "2"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify deterministic reranker and gold isolation tests
+        run: |
+          python -m unittest discover -s tests -p 'test_aitech_*.py' -v
+      - name: Retrieve previously frozen Math/Chart source and posthoc labels
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p agent-output/source agent-output/rerank
+          gh run download 43141574195 \
+            --repo ParisaArbab/AdaptiveContextOpt \
+            -n aitech-real-project-pairs-43141574195 \
+            -D agent-output/source
+          git rev-parse HEAD > agent-output/rerank/git-commit.txt
+          test -f agent-output/source/math-1-pre-gold.json
+          test -f agent-output/source/chart-1-pre-gold.json
+          test -f agent-output/source/paired-model/file_level_outcomes_posthoc.json
+      - name: Install fixed open-source CPU Qwen runtime
+        timeout-minutes: 8
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --no-cache-dir torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install --no-cache-dir transformers==4.51.3 huggingface_hub==0.30.2 safetensors
+          python -m pip freeze > agent-output/rerank/pip-freeze.txt
+      - name: Run new failure/IDF reranking and candidate-order ablation
+        timeout-minutes: 14
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m aitech.cpu_failure_rerank_ablation \
+            --snapshot Math-1 agent-output/source/math-1-pre-gold.json \
+            --snapshot Chart-1 agent-output/source/chart-1-pre-gold.json \
+            --posthoc agent-output/source/paired-model/file_level_outcomes_posthoc.json \
+            --output-dir agent-output/rerank \
+            2>&1 | tee agent-output/rerank/console.log
+      - name: Verify that all six real predictions exist
+        timeout-minutes: 1
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path("agent-output/rerank")
+          raw = json.loads((root / "raw_predictions_before_gold.json").read_text())
+          scored = json.loads((root / "posthoc_scores.json").read_text())
+          assert sorted(r["bug"] for r in raw) == ["Chart-1", "Math-1"]
+          assert len(scored["results"]) == 6
+          assert all(len(r["predictions"]) == 3 for r in raw)
+          print("Six source-frozen Qwen ablation conditions verified")
+          PY
+      - name: Archive frozen prompts, raw responses and scores
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aitech-failure-rerank-${{ github.run_id }}
+          path: agent-output/rerank/
+          retention-days: 30
+          if-no-files-found: warn
