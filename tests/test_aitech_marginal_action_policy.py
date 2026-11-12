@@ -59,6 +59,15 @@ class TestMarginalActionPolicy(unittest.TestCase):
         self.assertEqual(result.decision, "STOP_NO_ELIGIBLE_ACTIONS")
         self.assertIn(("a", "unverified_call_binding"), result.rejection_reasons)
 
+    def test_graph_requires_verified_binding_even_if_caller_omits_flag(self):
+        estimator = FakeCalibratedEstimator({"graph": (1.0, 0.0)})
+        decision = decide_next_action(
+            [action("graph", kind="GRAPH", requires_binding=False,
+                    verified=False)], estimator, 100)
+        self.assertEqual(decision.decision, "STOP_NO_ELIGIBLE_ACTIONS")
+        self.assertIn(("graph", "unverified_call_binding"),
+                      decision.rejection_reasons)
+
     def test_best_positive_utility_selected(self):
         estimator = FakeCalibratedEstimator({
             "expensive": (0.6, 0.1),
