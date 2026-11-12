@@ -131,6 +131,7 @@ def train(rows: list[dict], min_calibration_rows: int = 20) -> dict:
         "source_pairs_sha256": summary["sha256"],
         "project_split": summary["project_split"],
         "model_id": summary["model_id"],
+        "outcome_definition": summary["outcome_definition"],
         "common_input_token_ceiling": summary["common_input_token_ceiling"],
         "counts": {key: len(value) for key, value in parts.items()},
         "calibration_metrics": {
