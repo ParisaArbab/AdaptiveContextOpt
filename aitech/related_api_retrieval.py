@@ -47,6 +47,24 @@ def owner_of(method_id: str) -> str:
     return qualified.rsplit(".", 1)[0]
 
 
+def choose_behavior_method(items: list[dict], indices: list[int]) -> int:
+    """Prefer an implementation method to a constructor in paired APIs.
+
+    Only uses candidate names and *buggy* source snippets. Does not
+    assert that the chosen method is implicated by the failing test.
+    """
+    if not indices:
+        raise ValueError("cannot choose from empty source candidates")
+    behavior = [
+        i for i in indices
+        if items[i]["function_id"].split("(", 1)[0].rsplit(".", 1)[-1]
+        != owner_of(items[i]["function_id"]).rsplit(".", 1)[-1]
+    ]
+    if behavior:
+        return behavior[0]
+    return indices[0]
+
+
 def sibling_class(class_name: str) -> str | None:
     for suffix_a, suffix_b in PAIRS:
         if class_name.endswith(suffix_a):
@@ -96,7 +114,7 @@ def related_shortlist(snapshot: dict, *, count: int = 8,
     for source_owner in sorted(frame_owners.intersection(classes)):
         partner = sibling_class(source_owner)
         if partner and partner in classes and len(selected) < count:
-            if add(classes[partner][0]):
+            if add(choose_behavior_method(items, classes[partner])):
                 proposals.append((source_owner, partner))
 
     # Test-to-production attribution is a weaker named-class hint.
