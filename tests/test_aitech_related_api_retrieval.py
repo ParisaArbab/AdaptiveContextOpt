@@ -2,7 +2,7 @@
 import unittest
 
 from aitech.related_api_retrieval import (
-    owner_of, related_shortlist, sibling_class
+    owner_of, related_shortlist, sibling_class, choose_behavior_method
 )
 
 
@@ -57,6 +57,14 @@ class TestRelatedApiRetrieval(unittest.TestCase):
         self.assertIn("pkg.Alpha", owners)
         self.assertIn("pkg.Beta", owners)
         self.assertIn("pkg.Gamma", owners)
+
+    def test_sibling_avoids_constructor_when_behavior_method_exists(self):
+        items = [
+            candidate("pkg.ArchiveOutputStream.ArchiveOutputStream(OutputStream)"),
+            candidate("pkg.ArchiveOutputStream.ArchiveOutputStream(OutputStream,int)"),
+            candidate("pkg.ArchiveOutputStream.close()"),
+        ]
+        self.assertEqual(choose_behavior_method(items, [0, 1, 2]), 2)
 
     def test_missing_sibling_is_never_invented(self):
         snap = {
