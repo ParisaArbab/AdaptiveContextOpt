@@ -22,7 +22,7 @@ from .cpu_llm_localization import _token_count, build_messages, parse_prediction
 from .failure_grounded_rerank import rerank, shortlist
 from .related_api_retrieval import related_shortlist
 
-ARMS = ("stack_L0", "related_L0", "related_explain_L0", "related_reverse_L0")
+ARMS = ("stack_L0", "related_L0", "related_explain_L0", "related_reverse_L0", "related_peer_L1")
 MODEL = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
 
 
@@ -36,11 +36,29 @@ def freeze(snapshot: dict, tokenizer, max_input_tokens: int = 1800) -> list[dict
         "related_L0": list(related.original_indices),
         "related_explain_L0": list(related.original_indices),
         "related_reverse_L0": list(reversed(related.original_indices)),
+        "related_peer_L1": list(related.original_indices),
     }
     frozen = []
     for arm in ARMS:
         local = shortlist(snapshot, orders[arm], count=8)
-        messages = build_messages(local, {i: 1 for i in range(8)})
+        tiers = {i: 1 for i in range(8)}
+        if arm == "related_peer_L1":
+            targets = {partner for _, partner in related.related_class_proposals}
+            peer_indices = [
+                i for i, item in enumerate(local["candidates"])
+                if item["function_id"].split("(", 1)[0].rsplit(".", 1)[0]
+                in targets
+            ]
+            if not peer_indices:
+                frozen.append({
+                    "arm": arm, "skip_reason": "no_source_present_API_peer",
+                    "selected_method_ids": [
+                        item["function_id"] for item in local["candidates"]],
+                    "actual_input_tokens": None,
+                })
+                continue
+            tiers[peer_indices[0]] = 2
+        messages = build_messages(local, tiers)
         if arm == "related_explain_L0":
             messages[0]["content"] += (
                 " A stack frame may show where a failure was detected,"
@@ -60,7 +78,8 @@ def freeze(snapshot: dict, tokenizer, max_input_tokens: int = 1800) -> list[dict
         if tokens > max_input_tokens:
             raise ValueError(f"{arm} exceeds common model-input ceiling")
         frozen.append({
-            "arm": arm, "prompt_sha256": hashlib.sha256(
+            "arm": arm, "selected_levels": tiers,
+            "prompt_sha256": hashlib.sha256(
                 prompt.encode("utf-8")).hexdigest(),
             "prompt": prompt, "actual_input_tokens": tokens,
             "selected_method_ids": [
@@ -87,6 +106,8 @@ def score(raw: list[dict], labels: dict[str, set[str]]) -> dict:
                 "actual_input_tokens": item["actual_input_tokens"],
                 "generation_seconds": item["generation_seconds"],
                 "parse_valid": prediction is not None,
+                "skipped": bool(item.get("skip_reason")),
+                "skip_reason": item.get("skip_reason"),
             }
         output.append({
             "bug": record["bug"],
@@ -143,6 +164,12 @@ def main() -> None:
         report = {"bug": bug, "model_id": args.model,
                   "model_revision": revision, "arms": []}
         for arm in items:
+            if arm.get("skip_reason"):
+                report["arms"].append({
+                    **arm, "predicted_method": None,
+                    "generation_seconds": None, "raw_response": None,
+                })
+                continue
             inputs = tokenizer(
                 arm["prompt"], return_tensors="pt",
                 add_special_tokens=False)
