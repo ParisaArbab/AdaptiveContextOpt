@@ -45,6 +45,12 @@ class TestPairedActionOutcomes(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "split leakage"):
             validate_pairs([pair(), second])
 
+    def test_mixed_decoding_settings_are_rejected(self):
+        other = pair("Time", "calibration", -1)
+        other["decoding_hash"] = "different-temperature"
+        with self.assertRaisesRegex(ValueError, "decoding"):
+            validate_pairs([pair(), other])
+
     def test_no_fabricated_freeze(self):
         value = pair()
         value["predictions_frozen_before_gold"] = False
