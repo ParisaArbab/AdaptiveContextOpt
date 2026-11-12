@@ -40,7 +40,7 @@ REQUIRED = {
     "baseline_prediction_sha256", "action_prediction_sha256",
     "actual_baseline_input_tokens", "actual_action_input_tokens",
     "common_input_token_ceiling", "action", "outcome",
-    "gold_scoring_only", "predictions_frozen_before_gold",
+    "gold_scoring_only", "predictions_frozen_before_gold", "outcome_definition",
 }
 SPLITS = {"train", "calibration", "test"}
 
@@ -54,6 +54,7 @@ def validate_pairs(rows: list[dict]) -> dict:
     model_ids = set()
     ceilings = set()
     decoding_protocols = set()
+    outcome_definitions = set()
     for i, row in enumerate(rows):
         if not isinstance(row, dict) or set(row) != REQUIRED:
             raise ValueError(f"row {i}: schema mismatch")
@@ -79,6 +80,12 @@ def validate_pairs(rows: list[dict]) -> dict:
         if (row["gold_scoring_only"] is not True
                 or row["predictions_frozen_before_gold"] is not True):
             raise ValueError(f"row {i}: no verified freeze-before-scoring contract")
+        if row["outcome_definition"] not in {
+            "defects4j_changed_class_hit_at_1",
+            "defects4j_changed_method_hit_at_1",
+        }:
+            raise ValueError(f"row {i}: unknown localization outcome definition")
+        outcome_definitions.add(row["outcome_definition"])
         if type(row["outcome"]) is not int or row["outcome"] not in (-1, 0, 1):
             raise ValueError(f"row {i}: outcome must be -1, 0 or 1")
         if not isinstance(row["action"], dict):
@@ -106,8 +113,9 @@ def validate_pairs(rows: list[dict]) -> dict:
         model_ids.add(row["model_id"])
         decoding_protocols.add(row["decoding_hash"])
         ceilings.add(row["common_input_token_ceiling"])
-    if len(model_ids) != 1 or len(ceilings) != 1 or len(decoding_protocols) != 1:
-        raise ValueError("model, decoding and input ceiling must be matched")
+    if (len(model_ids) != 1 or len(ceilings) != 1
+            or len(decoding_protocols) != 1 or len(outcome_definitions) != 1):
+        raise ValueError("model, decoding, outcome definition and input ceiling must be matched")
     return {
         "schema": 1,
         "count": len(rows),
@@ -119,6 +127,7 @@ def validate_pairs(rows: list[dict]) -> dict:
             for split in sorted(SPLITS)
         },
         "model_id": next(iter(model_ids)),
+        "outcome_definition": next(iter(outcome_definitions)),
         "common_input_token_ceiling": next(iter(ceilings)),
         "sha256": hashlib.sha256(json.dumps(
             rows, sort_keys=True, separators=(",", ":")
