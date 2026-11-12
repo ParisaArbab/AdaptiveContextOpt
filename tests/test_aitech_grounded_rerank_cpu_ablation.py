@@ -1,7 +1,7 @@
 """Tests for gold-free stack reranking, matched arms and order control."""
 import unittest
 
-from aitech.failure_grounded_rerank import rerank, shortlist, terms
+from aitech.failure_grounded_rerank import rerank, shortlist, terms, failing_test_class_hints
 from aitech.grounded_rerank_cpu_ablation import freeze_arms, score_arms
 
 
@@ -49,6 +49,19 @@ class TestGroundedRerank(unittest.TestCase):
         self.assertEqual(ranked[0], 8)
         self.assertEqual(set(ranked), set(range(10)))
         self.assertEqual(len(set(terms("badCode valueHandler"))), 4)
+
+    def test_failing_test_name_generates_weak_class_hint(self):
+        failure = ("--- pkg.junit.WidgetTests::testBroken\\n"
+                   "--- pkg.TestFraction::failure\\n"
+                   "java.lang.AssertionError")
+        self.assertEqual(failing_test_class_hints(failure),
+                         {"Widget", "Fraction"})
+
+    def test_no_bug_oracle_from_unrelated_assertion(self):
+        self.assertEqual(
+            failing_test_class_hints(
+                "java.lang.AssertionError at junit.framework.Assert.fail"),
+            set())
 
     def test_shortlist_rejects_duplicated_indices(self):
         with self.assertRaisesRegex(ValueError, "invalid"):
