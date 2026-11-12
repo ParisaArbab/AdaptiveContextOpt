@@ -1,0 +1,84 @@
+name: AITECH one-shot marginal L0-to-L1 CPU counterfactual
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [AITECH]
+    paths:
+      - ".github/workflows/aitech-cpu-action-counterfactual.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aitech-cpu-action-counterfactual
+  cancel-in-progress: false
+
+jobs:
+  paired-cpu-action-value:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+    env:
+      HF_HOME: "/tmp/aitech-hf-action"
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      TOKENIZERS_PARALLELISM: "false"
+      OMP_NUM_THREADS: "2"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Record triggering revision
+        run: |
+          mkdir -p agent-output/marginal-action
+          git rev-parse HEAD > agent-output/marginal-action/git_commit.txt
+          python --version > agent-output/marginal-action/python.txt
+      - name: Run no-model protocol checks
+        run: |
+          python -m unittest discover -s tests -p 'test_aitech_*.py' -v
+      - name: Install pinned CPU-only model runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --no-cache-dir torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install --no-cache-dir transformers==4.51.3 huggingface_hub==0.30.2 safetensors
+          python -m pip freeze > agent-output/marginal-action/pip-freeze.txt
+      - name: Run development-only real Qwen paired action-value experiment
+        timeout-minutes: 19
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m aitech.cpu_action_counterfactual \
+            --bugs Lang-1 Time-25 \
+            --evidence-budget 650 \
+            --max-input-tokens 1800 \
+            --max-new-tokens 24 \
+            --output-dir agent-output/marginal-action \
+            2>&1 | tee agent-output/marginal-action/console.log
+      - name: Verify paired model artifacts are present
+        if: success()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          base = Path("agent-output/marginal-action")
+          raw = json.loads((base / "raw_pair_predictions.json").read_text())
+          outcomes = json.loads((base / "posthoc_action_outcomes.json").read_text())
+          assert raw and len(raw) == len(outcomes["pairs"])
+          executed = [record for record in raw if record["skip_reason"] is None]
+          assert executed, "No real STOP/UPGRADE pairs were executed"
+          print("Actual paired comparisons completed:", len(executed))
+          for record in raw:
+              if record["skip_reason"] is None:
+                  assert [r["condition"] for r in record["predictions"]] == ["STOP", "UPGRADE_L1"]
+                  assert all("response" in r for r in record["predictions"])
+          print("Verified stored predictions and posthoc outcomes for", len(raw), "bugs")
+          PY
+      - name: Upload all frozen prompts, real predictions and outcomes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aitech-marginal-action-${{ github.run_id }}
+          path: agent-output/marginal-action/
+          retention-days: 30
+          if-no-files-found: warn

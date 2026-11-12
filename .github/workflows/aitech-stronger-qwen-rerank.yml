@@ -1,0 +1,82 @@
+name: AITECH one-shot stronger Qwen CPU position-bias study
+
+on:
+  push:
+    branches: [AITECH]
+    paths:
+      - ".github/workflows/aitech-stronger-qwen-rerank.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  stronger-qwen:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+    env:
+      HF_HOME: /tmp/aitech-qwen15-cache
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      TOKENIZERS_PARALLELISM: "false"
+      OMP_NUM_THREADS: "2"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate implementation and evaluation guards
+        run: |
+          mkdir -p agent-output/stronger-qwen agent-output/source
+          git rev-parse HEAD > agent-output/stronger-qwen/revision.txt
+          python -m py_compile aitech/cpu_failure_rerank_ablation.py
+          python -m unittest discover -s tests -p 'test_aitech_*.py' -v
+      - name: Retrieve previously frozen Math and Chart buggy snapshots
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 43141574195 \
+            --repo ParisaArbab/AdaptiveContextOpt \
+            -n aitech-real-project-pairs-43141574195 \
+            -D agent-output/source
+      - name: Install CPU-only pinned runtime
+        timeout-minutes: 9
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --no-cache-dir torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install --no-cache-dir transformers==4.51.3 huggingface_hub==0.30.2 safetensors
+          python -m pip freeze > agent-output/stronger-qwen/pip-freeze.txt
+      - name: Compare Qwen 1.5B initial rank, test-hint rank, reversed order
+        timeout-minutes: 27
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m aitech.cpu_failure_rerank_ablation \
+            --snapshot Math-1 agent-output/source/math-1-pre-gold.json \
+            --snapshot Chart-1 agent-output/source/chart-1-pre-gold.json \
+            --posthoc agent-output/source/paired-model/file_level_outcomes_posthoc.json \
+            --output-dir agent-output/stronger-qwen \
+            --model-id Qwen/Qwen2.5-Coder-1.5B-Instruct \
+            --dtype bfloat16 \
+            --conditions original_top8 test_name_rerank test_name_rerank_reversed \
+            2>&1 | tee agent-output/stronger-qwen/console.log
+      - name: Require all six real model predictions
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path("agent-output/stronger-qwen")
+          data = json.loads((root/"posthoc_scores.json").read_text())
+          assert len(data["results"]) == 6
+          valid = sum(item["parse_valid"] for item in data["results"])
+          hits = sum(item["changed_class_hit_at_1"] for item in data["results"])
+          print("Stronger Qwen, valid", valid, "of 6; changed-class Hit@1:", hits, "of 6")
+          PY
+      - name: Archive all prompts, model replies and posthoc results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aitech-stronger-qwen-${{ github.run_id }}
+          path: agent-output/stronger-qwen/
+          retention-days: 30
+          if-no-files-found: warn

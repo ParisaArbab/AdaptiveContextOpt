@@ -1,0 +1,124 @@
+name: AITECH one-shot real Defects4J cross-project Qwen pairs
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [AITECH]
+    paths:
+      - ".github/workflows/aitech-real-project-pairs.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aitech-real-project-pairs-one-shot
+  cancel-in-progress: false
+
+jobs:
+  real-project-cpu-pairs:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 65
+    env:
+      HF_HOME: "/tmp/aitech-live-hf"
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      TOKENIZERS_PARALLELISM: "false"
+      OMP_NUM_THREADS: "2"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "11"
+      - name: Freeze project revision and runtime
+        run: |
+          mkdir -p agent-output/live-projects
+          git rev-parse HEAD > agent-output/live-projects/aitech-commit.txt
+          java -version 2> agent-output/live-projects/java-version.txt
+          python --version > agent-output/live-projects/python-version.txt
+      - name: Verify test and protocol contracts
+        run: python -m unittest discover -s tests -p 'test_aitech_*.py' -v
+      - name: Install pinned Defects4J
+        shell: bash
+        timeout-minutes: 19
+        run: |
+          set -euo pipefail
+          sudo apt-get update -q
+          sudo apt-get install -y cpanminus subversion
+          git clone https://github.com/rjust/defects4j.git "$RUNNER_TEMP/defects4j"
+          git -C "$RUNNER_TEMP/defects4j" checkout 8c16da8230843cdc918eaf4ddb449637f02b83c6
+          git -C "$RUNNER_TEMP/defects4j" rev-parse HEAD > agent-output/live-projects/defects4j-commit.txt
+          cd "$RUNNER_TEMP/defects4j"
+          sudo cpanm --notest --installdeps . 2>&1 | tee "$GITHUB_WORKSPACE/agent-output/live-projects/defects4j-setup.log"
+          ./init.sh 2>&1 | tee "$GITHUB_WORKSPACE/agent-output/live-projects/defects4j-init.log"
+      - name: Checkout Math-1b and Chart-1b buggy revisions
+        timeout-minutes: 11
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$RUNNER_TEMP/defects4j/framework/bin:$PATH"
+          defects4j checkout -p Math -v 1b -w "$RUNNER_TEMP/Math-1"
+          defects4j checkout -p Chart -v 1b -w "$RUNNER_TEMP/Chart-1"
+          defects4j info -p Math -b 1 > agent-output/live-projects/math-bug-info.txt
+          defects4j info -p Chart -b 1 > agent-output/live-projects/chart-bug-info.txt
+      - name: Execute real failing tests and freeze pre-gold source snapshots
+        timeout-minutes: 14
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$RUNNER_TEMP/defects4j/framework/bin:$PATH"
+          python -m aitech.live_defects4j_snapshot \
+            --checkout "$RUNNER_TEMP/Math-1" \
+            --output agent-output/live-projects/math-1-pre-gold.json \
+            2>&1 | tee agent-output/live-projects/math-snapshot.log
+          python -m aitech.live_defects4j_snapshot \
+            --checkout "$RUNNER_TEMP/Chart-1" \
+            --output agent-output/live-projects/chart-1-pre-gold.json \
+            2>&1 | tee agent-output/live-projects/chart-snapshot.log
+      - name: Install CPU-only pinned Qwen inference
+        timeout-minutes: 9
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --no-cache-dir torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install --no-cache-dir transformers==4.51.3 huggingface_hub==0.30.2 safetensors
+          python -m pip freeze > agent-output/live-projects/pip-freeze.txt
+      - name: Run frozen Qwen STOP/UPGRADE pairs and posthoc modified-class scoring
+        timeout-minutes: 23
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$RUNNER_TEMP/defects4j/framework/bin:$PATH"
+          python -m aitech.cpu_live_defects4j_pairs \
+            --bug Math-1 agent-output/live-projects/math-1-pre-gold.json "$RUNNER_TEMP/Math-1" \
+            --bug Chart-1 agent-output/live-projects/chart-1-pre-gold.json "$RUNNER_TEMP/Chart-1" \
+            --output-dir agent-output/live-projects/paired-model \
+            --evidence-budget 650 --max-input-tokens 1800 \
+            2>&1 | tee agent-output/live-projects/paired-run.log
+      - name: Audit actual paired outputs before interpreting accuracy
+        if: success()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path("agent-output/live-projects/paired-model")
+          raw = json.loads((root / "raw_predictions_before_gold.json").read_text())
+          scores = json.loads((root / "file_level_outcomes_posthoc.json").read_text())
+          assert len(raw) == len(scores["results"]) == 2
+          complete = [r for r in raw if r["skip_reason"] is None]
+          assert complete, "All real-project comparisons were skipped"
+          for record in complete:
+              assert [x["condition"] for x in record["predictions"]] == ["STOP", "UPGRADE_L1"]
+          print("Verified real-project paired LLM comparisons:", len(complete))
+          print("Skipped:", [r["bug"] for r in raw if r["skip_reason"]])
+          PY
+      - name: Archive real failure snapshots, raw predictions and posthoc labels
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aitech-real-project-pairs-${{ github.run_id }}
+          path: agent-output/live-projects/
+          retention-days: 30
+          if-no-files-found: warn

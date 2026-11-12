@@ -1,0 +1,74 @@
+name: AITECH one-shot producer-consumer candidate recall diagnostic
+
+on:
+  push:
+    branches: [AITECH]
+    paths:
+      - ".github/workflows/aitech-related-api-recall.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  candidate-recall:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run source-pool and no-gold tests
+        run: |
+          mkdir -p agent-output/source agent-output/recall
+          git rev-parse HEAD > agent-output/recall/aitech-commit.txt
+          python -m unittest discover -s tests -p 'test_aitech_*.py' -v
+      - name: Restore frozen real Codec and Compress buggy source candidates
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 43151606993 \
+            --repo ParisaArbab/AdaptiveContextOpt \
+            -n aitech-heldout-guard-43151606993 \
+            -D agent-output/source
+          test -s agent-output/source/codec-1-pre-gold.json
+          test -s agent-output/source/compress-1-pre-gold.json
+      - name: Download official Defects4J class labels at pinned framework revision
+        run: |
+          mkdir -p agent-output/labels
+          curl --fail --location --silent --show-error \
+            https://raw.githubusercontent.com/rjust/defects4j/8c16da8230843cdc918eaf4ddb449637f02b83c6/framework/projects/Codec/modified_classes/1.src \
+            -o agent-output/labels/Codec-1.src
+          curl --fail --location --silent --show-error \
+            https://raw.githubusercontent.com/rjust/defects4j/8c16da8230843cdc918eaf4ddb449637f02b83c6/framework/projects/Compress/modified_classes/1.src \
+            -o agent-output/labels/Compress-1.src
+      - name: Freeze before-label retrieval selections and score candidate recall
+        run: |
+          python -m aitech.related_api_retrieval_pilot \
+            --snapshot Codec-1 agent-output/source/codec-1-pre-gold.json \
+            --snapshot Compress-1 agent-output/source/compress-1-pre-gold.json \
+            --gold Codec-1 agent-output/labels/Codec-1.src \
+            --gold Compress-1 agent-output/labels/Compress-1.src \
+            --output-dir agent-output/recall
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("agent-output/recall")
+          f=json.loads((root/"frozen_before_gold.json").read_text())
+          result=json.loads((root/"retrieval_recall_after_gold.json").read_text())
+          assert set(f) == {"Codec-1","Compress-1"}
+          assert set(result["bugs"]) == set(f)
+          assert all(len(selection["methods"]) == 8
+                     for data in f.values()
+                     for selection in data["selections"].values())
+          print("Verified exactly eight selected method identities per arm")
+          PY
+      - name: Archive code provenance and scored candidate coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aitech-related-api-recall-${{ github.run_id }}
+          path: agent-output/recall/
+          retention-days: 30
+          if-no-files-found: warn

@@ -1,0 +1,106 @@
+name: AITECH evidence selector tests
+
+on:
+  push:
+    branches: [AITECH]
+    paths:
+      - "aitech/**"
+      - "tests/test_aitech_*.py"
+      - ".github/workflows/aitech-tests.yml"
+  pull_request:
+    paths:
+      - "aitech/**"
+      - "tests/test_aitech_*.py"
+      - ".github/workflows/aitech-tests.yml"
+
+jobs:
+  aitech-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Run dependency selection unit tests
+        run: python -m unittest discover -s tests -p 'test_aitech_*.py' -v
+      - name: Run risk-gated context experiment on archived Defects4J inputs
+        run: python -m aitech.risk_gated_pilot --output /tmp/aitech-risk-gated-pilot.json
+      - name: Analyze paired risk-gated outcomes without gold labels
+        run: |
+          python -m aitech.analyze_risk_gated_pilot \
+            --input /tmp/aitech-risk-gated-pilot.json \
+            --output-dir agent-output/risk_gated
+          cp /tmp/aitech-risk-gated-pilot.json agent-output/risk_gated/results.json
+      - name: Upload paired real-archive selector results
+        uses: actions/upload-artifact@v4
+        with:
+          name: aitech-risk-gated-${{ github.run_id }}
+          path: agent-output/risk_gated/
+          retention-days: 30
+      - name: Audit missing class-qualified dependency evidence
+        run: python -m aitech.frontier_coverage_pilot --output agent-output/risk_gated/frontier_coverage.json
+      - name: Freeze prioritized missing-code retrieval requests
+        run: python -m aitech.frontier_request_pilot --output agent-output/risk_gated/frontier_requests.json
+      - name: Compare verified historical helper at matched token proxies
+        run: python -m aitech.time1_verified_retrieval_study --output agent-output/risk_gated/time1_verified_retrieval.json
+      - name: Score frozen Time-1 context against official patch methods
+        run: python -m aitech.time1_posthoc_scoring --output agent-output/risk_gated/time1_posthoc_patch_recall.json
+      - name: Score frozen three-bug selection against official Defects4J patches
+        run: python -m aitech.three_bug_posthoc_scoring --output agent-output/risk_gated/three_bug_posthoc_recall.json
+      - name: Select hierarchical L0 signatures and L1 code evidence
+        run: python -m aitech.tiered_evidence_pilot --output agent-output/risk_gated/tiered_evidence.json
+      - name: Score frozen L0 identity and L1 source separately
+        run: python -m aitech.score_tiered_posthoc --output agent-output/risk_gated/tiered_posthoc.json
+      - name: Audit identity versus detailed-code Pareto tradeoffs
+        run: python -m aitech.tiered_pareto_analysis --output-dir agent-output/risk_gated/tiered_pareto
+      - name: Run frozen three-bug evidence ablations (CPU only)
+        run: |
+          mkdir -p /tmp/aitech-evidence
+          python -m aitech.failure_conditioned_study \
+            --output /tmp/aitech-evidence/failure_conditioned.json
+          python -m aitech.multiresolution_study \
+            --output /tmp/aitech-evidence/multiresolution.json
+      - name: Score frozen multi-resolution detail against known patch-method labels
+        run: |
+          python -m aitech.score_multiresolution_posthoc \
+            --frozen /tmp/aitech-evidence/multiresolution.json \
+            --output /tmp/aitech-evidence/multiresolution_posthoc.json
+      - name: Measure gold-aware oracle ceiling, strictly post selection
+        run: |
+          python -m aitech.changed_method_oracle_ceiling \
+            --frozen /tmp/aitech-evidence/multiresolution.json \
+            --output /tmp/aitech-evidence/changed_method_oracle.json
+      - name: Compare against strong pre-existing tiered source-detail baselines
+        run: |
+          python -m aitech.compare_strong_tiered_baselines \
+            --frozen /tmp/aitech-evidence/multiresolution.json \
+            --output /tmp/aitech-evidence/strong_tiered_comparison.json
+      - name: Upload raw exploratory selection results
+        uses: actions/upload-artifact@v4
+        with:
+          name: aitech-three-bug-cpu-${{ github.run_id }}
+          path: /tmp/aitech-evidence/
+          retention-days: 30
+      - name: Print deterministic demonstration
+        run: python -m aitech.demo
+      - name: Run archived SymPy trace pilot
+        run: python -m aitech.sympy_trace_pilot --output /tmp/aitech-sympy-trace.json
+      - name: Verify matched-budget trace result
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path("/tmp/aitech-sympy-trace.json").read_text())
+          a = result["conditions"]["relevance_only"]
+          b = result["conditions"]["dependency_aware"]
+          assert result["evidence_items"] == 7
+          assert result["budget_tokens_proxy"] == 36
+          assert a["tokens_proxy"] == b["tokens_proxy"] == 35
+          assert a["known_dependency_violations"] == 1
+          assert b["known_dependency_violations"] == 0
+          print("Archived real-trace dependency microcase validated")
+          PY

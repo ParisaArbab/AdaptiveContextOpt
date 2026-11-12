@@ -1,0 +1,90 @@
+name: AITECH real Defects4J compiler experiment
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [AITECH]
+    paths:
+      - ".github/workflows/aitech-defects4j-compiler.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aitech-d4j-compiler-one-off
+  cancel-in-progress: false
+
+jobs:
+  defects4j-real-compiler:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+    env:
+      TZ: America/Los_Angeles
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "11"
+      - name: Record JDK and checkout identity
+        run: |
+          mkdir -p agent-output
+          java -version 2>&1 | tee agent-output/java-version.log
+          git rev-parse HEAD | tee agent-output/aitech-commit.txt
+      - name: Install Defects4J prerequisites
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y cpanminus subversion
+      - name: Install pinned Defects4J framework
+        shell: bash
+        run: |
+          git clone https://github.com/rjust/defects4j.git "$RUNNER_TEMP/defects4j"
+          cd "$RUNNER_TEMP/defects4j"
+          git checkout 8c16da8230843cdc918eaf4ddb449637f02b83c6
+          git rev-parse HEAD > "$GITHUB_WORKSPACE/agent-output/defects4j-commit.txt"
+          sudo cpanm --notest --installdeps . 2>&1 | tee "$GITHUB_WORKSPACE/agent-output/defects4j-perl-setup.log"
+          ./init.sh 2>&1 | tee "$GITHUB_WORKSPACE/agent-output/defects4j-init.log"
+      - name: Checkout real buggy Lang-1b
+        shell: bash
+        run: |
+          export PATH="$RUNNER_TEMP/defects4j/framework/bin:$PATH"
+          defects4j info -p Lang -b 1 | tee agent-output/defects4j-bug-info.txt
+          defects4j checkout -p Lang -v 1b -w "$RUNNER_TEMP/Lang-1" 2>&1 | tee agent-output/checkout.log
+          cd "$RUNNER_TEMP/Lang-1"
+          defects4j export -p dir.src.classes | tee "$GITHUB_WORKSPACE/agent-output/src-dir.txt"
+          defects4j export -p cp.compile > "$GITHUB_WORKSPACE/agent-output/compile-classpath.txt"
+      - name: Execute compiler graph study on real bug
+        shell: bash
+        run: |
+          export PATH="$RUNNER_TEMP/defects4j/framework/bin:$PATH"
+          python -m aitech.defects4j_compiler_pilot \
+            --checkout "$RUNNER_TEMP/Lang-1" \
+            --max-files 1000 \
+            --timeout 600 \
+            --candidate-snapshot results/rave_fl_iteration_d/independent_live/Lang-1/input_snapshot.json \
+            --output agent-output/lang1_compiler_graph.json \
+            2>&1 | tee agent-output/lang1_run.log
+      - name: Report graph coverage and matched-budget selections
+        shell: bash
+        run: |
+          python -m aitech.report_compiler_graph \
+            --input agent-output/lang1_compiler_graph.json \
+            --output agent-output/lang1_diagnostic.md
+      - name: Validate real compiler output provenance and budget safety
+        shell: bash
+        run: |
+          python -m aitech.validate_real_bug_graph \
+            --input agent-output/lang1_compiler_graph.json \
+            --output agent-output/lang1_validation.json
+      - name: Archive evidence and setup diagnostics, even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aitech-d4j-compiler-${{ github.run_id }}
+          path: agent-output/
+          retention-days: 30
+          if-no-files-found: warn

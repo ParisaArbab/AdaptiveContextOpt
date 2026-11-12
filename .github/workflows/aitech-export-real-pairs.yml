@@ -1,0 +1,65 @@
+name: AITECH one-shot verified real-pair outcome export
+
+on:
+  push:
+    branches: [AITECH]
+    paths:
+      - ".github/workflows/aitech-export-real-pairs.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  export-real-pairs:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify exporter and no-leakage contracts
+        run: |
+          python -m unittest discover -s tests -p 'test_aitech_*.py' -v
+      - name: Retrieve completed Math/Chart real model artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p agent-output/source agent-output/export
+          gh run download 43141574195 \
+            --repo ParisaArbab/AdaptiveContextOpt \
+            -n aitech-real-project-pairs-43141574195 \
+            -D agent-output/source
+      - name: Freeze and validate file-level action-outcome training records
+        run: |
+          python -m aitech.export_real_action_pairs \
+            --results-dir agent-output/source/paired-model \
+            --snapshot Math-1 agent-output/source/math-1-pre-gold.json \
+            --snapshot Chart-1 agent-output/source/chart-1-pre-gold.json \
+            --split Math train \
+            --split Chart calibration \
+            --output-jsonl agent-output/export/paired_action_outcomes.jsonl \
+            --summary-json agent-output/export/paired_action_validation.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path("agent-output/export")
+          rows = [json.loads(x) for x in
+                  (root / "paired_action_outcomes.jsonl").read_text().splitlines()
+                  if x.strip()]
+          report = json.loads((root / "paired_action_validation.json").read_text())
+          assert len(rows) == 2, "Missing Math/Chart real paired outcomes"
+          assert all(r["outcome"] == 0 for r in rows)
+          print("Actual neutral action outcomes saved:", len(rows))
+          print("Projects:", sorted({r["project"] for r in rows}))
+          print("Need more projects and positive/negative outcomes before training")
+          PY
+      - name: Archive validated source model-outcome dataset
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aitech-validated-real-action-pairs-${{ github.run_id }}
+          path: agent-output/export/
+          retention-days: 30
+          if-no-files-found: warn

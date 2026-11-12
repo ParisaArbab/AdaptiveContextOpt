@@ -1,0 +1,79 @@
+name: AITECH autonomous CPU research
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [AITECH]
+    paths:
+      - "aitech/**"
+      - "tests/test_aitech_*.py"
+      - ".github/workflows/aitech-research-agent.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aitech-research-agent
+  cancel-in-progress: false
+
+jobs:
+  cpu-research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact triggering revision
+        uses: actions/checkout@v4
+      - name: Configure Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Run AITECH unit tests
+        run: python -m unittest discover -s tests -p 'test_aitech_*.py' -v
+      - name: Run archived-source CPU comparison
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            python -m aitech.research_agent --no-search --output-dir agent-output
+          else
+            python -m aitech.research_agent --output-dir agent-output
+          fi
+      - name: Run independent archived-bug call-closure ablation
+        run: python -m aitech.multibug_call_ablation --output-dir agent-output/multibug_call
+      - name: Run anchor-first budget stress test on real archived bugs
+        run: python -m aitech.real_bug_closure_stress --output agent-output/anchor_first_real_bug_stress.json
+      - name: Audit JDK AST calls on two archived Java bugs
+        run: python -m aitech.java_ast_real_bug --output agent-output/java_ast_real_bug.json
+      - name: Verify compiler-bound overloads and save proof artifact
+        run: |
+          python -m aitech.java_compiler_graph \
+            --sources aitech/fixtures/java_compiler_verified \
+            --output agent-output/compiler_verified_fixture.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("agent-output/compiler_verified_fixture.json").read_text())
+          calls = [x for x in report["calls"] if x["caller_method"] == "run"
+                   and x["target_method"] == "translate"]
+          assert len(calls) == 2, calls
+          assert {x["parameter_types"] for x in calls} == {
+              "java.lang.String", "java.lang.Object"
+          }, calls
+          assert report["unresolved_count"] == 0
+          print("Compiler resolved both same-arity overloads distinctly")
+          PY
+      - name: Validate full caller-and-callee overload identity mapping
+        run: python -m aitech.compiler_attribution_acceptance --output agent-output/compiler_attribution_acceptance.json
+      - name: Run frozen failure-conditioned three-bug ablation
+        run: python -m aitech.failure_conditioned_study --output agent-output/failure_conditioned_three_bug.json
+      - name: Compare sufficient-path versus all-edge closure on controlled evidence
+        run: python -m aitech.alternative_support_ablation --output agent-output/alternative_support_microcase.json
+      - name: Save raw results and report (no automatic merge)
+        uses: actions/upload-artifact@v4
+        with:
+          name: aitech-research-${{ github.run_id }}
+          path: agent-output/
+          retention-days: 30

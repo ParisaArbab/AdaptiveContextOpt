@@ -1,0 +1,57 @@
+name: AITECH one-shot model-free STOP baseline
+
+on:
+  push:
+    branches: [AITECH]
+    paths:
+      - ".github/workflows/aitech-model-free-rerank.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  model-free:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate pre-gold evidence and model-free code
+        run: |
+          python -m py_compile aitech/evaluate_model_free_reranking.py
+          python -m unittest discover -s tests -p 'test_aitech_*.py' -v
+      - name: Retrieve frozen buggy source snapshots and posthoc labels
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p agent-output/source agent-output/model-free
+          gh run download 43141574195 \
+            --repo ParisaArbab/AdaptiveContextOpt \
+            -n aitech-real-project-pairs-43141574195 \
+            -D agent-output/source
+          git rev-parse HEAD > agent-output/model-free/source-revision.txt
+      - name: Freeze heuristic candidate decisions before gold scoring
+        run: |
+          python -m aitech.evaluate_model_free_reranking \
+            --snapshot Math-1 agent-output/source/math-1-pre-gold.json \
+            --snapshot Chart-1 agent-output/source/chart-1-pre-gold.json \
+            --posthoc agent-output/source/paired-model/file_level_outcomes_posthoc.json \
+            --output-dir agent-output/model-free
+      - name: Evaluate conservative test-name class STOP gate
+        run: |
+          python -m aitech.evaluate_stop_gate \
+            --snapshot Math-1 agent-output/source/math-1-pre-gold.json \
+            --snapshot Chart-1 agent-output/source/chart-1-pre-gold.json \
+            --posthoc agent-output/source/paired-model/file_level_outcomes_posthoc.json \
+            --output-dir agent-output/model-free/stop-gate
+      - name: Save model-free outcome and source provenance
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aitech-model-free-${{ github.run_id }}
+          path: agent-output/model-free/
+          retention-days: 30
+          if-no-files-found: warn

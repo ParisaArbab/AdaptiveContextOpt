@@ -1,0 +1,117 @@
+name: AITECH one-shot untouched Codec Compress STOP policy validation
+
+on:
+  push:
+    branches: [AITECH]
+    paths:
+      - ".github/workflows/aitech-heldout-guard-cpu.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aitech-heldout-codec-compress-once
+  cancel-in-progress: false
+
+jobs:
+  heldout-qwen15b:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 65
+    env:
+      HF_HOME: /tmp/aitech-heldout-hf
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      TOKENIZERS_PARALLELISM: "false"
+      OMP_NUM_THREADS: "2"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "11"
+      - name: Freeze reproducible environment and guard protocol
+        run: |
+          mkdir -p agent-output/heldout
+          git rev-parse HEAD > agent-output/heldout/aitech-commit.txt
+          java -version 2> agent-output/heldout/jdk-version.txt
+          python -m compileall -q aitech
+          python -m unittest discover -s tests -p 'test_aitech_*.py' -v
+      - name: Install pinned Defects4J and dependencies
+        timeout-minutes: 19
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -q
+          sudo apt-get install -y cpanminus subversion
+          git clone https://github.com/rjust/defects4j.git "$RUNNER_TEMP/defects4j"
+          git -C "$RUNNER_TEMP/defects4j" checkout 8c16da8230843cdc918eaf4ddb449637f02b83c6
+          git -C "$RUNNER_TEMP/defects4j" rev-parse HEAD > agent-output/heldout/defects4j-commit.txt
+          cd "$RUNNER_TEMP/defects4j"
+          sudo cpanm --notest --installdeps . 2>&1 | tee "$GITHUB_WORKSPACE/agent-output/heldout/defects4j-setup.log"
+          ./init.sh 2>&1 | tee "$GITHUB_WORKSPACE/agent-output/heldout/defects4j-init.log"
+      - name: Freeze fresh Codec-1 and Compress-1 buggy sources and failures
+        timeout-minutes: 15
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$RUNNER_TEMP/defects4j/framework/bin:$PATH"
+          defects4j checkout -p Codec -v 1b -w "$RUNNER_TEMP/Codec-1"
+          defects4j checkout -p Compress -v 1b -w "$RUNNER_TEMP/Compress-1"
+          python -m aitech.live_defects4j_snapshot \
+            --checkout "$RUNNER_TEMP/Codec-1" \
+            --output agent-output/heldout/codec-1-pre-gold.json \
+            2>&1 | tee agent-output/heldout/codec-snapshot.log
+          python -m aitech.live_defects4j_snapshot \
+            --checkout "$RUNNER_TEMP/Compress-1" \
+            --output agent-output/heldout/compress-1-pre-gold.json \
+            2>&1 | tee agent-output/heldout/compress-snapshot.log
+      - name: Install Qwen1.5B CPU inference
+        timeout-minutes: 10
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --no-cache-dir torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install --no-cache-dir transformers==4.51.3 huggingface_hub==0.30.2 safetensors
+          python -m pip freeze > agent-output/heldout/pip-freeze.txt
+      - name: Run heldout STOP versus forced L1 upgrade with independent gold firewall
+        timeout-minutes: 21
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$RUNNER_TEMP/defects4j/framework/bin:$PATH"
+          python -m aitech.grounded_rerank_cpu_ablation \
+            --snapshot Codec-1 agent-output/heldout/codec-1-pre-gold.json \
+            --snapshot Compress-1 agent-output/heldout/compress-1-pre-gold.json \
+            --checkout Codec-1 "$RUNNER_TEMP/Codec-1" \
+            --checkout Compress-1 "$RUNNER_TEMP/Compress-1" \
+            --output-dir agent-output/heldout/paired-model \
+            --model Qwen/Qwen2.5-Coder-1.5B-Instruct \
+            --max-input-tokens 1800 \
+            2>&1 | tee agent-output/heldout/model-run.log
+      - name: Report honest STOP/UPGRADE heldout outcomes
+        if: success()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=Path("agent-output/heldout/paired-model")
+          assert (d/"raw_predictions_before_gold.json").is_file()
+          assert (d/"pre_gold_guard_decisions.json").is_file()
+          scores=json.loads((d/"scored_after_gold.json").read_text())
+          for row in scores["results"]:
+              print("Bug",row["bug"],
+                    "original",row["arms"]["original_first8"]["hit_at_1_modified_class"],
+                    "grounded",row["arms"]["grounded_first8"]["hit_at_1_modified_class"],
+                    "forced_L1",row["arms"]["grounded_one_L1"]["hit_at_1_modified_class"],
+                    "guarded",row["guarded_policy"])
+          PY
+      - name: Archive source snapshots, prompts, predictions and independent labels
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aitech-heldout-guard-${{ github.run_id }}
+          path: agent-output/heldout/
+          retention-days: 30
+          if-no-files-found: warn

@@ -1,0 +1,101 @@
+name: AITECH one-shot Qwen producer-consumer source-detail localization pilot
+
+on:
+  push:
+    branches: [AITECH]
+    paths:
+      - ".github/workflows/aitech-related-api-llm.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: aitech-related-api-llm-one-shot
+  cancel-in-progress: false
+
+jobs:
+  related-api-qwen:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+    env:
+      HF_HOME: /tmp/aitech-related-hf
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      TOKENIZERS_PARALLELISM: "false"
+      OMP_NUM_THREADS: "2"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Freeze source revision and run no-model consistency tests
+        run: |
+          mkdir -p agent-output/source agent-output/related-model agent-output/gold
+          git rev-parse HEAD > agent-output/related-model/aitech-commit.txt
+          python -m compileall -q aitech
+          python -m unittest discover -s tests -p 'test_aitech_*.py' -v
+      - name: Download pre-gold real Codec and Compress source pools
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 43151606993 \
+            --repo ParisaArbab/AdaptiveContextOpt \
+            -n aitech-heldout-guard-43151606993 \
+            -D agent-output/source
+          test -s agent-output/source/codec-1-pre-gold.json
+          test -s agent-output/source/compress-1-pre-gold.json
+      - name: Freeze official modified-class data for posthoc-only scoring
+        run: |
+          curl -fLsS \
+            https://raw.githubusercontent.com/rjust/defects4j/8c16da8230843cdc918eaf4ddb449637f02b83c6/framework/projects/Codec/modified_classes/1.src \
+            -o agent-output/gold/Codec-1.src
+          curl -fLsS \
+            https://raw.githubusercontent.com/rjust/defects4j/8c16da8230843cdc918eaf4ddb449637f02b83c6/framework/projects/Compress/modified_classes/1.src \
+            -o agent-output/gold/Compress-1.src
+      - name: Install pinned Qwen1.5B CPU runtime
+        timeout-minutes: 11
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --no-cache-dir torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install --no-cache-dir transformers==4.51.3 huggingface_hub==0.30.2 safetensors
+          python -m pip freeze > agent-output/related-model/pip-freeze.txt
+      - name: Compare stack-only, related APIs, causal hints and reverse order
+        timeout-minutes: 18
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m aitech.related_api_cpu_localization \
+            --snapshot Codec-1 agent-output/source/codec-1-pre-gold.json \
+            --snapshot Compress-1 agent-output/source/compress-1-pre-gold.json \
+            --gold Codec-1 agent-output/gold/Codec-1.src \
+            --gold Compress-1 agent-output/gold/Compress-1.src \
+            --output-dir agent-output/related-model \
+            --model Qwen/Qwen2.5-Coder-1.5B-Instruct \
+            --max-input-tokens 1800 \
+            2>&1 | tee agent-output/related-model/console.log
+      - name: Verify saved model outputs and class accuracy proxy
+        if: success()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("agent-output/related-model")
+          raw=json.loads((root/"raw_predictions_before_gold.json").read_text())
+          scores=json.loads((root/"score_after_gold.json").read_text())
+          assert len(raw) == len(scores["results"]) == 2
+          assert all(len(bug["arms"]) == 5 for bug in raw)
+          for bug in scores["results"]:
+              print(bug["bug"],{
+                k:(v["class_hit_at_1"],v["actual_input_tokens"])
+                for k,v in bug["arms"].items()
+              })
+          PY
+      - name: Archive full prompt, raw and posthoc predictions
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aitech-related-api-llm-${{ github.run_id }}
+          path: agent-output/related-model/
+          retention-days: 30
+          if-no-files-found: warn
