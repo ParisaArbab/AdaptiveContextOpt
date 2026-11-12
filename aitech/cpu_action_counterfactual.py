@@ -38,7 +38,13 @@ def freeze_upgrade_pair(snapshot: dict, tokenizer, *,
     items = source["candidates"]
     chosen = {}
     used = 0
+    # Cap the initial signature-only shortlist so there is a genuine
+    # opportunity to test an L0 -> L1 upgrade under the SAME total
+    # evidence ceiling. The shortlist size is fixed before seeing gold.
+    max_baseline_candidates = 8
     for i, item in enumerate(items):
+        if len(chosen) >= max_baseline_candidates:
+            break
         cost = _token_count(tokenizer, text_for_candidate(i, item, 1))
         if used + cost <= evidence_budget:
             chosen[i] = 1
@@ -85,7 +91,7 @@ def freeze_upgrade_pair(snapshot: dict, tokenizer, *,
         "skip_reason": None, "prompts": prompts,
         "target_method": items[upgrade_i]["function_id"],
         "upgrade_index": upgrade_i, "incremental_evidence_tokens": delta,
-        "evidence_budget": evidence_budget,
+        "evidence_budget": evidence_budget,\n        "initial_signature_candidate_cap": max_baseline_candidates,
         "common_total_input_ceiling": max_total_input,
         "candidate_id_by_index": {str(i): items[i]["function_id"] for i in chosen},
         "frozen_candidate_ids": [items[i]["function_id"] for i in chosen],
