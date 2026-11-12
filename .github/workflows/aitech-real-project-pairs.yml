@@ -97,6 +97,23 @@ jobs:
             --output-dir agent-output/live-projects/paired-model \
             --evidence-budget 650 --max-input-tokens 1800 \
             2>&1 | tee agent-output/live-projects/paired-run.log
+      - name: Audit actual paired outputs before interpreting accuracy
+        if: success()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path("agent-output/live-projects/paired-model")
+          raw = json.loads((root / "raw_predictions_before_gold.json").read_text())
+          scores = json.loads((root / "file_level_outcomes_posthoc.json").read_text())
+          assert len(raw) == len(scores["results"]) == 2
+          complete = [r for r in raw if r["skip_reason"] is None]
+          assert complete, "All real-project comparisons were skipped"
+          for record in complete:
+              assert [x["condition"] for x in record["predictions"]] == ["STOP", "UPGRADE_L1"]
+          print("Verified real-project paired LLM comparisons:", len(complete))
+          print("Skipped:", [r["bug"] for r in raw if r["skip_reason"]])
+          PY
       - name: Archive real failure snapshots, raw predictions and posthoc labels
         if: always()
         uses: actions/upload-artifact@v4
