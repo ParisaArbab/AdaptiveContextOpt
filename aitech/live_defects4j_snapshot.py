@@ -83,6 +83,22 @@ def _methods(source: str, filename: str, owner: str) -> list[dict]:
     return found
 
 
+def compact_failure_text(text: str, max_chars: int = 2600) -> str:
+    """Preserve failed-test headline and early trace frames under a fixed cap."""
+    if max_chars < 500:
+        raise ValueError("failure context budget too small")
+    lines = text.splitlines()
+    selected = []
+    for line in lines:
+        if ("Failing tests:" in line or "::" in line or "Exception" in line
+                or "Error" in line or "Assertion" in line
+                or FRAME.search(line) is not None):
+            selected.append(line)
+    if not selected:
+        selected = lines[:30]
+    return "\\n".join(selected)[:max_chars]
+
+
 def extract_snapshot(checkout: Path, failure_text: str, *, limit: int = 25,
                      max_files: int = 2000) -> dict:
     if limit < 2 or max_files < 1:
@@ -96,10 +112,10 @@ def extract_snapshot(checkout: Path, failure_text: str, *, limit: int = 25,
     paths = sorted(src_dir.rglob("*.java"))
     if len(paths) > max_files:
         raise RuntimeError("too many sources, no silent partial scan")
-    frame_hits = FRAME.findall(failure_text)
+    compact_context = compact_failure_text(failure_text)\n    frame_hits = FRAME.findall(compact_context)
     frame_classes = {x[0].replace("$", ".") for x in frame_hits}
     frame_methods = {x[1] for x in frame_hits}
-    failure_terms = set(re.findall(r"[a-zA-Z]{4,}", failure_text.lower()))
+    failure_terms = set(re.findall(r"[a-zA-Z]{4,}", compact_context.lower()))
     methods = []
     for file in paths:
         raw = file.read_bytes()
@@ -133,7 +149,7 @@ def extract_snapshot(checkout: Path, failure_text: str, *, limit: int = 25,
     if not candidates:
         raise RuntimeError("no source methods extracted")
     snapshot = {
-        "context": failure_text,
+        "context": compact_context,
         "candidates": [
             {
                 **item,
@@ -152,7 +168,7 @@ def extract_snapshot(checkout: Path, failure_text: str, *, limit: int = 25,
             "source_root": str(src_dir),
             "source_file_count": len(paths),
             "frame_count": len(frame_hits),
-            "failure_sha256": hashlib.sha256(
+            "raw_failure_characters": len(failure_text),\n            "compact_failure_characters": len(compact_context),\n            "failure_sha256": hashlib.sha256(
                 failure_text.encode("utf-8")).hexdigest(),
             "candidate_extraction": "regex heuristic, not compiler-verified",
             "gold_patches_loaded": False,
