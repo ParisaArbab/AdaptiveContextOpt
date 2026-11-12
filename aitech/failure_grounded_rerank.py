@@ -35,7 +35,7 @@ def failing_test_class_hints(failure: str) -> set[str]:
     candidates worth examining when production stack frames are absent.
     """
     hints = set()
-    for qualified in re.findall(r"([A-Za-z_$][\\w.$]*)::[A-Za-z_$][\\w$]*",
+    for qualified in re.findall(r"([A-Za-z_$][\w.$]*)::[A-Za-z_$][\w$]*",
                                 failure):
         name = qualified.rsplit(".", 1)[-1].replace("$", ".")
         if name.endswith("Tests") and len(name) > 5:
