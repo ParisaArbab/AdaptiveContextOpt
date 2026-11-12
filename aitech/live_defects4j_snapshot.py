@@ -112,7 +112,8 @@ def extract_snapshot(checkout: Path, failure_text: str, *, limit: int = 25,
     paths = sorted(src_dir.rglob("*.java"))
     if len(paths) > max_files:
         raise RuntimeError("too many sources, no silent partial scan")
-    compact_context = compact_failure_text(failure_text)\n    frame_hits = FRAME.findall(compact_context)
+    compact_context = compact_failure_text(failure_text)
+    frame_hits = FRAME.findall(compact_context)
     frame_classes = {x[0].replace("$", ".") for x in frame_hits}
     frame_methods = {x[1] for x in frame_hits}
     failure_terms = set(re.findall(r"[a-zA-Z]{4,}", compact_context.lower()))
@@ -168,7 +169,9 @@ def extract_snapshot(checkout: Path, failure_text: str, *, limit: int = 25,
             "source_root": str(src_dir),
             "source_file_count": len(paths),
             "frame_count": len(frame_hits),
-            "raw_failure_characters": len(failure_text),\n            "compact_failure_characters": len(compact_context),\n            "failure_sha256": hashlib.sha256(
+            "raw_failure_characters": len(failure_text),
+            "compact_failure_characters": len(compact_context),
+            "failure_sha256": hashlib.sha256(
                 failure_text.encode("utf-8")).hexdigest(),
             "candidate_extraction": "regex heuristic, not compiler-verified",
             "gold_patches_loaded": False,
