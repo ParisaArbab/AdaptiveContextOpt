@@ -55,6 +55,22 @@ jobs:
             --max-new-tokens 24 \
             --output-dir agent-output/marginal-action \
             2>&1 | tee agent-output/marginal-action/console.log
+      - name: Verify paired model artifacts are present
+        if: success()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          base = Path("agent-output/marginal-action")
+          raw = json.loads((base / "raw_pair_predictions.json").read_text())
+          outcomes = json.loads((base / "posthoc_action_outcomes.json").read_text())
+          assert raw and len(raw) == len(outcomes["pairs"])
+          for record in raw:
+              if record["skip_reason"] is None:
+                  assert [r["condition"] for r in record["predictions"]] == ["STOP", "UPGRADE_L1"]
+                  assert all("response" in r for r in record["predictions"])
+          print("Verified stored predictions and posthoc outcomes for", len(raw), "bugs")
+          PY
       - name: Upload all frozen prompts, real predictions and outcomes
         if: always()
         uses: actions/upload-artifact@v4
