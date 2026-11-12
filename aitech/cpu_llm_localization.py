@@ -104,11 +104,11 @@ def build_messages(snapshot: dict, selected: dict[int, int]) -> list[dict]:
 def parse_prediction(reply: str, selected: dict[int, int]) -> int | None:
     """Parse an unambiguous numeric choice, or the previous INDEX: N form.
 
-    Some small code models return bare integers despite format instructions.
+    Some small code models return bare or bracketed integers despite format instructions.
     Accept only a complete, single numeric response. Never guess from free
     prose, a malformed answer, or an unlisted candidate number.
     """
-    match = re.fullmatch(r"\s*(?:INDEX\s*:\s*)?(\d+)\s*", reply, flags=re.I)
+    match = re.fullmatch(r"\s*(?:INDEX\s*:\s*)?\[?(\d+)\]?\s*", reply, flags=re.I)
     if not match:
         return None
     index = int(match.group(1)) - 1
