@@ -35,11 +35,7 @@ jobs:
           python --version > agent-output/marginal-action/python.txt
       - name: Run no-model protocol checks
         run: |
-          python -m unittest -v \
-            tests.test_aitech_cpu_action_counterfactual \
-            tests.test_aitech_marginal_action_policy \
-            tests.test_aitech_paired_action_outcomes \
-            tests.test_aitech_train_marginal_outcomes
+          python -m unittest discover -s tests -p 'test_aitech_*.py' -v
       - name: Install pinned CPU-only model runtime
         shell: bash
         run: |
