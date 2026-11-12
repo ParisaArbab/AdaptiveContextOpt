@@ -35,6 +35,14 @@ def run_failed_tests(checkout: Path, timeout: int = 300) -> str:
         ["defects4j", "test"], cwd=checkout, capture_output=True,
         text=True, timeout=timeout, check=False)
     combined = completed.stdout + "\n" + completed.stderr
+    # Defects4J writes full exception/assertion traces into the file
+    # `failing_tests`; stdout usually contains only the failing test IDs.
+    # Capture the real failure trace, never a generated reconstruction.
+    saved_trace = checkout / "failing_tests"
+    if saved_trace.is_file():
+        contents = saved_trace.read_text(encoding="utf-8", errors="replace")
+        if contents.strip():
+            combined += "\n" + contents
     if not combined.strip() or (
         "Failing tests:" not in combined and "FAIL" not in combined
         and "Exception" not in combined and "Error" not in combined):
@@ -142,11 +150,17 @@ def extract_snapshot(checkout: Path, failure_text: str, *, limit: int = 25,
                                 x["source_path"], x["source_line"]))
     candidates = []
     seen = set()
+    per_file: dict[str, int] = {}
+    # Avoid filling an entire top-K list with overloads from one source
+    # file. This is a pre-gold retrieval diversity rule, not bug oracle.
+    max_per_source_file = 3
     for item in methods:
         key = item["function_id"]
-        if key in seen:
+        path = item["source_path"]
+        if key in seen or per_file.get(path, 0) >= max_per_source_file:
             continue
         seen.add(key)
+        per_file[path] = per_file.get(path, 0) + 1
         candidates.append(item)
         if len(candidates) >= limit:
             break
@@ -176,7 +190,7 @@ def extract_snapshot(checkout: Path, failure_text: str, *, limit: int = 25,
             "compact_failure_characters": len(compact_context),
             "failure_sha256": hashlib.sha256(
                 failure_text.encode("utf-8")).hexdigest(),
-            "candidate_extraction": "regex heuristic, not compiler-verified",
+            "candidate_extraction": "regex heuristic with 3-per-file diversity, not compiler-verified",
             "gold_patches_loaded": False,
         },
     }
