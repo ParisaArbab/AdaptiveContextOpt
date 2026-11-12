@@ -39,6 +39,9 @@ def run_failed_tests(checkout: Path, timeout: int = 300) -> str:
         "Failing tests:" not in combined and "FAIL" not in combined
         and "Exception" not in combined and "Error" not in combined):
         raise RuntimeError("defects4j test did not provide failure evidence")
+    match = re.search(r"Failing tests:\\s*(\\d+)", combined)
+    if match is not None and int(match.group(1)) == 0:
+        raise RuntimeError("buggy checkout reported zero failing tests")
     return combined[-25000:]
 
 
