@@ -96,7 +96,7 @@ def compact_failure_text(text: str, max_chars: int = 2600) -> str:
             selected.append(line)
     if not selected:
         selected = lines[:30]
-    return "\\n".join(selected)[:max_chars]
+    return "\n".join(selected)[:max_chars]
 
 
 def extract_snapshot(checkout: Path, failure_text: str, *, limit: int = 25,
