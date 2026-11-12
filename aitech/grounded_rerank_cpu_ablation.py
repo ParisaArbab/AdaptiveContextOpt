@@ -23,6 +23,7 @@ from .cpu_llm_localization import (
     _token_count, build_messages, parse_prediction, text_for_candidate
 )
 from .failure_grounded_rerank import rerank, shortlist
+from .grounded_stop_guard import decide_pre_gold
 
 MODEL = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
 ARMS = ("original_first8", "grounded_first8",
@@ -145,7 +146,11 @@ def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--snapshot", nargs=2, action="append",
                    metavar=("BUG", "PRE_GOLD_JSON"), required=True)
-    p.add_argument("--gold-report", type=Path, required=True)
+    p.add_argument("--gold-report", type=Path,
+                   help="Previously frozen development-only labels")
+    p.add_argument("--checkout", nargs=2, action="append",
+                   metavar=("BUG", "BUGGY_CHECKOUT"),
+                   help="For unseen projects, only export labels after raw predictions")
     p.add_argument("--output-dir", type=Path, required=True)
     p.add_argument("--max-input-tokens", type=int, default=1800)
     p.add_argument("--model", default=MODEL)
@@ -166,16 +171,20 @@ def main() -> None:
     model.eval()
 
     frozen = {}
+    pre_gold_decisions = {}
     for bug, path in args.snapshot:
         snap = json.loads(Path(path).read_text())
         if snap.get("provenance", {}).get("gold_patches_loaded") is not False:
             raise ValueError("candidate source may not contain gold")
         frozen[bug] = freeze_arms(
             snap, tokenizer, max_input_tokens=args.max_input_tokens)
+        pre_gold_decisions[bug] = decide_pre_gold(snap).__dict__
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     (args.output_dir / "frozen_prompts.json").write_text(
         json.dumps(frozen, indent=2) + "\n")
+    (args.output_dir / "pre_gold_guard_decisions.json").write_text(
+        json.dumps(pre_gold_decisions, indent=2) + "\n")
     raw = []
     for bug, arms in frozen.items():
         item = {"bug": bug, "model_id": args.model,
@@ -217,14 +226,57 @@ def main() -> None:
     # Hard gold firewall: persist all model responses before opening labels.
     (args.output_dir / "raw_predictions_before_gold.json").write_text(
         json.dumps(raw, indent=2) + "\n")
-    posthoc = json.loads(args.gold_report.read_text())
-    gold = {
-        row["bug"]: set(row["gold_modified_classes"])
-        for row in posthoc["results"] if not row.get("skipped")
-    }
+    if (args.gold_report is None) == (args.checkout is None):
+        raise ValueError("Choose exactly one posthoc label source")
+    if args.checkout:
+        # This import and subprocess run occur *after* raw predictions
+        # are persisted to disk, enforcing the pre-gold firewall.
+        from .cpu_live_defects4j_pairs import _read_gold_modified_classes
+        gold = {bug: _read_gold_modified_classes(Path(checkout))
+                for bug, checkout in args.checkout}
+    else:
+        posthoc = json.loads(args.gold_report.read_text())
+        gold = {
+            row["bug"]: set(row["gold_modified_classes"])
+            for row in posthoc["results"] if not row.get("skipped")
+        }
     if set(gold) != {x[0] for x in args.snapshot}:
         raise ValueError("gold report has different bug set")
     scores = score_arms(raw, gold)
+    for row in scores["results"]:
+        bug = row["bug"]
+        decision = pre_gold_decisions[bug]
+        selected = ("grounded_one_L1"
+                    if decision["action"] == "UPGRADE_L1" and
+                    not row["arms"]["grounded_one_L1"]["skipped"]
+                    else "grounded_first8")
+        arm = row["arms"][selected]
+        extra = row["arms"]["grounded_one_L1"]
+        base = row["arms"]["grounded_first8"]
+        row["guarded_policy"] = {
+            "action": ("UPGRADE_L1" if selected == "grounded_one_L1"
+                       else "STOP"),
+            "pre_gold_reason": decision["reason"],
+            "hit_at_1_modified_class": arm["hit_at_1_modified_class"],
+            "actual_input_tokens": arm["actual_input_tokens"],
+            "generation_seconds": arm["generation_seconds"],
+            "extra_upgrade_tokens_avoided": (
+                max(0, (extra["actual_input_tokens"] or 0)
+                    - (base["actual_input_tokens"] or 0))
+                if selected == "grounded_first8" and not extra["skipped"]
+                else 0),
+            "harm_avoided_vs_forced_upgrade": (
+                selected == "grounded_first8" and
+                not extra["skipped"] and
+                base["hit_at_1_modified_class"] and
+                not extra["hit_at_1_modified_class"]),
+            "benefit_missed_vs_forced_upgrade": (
+                selected == "grounded_first8" and
+                not extra["skipped"] and
+                not base["hit_at_1_modified_class"] and
+                extra["hit_at_1_modified_class"]),
+        }
+    scores["pre_gold_guard_decisions_frozen"] = True
     scores["model_id"] = args.model
     scores["model_revision"] = revision
     (args.output_dir / "scored_after_gold.json").write_text(
