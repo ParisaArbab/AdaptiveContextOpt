@@ -49,6 +49,8 @@ def evaluate(rows: list[dict], artifact: dict,
         raise ValueError("missing training-data provenance")
     if artifact.get("model_id") != summary["model_id"]:
         raise ValueError("evaluation model differs from trained model")
+    if artifact.get("outcome_definition") != summary["outcome_definition"]:
+        raise ValueError("mixed file-level and method-level outcome labels")
     if artifact.get("common_input_token_ceiling") != summary["common_input_token_ceiling"]:
         raise ValueError("evaluation ceiling differs from trained model")
     for row in rows:
