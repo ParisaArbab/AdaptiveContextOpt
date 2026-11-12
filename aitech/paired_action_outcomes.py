@@ -91,7 +91,7 @@ def validate_pairs(rows: list[dict]) -> dict:
             action_feature_vector(action)
         except (ValueError, TypeError) as exc:
             raise ValueError(f"row {i}: invalid pre-action evidence: {exc}") from exc
-        if (action.requires_call_binding and not action.compiler_binding_verified):
+        if ((action.kind == "GRAPH" or action.requires_call_binding)\n                and not action.compiler_binding_verified):
             raise ValueError(f"row {i}: experiment used unverified graph binding")
         key = (row["bug"], row["seed"], action.action_id)
         if key in seen:
