@@ -80,6 +80,25 @@ jobs:
                          for arm in bug["arms"] if not arm.get("skip_reason"))
           print("Verified matched Qwen model cases:", len(raw))
           PY
+      - name: Summarize matched changed-class Hit@1 and position stability
+        if: success()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("agent-output/rerank/scored_after_gold.json")
+          data=json.loads(p.read_text())
+          for bug in data["results"]:
+              rows=bug["arms"]
+              print("Bug:",bug["bug"])
+              for arm in ("original_first8","grounded_first8",
+                          "grounded_reversed","grounded_one_L1"):
+                  r=rows[arm]
+                  print(" ",arm,"hit",r["hit_at_1_modified_class"],
+                        "tokens",r["actual_input_tokens"],
+                        "valid",r["parse_valid"])
+              print("Position agreement:",rows["position_agreement"])
+          PY
       - name: Upload all frozen prompts and raw and scored evidence
         if: always()
         uses: actions/upload-artifact@v4
