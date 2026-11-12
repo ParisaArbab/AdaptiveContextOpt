@@ -24,7 +24,8 @@ from .failure_aligned_reranker import failure_rerank, shortlist
 from .test_name_anchored_reranker import hinted_shortlist, rank_with_test_hints
 from .cpu_live_defects4j_pairs import _predicted_class
 
-CONDITIONS = ("original_top8", "failure_rerank", "failure_rerank_reversed",\n              "test_name_rerank", "test_name_rerank_reversed")
+CONDITIONS = ("original_top8", "failure_rerank", "failure_rerank_reversed",
+              "test_name_rerank", "test_name_rerank_reversed")
 
 
 def build_frozen_prompts(snapshot: dict, tokenizer, *,
