@@ -25,7 +25,9 @@ def pair(project="Lang", split="train", outcome=1, action_id="a"):
             "provenance": "java-source-and-test",
             "failure_relevance": 0.6,
         },
-        "outcome": outcome, "gold_scoring_only": True,
+        "outcome": outcome,
+        "outcome_definition": "defects4j_changed_class_hit_at_1",
+        "gold_scoring_only": True,
         "predictions_frozen_before_gold": True,
     }
 
