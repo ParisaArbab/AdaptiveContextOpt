@@ -46,6 +46,17 @@ class TestRelatedApiCpuLocalization(unittest.TestCase):
         self.assertTrue(all(item["actual_input_tokens"] <= 1200
                             for item in chosen))
 
+    def test_related_peer_l1_exposes_implementation_when_present(self):
+        chosen = {arm["arm"]: arm for arm in freeze(
+            snapshot(), Tokenizer(), max_input_tokens=1200)}
+        peer = chosen["related_peer_L1"]
+        self.assertFalse(peer.get("skip_reason"))
+        self.assertIn(2, peer["selected_levels"].values())
+        self.assertEqual(peer["selected_method_ids"],
+                         chosen["related_L0"]["selected_method_ids"])
+        self.assertGreater(peer["actual_input_tokens"],
+                           chosen["related_L0"]["actual_input_tokens"])
+
     def test_changed_class_scoring_is_distinct_from_retrieval_recall(self):
         arms = freeze(snapshot(), Tokenizer(), max_input_tokens=1200)
         raw = [{"bug": "Fixture-1", "arms": [
