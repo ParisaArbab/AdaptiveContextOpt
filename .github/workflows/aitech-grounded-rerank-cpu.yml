@@ -32,6 +32,7 @@ jobs:
         run: |
           mkdir -p agent-output/rerank agent-output/source
           git rev-parse HEAD > agent-output/rerank/aitech-commit.txt
+          python -m compileall -q aitech/failure_grounded_rerank.py aitech/grounded_rerank_cpu_ablation.py
           python -m unittest discover -s tests -p 'test_aitech_*.py' -v
       - name: Retrieve existing frozen buggy-source snapshots
         env:
