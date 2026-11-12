@@ -53,6 +53,22 @@ jobs:
             --max-new-tokens 24 \
             --output-dir agent-output/cpu-llm-v2 \
             2>&1 | tee agent-output/cpu-llm-v2/console.log
+      - name: Count valid predictions without inventing accuracy
+        if: success()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path("agent-output/cpu-llm-v2")
+          predictions = json.loads((root / "predictions.json").read_text())
+          assert len(predictions) == 6, "Expected three policies on two archived bugs"
+          valid = sum(row["predicted_method"] is not None for row in predictions)
+          print("Valid candidate predictions:", valid, "of", len(predictions))
+          print("Unparseable responses:", [
+              row["response"] for row in predictions
+              if row["predicted_method"] is None
+          ])
+          PY
       - name: Upload frozen model predictions, evidence and posthoc scores
         if: always()
         uses: actions/upload-artifact@v4
