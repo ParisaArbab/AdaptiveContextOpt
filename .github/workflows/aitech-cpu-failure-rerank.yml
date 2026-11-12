@@ -74,6 +74,9 @@ jobs:
           scored = json.loads((root / "posthoc_scores.json").read_text())
           assert sorted(r["bug"] for r in raw) == ["Chart-1", "Math-1"]
           assert len(scored["results"]) == 6
+          valid = sum(r["parse_valid"] for r in scored["results"])
+          hits = sum(r["changed_class_hit_at_1"] for r in scored["results"])
+          print("Valid model choices:", valid, "of 6; changed-class hits:", hits)
           assert all(len(r["predictions"]) == 3 for r in raw)
           print("Six source-frozen Qwen ablation conditions verified")
           PY
