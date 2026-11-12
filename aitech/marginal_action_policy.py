@@ -154,7 +154,7 @@ def decide_next_action(
         if action.incremental_input_tokens > remaining_input_tokens:
             rejections.append((action.action_id, "token_budget_exceeded"))
             continue
-        if action.requires_call_binding and not action.compiler_binding_verified:
+        if (action.kind == "GRAPH" or action.requires_call_binding) and not action.compiler_binding_verified:
             rejections.append((action.action_id, "unverified_call_binding"))
             continue
         # A sufficiently grounded binding may still be optional; audited
