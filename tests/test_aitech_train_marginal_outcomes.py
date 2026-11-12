@@ -48,6 +48,7 @@ class TestMarginalOutcomeTraining(unittest.TestCase):
                     "provenance": "verified"
                 },
                 "outcome": label,
+                "outcome_definition": "defects4j_changed_class_hit_at_1",
                 "gold_scoring_only": True,
                 "predictions_frozen_before_gold": True,
             }
