@@ -51,6 +51,13 @@ class TestCpuFailureRerankAblation(unittest.TestCase):
             set(arms["failure_rerank"]["candidate_ids"]),
             set(arms["failure_rerank_reversed"]["candidate_ids"]))
         self.assertEqual(len(arms["original_top8"]["candidate_ids"]), 3)
+        self.assertEqual(
+            arms["test_name_rerank_reversed"]["candidate_indices"],
+            list(reversed(arms["test_name_rerank"]["candidate_indices"])))
+        self.assertEqual(
+            set(arms["test_name_rerank"]["candidate_ids"]),
+            set(arms["test_name_rerank_reversed"]["candidate_ids"]))
+
 
     def test_candidate_order_changes_prompt_hash(self):
         frozen = build_frozen_prompts(snapshot(), Tokenizer(),
