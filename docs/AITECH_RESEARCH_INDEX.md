@@ -22,6 +22,32 @@ negative results, **not yet a validated new localization method**.
 | Can javac calls suggest support without claiming causality? | `aitech/compiler_support_proposals.py` | provenance-gated source-backed candidate proposals | implemented, unverified sufficiency; no LLM |
 | Does a small code LLM actually localize more bugs? | `aitech/cpu_llm_localization.py` | one-shot Actions `aitech-cpu-llm-paired-v2.yml` | configured, result NOT verified |
 
+## Research direction: learned marginal benefit/harm of debugging evidence (2026-11-11)
+
+The newest AITECH candidate mechanism is a *provenance-gated, cost-aware
+retrieve/upgrade/STOP controller*. Code is implemented, but there is
+**no demonstrated independent LLM localization improvement yet**.
+
+- Core action selector: `aitech/marginal_action_policy.py`
+- Project-disjoint paired LLM outcome contract:
+  `aitech/paired_action_outcomes.py`
+- Three-outcome outcome-learning and independent calibration:
+  `aitech/train_marginal_outcomes.py`
+- Real Qwen STOP vs L0-to-L1 development experiment:
+  `aitech/cpu_action_counterfactual.py`
+- Held-out STOP / cheapest / learned / posthoc-oracle ablation:
+  `aitech/evaluate_marginal_policy.py`
+- One-shot CPU workflow:
+  `.github/workflows/aitech-cpu-action-counterfactual.yml`
+- Full novelty and acceptance report:
+  `reports/AITECH_MARGINAL_ACTION_NOVELTY_PROTOCOL_20261111.md`
+
+The model will abstain unless it has an independently calibrated
+outcome estimator, and GRAPH actions require compiler-verified calls.
+The classifier-training input requires **actual paired model predictions**
+from independent training, calibration and test projects. Old Lang/Time
+snapshots remain development-only and cannot count as unseen tests.
+
 ## Figures
 
 ![Changed-method L1 source retention](../reports/figures/aitech_changed_method_L1_coverage_20261111.svg)
