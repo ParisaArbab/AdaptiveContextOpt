@@ -21,9 +21,10 @@ from .cpu_llm_localization import (
     MODEL_ID, _token_count, parse_prediction, with_real_costs,
 )
 from .failure_aligned_reranker import failure_rerank, shortlist
+from .test_name_anchored_reranker import hinted_shortlist, rank_with_test_hints
 from .cpu_live_defects4j_pairs import _predicted_class
 
-CONDITIONS = ("original_top8", "failure_rerank", "failure_rerank_reversed")
+CONDITIONS = ("original_top8", "failure_rerank", "failure_rerank_reversed",\n              "test_name_rerank", "test_name_rerank_reversed")
 
 
 def build_frozen_prompts(snapshot: dict, tokenizer, *,
@@ -36,11 +37,11 @@ def build_frozen_prompts(snapshot: dict, tokenizer, *,
     if len(items) < 2:
         raise ValueError("at least two candidate methods needed")
     order_old = list(range(min(limit, len(items))))
-    order_ranked = shortlist(normalized, limit=limit)
+    order_ranked = shortlist(normalized, limit=limit)\n    order_test = hinted_shortlist(normalized, limit=limit)
     orders = {
         "original_top8": order_old,
         "failure_rerank": order_ranked,
-        "failure_rerank_reversed": list(reversed(order_ranked)),
+        "failure_rerank_reversed": list(reversed(order_ranked)),\n        "test_name_rerank": order_test,\n        "test_name_rerank_reversed": list(reversed(order_test)),
     }
     frozen = {}
     for condition, indices in orders.items():
@@ -96,7 +97,7 @@ def build_frozen_prompts(snapshot: dict, tokenizer, *,
             "prompt": prompt,
         }
     return {
-        "conditions": frozen, "ranking": failure_rerank(normalized),
+        "conditions": frozen, "ranking": failure_rerank(normalized),\n        "test_name_ranking": rank_with_test_hints(normalized),
         "failure_sha256": normalized["provenance"]["failure_sha256"],
         "model_input_ceiling": max_input_tokens,
         "no_gold_used": True,
