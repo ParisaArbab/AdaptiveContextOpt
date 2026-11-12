@@ -83,6 +83,14 @@ class TestPairedActionOutcomes(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "unverified"):
             validate_pairs([value])
 
+    def test_graph_cannot_bypass_binding_by_omitting_flag(self):
+        value = pair()
+        value["action"]["kind"] = "GRAPH"
+        value["action"]["requires_call_binding"] = False
+        value["action"]["compiler_binding_verified"] = False
+        with self.assertRaisesRegex(ValueError, "unverified"):
+            validate_pairs([value])
+
     def test_empty_outcome_data_cannot_train(self):
         with self.assertRaisesRegex(ValueError, "actual paired"):
             validate_pairs([])
