@@ -40,6 +40,13 @@ jobs:
             --snapshot Chart-1 agent-output/source/chart-1-pre-gold.json \
             --posthoc agent-output/source/paired-model/file_level_outcomes_posthoc.json \
             --output-dir agent-output/model-free
+      - name: Evaluate conservative test-name class STOP gate
+        run: |
+          python -m aitech.evaluate_stop_gate \
+            --snapshot Math-1 agent-output/source/math-1-pre-gold.json \
+            --snapshot Chart-1 agent-output/source/chart-1-pre-gold.json \
+            --posthoc agent-output/source/paired-model/file_level_outcomes_posthoc.json \
+            --output-dir agent-output/model-free/stop-gate
       - name: Save model-free outcome and source provenance
         if: always()
         uses: actions/upload-artifact@v4
