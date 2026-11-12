@@ -1,4 +1,4 @@
-name: AITECH one-shot Qwen producer-consumer localization pilot
+name: AITECH one-shot Qwen producer-consumer source-detail localization pilot
 
 on:
   push:
@@ -84,7 +84,7 @@ jobs:
           raw=json.loads((root/"raw_predictions_before_gold.json").read_text())
           scores=json.loads((root/"score_after_gold.json").read_text())
           assert len(raw) == len(scores["results"]) == 2
-          assert all(len(bug["arms"]) == 4 for bug in raw)
+          assert all(len(bug["arms"]) == 5 for bug in raw)
           for bug in scores["results"]:
               print(bug["bug"],{
                 k:(v["class_hit_at_1"],v["actual_input_tokens"])
