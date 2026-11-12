@@ -112,6 +112,57 @@ The model scores must not be inferred from the candidate-recall result.
 Report outcomes only after verifying the saved raw prediction artifact.
 All model scoring reads official labels **after** raw output persistence.
 
+## Verified matched-model localization result after related-API retrieval
+
+The same Qwen2.5-Coder-1.5B-Instruct CPU model was run on Codec-1
+and Compress-1 using eight method IDs per completed arm:
+
+| Bug | Stack-only L0 Hit@1 | Related-API L0 Hit@1 | General causal instruction Hit@1 | Related-API reverse order | Related-API peer L1 |
+|---|---:|---:|---:|---:|---:|
+| Codec-1 | 0 | 0 | 0 | 1 | N/A (no API sibling) |
+| Compress-1 | 0 | 0 | 0 | 0 | 0 |
+
+**This is a negative downstream result.** The related-API method
+restored the correct changed *class* for Compress-1 but the 1.5B
+model still chose an input-stream method, not the output-stream class.
+
+We also tested upgrading the recovered paired API method to its
+actual source body rather than keeping its constructor signature.
+The algorithm now prefers a non-constructor method where available.
+For Compress-1 the retrieved `CpioArchiveOutputStream.close()` source
+body increased model input from **1024 to 1052 tokens**, with no
+change in changed-class Hit@1.
+
+Adding a general instruction to distinguish a failure-detection
+site from the code that caused it also failed to change the class
+prediction. The prompt had 1103 input tokens on Compress-1, with
+no localization improvement.
+
+On Codec-1, reversing the **same eight source methods** selected
+`Caverphone`, a changed class; the forward order predicted
+`DoubleMetaphone`, an unchanged class. The position-order result
+must not be presented as a generally reliable improvement. It
+demonstrates model sensitivity to presentation order.
+
+Experiment runs:
+- Initial same-model related-API test:
+  https://github.com/ParisaArbab/AdaptiveContextOpt/actions/runs/43153151368
+- Peer source-body follow-up:
+  https://github.com/ParisaArbab/AdaptiveContextOpt/actions/runs/43154014633
+
+Reproduction code:
+- `aitech/related_api_cpu_localization.py`
+- `aitech/related_api_retrieval.py`
+- `tests/test_aitech_related_api_cpu_localization.py`
+- `tests/test_aitech_related_api_retrieval.py`
+
+**Methodological conclusion:** Better candidate recall is necessary
+but not sufficient. Our next localization model must reason at the
+CLASS level first and test source-specific hypotheses, instead of
+trusting one position-sensitive forced-choice number. To avoid
+overfitting, new projects, not Codec/Compress/Chart, must be used
+to evaluate this next model.
+
 ## Scientific decision and risks
 
 - **Keep** the related-API method as an experimental retrieval
