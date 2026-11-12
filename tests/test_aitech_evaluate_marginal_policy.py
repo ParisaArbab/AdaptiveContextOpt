@@ -24,7 +24,9 @@ def fake_pair(project, split, bug_num, outcome, action_id="upgrade"):
             "provenance": "audited-repo-snapshot",
             "failure_relevance": 0.7,
         },
-        "outcome": outcome, "gold_scoring_only": True,
+        "outcome": outcome,
+        "outcome_definition": "defects4j_changed_class_hit_at_1",
+        "gold_scoring_only": True,
         "predictions_frozen_before_gold": True,
     }
 
