@@ -26,7 +26,7 @@ POLICIES = ("rank_fill", "anchor_rank_detail", "tiered_marginal")
 PROMPT_INSTRUCTION = (
     "You are locating a software bug using a failed test and candidate Java methods. "
     "Choose the ONE most suspicious method from the provided candidates. "
-    "Reply with exactly INDEX: N, where N is a displayed number. "
+    "Reply with the candidate number only, for example 2. "
     "Do not invent new candidates or explain."
 )
 
@@ -95,14 +95,20 @@ def build_messages(snapshot: dict, selected: dict[int, int]) -> list[dict]:
     body = (
         "FAILED TEST AND ERROR:\n" + snapshot["context"] +
         "\n\nCANDIDATE JAVA CODE:\n" + evidence +
-        "\nAnswer with INDEX: N using only the numbered methods above."
+        "\nAnswer with only the number of one displayed method."
     )
     return [{"role": "system", "content": PROMPT_INSTRUCTION},
             {"role": "user", "content": body}]
 
 
 def parse_prediction(reply: str, selected: dict[int, int]) -> int | None:
-    match = re.search(r"\bINDEX\s*:\s*(\d+)\b", reply, flags=re.I)
+    """Parse an unambiguous numeric choice, or the previous INDEX: N form.
+
+    Some small code models return bare integers despite format instructions.
+    Accept only a complete, single numeric response. Never guess from free
+    prose, a malformed answer, or an unlisted candidate number.
+    """
+    match = re.fullmatch(r"\s*(?:INDEX\s*:\s*)?(\d+)\s*", reply, flags=re.I)
     if not match:
         return None
     index = int(match.group(1)) - 1
