@@ -65,6 +65,9 @@ jobs:
           raw = json.loads((base / "raw_pair_predictions.json").read_text())
           outcomes = json.loads((base / "posthoc_action_outcomes.json").read_text())
           assert raw and len(raw) == len(outcomes["pairs"])
+          executed = [record for record in raw if record["skip_reason"] is None]
+          assert executed, "No real STOP/UPGRADE pairs were executed"
+          print("Actual paired comparisons completed:", len(executed))
           for record in raw:
               if record["skip_reason"] is None:
                   assert [r["condition"] for r in record["predictions"]] == ["STOP", "UPGRADE_L1"]
