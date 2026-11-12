@@ -40,6 +40,7 @@ def fake_artifact():
         "project_split": {
             "Lang": "train", "Time": "calibration", "Math": "test"},
         "model_id": "Qwen-tiny@sha",
+        "outcome_definition": "defects4j_changed_class_hit_at_1",
         "common_input_token_ceiling": 300,
         "feature_names": list(FEATURE_NAMES),
         "mean": [0.0] * n, "scale": [1.0] * n,
