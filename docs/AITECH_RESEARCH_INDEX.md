@@ -48,6 +48,33 @@ The classifier-training input requires **actual paired model predictions**
 from independent training, calibration and test projects. Old Lang/Time
 snapshots remain development-only and cannot count as unseen tests.
 
+## Failure-grounded retrieval and related-API ablation (November 11, 2026)
+
+This research iteration measures two different things separately:
+
+- **Candidate class recall:** `aitech/related_api_retrieval.py` restores
+  source-present reciprocal API siblings such as
+  `CpioArchiveInputStream` -> `CpioArchiveOutputStream`.
+  On the previously studied Compress-1 case, changed-class
+  presence in eight candidates improved **0/1 -> 1/1**.
+- **Downstream LLM localization:** `aitech/related_api_cpu_localization.py`
+  compares the same Qwen1.5B model with stack-only retrieval,
+  related-API retrieval, causal explanation, reverse order, and
+  a behavior-bearing peer L1 source upgrade.
+  **None of the related-API or added-source conditions improved
+  Compress-1 class Hit@1.** On Codec-1 reversed ordering alone
+  changed the chosen class, demonstrating position sensitivity.
+
+- Full verified audit:
+  `reports/AITECH_RETRIEVAL_REDESIGN_AND_RELATED_API_RESULTS_20261111.md`
+- One-shot source-candidate recall workflow:
+  `.github/workflows/aitech-related-api-recall.yml`
+- Same-model LLM workflow:
+  `.github/workflows/aitech-related-api-llm.yml`
+
+These are development bugs, not untouched project-level evaluations.
+We must not claim superiority or a trained marginal-harm controller.
+
 ## Figures
 
 ![Changed-method L1 source retention](../reports/figures/aitech_changed_method_L1_coverage_20261111.svg)
