@@ -53,6 +53,7 @@ def validate_pairs(rows: list[dict]) -> dict:
     labels = Counter()
     model_ids = set()
     ceilings = set()
+    decoding_protocols = set()
     for i, row in enumerate(rows):
         if not isinstance(row, dict) or set(row) != REQUIRED:
             raise ValueError(f"row {i}: schema mismatch")
@@ -102,9 +103,10 @@ def validate_pairs(rows: list[dict]) -> dict:
         project_splits[project] = row["split"]
         labels[(row["split"], row["outcome"])] += 1
         model_ids.add(row["model_id"])
+        decoding_protocols.add(row["decoding_hash"])
         ceilings.add(row["common_input_token_ceiling"])
-    if len(model_ids) != 1 or len(ceilings) != 1:
-        raise ValueError("model and input ceiling must be matched")
+    if len(model_ids) != 1 or len(ceilings) != 1 or len(decoding_protocols) != 1:
+        raise ValueError("model, decoding and input ceiling must be matched")
     return {
         "schema": 1,
         "count": len(rows),
