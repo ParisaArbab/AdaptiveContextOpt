@@ -1,0 +1,89 @@
+name: AITECH one-shot grounded rerank versus order bias CPU study
+
+on:
+  push:
+    branches: [AITECH]
+    paths:
+      - ".github/workflows/aitech-grounded-rerank-cpu.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: aitech-grounded-rerank-cpu-once
+  cancel-in-progress: false
+
+jobs:
+  rerank-qwen15b:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 40
+    env:
+      HF_HOME: /tmp/aitech-rerank-hf
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      TOKENIZERS_PARALLELISM: "false"
+      OMP_NUM_THREADS: "2"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify code and freeze execution revision
+        run: |
+          mkdir -p agent-output/rerank agent-output/source
+          git rev-parse HEAD > agent-output/rerank/aitech-commit.txt
+          python -m unittest discover -s tests -p 'test_aitech_*.py' -v
+      - name: Retrieve existing frozen buggy-source snapshots
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 43141574195 \
+            --repo ParisaArbab/AdaptiveContextOpt \
+            -n aitech-real-project-pairs-43141574195 \
+            -D agent-output/source
+          test -s agent-output/source/math-1-pre-gold.json
+          test -s agent-output/source/chart-1-pre-gold.json
+          test -s agent-output/source/paired-model/file_level_outcomes_posthoc.json
+      - name: Install pinned CPU model environment
+        timeout-minutes: 11
+        run: |
+          set -euo pipefail
+          python -m pip install --no-cache-dir torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install --no-cache-dir transformers==4.51.3 huggingface_hub==0.30.2 safetensors
+          python -m pip freeze > agent-output/rerank/pip-freeze.txt
+      - name: Compare fixed ranking to stack-BM25 and reverse-order control
+        timeout-minutes: 23
+        run: |
+          set -euo pipefail
+          python -m aitech.grounded_rerank_cpu_ablation \
+            --snapshot Math-1 agent-output/source/math-1-pre-gold.json \
+            --snapshot Chart-1 agent-output/source/chart-1-pre-gold.json \
+            --gold-report agent-output/source/paired-model/file_level_outcomes_posthoc.json \
+            --output-dir agent-output/rerank \
+            --model Qwen/Qwen2.5-Coder-1.5B-Instruct \
+            --max-input-tokens 1800 \
+            2>&1 | tee agent-output/rerank/console.log
+      - name: Validate real model outputs exist before interpretation
+        if: success()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path("agent-output/rerank")
+          raw = json.loads((root/"raw_predictions_before_gold.json").read_text())
+          scores = json.loads((root/"scored_after_gold.json").read_text())
+          assert len(raw) == len(scores["results"]) == 2
+          assert all(len(bug["arms"]) == 4 for bug in raw)
+          for bug in raw:
+              assert all(arm.get("raw_response") is not None
+                         for arm in bug["arms"] if not arm.get("skip_reason"))
+          print("Verified matched Qwen model cases:", len(raw))
+          PY
+      - name: Upload all frozen prompts and raw and scored evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aitech-grounded-rerank-${{ github.run_id }}
+          path: agent-output/rerank/
+          if-no-files-found: warn
+          retention-days: 30
