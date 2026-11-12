@@ -69,11 +69,11 @@ public class Widget {
         with tempfile.TemporaryDirectory() as t:
             path = Path(t)
             (path / "failing_tests").write_text(
-                "--- org.example.WidgetTest::failure\\n"
-                "java.lang.AssertionError\\n"
-                "at org.example.Widget.check(Widget.java:20)\\n")
+                "--- org.example.WidgetTest::failure\n"
+                "java.lang.AssertionError\n"
+                "at org.example.Widget.check(Widget.java:20)\n")
             class Completed:
-                stdout = "Failing tests: 1\\n"
+                stdout = "Failing tests: 1\n"
                 stderr = ""
                 returncode = 0
             with patch("aitech.live_defects4j_snapshot.subprocess.run",
@@ -85,20 +85,20 @@ public class Widget {
     def test_candidate_file_diversity_before_gold(self):
         with tempfile.TemporaryDirectory() as t:
             root = Path(t)
-            (root / ".defects4j.config").write_text("project=Example\\n")
+            (root / ".defects4j.config").write_text("project=Example\n")
             source_dir = root / "src"
             source_dir.mkdir()
             for name in ("Alpha", "Beta", "Gamma"):
-                methods = "\\n".join(
+                methods = "\n".join(
                     f" public int m{i}() {{ return {i}; }}"
                     for i in range(8))
                 (source_dir / f"{name}.java").write_text(
-                    f"package org.example;\\nclass {name} {{\\n" +
-                    methods + "\\n}\\n")
+                    f"package org.example;\nclass {name} {{\n" +
+                    methods + "\n}\n")
             with patch("aitech.live_defects4j_snapshot.export",
                        return_value="src"):
                 result = extract_snapshot(
-                    root, "Failing tests: 1\\n", limit=9)
+                    root, "Failing tests: 1\n", limit=9)
             from collections import Counter
             per_file = Counter(x["source_path"] for x in result["candidates"])
             self.assertEqual(len(result["candidates"]), 9)
