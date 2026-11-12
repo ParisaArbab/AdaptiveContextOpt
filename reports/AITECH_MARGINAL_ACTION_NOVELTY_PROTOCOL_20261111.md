@@ -63,6 +63,23 @@ misrepresented as an outcome probability.
 | Tests | `tests/test_aitech_marginal_action_policy.py` and `tests/test_aitech_paired_action_outcomes.py` | Budget, harm, unknown provenance, leakage, no-op, matched ceiling |
 | Runner/trainer tests | `tests/test_aitech_cpu_action_counterfactual.py` and `tests/test_aitech_train_marginal_outcomes.py` | Frozen prompt pairs, independent outcome gating, untrained abstention |
 
+### Held-out offline action-policy evaluator
+
+- `aitech/evaluate_marginal_policy.py` compares four predeclared policies
+  using only the `test` project rows of a frozen, validated paired-outcome
+  dataset: `stop_always`, `force_cheapest`, `learned_net_value` and a
+  clearly nondeployable `posthoc_oracle`.
+- Every action is charged by actual input-token difference in the paired
+  record, and reported with outcome, harm rate, acquisition coverage and
+  expected tool latency. The policy makes its decision from *pre-action*
+  features, never the patch-method labels.
+- Rejects different baseline prompts/predictions for the same bug and seed.
+  The outcome oracle may examine posthoc scoring only as an upper bound.
+- Tests: `tests/test_aitech_evaluate_marginal_policy.py` and
+  `tests/test_aitech_paired_action_outcomes.py`.
+- **No new observed held-out gains are available** until independent
+  real-model paired outcomes are collected.
+
 ## 4. What has and has NOT been measured
 
 Engineering unit tests have executed in GitHub Actions. Existing
