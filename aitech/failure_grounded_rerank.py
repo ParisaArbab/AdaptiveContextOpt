@@ -12,15 +12,15 @@ import math
 import re
 from collections import Counter
 
-TOKEN = re.compile(r"[A-Za-z][a-z]*|[A-Z]?[a-z]+|[A-Z]+(?=[A-Z][a-z]|\\b)|[0-9]+")
-FRAME = re.compile(r"\\bat\\s+([\\w.$]+)\\.([\\w$<>]+)\\((?:[\\w$]+\\.java):\\d+\\)")
+TOKEN = re.compile(r"[A-Za-z][a-z]*|[A-Z]?[a-z]+|[A-Z]+(?=[A-Z][a-z]|\b)|[0-9]+")
+FRAME = re.compile(r"\bat\s+([\w.$]+)\.([\w$<>]+)\((?:[\w$]+\.java):\d+\)")
 STOP = {"java", "lang", "org", "com", "the", "this", "that", "test",
         "error", "exception", "assert", "public", "void", "return", "class"}
 
 
 def terms(text: str) -> list[str]:
     # Split code symbols and camel-case words, ignoring punctuation.
-    text = re.sub(r"([a-z0-9])([A-Z])", r"\\1 \\2", text)
+    text = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", text)
     return [x.lower() for x in re.findall(r"[A-Za-z][A-Za-z0-9]*", text)
             if len(x) >= 3 and x.lower() not in STOP]
 
