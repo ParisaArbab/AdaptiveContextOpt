@@ -145,17 +145,26 @@ def score_predictions(raw: list[dict], posthoc: dict) -> dict:
 
 
 def run(snapshots: dict[str, Path], posthoc_path: Path, output_dir: Path,
-        max_input_tokens: int = 1800) -> None:
+        max_input_tokens: int = 1800,
+        model_id: str = MODEL_ID, dtype: str = "float32",
+        conditions: tuple[str, ...] = CONDITIONS) -> None:
     import torch
     from huggingface_hub import HfApi
     from transformers import AutoTokenizer, AutoModelForCausalLM
 
+    if dtype not in ("float32", "bfloat16"):
+        raise ValueError("dtype must be float32 or bfloat16")
+    if not conditions or len(set(conditions)) != len(conditions):
+        raise ValueError("missing or duplicate conditions")
+    if any(condition not in CONDITIONS for condition in conditions):
+        raise ValueError("unknown condition")
     torch.set_num_threads(2)
     torch.manual_seed(42)
-    revision = HfApi().model_info(MODEL_ID).sha
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, revision=revision)
+    revision = HfApi().model_info(model_id).sha
+    tokenizer = AutoTokenizer.from_pretrained(model_id, revision=revision)
     model = AutoModelForCausalLM.from_pretrained(
-        MODEL_ID, revision=revision, torch_dtype=torch.float32)
+        model_id, revision=revision,
+        torch_dtype=torch.float32 if dtype == "float32" else torch.bfloat16)
     model.eval()
     output_dir.mkdir(parents=True, exist_ok=True)
     pre_frozen = {}
@@ -170,9 +179,10 @@ def run(snapshots: dict[str, Path], posthoc_path: Path, output_dir: Path,
 
     raw = []
     for bug, spec in pre_frozen.items():
-        record = {"bug": bug, "model_id": MODEL_ID, "revision": revision,
+        record = {"bug": bug, "model_id": model_id, "revision": revision,
                   "predictions": []}
-        for condition, row in spec["conditions"].items():
+        for condition in conditions:
+            row = spec["conditions"][condition]
             if row["skip_reason"]:
                 print(bug, condition, "SKIP", row["skip_reason"], flush=True)
                 continue
@@ -224,9 +234,16 @@ def main() -> None:
                    metavar=("BUG", "PATH"), required=True)
     p.add_argument("--posthoc", type=Path, required=True)
     p.add_argument("--output-dir", type=Path, required=True)
+    p.add_argument("--model-id", default=MODEL_ID)
+    p.add_argument("--dtype", choices=("float32", "bfloat16"),
+                   default="float32")
+    p.add_argument("--conditions", nargs="+", choices=CONDITIONS,
+                   default=list(CONDITIONS))
     args = p.parse_args()
     run({k: Path(v) for k, v in args.snapshot},
-        args.posthoc, args.output_dir)
+        args.posthoc, args.output_dir,
+        model_id=args.model_id, dtype=args.dtype,
+        conditions=tuple(args.conditions))
 
 
 if __name__ == "__main__":
