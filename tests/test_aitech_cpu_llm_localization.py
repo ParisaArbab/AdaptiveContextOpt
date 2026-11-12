@@ -58,6 +58,12 @@ class TestCpuLLMLocalization(unittest.TestCase):
         self.assertEqual(parse_prediction("INDEX: 4", picked), 3)
         self.assertEqual(parse_prediction("INDEX: 2", picked), None)
         self.assertEqual(parse_prediction("I don't know", picked), None)
+        self.assertEqual(parse_prediction("[1]", picked), 0)
+        self.assertEqual(parse_prediction("INDEX: [4]", picked), 3)
+        self.assertIsNone(parse_prediction("[4", picked))
+        self.assertIsNone(parse_prediction("4]", picked))
+        self.assertIsNone(parse_prediction("[1] [4]", picked))
+
 
     def test_scoring_reports_l0_as_identity_not_source(self):
         prediction = {
