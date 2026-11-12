@@ -25,6 +25,32 @@ def terms(text: str) -> list[str]:
             if len(x) >= 3 and x.lower() not in STOP]
 
 
+def failing_test_class_hints(failure: str) -> set[str]:
+    """Weak source-class clues from test identity, not oracle fault labels.
+
+    Typical Defects4J identifiers:
+      org.project.junit.WidgetTests::testFailure -> Widget
+      pkg.TestWidget::testBroken -> Widget
+    Such names do not prove the class is faulty; they only suggest
+    candidates worth examining when production stack frames are absent.
+    """
+    hints = set()
+    for qualified in re.findall(r"([A-Za-z_$][\\w.$]*)::[A-Za-z_$][\\w$]*",
+                                failure):
+        name = qualified.rsplit(".", 1)[-1].replace("$", ".")
+        if name.endswith("Tests") and len(name) > 5:
+            name = name[:-5]
+        elif name.endswith("Test") and len(name) > 4:
+            name = name[:-4]
+        elif name.startswith("Test") and len(name) > 4:
+            name = name[4:]
+        else:
+            continue
+        if name:
+            hints.add(name)
+    return hints
+
+
 def rerank(snapshot: dict, *, frame_bonus: float = 9.0,
            method_bonus: float = 4.0) -> list[int]:
     """Rank candidate indices without accessing gold labels.
@@ -40,6 +66,7 @@ def rerank(snapshot: dict, *, frame_bonus: float = 9.0,
     frames = FRAME.findall(failure)
     frame_classes = {c.replace("$", ".") for c, _ in frames}
     frame_methods = {(c.replace("$", "."), m) for c, m in frames}
+    test_class_hints = failing_test_class_hints(failure)
     query = Counter(terms(failure))
     documents = [Counter(terms(item["levels"][1][:1400])) for item in items]
     n = len(items)
@@ -59,6 +86,8 @@ def rerank(snapshot: dict, *, frame_bonus: float = 9.0,
             provenance_score = 0.0
         if (owner, method) in frame_methods:
             provenance_score += method_bonus
+        if owner.rsplit(".", 1)[-1] in test_class_hints:
+            provenance_score += 5.0
         doc = documents[i]
         doc_length = sum(doc.values())
         bm25 = 0.0
