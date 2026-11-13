@@ -226,7 +226,8 @@ def audit_saved_run(source, profile):
             require(coverage[0] == coverage[1], f"{bug}: candidate recall differs between fixed arms")
             evidence.extend(evidence_rows(record, synthetic=synthetic))
         view = SimpleNamespace(db=db, ledger=ledger)
-        require(journal_identity(view, actions, live_model=None if synthetic else benchmark["model"])
+        require(journal_identity(view, actions, live_model=None if synthetic else benchmark["model"],
+                                 linux_attestation=manifest["provider"] if benchmark["device"] == "a100" else None)
                 == result["journal_sha256"] and paid == set(journal),
                 "Journal integrity or complete charge attribution mismatch")
     require(len(paid) == spending["new_calls"]

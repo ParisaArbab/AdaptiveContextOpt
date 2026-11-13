@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import sqlite3
+import subprocess
 import threading
 import time
 import tempfile
@@ -171,6 +172,7 @@ class Store:
         self.root = Path(run_dir)
         self.opts = opts
         self.settlements = dict(settlements or {})
+        self.linux_gpu = any(s.serving_identity.get("system") == "Linux" for s in self.settlements.values())
         self.lock = threading.Condition(threading.RLock())
         self.db = sqlite3.connect(self.root / "journal.sqlite3", check_same_thread=False)
         self.db.execute("PRAGMA journal_mode=WAL")
@@ -180,6 +182,8 @@ class Store:
         )
         if self.settlements:
             self.db.execute("CREATE TABLE IF NOT EXISTS prompt_settlements (key TEXT PRIMARY KEY, binding TEXT NOT NULL)")
+            if self.linux_gpu:
+                self.db.execute("CREATE TABLE IF NOT EXISTS gpu_attestations (key TEXT PRIMARY KEY, receipt TEXT NOT NULL)")
         elif (self.db.execute("SELECT 1 FROM sqlite_master WHERE name='prompt_settlements'").fetchone()
               and self.db.execute("SELECT 1 FROM prompt_settlements LIMIT 1").fetchone()):
             self.db.close()
@@ -373,17 +377,29 @@ class Store:
                 raise ValueError("Provider omitted valid token counters")
             identity_drift = (settlement and hasattr(provider, "response_identity_matches")
                               and not provider.response_identity_matches(response))
+            device_error = None
+            device_receipt = None
+            if self.linux_gpu:
+                try:
+                    device_receipt = provider.verify_generation_device()
+                    if not isinstance(device_receipt, dict) or not device_receipt:
+                        raise ValueError("Missing A100 placement receipt")
+                except (ValueError, OSError, RuntimeError, KeyError, TypeError, AttributeError, subprocess.SubprocessError) as exc:
+                    device_error = str(exc)
             violation = (
                 inp > payload["options"]["num_ctx"] or out > payload["options"]["num_predict"]
-                or settlement is not None and inp != settlement.prompt_tokens or identity_drift
+                or settlement is not None and inp != settlement.prompt_tokens or identity_drift or device_error is not None
             )
             error = None
             if violation:
-                error = ("Provider returned an unexpected model; paid usage retained; stop run" if identity_drift else
+                error = (f"GPU attestation failed; paid usage retained; stop run: {device_error}" if device_error is not None else
+                         "Provider returned an unexpected model; paid usage retained; stop run" if identity_drift else
                          "Provider prompt-token count drift; paid usage retained; stop run"
                          if settlement and inp != settlement.prompt_tokens else
                          "Provider counter bound violated; paid usage retained; stop run")
             with self.lock:
+                if self.linux_gpu and device_receipt and not violation:
+                    self.db.execute("INSERT INTO gpu_attestations VALUES (?,?)", (key, json.dumps(device_receipt)))
                 self.db.execute(
                     "UPDATE calls SET status=?,response=?,input=?,output=?,error=? WHERE key=?",
                     ("violation" if violation else "complete", json.dumps(response), inp, out, error, key),
@@ -397,6 +413,7 @@ class Store:
                         "response": response,
                         "duration_seconds": time.monotonic() - start,
                         **({"settled_upper_tokens": None if violation else settlement.upper} if settlement else {}),
+                        **({"gpu_attestation": device_receipt} if device_receipt is not None else {}),
                     }
                 )
                 if violation:

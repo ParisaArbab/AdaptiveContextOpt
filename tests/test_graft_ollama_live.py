@@ -124,7 +124,8 @@ def server(tmp_path, monkeypatch, fixed_fixture):
             value["prompt_settlement"] = {"file": "fixture", "sha256": "a" * 64}
             config_path = tmp_path / "live-config.json"
             write_json(config_path, value)
-            flags = ["--profile", HOST, "--config", str(config_path), "--serving-binary", str(binary),
+            # Loopback fixture has no physical GPU, regardless of the test host.
+            flags = ["--profile", HOST, "--device", "auto", "--config", str(config_path), "--serving-binary", str(binary),
                      "--generation-manifest", str(manifest), "--ollama-models-dir", str(model_root),
                      "--endpoint", value["benchmark"]["endpoint"]]
             yield state, flags

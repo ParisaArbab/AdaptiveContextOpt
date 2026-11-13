@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 
 from rave_fl.graft import fixed_evidence_experiment as fixed
+from rave_fl.graft.linux_runtime import OLLAMA_SOURCE
 from rave_fl.eval.schema import file_hash, fingerprint
 from rave_fl.graft.prompt_settlement import (
     BGE_MODEL, BUGS, COHORTS, MAC_BINARY_SHA256, MODEL_DIGEST, RUNNER,
@@ -83,10 +84,12 @@ def build_schedule(audit, base_config, certificate, output_config, *, native_sha
             "Native capture bytes differ from the supplied receipts")
     plan = json.loads(plan_path.read_text())
     native = json.loads(native_path.read_text())
+    host = (native["system"], native["architecture"], native["serving_binary_sha256"])
+    linux = native.get("linux_build")
     require(native["schema"] == "graft-native-schedule-audit-v1"
             and native["capture_plan_sha256"] == file_hash(plan_path)
-            and (native["system"], native["architecture"], native["serving_binary_sha256"])
-            == ("Darwin", "arm64", MAC_BINARY_SHA256)
+            and (host == ("Darwin", "arm64", MAC_BINARY_SHA256) or
+                 (host[0] == "Linux" and isinstance(linux, dict) and linux.get("ollama_source_commit") == OLLAMA_SOURCE))
             and native["model_sha256"] == MODEL_DIGEST and native["template_sha256"] == TEMPLATE
             and not native["mismatches"] and b"vocab only - skipping tensors" in log_path.read_bytes(),
             "Invalid native schedule capture, plan binding or vocabulary-only receipt")
@@ -135,8 +138,9 @@ def build_schedule(audit, base_config, certificate, output_config, *, native_sha
                                  "token_ids_sha256": fingerprint(ids)})
     proof = {"schema": SCHEDULE_SCHEMA, "dataset_sha256": file_hash(dataset),
              "serving": {"model_manifest_sha256": MODEL_DIGEST, "template_sha256": TEMPLATE,
-                         "serving_version": VERSION, "runner": RUNNER, "system": "Darwin", "architecture": "arm64",
-                         "binary_sha256": MAC_BINARY_SHA256, "model_blob_sha256": native["model_blob_sha256"],
+                         "serving_version": VERSION, "runner": RUNNER, "system": host[0], "architecture": host[1],
+                         "binary_sha256": host[2], "model_blob_sha256": native["model_blob_sha256"],
+                         **(linux if host[0] == "Linux" else {}),
                          "capture_plan_sha256": native["capture_plan_sha256"],
                          "native_audit_sha256": native_sha256, "native_tokenizer_log_sha256": log_sha256},
              "tokenizer_files": tokenizer_files, "encoder": encoder, "pairs": pairs, "schedules": schedules,

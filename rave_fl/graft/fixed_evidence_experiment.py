@@ -497,7 +497,7 @@ def requests(config, pairs, plan, provider, store):
     return result
 
 
-def journal_identity(store, actions, *, reconcile=False, live_model=None):
+def journal_identity(store, actions, *, reconcile=False, live_model=None, linux_attestation=None):
     expected = {
         key: (bug, payload, logical, settlement)
         for (bug, _), (_, _, group) in actions.items()
@@ -535,6 +535,10 @@ def journal_identity(store, actions, *, reconcile=False, live_model=None):
         bindings = dict(store.db.execute("SELECT key,binding FROM prompt_settlements"))
         if set(bindings) != {row[0] for row in rows}:
             raise CompatibilityError("Journal settlement bindings differ from paid or pending requests")
+    linux = any(item[-1] and item[-1].serving_identity.get("system") == "Linux" for item in expected.values())
+    gpu_rows = dict(store.db.execute("SELECT key,receipt FROM gpu_attestations")) if linux else {}
+    if linux and set(gpu_rows) != {row[0] for row in rows if row[2] == "complete"}:
+        raise CompatibilityError("Journal GPU receipts differ from completed Linux requests")
     recovered = []
     for key, bug, status, raw_request, raw_response, reserve, inp, out in rows:
         if status != "complete":
@@ -577,10 +581,29 @@ def journal_identity(store, actions, *, reconcile=False, live_model=None):
                     raise CompatibilityError("Missing settlement response event")
                 recovered.append({"event": "response", "fingerprint": key, "instance": bug,
                                   "response": response, "settled_upper_tokens": settlement.upper,
+                                  **({"gpu_attestation": json.loads(gpu_rows[key])} if linux else {}),
                                   "recovered_from_durable_journal": True})
+            if linux:
+                gpu = json.loads(gpu_rows[key])
+                placement = gpu.get("compute_processes") or []
+                listener = gpu.get("listener") or {}
+                if (type(gpu.get("model_size")) is not int or gpu["model_size"] <= 0
+                        or gpu.get("size_vram") != gpu["model_size"] or gpu.get("context_length") != limits["num_ctx"]
+                        or not placement or type(listener.get("pid")) is not int
+                        or (logged is not None and logged.get("gpu_attestation") != gpu)):
+                    raise CompatibilityError("Missing or invalid Linux GPU attestation in paid response ledger")
+                if linux_attestation:
+                    static = {k: v for k, v in listener.items() if k not in {"pid", "started"}}
+                    baseline = {k: v for k, v in linux_attestation["listener"].items() if k not in {"pid", "started"}}
+                    allowed = {row["uuid"] for row in linux_attestation["a100_inventory"]}
+                    if static != baseline or any(row.get("gpu_uuid") not in allowed
+                            or type(row.get("allocated_mib")) is not int or row["allocated_mib"] <= 0
+                            or not row.get("cuda_libraries") for row in placement):
+                        raise CompatibilityError("Linux GPU receipt differs from the sealed serving or device identity")
     for event in recovered:
         store.event(event)
-    return fingerprint({"calls": rows, "settlements": bindings}) if bindings else fingerprint(rows)
+    return fingerprint({"calls": rows, "settlements": bindings, **({"gpu_attestations": gpu_rows} if linux else {})}
+                       ) if bindings or linux else fingerprint(rows)
 
 
 def collect_arm(pair, name, action_group):
@@ -703,7 +726,7 @@ def run(config, directory, *, resume=False, allow_inference=False, cohort_bindin
     provider = live_paths.provider(config) if live else GraftProvider(opts)
     if live:
         provider.preflight()
-        if provider.metadata != cohort_binding["live_attestation"]:
+        if not provider.matches_cohort(cohort_binding["live_attestation"]):
             raise CompatibilityError("Active serving identity differs from the sealed cohort")
     directory = Path(directory)
     if not resume:
@@ -713,7 +736,7 @@ def run(config, directory, *, resume=False, allow_inference=False, cohort_bindin
     with run_lock(directory):
         if not live:
             provider.preflight()
-        identity = {"plan": plan, "provider": provider.metadata}
+        identity = {"plan": plan, "provider": cohort_binding["live_attestation"] if live else provider.metadata}
         if cohort_binding is not None:
             identity["cohort_binding"] = cohort_binding
         manifest = directory / "manifest.json"
@@ -735,7 +758,9 @@ def run(config, directory, *, resume=False, allow_inference=False, cohort_bindin
             for backend, _, _ in actions.values():
                 backend.store = store
             live_model = opts["model"] if live else None
-            before_hash = journal_identity(store, actions, reconcile=resume, live_model=live_model)
+            linux_attestation = cohort_binding["live_attestation"] if live and opts["device"] == "a100" else None
+            before_hash = journal_identity(store, actions, reconcile=resume, live_model=live_model,
+                                           linux_attestation=linux_attestation)
             before_calls = store.snapshot()["new_calls"]
             if resume and result_path.exists():
                 saved = json.loads(result_path.read_text())
@@ -803,7 +828,7 @@ def run(config, directory, *, resume=False, allow_inference=False, cohort_bindin
                 "manifest_sha256": fingerprint(identity),
                 "pairs": results,
                 "spending": usage,
-                "journal_sha256": journal_identity(store, actions, live_model=live_model),
+                "journal_sha256": journal_identity(store, actions, live_model=live_model, linux_attestation=linux_attestation),
                 "labels_sha256": labels_hash,
             }
             write_json(result_path, {**result, "sha256": fingerprint(result)})

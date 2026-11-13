@@ -14,6 +14,7 @@ from unittest.mock import patch
 
 from rave_fl.eval.schema import file_hash
 from rave_fl.graft import fixed_evidence_experiment as fixed
+from rave_fl.graft.linux_runtime import linux_build, stream_hash
 from rave_fl.graft.prompt_settlement import MAC_BINARY_SHA256, MODEL_DIGEST, TEMPLATE, VERSION, require
 from scripts.build_graft_settlement_certificate import rendered
 
@@ -26,6 +27,7 @@ class AuditCounter:
     def __init__(self, base, captures):
         self.base = base
         self.captures = captures
+        self.messages = {}
         self.name = base.name
         self.exact = base.exact
 
@@ -33,25 +35,27 @@ class AuditCounter:
         prompt = rendered(messages)
         if prompt not in self.captures:
             self.captures[prompt] = self.base.token_ids(messages)
+        self.messages[prompt] = messages
         return len(self.captures[prompt])
 
 
 def verify_local_inputs(binary, manifest, model_dir):
-    require((platform.system(), platform.machine()) == ("Darwin", "arm64")
+    build = linux_build(binary) if platform.system() == "Linux" else None
+    require(build is not None or ((platform.system(), platform.machine()) == ("Darwin", "arm64")
             and file_hash(binary) == MAC_BINARY_SHA256
-            and plistlib.loads((binary.parents[1] / "Info.plist").read_bytes())["CFBundleVersion"] == VERSION,
-            "Native capture is supported on the audited Ollama 0.17.7 arm64 Mac build")
+            and plistlib.loads((binary.parents[1] / "Info.plist").read_bytes())["CFBundleVersion"] == VERSION),
+            "Native capture requires an audited Ollama 0.17.7 build")
     require(file_hash(manifest) == MODEL_DIGEST, "Installed model manifest differs from the frozen digest")
     value = json.loads(manifest.read_text())
 
     def verified(layer):
         sha = layer["digest"].removeprefix("sha256:")
         blob = model_dir / "blobs" / f"sha256-{sha}"
-        require(blob.stat().st_size == layer["size"] and file_hash(blob) == sha, "Installed model layer drift")
+        require(blob.stat().st_size == layer["size"] and stream_hash(blob) == sha, "Installed model layer drift")
         return blob, sha
 
     layers = {r["mediaType"].rsplit(".", 1)[-1]: r for r in value["layers"]}
-    _, template = verified(layers["template"])
+    template_path, template = verified(layers["template"])
     weights, model = verified(layers["model"])
     cfg, _ = verified(value["config"])
     verified(layers["params"])
@@ -59,7 +63,26 @@ def verify_local_inputs(binary, manifest, model_dir):
     require(template == TEMPLATE and config["model_family"] == "llama"
             and not any(config.get(k) for k in ("renderer", "remote_host", "remote_model")),
             "Model does not use the audited no-tools compatibility path")
-    return weights, model
+    return weights, model, template_path, build
+
+
+def linux_ids(prompts, messages, binary, weights, template, output):
+    # Use the same binary and upstream Go template used by the listener.
+    env = {k: v for k, v in os.environ.items() if k not in {"LD_PRELOAD", "LD_LIBRARY_PATH", "OLLAMA_LIBRARY_PATH"}}
+    with tempfile.TemporaryFile(dir=output) as request, tempfile.TemporaryFile(dir=output) as reply:
+        for prompt in prompts:
+            request.write((json.dumps(messages[prompt], ensure_ascii=False) + "\n").encode())
+        request.seek(0)
+        with (output / "native-tokenizer.log").open("wb") as log:
+            subprocess.run([binary, "graft-tokenize", weights, template], stdin=request, stdout=reply, stderr=log,
+                           timeout=600, check=True, env={**env, "CUDA_VISIBLE_DEVICES": "-1", "OLLAMA_NO_CLOUD": "1"})
+        require(b"vocab only - skipping tensors" in (output / "native-tokenizer.log").read_bytes(),
+                "Linux native audit did not attest vocabulary-only loading")
+        reply.seek(0)
+        for prompt, row in zip(prompts, reply, strict=True):
+            value = json.loads(row)
+            require(value["rendered"].encode() == prompt, "Serving template differs from packing template")
+            yield value["token_ids"]
 
 
 def native_token_ids(prompts, binary, weights, output):
@@ -138,14 +161,17 @@ def main():
             and opts["sample"] == "first" and opts["limit"] is None
             and opts["bugs"] == sorted(set(opts["bugs"])) and 0 < len(opts["bugs"]) <= 3,
             "Capture requires an explicit sorted, unsealed Ollama schedule of at most three defects")
-    weights, model_sha = verify_local_inputs(args.serving_binary, args.generation_manifest, args.ollama_models_dir)
+    weights, model_sha, template, build = verify_local_inputs(args.serving_binary, args.generation_manifest, args.ollama_models_dir)
     args.output.mkdir(parents=True, exist_ok=False)
     captures = {}
+    messages = {}
     resources = fixed.resources
 
     def traced_resources(cfg, defect):
         counter, bundle = resources(cfg, defect)
-        return AuditCounter(counter, captures), bundle
+        traced = AuditCounter(counter, captures)
+        traced.messages = messages
+        return traced, bundle
 
     with patch.object(fixed, "resources", traced_resources):
         plan, _ = fixed.prepare(config)
@@ -155,14 +181,16 @@ def main():
     require(all(all(row.get("request") for rows in p["arms"].values() for row in rows)
                 and p["schedule"] for p in plan["pairs"]), "At least one pair has missing or overflowing requests")
     rows = []
-    for (prompt, local), native in zip(captures.items(),
-                                     native_token_ids(captures, args.serving_binary, weights, args.output), strict=True):
+    observed = (linux_ids(captures, messages, args.serving_binary, weights, template, args.output)
+                if build else native_token_ids(captures, args.serving_binary, weights, args.output))
+    for (prompt, local), native in zip(captures.items(), observed, strict=True):
         rows.append({"rendered_sha256": hashlib.sha256(prompt).hexdigest(), "tokens": len(native),
                      "token_ids": native, "matches": local == native})
     mismatch = [row["rendered_sha256"] for row in rows if not row["matches"]]
     receipt = {"schema": "graft-native-schedule-audit-v1", "capture_plan_sha256": file_hash(plan_path),
                "model_sha256": MODEL_DIGEST, "template_sha256": TEMPLATE, "model_blob_sha256": model_sha,
-               "serving_binary_sha256": MAC_BINARY_SHA256, "system": platform.system(), "architecture": platform.machine(),
+               "serving_binary_sha256": stream_hash(args.serving_binary), "system": platform.system(),
+               "architecture": platform.machine(), **({"linux_build": build} if build else {}),
                "requests": len(rows), "mismatches": mismatch, "rows": rows}
     (args.output / "native-comparison.json").write_text(json.dumps(receipt, indent=2) + "\n")
     require(not mismatch, "Native token IDs differ from the local packing counter")

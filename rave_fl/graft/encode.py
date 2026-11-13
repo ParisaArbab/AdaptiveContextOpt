@@ -51,13 +51,19 @@ def export(graph,model_dir,revision,output,device='cpu',batch_size=8,max_length=
         start=time.monotonic();model=BGEM3FlagModel(str(model_dir),devices=[device],use_fp16=device.startswith('cuda'))
         encoded=model.encode(texts,batch_size=batch_size,max_length=max_length,return_dense=True,return_sparse=True,return_colbert_vecs=False)
         if len(encoded['dense_vecs'])!=len(texts) or len(encoded['lexical_weights'])!=len(texts):raise ValueError('Encoder returned an incomplete text batch')
+        packages = {package: version(package) for package in ('FlagEmbedding', 'transformers', 'torch')}
+        # Linux CPU wheels append a build tag to the same pinned torch release.
+        wheel = packages['torch']
+        if wheel.endswith('+cpu'):
+            packages['torch'] = wheel.removesuffix('+cpu')
         value={'schema':'graft-embeddings-v1','model_id':'BGE-M3:'+revision,'synthetic':False,
                'texts':{text_hash(t):{'dense':[float(x) for x in d],'sparse':{str(k):float(v) for k,v in s.items()},'truncated':False} for t,d,s in zip(texts,encoded['dense_vecs'],encoded['lexical_weights'])},
                'provenance':{'checkpoint_files':hashes,'checkpoint_revision':revision,
                              'graph_sha256':graph.hash,'source_revision':graph.revision,
                              'device_requested':device,'embedding_seconds_including_load':time.monotonic()-start,
                              'batch_size':batch_size,'max_length':max_length,'max_observed_tokens':longest,
-                             'packages':{package:version(package) for package in ('FlagEmbedding','transformers','torch')}}}
+                             'packages':packages,
+                             **({'torch_wheel': wheel} if wheel != packages['torch'] else {})}}
         EmbeddingBundle(value).validate_for_graph(graph);write_json(output,value)
         return value['provenance']
     finally:

@@ -5,6 +5,7 @@ from pathlib import Path
 
 from rave_fl.eval.backend import PromptSettlement
 from rave_fl.eval.schema import CompatibilityError, file_hash, fingerprint
+from rave_fl.graft.linux_runtime import OLLAMA_SOURCE, linux_build
 
 
 MODEL = "llama3.1:8b"
@@ -73,10 +74,14 @@ class SettlementCertificate:
             self.candidate_counts = {bug: BUGS[bug] for bug in self.cohort}
         else:
             schedules = value["schedules"]
+            mac = (serving["system"], serving["architecture"], serving["binary_sha256"]) == ("Darwin", "arm64", MAC_BINARY_SHA256)
+            linux = (serving["system"] == "Linux" and opts["device"] == "a100"
+                     and serving.get("ollama_source_commit") == OLLAMA_SOURCE
+                     and digest(serving.get("linux_build_sha256"))
+                     and digest(serving.get("library_inventory_sha256")))
             require(0 < len(self.cohort) <= 3 and tuple(schedules) == self.cohort
                     and tuple(opts["bugs"]) == self.cohort and digest(serving.get("capture_plan_sha256"))
-                    and (serving["system"], serving["architecture"], serving["binary_sha256"])
-                    == ("Darwin", "arm64", MAC_BINARY_SHA256),
+                    and (mac or linux),
                     "Settlement certificate requires the exact explicit cohort and capture plan")
             for bug, targets in schedules.items():
                 require(isinstance(targets, list) and 0 < len(targets) <= 24
@@ -140,6 +145,10 @@ class SettlementCertificate:
                 and file_hash(binary) == self.identity["binary_sha256"]
                 and file_hash(manifest) == self.identity["model_manifest_sha256"],
                 "Serving build or host differs from the settlement audit")
+        if system == "Linux":
+            require(self.identity.get("ollama_source_commit") == OLLAMA_SOURCE
+                    and linux_build(binary, receipt_sha=self.identity["linux_build_sha256"])["library_inventory_sha256"]
+                    == self.identity["library_inventory_sha256"], "Linux serving libraries differ from certification")
         model, template, config, params = self.local_model_paths(manifest, models_dir)
         require(file_hash(template) == self.identity["template_sha256"], "Installed no-tools template differs from audit")
         require(file_hash(params) == params.name.removeprefix("sha256-"), "Installed generation defaults differ from audit")

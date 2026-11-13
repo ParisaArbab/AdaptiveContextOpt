@@ -14,6 +14,7 @@ import subprocess
 from urllib.parse import urlsplit
 
 from rave_fl.graft.controller import GraftProvider
+from rave_fl.graft.linux_runtime import nvidia_inventory, runner_gpu
 from rave_fl.graft.prompt_settlement import MODEL, RUNNER, SettlementCertificate, require
 
 
@@ -81,7 +82,9 @@ def listener(port, binary, models_dir):
     env = {}
     for item in entries:
         key, sep, value = item.partition(b"=")
-        if sep and key in {b"HOME", b"OLLAMA_MODELS", b"OLLAMA_NEW_ENGINE"}:
+        if sep and key in {b"HOME", b"OLLAMA_MODELS", b"OLLAMA_NEW_ENGINE", b"LD_LIBRARY_PATH", b"LD_PRELOAD",
+                           b"OLLAMA_LIBRARY_PATH", b"CUDA_VISIBLE_DEVICES", b"OLLAMA_KV_CACHE_TYPE",
+                           b"OLLAMA_FLASH_ATTENTION", b"OLLAMA_NUM_PARALLEL", b"OLLAMA_KEEP_ALIVE"}:
             require(key not in env, "Ambiguous Ollama process environment")
             env[key] = os.fsdecode(value).strip().strip("\"'").strip()
     require(env.get(b"OLLAMA_NEW_ENGINE", "").lower() in {"", "0", "false", "f"},
@@ -89,9 +92,21 @@ def listener(port, binary, models_dir):
     require(env.get(b"OLLAMA_MODELS") or env.get(b"HOME"), "Listener model store is unavailable")
     model_root = Path(env[b"OLLAMA_MODELS"]) if env.get(b"OLLAMA_MODELS") else Path(env[b"HOME"]) / ".ollama/models"
     require(model_root.resolve() == models_dir, "Listener uses a different model store")
+    linux_settings = {}
+    if system == "Linux":
+        require(not any(env.get(k) for k in (b"LD_LIBRARY_PATH", b"LD_PRELOAD", b"OLLAMA_LIBRARY_PATH"))
+                and env.get(b"OLLAMA_NUM_PARALLEL") == "1"
+                and env.get(b"OLLAMA_KEEP_ALIVE") == "-1"
+                and re.fullmatch(r"GPU-[0-9a-fA-F-]+", env.get(b"CUDA_VISIBLE_DEVICES", "")) is not None
+                and env.get(b"OLLAMA_KV_CACHE_TYPE", "f16") == "f16"
+                and env.get(b"OLLAMA_FLASH_ATTENTION", "0") in {"0", "false"},
+                "Use the runbook's dedicated Ollama environment without library overrides")
+        linux_settings = {"cuda_visible_devices": env.get(b"CUDA_VISIBLE_DEVICES"),
+                          "parallel": 1, "keep_alive": "-1", "kv_cache_type": "f16", "flash_attention": False}
     return {"pid": pid, "started": ps[1], "runner": RUNNER,
             "executable_device": stat.st_dev, "executable_inode": stat.st_ino,
-            "executable_mtime_ns": stat.st_mtime_ns, "executable_ctime_ns": stat.st_ctime_ns}
+            "executable_mtime_ns": stat.st_mtime_ns, "executable_ctime_ns": stat.st_ctime_ns,
+            **({"linux_settings": linux_settings} if linux_settings else {})}
 
 
 @dataclass(frozen=True)
@@ -152,12 +167,34 @@ class AttestedOllama(GraftProvider):
         self.model_paths = self.certificate.local_model_paths(self.manifest, self.models_dir)
         self.model_state = self.local_model_state()
         self.certificate.verify_local_host(self.binary, self.manifest, self.models_dir, platform.system(), platform.machine())
+        self.a100_gpus = self.visible_a100()
+        require(self.opts.get("device") != "a100" or self.a100_gpus, "No NVIDIA A100 (compute capability 8.0) visible")
         self.metadata = self.verify_endpoint()
+        if self.a100_gpus:
+            self.metadata["a100_inventory"] = self.a100_gpus
         return self.metadata
+
+    def visible_a100(self):
+        if self.opts.get("device") != "a100":
+            return []
+        selected = self.process["linux_settings"]["cuda_visible_devices"]
+        return [gpu for gpu in nvidia_inventory() if gpu["uuid"] == selected]
 
     def assert_stable(self):
         require(self.check_listener() == self.process, "Ollama listener changed after attestation")
         require(self.local_model_state() == self.model_state, "Ollama model files changed after attestation")
+
+    def matches_cohort(self, original):
+        if not self.a100_gpus:
+            return self.metadata == original
+
+        def stable(attestation):
+            return {**attestation, "listener": {k: v for k, v in attestation["listener"].items()
+                                                if k not in {"pid", "started"}}}
+
+        # A fresh Linux process must reattest the same executable, files,
+        # settings and GPU inventory. The original cohort and claim stay sealed.
+        return stable(self.metadata) == stable(original)
 
     def verify_endpoint(self):
         self.assert_stable()
@@ -181,10 +218,26 @@ class AttestedOllama(GraftProvider):
                 "listener": self.process}
 
     def before_fresh_request(self):
-        require(self.verify_endpoint() == self.metadata, "Serving identity changed after preflight")
+        current = self.verify_endpoint()
+        if self.a100_gpus:
+            current["a100_inventory"] = self.visible_a100()
+        require(current == self.metadata, "Serving identity changed after preflight")
 
     def execute(self, payload, ids, action):
         return self.http_json("/api/chat", payload, before_send=self.assert_stable)
+
+    def verify_generation_device(self):
+        if not self.a100_gpus:
+            return None
+        models = self.get("/api/ps")["models"]
+        matches = [row for row in models if row.get("digest") == self.metadata["digest"]]
+        require(len(matches) == 1 and type(matches[0].get("size")) is int
+                and matches[0]["size"] > 0 and matches[0].get("size_vram") == matches[0]["size"]
+                and matches[0].get("context_length") == self.opts["context_window"],
+                "Expected complete GPU placement and the frozen context from Ollama /api/ps")
+        return {"model_size": matches[0]["size"], "size_vram": matches[0]["size_vram"],
+                "context_length": matches[0]["context_length"], "listener": self.process,
+                "compute_processes": runner_gpu(self.process["pid"], self.binary, self.a100_gpus, self.model_paths[0])}
 
     def response_identity_matches(self, response):
         return response.get("model") == MODEL
