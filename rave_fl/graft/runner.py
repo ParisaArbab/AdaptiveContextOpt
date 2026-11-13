@@ -28,7 +28,7 @@ from rave_fl.graft.topology import EmbeddingBundle
 from rave_fl.graft.evaluation import evaluate_profile, PROFILES
 
 BASELINES = {"fixed_l1", "highest_suspicion", "v2_utility", "full"}
-GRAFT_POLICIES = {"l1_anchor", "l1_graph", "graft_adaptive"}
+GRAFT_POLICIES = {"l1_anchor", "l1_graph", "l1_graph_suspicion", "graft_adaptive"}
 
 
 def validate_config(value):
