@@ -66,3 +66,44 @@ def test_blend_deterministic_when_scores_are_equal():
     states = {a.function_id: b for a, b in examples}
     f = Fusion("suspicion_rank_blend", tie="original")
     assert [c.rank for c in f.order(candidates, f.scores(candidates, states))] == [1, 2]
+
+
+def test_offline_audit_uses_frozen_responses_and_evaluation_only_labels(tmp_path):
+    from dataclasses import asdict
+    import json
+    from scripts.audit_graft_fusion_offline import inspect_instance, main
+
+    folder = tmp_path / "run" / "instances" / "Time-4_fixture"
+    folder.mkdir(parents=True)
+    examples = [example(1, 0.1), example(2, 0.9)]
+    candidates = [c for c, _ in examples]
+    states = {c.function_id: state for c, state in examples}
+    historical = Fusion("rrf")
+    old = [c.function_id for c in historical.order(
+        candidates, historical.scores(candidates, states)
+    )]
+    (folder / "input.json").write_text(json.dumps({
+        "candidates": [asdict(c) for c in candidates],
+    }))
+    (folder / "l1_anchor__rrf_fixture.json").write_text(json.dumps({
+        "instance_id": "Time-4",
+        "status": "completed",
+        "arm": {
+            "states": {key: asdict(value) for key, value in states.items()},
+            "ranker": historical.config(),
+            "ranked_functions": old,
+            "failure_name_anchors": {},
+            "graft_config": {"failure_name_anchor": False},
+        },
+    }))
+    (folder / "evaluation_only.json").write_text(json.dumps({
+        "functions": [candidates[1].function_id],
+    }))
+    audit = inspect_instance(folder)
+    assert audit["rrf_reproduced"]
+    assert audit["rankings"]["suspicion_rank_blend"]["first_relevant_rank"] == 1
+    path = tmp_path / "report.json"
+    assert main([str(tmp_path / "run"), "--output", str(path)]) == 0
+    result = json.loads(path.read_text())
+    assert result["new_model_calls"] == 0
+    assert result["gold_used_for_scoring"] is False
