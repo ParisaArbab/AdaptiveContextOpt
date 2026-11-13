@@ -1,11 +1,12 @@
 """Exercise the approved settlement with paid synthetic responses only."""
+import json
 from types import SimpleNamespace
 
 import pytest
 
 from rave_fl.core import Action
 from rave_fl.eval.backend import ExecutionLimit, PromptSettlement, Store, UnknownUsage
-from rave_fl.eval.schema import CompatibilityError, fingerprint
+from rave_fl.eval.schema import CompatibilityError, file_hash, fingerprint
 from rave_fl.graft import fixed_evidence_experiment as fixed
 from rave_fl.graft import prompt_settlement as proof
 from rave_fl.graft.fixed_evidence_reporting import audit_saved_run
@@ -161,6 +162,47 @@ def test_exact_token_ids_and_request_hash_are_checked():
         certificate.for_request("bug", "arm", "target", {**payload, "think": True}, counter)
 
 
+def test_math_only_certificate_requires_42_math_requests(tmp_path):
+    dataset = tmp_path / "dataset.json"
+    dataset.write_text("{}")
+    tokenizer_files = {}
+    for name in ("tokenizer.json", "tokenizer_config.json"):
+        path = tmp_path / name
+        path.write_text("{}")
+        tokenizer_files[name] = file_hash(path)
+    path = tmp_path / "certificate.json"
+    value = {
+        "schema": proof.SCHEMA, "dataset_sha256": file_hash(dataset), "tokenizer_files": tokenizer_files,
+        "serving": {"model_manifest_sha256": proof.MODEL_DIGEST, "template_sha256": proof.TEMPLATE,
+                    "serving_version": proof.VERSION, "runner": proof.RUNNER, "system": "Darwin", "architecture": "arm64",
+                    **dict.fromkeys(("binary_sha256", "model_blob_sha256", "native_audit_sha256", "native_tokenizer_log_sha256"), "a" * 64)},
+        "pairs": {"Math-80": {}},
+        "requests": [{"instance_id": "Math-80", "arm": arm, "target": f"m{i}", "prompt_tokens": 900,
+                      "request_sha256": "b" * 64, "token_ids_sha256": "c" * 64}
+                     for arm in fixed.ARMS for i in range(21)],
+    }
+    config = {
+        "benchmark": {"backend": "ollama", "model": proof.MODEL, "model_digest": proof.MODEL_DIGEST,
+                      "context_window": 8192, "output_tokens": 160, "seed": 0, "temperature": 0,
+                      "device": "apple", "dataset": "defects4j", "candidate_provider": "flexfl",
+                      "candidate_count": 24, "top_per_method": 10, "dataset_file": str(dataset)},
+        "graft": {"input_budget": 1024}, "tokenizer_dir": str(tmp_path),
+    }
+
+    def load():
+        path.write_text(json.dumps(value))
+        return proof.SettlementCertificate({**config, "prompt_settlement": {"file": str(path), "sha256": file_hash(path)}})
+
+    certificate = load()
+    assert certificate.cohort == ("Math-80",) and certificate.calls == 42
+    value["requests"][0]["instance_id"] = "Lang-54"
+    with pytest.raises(CompatibilityError, match="audited action"):
+        load()
+    value["requests"].pop(0)
+    with pytest.raises(CompatibilityError, match="entire audited schedule"):
+        load()
+
+
 def test_settlement_flows_through_planner_backend_resume_and_reporting(fixed_fixture, tmp_path, monkeypatch):
     _, config = fixed_fixture
     opts = config["benchmark"]
@@ -181,7 +223,6 @@ def test_settlement_flows_through_planner_backend_resume_and_reporting(fixed_fix
         def for_request(self, bug, arm, target, payload, counter):
             return PromptSettlement(fingerprint(payload), self.identity, 90, opts["output_tokens"])
 
-    monkeypatch.setattr(fixed, "BUGS", cohort_ids)
     monkeypatch.setattr(fixed, "SettlementCertificate", FixtureCertificate)
     preflight = fixed.GraftProvider.preflight
     execute = fixed.GraftProvider.execute

@@ -37,6 +37,32 @@ def test_topology_and_relevance_ablation_share_inputs_and_budget():
     assert a.diagnostics['embedding_synthetic'] and c.diagnostics['iterations']==0
     assert a.hash==topo_select(g,'x.A.a()',b,2400).hash
 
+
+def test_packing_trace_reports_skips_without_changing_artifact():
+    from rave_fl.graft.selection import ByteCounter, SYSTEM, mandatory_ids, pack_scores, render
+
+    _, _, graph = fixture_graph()
+    target = "x.A.a()"
+    mandatory = mandatory_ids(graph, target)
+    optional = sorted(set(graph.by_id) - set(mandatory))
+    redundant, oversized = optional[:2]
+    scores = dict.fromkeys(graph.by_id, 0.)
+    scores.update({redundant: .2, oversized: .8})
+    counter = ByteCounter()
+    budget = counter.count([{"content": SYSTEM}, {"content": render(graph, target, mandatory)}])
+    trace = []
+    redundancy = lambda node, _: 1. if node == redundant else 0.
+    original = pack_scores(graph, target, scores, budget, counter, redundancy, .3)
+    traced = pack_scores(graph, target, scores, budget, counter, redundancy, .3, trace=trace.append)
+    assert traced == original and traced.hash == original.hash
+    by_id = {event["id"]: event for event in trace}
+    assert trace[0]["id"] == oversized and by_id[oversized]["outcome"] == "budget_rejected"
+    assert by_id[oversized]["trial_tokens"] > budget
+    assert by_id[redundant]["outcome"] == "nonpositive_after_redundancy"
+    assert by_id[redundant]["score"] > 0 > by_id[redundant]["adjusted_score"]
+    assert all(by_id[node]["outcome"] == "nonpositive_score" for node in optional[2:])
+    assert by_id[redundant]["trial_tokens"] is None
+
 @pytest.mark.parametrize('with_propagation', [False, True])
 def test_same_line_statement_order_is_independent_of_node_iteration(with_propagation):
     from rave_fl.graft.graph import build_graph

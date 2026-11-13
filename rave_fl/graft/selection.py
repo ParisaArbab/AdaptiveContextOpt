@@ -103,7 +103,7 @@ def lexical_scores(graph,query):
     return {n.id:sum(math.log(1+(len(docs)-df[w]+.5)/(df[w]+.5))*d[w]*2.5/(d[w]+1.5*(.25+.75*l/avg)) for w in q if d[w]) for n,d,l in zip(graph.nodes,docs,lengths)}
 
 
-def pack_scores(graph,target,scores,budget,counter=None,redundancy=None,penalty=0.,selector='relevance_only'):
+def pack_scores(graph,target,scores,budget,counter=None,redundancy=None,penalty=0.,selector='relevance_only',*,trace=None):
     if set(scores)!=set(graph.by_id) or any(not math.isfinite(v) or v<0 for v in scores.values()):raise ValueError('Finite nonnegative score for every node required')
     if not math.isfinite(penalty) or penalty<0:raise ValueError('Nonnegative redundancy penalty required')
     chosen=set(mandatory_ids(graph,target));initial=package(graph,target,chosen,budget,counter,selector,scores)
@@ -114,11 +114,23 @@ def pack_scores(graph,target,scores,budget,counter=None,redundancy=None,penalty=
             similarity=max((redundancy(i,j) for j in chosen),default=0.) if redundancy else 0.
             return (-(scores[i]-penalty*similarity),i)
         ident=min(remaining,key=key);remaining.remove(ident)
-        if scores[ident]<=0:continue
-        if redundancy and scores[ident]-penalty*max((redundancy(ident,j) for j in chosen),default=0.)<=0:continue
-        trial=package(graph,target,chosen|{ident},budget,counter,selector,scores)
-        if trial.status=='ready':chosen.add(ident)
-        else:rejected.append(ident)
+        adjusted = -key(ident)[0] if redundancy else scores[ident]
+        trial = None
+        if scores[ident] <= 0:
+            outcome = 'nonpositive_score'
+        elif redundancy and adjusted <= 0:
+            outcome = 'nonpositive_after_redundancy'
+        else:
+            trial = package(graph,target,chosen|{ident},budget,counter,selector,scores)
+            outcome = 'selected' if trial.status == 'ready' else 'budget_rejected'
+        if trace is not None:
+            trace({'id': ident, 'score': scores[ident], 'adjusted_score': adjusted,
+                   'outcome': outcome, 'trial_tokens': trial.input_units if trial else None,
+                   'selected_before': sorted(chosen)})
+        if outcome == 'selected':
+            chosen.add(ident)
+        elif outcome == 'budget_rejected':
+            rejected.append(ident)
     return package(graph,target,chosen,budget,counter,selector,scores,{'budget_rejected_ids':rejected,'scores_are_calibrated':False})
 
 

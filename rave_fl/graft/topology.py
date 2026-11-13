@@ -181,7 +181,7 @@ def propagate(seed,adjacency,eta=.85,max_iterations=300,tolerance=1e-9):
     raise ValueError('Propagation did not converge within the configured iteration cap')
 
 
-def topo_select(graph,target,bundle,budget,counter=None,config=None,*,audit=False):
+def topo_select(graph,target,bundle,budget,counter=None,config=None,*,audit=False,packing_trace=None):
     if not isinstance(bundle,EmbeddingBundle):raise TypeError('Explicit dense/sparse embedding bundle required')
     nodes=sorted(graph.nodes,key=lambda n:n.id)
     config=config or TopologyConfig();ids=[n.id for n in nodes];vectors={};lexical={}
@@ -216,6 +216,6 @@ def topo_select(graph,target,bundle,budget,counter=None,config=None,*,audit=Fals
     if audit:
         diagnostic.update(seed_sha256=fingerprint(seed), adjacency_sha256=fingerprint(adj),
                           seed_mass=math.fsum(seed.values()), score_mass=math.fsum(scores.values()))
-    result=pack_scores(graph,target,scores,budget,counter,redundancy=lambda i,j:dot(vectors[i],vectors[j]),penalty=config.redundancy,selector='topocompress_typed' if config.typed else 'topocompress_semantic')
+    result=pack_scores(graph,target,scores,budget,counter,redundancy=lambda i,j:dot(vectors[i],vectors[j]),penalty=config.redundancy,selector='topocompress_typed' if config.typed else 'topocompress_semantic',trace=packing_trace)
     return replace(result,diagnostics={**result.diagnostics,**diagnostic,'embedding_model':bundle.model_id,'embedding_hash':bundle.hash,'embedding_synthetic':bundle.synthetic,
                                       'config':asdict(config),'semantic_acceleration_scope':'source-ordered units within each supplied method; never candidate rank order'})

@@ -104,7 +104,6 @@ def server(tmp_path, monkeypatch, fixed_fixture):
     # The local fixture supplies only attestation primitives and response bytes.
     # Its requests go through the production launcher, runner, transport and store.
     monkeypatch.setattr(live, "listener", lambda *_: {"pid": state.pid})
-    monkeypatch.setattr(fixed, "BUGS", sizes)
     for module in (live, fixed, portable):
         monkeypatch.setattr(module, "SettlementCertificate", Certificate)
     original_resources = fixed.resources

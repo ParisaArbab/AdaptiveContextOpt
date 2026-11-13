@@ -17,7 +17,7 @@ from rave_fl.graft.controller import GraphBackend, GraftConfig, GraftProvider
 from rave_fl.graft.evaluation import PROFILES, evaluate_profile
 from rave_fl.graft.fixed_inputs import fixed_graph, portable_preparation_sha256
 from rave_fl.graft.ollama_live import LiveOllamaPaths
-from rave_fl.graft.prompt_settlement import BUGS, SettlementCertificate, digest
+from rave_fl.graft.prompt_settlement import SettlementCertificate, digest
 from rave_fl.graft.runner import resource_identity, resources, validate_config
 from rave_fl.graft.selection import ByteCounter, SYSTEM, query_text
 from rave_fl.graft.topology import TopologyConfig, text_hash, topo_select
@@ -243,8 +243,6 @@ def prepare_pair(instance, config, certificate=None):
     opts = config["benchmark"]
     instance, entities, candidates, _, _, prepared = prepare_one(instance, opts)
     schedule = fixed_schedule(candidates, entities)
-    if certificate and (instance.instance_id not in BUGS or len(schedule) != BUGS[instance.instance_id]):
-        raise CompatibilityError("Prompt settlement requires the audited Lang and Math schedules")
     if any(entity.kind not in {"method", "function"} for entity in entities):
         raise CompatibilityError("Fixed evidence requires method/function candidates")
     graph = fixed_graph(instance, entities)
