@@ -20,7 +20,24 @@ python -m pytest -q \
   tests/test_graft_fusion_ablation.py \
   tests/test_graft_graph_suspicion.py \
   tests/test_graft_controller.py \
-  tests/test_graft_pipeline.py
+  tests/test_graft_pipeline.py \
+  tests/test_graft_phase1_live_config.py
+
+# Preserve the independently verified zero-inference result in its own commit.
+OFFLINE="results/graft_time4_fusion_replay_local_20261113.json"
+if [[ -f "$OFFLINE" ]]; then
+  python - "$OFFLINE" <<'PY'
+import json,sys
+data=json.load(open(sys.argv[1]))
+if data.get("new_model_calls") != 0 or data.get("gold_used_for_scoring") is not False:
+    raise SystemExit("Offline replay metadata failed verification")
+PY
+  git add -f -- "$OFFLINE"
+  if ! git diff --cached --quiet; then
+    git commit -m "result(graft): archive verified AIScalar zero-call fusion replay"
+    git push origin "$BRANCH"
+  fi
+fi
 
 ROOT="results/graft_phase1_live_$(date +%Y%m%d_%H%M%S)"
 SOURCE="results/graft_time4_graph_ablation_20261113_143016/config.json"
