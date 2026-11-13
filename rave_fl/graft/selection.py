@@ -102,7 +102,7 @@ def render_focused(graph, target, ids):
     return json.dumps({
         "schema": "graft-focused-v1",
         "target": target,
-        "failure": "\\n".join(n.text for n in failures),
+        "failure": "\n".join(n.text for n in failures),
         "sources": sources,
     }, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
