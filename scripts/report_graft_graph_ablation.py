@@ -13,14 +13,14 @@ def main(root):
           "provider_tokens", accounting.get("known_provider_tokens"),
           "usage_unknown", accounting.get("usage_unknown"))
     rows = sorted((r for r in rows if r.get("policy") in POLICIES),
-                  key=lambda r: (r.get("instance_id", ""), POLICIES.index(r["policy"])))
+                  key=lambda r: (r.get("instance_id", ""), r.get("fusion", ""), POLICIES.index(r["policy"])))
     for row in rows:
         arm = row.get("arm", {})
         metrics = row.get("metrics", {}).get("java_strict_v2", {}).get("method", {})
         calls = arm.get("calls", [])
         stages = Counter(call.get("stage") for call in calls)
         paid = sum((c.get("input_tokens", 0) + c.get("output_tokens", 0)) for c in calls)
-        print(row.get("instance_id"),row["policy"],
+        print(row.get("instance_id"), "fusion", row.get("fusion"), row["policy"],
               "status",row.get("status"), "rank",metrics.get("first_relevant_rank"),
               "Top5",metrics.get("Top-5"),"MRR",metrics.get("MRR"),
               "logical_tokens",arm.get("actual_tokens"),
