@@ -14,6 +14,7 @@ from rave_fl.pilot_types import CandidateState
 from rave_fl.eval.backend import Backend, ExecutionLimit, Provider
 from rave_fl.eval.schema import CompatibilityError, fingerprint
 from rave_fl.graft.selection import SYSTEM, ByteCounter, relevance_select, package
+from rave_fl.graft.focused import focus_select
 from rave_fl.graft.topology import topo_select, TopologyConfig
 from rave_fl.graft.paths import preserve_paths
 from rave_fl.graft.repair import repair_support, missing_support
@@ -272,7 +273,7 @@ class Router:
     """Transparent development heuristic; no calibrated gain or trained policy."""
 
     def __init__(self, candidates, session, fusion, policy="graft_adaptive", embeddings=None):
-        if policy not in {"l1_anchor", "l1_graph", "l1_graph_suspicion", "graft_adaptive"}:
+        if policy not in {"l1_anchor", "l1_graph", "l1_graph_suspicion", "l1_graph_focused", "graft_adaptive"}:
             raise ValueError("Unknown GRAFT policy")
         if len({c.function_id for c in candidates}) != len(candidates) or not candidates:
             raise ValueError("Nonempty unique candidate pool required")
@@ -427,13 +428,20 @@ class Router:
                         selection = None
                         if stage == EvidenceStage.GRAPH:
                             if ident not in self.packages:
-                                self.packages[ident] = select_evidence(
-                                    self.graph,
-                                    ident,
-                                    self.config,
-                                    self.session.counter,
-                                    self.embeddings,
-                                )
+                                if self.policy == "l1_graph_focused":
+                                    self.packages[ident] = focus_select(
+                                        self.graph, ident, self.config.input_budget,
+                                        self.session.counter,
+                                        missing_evidence=obs.missing_evidence if obs else "",
+                                    )
+                                else:
+                                    self.packages[ident] = select_evidence(
+                                        self.graph,
+                                        ident,
+                                        self.config,
+                                        self.session.counter,
+                                        self.embeddings,
+                                    )
                             selection = self.packages[ident]
                             if selection.status != "ready":
                                 rows.append(
@@ -477,7 +485,7 @@ class Router:
                             / max(1, predicted)
                         )
                         gate = (
-                            self.policy in {"l1_graph", "l1_graph_suspicion"} or position < self.config.top_k or uncertain
+                            self.policy in {"l1_graph", "l1_graph_suspicion", "l1_graph_focused"} or position < self.config.top_k or uncertain
                         )
                         rows.append(
                             {
@@ -530,7 +538,7 @@ class Router:
                                 r["candidate"],
                             ),
                         )
-                        if self.policy == "l1_graph_suspicion"
+                        if self.policy in {"l1_graph_suspicion", "l1_graph_focused"}
                         else min(
                             eligible,
                             key=lambda r: (
