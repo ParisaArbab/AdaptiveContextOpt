@@ -79,10 +79,13 @@ class Fusion:
         return self.scores(candidates, hypothetical)
 
     def config(self):
-        return {
+        result = {
             "name": self.name,
             "tie": self.tie,
             "rounding": self.rounding,
             "rrf_k": self.rrf_k,
             "calibrated": False,
         }
+        if self.name == "suspicion_rank_blend":
+            result["blend_weights"] = {"rank": 0.30, "suspicion": 0.70}
+        return result
