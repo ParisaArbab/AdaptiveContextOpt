@@ -1,0 +1,236 @@
+{
+  "schema_version": "graft-fixed-evidence-prereg-v1",
+  "status": "phase0_draft",
+  "branch": "GRAFT-FL",
+  "revision": "e64d6dee9e642adaf08e4485512e7060f3335403",
+  "master_prompt_sha256": "d852c26f95555c5b5b1f38aeb79f4006441ff1567b03863ec343a300929a151b",
+  "arms": {
+    "dense_sparse_no_propagation": {
+      "mu": 0.5,
+      "acceleration": 0.2,
+      "semantic_weight": 1.0,
+      "sequential_weight": 1.0,
+      "program_weight": 0.25,
+      "eta": 0.85,
+      "redundancy": 0.2,
+      "neighbors": 5,
+      "max_iterations": 300,
+      "tolerance": 1e-09,
+      "typed": false,
+      "propagate": false
+    },
+    "dense_sparse_with_propagation": {
+      "mu": 0.5,
+      "acceleration": 0.2,
+      "semantic_weight": 1.0,
+      "sequential_weight": 1.0,
+      "program_weight": 0.25,
+      "eta": 0.85,
+      "redundancy": 0.2,
+      "neighbors": 5,
+      "max_iterations": 300,
+      "tolerance": 1e-09,
+      "typed": false,
+      "propagate": true
+    }
+  },
+  "common": {
+    "selector": "topo",
+    "paths": false,
+    "repair": false,
+    "schedule": "all_prepared_candidates_once_prior_rank_then_input_order",
+    "prior": "frozen_pool_order",
+    "candidate_cap": 24,
+    "candidate_provider": "flexfl",
+    "require_observed_failure": true,
+    "encoder": "BGE-M3",
+    "encoder_revision": null,
+    "tokenizer_identity": null,
+    "prompt_version": "graft-graph-verdict-v2-short-strings",
+    "system_sha256": "87b608d4ff5cac029af9de2ddba0cf49692ceec19a849985c0a6f63b43be58d2",
+    "renderer": "rave_fl.graft.selection.render",
+    "counter": "validated_provider_equivalent_chat_template_tokens",
+    "input_allowance": 1024,
+    "context_window": 8192,
+    "output_cap": 160,
+    "temperature": 0,
+    "seed": 0,
+    "fusion": {
+      "name": "rrf",
+      "rrf_k": 60,
+      "tie": "original",
+      "rounding": null
+    },
+    "model": "llama3.1:8b",
+    "model_digest": "46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+    "quantization": "Q4_K_M",
+    "provider": "ollama",
+    "provider_version": null
+  },
+  "caps": {
+    "phase0_fresh_calls": 0,
+    "phase0_physical_tokens": 0,
+    "per_arm_per_bug_logical": 36000,
+    "per_arm_per_bug_physical": 36000,
+    "per_bug_physical": 72000,
+    "per_run_physical": 216000,
+    "per_arm_per_bug_fresh_calls": 24,
+    "per_bug_fresh_calls": 48,
+    "per_run_fresh_calls": 144,
+    "max_smoke_bugs": 3
+  },
+  "cohorts": {
+    "feasibility_ids": [
+      "Lang-54",
+      "Math-80",
+      "Closure-61"
+    ],
+    "feasibility_readiness": "blocked_missing_source_evidence_and_candidates",
+    "exploratory_range": [
+      10,
+      15
+    ],
+    "minimum_exploratory_projects": 4,
+    "exploratory_ids": null,
+    "heldout_ids": null
+  },
+  "analysis": {
+    "primary": "mean_paired_delta_MRR_T1_minus_T0",
+    "primary_cohort": "joint_complete_labeled",
+    "primary_evaluator": "java_strict_v2",
+    "sensitivity_evaluator": "legacy_v1",
+    "secondary": [
+      "Top-1",
+      "Top-3",
+      "Top-5",
+      "candidate_pool_recall",
+      "completion",
+      "logical_tokens",
+      "fresh_physical_tokens",
+      "cache_reuse",
+      "encoding_time",
+      "encoding_memory",
+      "graph_time",
+      "selection_time",
+      "wall_time"
+    ],
+    "smoke_uncertainty": "descriptive_only",
+    "exploratory_uncertainty": "paired_bug_deltas_project_cluster_bootstrap_only_if_adequate",
+    "bootstrap_seed": 20261112,
+    "bootstrap_resamples": 10000
+  },
+  "frozen_inputs": [
+    {
+      "path": "rave_fl/graft/graph.py",
+      "sha256": "189ef35df25e966d49d770e08b4a824135f23c24a250a7c6173b4d7fac5f2eb2"
+    },
+    {
+      "path": "rave_fl/graft/selection.py",
+      "sha256": "3ebbf7fe256bf63f27fd53249db3a6fbf75fd5493522d98c0b0203c545129cc7"
+    },
+    {
+      "path": "rave_fl/graft/topology.py",
+      "sha256": "62c5a94c78f6822243ed3fe1f7b97d515d2d4be9b32fce16386e2500e0a188e8"
+    },
+    {
+      "path": "rave_fl/graft/encode.py",
+      "sha256": "8b1cce03d73d90efcadec61ac91930c917d1dabb11fb4f6ae6ed29c4ba1b3faf"
+    },
+    {
+      "path": "rave_fl/graft/controller.py",
+      "sha256": "00ff4fa74ab68bf0bdd849cfb2a249322d8a03a55372b5172f27b7b9b561f7ee"
+    },
+    {
+      "path": "rave_fl/graft/runner.py",
+      "sha256": "f8f68494ff679cd8a3a8f2053d62b7166e9a7e1f04f8cb2f71cf1095c3e97e2f"
+    },
+    {
+      "path": "rave_fl/graft/evaluation.py",
+      "sha256": "03aef5a6a3302043582baf6dbdf6d864680c07010e1a9ed4742984f94a9da5e9"
+    },
+    {
+      "path": "rave_fl/graft/reporting.py",
+      "sha256": "4d6e8d326ae11b76d9a1f606b476dff43abc8abfe1ff6ccd14cefbd3eacaa39d"
+    },
+    {
+      "path": "rave_fl/graft/cli.py",
+      "sha256": "6763c32cda072558f548c11098355315bd5c1fecad2504e8018284d3daf8e5a6"
+    },
+    {
+      "path": "rave_fl/eval/fusion.py",
+      "sha256": "519a2886e9f1926e776d581709f4285c9c047613fbe36193ce26b29fefd3639a"
+    },
+    {
+      "path": "rave_fl/eval/backend.py",
+      "sha256": "d67e0eee7902a438f6c869776cf31e156631eb0f02933d898557f25e5a831d20"
+    },
+    {
+      "path": "rave_fl/eval/runner.py",
+      "sha256": "9db47a2119df274f4181267b991846a1e1ff556536677631f352b4d70539fd6a"
+    },
+    {
+      "path": "rave_fl/eval/metrics.py",
+      "sha256": "b74d98e6084f0b6b8f0bf7b5bea5e49285805c332d555a7c5b3e615f06b99c43"
+    },
+    {
+      "path": "rave_fl/eval/adapters.py",
+      "sha256": "f738b60983834597917ecb7301e62a7dfef686f5dd9046f510c6c9f0c1a28cb4"
+    },
+    {
+      "path": "rave_fl/eval/candidates.py",
+      "sha256": "34ec5a0bb427730ab16f7a5d0ad02e01df98e3ef63052f9765a5147ebf671ff1"
+    },
+    {
+      "path": "rave_fl/pilot_backend.py",
+      "sha256": "42b8ca05dd716d194dca523bad97645c80e2d2fe2c0f0edfa95b1de3a65e8a24"
+    },
+    {
+      "path": "docs/GRAFT_FL.md",
+      "sha256": "625ad2bbe24a5fd5bf4dd553fe43509dbae040ce43a62aab8f8b19bc0d9f4a94"
+    },
+    {
+      "path": "docs/graft_fl/ROADMAP.md",
+      "sha256": "37230580ab50e3ff04152948be5961d557b508f5ef01ba75611c78857018179a"
+    },
+    {
+      "path": "configs/graft_smoke_a100.json",
+      "sha256": "4cc32aab529c0f247d971408c2816872bc266cee4462628d1602678003ee387a"
+    },
+    {
+      "path": "configs/graft_feasibility_protocol.json",
+      "sha256": "bbb3c7a976ba3b471d5c7e2a5b13d7cac655fa0fbfb343d2ede5a2b4644b38f8"
+    },
+    {
+      "path": "reports/graft_fl_development_2026_11_05/tables/frozen_ranking_metrics.md",
+      "sha256": "15c8cbefdf4f005b13f1924eabe37a9df2238b571bcca41781d90226c2787ef8"
+    },
+    {
+      "path": "reports/rave_fl_100_bugs_audit_2026_10_28/audit_summary.json",
+      "sha256": "42d0704b5c65304734c5ed7ea87b04b2e2f10160ff96b513725bf34a87f7bacb"
+    },
+    {
+      "path": "reports/rave_fl_100_bugs_audit_2026_10_28/tables/run_catalog.csv",
+      "sha256": "d2186b6c398a5de90193c70dca3d9b89a5fc615b14ead05f7c7b21b2902f5070"
+    },
+    {
+      "path": "reports/graft_fl_local_real_smoke_2026_11_05/README.md",
+      "sha256": "cc0a0f2a0f173fdd6888a782d0027abd1ad775603dfd8436c87d2caecb457953"
+    },
+    {
+      "path": "reports/graft_fl_local_real_smoke_2026_11_05/followup/audit.json",
+      "sha256": "8aaa329a0457441dd45c1951821fe26ac599eff2c01e2f2171b4e4660ed67ed8"
+    },
+    {
+      "path": "results-100-bugs/results/d4j_multibug/d4j97_promptfix_20261027_122406",
+      "glob": "*/manifest.json",
+      "files": 97,
+      "sha256": "e7d847b3314918b6384b7c9c23e031181b4fd2758900aacb9f33ac640e2f7e4d"
+    },
+    {
+      "path": "results-100-bugs/results/d4j_multibug/d4j97_promptfix_20261027_122406",
+      "glob": "*/results.json",
+      "files": 97,
+      "sha256": "a35c6e37e3ad067b2b84ce9ab1b23cd3ac982cce30a872e456647bcd87d62e97"
+    }
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "status", "branch", "revision", "master_prompt_sha256", "arms", "common", "caps", "cohorts", "analysis", "frozen_inputs"],
+  "properties": {
+    "schema_version": {"const": "graft-fixed-evidence-prereg-v1"},
+    "status": {"const": "phase0_draft"},
+    "branch": {"const": "GRAFT-FL"},
+    "revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "master_prompt_sha256": {"$ref": "#/$defs/hash"},
+    "arms": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dense_sparse_no_propagation", "dense_sparse_with_propagation"],
+      "properties": {
+        "dense_sparse_no_propagation": {"allOf": [{"$ref": "#/$defs/topology"}, {"properties": {"propagate": {"const": false}}}]},
+        "dense_sparse_with_propagation": {"allOf": [{"$ref": "#/$defs/topology"}, {"properties": {"propagate": {"const": true}}}]}
+      }
+    },
+    "common": {
+      "type": "object",
+      "required": ["selector", "paths", "repair", "schedule", "prior", "candidate_cap", "candidate_provider", "require_observed_failure", "encoder", "encoder_revision", "tokenizer_identity", "prompt_version", "system_sha256", "renderer", "counter", "input_allowance", "context_window", "output_cap", "temperature", "seed", "fusion", "model", "model_digest", "quantization", "provider", "provider_version"],
+      "properties": {
+        "selector": {"const": "topo"},
+        "paths": {"const": false},
+        "repair": {"const": false},
+        "require_observed_failure": {"const": true},
+        "candidate_cap": {"type": "integer", "minimum": 1},
+        "input_allowance": {"type": "integer", "minimum": 1},
+        "context_window": {"type": "integer", "minimum": 1},
+        "output_cap": {"type": "integer", "minimum": 1},
+        "temperature": {"type": "number", "minimum": 0},
+        "seed": {"type": "integer"},
+        "system_sha256": {"$ref": "#/$defs/hash"},
+        "model_digest": {"$ref": "#/$defs/hash"},
+        "fusion": {
+          "type": "object",
+          "required": ["name", "rrf_k", "tie", "rounding"],
+          "properties": {
+            "name": {"const": "rrf"}, "rrf_k": {"const": 60},
+            "tie": {"const": "original"}, "rounding": {"type": "null"}
+          }
+        },
+        "encoder_revision": {"type": ["string", "null"]},
+        "tokenizer_identity": {"type": ["string", "null"]},
+        "provider_version": {"type": ["string", "null"]}
+      }
+    },
+    "caps": {
+      "type": "object",
+      "required": ["phase0_fresh_calls", "phase0_physical_tokens", "per_arm_per_bug_logical", "per_arm_per_bug_physical", "per_bug_physical", "per_run_physical", "per_arm_per_bug_fresh_calls", "per_bug_fresh_calls", "per_run_fresh_calls", "max_smoke_bugs"],
+      "additionalProperties": false,
+      "properties": {
+        "phase0_fresh_calls": {"const": 0},
+        "phase0_physical_tokens": {"const": 0},
+        "max_smoke_bugs": {"type": "integer", "minimum": 1, "maximum": 3}
+      },
+      "patternProperties": {"^(per_|max_smoke_bugs$)": {"type": "integer", "minimum": 1}}
+    },
+    "cohorts": {
+      "type": "object",
+      "required": ["feasibility_ids", "feasibility_readiness", "exploratory_range", "minimum_exploratory_projects", "exploratory_ids", "heldout_ids"],
+      "properties": {
+        "feasibility_ids": {"const": ["Lang-54", "Math-80", "Closure-61"]},
+        "feasibility_readiness": {"const": "blocked_missing_source_evidence_and_candidates"},
+        "exploratory_range": {"const": [10, 15]},
+        "minimum_exploratory_projects": {"type": "integer", "minimum": 4},
+        "exploratory_ids": {"type": ["array", "null"]},
+        "heldout_ids": {"type": ["array", "null"]}
+      }
+    },
+    "analysis": {
+      "type": "object",
+      "required": ["primary", "primary_cohort", "primary_evaluator", "sensitivity_evaluator", "secondary", "smoke_uncertainty", "exploratory_uncertainty", "bootstrap_seed", "bootstrap_resamples"],
+      "properties": {
+        "primary": {"const": "mean_paired_delta_MRR_T1_minus_T0"},
+        "primary_cohort": {"const": "joint_complete_labeled"},
+        "primary_evaluator": {"const": "java_strict_v2"},
+        "sensitivity_evaluator": {"const": "legacy_v1"},
+        "smoke_uncertainty": {"const": "descriptive_only"},
+        "secondary": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+        "bootstrap_seed": {"type": "integer"},
+        "bootstrap_resamples": {"type": "integer", "minimum": 1}
+      }
+    },
+    "frozen_inputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["path", "sha256"],
+        "additionalProperties": false,
+        "dependentRequired": {"glob": ["files"], "files": ["glob"]},
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"$ref": "#/$defs/hash"},
+          "glob": {"type": "string"},
+          "files": {"type": "integer", "minimum": 1}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "topology": {
+      "type": "object",
+      "required": ["mu", "acceleration", "semantic_weight", "sequential_weight", "program_weight", "eta", "redundancy", "neighbors", "max_iterations", "tolerance", "typed", "propagate"],
+      "properties": {
+        "typed": {"const": false},
+        "propagate": {"type": "boolean"},
+        "neighbors": {"type": "integer", "minimum": 1},
+        "max_iterations": {"type": "integer", "minimum": 1}
+      }
+    }
+  }
+}

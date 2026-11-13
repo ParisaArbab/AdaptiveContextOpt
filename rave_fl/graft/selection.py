@@ -24,8 +24,21 @@ class TokenizerCounter:
         from transformers import AutoTokenizer
         self.tokenizer=AutoTokenizer.from_pretrained(str(path),local_files_only=True,trust_remote_code=False)
         if not self.tokenizer.chat_template:raise ValueError('Tokenizer chat template required')
-        self.name='local_chat_template:'+fingerprint({str(p.name):p.read_text() for p in sorted(path.glob('*token*json'))})
-    def count(self,messages):return len(self.tokenizer.apply_chat_template(messages,tokenize=True,add_generation_prompt=True))
+        self.name = 'local_chat_template:' + fingerprint({
+            'template': self.tokenizer.chat_template,
+            'tokenizer_files': {p.name: p.read_text(encoding='utf-8') for p in sorted(path.glob('*token*json'))},
+        })
+
+    def token_ids(self, messages):
+        tokens = self.tokenizer.apply_chat_template(
+            messages, tokenize=True, add_generation_prompt=True, return_dict=False,
+        )
+        if not isinstance(tokens, list) or not tokens or any(type(token) is not int for token in tokens):
+            raise ValueError('Local chat template must produce one nonempty token ID sequence')
+        return tokens
+
+    def count(self, messages):
+        return len(self.token_ids(messages))
 
 @dataclass(frozen=True)
 class Selection:

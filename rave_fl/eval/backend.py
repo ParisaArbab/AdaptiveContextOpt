@@ -1,5 +1,5 @@
 """Exact selected-action cache, durable request journal and bounded providers."""
-from dataclasses import asdict
+from dataclasses import asdict, dataclass
 import hashlib
 import importlib
 import json
@@ -25,6 +25,30 @@ class ExecutionLimit(RuntimeError):
 
 class UnknownUsage(RuntimeError):
     pass
+
+
+@dataclass(frozen=True)
+class PromptSettlement:
+    """Verified usage ceiling for one exact request, separate from its pending hold."""
+
+    request_sha256: str
+    serving_identity: dict
+    prompt_tokens: int
+    output_cap: int
+
+    @property
+    def upper(self):
+        return self.prompt_tokens + self.output_cap
+
+    def verify(self, payload, provider):
+        if (fingerprint(payload) != self.request_sha256
+                or provider.metadata.get("prompt_settlement_identity") != self.serving_identity
+                or provider.metadata.get("digest") != self.serving_identity["model_manifest_sha256"]
+                or provider.metadata.get("provider_version") != self.serving_identity["serving_version"]
+                or payload["options"]["num_predict"] != self.output_cap
+                or type(self.prompt_tokens) is not int or self.prompt_tokens <= 0
+                or not 0 < self.upper <= payload["options"]["num_ctx"]):
+            raise CompatibilityError("Prompt settlement request or serving provenance mismatch")
 
 
 def prompt(candidates, context, action, level, language, granularity):
@@ -143,9 +167,10 @@ class Provider:
 class Store:
     """A run lock excludes other processes; this lock coordinates worker threads."""
 
-    def __init__(self, run_dir, opts):
+    def __init__(self, run_dir, opts, *, settlements=None):
         self.root = Path(run_dir)
         self.opts = opts
+        self.settlements = dict(settlements or {})
         self.lock = threading.Condition(threading.RLock())
         self.db = sqlite3.connect(self.root / "journal.sqlite3", check_same_thread=False)
         self.db.execute("PRAGMA journal_mode=WAL")
@@ -153,6 +178,12 @@ class Store:
         self.db.execute(
             "CREATE TABLE IF NOT EXISTS calls (key TEXT PRIMARY KEY, instance TEXT, status TEXT, request TEXT, response TEXT, reservation INTEGER, input INTEGER, output INTEGER, error TEXT)"
         )
+        if self.settlements:
+            self.db.execute("CREATE TABLE IF NOT EXISTS prompt_settlements (key TEXT PRIMARY KEY, binding TEXT NOT NULL)")
+        elif (self.db.execute("SELECT 1 FROM sqlite_master WHERE name='prompt_settlements'").fetchone()
+              and self.db.execute("SELECT 1 FROM prompt_settlements LIMIT 1").fetchone()):
+            self.db.close()
+            raise CompatibilityError("Resuming a settlement journal requires its verified request bindings")
         self.db.commit()
         self.cache_dir = (
             Path(opts["cache_dir"]).resolve() if opts.get("cache_dir") else self.root / "cache"
@@ -168,21 +199,29 @@ class Store:
             os.fsync(f.fileno())
 
     def totals(self, instance=None):
-        query = "SELECT status,reservation,input,output FROM calls"
+        query = "SELECT status,reservation,input,output,key FROM calls"
         params = ()
         if instance is not None:
             query += " WHERE instance=?"
             params = (instance,)
         rows = self.db.execute(query, params).fetchall()
         known = sum((r[2] or 0) + (r[3] or 0) for r in rows)
-        reserved = sum(r[1] for r in rows if r[0] in {"pending", "unknown"})
-        return {
+        reserved = sum(r[1] for r in rows if r[0] in {"pending", "unknown"}
+                       or r[0] == "violation" and r[4] in self.settlements)
+        totals = {
             "known_provider_tokens": known,
             "reserved_or_unknown_tokens": reserved,
             "new_calls": sum(r[0] != "reused" for r in rows),
             "usage_unknown": any(r[0] in {"unknown", "violation"} for r in rows),
             "pending": any(r[0] == "pending" for r in rows),
         }
+        if self.settlements:
+            if any(key not in self.settlements for _, _, _, _, key in rows):
+                raise CompatibilityError("Journal contains a request outside the settlement plan")
+            totals["settled_upper_tokens"] = sum(
+                self.settlements[key].upper for status, _, _, _, key in rows if status == "complete"
+            )
+        return totals
 
     def snapshot(self):
         with self.lock:
@@ -203,6 +242,12 @@ class Store:
             "model_digest": provider.metadata["digest"],
         }
         cache = self.cache_dir / (key + ".json")
+        settlement = self.settlements.get(key)
+        if self.settlements:
+            if settlement is None or self.opts["cache_mode"] != "off":
+                raise CompatibilityError("Prompt settlement requires a verified request and journal-only reuse")
+            settlement.verify(payload, provider)
+            record["prompt_settlement"] = asdict(settlement)
         with self.lock:
             while True:
                 row = self.db.execute(
@@ -216,6 +261,18 @@ class Store:
                     self.lock.wait()
                     continue
                 break
+            if settlement and self.totals()["usage_unknown"]:
+                raise UnknownUsage("Unresolved or unsafe settlement usage blocks requests")
+            if settlement and row:
+                saved = self.db.execute("SELECT binding FROM prompt_settlements WHERE key=?", (key,)).fetchone()
+                if saved is None or json.loads(saved[0]) != record["prompt_settlement"]:
+                    raise CompatibilityError("Journal prompt settlement provenance mismatch")
+                if row[0] == "complete":
+                    response = json.loads(row[1])
+                    if (response.get("done") is not True or type(response.get("prompt_eval_count")) is not int
+                            or response["prompt_eval_count"] != settlement.prompt_tokens
+                            or type(response.get("eval_count")) is not int or not 0 <= response["eval_count"] <= settlement.output_cap):
+                        raise CompatibilityError("Journal response violates the verified settlement")
             if row:
                 if row[0] not in {"complete", "reused"}:
                     raise UnknownUsage(row[2] or "Previous provider usage unresolved")
@@ -258,7 +315,7 @@ class Store:
             reservation = payload["options"]["num_ctx"] + payload["options"]["num_predict"]
             if (
                 total["new_calls"] >= self.opts["max_new_calls"]
-                or total["known_provider_tokens"]
+                or total.get("settled_upper_tokens", total["known_provider_tokens"])
                 + total["reserved_or_unknown_tokens"]
                 + reservation
                 > self.opts["physical_budget"]
@@ -267,10 +324,12 @@ class Store:
                     "Whole-run physical token/call cap cannot reserve next request"
                 )
             if (
-                bug["known_provider_tokens"] + bug["reserved_or_unknown_tokens"] + reservation
+                bug.get("settled_upper_tokens", bug["known_provider_tokens"]) + bug["reserved_or_unknown_tokens"] + reservation
                 > self.opts["per_bug_physical_budget"]
             ):
                 raise ExecutionLimit("Per-bug physical token cap cannot reserve next request")
+            if settlement and hasattr(provider, "before_fresh_request"):
+                provider.before_fresh_request()
             self.db.execute(
                 "INSERT INTO calls VALUES (?,?,?,?,?,?,?,?,?)",
                 (
@@ -285,9 +344,9 @@ class Store:
                     None,
                 ),
             )
+            if settlement:
+                self.db.execute("INSERT INTO prompt_settlements VALUES (?,?)", (key, json.dumps(asdict(settlement))))
             self.db.commit()
-            self.active = getattr(self, "active", set())
-            self.active.add(key)
             self.event(
                 {
                     "event": "request",
@@ -297,18 +356,37 @@ class Store:
                     **record,
                 }
             )
+            self.active = getattr(self, "active", set())
+            self.active.add(key)
         start = time.monotonic()
         try:
             response = provider.execute(payload, ids, action)
-            if response.get("done") is not True:
-                raise ValueError("Provider response is incomplete")
             inp, out = response.get("prompt_eval_count"), response.get("eval_count")
+            if response.get("done") is not True:
+                if settlement and type(inp) is type(out) is int and inp >= 0 and out >= 0:
+                    with self.lock:
+                        self.db.execute("UPDATE calls SET response=?,input=?,output=? WHERE key=?",
+                                        (json.dumps(response), inp, out, key))
+                        self.db.commit()
+                raise ValueError("Provider response is incomplete")
             if type(inp) is not int or type(out) is not int or inp < 0 or out < 0:
                 raise ValueError("Provider omitted valid token counters")
+            identity_drift = (settlement and hasattr(provider, "response_identity_matches")
+                              and not provider.response_identity_matches(response))
+            violation = (
+                inp > payload["options"]["num_ctx"] or out > payload["options"]["num_predict"]
+                or settlement is not None and inp != settlement.prompt_tokens or identity_drift
+            )
+            error = None
+            if violation:
+                error = ("Provider returned an unexpected model; paid usage retained; stop run" if identity_drift else
+                         "Provider prompt-token count drift; paid usage retained; stop run"
+                         if settlement and inp != settlement.prompt_tokens else
+                         "Provider counter bound violated; paid usage retained; stop run")
             with self.lock:
                 self.db.execute(
-                    "UPDATE calls SET status=?,response=?,input=?,output=? WHERE key=?",
-                    ("complete", json.dumps(response), inp, out, key),
+                    "UPDATE calls SET status=?,response=?,input=?,output=?,error=? WHERE key=?",
+                    ("violation" if violation else "complete", json.dumps(response), inp, out, error, key),
                 )
                 self.db.commit()
                 self.event(
@@ -318,17 +396,11 @@ class Store:
                         "instance": instance,
                         "response": response,
                         "duration_seconds": time.monotonic() - start,
+                        **({"settled_upper_tokens": None if violation else settlement.upper} if settlement else {}),
                     }
                 )
-                if inp > payload["options"]["num_ctx"] or out > payload["options"]["num_predict"]:
-                    self.db.execute(
-                        "UPDATE calls SET status=?,error=? WHERE key=?",
-                        ("violation", "Provider violated context/output reservation", key),
-                    )
-                    self.db.commit()
-                    raise ExecutionLimit(
-                        "Provider counter bound violated; paid usage retained; stop run", response
-                    )
+                if violation:
+                    raise ExecutionLimit(error, response)
                 with tempfile.NamedTemporaryFile(
                     "w", dir=self.cache_dir, prefix=key + ".", suffix=".tmp", delete=False
                 ) as handle:
@@ -481,8 +553,12 @@ class Backend:
 
     def execute(self, cs, action, level):
         predicted, reserved = self.planning(cs, action, level)
-        if reserved > self.budget - self.spent:
+        settlement = getattr(self, "prompt_settlement", None)
+        admitted_spend = getattr(self, "settled_upper_spent", 0) if settlement else self.spent
+        if reserved > self.budget - admitted_spend:
             raise ExecutionLimit("Per-policy reservation cannot admit selected action")
+        if settlement and reserved > getattr(self, "arm_physical_budget", self.budget) - admitted_spend:
+            raise ExecutionLimit("Per-arm physical token cap cannot reserve next request")
         if predicted > self.opts["context_window"]:
             raise CompatibilityError(
                 "Conservative prompt/context estimate too large; raise context or reduce pool/batch"
@@ -520,10 +596,14 @@ class Backend:
                     }
                 )
             raise
-        raw = response.get("message", {}).get("content", "")
+        message = response.get("message")
+        content = message.get("content") if isinstance(message, dict) else None
+        raw = content if isinstance(content, str) else ""
         obs, error = parse_response(raw, cs, action)
         inp, out = response["prompt_eval_count"], response["eval_count"]
         self.spent += inp + out
+        if settlement:
+            self.settled_upper_spent = admitted_spend + settlement.upper
         self.events.append(
             {
                 "fingerprint": key,
@@ -535,6 +615,8 @@ class Backend:
                 "reuse": reuse,
                 "remaining": self.budget - self.spent,
                 "error": error,
+                **({"settled_upper_tokens": settlement.upper,
+                    "admission_remaining_tokens": self.budget - self.settled_upper_spent} if settlement else {}),
             }
         )
         if self.opts["admission"] == "strict" and inp + out > reserved:

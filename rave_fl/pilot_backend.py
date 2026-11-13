@@ -8,7 +8,6 @@ from __future__ import annotations
 from dataclasses import asdict
 import hashlib
 import json
-import math
 from pathlib import Path
 import time
 import urllib.request
@@ -73,10 +72,9 @@ def parse_response(raw, candidates, action):
 def number(value):
     if isinstance(value, bool) or not isinstance(value, (float, int)):
         raise ValueError("Score must be a JSON number")
-    score = float(value)
-    if not math.isfinite(score) or not 0 <= score <= 1:
+    if not 0 <= value <= 1:
         raise ValueError("Score outside [0, 1]")
-    return score
+    return float(value)
 
 
 class OllamaPilotBackend:
