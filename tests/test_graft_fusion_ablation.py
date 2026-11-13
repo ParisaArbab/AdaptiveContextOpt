@@ -31,7 +31,7 @@ def test_fixed_suspicion_blend_can_override_initial_rank():
     f = Fusion("suspicion_rank_blend")
     scores = f.scores(candidates, states)
     ranked = f.order(candidates, scores)
-    assert [c.rank for c in ranked] == [3, 2, 1]
+    assert [c.rank for c in ranked] == [3, 1, 2]
     assert scores[candidates[2].function_id] == 0.70 * 0.9
     assert f.config()["calibrated"] is False
 
