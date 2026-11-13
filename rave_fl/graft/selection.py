@@ -67,9 +67,49 @@ def render(graph,target,ids):
     return json.dumps({'evidence_links':links,'schema':'graft-evidence-v1','target':target,'failure':failure,'units':units,'frame_references_in_failure':references},ensure_ascii=False,sort_keys=True,separators=(',',':'))
 
 
+
+def render_focused(graph, target, ids):
+    """Compact, provenance-preserving view of exact existing graph/source nodes.
+
+    Only the opt-in focused arm uses this format. Historical render() and
+    evidence hashes remain unchanged. Grouping repeated owner/path metadata
+    makes room for complete source blocks within the same input budget.
+    The graph/node IDs are retained in Selection.ids and its hash; the prompt
+    includes the original, unmodified source text and precise line ranges.
+    """
+    known = graph.by_id
+    selected = set(ids)
+    if not selected <= set(known):
+        raise ValueError("Unknown focused evidence ID")
+    failures = [n for n in graph.nodes if n.id in selected and n.kind == "failure"]
+    grouped = {}
+    for node in graph.nodes:
+        if node.id not in selected or node.kind == "failure":
+            continue
+        # Grouping never merges different files or method owners.
+        key = (node.owner, node.origin.path)
+        grouped.setdefault(key, []).append([
+            node.origin.start_line, node.origin.end_line, node.text
+        ])
+    sources = [
+        {
+            "fn": owner,
+            "path": path,
+            "units": sorted(units, key=lambda x: (x[0], x[1], x[2])),
+        }
+        for (owner, path), units in sorted(grouped.items())
+    ]
+    return json.dumps({
+        "schema": "graft-focused-v1",
+        "target": target,
+        "failure": "\\n".join(n.text for n in failures),
+        "sources": sources,
+    }, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
 def package(graph,target,ids,budget,counter=None,selector='manual',scores=None,diagnostics=None,reason=''):
     if type(budget) is not int or budget<1:raise ValueError('Positive input budget required')
-    counter=counter or ByteCounter();ids=tuple(sorted(set(ids)));text=render(graph,target,ids)
+    counter=counter or ByteCounter();ids=tuple(sorted(set(ids)));text=(render_focused(graph,target,ids) if selector=="focused_compact_v1" else render(graph,target,ids))
     units=counter.count([{'role':'system','content':SYSTEM},{'role':'user','content':text}])
     if type(units) is not int or units<0:raise ValueError('Counter must return a nonnegative integer')
     complete=set(mandatory_ids(graph,target))<=set(ids)
