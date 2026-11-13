@@ -272,7 +272,7 @@ class Router:
     """Transparent development heuristic; no calibrated gain or trained policy."""
 
     def __init__(self, candidates, session, fusion, policy="graft_adaptive", embeddings=None):
-        if policy not in {"l1_anchor", "l1_graph", "graft_adaptive"}:
+        if policy not in {"l1_anchor", "l1_graph", "l1_graph_suspicion", "graft_adaptive"}:
             raise ValueError("Unknown GRAFT policy")
         if len({c.function_id for c in candidates}) != len(candidates) or not candidates:
             raise ValueError("Nonempty unique candidate pool required")
@@ -477,7 +477,7 @@ class Router:
                             / max(1, predicted)
                         )
                         gate = (
-                            self.policy == "l1_graph" or position < self.config.top_k or uncertain
+                            self.policy in {"l1_graph", "l1_graph_suspicion"} or position < self.config.top_k or uncertain
                         )
                         rows.append(
                             {
@@ -518,6 +518,19 @@ class Router:
                             ),
                         )
                         if self.policy == "graft_adaptive"
+                        else max(
+                            eligible,
+                            key=lambda r: (
+                                # Deliberately simple, gold-free graph-selection
+                                # ablation; retain the old l1_graph as control.
+                                r["suspicion"],
+                                -r["reported_uncertainty"],
+                                -r["predicted_tokens"],
+                                -r["current_rank"],
+                                r["candidate"],
+                            ),
+                        )
+                        if self.policy == "l1_graph_suspicion"
                         else min(
                             eligible,
                             key=lambda r: (
