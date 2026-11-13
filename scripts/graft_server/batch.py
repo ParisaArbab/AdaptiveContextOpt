@@ -303,32 +303,39 @@ def stage(args, selection, name):
     folder = args.work / name
     folder.mkdir(exist_ok=True)
     manifest = folder / "batch.json"
+    saved = None
     if manifest.exists():
         saved = unseal(manifest)
         require(saved["selection_sha256"] == selection["sha256"] and saved["implementation"] == implementation_identity()
                 and saved["deployment_sha256"] == deployment_identity(),
                 "Existing batch has another selection or implementation")
-        save_disposition(folder, saved["dispositions"])
-        return saved
+        if not args.retry_blocked or all(row["status"] == "READY" for row in saved["dispositions"]):
+            save_disposition(folder, saved["dispositions"])
+            return saved
+    old_rows = {r["defect"]: r for r in saved["dispositions"] if r["status"] == "READY"} if saved else {}
+    generation = saved.get("preparation_revision", 1) + 1 if saved else 1
     gt = args.work / "offline/ground-truth.json"
     label_spec = selection["label_reference_offline_only"]
     _, label_failure = gate("pinned FlexFL label reference", lambda: rank_blob(label_spec, gt, args.flexfl))
     labels = {} if label_failure else read(gt)
     with ThreadPoolExecutor(max_workers=args.workers) as pool:
-        rows = list(pool.map(lambda case: prepare_one_defect(args, case, labels, args.work), cases))
+        rows = list(pool.map(lambda case: old_rows.get(case["defect"])
+                             or prepare_one_defect(args, case, labels, args.work), cases))
     if label_failure:
         for row in rows:
-            row.setdefault("label_reason", label_failure)
+            if row["status"] != "READY":
+                row.setdefault("label_reason", label_failure)
     ready = [r for r in rows if r["status"] == "PREPARED"]
-    groups = []
+    groups = saved["groups"].copy() if saved else []
     locations = folder / "groups"
     locations.mkdir(exist_ok=True)
     # One deterministic smoke uses the first fully admissible defect. It counts
     # in the same holdout, and a failed preparation does not replace any ID.
     pending = []
-    if name == "core":
+    if name == "core" and not groups:
         for index, candidate in enumerate(ready):
-            group, error = gate("smoke certification", lambda: certify(args, locations / f"core-smoke-{candidate['defect']}", [candidate]))
+            suffix = "" if generation == 1 else f"-r{generation}"
+            group, error = gate("smoke certification", lambda: certify(args, locations / f"core-smoke-{candidate['defect']}{suffix}", [candidate]))
             if group:
                 candidate.update(status="READY", group=group["id"], **recall_for(group, candidate))
                 groups.append(group)
@@ -339,7 +346,8 @@ def stage(args, selection, name):
         pending = ready.copy()
     for index in range(0, len(pending), 3):
         chunk = pending[index:index + 3]
-        base = f"{name}-{index // 3:03d}"
+        prefix = name if generation == 1 else f"{name}-r{generation}"
+        base = f"{prefix}-{index // 3:03d}"
         group, error = gate("group certification", lambda: certify(args, locations / base, chunk))
         if group:
             groups.append(group)
@@ -360,11 +368,17 @@ def stage(args, selection, name):
     ids = [r["defect"] for r in cases]
     value = {"schema": "graft-a100-batch-v1", "segment": name, "selection_sha256": selection["sha256"],
              "selected": ids, "groups": groups, "dispositions": rows,
+             "preparation_revision": generation,
              "implementation": implementation_identity(), "deployment_sha256": deployment_identity(),
              "commit": git(ROOT, "rev-parse", "HEAD").decode().strip(),
              "max_calls": len(ids) * 48, "aggregate_physical_cap": len(ids) * 72000}
     require(sum(g["calls"] for g in groups) <= value["max_calls"]
             and sum(g["peak"] for g in groups) <= value["aggregate_physical_cap"], "Aggregate admission cap exceeded")
+    if saved:
+        previous = folder / f"batch-preparation-r{generation - 1}.json"
+        if not previous.exists():
+            write_json(previous, saved)
+        require(unseal(previous) == saved, "Previous batch preparation receipt differs")
     sealed(manifest, value)
     save_disposition(folder, rows)
     print(name, dict(Counter(r["status"] for r in rows)), flush=True)
@@ -389,7 +403,9 @@ def blocked_report(output, rows, inventory):
 
 def deployment_identity():
     names = [*sorted((ROOT / "scripts/graft_server").glob("*")),
-             ROOT / "scripts/audit_graft_schedule_tokens.py", ROOT / "scripts/build_graft_settlement_certificate.py"]
+             *(ROOT / "scripts" / f"{name}.py" for name in ("audit_graft_schedule_tokens", "build_graft_settlement_certificate",
+                                                             "verify_graft_real_sources", "audit_graft_phase6")),
+             ROOT / "configs/graft_portable/remote_linux_a100.json"]
     return fingerprint({str(p.relative_to(ROOT)): file_hash(p) for p in names if p.is_file()})
 
 
@@ -701,6 +717,7 @@ def main():
         if cmd == "prepare-batch":
             sub.add_argument("--workers", type=int, default=2)
             sub.add_argument("--trigger-timeout", type=int, default=900)
+            sub.add_argument("--retry-blocked", action="store_true", help="Retry blocked preparation before any batch dispatch")
         if cmd == "run-batch":
             sub.add_argument("--allow-inference", action="store_true")
         if cmd == "report-batch":
@@ -727,6 +744,10 @@ def main():
     with lock(args.work / ".batch.lock", shared=args.command == "report-batch"):
         if args.command == "prepare-batch":
             selection = read_selection()
+            if args.retry_blocked:
+                claim = args.models.parent / "graft-fl-live-claims" / f"holdout-{selection['sha256']}.json"
+                require(not claim.exists() and not (args.work / "runs").exists(),
+                        "Preparation retries require an undispatched holdout and original workspace")
             inventory = host_inventory(args)
             write_json(args.work / "host-inventory.json", inventory)
             if inventory["status"] != "PASS":

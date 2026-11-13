@@ -177,6 +177,8 @@ scripts/graft_server/prepare_batch.sh --host-config "$GRAFT_BASE/host.json" \
 cat "$GRAFT_WORK/core/disposition.csv"
 ```
 
+After supplying missing project dependencies, you can retry blocked preparation before any dispatch by repeating that command with `--retry-blocked`. It archives the prior disposition, preserves existing group certificates and rechecks only blocked IDs. It never retries a generation request. Once collection is claimed, the admitted roster is fixed.
+
 Read the disposition and sealed group bounds before generation. This is the single manual inference command. For the 200-defect evaluation, change `GRAFT_COUNT` to 200 and rerun preparation in the same workspace before invoking it.
 
 ```bash

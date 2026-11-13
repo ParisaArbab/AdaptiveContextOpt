@@ -193,7 +193,7 @@ def official_replay(args, case, buggy, fixed, folder):
             "Defects4J archived trigger bytes drifted")
     trials = archive_blocks(archive)
     prefix = ["unshare", "--user", "--map-root-user", "--net", "--"]
-    env = {**os.environ, "PATH": f"{args.java_home}/bin:/usr/bin:/bin",
+    env = {**os.environ, "PATH": f"{args.java_home}/bin:/usr/local/bin:/usr/bin:/bin",
            "JAVA_HOME": str(args.java_home), "TZ": "America/Los_Angeles",
            "GIT_ALLOW_PROTOCOL": "file", "GIT_CONFIG_GLOBAL": "/dev/null", "GIT_CONFIG_NOSYSTEM": "1",
            "GIT_TERMINAL_PROMPT": "0", "GIT_AUTHOR_NAME": "Defects4J", "GIT_AUTHOR_EMAIL": "d4j@localhost",
@@ -250,9 +250,11 @@ def official_replay(args, case, buggy, fixed, folder):
             result = {}
             for p in root.rglob("*.java"):
                 name = p.relative_to(root).as_posix()
-                name = name.removeprefix("JodaTime/")
+                if project == "Time":
+                    name = name.removeprefix("JodaTime/")
                 if re.search(r"(^|/)(test|tests|testsrc|examples|target|build|generated_sources)(/|$)", name):
                     continue
+                require(name not in result and p.resolve().is_relative_to(root.resolve()), "Ambiguous production Java source identity")
                 result[name] = hashlib.sha256(p.read_bytes()).hexdigest()
             return result
         original = production(buggy)

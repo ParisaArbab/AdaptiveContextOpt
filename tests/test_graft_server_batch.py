@@ -112,6 +112,38 @@ def test_unstarted_reports_keep_dispositions_without_accuracy(tmp_path):
     assert [r["execution_status"] for r in rows] == ["not_prepared", "unstarted"]
 
 
+def test_retry_recertifies_only_blocked_defects_before_dispatch(tmp_path, monkeypatch):
+    selection_manifest = {"core": [{"defect": "A"}, {"defect": "B"}], "sha256": "selection",
+                          "label_reference_offline_only": {}}
+    calls = []
+    monkeypatch.setattr(batch, "implementation_identity", lambda: {})
+    monkeypatch.setattr(batch, "deployment_identity", lambda: "deploy")
+    monkeypatch.setattr(batch, "git", lambda *_: b"commit")
+    monkeypatch.setattr(batch, "rank_blob", lambda *_: None)
+    batch.write_json(tmp_path / "offline/ground-truth.json", {})
+
+    def prepare(_, case, *unused):
+        calls.append(case["defect"])
+        return {**case, "status": "PREPARED" if case["defect"] == "A" or calls.count("B") == 2 else "BLOCKED"}
+
+    def certify(_, path, members):
+        ids = [row["defect"] for row in members]
+        return {"id": path.name, "members": ids, "calls": 2 * len(ids), "peak": 100,
+                "offline_recall": {ident: {"status": "missing_labels"} for ident in ids}}
+
+    monkeypatch.setattr(batch, "prepare_one_defect", prepare)
+    monkeypatch.setattr(batch, "certify", certify)
+    args = SimpleNamespace(work=tmp_path, workers=1, flexfl=None, retry_blocked=False)
+    original = batch.stage(args, selection_manifest, "core")
+    args.retry_blocked = True
+    updated = batch.stage(args, selection_manifest, "core")
+    assert calls == ["A", "B", "B"]
+    assert updated["selected"] == original["selected"]
+    assert updated["groups"][0] == original["groups"][0]
+    assert updated["groups"][1]["members"] == ["B"]
+    assert batch.unseal(tmp_path / "core/batch-preparation-r1.json") == original
+
+
 def test_pinned_blob_and_archived_failure_checks(tmp_path, monkeypatch):
     raw = b"pinned ranking"
     spec = {"git_blob": data.blob_sha(raw), "path": "rank.csv"}

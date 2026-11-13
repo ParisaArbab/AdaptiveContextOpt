@@ -9,7 +9,7 @@ The 100-defect core and disjoint 100-defect extension are frozen before new gene
 - An initial Linux container used a legacy compiler that could not compile the pinned Ollama C++ sources. The check passed with GCC 12, as specified in the runbook.
 - The unsupported Mac preflight produced a blocked host inventory and a 200-row disposition, with no dispatch. Loopback and synthetic checks exercise batch gating, journal reconciliation and paid or unresolved usage.
 - SHA-256 revalidation matched all 88 archived Lang-54/Math-80 files and the three frozen 12-defect design files. The archived JxPath-14 reproduction and the Mac scientific implementation were retained.
-- The full workspace test run passed 340 tests. Three pre-existing failures also appear in the prior coordinate-gate log: Agent4SR format finalization and two legacy pipeline tests that reference the absent `scripts/run_pipeline.sh`.
+- The full workspace test run passed 341 tests. The prior coordinate-gate log records the same three failures. One is in Agent4SR format finalization and two are legacy pipeline tests that reference the absent `scripts/run_pipeline.sh`.
 
 ## Authentic holdout input check
 
