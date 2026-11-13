@@ -139,8 +139,13 @@ def focus_select(graph, target, budget, counter=None, missing_evidence=""):
         control = re.match(r"(?:if|switch|while|for)\s*\(", first)
         return bool(control and any(re.search(r"\b" + re.escape(v) + r"\b", first) for v in variables))
 
-    core = [n for n in target_codes if related_branch(n)]
-    for node in core:
+    # The earliest control-flow branch using a returned value is the primary
+    # branch; later uses are optional. Do not require *all* branches to fit.
+    core = sorted(
+        (n for n in target_codes if related_branch(n)),
+        key=lambda n: (n.origin.start_line, n.id),
+    )
+    for node in core[:1]:
         add_bundle([node], "target_control_flow:" + str(node.origin.start_line))
 
     # Fill with remaining on-target code. Do not prioritize other unrelated
