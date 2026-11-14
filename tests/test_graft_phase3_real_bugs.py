@@ -97,6 +97,89 @@ def test_modified_class_proxy_labels_require_actual_source_path(tmp_path):
     ]
 
 
+
+def test_official_collection_works_with_relative_root_and_absolute_test_path(
+    tmp_path, monkeypatch,
+):
+    """Reproduce the AIScalar path mismatch without invoking real Defects4J."""
+    import os
+    import subprocess
+    from scripts import prepare_graft_phase3_real_bugs as prep
+
+    frozen = source_manifest(tmp_path)
+    output_root = Path(os.path.relpath(tmp_path / "fake-official", Path.cwd()))
+    assert not output_root.is_absolute()
+    revisions = {"Time-1": "a" * 40, "Lang-1": "b" * 40, "Math-1": "c" * 40}
+    executed = []
+
+    def fake_cmd(args, **kwargs):
+        def done(stdout="", returncode=0):
+            return subprocess.CompletedProcess(
+                args, returncode, stdout=stdout, stderr=""
+            )
+
+        if args[0] == "fake-defects4j" and args[1] == "checkout":
+            checkout = Path(args[args.index("-w") + 1])
+            assert checkout.is_absolute(), "Defects4J must receive an absolute checkout"
+            test_file = checkout / "src/test/java/org/example/TestLogic.java"
+            test_file.parent.mkdir(parents=True)
+            test_file.write_text(
+                "package org.example;\n"
+                "public class TestLogic {\n"
+                "  public void testOne() { throw new AssertionError(); }\n"
+                "}\n"
+            )
+            production = checkout / "src/main/java/org/example/Logic.java"
+            production.parent.mkdir(parents=True)
+            production.write_text("package org.example; public class Logic {}\n")
+            return done()
+
+        if args[0] == "git" and args[1] == "-C":
+            checkout = Path(args[2])
+            bug = checkout.name
+            if args[3] == "rev-parse":
+                return done(revisions[bug] + "\n")
+            assert args[3] == "status"
+            return done()
+
+        if args[0] == "fake-defects4j" and args[1] == "export":
+            prop = args[args.index("-p") + 1]
+            return done({
+                "dir.src.tests": "src/test/java\n",
+                "dir.src.classes": "src/main/java\n",
+                "tests.trigger": "org.example.TestLogic::testOne\n",
+                "classes.modified": "org.example.Logic\n",
+            }[prop])
+
+        if args[0] == "fake-defects4j" and args[1] == "test":
+            checkout = Path(args[args.index("-w") + 1])
+            assert checkout.is_absolute()
+            (checkout / "failing_tests").write_text(
+                "--- org.example.TestLogic::testOne\n"
+                "java.lang.AssertionError: observed in synthetic fixture\n"
+            )
+            executed.append(checkout.name)
+            return done("Tests run: 1, Failing tests: 1\n")
+        raise AssertionError(f"Unexpected mock command: {args}")
+
+    monkeypatch.setattr(prep, "cmd", fake_cmd)
+    report = prep.collect(frozen, output_root, "fake-defects4j")
+    assert report["status"] == "ready"
+    assert executed == ["Time-1", "Lang-1", "Math-1"]
+    assert (output_root / "manifest.json").is_file()
+    manifest = json.loads((output_root / "manifest.json").read_text())
+    assert [c["bug"] for c in manifest["cases"]] == executed
+    for case in manifest["cases"]:
+        assert Path(case["checkout"]).is_absolute()
+        assert Path(case["evidence_file"]).is_absolute()
+        evidence = Path(case["evidence_file"]).read_text()
+        assert "TEST SOURCE: src/test/java/org/example/TestLogic.java" in evidence
+        assert "java.lang.AssertionError" in evidence
+        assert case["gold"]["files"] == ["src/main/java/org/example/Logic.java"]
+        assert case["evidence_kind"] == "observed_failure"
+    assert all(a["original_sha_matches"] for a in report["audits"])
+    assert report["new_model_calls"] == 0
+
 def test_pair_config_requires_three_real_inputs_and_no_flexfl_replacement(tmp_path):
     source = Path("configs/graft_independent_qwen7b_control.json")
     d = tmp_path / "dataset.json"
