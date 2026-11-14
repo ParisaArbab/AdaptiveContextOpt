@@ -5,6 +5,7 @@ from dataclasses import replace
 from pathlib import Path
 import re
 import textwrap
+import sys
 
 from rave_fl.code_sketch import FEATURE_NAMES, java_sketch, words
 from rave_fl.core import approx_tokens
@@ -240,10 +241,23 @@ def index_source(instance, granularity, max_files=3000, max_bytes=30_000_000):
 
             walk(tree.body)
         elif instance.language == "java":
+            if os.environ.get("GRAFT_TRACE_JAVA_INDEX") == "1":
+                print(
+                    f"[java-index] parsing {rel} ({len(source.encode())} bytes)",
+                    file=sys.stderr,
+                    flush=True,
+                )
             tree = java_tree(source)
+            if os.environ.get("GRAFT_TRACE_JAVA_INDEX") == "1":
+                print(f"[java-index] parsed {rel}", file=sys.stderr, flush=True)
             data = source.encode()
 
-            def walk_java(n, parents=()):
+            # Explicit stack avoids Python/native stack exhaustion on deeply
+            # nested real-world Java syntax trees. Preserve original AST
+            # preorder and class-qualified candidate IDs.
+            pending = [(tree, ())]
+            while pending:
+                n, parents = pending.pop()
                 current = parents
                 if n.type in {"class_declaration", "interface_declaration", "enum_declaration"}:
                     name = n.child_by_field_name("name")
@@ -286,10 +300,10 @@ def index_source(instance, granularity, max_files=3000, max_bytes=30_000_000):
                             kind="method",
                         )
                     )
-                for child in n.named_children:
-                    walk_java(child, current)
+                pending.extend((child, current) for child in reversed(n.named_children))
+            if os.environ.get("GRAFT_TRACE_JAVA_INDEX") == "1":
+                print(f"[java-index] finished {rel}", file=sys.stderr, flush=True)
 
-            walk_java(tree)
         else:
             raise CompatibilityError(
                 "Method indexing unsupported for "
