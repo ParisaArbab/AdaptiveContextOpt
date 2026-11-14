@@ -1,9 +1,10 @@
-"""Prepare an authentic full failing-test method for the Time-4 development bug.
+"""Prepare an authentic official Time-4 trigger test with explicit provenance.
 
-Uses archived buggy checkout and trigger-description evidence; does not run
-tests or a model. Unlike the new official multi-bug cohort, this condition is
-still trigger-description evidence, NOT a newly observed failing execution.
-No gold labels enter the online test evidence.
+The triggering test was introduced after the raw buggy Git revision. Defects4J
+records it in 4.test.patch. Only the test method is read from the pinned
+fixed-revision test FILE; ALL production code stays at the immutable buggy
+revision. This is trigger-description evidence, NOT a new observed test run.
+No gold labels or fixed production source enter the model input.
 """
 from __future__ import annotations
 import argparse
@@ -12,8 +13,77 @@ import json
 from pathlib import Path
 import subprocess
 
-from scripts.prepare_graft_phase3_real_bugs import find_test_source
+from scripts.prepare_graft_phase3_real_bugs import _one_test_method
 from rave_fl.graft.runner import validate_config
+
+# These are the frozen, official Defects4J Time-4 revisions. The framework's
+# 4.test.patch documents testWith3() as a benchmark triggering test that is
+# absent from the raw buggy source but present in the fixed test revision.
+# NEVER read the fixed revision's production source or change the buggy tree.
+TIME4_BUGGY_REVISION = "bcb044669b4d1f8d334861ccbd169924d6ef3b54"
+TIME4_FIXED_TEST_REVISION = "3ba9ba799b3261b7332a467a88be142c83b298fd"
+OFFICIAL_TEST_PATH = "src/test/java/org/joda/time/TestPartial_Basics.java"
+OFFICIAL_TEST_ID = "org.joda.time.TestPartial_Basics::testWith3"
+OFFICIAL_DEFECTS4J_PATCH = (
+    "https://github.com/rjust/defects4j/blob/master/"
+    "framework/projects/Time/patches/4.test.patch"
+)
+
+
+def _verified_official_time4_test(checkout: Path, revision: str, test_id: str):
+    """Get exactly the official trigger method, never fixed production code.
+
+    No checkout, network, compilation or model calls. If the fixed test commit
+    object is unavailable locally, fail closed rather than using a later
+    release, a guessed snippet or the truncated trigger description.
+    """
+    if revision != TIME4_BUGGY_REVISION or test_id != OFFICIAL_TEST_ID:
+        raise ValueError("Only the pinned official Time-4 trigger and buggy revision are supported")
+    source_path = checkout / OFFICIAL_TEST_PATH
+    if not source_path.is_file() or source_path.is_symlink():
+        raise FileNotFoundError(f"Buggy checkout test file missing: {source_path}")
+    raw_buggy = source_path.read_bytes()
+    if _one_test_method(raw_buggy, "testWith3") is not None:
+        raise ValueError(
+            "Unexpected testWith3() in raw Time-4 buggy revision. "
+            "Verify the checkout is not modified or benchmark-patched."
+        )
+    reference = TIME4_FIXED_TEST_REVISION + ":" + OFFICIAL_TEST_PATH
+    proc = subprocess.run(
+        ["git", "-C", str(checkout), "show", reference],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        check=False, timeout=60,
+    )
+    if proc.returncode != 0:
+        raise FileNotFoundError(
+            "Official Time-4 fixed-revision TEST source is not in the local Git "
+            "object store. Do not use a different revision. Obtain the pinned "
+            f"commit {TIME4_FIXED_TEST_REVISION} or use the official "
+            f"Defects4J test-patch workflow. Git error: {proc.stderr.decode(errors='replace')[-400:]}"
+        )
+    full_test = _one_test_method(proc.stdout, "testWith3")
+    if full_test is None:
+        raise ValueError("Official fixed-revision test file has no complete testWith3 method")
+    if not all(pattern in full_test for pattern in (
+        b"test.with(DateTimeFieldType.clockhourOfDay(), 6)",
+        b"fail()",
+        b"catch (IllegalArgumentException",
+    )):
+        raise ValueError("Pinned test method fails the expected Defects4J trigger signature")
+    return full_test, {
+        "test_source_revision": TIME4_FIXED_TEST_REVISION,
+        "test_source_role": "official_defects4j_trigger_test_only",
+        "test_source_path": OFFICIAL_TEST_PATH,
+        "test_source_full_sha256": sha256(proc.stdout).hexdigest(),
+        "test_method_sha256": sha256(full_test).hexdigest(),
+        "buggy_test_file_sha256": sha256(raw_buggy).hexdigest(),
+        "raw_buggy_revision_contains_test_method": False,
+        "official_patch_reference": OFFICIAL_DEFECTS4J_PATCH,
+        "fixed_production_source_read": False,
+        "buggy_checkout_modified": False,
+        "new_test_execution_performed": False,
+    }
+
 
 
 def prepare(input_file: Path, original_config: Path, output: Path,
@@ -36,13 +106,17 @@ def prepare(input_file: Path, original_config: Path, output: Path,
                            capture_output=True, text=True, check=True)
     if dirty.stdout.strip():
         raise ValueError("Tracked buggy-revision source is dirty")
-    test_file, full_method = find_test_source(checkout, test_id, "src/test/java")
+    full_method, test_provenance = _verified_official_time4_test(
+        checkout, revision, test_id
+    )
     old_failure = source["evidence"]["text"]
     evidence = (
-        "AUTHENTIC COMPLETE BUGGY-REVISION TEST METHOD:\n"
+        "AUTHENTIC OFFICIAL DEFECTS4J TRIGGER TEST METHOD:\n"
+        "TEST METHOD SOURCE: FIXED-REVISION TEST FILE ONLY, NOT FIXED PRODUCTION CODE\n"
         f"TEST: {test_id}\n"
-        f"TEST FILE: {test_file.relative_to(checkout)}\n"
-        f"TEST FILE SHA256: {sha256(test_file.read_bytes()).hexdigest()}\n"
+        f"TEST REVISION: {test_provenance['test_source_revision']}\n"
+        f"TEST FILE: {test_provenance['test_source_path']}\n"
+        f"TEST SOURCE SHA256: {test_provenance['test_source_full_sha256']}\n"
         + full_method.decode("utf-8")
         + "\nORIGINAL PROVIDED TRIGGER DESCRIPTION (NOT A NEW TEST RUN):\n"
         + old_failure
@@ -90,16 +164,18 @@ def prepare(input_file: Path, original_config: Path, output: Path,
         "development_not_heldout": True,
         "new_test_execution_performed": False,
         "trigger_is_original_and_not_observed": True,
-        "test_source_file": str(test_file),
-        "test_source_sha256": sha256(test_file.read_bytes()).hexdigest(),
-        "method_source_sha256": sha256(full_method).hexdigest(),
+        "test_source_file": test_provenance["test_source_path"],
+        "test_source_revision": test_provenance["test_source_revision"],
+        "test_source_sha256": test_provenance["test_source_full_sha256"],
+        "method_source_sha256": test_provenance["test_method_sha256"],
+        "official_trigger_provenance": test_provenance,
         "source_revision": revision,
         "original_trigger_sha256": sha256(old_failure.encode()).hexdigest(),
         "new_combined_evidence_sha256": sha256(evidence.encode()).hexdigest(),
         "new_provider_calls_during_preparation": 0,
         "original_input_json": str(input_file.resolve()),
     }, indent=2) + "\n")
-    print("Prepared authentic full test for", test_id)
+    print("Prepared official benchmark trigger test for", test_id)\n    print("Trigger source revision:", test_provenance["test_source_revision"])
     print("Combined evidence bytes:", len(evidence.encode()))
     print("New dataset:", manifest_path)
     print("New config:", output / "config.json")
