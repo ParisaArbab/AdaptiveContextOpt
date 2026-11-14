@@ -10,6 +10,7 @@ git diff --quiet && git diff --cached --quiet || {
   echo "Preserve tracked changes before running" >&2; exit 2;
 }
 python -m pytest -q \
+  tests/test_graft_time4_official_trigger.py \
   tests/test_graft_phase3_real_bugs.py \
   tests/test_graft_test_aware.py \
   tests/test_graft_test_aware_live_config.py \
@@ -17,6 +18,18 @@ python -m pytest -q \
 
 ROOT="results/graft_phase3_time4_full_test_$(date +%Y%m%d_%H%M%S)"
 python -m scripts.prepare_graft_time4_authentic_test --output "$ROOT"
+python - "$ROOT/provenance.json" <<'PY'
+import json,sys
+p=json.load(open(sys.argv[1]))
+source=p["official_trigger_provenance"]
+assert source["test_source_role"]=="official_defects4j_trigger_test_only"
+assert source["raw_buggy_revision_contains_test_method"] is False
+assert source["fixed_production_source_read"] is False
+assert source["buggy_checkout_modified"] is False
+assert source["new_test_execution_performed"] is False
+assert p["trigger_is_original_and_not_observed"] is True
+print("Verified: authentic Defects4J trigger test only, production checkout remains buggy.")
+PY
 if ! python -m rave_fl.graft.cli preflight \
    --config "$ROOT/config.json" > "$ROOT/preflight.json"; then
   python - "$ROOT/preflight.json" <<'PY'
