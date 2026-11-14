@@ -85,3 +85,48 @@ def test_original_bm25_is_still_old_schema():
     original = relevance_select(graph, target, 4096)
     assert original.selector == "bm25_relevance_only"
     assert json.loads(original.text)["schema"] == "graft-evidence-v1"
+
+
+def test_saved_graph_offline_audit_never_reads_evaluation_labels():
+    from scripts.audit_graft_focused_offline import inspect_instance
+    row = inspect_instance(SNAPSHOT, budget=4096)
+    assert row["new_llm_calls"] == 0
+    assert row["focused_status"] == "ready"
+    assert row["focused_input_units"] <= 4096
+    assert any(item["method"].endswith(".indexOf(DateTimeFieldType)")
+               for item in row["selected_sources"])
+
+
+def test_new_focused_policy_is_registered_and_separate():
+    from rave_fl.graft.runner import GRAFT_POLICIES
+    assert "l1_graph_focused" in GRAFT_POLICIES
+    assert {"l1_graph", "l1_graph_suspicion", "graft_adaptive"} <= GRAFT_POLICIES
+
+
+def test_prepare_independent_cohort_requires_existing_manifest(tmp_path):
+    from scripts.prepare_graft_focused_independent import prepare
+    import pytest
+
+    source = tmp_path / "source.json"
+    conf = {
+        "benchmark": {
+            "bugs": ["Time-1", "Lang-1", "Math-1"],
+            "model": "qwen2.5:7b",
+            "batch_size": 1,
+            "candidate_provider": "flexfl",
+            "dataset_file": str(tmp_path / "existing.json"),
+        },
+        "graft": {"input_budget": 4096, "max_graph": 2, "max_full": 1},
+        "graft_policies": ["l1_graph_suspicion"],
+    }
+    source.write_text(json.dumps(conf))
+    with pytest.raises(FileNotFoundError):
+        prepare(source, tmp_path / "bad")
+    (tmp_path / "existing.json").write_text("{}")
+    path = prepare(source, tmp_path / "good")
+    out = json.loads(path.read_text())
+    assert out["graft_policies"] == [
+        "l1_anchor", "l1_graph_suspicion", "l1_graph_focused"
+    ]
+    assert out["benchmark"]["fusions"] == ["rrf", "suspicion_rank_blend"]
+    assert json.loads((path.parent / "provenance.json").read_text())["new_calls_during_preparation"] == 0
