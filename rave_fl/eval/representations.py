@@ -261,12 +261,26 @@ def index_source(instance, granularity, max_files=3000, max_bytes=30_000_000):
                         + ".".join((*parents, data[name.start_byte : name.end_byte].decode()))
                         + data[params.start_byte : params.end_byte].decode()
                     )
+                    # Normalize tree-sitter point coordinates at the AST
+                    # boundary. CodeEntity requires native positive Python
+                    # integers; retain the exact parser-derived source span.
+                    start = int(n.start_point.row) + 1
+                    end = int(n.end_point.row) + 1
+                    if not 1 <= start <= end:
+                        raise CompatibilityError(
+                            "Invalid Java AST method span: "
+                            f"file={rel!r}, entity={ident!r}, "
+                            f"start={start}, end={end}, "
+                            f"start_type={type(n.start_point.row).__name__}, "
+                            f"end_type={type(n.end_point.row).__name__}, "
+                            f"node_error={n.has_error}"
+                        )
                     entities.append(
                         CodeEntity(
                             ident,
                             rel,
-                            n.start_point.row + 1,
-                            n.end_point.row + 1,
+                            start,
+                            end,
                             data[n.start_byte : n.end_byte].decode(),
                             0.5,
                             kind="method",
