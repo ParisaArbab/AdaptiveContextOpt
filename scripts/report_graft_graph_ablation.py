@@ -4,7 +4,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-POLICIES = ("fixed_l1", "l1_anchor", "l1_graph", "l1_graph_suspicion", "l1_graph_focused", "graft_adaptive")
+POLICIES = ("fixed_l1", "l1_anchor", "l1_graph", "l1_graph_suspicion", "l1_graph_focused", "l1_graph_test_aware", "graft_adaptive")
 
 def main(root):
     rows = json.loads((root / "results.json").read_text())
