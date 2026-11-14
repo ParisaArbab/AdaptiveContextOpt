@@ -274,7 +274,7 @@ class Router:
     """Transparent development heuristic; no calibrated gain or trained policy."""
 
     def __init__(self, candidates, session, fusion, policy="graft_adaptive", embeddings=None):
-        if policy not in {"l1_anchor", "l1_graph", "l1_graph_suspicion", "l1_graph_focused", "l1_graph_test_aware", "graft_adaptive"}:
+        if policy not in {"l1_anchor", "l1_graph", "l1_graph_suspicion", "l1_graph_focused", "l1_graph_test_aware", "l1_graph_test_aware_nostop", "graft_adaptive"}:
             raise ValueError("Unknown GRAFT policy")
         if len({c.function_id for c in candidates}) != len(candidates) or not candidates:
             raise ValueError("Nonempty unique candidate pool required")
@@ -447,7 +447,7 @@ class Router:
                                         self.session.counter,
                                         missing_evidence=obs.missing_evidence if obs else "",
                                     )
-                                elif self.policy == "l1_graph_test_aware":
+                                elif self.policy in {"l1_graph_test_aware", "l1_graph_test_aware_nostop"}:
                                     self.packages[ident] = test_aware_select(
                                         self.graph, ident, self.config.input_budget,
                                         self.session.counter,
@@ -504,7 +504,7 @@ class Router:
                             / max(1, predicted)
                         )
                         gate = (
-                            self.policy in {"l1_graph", "l1_graph_suspicion", "l1_graph_focused", "l1_graph_test_aware"} or position < self.config.top_k or uncertain
+                            self.policy in {"l1_graph", "l1_graph_suspicion", "l1_graph_focused", "l1_graph_test_aware", "l1_graph_test_aware_nostop"} or position < self.config.top_k or uncertain
                         )
                         rows.append(
                             {
@@ -557,7 +557,7 @@ class Router:
                                 r["candidate"],
                             ),
                         )
-                        if self.policy in {"l1_graph_suspicion", "l1_graph_focused", "l1_graph_test_aware"}
+                        if self.policy in {"l1_graph_suspicion", "l1_graph_focused", "l1_graph_test_aware", "l1_graph_test_aware_nostop"}
                         else min(
                             eligible,
                             key=lambda r: (
