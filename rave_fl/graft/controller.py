@@ -8,11 +8,14 @@ from dataclasses import dataclass, asdict, replace
 from enum import Enum
 import json
 import math
+import re
 from rave_fl.core import Action
 from rave_fl.pilot_types import CandidateState
 from rave_fl.eval.backend import Backend, ExecutionLimit, Provider
 from rave_fl.eval.schema import CompatibilityError, fingerprint
 from rave_fl.graft.selection import SYSTEM, ByteCounter, relevance_select, package
+from rave_fl.graft.focused import focus_select
+from rave_fl.graft.test_aware import test_aware_select, stop_decision
 from rave_fl.graft.topology import topo_select, TopologyConfig
 from rave_fl.graft.paths import preserve_paths
 from rave_fl.graft.repair import repair_support, missing_support
@@ -60,6 +63,8 @@ class GraftConfig:
     top_k: int = 5
     typed_topology: bool = False
     propagation: bool = True
+    guard_unsupported_graph_downgrade: bool = True
+    failure_name_anchor: bool = False
 
     def __post_init__(self):
         if self.selector not in {"bm25", "topo"}:
@@ -80,7 +85,10 @@ class GraftConfig:
             raise ValueError("Invalid uncertainty threshold")
         if any(
             type(v) is not bool
-            for v in [self.paths, self.repair, self.typed_topology, self.propagation]
+            for v in [
+                self.paths, self.repair, self.typed_topology, self.propagation,
+                self.guard_unsupported_graph_downgrade, self.failure_name_anchor,
+            ]
         ):
             raise ValueError("Boolean ablation flags required")
 
@@ -237,11 +245,36 @@ class Session:
             )
 
 
+def failing_test_name_anchors(failure_text, function_ids):
+    """Exact name cues from observed failing TEST headers, never gold labels.
+
+    Full method names only; this is not proof of execution or calibrated risk.
+    """
+    tests = set()
+    for line in failure_text.splitlines():
+        if line.startswith("TEST:"):
+            name = line[5:].strip().split("(", 1)[0]
+            parts = re.split(r"[^a-zA-Z0-9]+", name)
+            tests.update(part.lower() for part in parts if part)
+            # Also handle common Java testGetOffsetFromLocal naming.
+            tests.update(
+                part[4:].lower()
+                for part in parts
+                if part.startswith("test") and len(part) > 8
+            )
+    result = {}
+    for function_id in function_ids:
+        method = function_id.rsplit(".", 1)[-1].split("(", 1)[0]
+        name = re.sub(r"[^a-z0-9]", "", method.lower())
+        result[function_id] = len(name) >= 8 and name in tests
+    return result
+
+
 class Router:
     """Transparent development heuristic; no calibrated gain or trained policy."""
 
     def __init__(self, candidates, session, fusion, policy="graft_adaptive", embeddings=None):
-        if policy not in {"l1_graph", "graft_adaptive"}:
+        if policy not in {"l1_anchor", "l1_graph", "l1_graph_suspicion", "l1_graph_focused", "l1_graph_test_aware", "l1_graph_test_aware_nostop", "graft_adaptive"}:
             raise ValueError("Unknown GRAFT policy")
         if len({c.function_id for c in candidates}) != len(candidates) or not candidates:
             raise ValueError("Nonempty unique candidate pool required")
@@ -256,9 +289,26 @@ class Router:
         self.states = {c.function_id: CandidateState() for c in candidates}
         self.history = {c.function_id: [] for c in candidates}
         self.packages, self.trace, self.calls = {}, [], []
+        failures = [n.text for n in self.graph.nodes if n.kind == "failure"]
+        self.failure_anchors = failing_test_name_anchors(
+            "\n".join(failures), [c.function_id for c in candidates]
+        )
+
+    def scores(self):
+        scores = self.fusion.scores(self.candidates, self.states)
+        if self.config.failure_name_anchor and self.fusion.name == "rrf":
+            # One quarter of an RRF rank contribution, a transparent heuristic.
+            # No gold label, patch or future outcome is used.
+            bonus = 0.25 / (self.fusion.rrf_k + 1)
+            scores = {
+                ident: value + (bonus if self.failure_anchors[ident] else 0.0)
+                for ident, value in scores.items()
+            }
+        return scores
 
     def order(self):
-        return self.fusion.order(self.candidates, self.fusion.scores(self.candidates, self.states))
+        return self.fusion.order(self.candidates, self.scores())
+
 
     def observe(self, candidates, stage, selection=None):
         result = self.session.execute(candidates, stage, selection)
@@ -275,16 +325,29 @@ class Router:
         } or len(result.observations) != len(candidates):
             raise CompatibilityError("Paid backend observation IDs differ from selected targets")
         for obs in result.observations:
+            previous = self.states[obs.function_id].observation
+            # A graph response that admits missing evidence is not enough to
+            # override stronger, valid L1 evidence with a lower suspicion.
+            # Preserve the paid response in history for audit and ablation.
+            guard = (
+                self.config.guard_unsupported_graph_downgrade
+                and stage == EvidenceStage.GRAPH
+                and previous is not None and previous.valid
+                and obs.valid and obs.suspicion < previous.suspicion
+                and obs.missing_evidence.strip().lower() not in {"", "none", "n/a"}
+            )
             event = {
                 "stage": stage.value,
                 "evidence_ids": list(selection.ids) if selection else [],
                 **asdict(obs),
+                "applied_to_ranking": not guard,
+                "guard_reason": "unsupported_graph_downgrade" if guard else None,
             }
             self.history[obs.function_id].append(event)
             # Historical Full bonus applies only to actual complete methods.
             self.states[obs.function_id] = CandidateState(
                 2 if stage == EvidenceStage.METHOD_FULL else 1,
-                obs,
+                previous if guard else obs,
                 list(self.history[obs.function_id]),
             )
 
@@ -317,8 +380,13 @@ class Router:
                     stop = "incomplete_l1_budget_or_context"
                     return self.result(stop)
                 self.observe(cs, EvidenceStage.SKETCH)
+            if self.policy == "l1_anchor":
+                # Pure L1 plus the configured name anchor. Graph construction
+                # supplies the same initial evidence but NO graph or Full call
+                # is allowed, ensuring a clean ranking-only ablation.
+                return self.result("l1_anchor_only")
             for step in range(self.config.max_graph + self.config.max_full + 1):
-                scores = self.fusion.scores(self.candidates, self.states)
+                scores = self.scores()
                 ordered = self.order()
                 differences = [
                     abs(scores[a.function_id] - scores[b.function_id])
@@ -358,16 +426,41 @@ class Router:
                         if EvidenceStage.GRAPH.value in past or self.config.max_graph == 0:
                             stages.append(EvidenceStage.METHOD_FULL)
                     for stage in stages:
+                        # The test-aware treatment alone can skip a graph
+                        # request when there is no unanswered evidence question
+                        # for an already high-suspicion top-1 candidate.
+                        if self.policy == "l1_graph_test_aware" and stage == EvidenceStage.GRAPH:
+                            reason = stop_decision(obs, position + 1, top_k=self.config.top_k)
+                            if reason:
+                                rows.append({
+                                    "candidate": ident, "stage": stage.value,
+                                    "eligible": False, "reason": reason,
+                                    "stop_is_calibrated": False,
+                                })
+                                continue
                         selection = None
                         if stage == EvidenceStage.GRAPH:
                             if ident not in self.packages:
-                                self.packages[ident] = select_evidence(
-                                    self.graph,
-                                    ident,
-                                    self.config,
-                                    self.session.counter,
-                                    self.embeddings,
-                                )
+                                if self.policy == "l1_graph_focused":
+                                    self.packages[ident] = focus_select(
+                                        self.graph, ident, self.config.input_budget,
+                                        self.session.counter,
+                                        missing_evidence=obs.missing_evidence if obs else "",
+                                    )
+                                elif self.policy in {"l1_graph_test_aware", "l1_graph_test_aware_nostop"}:
+                                    self.packages[ident] = test_aware_select(
+                                        self.graph, ident, self.config.input_budget,
+                                        self.session.counter,
+                                        missing_evidence=obs.missing_evidence if obs else "",
+                                    )
+                                else:
+                                    self.packages[ident] = select_evidence(
+                                        self.graph,
+                                        ident,
+                                        self.config,
+                                        self.session.counter,
+                                        self.embeddings,
+                                    )
                             selection = self.packages[ident]
                             if selection.status != "ready":
                                 rows.append(
@@ -398,6 +491,7 @@ class Router:
                             + 0.30 * obs.uncertainty
                             + 0.20 * closeness
                             + 0.15 * novelty
+                            + (0.40 if self.config.failure_name_anchor and self.failure_anchors[ident] else 0.0)
                         )
                         priority = (
                             value
@@ -410,7 +504,7 @@ class Router:
                             / max(1, predicted)
                         )
                         gate = (
-                            self.policy == "l1_graph" or position < self.config.top_k or uncertain
+                            self.policy in {"l1_graph", "l1_graph_suspicion", "l1_graph_focused", "l1_graph_test_aware", "l1_graph_test_aware_nostop"} or position < self.config.top_k or uncertain
                         )
                         rows.append(
                             {
@@ -425,6 +519,7 @@ class Router:
                                 "predicted_tokens": predicted,
                                 "reserved_tokens": reserved,
                                 "current_score": scores[ident],
+                                "failure_name_anchor": self.failure_anchors[ident],
                                 "current_rank": position + 1,
                                 "reported_uncertainty": obs.uncertainty,
                                 "suspicion": obs.suspicion,
@@ -450,6 +545,19 @@ class Router:
                             ),
                         )
                         if self.policy == "graft_adaptive"
+                        else max(
+                            eligible,
+                            key=lambda r: (
+                                # Deliberately simple, gold-free graph-selection
+                                # ablation; retain the old l1_graph as control.
+                                r["suspicion"],
+                                -r["reported_uncertainty"],
+                                -r["predicted_tokens"],
+                                -r["current_rank"],
+                                r["candidate"],
+                            ),
+                        )
+                        if self.policy in {"l1_graph_suspicion", "l1_graph_focused", "l1_graph_test_aware", "l1_graph_test_aware_nostop"}
                         else min(
                             eligible,
                             key=lambda r: (
@@ -497,7 +605,9 @@ class Router:
             "graft_config": asdict(self.config),
             "ranker": self.fusion.config(),
             "ranked_functions": [c.function_id for c in self.order()],
-            "ranking_scores": self.fusion.scores(self.candidates, self.states),
+            "ranking_scores": self.scores(),
+            "failure_name_anchors": self.failure_anchors,
+            "failure_anchor_is_calibrated": False,
             "actual_tokens": self.session.spent,
             "tokens_remaining": self.session.budget - self.session.spent,
             "budget_exceeded": self.session.spent > self.session.budget,

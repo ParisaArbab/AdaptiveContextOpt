@@ -4,7 +4,7 @@ import hashlib
 from rave_fl.adaptive import fused_score
 from rave_fl.pilot_types import CandidateState
 
-FUSIONS = ("shared_prior_evidence_fusion_v1", "consistent_score", "rrf", "prior_aware")
+FUSIONS = ("shared_prior_evidence_fusion_v1", "consistent_score", "rrf", "prior_aware", "suspicion_rank_blend")
 
 
 class Fusion:
@@ -35,6 +35,17 @@ class Fusion:
                     1 / (self.rrf_k + 1 + sum(v > o.suspicion for v in observations))
                     if o and o.valid
                     else 0
+                )
+            elif self.name == "suspicion_rank_blend":
+                # Opt-in, fixed, uncalibrated development treatment.
+                # Normalize original ordinal rank to [0, 1]. No gold or future
+                # outcomes are consulted, and no extra model calls are made.
+                n = max(1, len(candidates))
+                rank_prior = 1.0 - (min(max(c.rank, 1), n) - 1) / max(1, n - 1)
+                value = (
+                    0.30 * rank_prior + 0.70 * o.suspicion
+                    if o is not None and o.valid
+                    else rank_prior
                 )
             elif not o or not o.valid:
                 value = prior
@@ -68,10 +79,13 @@ class Fusion:
         return self.scores(candidates, hypothetical)
 
     def config(self):
-        return {
+        result = {
             "name": self.name,
             "tie": self.tie,
             "rounding": self.rounding,
             "rrf_k": self.rrf_k,
             "calibrated": False,
         }
+        if self.name == "suspicion_rank_blend":
+            result["blend_weights"] = {"rank": 0.30, "suspicion": 0.70}
+        return result

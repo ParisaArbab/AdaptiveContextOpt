@@ -185,3 +185,152 @@ def test_graph_rejects_non_string_explanations_after_charging(tmp_path):
     call = next(c for c in result['calls'] if c['stage'] == 'graph')
     assert not call['observations'][0]['valid'] and 'strings' in call['error']
     assert call['input_tokens'] + call['output_tokens'] > 0
+
+
+def test_unsupported_graph_downgrade_keeps_valid_l1_score_and_audit(tmp_path, monkeypatch):
+    candidates, session, _ = setup(tmp_path, GraftConfig(max_graph=1, max_full=0))
+    candidate = candidates[0]
+    router = Router(candidates, session, Fusion("rrf"), "l1_graph")
+    router.observe([candidate], EvidenceStage.SKETCH)
+    original = router.states[candidate.function_id].observation
+    assert original.valid
+    # Preserve the same result type as the real backend while simulating an
+    # explicitly unsupported lower graph verdict.
+    from dataclasses import dataclass, replace as dc_replace
+
+    low = dc_replace(
+        original,
+        suspicion=max(0.0, original.suspicion - 0.2),
+        missing_evidence="No specific code fragment for failure",
+    )
+
+    @dataclass
+    class StubResult:
+        observations: list
+        input_tokens: int = 10
+        output_tokens: int = 2
+
+    monkeypatch.setattr(session, "execute", lambda *_args: StubResult([low]))
+    router.observe([candidate], EvidenceStage.GRAPH)
+    state = router.states[candidate.function_id]
+    assert state.level == 1
+    assert state.observation.suspicion == original.suspicion
+    assert state.history[-1]["suspicion"] == low.suspicion
+    assert state.history[-1]["applied_to_ranking"] is False
+    assert state.history[-1]["guard_reason"] == "unsupported_graph_downgrade"
+
+
+def test_graph_guard_is_explicitly_ablatable(tmp_path, monkeypatch):
+    from dataclasses import dataclass
+
+    config = GraftConfig(
+        max_graph=1, max_full=0, guard_unsupported_graph_downgrade=False
+    )
+    candidates, session, _ = setup(tmp_path, config)
+    candidate = candidates[0]
+    router = Router(candidates, session, Fusion("rrf"), "l1_graph")
+    router.observe([candidate], EvidenceStage.SKETCH)
+    original = router.states[candidate.function_id].observation
+    low = replace(
+        original,
+        suspicion=max(0.0, original.suspicion - 0.2),
+        missing_evidence="Missing supporting code",
+    )
+
+    @dataclass
+    class StubResult:
+        observations: list
+        input_tokens: int = 10
+        output_tokens: int = 2
+
+    monkeypatch.setattr(session, "execute", lambda *_args: StubResult([low]))
+    router.observe([candidate], EvidenceStage.GRAPH)
+    assert router.states[candidate.function_id].observation.suspicion == low.suspicion
+    assert router.states[candidate.function_id].history[-1]["applied_to_ranking"] is True
+
+
+def test_failure_name_anchor_from_observed_test_names_only():
+    from rave_fl.graft.controller import failing_test_name_anchors
+
+    evidence = (
+        "TEST: org.joda.time.TestDateTimeZoneCutover::test_getOffsetFromLocal_Moscow_Autumn\n"
+        "FAILURE: Expected +04:00 but received +03:00\n"
+        "PROJECT FRAMES: some irrelevant code\n"
+    )
+    names = [
+        "org.joda.time.DateTimeZone.getOffsetFromLocal(long)",
+        "org.joda.time.DateTimeZone.getOffset(long)",
+        "org.joda.time.DateTime.toString()",
+    ]
+    hits = failing_test_name_anchors(evidence, names)
+    assert hits == {names[0]: True, names[1]: False, names[2]: False}
+    assert not any(failing_test_name_anchors("No TEST header", names).values())
+
+
+def test_failure_anchor_ablation_changes_only_router_scores(tmp_path):
+    from rave_fl.graft.controller import failing_test_name_anchors
+
+    candidates, session, _ = setup(tmp_path, GraftConfig(failure_name_anchor=True))
+    router = Router(candidates, session, Fusion("rrf"))
+    # Same online evidence in both arms; no gold labels are consulted.
+    target = candidates[0].function_id
+    router.failure_anchors = {c.function_id: c.function_id == target for c in candidates}
+    anchored = router.scores()
+    standard = router.fusion.scores(candidates, router.states)
+    assert anchored[target] > standard[target]
+    assert all(
+        anchored[c.function_id] == standard[c.function_id]
+        for c in candidates[1:]
+    )
+    session.config = replace(session.config, failure_name_anchor=False)
+    router.config = session.config
+    assert router.scores() == standard
+
+
+def test_failure_anchor_config_rejects_non_boolean():
+    with pytest.raises(ValueError, match="Boolean"):
+        GraftConfig(failure_name_anchor=1)
+
+
+def test_l1_anchor_never_invokes_graph_or_full(tmp_path):
+    config = GraftConfig(failure_name_anchor=True, max_graph=2, max_full=1)
+    candidates, session, store = setup(tmp_path, config)
+    arm = Router(candidates, session, Fusion("rrf"), "l1_anchor").execute()
+    assert arm["stop_reason"] == "l1_anchor_only"
+    assert arm["calls"]
+    assert {call["stage"] for call in arm["calls"]} == {"sketch"}
+    assert all(state["level"] == 1 for state in arm["states"].values())
+    assert arm["actual_tokens"] > 0
+    assert arm["ranked_functions"]
+    assert len(arm["ranked_functions"]) == len(candidates)
+    assert all(state["observation"]["valid"] for state in arm["states"].values())
+
+
+def test_l1_anchor_and_graph_share_exact_initial_evidence(tmp_path):
+    config = GraftConfig(failure_name_anchor=True, max_graph=1, max_full=0)
+    candidates, session, store = setup(tmp_path, config)
+    baseline = Router(candidates, session, Fusion("rrf"), "l1_anchor").execute()
+    initial = set(baseline["states"])
+    graph_session = Session(
+        session.legacy.instance,
+        session.legacy.entities,
+        session.legacy.provider,
+        store,
+        session.legacy.opts,
+        16000,
+        session.graph,
+        config,
+    )
+    with_graph = Router(candidates, graph_session, Fusion("rrf"), "l1_graph").execute()
+    assert with_graph["calls"]
+    assert [c["candidate_ids"] for c in baseline["calls"]] == [
+        c["candidate_ids"] for c in with_graph["calls"] if c["stage"] == "sketch"
+    ]
+    assert all(
+        e["reuse"] == "journal"
+        for e in graph_session.events
+        if e["stage"] == "sketch"
+    )
+    assert any(c["stage"] == "graph" for c in with_graph["calls"])
+    for key in initial:
+        assert baseline["stage_histories"][key][0] == with_graph["stage_histories"][key][0]

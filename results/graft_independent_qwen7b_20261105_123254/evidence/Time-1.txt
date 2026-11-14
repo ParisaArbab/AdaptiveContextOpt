@@ -1,0 +1,28 @@
+public void testConstructorEx7_TypeArray_intArray() throws Throwable {
+        int[] values = new int[] {1, 1, 1};
+        DateTimeFieldType[] types = new DateTimeFieldType[] {
+            DateTimeFieldType.dayOfMonth(), DateTimeFieldType.year(), DateTimeFieldType.monthOfYear() };
+        try {
+            new Partial(types, values);
+            fail();
+        } catch (IllegalArgumentException ex) {
+            assertMessageContains(ex, "must be in order", "largest-smallest");
+        }
+        
+        types = new DateTimeFieldType[] {
+            DateTimeFieldType.year(), DateTimeFieldType.dayOfMonth(), DateTimeFieldType.monthOfYear() };
+        try {
+            new Partial(types, values);
+            fail();
+        } catch (IllegalArgumentException ex) {
+            assertMessageContains(ex, "must be in order", "largest-smallest");
+        }
+        
+        types = new DateTimeFieldType[] {
+            DateTimeFieldType.year(), DateTimeFieldType.era(), DateTimeFieldType.monthOfYear() };
+        try {
+            new Partial(types, values);
+            fail();
+The last line shown above failed with the following stack trace.
+junit.framework.AssertionFailedError
+	at org.joda.time.TestPartial_Constructors.testConstructorEx7_TypeArray_intArray(TestPartial_Constructors.java:284)
