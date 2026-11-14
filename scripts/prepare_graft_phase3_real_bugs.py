@@ -228,6 +228,11 @@ def collect_case(row: dict, cli: str, root: Path, *, max_bytes: int = _MAX_BYTES
     # method-level gold; this metadata is never in model input.
     classes = _export(cli, "classes.modified", checkout)
     file_labels = _file_labels(checkout, classes, prod_dir)
+    if not file_labels:
+        raise RuntimeError(
+            f"{bug} official modified-class metadata produced no unique source file labels; "
+            "do not claim measurable localization accuracy"
+        )
     gold = {"files": file_labels, "functions": [],
             "semantics": "official_d4j_modified_classes_file_proxy"}
     case = {
