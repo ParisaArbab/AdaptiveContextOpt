@@ -50,8 +50,9 @@ PY
   exit 3
 fi
 
-python - "$ROOT/preflight.json" <<'PY'
+python - "$ROOT/preflight.json" "$ROOT/config.json" <<'PY'
 import json,sys
+from rave_fl.eval.adapters import load_instances
 d=json.load(open(sys.argv[1]))
 rows=d.get("candidate_preparations",[])
 expected={"Time-1","Lang-1","Math-1"}
@@ -59,8 +60,11 @@ ready={r.get("instance_id") for r in rows if r.get("status")=="ready"}
 print("Preflight prepared:",rows)
 assert d.get("ready") and d.get("inference_performed") is False
 assert ready==expected and len(rows)==3
-assert set(d.get("evidence_kinds",[]))=={"observed_failure"}
-print("All three official buggy revisions and candidate pools validated.")
+config=json.load(open(sys.argv[2]))
+instances, _ = load_instances(config["benchmark"])
+assert {i.instance_id for i in instances}==expected
+assert all(i.evidence.kind=="observed_failure" for i in instances)
+print("All three buggy revisions, candidate pools and observed evidence validated.")
 PY
 
 echo "Starting bounded Qwen run, up to 135 physical calls and 240,000 provider tokens."
