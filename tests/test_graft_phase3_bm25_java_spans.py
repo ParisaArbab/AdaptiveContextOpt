@@ -44,35 +44,41 @@ def test_bm25_java_method_pool_has_valid_int_spans(tmp_path):
     assert any("add(" in e.entity_id for e in entities)
 
 
-def test_java_ast_coordinates_are_normalized_to_native_ints(tmp_path, monkeypatch):
+def test_java_ast_does_not_read_point_coordinates(tmp_path, monkeypatch):
+    """Any Point.row access is forbidden because of tree-sitter 0.26.0."""
     instance, _ = source_setup(tmp_path)
     original = reprs.java_tree
 
-    class StringPointNodes:
-        """Wrap a real AST to mimic a parser exposing non-native row types."""
+    class NoPoint:
         def __init__(self, node):
             self.node = node
             self.type = node.type
             self.start_byte = node.start_byte
             self.end_byte = node.end_byte
             self.has_error = node.has_error
-            self.start_point = SimpleNamespace(row=str(node.start_point.row))
-            self.end_point = SimpleNamespace(row=str(node.end_point.row))
+
+        @property
+        def start_point(self):
+            raise AssertionError("native Point.row must never be accessed")
+
+        @property
+        def end_point(self):
+            raise AssertionError("native Point.row must never be accessed")
 
         @property
         def named_children(self):
-            return [StringPointNodes(child) for child in self.node.named_children]
+            return [NoPoint(child) for child in self.node.named_children]
 
         def child_by_field_name(self, key):
             return self.node.child_by_field_name(key)
 
-    monkeypatch.setattr(reprs, "java_tree", lambda source: StringPointNodes(original(source)))
+    monkeypatch.setattr(reprs, "java_tree", lambda source: NoPoint(original(source)))
     entities = reprs.index_source(instance, "method")
     assert len(entities) == 2
     assert all(type(e.start_line) is int and type(e.end_line) is int for e in entities)
 
 
-def test_invalid_parser_span_reports_file_and_candidate(tmp_path, monkeypatch):
+def test_invalid_parser_byte_span_reports_file_and_candidate(tmp_path, monkeypatch):
     instance, _ = source_setup(tmp_path)
     original = reprs.java_tree
 
@@ -80,15 +86,11 @@ def test_invalid_parser_span_reports_file_and_candidate(tmp_path, monkeypatch):
         def __init__(self, node):
             self.node = node
             self.type = node.type
-            self.start_byte = node.start_byte
+            self.start_byte = (
+                999999 if node.type == "method_declaration" else node.start_byte
+            )
             self.end_byte = node.end_byte
             self.has_error = node.has_error
-            self.start_point = SimpleNamespace(
-                row=20 if node.type == "method_declaration" else node.start_point.row
-            )
-            self.end_point = SimpleNamespace(
-                row=1 if node.type == "method_declaration" else node.end_point.row
-            )
 
         @property
         def named_children(self):
@@ -97,11 +99,36 @@ def test_invalid_parser_span_reports_file_and_candidate(tmp_path, monkeypatch):
         def child_by_field_name(self, key):
             return self.node.child_by_field_name(key)
 
-    monkeypatch.setattr(reprs, "java_tree", lambda source: InvalidMethodNode(original(source)))
-    with pytest.raises(CompatibilityError, match="Invalid Java AST method span") as err:
+    monkeypatch.setattr(
+        reprs, "java_tree", lambda source: InvalidMethodNode(original(source))
+    )
+    with pytest.raises(
+        CompatibilityError, match="Invalid Java AST method byte span"
+    ) as err:
         reprs.index_source(instance, "method")
     assert "Example.java" in str(err.value)
     assert "add" in str(err.value)
+
+
+def test_large_realistic_java_source_line_number_above_256(tmp_path, monkeypatch):
+    """Native Point.row on non-immortal ints can corrupt memory in 0.26.0."""
+    instance, path = source_setup(tmp_path)
+    source = (
+        "package org.example;\n"
+        + ("// café and ☕\n" * 300)
+        + "public class Example {\n"
+        + "  public void lateMethod() { System.out.println(2); }\n"
+        + "}\n"
+    )
+    path.write_text(source, encoding="utf-8")
+    entities = reprs.index_source(instance, "method")
+    assert len(entities) == 1
+    method = entities[0]
+    assert "lateMethod" in method.entity_id
+    assert method.start_line == 303
+    assert method.end_line == 303
+    assert "System.out.println(2)" in method.source
+    assert method.path == "src/main/java/org/example/Example.java"
 
 
 
