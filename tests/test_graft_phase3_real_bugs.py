@@ -119,37 +119,73 @@ def test_pair_config_requires_three_real_inputs_and_no_flexfl_replacement(tmp_pa
 
 def test_paired_audit_reports_file_level_only_and_real_stopping_status(tmp_path):
     from scripts.audit_graft_phase3_multibug import inspect
+
     run = tmp_path / "run"
     run.mkdir()
+    policies = (
+        "l1_anchor", "l1_graph_focused",
+        "l1_graph_test_aware_nostop", "l1_graph_test_aware",
+    )
+    # Six complete bug/fusion pairs, each with four policies, are required.
+    # This fixture exercises audit completeness; it is NOT research evidence.
     sample = []
-    for policy in ("l1_anchor", "l1_graph_focused",
-                   "l1_graph_test_aware_nostop", "l1_graph_test_aware"):
-        sample.append({
-            "instance_id": "Lang-1", "fusion": "rrf", "policy": policy,
-            "status": "completed",
-            "metrics": {"java_strict_v2": {
-                "gold_semantics": "official_d4j_modified_classes_file_proxy",
-                "file": {"first_relevant_rank": 2, "MRR": 0.5, "Top-1": 0,
-                         "Top-5": 1, "pool_gold_count": 1,
-                         "candidate_pool_coverage": 1.0},
-                "method": None
-            }},
-            "arm": {
-                "actual_tokens": 100 if policy == "l1_anchor" else 120,
-                "calls": ([{"stage": "sketch", "candidate_ids": ["x.a()"]}]
-                          + ([{"stage": "graph", "candidate_ids": ["x.a()"], "selection": None}]
-                             if policy != "l1_anchor" else [])),
-                "trace": [{"phase": "route", "options": []}],
-                "stage_histories": {},
-            },
-        })
+    for bug in ("Time-1", "Lang-1", "Math-1"):
+        for fusion in ("rrf", "suspicion_rank_blend"):
+            for policy in policies:
+                sample.append({
+                    "instance_id": bug,
+                    "fusion": fusion,
+                    "policy": policy,
+                    "status": "completed",
+                    "metrics": {"java_strict_v2": {
+                        "gold_semantics": "official_d4j_modified_classes_file_proxy",
+                        "file": {
+                            "first_relevant_rank": 2, "MRR": 0.5,
+                            "Top-1": 0, "Top-5": 1,
+                            "pool_gold_count": 1,
+                            "candidate_pool_coverage": 1.0,
+                        },
+                        "method": None,
+                    }},
+                    "arm": {
+                        "actual_tokens": 100 if policy == "l1_anchor" else 120,
+                        "calls": [{"stage": "sketch", "candidate_ids": ["x.a()"]}]
+                        + ([{
+                            "stage": "graph", "candidate_ids": ["x.a()"],
+                            "selection": None,
+                        }] if policy != "l1_anchor" else []),
+                        "trace": [{"phase": "route", "options": []}],
+                        "stage_histories": {},
+                    },
+                })
     (run / "results.json").write_text(json.dumps(sample))
-    (run / "accounting.json").write_text(json.dumps(
-        {"new_calls": 1, "known_provider_tokens": 75}))
+    (run / "accounting.json").write_text(json.dumps({
+        "new_calls": 1, "known_provider_tokens": 75,
+    }))
+
     summary = inspect(run)
     assert summary["all_pairs_completed"]
+    assert len(summary["records"]) == 24
+    assert len(summary["paired_comparisons"]) == 6
     assert not summary["any_real_stop_gate_activated"]
     assert summary["gold_is_file_level_proxy_not_method_truth"]
-    assert summary["records"][0]["method_mrr"] is None
-    assert summary["paired_comparisons"][0]["graph_calls_saved_by_stop"] == 0
+    assert all(row["method_mrr"] is None for row in summary["records"])
+    assert all(row["graph_calls_saved_by_stop"] == 0
+               for row in summary["paired_comparisons"])
     assert summary["new_model_calls_by_this_audit"] == 0
+
+    # Missing even one policy must be reported, never silently considered complete.
+    sample.pop()
+    (run / "results.json").write_text(json.dumps(sample))
+    incomplete = inspect(run)
+    assert not incomplete["all_pairs_completed"]
+    assert any(row["status"] == "incomplete_arm_set"
+               for row in incomplete["paired_comparisons"])
+
+    # Missing an entire bug/fusion pair must also be incomplete.
+    sample = [r for r in sample
+              if not (r["instance_id"] == "Math-1"
+                      and r["fusion"] == "suspicion_rank_blend")]
+    (run / "results.json").write_text(json.dumps(sample))
+    incomplete = inspect(run)
+    assert not incomplete["all_pairs_completed"]
