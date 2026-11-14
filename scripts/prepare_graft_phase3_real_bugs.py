@@ -170,7 +170,9 @@ def _file_labels(checkout: Path, classes: str, source_dir: str) -> list[str]:
 def collect_case(row: dict, cli: str, root: Path, *, max_bytes: int = _MAX_BYTES) -> tuple[dict, dict]:
     bug = row["bug"]
     project, number = FIXED[bug]
-    checkout = root / "checkouts" / bug
+    # Normalize the checkout before passing it to Defects4J and comparing
+    # absolute AST-discovered test paths. The runner supplies a relative ROOT.
+    checkout = (root / "checkouts" / bug).resolve()
     if checkout.exists():
         raise FileExistsError(f"Refusing to overwrite checkout: {checkout}")
     checkout.parent.mkdir(parents=True, exist_ok=True)
@@ -273,6 +275,9 @@ def collect_case(row: dict, cli: str, root: Path, *, max_bytes: int = _MAX_BYTES
 
 
 def collect(manifest: Path, root: Path, cli: str, max_bytes: int = _MAX_BYTES) -> dict:
+    # Use one absolute base for checkouts, logs, evidence and the manifest.
+    # This is required because find_test_source returns resolved absolute paths.
+    root = root.resolve()
     data = _read_json(manifest)
     rows = _only_known_cases(data["cases"])
     if root.exists():
