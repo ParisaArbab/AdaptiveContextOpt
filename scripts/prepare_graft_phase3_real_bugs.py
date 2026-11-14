@@ -83,14 +83,18 @@ def inspect(manifest: Path, cli: str | None, root: Path) -> dict:
 def _one_test_method(source: bytes, name: str) -> bytes | None:
     """Return the exact raw method bytes from tree-sitter, not a regex slice."""
     tree = java_tree(source.decode("utf-8"))
-    if tree.has_error:
-        return None
     stack = [tree]
     while stack:
         node = stack.pop()
         if node.type == "method_declaration":
             nm = node.child_by_field_name("name")
-            if nm and source[nm.start_byte:nm.end_byte].decode(errors="replace") == name:
+            body = node.child_by_field_name("body")
+            if nm and source[nm.start_byte:nm.end_byte].decode("utf-8") == name:
+                # A parse error elsewhere in an old Java test file must not
+                # hide an otherwise complete target method. Never return a
+                # partial, missing or syntactically erroneous target body.
+                if node.has_error or body is None or body.is_missing:
+                    return None
                 return source[node.start_byte:node.end_byte]
         stack.extend(reversed(node.named_children))
     return None
