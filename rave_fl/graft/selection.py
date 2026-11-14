@@ -68,7 +68,7 @@ def render(graph,target,ids):
 
 
 
-def render_focused(graph, target, ids):
+def render_focused(graph, target, ids, selector="focused_compact_v1"):
     """Compact, provenance-preserving view of exact existing graph/source nodes.
 
     Only the opt-in focused arm uses this format. Historical render() and
@@ -99,17 +99,24 @@ def render_focused(graph, target, ids):
         }
         for (owner, path), units in sorted(grouped.items())
     ]
-    return json.dumps({
-        "schema": "graft-focused-v1",
+    payload = {
+        "schema": "graft-focused-v1" if selector == "focused_compact_v1" else "graft-test-aware-v1",
         "target": target,
         "failure": "\n".join(n.text for n in failures),
         "sources": sources,
-    }, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    }
+    if selector == "test_aware_compact_v1":
+        # Derived only from the same mandatory failure node; no gold, unseen
+        # tests, or model predictions. The prompt explicitly marks uncertainty.
+        from rave_fl.graft.test_aware import failure_signal
+        source = failures[0].origin.provenance if failures else ""
+        payload["test_signal"] = failure_signal(payload["failure"], source)
+    return json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
 def package(graph,target,ids,budget,counter=None,selector='manual',scores=None,diagnostics=None,reason=''):
     if type(budget) is not int or budget<1:raise ValueError('Positive input budget required')
-    counter=counter or ByteCounter();ids=tuple(sorted(set(ids)));text=(render_focused(graph,target,ids) if selector=="focused_compact_v1" else render(graph,target,ids))
+    counter=counter or ByteCounter();ids=tuple(sorted(set(ids)));text=(render_focused(graph,target,ids,selector) if selector in {"focused_compact_v1","test_aware_compact_v1"} else render(graph,target,ids))
     units=counter.count([{'role':'system','content':SYSTEM},{'role':'user','content':text}])
     if type(units) is not int or units<0:raise ValueError('Counter must return a nonnegative integer')
     complete=set(mandatory_ids(graph,target))<=set(ids)
