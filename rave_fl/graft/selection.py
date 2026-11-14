@@ -109,7 +109,7 @@ def render_focused(graph, target, ids, selector="focused_compact_v1"):
         # Derived only from the same mandatory failure node; no gold, unseen
         # tests, or model predictions. The prompt explicitly marks uncertainty.
         from rave_fl.graft.test_aware import failure_signal
-        source = failures[0].origin.provenance if failures else ""
+        source = failures[0].origin.extractor if failures else ""
         payload["test_signal"] = failure_signal(payload["failure"], source)
     return json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
