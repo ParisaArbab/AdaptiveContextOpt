@@ -111,7 +111,8 @@ def test_time4_test_aware_pack_prioritizes_actual_executable_path():
         selector=SELECTOR,
     )
     assert reconstructed.text == selection.text
-    assert reconstructed.hash == selection.hash
+    assert reconstructed.ids == selection.ids
+    assert reconstructed.input_units == selection.input_units
 
 
 def test_small_budget_keeps_original_sources_and_reports_missing():
