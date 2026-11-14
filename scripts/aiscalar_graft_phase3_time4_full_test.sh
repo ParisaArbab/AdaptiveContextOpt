@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# Bounded Time-4 real-Qwen follow-up with AUTHENTIC complete buggy test source.
+# Development data only, separate from the new independent-bug evaluation.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+[[ "$(git branch --show-current)" == "graft-fl-aiscalar-20261113" ]] || {
+  echo "Wrong branch" >&2; exit 2;
+}
+git diff --quiet && git diff --cached --quiet || {
+  echo "Preserve tracked changes before running" >&2; exit 2;
+}
+python -m pytest -q \
+  tests/test_graft_phase3_real_bugs.py \
+  tests/test_graft_test_aware.py \
+  tests/test_graft_test_aware_live_config.py \
+  tests/test_graft_controller.py
+
+ROOT="results/graft_phase3_time4_full_test_$(date +%Y%m%d_%H%M%S)"
+python -m scripts.prepare_graft_time4_authentic_test --output "$ROOT"
+if ! python -m rave_fl.graft.cli preflight \
+   --config "$ROOT/config.json" > "$ROOT/preflight.json"; then
+  python - "$ROOT/preflight.json" <<'PY'
+import json,sys
+d=json.load(open(sys.argv[1]))
+print("dataset_error:", d.get("dataset_error"))
+print("preparation_error:", d.get("preparation_error"))
+print("candidates:", d.get("candidate_preparations"))
+PY
+  echo "Preflight failed, no Qwen calls." >&2
+  exit 3
+fi
+python - "$ROOT/preflight.json" <<'PY'
+import json,sys
+d=json.load(open(sys.argv[1]))
+x=d.get("candidate_preparations",[])
+assert d.get("ready") and d.get("inference_performed") is False
+assert len(x)==1 and x[0].get("instance_id")=="Time-4" and x[0].get("status")=="ready"
+assert d.get("evidence_kinds")==["trigger_description"]
+print("Full-test Time-4 preflight passed, real Qwen not yet called.")
+PY
+set +e
+python -m rave_fl.graft.cli run \
+  --config "$ROOT/config.json" --output "$ROOT/run" \
+  --allow-inference 2>&1 | tee "$ROOT/run.log"
+status=$?
+set -e
+if [[ -f "$ROOT/run/results.json" && -f "$ROOT/run/accounting.json" ]]; then
+  python scripts/report_graft_graph_ablation.py "$ROOT/run" \
+    > "$ROOT/ablation_summary.txt" 2>&1 || true
+  cat "$ROOT/ablation_summary.txt"
+fi
+if [[ -f "$ROOT/run/manifest.json" ]]; then
+  python -m rave_fl.graft.cli report --run-dir "$ROOT/run" \
+    > "$ROOT/report.log" 2>&1 || true
+fi
+big=$(find "$ROOT" -type f -size +90M -print -quit)
+if [[ -n "$big" ]]; then echo "Oversize archive: $big" >&2; exit 2; fi
+if grep -RIlE --include="*.json" --include="*.jsonl" --include="*.log" \
+  "(ghp_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,}|sk-[A-Za-z0-9]{24,}|-----BEGIN (RSA|OPENSSH|EC) PRIVATE KEY-----)" \
+  "$ROOT" | grep -q .; then
+  echo "Possible secret, review before pushing." >&2; exit 2
+fi
+git config user.name "ParisaArbab"
+git config user.email "pa.arbab@gmail.com"
+git add -f -- "$ROOT"
+while IFS= read -r lock; do
+  git rm --cached -q --ignore-unmatch -- "$lock"
+done < <(find "$ROOT" -type f -name "*.lock")
+if ! git diff --cached --quiet; then
+  git commit -m "experiment(graft): archive authentic full test Time-4 comparison"
+  git push origin graft-fl-aiscalar-20261113
+fi
+echo "Saved: $ROOT"
+exit "$status"
