@@ -148,3 +148,58 @@ def test_router_treatments_coexist_on_fake_provider(tmp_path):
             assert c["selection"]["selector"] == SELECTOR
             assert json.loads(c["selection"]["text"])["schema"] == "graft-test-aware-v1"
     assert store.snapshot()["physical_inference_tokens"] == 0
+
+
+def test_stop_rule_changes_router_actions_not_just_helper(tmp_path):
+    from dataclasses import replace as dc_replace
+    from test_graft_controller import setup
+    from rave_fl.eval.fusion import Fusion
+    from rave_fl.graft.controller import GraftConfig, Router, EvidenceStage
+    from rave_fl.pilot_types import CandidateState
+
+    class FixedSketchRouter(Router):
+        def observe(self, candidates, stage, selection=None):
+            super().observe(candidates, stage, selection)
+            if stage == EvidenceStage.SKETCH:
+                for candidate in candidates:
+                    state = self.states[candidate.function_id]
+                    previous = state.observation
+                    self.states[candidate.function_id] = CandidateState(
+                        level=1,
+                        observation=dc_replace(
+                            previous,
+                            suspicion=0.95 if candidate.rank == 1 else 0.10,
+                            uncertainty=0.05 if candidate.rank == 1 else 0.75,
+                            missing_evidence="",
+                        ),
+                        history=state.history,
+                    )
+
+    def run(policy, directory):
+        cs, session, _ = setup(
+            directory, GraftConfig(max_graph=1, max_full=0, input_budget=4096)
+        )
+        result = FixedSketchRouter(
+            cs, session, Fusion("suspicion_rank_blend"), policy
+        ).execute()
+        options = next(
+            event for event in result["trace"]
+            if event["phase"] == "route" and event.get("selected")
+        )
+        return cs, result, options
+
+    cs, gated, gated_route = run(
+        "l1_graph_test_aware", tmp_path / "with_stop"
+    )
+    _, ungated, ungated_route = run(
+        "l1_graph_test_aware_nostop", tmp_path / "without_stop"
+    )
+    top = next(c.function_id for c in cs if c.rank == 1)
+    assert any(
+        row["candidate"] == top and
+        row["reason"] == "high_suspicion_no_open_evidence_question"
+        for row in gated_route["options"]
+    )
+    assert gated_route["selected"]["candidate"] != top
+    assert ungated_route["selected"]["candidate"] == top
+    assert not gated["budget_exceeded"] and not ungated["budget_exceeded"]
