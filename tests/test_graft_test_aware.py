@@ -176,6 +176,8 @@ def test_stop_rule_changes_router_actions_not_just_helper(tmp_path):
                     )
 
     def run(policy, directory):
+        # Store requires an existing run directory for SQLite journaling.
+        directory.mkdir(parents=True, exist_ok=True)
         cs, session, _ = setup(
             directory, GraftConfig(max_graph=1, max_full=0, input_budget=4096)
         )
