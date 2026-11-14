@@ -102,3 +102,37 @@ def test_invalid_parser_span_reports_file_and_candidate(tmp_path, monkeypatch):
         reprs.index_source(instance, "method")
     assert "Example.java" in str(err.value)
     assert "add" in str(err.value)
+
+
+
+def test_deep_java_ast_is_indexed_without_python_recursion(tmp_path, monkeypatch):
+    """A deeply nested parser tree must not overflow recursive walk_java."""
+    instance, _ = source_setup(tmp_path)
+    original = reprs.java_tree
+    root = original(JAVA)
+
+    class Wrapper:
+        def __init__(self, child):
+            self.type = "block"
+            self.named_children = [child]
+
+    for _ in range(1600):
+        root = Wrapper(root)
+
+    monkeypatch.setattr(reprs, "java_tree", lambda source: root)
+    entities = reprs.index_source(instance, "method")
+    assert len(entities) == 2
+    assert any("add(" in e.entity_id for e in entities)
+    assert all(type(e.start_line) is int and e.start_line > 0 for e in entities)
+
+
+def test_java_index_trace_is_opt_in(tmp_path, monkeypatch, capsys):
+    instance, _ = source_setup(tmp_path)
+    monkeypatch.setenv("GRAFT_TRACE_JAVA_INDEX", "1")
+    entities = reprs.index_source(instance, "method")
+    stderr = capsys.readouterr().err
+    assert len(entities) == 2
+    assert "[java-index] parsing " in stderr
+    assert "[java-index] parsed " in stderr
+    assert "[java-index] finished " in stderr
+    assert "org/example/Example.java" in stderr
