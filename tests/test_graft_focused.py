@@ -130,3 +130,23 @@ def test_prepare_independent_cohort_requires_existing_manifest(tmp_path):
     ]
     assert out["benchmark"]["fusions"] == ["rrf", "suspicion_rank_blend"]
     assert json.loads((path.parent / "provenance.json").read_text())["new_calls_during_preparation"] == 0
+
+
+def test_focused_arm_runs_in_synthetic_graph_transport(tmp_path):
+    from test_graft_controller import setup
+    from rave_fl.eval.fusion import Fusion
+    from rave_fl.graft.controller import GraftConfig, Router
+
+    candidates, session, store = setup(
+        tmp_path, GraftConfig(max_graph=1, max_full=0, input_budget=4096)
+    )
+    result = Router(candidates, session, Fusion("rrf"), "l1_graph_focused").execute()
+    assert not result["budget_exceeded"]
+    graph_calls = [call for call in result["calls"] if call["stage"] == "graph"]
+    assert graph_calls, result["stop_reason"]
+    assert all(c["selection"]["selector"] == FOCUSED_SELECTOR for c in graph_calls)
+    assert all(json.loads(c["selection"]["text"])["schema"] == "graft-focused-v1"
+               for c in graph_calls)
+    assert all(c["selection"]["input_units"] <= 4096 for c in graph_calls)
+    assert result["policy"] == "l1_graph_focused"
+    assert store.snapshot()["physical_inference_tokens"] == 0
