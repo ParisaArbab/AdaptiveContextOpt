@@ -1,5 +1,6 @@
 """Language-specific structural representations and gold-free source indexing."""
 import ast
+from bisect import bisect_right
 import os
 from dataclasses import replace
 from pathlib import Path
@@ -251,6 +252,12 @@ def index_source(instance, granularity, max_files=3000, max_bytes=30_000_000):
             if os.environ.get("GRAFT_TRACE_JAVA_INDEX") == "1":
                 print(f"[java-index] parsed {rel}", file=sys.stderr, flush=True)
             data = source.encode()
+            # Avoid tree-sitter Point.row / Point.column. In py-tree-sitter
+            # 0.26.0 their refcount bug can corrupt Python's heap for line
+            # numbers above 256, producing a SIGSEGV in unrelated code.
+            # Derive exact 1-based lines from original UTF-8 byte offsets.
+            line_starts = [0]
+            line_starts.extend(i + 1 for i, byte in enumerate(data) if byte == 10)
 
             # Explicit stack avoids Python/native stack exhaustion on deeply
             # nested real-world Java syntax trees. Preserve original AST
@@ -275,19 +282,24 @@ def index_source(instance, granularity, max_files=3000, max_bytes=30_000_000):
                         + ".".join((*parents, data[name.start_byte : name.end_byte].decode()))
                         + data[params.start_byte : params.end_byte].decode()
                     )
-                    # Normalize tree-sitter point coordinates at the AST
-                    # boundary. CodeEntity requires native positive Python
-                    # integers; retain the exact parser-derived source span.
-                    start = int(n.start_point.row) + 1
-                    end = int(n.end_point.row) + 1
+                    # Native byte positions are half-open [start, end).
+                    # Validate before slicing or constructing CodeEntity.
+                    byte_start = int(n.start_byte)
+                    byte_end = int(n.end_byte)
+                    if not 0 <= byte_start < byte_end <= len(data):
+                        raise CompatibilityError(
+                            "Invalid Java AST method byte span: "
+                            f"file={rel!r}, entity={ident!r}, "
+                            f"start_byte={byte_start}, end_byte={byte_end}, "
+                            f"file_bytes={len(data)}"
+                        )
+                    start = bisect_right(line_starts, byte_start)
+                    end = bisect_right(line_starts, byte_end)
                     if not 1 <= start <= end:
                         raise CompatibilityError(
-                            "Invalid Java AST method span: "
+                            "Invalid Java AST method line span: "
                             f"file={rel!r}, entity={ident!r}, "
-                            f"start={start}, end={end}, "
-                            f"start_type={type(n.start_point.row).__name__}, "
-                            f"end_type={type(n.end_point.row).__name__}, "
-                            f"node_error={n.has_error}"
+                            f"start={start}, end={end}"
                         )
                     entities.append(
                         CodeEntity(
