@@ -67,6 +67,26 @@ def test_real_java_test_ast_extracts_complete_method_not_partial_excerpt(tmp_pat
     assert found == f and extracted == method
 
 
+
+def test_ast_extracts_only_complete_named_method_not_similar_names():
+    buggy = (
+        b"class Example {\n"
+        b" public void testWith2() {}\n"
+        b" public void testWith3a() {}\n"
+        b"}\n"
+    )
+    assert _one_test_method(buggy, "testWith3") is None
+
+    valid = (
+        b"class Example {\n"
+        b" public void testWith3() { try { call(); fail(); } "
+        b"catch (IllegalArgumentException ex) {} }\n"
+        b"}\n"
+    )
+    assert b"catch (IllegalArgumentException ex)" in _one_test_method(valid, "testWith3")
+    invalid = b"class Example { public void testWith3() { fail(); "
+    assert _one_test_method(invalid, "testWith3") is None
+
 def test_modified_class_proxy_labels_require_actual_source_path(tmp_path):
     root = tmp_path / "checkout"
     file = root / "src/main/java/org/example/Logic.java"
