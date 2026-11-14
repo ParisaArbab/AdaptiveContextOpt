@@ -82,7 +82,7 @@ def inspect(manifest: Path, cli: str | None, root: Path) -> dict:
 
 def _one_test_method(source: bytes, name: str) -> bytes | None:
     """Return the exact raw method bytes from tree-sitter, not a regex slice."""
-    tree = java_tree(source.decode("utf-8", errors="replace"))
+    tree = java_tree(source.decode("utf-8"))
     if tree.has_error:
         return None
     stack = [tree]
@@ -154,7 +154,7 @@ def _observed_failing_tests(checkout: Path) -> list[str]:
 def _file_labels(checkout: Path, classes: str, source_dir: str) -> list[str]:
     root = checkout.resolve()
     labels = []
-    for klass in [line.strip() for line in classes.splitlines() if line.strip()]:
+    for klass in [part.strip() for part in re.split(r"[;,\n]+", classes) if part.strip()]:
         if not re.fullmatch(r"[\w$]+(?:\.[\w$]+)+", klass):
             continue
         path = root / source_dir / (klass.replace(".", "/") + ".java")
