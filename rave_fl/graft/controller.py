@@ -15,6 +15,7 @@ from rave_fl.eval.backend import Backend, ExecutionLimit, Provider
 from rave_fl.eval.schema import CompatibilityError, fingerprint
 from rave_fl.graft.selection import SYSTEM, ByteCounter, relevance_select, package
 from rave_fl.graft.focused import focus_select
+from rave_fl.graft.test_aware import test_aware_select, stop_decision
 from rave_fl.graft.topology import topo_select, TopologyConfig
 from rave_fl.graft.paths import preserve_paths
 from rave_fl.graft.repair import repair_support, missing_support
@@ -273,7 +274,7 @@ class Router:
     """Transparent development heuristic; no calibrated gain or trained policy."""
 
     def __init__(self, candidates, session, fusion, policy="graft_adaptive", embeddings=None):
-        if policy not in {"l1_anchor", "l1_graph", "l1_graph_suspicion", "l1_graph_focused", "graft_adaptive"}:
+        if policy not in {"l1_anchor", "l1_graph", "l1_graph_suspicion", "l1_graph_focused", "l1_graph_test_aware", "graft_adaptive"}:
             raise ValueError("Unknown GRAFT policy")
         if len({c.function_id for c in candidates}) != len(candidates) or not candidates:
             raise ValueError("Nonempty unique candidate pool required")
@@ -425,11 +426,29 @@ class Router:
                         if EvidenceStage.GRAPH.value in past or self.config.max_graph == 0:
                             stages.append(EvidenceStage.METHOD_FULL)
                     for stage in stages:
+                        # The test-aware treatment alone can skip a graph
+                        # request when there is no unanswered evidence question
+                        # for an already high-suspicion top-1 candidate.
+                        if self.policy == "l1_graph_test_aware" and stage == EvidenceStage.GRAPH:
+                            reason = stop_decision(obs, position + 1, top_k=self.config.top_k)
+                            if reason:
+                                rows.append({
+                                    "candidate": ident, "stage": stage.value,
+                                    "eligible": False, "reason": reason,
+                                    "stop_is_calibrated": False,
+                                })
+                                continue
                         selection = None
                         if stage == EvidenceStage.GRAPH:
                             if ident not in self.packages:
                                 if self.policy == "l1_graph_focused":
                                     self.packages[ident] = focus_select(
+                                        self.graph, ident, self.config.input_budget,
+                                        self.session.counter,
+                                        missing_evidence=obs.missing_evidence if obs else "",
+                                    )
+                                elif self.policy == "l1_graph_test_aware":
+                                    self.packages[ident] = test_aware_select(
                                         self.graph, ident, self.config.input_budget,
                                         self.session.counter,
                                         missing_evidence=obs.missing_evidence if obs else "",
@@ -485,7 +504,7 @@ class Router:
                             / max(1, predicted)
                         )
                         gate = (
-                            self.policy in {"l1_graph", "l1_graph_suspicion", "l1_graph_focused"} or position < self.config.top_k or uncertain
+                            self.policy in {"l1_graph", "l1_graph_suspicion", "l1_graph_focused", "l1_graph_test_aware"} or position < self.config.top_k or uncertain
                         )
                         rows.append(
                             {
@@ -538,7 +557,7 @@ class Router:
                                 r["candidate"],
                             ),
                         )
-                        if self.policy in {"l1_graph_suspicion", "l1_graph_focused"}
+                        if self.policy in {"l1_graph_suspicion", "l1_graph_focused", "l1_graph_test_aware"}
                         else min(
                             eligible,
                             key=lambda r: (
