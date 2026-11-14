@@ -28,7 +28,7 @@ def main(root):
               "label_note",row.get("gold_unavailable_reason"))
         if row["policy"] == "l1_anchor" and any(s != "sketch" for s in stages):
             raise RuntimeError("L1-only ablation violated: graph/Full call detected")
-        if row["policy"] in {"l1_graph", "l1_graph_suspicion"} and stages.get("method_full", 0):
+        if row["policy"] in {"l1_graph", "l1_graph_suspicion", "l1_graph_focused"} and stages.get("method_full", 0):
             raise RuntimeError("Graph-only ablation violated: Full call detected")
     print("IMPORTANT: physical provider totals count shared calls once; per-policy logical totals can count shared cache requests repeatedly.")
     print("Do not claim graph-specific benefit unless rank changes between l1_anchor and l1_graph with the same evidence and LLM model.")
