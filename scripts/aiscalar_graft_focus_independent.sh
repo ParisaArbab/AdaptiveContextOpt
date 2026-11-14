@@ -18,7 +18,19 @@ ROOT="results/graft_focused_independent_$(date +%Y%m%d_%H%M%S)"
 python -m scripts.prepare_graft_focused_independent \
   --source configs/graft_independent_qwen7b_control.json \
   --output "$ROOT"
-python -m rave_fl.graft.cli preflight --config "$ROOT/config.json" > "$ROOT/preflight.json"
+if ! python -m rave_fl.graft.cli preflight --config "$ROOT/config.json" > "$ROOT/preflight.json"; then
+  echo "Preflight failed before Qwen calls. Saved diagnostics: $ROOT/preflight.json" >&2
+  python - "$ROOT/preflight.json" <<'PYERR'
+import json,sys
+p=json.load(open(sys.argv[1]))
+print("dataset_error:", p.get("dataset_error"))
+print("preparation_error:", p.get("preparation_error"))
+for c in p.get("candidate_preparations", []):
+    print("candidate_preparation:", c.get("instance_id"), c.get("status"), c.get("reason"))
+PYERR
+  python -m scripts.diagnose_graft_independent_evidence --manifest configs/rave_independent_smoke.json
+  exit 2
+fi
 python - "$ROOT/preflight.json" <<'PY'
 import json, sys
 d=json.load(open(sys.argv[1]))
