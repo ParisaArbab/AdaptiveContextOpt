@@ -175,7 +175,8 @@ def prepare(input_file: Path, original_config: Path, output: Path,
         "new_provider_calls_during_preparation": 0,
         "original_input_json": str(input_file.resolve()),
     }, indent=2) + "\n")
-    print("Prepared official benchmark trigger test for", test_id)\n    print("Trigger source revision:", test_provenance["test_source_revision"])
+    print("Prepared official benchmark trigger test for", test_id)
+    print("Trigger source revision:", test_provenance["test_source_revision"])
     print("Combined evidence bytes:", len(evidence.encode()))
     print("New dataset:", manifest_path)
     print("New config:", output / "config.json")
