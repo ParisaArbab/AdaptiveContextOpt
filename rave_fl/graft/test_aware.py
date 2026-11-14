@@ -45,7 +45,7 @@ def failure_source(graph) -> tuple[str, str]:
     failures = [n for n in graph.nodes if n.kind == "failure"]
     return (
         "\n".join(n.text for n in failures),
-        failures[0].origin.provenance if failures else "",
+        failures[0].origin.extractor if failures else "",
     )
 
 
@@ -171,3 +171,7 @@ def test_aware_select(graph, target, budget, counter=None, missing_evidence=""):
         "gold_used": False,
     }
     return replace(result, diagnostics=diagnostics)
+
+
+# Pytest must not collect this imported selector as a standalone test case.
+test_aware_select.__test__ = False
