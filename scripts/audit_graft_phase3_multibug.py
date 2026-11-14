@@ -104,6 +104,12 @@ def inspect(root: Path) -> dict:
             "stopped_candidate_ids": with_stop["stop_gate_candidates"],
             "file_gold_in_pool": (base["gold_files_in_candidate_pool"] or 0) > 0,
         })
+    expected_pairs = {
+        (bug, fusion)
+        for bug in ("Time-1", "Lang-1", "Math-1")
+        for fusion in FUSIONS
+    }
+    seen_pairs = {(r["bug"], r["fusion"]) for r in comparisons}
     return {
         "schema": "graft-phase3-multibug-audit-v1",
         "new_model_calls_by_this_audit": 0,
@@ -111,8 +117,10 @@ def inspect(root: Path) -> dict:
         "gold_is_file_level_proxy_not_method_truth": True,
         "records": output,
         "paired_comparisons": comparisons,
-        "all_pairs_completed": bool(comparisons) and all(
-            r["status"] == "paired" for r in comparisons
+        "all_pairs_completed": (
+            seen_pairs == expected_pairs
+            and len(comparisons) == len(expected_pairs)
+            and all(r["status"] == "paired" for r in comparisons)
         ),
         "any_real_stop_gate_activated": any(
             r.get("stop_gate_activated") for r in comparisons
