@@ -38,16 +38,37 @@ python -m scripts.prepare_graft_phase3_multibug \
   --dataset "$DATASET" \
   --output "$ROOT"
 
-if ! python -m rave_fl.graft.cli preflight \
-  --config "$ROOT/config.json" > "$ROOT/preflight.json"; then
-  python - "$ROOT/preflight.json" <<'PY'
-import json,sys
-d=json.load(open(sys.argv[1]))
-print("dataset_error:",d.get("dataset_error"))
-print("preparation_error:",d.get("preparation_error"))
-print("candidates:",d.get("candidate_preparations"))
+# A native library fault can kill Python without writing JSON. Keep the
+# faulthandler traceback and never conceal a segfault with a JSONDecodeError.
+preflight_status=0
+PYTHONFAULTHANDLER=1 python -X faulthandler -m rave_fl.graft.cli preflight \
+  --config "$ROOT/config.json" \
+  > "$ROOT/preflight.json" 2> "$ROOT/preflight.stderr.log" || preflight_status=$?
+
+if [[ "$preflight_status" -ne 0 ]] || \
+   [[ ! -s "$ROOT/preflight.json" ]] || \
+   ! python -m json.tool "$ROOT/preflight.json" >/dev/null 2>&1; then
+  echo "Preflight did not complete; exit=$preflight_status. No Qwen calls." >&2
+  if [[ -s "$ROOT/preflight.stderr.log" ]]; then
+    echo "Last preflight error lines:" >&2
+    tail -n 50 "$ROOT/preflight.stderr.log" >&2
+  fi
+  if [[ -s "$ROOT/preflight.json" ]]; then
+    python - "$ROOT/preflight.json" <<'PY'
+import json, sys
+try:
+    d = json.load(open(sys.argv[1]))
+except (ValueError, OSError) as exc:
+    print("Preflight did not produce valid JSON:", str(exc))
+else:
+    print("dataset_error:", d.get("dataset_error"))
+    print("preparation_error:", d.get("preparation_error"))
+    print("candidates:", d.get("candidate_preparations"))
 PY
-  echo "Preflight failed. No Qwen calls, no incomplete case substitutions." >&2
+  fi
+  echo "Native or candidate-preparation failure. Diagnose without inference:" >&2
+  echo "python -m scripts.diagnose_graft_phase3_preflight --config '$ROOT/config.json' --output '$ROOT/native_diagnostics'" >&2
+  echo "Crash logs preserved at $ROOT/preflight.stderr.log" >&2
   exit 3
 fi
 
