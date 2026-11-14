@@ -24,6 +24,7 @@ fi
 
 python -m pytest -q \
   tests/test_graft_phase3_real_bugs.py \
+  tests/test_graft_phase3_bm25_java_spans.py \
   tests/test_graft_test_aware.py \
   tests/test_graft_test_aware_live_config.py \
   tests/test_graft_focused.py \
