@@ -29,14 +29,18 @@ PY
   echo "Preflight failed, no Qwen calls." >&2
   exit 3
 fi
-python - "$ROOT/preflight.json" <<'PY'
+python - "$ROOT/preflight.json" "$ROOT/config.json" <<'PY'
 import json,sys
+from rave_fl.eval.adapters import load_instances
 d=json.load(open(sys.argv[1]))
 x=d.get("candidate_preparations",[])
 assert d.get("ready") and d.get("inference_performed") is False
 assert len(x)==1 and x[0].get("instance_id")=="Time-4" and x[0].get("status")=="ready"
-assert d.get("evidence_kinds")==["trigger_description"]
-print("Full-test Time-4 preflight passed, real Qwen not yet called.")
+config=json.load(open(sys.argv[2]))
+instances, _ = load_instances(config["benchmark"])
+assert len(instances)==1 and instances[0].instance_id=="Time-4"
+assert instances[0].evidence.kind=="trigger_description"
+print("Full-test Time-4 preflight passed, evidence kind checked against loaded manifest.")
 PY
 set +e
 python -m rave_fl.graft.cli run \
