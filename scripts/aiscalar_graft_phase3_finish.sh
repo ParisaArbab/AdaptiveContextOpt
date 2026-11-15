@@ -6,7 +6,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 DATASET="data/graft_phase3_official_20261113_215102/manifest.json"
-ARCHIVE="results/graft_phase3_real_bugs_20261113_222808/run"
+ARCHIVE="results/graft_phase3_real_bugs_20261115_132745/run"
 
 if [[ "$(git branch --show-current)" != "graft-fl-aiscalar-20261113" ]]; then
   echo "Wrong branch; no Qwen inference started." >&2
@@ -16,7 +16,8 @@ if ! command -v flock >/dev/null 2>&1 || ! command -v nohup >/dev/null 2>&1; the
   echo "flock and nohup are required to avoid duplicate runs and SSH hangups." >&2
   exit 2
 fi
-if [[ ! -f "$DATASET" || ! -f "$ARCHIVE/manifest.json" || ! -d "$ARCHIVE/cache" ]]; then
+if [[ ! -f "$DATASET" || ! -f "$ARCHIVE/manifest.json" || \
+      ( ! -d "$ARCHIVE/cache" && ! -d "$ARCHIVE/../cache" ) ]]; then
   echo "Verified prepared data or original Qwen cache is missing." >&2
   exit 2
 fi
