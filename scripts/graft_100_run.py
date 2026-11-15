@@ -357,6 +357,10 @@ def aggregate(root: Path, cohort: dict):
                         k: v.get("file_hit_at_1") if v and v.get("status") == "completed" else None
                         for k, v in metrics.items()
                     },
+                    "file_top5": {
+                        k: v.get("file_hit_at_5") if v and v.get("status") == "completed" else None
+                        for k, v in metrics.items()
+                    },
                     "graph_calls": {
                         k: v.get("graph_call_count") if v else None
                         for k, v in metrics.items()
@@ -385,6 +389,18 @@ def aggregate(root: Path, cohort: dict):
                 "unavailable_or_incomplete_n": len(eligible) - len(usable),
                 "mean_file_mrr_paired_only": means,
                 "mean_file_mrr_difference_vs_l1_paired_only": diffs,
+                "mean_file_top1_paired_only": {
+                    p: round(sum(r["file_top1"][p] for r in usable) / len(usable), 5)
+                    if usable else None for p in POLICIES
+                },
+                "mean_file_top5_paired_only": {
+                    p: round(sum(r["file_top5"][p] for r in usable) / len(usable), 5)
+                    if usable else None for p in POLICIES
+                },
+                "mean_graph_calls_paired_only": {
+                    p: round(sum(r["graph_calls"][p] for r in usable) / len(usable), 4)
+                    if usable else None for p in POLICIES
+                },
             })
     result = {
         "schema": "graft-100-aggregate-v1",
