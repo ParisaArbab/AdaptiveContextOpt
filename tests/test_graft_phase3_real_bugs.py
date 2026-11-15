@@ -225,6 +225,11 @@ def test_paired_audit_reports_file_level_only_and_real_stopping_status(tmp_path)
 
     run = tmp_path / "run"
     run.mkdir()
+    # Audit denominator comes from a declared run manifest, never inferred
+    # from whichever policy rows happened to complete.
+    (run / "manifest.json").write_text(json.dumps({
+        "instances": [{"instance_id": bug} for bug in ("Time-1", "Lang-1", "Math-1")]
+    }))
     policies = (
         "l1_anchor", "l1_graph_focused",
         "l1_graph_test_aware_nostop", "l1_graph_test_aware",
