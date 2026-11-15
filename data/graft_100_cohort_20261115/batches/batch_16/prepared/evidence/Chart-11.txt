@@ -1,0 +1,102 @@
+OFFICIAL DEFECTS4J BUG: Chart-11
+EXECUTED BUGGY TEST: org.jfree.chart.util.junit.ShapeUtilitiesTests::testEqualGeneralPaths
+TEST SOURCE: tests/org/jfree/chart/util/junit/ShapeUtilitiesTests.java
+TEST SOURCE SHA256: 08e43b513cce1771ff58d8186f8bef4832a5bc50fa8af85b906eccc52e6aa847
+COMPLETE EXECUTED TEST METHOD (verbatim):
+public void testEqualGeneralPaths() {
+        GeneralPath g1 = new GeneralPath();
+        g1.moveTo(1.0f, 2.0f);
+        g1.lineTo(3.0f, 4.0f);
+        g1.curveTo(5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f);
+        g1.quadTo(1.0f, 2.0f, 3.0f, 4.0f);
+        g1.closePath();
+        GeneralPath g2 = new GeneralPath();
+        g2.moveTo(1.0f, 2.0f);
+        g2.lineTo(3.0f, 4.0f);
+        g2.curveTo(5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f);
+        g2.quadTo(1.0f, 2.0f, 3.0f, 4.0f);
+        g2.closePath();
+        assertTrue(ShapeUtilities.equal(g1, g2));
+
+        g2 = new GeneralPath();
+        g2.moveTo(11.0f, 22.0f);
+        g2.lineTo(3.0f, 4.0f);
+        g2.curveTo(5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f);
+        g2.quadTo(1.0f, 2.0f, 3.0f, 4.0f);
+        g2.closePath();
+        assertFalse(ShapeUtilities.equal(g1, g2));
+
+        g2 = new GeneralPath();
+        g2.moveTo(1.0f, 2.0f);
+        g2.lineTo(33.0f, 44.0f);
+        g2.curveTo(5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f);
+        g2.quadTo(1.0f, 2.0f, 3.0f, 4.0f);
+        g2.closePath();
+        assertFalse(ShapeUtilities.equal(g1, g2));
+
+        g2 = new GeneralPath();
+        g2.moveTo(1.0f, 2.0f);
+        g2.lineTo(3.0f, 4.0f);
+        g2.curveTo(55.0f, 66.0f, 77.0f, 88.0f, 99.0f, 100.0f);
+        g2.quadTo(1.0f, 2.0f, 3.0f, 4.0f);
+        g2.closePath();
+        assertFalse(ShapeUtilities.equal(g1, g2));
+
+        g2 = new GeneralPath();
+        g2.moveTo(1.0f, 2.0f);
+        g2.lineTo(3.0f, 4.0f);
+        g2.curveTo(5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f);
+        g2.quadTo(11.0f, 22.0f, 33.0f, 44.0f);
+        g2.closePath();
+        assertFalse(ShapeUtilities.equal(g1, g2));
+
+        g2 = new GeneralPath();
+        g2.moveTo(1.0f, 2.0f);
+        g2.lineTo(3.0f, 4.0f);
+        g2.curveTo(5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f);
+        g2.quadTo(1.0f, 2.0f, 3.0f, 4.0f);
+        g2.lineTo(3.0f, 4.0f);
+        g2.closePath();
+        assertFalse(ShapeUtilities.equal(g1, g2));
+    }
+OBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):
+--- org.jfree.chart.util.junit.ShapeUtilitiesTests::testEqualGeneralPaths
+junit.framework.AssertionFailedError
+	at junit.framework.Assert.fail(Assert.java:55)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertFalse(Assert.java:39)
+	at junit.framework.Assert.assertFalse(Assert.java:47)
+	at junit.framework.TestCase.assertFalse(TestCase.java:219)
+	at org.jfree.chart.util.junit.ShapeUtilitiesTests.testEqualGeneralPaths(ShapeUtilitiesTests.java:212)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)

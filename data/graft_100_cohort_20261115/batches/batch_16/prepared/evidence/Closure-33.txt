@@ -1,0 +1,91 @@
+OFFICIAL DEFECTS4J BUG: Closure-33
+EXECUTED BUGGY TEST: com.google.javascript.jscomp.TypeCheckTest::testIssue700
+TEST SOURCE: test/com/google/javascript/jscomp/TypeCheckTest.java
+TEST SOURCE SHA256: c5e48b12ce04f599f6e5370f17d204f4af1c09323319a3e223d38cf9d03197c8
+COMPLETE EXECUTED TEST METHOD (verbatim):
+public void testIssue700() throws Exception {
+    testTypes(
+        "/**\n" +
+        " * @param {{text: string}} opt_data\n" +
+        " * @return {string}\n" +
+        " */\n" +
+        "function temp1(opt_data) {\n" +
+        "  return opt_data.text;\n" +
+        "}\n" +
+        "\n" +
+        "/**\n" +
+        " * @param {{activity: (boolean|number|string|null|Object)}} opt_data\n" +
+        " * @return {string}\n" +
+        " */\n" +
+        "function temp2(opt_data) {\n" +
+        "  /** @notypecheck */\n" +
+        "  function __inner() {\n" +
+        "    return temp1(opt_data.activity);\n" +
+        "  }\n" +
+        "  return __inner();\n" +
+        "}\n" +
+        "\n" +
+        "/**\n" +
+        " * @param {{n: number, text: string, b: boolean}} opt_data\n" +
+        " * @return {string}\n" +
+        " */\n" +
+        "function temp3(opt_data) {\n" +
+        "  return 'n: ' + opt_data.n + ', t: ' + opt_data.text + '.';\n" +
+        "}\n" +
+        "\n" +
+        "function callee() {\n" +
+        "  var output = temp3({\n" +
+        "    n: 0,\n" +
+        "    text: 'a string',\n" +
+        "    b: true\n" +
+        "  })\n" +
+        "  alert(output);\n" +
+        "}\n" +
+        "\n" +
+        "callee();");
+  }
+OBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):
+--- com.google.javascript.jscomp.TypeCheckTest::testIssue700
+junit.framework.AssertionFailedError: unexpected warnings(s):
+JSC_TYPE_MISMATCH. actual parameter 1 of temp3 does not match formal parameter
+found   : {b: boolean, n: number, text: (string|undefined)}
+required: (undefined|{b: boolean, n: number, text: string}) at [testcode] line 30 : 21
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.TestCase.fail(TestCase.java:227)
+	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:9908)
+	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:9882)
+	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:9820)
+	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:9816)
+	at com.google.javascript.jscomp.TypeCheckTest.testIssue700(TypeCheckTest.java:5777)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
