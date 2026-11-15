@@ -167,7 +167,7 @@ def _file_labels(checkout: Path, classes: str, source_dir: str) -> list[str]:
     return sorted(set(labels))
 
 
-def collect_case(row: dict, cli: str, root: Path, *, max_bytes: int = _MAX_BYTES) -> tuple[dict, dict]:
+def collect_case(row: dict, cli: str, root: Path, *, max_bytes: int = _MAX_BYTES, test_scope: str = "suite") -> tuple[dict, dict]:
     bug = row["bug"]
     # Reuse this audited collector for the frozen 100-bug cohort while
     # preserving the original three-bug behavior. The 100-bug selector
@@ -196,8 +196,23 @@ def collect_case(row: dict, cli: str, root: Path, *, max_bytes: int = _MAX_BYTES
     test_dir = _export(cli, "dir.src.tests", checkout)
     prod_dir = _export(cli, "dir.src.classes", checkout)
     trigger = _export(cli, "tests.trigger", checkout)
+    # For the separate 100-bug condition, execute the first official
+    # triggering test *selected before observing failures*. This produces
+    # a real Defects4J failing_tests log, avoiding unrelated suite failures.
+    # Existing three-bug historical condition remains full-suite by default.
+    declared = [t.strip() for t in trigger.splitlines() if "::" in t]
+    if test_scope not in {"suite", "official_trigger"}:
+        raise ValueError("Unsupported D4J test scope")
+    if test_scope == "official_trigger" and not declared:
+        raise RuntimeError(f"{bug} has no declared Defects4J triggering test")
+    official_trigger = declared[0] if declared else None
+    test_command = (
+        [cli, "test", "-t", official_trigger, "-w", str(checkout)]
+        if test_scope == "official_trigger"
+        else [cli, "test", "-w", str(checkout)]
+    )
     # Real tests; never substitute an issue description or oracle patch.
-    test_run = cmd([cli, "test", "-w", str(checkout)], timeout=1800)
+    test_run = cmd(test_command, timeout=1800)
     logs = root / "test_runs"
     logs.mkdir(parents=True, exist_ok=True)
     (logs / f"{bug}.stdout.txt").write_text(test_run.stdout)
@@ -208,9 +223,17 @@ def collect_case(row: dict, cli: str, root: Path, *, max_bytes: int = _MAX_BYTES
     if test_run.returncode:
         raise RuntimeError(f"{bug} Defects4J test command failed (rc={test_run.returncode}), logs saved")
 
-    # Keep tests.trigger as metadata, not as proof of execution.
-    declared = [t.strip() for t in trigger.splitlines() if "::" in t]
-    selected = next((f for f in fails if f in declared), fails[0])
+    # The named official trigger is not treated as observed until it appears
+    # in the actual buggy checkout's failing_tests output.
+    selected = (
+        official_trigger
+        if test_scope == "official_trigger"
+        else next((f for f in fails if f in declared), fails[0])
+    )
+    if selected not in fails:
+        raise RuntimeError(
+            f"{bug} official predeclared trigger was not observed failing: {selected}"
+        )
     test_path, method_raw = find_test_source(checkout, selected, test_dir)
     trace = (checkout / "failing_tests").read_bytes()
     if len(method_raw) > max_bytes or len(trace) > max_bytes:
@@ -278,6 +301,9 @@ def collect_case(row: dict, cli: str, root: Path, *, max_bytes: int = _MAX_BYTES
         "evidence_sha256": digest(evidence),
         "evidence_bytes": len(evidence),
         "test_run_exit_code": test_run.returncode,
+        "test_execution_scope": test_scope,
+        "predeclared_official_test": official_trigger,
+        "test_command": test_command,
         "source_checkout_clean": True,
         "candidate_provider": "bm25",
         "modified_file_proxy_count": len(file_labels),
