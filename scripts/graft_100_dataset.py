@@ -165,7 +165,7 @@ def expected_batch(cohort: dict, batch: int) -> list[dict]:
     return rows
 
 
-def collect_batch(root: Path, cohort: dict, batch: int, cli: str, max_bytes: int = 20000):
+def collect_batch(root: Path, cohort: dict, batch: int, cli: str, max_bytes: int = 9000):
     rows = expected_batch(cohort, batch)
     folder = (root / "batches" / f"batch_{batch:02d}").resolve()
     prepared = folder / "prepared"
@@ -249,7 +249,7 @@ def main(argv=None):
             sub.add_argument("--batch", type=int, required=True)
         if action == "collect":
             sub.add_argument("--allow-real-tests", action="store_true")
-            sub.add_argument("--max-evidence-bytes", type=int, default=20000)
+            sub.add_argument("--max-evidence-bytes", type=int, default=9000)
     args = p.parse_args(argv)
     if args.command == "freeze":
         freeze(args.defects4j, args.root, args.seed)
