@@ -64,7 +64,8 @@ def test_failed_genuine_test_is_not_replaced_with_another_bug(tmp_path, monkeypa
     failed = selected[2]["bug"]
     called = []
 
-    def fake_collect(row, cmd, prep, max_bytes):
+    def fake_collect(row, cmd, prep, max_bytes, test_scope):
+        assert test_scope == "official_trigger"
         bug = row["bug"]
         called.append(bug)
         if bug == failed:
@@ -110,7 +111,8 @@ def test_failed_genuine_test_is_not_replaced_with_another_bug(tmp_path, monkeypa
 def test_all_five_prepared_cases_keep_original_cohort_order(tmp_path, monkeypatch):
     root, frozen = make_cohort(tmp_path, monkeypatch)
 
-    def fake_collect(row, cmd, prep, max_bytes):
+    def fake_collect(row, cmd, prep, max_bytes, test_scope):
+        assert test_scope == "official_trigger"
         bug = row["bug"]
         checkout = prep / "checkouts" / bug
         checkout.mkdir(parents=True)
