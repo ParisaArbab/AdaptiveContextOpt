@@ -12,11 +12,19 @@ git diff --quiet && git diff --cached --quiet || {
   echo "Uncommitted tracked changes found. Preserve them first." >&2
   exit 2
 }
-if [[ "$#" -ne 1 ]]; then
-  echo "Usage: bash scripts/aiscalar_graft_phase3_multibug.sh data/<new-official-prep>/manifest.json" >&2
+if [[ "$#" -ne 1 && "$#" -ne 3 ]]; then
+  echo "Usage: bash scripts/aiscalar_graft_phase3_multibug.sh data/<official-prep>/manifest.json [--seed-run results/<archived>/run]" >&2
   exit 2
 fi
 DATASET="$1"
+SEED_ARGS=()
+if [[ "$#" -eq 3 ]]; then
+  if [[ "$2" != "--seed-run" || ! -f "$3/manifest.json" || ! -d "$3/cache" ]]; then
+    echo "Seed run must be a verified archived run with manifest.json and cache/." >&2
+    exit 2
+  fi
+  SEED_ARGS=(--seed-run "$3")
+fi
 if [[ ! -f "$DATASET" ]]; then
   echo "Missing verified new dataset: $DATASET" >&2
   exit 2
@@ -36,7 +44,8 @@ ROOT="results/graft_phase3_real_bugs_$(date +%Y%m%d_%H%M%S)"
 python -m scripts.prepare_graft_phase3_multibug \
   --source configs/graft_independent_qwen7b_control.json \
   --dataset "$DATASET" \
-  --output "$ROOT"
+  --output "$ROOT" \
+  "${SEED_ARGS[@]}"
 
 # A native library fault can kill Python without writing JSON. Keep the
 # faulthandler traceback and never conceal a segfault with a JSONDecodeError.
@@ -131,7 +140,7 @@ git add -f -- "$ROOT"
 while IFS= read -r lock; do
   git rm --cached -q --ignore-unmatch -- "$lock"
 done < <(find "$ROOT" -type f -name "*.lock")
-git diff --cached --stat
+git diff --cached --stat | tail -n 30
 if ! git diff --cached --quiet; then
   git commit -m "experiment(graft): archive Phase-3 real three-bug paired BM25 and test-aware comparison"
   git push origin graft-fl-aiscalar-20261113
