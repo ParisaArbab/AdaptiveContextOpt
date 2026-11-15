@@ -75,7 +75,16 @@ def bounded_failure_excerpt(full: str) -> dict:
             raise ValueError("Observed failed test has no exception message")
         obligatory.append(exception)
         top = [i for i in block if lines[i].lstrip().startswith("at ")]
-        obligatory.extend(top[:2])
+        # Prefer the first frames in the actual program/test namespace over
+        # generic JVM reflection and JUnit runner frames. Preserve the exact
+        # original text and line numbers, without inventing execution links.
+        project = [
+            i for i in top if not lines[i].lstrip().startswith((
+                "at java.", "at javax.", "at jdk.", "at sun.",
+                "at junit.", "at org.junit.", "at org.apache.tools.ant.",
+            ))
+        ]
+        obligatory.extend((project or top)[:2])
 
     # Include the start/end of the real method (not generated prose). The test
     # can be long; omitted sections are reported, not silently stitched.
@@ -109,7 +118,7 @@ def bounded_failure_excerpt(full: str) -> dict:
         "source_sha256": sha256(full.encode("utf-8")).hexdigest(),
         "original_line_count": len(lines),
         "original_utf8_bytes": len(full.encode("utf-8")),
-        "selection_rule": "identity_test_head_tail_assertions_first_two_observed_failures_and_frames",
+        "selection_rule": "identity_test_head_tail_assertions_first_two_observed_failures_and_project_frames",
         "source_line_bytes_limit": MAX_SOURCE_BYTES,
         "excerpt_is_incomplete": len(included) != len(lines),
         "selected_original_lines": [[i + 1, lines[i]] for i in included],
