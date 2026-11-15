@@ -65,6 +65,10 @@ def prepare(
     # Store future cache entries only in a NEW independent cache directory.
     b["cache_dir"] = str((output / "cache").resolve()) if seed_run else None
     b["cache_mode"] = "use"
+    # Explicit new graph prompt condition; L1 source and provider requests
+    # remain unchanged for exact-cache matching. Failure excerpts are hashed,
+    # line-numbered quotes of the original observed failing test/log.
+    g["failure_digest_mode"] = "bounded_excerpt"
     config["graft_policies"] = list(POLICIES)
     from rave_fl.graft.runner import validate_config
     config = validate_config(config)
@@ -83,6 +87,8 @@ def prepare(
         "fusions": list(FUSIONS),
         "policies": list(POLICIES),
         "graph_evidence_budget": 4096,
+        "graph_failure_view": "bounded_excerpt_exact_source_lines_v2",
+        "full_original_failure_retained_in_graph_and_l1": True,
         "new_calls_during_preparation": 0,
         "known_physical_provider_token_cap": 240000,
         "provider_calls_cap": 135,
