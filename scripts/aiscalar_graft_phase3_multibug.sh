@@ -19,8 +19,9 @@ fi
 DATASET="$1"
 SEED_ARGS=()
 if [[ "$#" -eq 3 ]]; then
-  if [[ "$2" != "--seed-run" || ! -f "$3/manifest.json" || ! -d "$3/cache" ]]; then
-    echo "Seed run must be a verified archived run with manifest.json and cache/." >&2
+  if [[ "$2" != "--seed-run" || ! -f "$3/manifest.json" || \
+        ( ! -d "$3/cache" && ! -d "$3/../cache" ) ]]; then
+    echo "Seed run must contain manifest.json and an archived response cache." >&2
     exit 2
   fi
   SEED_ARGS=(--seed-run "$3")
