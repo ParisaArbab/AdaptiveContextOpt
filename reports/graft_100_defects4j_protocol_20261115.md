@@ -41,11 +41,18 @@ in the frozen cohort.json and committed **before executing these 100 bugs**.
 ## Evidence, labels and direct experimental comparison
 
 Each bug is checked out at its authentic buggy revision with Defects4J.
-Real Defects4J tests run against that revision. The preparer obtains the
-exact executed test method source, full observed failing_tests log, source
-SHA values, actual checkout Git revision, code-root metadata and modified
-classes. No fixed production source, oracle patch, gold files or modified
-class names are added to L1/model-facing failure prompts.
+The *first official Defects4J tests.trigger method* is selected from metadata
+**before executing that test**, and `defects4j test -t Class::method` runs it
+against the actual buggy checkout. Only its genuinely observed failing output
+is accepted. This is a declared single-trigger-test condition for 100 bugs;
+the earlier three-bug run used the full developer test suite and the two
+conditions must not be silently treated as identical.
+
+The preparer obtains the exact executed test method source, full observed
+failing_tests log for that one test, source SHA values, actual checkout Git
+revision, code-root metadata and modified classes. No fixed production source,
+oracle patch, gold files or modified class names are added to L1/model-facing
+failure prompts.
 
 A bug is marked unavailable if it lacks the validated inputs. No synthetic
 failures or reconstructed test descriptions may replace authentic observations.
