@@ -1,0 +1,1318 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Closure-6",
+    "repository": "Closure",
+    "language": "java",
+    "revision": "37181f0ae5fb3ac76436cebea9b70eed4f54ba04",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_09/prepared/checkouts/Closure-6",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Closure-6\nEXECUTED BUGGY TEST: com.google.javascript.jscomp.LooseTypeCheckTest::testTypeRedefinition\nTEST SOURCE: test/com/google/javascript/jscomp/LooseTypeCheckTest.java\nTEST SOURCE SHA256: 88af7c0bbeece5d5739d539604292bcdceebad25cf1f05ac3827ed6c3c33a082\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testTypeRedefinition() throws Exception {\n    testClosureTypesMultipleWarnings(\n        \"a={};/**@enum {string}*/ a.A = {ZOR:'b'};\"\n        + \"/** @constructor */ a.A = function() {}\",\n        Lists.newArrayList(\n            \"variable a.A redefined with type function (new:a.A): undefined, \" +\n            \"original definition at [testcode]:1 with type enum{a.A}\",\n            \"assignment to property A of a\\n\" +\n            \"found   : function (new:a.A): undefined\\n\" +\n            \"required: enum{a.A}\"));\n  }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- com.google.javascript.jscomp.LooseTypeCheckTest::testTypeRedefinition\njunit.framework.AssertionFailedError: expected:<2> but was:<1>\n\tat junit.framework.Assert.fail(Assert.java:57)\n\tat junit.framework.Assert.failNotEquals(Assert.java:329)\n\tat junit.framework.Assert.assertEquals(Assert.java:78)\n\tat junit.framework.Assert.assertEquals(Assert.java:234)\n\tat junit.framework.Assert.assertEquals(Assert.java:241)\n\tat junit.framework.TestCase.assertEquals(TestCase.java:409)\n\tat com.google.javascript.jscomp.LooseTypeCheckTest.testClosureTypesMultipleWarnings(LooseTypeCheckTest.java:6939)\n\tat com.google.javascript.jscomp.LooseTypeCheckTest.testTypeRedefinition(LooseTypeCheckTest.java:2121)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_09/prepared/evidence/Closure-6.txt",
+      "sha256": "1fb299cef9065eaffcd3dcf5c7cfe389e58be90c52c94c49b3f4591be1fbc5ef"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Closure-6",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()",
+      "path": "src/com/google/javascript/jscomp/ant/CompileTask.java",
+      "start_line": 268,
+      "end_line": 295,
+      "source": "@Override\n  public void execute() {\n    if (this.outputFile == null) {\n      throw new BuildException(\"outputFile attribute must be set\");\n    }\n\n    Compiler.setLoggingLevel(Level.OFF);\n\n    CompilerOptions options = createCompilerOptions();\n    Compiler compiler = createCompiler(options);\n\n    List<SourceFile> externs = findExternFiles();\n    List<SourceFile> sources = findSourceFiles();\n\n    if (isStale() || forceRecompile) {\n      log(\"Compiling \" + sources.size() + \" file(s) with \" +\n          externs.size() + \" extern(s)\");\n\n      Result result = compiler.compile(externs, sources, options);\n      if (result.success) {\n        writeResult(compiler.toSource());\n      } else {\n        throw new BuildException(\"Compilation failed.\");\n      }\n    } else {\n      log(\"None of the files changed. Compilation skipped.\");\n    }\n  }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 57.0465621980034
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/TightenTypes.java::TightenTypes.CreateScope.createAssignmentActions(\n        Node lhs, Node rhs, Node parent)",
+      "path": "src/com/google/javascript/jscomp/TightenTypes.java",
+      "start_line": 782,
+      "end_line": 805,
+      "source": "private List<Action> createAssignmentActions(\n        Node lhs, Node rhs, Node parent) {\n      switch (lhs.getType()) {\n        case Token.NAME:\n          ConcreteSlot var = (ConcreteSlot) scope.getSlot(lhs.getString());\n          Preconditions.checkState(var != null,\n              \"Type tightener could not find variable with name %s\",\n              lhs.getString());\n          return Lists.<Action>newArrayList(\n              new VariableAssignAction(var, rhs));\n\n        case Token.GETPROP:\n          Node receiver = lhs.getFirstChild();\n          return Lists.<Action>newArrayList(\n              new PropertyAssignAction(receiver, rhs));\n\n        case Token.GETELEM:\n          return Lists.newArrayList();\n\n        default:\n          throw new AssertionError(\n              \"Bad LHS for assignment: \" + parent.toStringTree());\n      }\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 50.556542536842656
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/jsonml/SecureCompiler.java::SecureCompiler.generateReport(Result result)",
+      "path": "src/com/google/javascript/jscomp/jsonml/SecureCompiler.java",
+      "start_line": 153,
+      "end_line": 172,
+      "source": "Report generateReport(Result result) {\n    // a report may be generated only after actual compilation is complete\n    if (result == null) {\n      return null;\n    }\n\n    ArrayList<JsonMLError> errors = Lists.newArrayList();\n    for (JSError error : result.errors) {\n      errors.add(JsonMLError.make(error, sourceAst));\n    }\n\n    ArrayList<JsonMLError> warnings = Lists.newArrayList();\n    for (JSError warning : result.warnings) {\n      warnings.add(JsonMLError.make(warning, sourceAst));\n    }\n\n    return new Report(\n        errors.toArray(new JsonMLError[0]),\n        warnings.toArray(new JsonMLError[0]));\n  }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 47.93260531715453
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)",
+      "path": "src/com/google/javascript/jscomp/TypeValidator.java",
+      "start_line": 609,
+      "end_line": 643,
+      "source": "private void expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop) {\n    StaticSlot<JSType> propSlot = instance.getSlot(prop);\n    if (propSlot == null) {\n      // Not implemented\n      String sourceName = n.getSourceFileName();\n      sourceName = sourceName == null ? \"\" : sourceName;\n      registerMismatch(instance, implementedInterface,\n          report(JSError.make(sourceName, n,\n          INTERFACE_METHOD_NOT_IMPLEMENTED,\n          prop, implementedInterface.toString(), instance.toString())));\n    } else {\n      Node propNode = propSlot.getDeclaration() == null ?\n          null : propSlot.getDeclaration().getNode();\n\n      // Fall back on the constructor node if we can't find a node for the\n      // property.\n      propNode = propNode == null ? n : propNode;\n\n      JSType found = propSlot.getType();\n      JSType required\n          = implementedInterface.getImplicitPrototype().getPropertyType(prop);\n      found = found.restrictByNotNullOrUndefined();\n      required = required.restrictByNotNullOrUndefined();\n      if (!found.canAssignTo(required)) {\n        // Implemented, but not correctly typed\n        FunctionType constructor =\n            implementedInterface.toObjectType().getConstructor();\n        registerMismatch(found, required, report(t.makeError(propNode,\n            HIDDEN_INTERFACE_PROPERTY_MISMATCH, prop,\n            constructor.getTopMostDefiningType(prop).toString(),\n            required.toString(), found.toString())));\n      }\n    }\n  }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 47.538704717957756
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)",
+      "path": "src/com/google/javascript/jscomp/ant/CompileTask.java",
+      "start_line": 504,
+      "end_line": 522,
+      "source": "private void writeResult(String source) {\n    if (this.outputFile.getParentFile().mkdirs()) {\n      log(\"Created missing parent directory \" +\n          this.outputFile.getParentFile(), Project.MSG_DEBUG);\n    }\n\n    try {\n      OutputStreamWriter out = new OutputStreamWriter(\n          new FileOutputStream(this.outputFile), outputEncoding);\n      out.append(source);\n      out.flush();\n      out.close();\n    } catch (IOException e) {\n      throw new BuildException(e);\n    }\n\n    log(\"Compiled JavaScript written to \" + this.outputFile.getAbsolutePath(),\n        Project.MSG_DEBUG);\n  }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 47.391641565388554
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()",
+      "path": "src/com/google/javascript/jscomp/ClosureCodingConvention.java",
+      "start_line": 367,
+      "end_line": 383,
+      "source": "@Override\n  public Collection<AssertionFunctionSpec> getAssertionFunctions() {\n    return ImmutableList.<AssertionFunctionSpec>of(\n        new AssertionFunctionSpec(\"goog.asserts.assert\"),\n        new AssertionFunctionSpec(\"goog.asserts.assertNumber\",\n            JSTypeNative.NUMBER_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertString\",\n            JSTypeNative.STRING_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertFunction\",\n            JSTypeNative.FUNCTION_INSTANCE_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertObject\",\n            JSTypeNative.OBJECT_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertArray\",\n            JSTypeNative.ARRAY_TYPE),\n        new AssertInstanceofSpec(\"goog.asserts.assertInstanceof\")\n    );\n  }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 46.896011332871915
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)",
+      "path": "src/com/google/javascript/jscomp/TypeValidator.java",
+      "start_line": 665,
+      "end_line": 689,
+      "source": "private void registerMismatch(JSType found, JSType required, JSError error) {\n    // Don't register a mismatch for differences in null or undefined or if the\n    // code didn't downcast.\n    found = found.restrictByNotNullOrUndefined();\n    required = required.restrictByNotNullOrUndefined();\n    if (found.canAssignTo(required) || required.canAssignTo(found)) {\n      return;\n    }\n\n    mismatches.add(new TypeMismatch(found, required, error));\n    if (found.isFunctionType() &&\n        required.isFunctionType()) {\n      FunctionType fnTypeA = found.toMaybeFunctionType();\n      FunctionType fnTypeB = required.toMaybeFunctionType();\n      Iterator<Node> paramItA = fnTypeA.getParameters().iterator();\n      Iterator<Node> paramItB = fnTypeB.getParameters().iterator();\n      while (paramItA.hasNext() && paramItB.hasNext()) {\n        registerIfMismatch(paramItA.next().getJSType(),\n            paramItB.next().getJSType(), error);\n      }\n\n      registerIfMismatch(\n          fnTypeA.getReturnType(), fnTypeB.getReturnType(), error);\n    }\n  }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 45.88095582260069
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)",
+      "path": "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java",
+      "start_line": 1520,
+      "end_line": 1674,
+      "source": "private JSType createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope) {\n    switch (n.getType()) {\n      case Token.LC: // Record type.\n        return createRecordTypeFromNodes(\n            n.getFirstChild(), sourceName, scope);\n\n      case Token.BANG: // Not nullable\n        return createFromTypeNodesInternal(\n            n.getFirstChild(), sourceName, scope)\n            .restrictByNotNullOrUndefined();\n\n      case Token.QMARK: // Nullable or unknown\n        Node firstChild = n.getFirstChild();\n        if (firstChild == null) {\n          return getNativeType(UNKNOWN_TYPE);\n        }\n        return createDefaultObjectUnion(\n            createFromTypeNodesInternal(\n                firstChild, sourceName, scope));\n\n      case Token.EQUALS: // Optional\n        return createOptionalType(\n            createFromTypeNodesInternal(\n                n.getFirstChild(), sourceName, scope));\n\n      case Token.ELLIPSIS: // Var args\n        return createOptionalType(\n            createFromTypeNodesInternal(\n                n.getFirstChild(), sourceName, scope));\n\n      case Token.STAR: // The AllType\n        return getNativeType(ALL_TYPE);\n\n      case Token.LB: // Array type\n        // TODO(nicksantos): Enforce membership restrictions on the Array.\n        return getNativeType(ARRAY_TYPE);\n\n      case Token.PIPE: // Union type\n        UnionTypeBuilder builder = new UnionTypeBuilder(this);\n        for (Node child = n.getFirstChild(); child != null;\n             child = child.getNext()) {\n          builder.addAlternate(\n              createFromTypeNodesInternal(child, sourceName, scope));\n        }\n        return builder.build();\n\n      case Token.EMPTY: // When the return value of a function is not specified\n        return getNativeType(UNKNOWN_TYPE);\n\n      case Token.VOID: // Only allowed in the return value of a function.\n        return getNativeType(VOID_TYPE);\n\n      case Token.STRING:\n        JSType namedType = getType(scope, n.getString(), sourceName,\n            n.getLineno(), n.getCharno());\n        if (resolveMode != ResolveMode.LAZY_NAMES) {\n          namedType = namedType.resolveInternal(reporter, scope);\n        }\n        if ((namedType instanceof ObjectType) &&\n            !(nonNullableTypeNames.contains(n.getString()))) {\n          Node typeList = n.getFirstChild();\n          if (typeList != null &&\n              (\"Array\".equals(n.getString()) ||\n               \"Object\".equals(n.getString()))) {\n            JSType parameterType =\n                createFromTypeNodesInternal(\n                    typeList.getLastChild(), sourceName, scope);\n            namedType = new ParameterizedType(\n                this, (ObjectType) namedType, parameterType);\n            if (typeList.hasMoreThanOneChild()) {\n              JSType indexType =\n                  createFromTypeNodesInternal(\n                      typeList.getFirstChild(), sourceName, scope);\n              namedType = new IndexedType(\n                  this, (ObjectType) namedType, indexType);\n            }\n          }\n          return createDefaultObjectUnion(namedType);\n        } else {\n          return namedType;\n        }\n\n      case Token.FUNCTION:\n        ObjectType thisType = null;\n        boolean isConstructor = false;\n        Node current = n.getFirstChild();\n        if (current.getType() == Token.THIS ||\n            current.getType() == Token.NEW) {\n          Node contextNode = current.getFirstChild();\n          thisType =\n              ObjectType.cast(\n                  createFromTypeNodesInternal(\n                      contextNode, sourceName, scope)\n                  .restrictByNotNullOrUndefined());\n          if (thisType == null) {\n            reporter.warning(\n                ScriptRuntime.getMessage0(\n                    current.getType() == Token.THIS ?\n                    \"msg.jsdoc.function.thisnotobject\" :\n                    \"msg.jsdoc.function.newnotobject\"),\n                sourceName,\n                contextNode.getLineno(), contextNode.getCharno());\n          }\n\n          isConstructor = current.getType() == Token.NEW;\n          current = current.getNext();\n        }\n\n        FunctionParamBuilder paramBuilder = new FunctionParamBuilder(this);\n\n        if (current.getType() == Token.PARAM_LIST) {\n          Node args = current.getFirstChild();\n          for (Node arg = current.getFirstChild(); arg != null;\n               arg = arg.getNext()) {\n            if (arg.getType() == Token.ELLIPSIS) {\n              if (arg.getChildCount() == 0) {\n                paramBuilder.addVarArgs(getNativeType(UNKNOWN_TYPE));\n              } else {\n                paramBuilder.addVarArgs(\n                    createFromTypeNodesInternal(\n                        arg.getFirstChild(), sourceName, scope));\n              }\n            } else {\n              JSType type = createFromTypeNodesInternal(\n                  arg, sourceName, scope);\n              if (arg.getType() == Token.EQUALS) {\n                boolean addSuccess = paramBuilder.addOptionalParams(type);\n                if (!addSuccess) {\n                  reporter.warning(\n                      ScriptRuntime.getMessage0(\"msg.jsdoc.function.varargs\"),\n                      sourceName, arg.getLineno(), arg.getCharno());\n                }\n              } else {\n                paramBuilder.addRequiredParams(type);\n              }\n            }\n          }\n          current = current.getNext();\n        }\n\n        JSType returnType =\n            createFromTypeNodesInternal(current, sourceName, scope);\n\n        return new FunctionBuilder(this)\n            .withParams(paramBuilder)\n            .withReturnType(returnType)\n            .withTypeOfThis(thisType)\n            .setIsConstructor(isConstructor)\n            .build();\n    }\n\n    throw new IllegalStateException(\n        \"Unexpected node in type expression: \" + n.toString());\n  }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 44.27970769893398
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/deps/SortedDependencies.java::SortedDependencies.topologicalStableSort(\n      List<T> items, Multimap<T, T> deps)",
+      "path": "src/com/google/javascript/jscomp/deps/SortedDependencies.java",
+      "start_line": 239,
+      "end_line": 288,
+      "source": "private static <T> List<T> topologicalStableSort(\n      List<T> items, Multimap<T, T> deps) {\n    if (items.size() == 0) {\n      // Priority queue blows up if we give it a size of 0. Since we need\n      // to special case this either way, just bail out.\n      return Lists.newArrayList();\n    }\n\n    final Map<T, Integer> originalIndex = Maps.newHashMap();\n    for (int i = 0; i < items.size(); i++) {\n      originalIndex.put(items.get(i), i);\n    }\n\n    PriorityQueue<T> inDegreeZero = new PriorityQueue<T>(items.size(),\n        new Comparator<T>() {\n      @Override\n      public int compare(T a, T b) {\n        return originalIndex.get(a).intValue() -\n            originalIndex.get(b).intValue();\n      }\n    });\n    List<T> result = Lists.newArrayList();\n\n    Multiset<T> inDegree = HashMultiset.create();\n    Multimap<T, T> reverseDeps = ArrayListMultimap.create();\n    Multimaps.invertFrom(deps, reverseDeps);\n\n    // First, add all the inputs with in-degree 0.\n    for (T item : items) {\n      Collection<T> itemDeps = deps.get(item);\n      inDegree.add(item, itemDeps.size());\n      if (itemDeps.isEmpty()) {\n        inDegreeZero.add(item);\n      }\n    }\n\n    // Then, iterate to a fixed point over the reverse dependency graph.\n    while (!inDegreeZero.isEmpty()) {\n      T item = inDegreeZero.remove();\n      result.add(item);\n      for (T inWaiting : reverseDeps.get(item)) {\n        inDegree.remove(inWaiting, 1);\n        if (inDegree.count(inWaiting) == 0) {\n          inDegreeZero.add(inWaiting);\n        }\n      }\n    }\n\n    return result;\n  }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 43.04034788950215
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.findJavaScriptFiles(FileList fileList)",
+      "path": "src/com/google/javascript/jscomp/ant/CompileTask.java",
+      "start_line": 464,
+      "end_line": 474,
+      "source": "private List<SourceFile> findJavaScriptFiles(FileList fileList) {\n    List<SourceFile> files = Lists.newLinkedList();\n    File baseDir = fileList.getDir(getProject());\n\n    for (String included : fileList.getFiles(getProject())) {\n      files.add(SourceFile.fromFile(new File(baseDir, included),\n          Charset.forName(encoding)));\n    }\n\n    return files;\n  }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.331783516979286
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()",
+      "path": "src/com/google/javascript/jscomp/ant/CompileTask.java",
+      "start_line": 496,
+      "end_line": 502,
+      "source": "private List<SourceFile> getDefaultExterns() {\n    try {\n      return CommandLineRunner.getDefaultExterns();\n    } catch (IOException e) {\n      throw new BuildException(e);\n    }\n  }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.17760335671827
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ParallelCompilerPass.java::ParallelCompilerPass.execute()",
+      "path": "src/com/google/javascript/jscomp/ParallelCompilerPass.java",
+      "start_line": 136,
+      "end_line": 177,
+      "source": "private Result execute() {\n    int numChildThread = numWorkers - 1;\n    Thread[] workers = new Thread[numChildThread];\n    final Result[] results = new Result[numChildThread];\n\n    for (int i = 0; i < numChildThread; i++) {\n      final int index = i;\n      Thread worker = new Thread() {\n        @Override\n          public void run() {\n            results[index] = processAllTasks();\n          }\n       };\n       workers[i] = worker;\n       worker.start();\n    }\n\n    Result result = processAllTasks();\n\n    // Wait for the child to finish.\n    for (int i = 0; i < numChildThread; i++) {\n      try {\n        workers[i].join();\n      } catch (InterruptedException e) {\n        // None of the children thread should be interrupted in the execution\n        // of this method. If, for whatever reason, this happens, we will\n        // re-throw it and investigate the cause.\n        result.exceptions.add(e);\n        // One of our thread was interrupted, we'll make the current thread to\n        // be interrupted so any caller that is interested in cancelable\n        // execution can cancel.\n        Thread.currentThread().interrupt();\n      }\n    }\n\n    // Combine the result.\n    for (int i = 0; i < numChildThread; i++) {\n      result.combine(results[i]);\n    }\n\n    return result;\n  }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.85102354366957
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)",
+      "path": "src/com/google/javascript/jscomp/ant/AntErrorManager.java",
+      "start_line": 41,
+      "end_line": 51,
+      "source": "@Override\n  public void println(CheckLevel level, JSError error) {\n    switch (level) {\n      case ERROR:\n        this.task.log(error.format(level, this.formatter), Project.MSG_ERR);\n        break;\n      case WARNING:\n        this.task.log(error.format(level, this.formatter), Project.MSG_WARN);\n        break;\n    }\n  }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.53549446520291
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.outputNameMaps(B options)",
+      "path": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java",
+      "start_line": 1289,
+      "end_line": 1348,
+      "source": "private void outputNameMaps(B options) throws FlagUsageException,\n      IOException {\n\n    String propertyMapOutputPath = null;\n    String variableMapOutputPath = null;\n    String functionInformationMapOutputPath = null;\n\n    // Check the create_name_map_files FLAG.\n    if (config.createNameMapFiles) {\n      String basePath = getMapPath(config.jsOutputFile);\n\n      propertyMapOutputPath = basePath + \"_props_map.out\";\n      variableMapOutputPath = basePath + \"_vars_map.out\";\n      functionInformationMapOutputPath = basePath + \"_functions_map.out\";\n    }\n\n    // Check the individual FLAGS.\n    if (!config.variableMapOutputFile.equals(\"\")) {\n      if (variableMapOutputPath != null) {\n        throw new FlagUsageException(\"The flags variable_map_output_file and \"\n            + \"create_name_map_files cannot both be used simultaniously.\");\n      }\n\n      variableMapOutputPath = config.variableMapOutputFile;\n    }\n\n    if (!config.propertyMapOutputFile.equals(\"\")) {\n      if (propertyMapOutputPath != null) {\n        throw new FlagUsageException(\"The flags property_map_output_file and \"\n            + \"create_name_map_files cannot both be used simultaniously.\");\n      }\n\n      propertyMapOutputPath = config.propertyMapOutputFile;\n    }\n\n    // Output the maps.\n    if (variableMapOutputPath != null) {\n      if (compiler.getVariableMap() != null) {\n        compiler.getVariableMap().save(variableMapOutputPath);\n      }\n    }\n\n    if (propertyMapOutputPath != null) {\n      if (compiler.getPropertyMap() != null) {\n        compiler.getPropertyMap().save(propertyMapOutputPath);\n      }\n    }\n\n    if (functionInformationMapOutputPath != null) {\n      if (compiler.getFunctionalInformationMap() != null) {\n        OutputStream file =\n            filenameToOutputStream(functionInformationMapOutputPath);\n        CodedOutputStream outputStream = CodedOutputStream.newInstance(file);\n        compiler.getFunctionalInformationMap().writeTo(outputStream);\n        outputStream.flush();\n        file.flush();\n        file.close();\n      }\n    }\n  }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.17077289491406
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/deps/PathUtil.java::PathUtil.makeRelative(String basePath, String targetPath)",
+      "path": "src/com/google/javascript/jscomp/deps/PathUtil.java",
+      "start_line": 162,
+      "end_line": 207,
+      "source": "public static String makeRelative(String basePath, String targetPath) {\n    // Ensure the paths are both absolute or both relative.\n    if (isAbsolute(basePath) !=\n        isAbsolute(targetPath)) {\n      throw new IllegalArgumentException(\n          \"Paths must both be relative or both absolute.\\n\" +\n          \"  basePath: \" + basePath + \"\\n\" +\n          \"  targetPath: \" + targetPath);\n    }\n\n    basePath = collapseDots(basePath);\n    targetPath = collapseDots(targetPath);\n    String[] baseFragments = basePath.split(\"/\");\n    String[] targetFragments = targetPath.split(\"/\");\n\n    int i = -1;\n    do {\n      i += 1;\n      if (i == baseFragments.length && i == targetFragments.length) {\n        // Eg) base: /java/com/google\n        //   target: /java/com/google\n        //   result: .  <-- . is better than \"\" since \"\" + \"/path\" = \"/path\"\n        return \".\";\n      } else if (i == baseFragments.length) {\n        // Eg) base: /java/com/google\n        //   target: /java/com/google/c/ui\n        //   result: c/ui\n        return Joiner.on(\"/\").join(\n            Lists.newArrayList(\n                Arrays.asList(targetFragments).listIterator(i)));\n      } else if (i == targetFragments.length) {\n        // Eg) base: /java/com/google/c/ui\n        //   target: /java/com/google\n        //   result: ../..\n        return Strings.repeat(\"../\", baseFragments.length - i - 1) + \"..\";\n      }\n\n    } while (baseFragments[i].equals(targetFragments[i]));\n\n    // Eg) base: /java/com/google/c\n    //   target: /java/com/google/common/base\n    //   result: ../common/base\n    return Strings.repeat(\"../\", baseFragments.length - i) +\n        Joiner.on(\"/\").join(\n            Lists.newArrayList(Arrays.asList(targetFragments).listIterator(i)));\n  }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.88009848721726
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/AstValidator.java::AstValidator.validateAssignmentTarget(Node n)",
+      "path": "src/com/google/javascript/jscomp/AstValidator.java",
+      "start_line": 605,
+      "end_line": 616,
+      "source": "private void validateAssignmentTarget(Node n) {\n    switch (n.getType()) {\n      case Token.NAME:\n      case Token.GETELEM:\n      case Token.GETPROP:\n        validateExpression(n);\n        return;\n      default:\n        violation(\"Expected assignment target expression but was \"\n            + Token.name(n.getType()), n);\n    }\n  }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.7808239950266
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/rhino/jstype/JSType.java::JSType.checkEquivalenceHelper(JSType that, EquivalenceMethod eqMethod)",
+      "path": "src/com/google/javascript/rhino/jstype/JSType.java",
+      "start_line": 652,
+      "end_line": 740,
+      "source": "boolean checkEquivalenceHelper(JSType that, EquivalenceMethod eqMethod) {\n    if (this == that) {\n      return true;\n    }\n\n    boolean thisUnknown = isUnknownType();\n    boolean thatUnknown = that.isUnknownType();\n    if (thisUnknown || thatUnknown) {\n      if (eqMethod == EquivalenceMethod.INVARIANT) {\n        // If we're checking for invariance, the unknown type is invariant\n        // with everyone.\n        return true;\n      } else if (eqMethod == EquivalenceMethod.DATA_FLOW) {\n        // If we're checking data flow, then two types are the same if they're\n        // both unknown.\n        return thisUnknown && thatUnknown;\n      } else if (thisUnknown && thatUnknown &&\n          (isNominalType() ^ that.isNominalType())) {\n        // If they're both unknown, but one is a nominal type and the other\n        // is not, then we should fail out immediately. This ensures that\n        // we won't unbox the unknowns further down.\n        return false;\n      }\n    }\n\n    if (isUnionType() && that.isUnionType()) {\n      return toMaybeUnionType().checkUnionEquivalenceHelper(\n          that.toMaybeUnionType(), eqMethod);\n    }\n\n    if (isFunctionType() && that.isFunctionType()) {\n      return toMaybeFunctionType().checkFunctionEquivalenceHelper(\n          that.toMaybeFunctionType(), eqMethod);\n    }\n\n    if (isRecordType() && that.isRecordType()) {\n      return toMaybeRecordType().checkRecordEquivalenceHelper(\n          that.toMaybeRecordType(), eqMethod);\n    }\n\n    ParameterizedType thisParamType = toMaybeParameterizedType();\n    ParameterizedType thatParamType = that.toMaybeParameterizedType();\n    if (thisParamType != null || thatParamType != null) {\n      // Check if one type is parameterized, but the other is not.\n      boolean paramsMatch = false;\n      if (thisParamType != null && thatParamType != null) {\n        paramsMatch = thisParamType.getParameterType().checkEquivalenceHelper(\n            thatParamType.getParameterType(), eqMethod);\n      } else if (eqMethod == EquivalenceMethod.IDENTITY) {\n        paramsMatch = false;\n      } else {\n        // If one of the type parameters is unknown, but the other is not,\n        // then we consider these the same for the purposes of data flow\n        // and invariance.\n        paramsMatch = true;\n      }\n\n      JSType thisRootType = thisParamType == null ?\n          this : thisParamType.getReferencedTypeInternal();\n      JSType thatRootType = thatParamType == null ?\n          that : thatParamType.getReferencedTypeInternal();\n      return paramsMatch &&\n          thisRootType.checkEquivalenceHelper(thatRootType, eqMethod);\n    }\n\n    if (isNominalType() && that.isNominalType()) {\n      return toObjectType().getReferenceName().equals(\n          that.toObjectType().getReferenceName());\n    }\n\n    // Unbox other proxies.\n    if (this instanceof ProxyObjectType) {\n      return ((ProxyObjectType) this)\n          .getReferencedTypeInternal().checkEquivalenceHelper(\n              that, eqMethod);\n    }\n\n    if (that instanceof ProxyObjectType) {\n      return checkEquivalenceHelper(\n          ((ProxyObjectType) that).getReferencedTypeInternal(),\n          eqMethod);\n    }\n\n    // Relies on the fact that for the base {@link JSType}, only one\n    // instance of each sub-type will ever be created in a given registry, so\n    // there is no need to verify members. If the object pointers are not\n    // identical, then the type member must be different.\n    return this == that;\n  }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.422026960161894
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.createInputs(List<String> files,\n      boolean allowStdIn)",
+      "path": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java",
+      "start_line": 441,
+      "end_line": 470,
+      "source": "protected List<SourceFile> createInputs(List<String> files,\n      boolean allowStdIn) throws FlagUsageException, IOException {\n    List<SourceFile> inputs = new ArrayList<SourceFile>(files.size());\n    boolean usingStdin = false;\n    for (String filename : files) {\n      if (!\"-\".equals(filename)) {\n        SourceFile newFile = SourceFile.fromFile(filename, inputCharset);\n        inputs.add(newFile);\n      } else {\n        if (!allowStdIn) {\n          throw new FlagUsageException(\"Can't specify stdin.\");\n        }\n        if (usingStdin) {\n          throw new FlagUsageException(\"Can't specify stdin twice.\");\n        }\n\n        if (!config.outputManifests.isEmpty()) {\n          throw new FlagUsageException(\"Manifest files cannot be generated \" +\n              \"when the input is from stdin.\");\n        }\n        if (!config.outputBundles.isEmpty()) {\n          throw new FlagUsageException(\"Bundle files cannot be generated \" +\n              \"when the input is from stdin.\");\n        }\n        inputs.add(SourceFile.fromInputStream(\"stdin\", System.in));\n        usingStdin = true;\n      }\n    }\n    return inputs;\n  }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.71371480412686
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)",
+      "path": "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java",
+      "start_line": 50,
+      "end_line": 74,
+      "source": "ErrorFunctionType(JSTypeRegistry registry, String name) {\n    super(\n        registry, name, null,\n        registry.createArrowType(\n            registry.createOptionalParameters(\n                registry.getNativeType(ALL_TYPE),\n                registry.getNativeType(ALL_TYPE),\n                registry.getNativeType(ALL_TYPE)),\n            null),\n        null, null, true, true);\n\n    // NOTE(nicksantos): Errors have the weird behavior in that they can\n    // be called as functions, and they will return instances of themselves.\n    // Error('x') instanceof Error => true\n    //\n    // In user-defined types, we would deal with this case by creating\n    // a NamedType with the name \"Error\" and then resolve it later.\n    //\n    // For native types, we don't really want the native types to\n    // depend on type-resolution. So we just set the return type manually\n    // at the end of construction.\n    //\n    // There's similar logic in JSTypeRegistry for Array and RegExp.\n    getInternalArrowType().returnType = getInstanceType();\n  }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.713184972734915
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/RenameVars.java::RenameVars.assignNames(Set<Assignment> varsToRename)",
+      "path": "src/com/google/javascript/jscomp/RenameVars.java",
+      "start_line": 442,
+      "end_line": 512,
+      "source": "private void assignNames(Set<Assignment> varsToRename) {\n    NameGenerator globalNameGenerator =\n        new NameGenerator(reservedNames, prefix, reservedCharacters);\n\n    // Local variables never need a prefix.\n    NameGenerator localNameGenerator =\n        prefix.isEmpty() ? globalNameGenerator : new NameGenerator(\n            reservedNames, \"\", reservedCharacters);\n\n    // Generated names and the assignments for non-local vars.\n    List<Assignment> pendingAssignments = new ArrayList<Assignment>();\n    List<String> generatedNamesForAssignments = new ArrayList<String>();\n\n    for (Assignment a : varsToRename) {\n      if (a.newName != null) {\n        continue;\n      }\n\n      if (externNames.contains(a.oldName)) {\n        continue;\n      }\n\n      String newName;\n      if (a.oldName.startsWith(LOCAL_VAR_PREFIX)) {\n        // For local variable, we make the assignment right away.\n        newName = localNameGenerator.generateNextName();\n        finalizeNameAssignment(a, newName);\n      } else {\n        // For non-local variable, delay finalizing the name assignment\n        // until we know how many new names we'll have of length 2, 3, etc.\n        newName = globalNameGenerator.generateNextName();\n        pendingAssignments.add(a);\n        generatedNamesForAssignments.add(newName);\n      }\n      reservedNames.add(newName);\n    }\n\n    // Now that we have a list of generated names, and a list of variable\n    // Assignment objects, we assign the generated names to the vars as\n    // follows:\n    // 1) The most frequent vars get the shorter names.\n    // 2) If N number of vars are going to be assigned names of the same\n    //    length, we assign the N names based on the order at which the vars\n    //    first appear in the source. This makes the output somewhat less\n    //    random, because symbols declared close together are assigned names\n    //    that are quite similar. With this heuristic, the output is more\n    //    compressible.\n    //    For instance, the output may look like:\n    //    var da = \"..\", ea = \"..\";\n    //    function fa() { .. } function ga() { .. }\n\n    int numPendingAssignments = generatedNamesForAssignments.size();\n    for (int i = 0; i < numPendingAssignments;) {\n      SortedSet<Assignment> varsByOrderOfOccurrence =\n          new TreeSet<Assignment>(ORDER_OF_OCCURRENCE_COMPARATOR);\n\n      // Add k number of Assignment to the set, where k is the number of\n      // generated names of the same length.\n      int len = generatedNamesForAssignments.get(i).length();\n      for (int j = i; j < numPendingAssignments\n          && generatedNamesForAssignments.get(j).length() == len; j++) {\n        varsByOrderOfOccurrence.add(pendingAssignments.get(j));\n      }\n\n      // Now, make the assignments\n      for (Assignment a : varsByOrderOfOccurrence) {\n        finalizeNameAssignment(a, generatedNamesForAssignments.get(i));\n        ++i;\n      }\n    }\n  }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.43916284132574
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.CompileTask()",
+      "path": "src/com/google/javascript/jscomp/ant/CompileTask.java",
+      "start_line": 80,
+      "end_line": 98,
+      "source": "public CompileTask() {\n    this.languageIn = CompilerOptions.LanguageMode.ECMASCRIPT3;\n    this.warningLevel = WarningLevel.DEFAULT;\n    this.debugOptions = false;\n    this.compilationLevel = CompilationLevel.SIMPLE_OPTIMIZATIONS;\n    this.customExternsOnly = false;\n    this.manageDependencies = false;\n    this.prettyPrint = false;\n    this.printInputDelimiter = false;\n    this.generateExports = false;\n    this.replaceProperties = false;\n    this.forceRecompile = false;\n    this.replacePropertiesPrefix = \"closure.define.\";\n    this.defineParams = Lists.newLinkedList();\n    this.externFileLists = Lists.newLinkedList();\n    this.sourceFileLists = Lists.newLinkedList();\n    this.sourcePaths = Lists.newLinkedList();\n    this.warnings = Lists.newLinkedList();\n  }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 38.37260087004823
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.writeModuleOutput(Appendable out, JSModule m)",
+      "path": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java",
+      "start_line": 660,
+      "end_line": 675,
+      "source": "@VisibleForTesting\n  void writeModuleOutput(Appendable out, JSModule m)\n      throws FlagUsageException, IOException {\n    if (parsedModuleWrappers == null) {\n      parsedModuleWrappers = parseModuleWrappers(\n          config.moduleWrapper,\n          Lists.newArrayList(\n              compiler.getDegenerateModuleGraph().getAllModules()));\n    }\n\n    String fileName = getModuleOutputFileName(m);\n    String baseName = new File(fileName).getName();\n    writeOutput(out, compiler, compiler.toSource(m),\n        parsedModuleWrappers.get(m.getName()).replace(\"%basename%\", baseName),\n        \"%s\", null);\n  }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 38.09055479694147
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/JSModule.java::JSModule.sortJsModules(Collection<JSModule> modules)",
+      "path": "src/com/google/javascript/jscomp/JSModule.java",
+      "start_line": 283,
+      "end_line": 289,
+      "source": "public static JSModule[] sortJsModules(Collection<JSModule> modules)\n      throws CircularDependencyException {\n    // Sort the JSModule in this order.\n    List<JSModule> sortedList = (new SortedDependencies<JSModule>(\n            Lists.newArrayList(modules))).getSortedList();\n    return sortedList.toArray(new JSModule[sortedList.size()]);\n  }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 37.90035073945285
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/CallGraph.java::CallGraph.lookupDefinitionsForTargetsOfCall(\n      Node callsite, DefinitionProvider definitionProvider)",
+      "path": "src/com/google/javascript/jscomp/CallGraph.java",
+      "start_line": 575,
+      "end_line": 597,
+      "source": "private Collection<Definition> lookupDefinitionsForTargetsOfCall(\n      Node callsite, DefinitionProvider definitionProvider) {\n    Preconditions.checkArgument(callsite.isCall()\n        || callsite.isNew());\n\n    Node targetExpression = callsite.getFirstChild();\n\n    // NameReferenceGraph throws an exception unless the node is\n    // a GETPROP or a NAME\n    if (!useNameReferenceGraph\n        || (targetExpression.isGetProp()\n        ||  targetExpression.isName())) {\n\n      Collection<Definition> definitions =\n        definitionProvider.getDefinitionsReferencedAt(targetExpression);\n\n      if (definitions != null && !definitions.isEmpty()) {\n        return definitions;\n      }\n    }\n\n    return null;\n  }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 37.71824982481571
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()",
+      "source": "@Override\n  public void execute() {\n    if (this.outputFile == null) {\n      throw new BuildException(\"outputFile attribute must be set\");\n    }\n\n    Compiler.setLoggingLevel(Level.OFF);\n\n    CompilerOptions options = createCompilerOptions();\n    Compiler compiler = createCompiler(options);\n\n    List<SourceFile> externs = findExternFiles();\n    List<SourceFile> sources = findSourceFiles();\n\n    if (isStale() || forceRecompile) {\n      log(\"Compiling \" + sources.size() + \" file(s) with \" +\n          externs.size() + \" extern(s)\");\n\n      Result result = compiler.compile(externs, sources, options);\n      if (result.success) {\n        writeResult(compiler.toSource());\n      } else {\n        throw new BuildException(\"Compilation failed.\");\n      }\n    } else {\n      log(\"None of the files changed. Compilation skipped.\");\n    }\n  }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()\nSIGNATURE: @Override\n  public void execute()",
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()\nSIGNATURE: @Override\n  public void execute()\nSTRUCTURE (lossy):\nif (this.outputFile == null)\nthrow new BuildException(\"outputFile attribute must be set\");\nCALL Compiler.setLoggingLevel(Level.OFF)\nCompilerOptions options = createCompilerOptions();\nCALL createCompilerOptions()\nCompiler compiler = createCompiler(options);\nCALL createCompiler(options)\nList<SourceFile> externs = findExternFiles();\nCALL findExternFiles()\nList<SourceFile> sources = findSourceFiles();\nCALL findSourceFiles()\nif (isStale() || forceRecompile)\nCALL isStale()\nCALL log(\"Compiling \" + sources.size() + \" file(s) with \" + externs.size() + \" extern(s)\")\nCALL sources.size()\nCALL externs.size()\nResult result = compiler.compile(externs, sources, options);\nCALL compiler.compile(externs, sources, options)\nif (result.success)\nCALL writeResult(compiler.toSource())\nCALL compiler.toSource()\nthrow new BuildException(\"Compilation failed.\");\nCALL log(\"None of the files changed. Compilation skipped.\")",
+        "@Override\n  public void execute() {\n    if (this.outputFile == null) {\n      throw new BuildException(\"outputFile attribute must be set\");\n    }\n\n    Compiler.setLoggingLevel(Level.OFF);\n\n    CompilerOptions options = createCompilerOptions();\n    Compiler compiler = createCompiler(options);\n\n    List<SourceFile> externs = findExternFiles();\n    List<SourceFile> sources = findSourceFiles();\n\n    if (isStale() || forceRecompile) {\n      log(\"Compiling \" + sources.size() + \" file(s) with \" +\n          externs.size() + \" extern(s)\");\n\n      Result result = compiler.compile(externs, sources, options);\n      if (result.success) {\n        writeResult(compiler.toSource());\n      } else {\n        throw new BuildException(\"Compilation failed.\");\n      }\n    } else {\n      log(\"None of the files changed. Compilation skipped.\");\n    }\n  }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.35185185185185186,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 13.0,
+        "literal_count": 7.0,
+        "source_tokens": 210.0,
+        "l0_tokens": 33.0,
+        "l1_tokens": 264.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 13,
+        "literal_count": 7
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/TightenTypes.java::TightenTypes.CreateScope.createAssignmentActions(\n        Node lhs, Node rhs, Node parent)",
+      "source": "private List<Action> createAssignmentActions(\n        Node lhs, Node rhs, Node parent) {\n      switch (lhs.getType()) {\n        case Token.NAME:\n          ConcreteSlot var = (ConcreteSlot) scope.getSlot(lhs.getString());\n          Preconditions.checkState(var != null,\n              \"Type tightener could not find variable with name %s\",\n              lhs.getString());\n          return Lists.<Action>newArrayList(\n              new VariableAssignAction(var, rhs));\n\n        case Token.GETPROP:\n          Node receiver = lhs.getFirstChild();\n          return Lists.<Action>newArrayList(\n              new PropertyAssignAction(receiver, rhs));\n\n        case Token.GETELEM:\n          return Lists.newArrayList();\n\n        default:\n          throw new AssertionError(\n              \"Bad LHS for assignment: \" + parent.toStringTree());\n      }\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/TightenTypes.java::TightenTypes.CreateScope.createAssignmentActions(\n        Node lhs, Node rhs, Node parent)\nSIGNATURE: private List<Action> createAssignmentActions(\n        Node lhs, Node rhs, Node parent)",
+        "METHOD: src/com/google/javascript/jscomp/TightenTypes.java::TightenTypes.CreateScope.createAssignmentActions(\n        Node lhs, Node rhs, Node parent)\nSIGNATURE: private List<Action> createAssignmentActions(\n        Node lhs, Node rhs, Node parent)\nSTRUCTURE (lossy):\nswitch (lhs.getType()) { case Token.NAME: ConcreteSlot var = (ConcreteSlot) scope.getSlot(lhs.getString()); Preconditions.checkState(var != null, \"Type tightener could not find variable with name %s\", lhs.getString()); return Lists.<Action>newArrayList( new VariableAssignAction(var, rhs)); case Token.GETPROP: Node receiver = lhs.getFirstChild(); return Lists.<Action>newArrayList( new PropertyAssignAction(receiver, rhs)); case Token.GETELEM: return Lists.newArrayList(); default: throw new AssertionError( \"Bad LHS for assignment: \" + parent.toStringTree()); }\nCALL lhs.getType()\nConcreteSlot var = (ConcreteSlot) scope.getSlot(lhs.getString());\nCALL scope.getSlot(lhs.getString())\nCALL lhs.getString()\nCALL Preconditions.checkState(var != null, \"Type tightener could not find variable with name %s\", lhs.getString())\nreturn Lists.<Action>newArrayList( new VariableAssignAction(var, rhs));\nCALL Lists.<Action>newArrayList( new VariableAssignAction(var, rhs))\nNode receiver = lhs.getFirstChild();\nCALL lhs.getFirstChild()\nreturn Lists.<Action>newArrayList( new PropertyAssignAction(receiver, rhs));\nCALL Lists.<Action>newArrayList( new PropertyAssignAction(receiver, rhs))\nreturn Lists.newArrayList();\nCALL Lists.newArrayList()\nthrow new AssertionError( \"Bad LHS for assignment: \" + parent.toStringTree());\nCALL parent.toStringTree()",
+        "private List<Action> createAssignmentActions(\n        Node lhs, Node rhs, Node parent) {\n      switch (lhs.getType()) {\n        case Token.NAME:\n          ConcreteSlot var = (ConcreteSlot) scope.getSlot(lhs.getString());\n          Preconditions.checkState(var != null,\n              \"Type tightener could not find variable with name %s\",\n              lhs.getString());\n          return Lists.<Action>newArrayList(\n              new VariableAssignAction(var, rhs));\n\n        case Token.GETPROP:\n          Node receiver = lhs.getFirstChild();\n          return Lists.<Action>newArrayList(\n              new PropertyAssignAction(receiver, rhs));\n\n        case Token.GETELEM:\n          return Lists.newArrayList();\n\n        default:\n          throw new AssertionError(\n              \"Bad LHS for assignment: \" + parent.toStringTree());\n      }\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.38596491228070173,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 10.0,
+        "literal_count": 3.0,
+        "source_tokens": 212.0,
+        "l0_tokens": 62.0,
+        "l1_tokens": 401.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 10,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/jsonml/SecureCompiler.java::SecureCompiler.generateReport(Result result)",
+      "source": "Report generateReport(Result result) {\n    // a report may be generated only after actual compilation is complete\n    if (result == null) {\n      return null;\n    }\n\n    ArrayList<JsonMLError> errors = Lists.newArrayList();\n    for (JSError error : result.errors) {\n      errors.add(JsonMLError.make(error, sourceAst));\n    }\n\n    ArrayList<JsonMLError> warnings = Lists.newArrayList();\n    for (JSError warning : result.warnings) {\n      warnings.add(JsonMLError.make(warning, sourceAst));\n    }\n\n    return new Report(\n        errors.toArray(new JsonMLError[0]),\n        warnings.toArray(new JsonMLError[0]));\n  }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/jsonml/SecureCompiler.java::SecureCompiler.generateReport(Result result)\nSIGNATURE: Report generateReport(Result result)",
+        "METHOD: src/com/google/javascript/jscomp/jsonml/SecureCompiler.java::SecureCompiler.generateReport(Result result)\nSIGNATURE: Report generateReport(Result result)\nSTRUCTURE (lossy):\nif (result == null)\nreturn null;\nArrayList<JsonMLError> errors = Lists.newArrayList();\nCALL Lists.newArrayList()\nfor (JSError error : result.errors)\nCALL errors.add(JsonMLError.make(error, sourceAst))\nCALL JsonMLError.make(error, sourceAst)\nArrayList<JsonMLError> warnings = Lists.newArrayList();\nfor (JSError warning : result.warnings)\nCALL warnings.add(JsonMLError.make(warning, sourceAst))\nCALL JsonMLError.make(warning, sourceAst)\nreturn new Report( errors.toArray(new JsonMLError[0]), warnings.toArray(new JsonMLError[0]));\nCALL errors.toArray(new JsonMLError[0])\nCALL warnings.toArray(new JsonMLError[0])",
+        "Report generateReport(Result result) {\n    // a report may be generated only after actual compilation is complete\n    if (result == null) {\n      return null;\n    }\n\n    ArrayList<JsonMLError> errors = Lists.newArrayList();\n    for (JSError error : result.errors) {\n      errors.add(JsonMLError.make(error, sourceAst));\n    }\n\n    ArrayList<JsonMLError> warnings = Lists.newArrayList();\n    for (JSError warning : result.warnings) {\n      warnings.add(JsonMLError.make(warning, sourceAst));\n    }\n\n    return new Report(\n        errors.toArray(new JsonMLError[0]),\n        warnings.toArray(new JsonMLError[0]));\n  }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.40540540540540543,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 8.0,
+        "literal_count": 4.0,
+        "source_tokens": 154.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 198.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 8,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)",
+      "source": "private void expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop) {\n    StaticSlot<JSType> propSlot = instance.getSlot(prop);\n    if (propSlot == null) {\n      // Not implemented\n      String sourceName = n.getSourceFileName();\n      sourceName = sourceName == null ? \"\" : sourceName;\n      registerMismatch(instance, implementedInterface,\n          report(JSError.make(sourceName, n,\n          INTERFACE_METHOD_NOT_IMPLEMENTED,\n          prop, implementedInterface.toString(), instance.toString())));\n    } else {\n      Node propNode = propSlot.getDeclaration() == null ?\n          null : propSlot.getDeclaration().getNode();\n\n      // Fall back on the constructor node if we can't find a node for the\n      // property.\n      propNode = propNode == null ? n : propNode;\n\n      JSType found = propSlot.getType();\n      JSType required\n          = implementedInterface.getImplicitPrototype().getPropertyType(prop);\n      found = found.restrictByNotNullOrUndefined();\n      required = required.restrictByNotNullOrUndefined();\n      if (!found.canAssignTo(required)) {\n        // Implemented, but not correctly typed\n        FunctionType constructor =\n            implementedInterface.toObjectType().getConstructor();\n        registerMismatch(found, required, report(t.makeError(propNode,\n            HIDDEN_INTERFACE_PROPERTY_MISMATCH, prop,\n            constructor.getTopMostDefiningType(prop).toString(),\n            required.toString(), found.toString())));\n      }\n    }\n  }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)\nSIGNATURE: private void expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)",
+        "METHOD: src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)\nSIGNATURE: private void expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)\nSTRUCTURE (lossy):\nStaticSlot<JSType> propSlot = instance.getSlot(prop);\nCALL instance.getSlot(prop)\nif (propSlot == null)\nString sourceName = n.getSourceFileName();\nCALL n.getSourceFileName()\nsourceName = sourceName == null ? \"\" : sourceName\nCALL registerMismatch(instance, implementedInterface, report(JSError.make(sourceName, n, INTERFACE_METHOD_NOT_IMPLEMENTED, prop, implementedInterface.toString(), instance.toString())))\nCALL report(JSError.make(sourceName, n, INTERFACE_METHOD_NOT_IMPLEMENTED, prop, implementedInterface.toString(), instance.toString()))\nCALL JSError.make(sourceName, n, INTERFACE_METHOD_NOT_IMPLEMENTED, prop, implementedInterface.toString(), instance.toString())\nCALL implementedInterface.toString()\nCALL instance.toString()\nNode propNode = propSlot.getDeclaration() == null ? null : propSlot.getDeclaration().getNode();\nCALL propSlot.getDeclaration()\nCALL propSlot.getDeclaration().getNode()\npropNode = propNode == null ? n : propNode\nJSType found = propSlot.getType();\nCALL propSlot.getType()\nJSType required = implementedInterface.getImplicitPrototype().getPropertyType(prop);\nCALL implementedInterface.getImplicitPrototype().getPropertyType(prop)\nCALL implementedInterface.getImplicitPrototype()\nfound = found.restrictByNotNullOrUndefined()\nCALL found.restrictByNotNullOrUndefined()\nrequired = required.restrictByNotNullOrUndefined()\nCALL required.restrictByNotNullOrUndefined()\nif (!found.canAssignTo(required))\nCALL found.canAssignTo(required)\nFunctionType constructor = implementedInterface.toObjectType().getConstructor();\nCALL implementedInterface.toObjectType().getConstructor()\nCALL implementedInterface.toObjectType()\nCALL registerMismatch(found, required, report(t.makeError(propNode, HIDDEN_INTERFACE_PROPERTY_MISMATCH, prop, constructor.getTopMostDefiningType(prop).toString(), required.toString(), found.toString()\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "private void expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop) {\n    StaticSlot<JSType> propSlot = instance.getSlot(prop);\n    if (propSlot == null) {\n      // Not implemented\n      String sourceName = n.getSourceFileName();\n      sourceName = sourceName == null ? \"\" : sourceName;\n      registerMismatch(instance, implementedInterface,\n          report(JSError.make(sourceName, n,\n          INTERFACE_METHOD_NOT_IMPLEMENTED,\n          prop, implementedInterface.toString(), instance.toString())));\n    } else {\n      Node propNode = propSlot.getDeclaration() == null ?\n          null : propSlot.getDeclaration().getNode();\n\n      // Fall back on the constructor node if we can't find a node for the\n      // property.\n      propNode = propNode == null ? n : propNode;\n\n      JSType found = propSlot.getType();\n      JSType required\n          = implementedInterface.getImplicitPrototype().getPropertyType(prop);\n      found = found.restrictByNotNullOrUndefined();\n      required = required.restrictByNotNullOrUndefined();\n      if (!found.canAssignTo(required)) {\n        // Implemented, but not correctly typed\n        FunctionType constructor =\n            implementedInterface.toObjectType().getConstructor();\n        registerMismatch(found, required, report(t.makeError(propNode,\n            HIDDEN_INTERFACE_PROPERTY_MISMATCH, prop,\n            constructor.getTopMostDefiningType(prop).toString(),\n            required.toString(), found.toString())));\n      }\n    }\n  }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.31666666666666665,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 25.0,
+        "literal_count": 6.0,
+        "source_tokens": 387.0,
+        "l0_tokens": 86.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 3,
+        "call_count": 25,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)",
+      "source": "private void writeResult(String source) {\n    if (this.outputFile.getParentFile().mkdirs()) {\n      log(\"Created missing parent directory \" +\n          this.outputFile.getParentFile(), Project.MSG_DEBUG);\n    }\n\n    try {\n      OutputStreamWriter out = new OutputStreamWriter(\n          new FileOutputStream(this.outputFile), outputEncoding);\n      out.append(source);\n      out.flush();\n      out.close();\n    } catch (IOException e) {\n      throw new BuildException(e);\n    }\n\n    log(\"Compiled JavaScript written to \" + this.outputFile.getAbsolutePath(),\n        Project.MSG_DEBUG);\n  }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)\nSIGNATURE: private void writeResult(String source)",
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)\nSIGNATURE: private void writeResult(String source)\nSTRUCTURE (lossy):\nif (this.outputFile.getParentFile().mkdirs())\nCALL this.outputFile.getParentFile().mkdirs()\nCALL this.outputFile.getParentFile()\nCALL log(\"Created missing parent directory \" + this.outputFile.getParentFile(), Project.MSG_DEBUG)\nOutputStreamWriter out = new OutputStreamWriter( new FileOutputStream(this.outputFile), outputEncoding);\nCALL out.append(source)\nCALL out.flush()\nCALL out.close()\ncatch (IOException e)\nthrow new BuildException(e);\nCALL log(\"Compiled JavaScript written to \" + this.outputFile.getAbsolutePath(), Project.MSG_DEBUG)\nCALL this.outputFile.getAbsolutePath()",
+        "private void writeResult(String source) {\n    if (this.outputFile.getParentFile().mkdirs()) {\n      log(\"Created missing parent directory \" +\n          this.outputFile.getParentFile(), Project.MSG_DEBUG);\n    }\n\n    try {\n      OutputStreamWriter out = new OutputStreamWriter(\n          new FileOutputStream(this.outputFile), outputEncoding);\n      out.append(source);\n      out.flush();\n      out.close();\n    } catch (IOException e) {\n      throw new BuildException(e);\n    }\n\n    log(\"Compiled JavaScript written to \" + this.outputFile.getAbsolutePath(),\n        Project.MSG_DEBUG);\n  }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3404255319148936,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 9.0,
+        "literal_count": 2.0,
+        "source_tokens": 148.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 188.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 9,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()",
+      "source": "@Override\n  public Collection<AssertionFunctionSpec> getAssertionFunctions() {\n    return ImmutableList.<AssertionFunctionSpec>of(\n        new AssertionFunctionSpec(\"goog.asserts.assert\"),\n        new AssertionFunctionSpec(\"goog.asserts.assertNumber\",\n            JSTypeNative.NUMBER_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertString\",\n            JSTypeNative.STRING_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertFunction\",\n            JSTypeNative.FUNCTION_INSTANCE_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertObject\",\n            JSTypeNative.OBJECT_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertArray\",\n            JSTypeNative.ARRAY_TYPE),\n        new AssertInstanceofSpec(\"goog.asserts.assertInstanceof\")\n    );\n  }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()\nSIGNATURE: @Override\n  public Collection<AssertionFunctionSpec> getAssertionFunctions()",
+        "METHOD: src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()\nSIGNATURE: @Override\n  public Collection<AssertionFunctionSpec> getAssertionFunctions()\nSTRUCTURE (lossy):\nreturn ImmutableList.<AssertionFunctionSpec>of( new AssertionFunctionSpec(\"goog.asserts.assert\"), new AssertionFunctionSpec(\"goog.asserts.assertNumber\", JSTypeNative.NUMBER_TYPE), new AssertionFunctionSpec(\"goog.asserts.assertString\", JSTypeNative.STRING_TYPE), new AssertionFunctionSpec(\"goog.asserts.assertFunction\", JSTypeNative.FUNCTION_INSTANCE_TYPE), new AssertionFunctionSpec(\"goog.asserts.assertObject\", JSTypeNative.OBJECT_TYPE), new AssertionFunctionSpec(\"goog.asserts.assertArray\", JSTypeNative.ARRAY_TYPE), new AssertInstanceofSpec(\"goog.asserts.assertInstanceof\") );\nCALL ImmutableList.<AssertionFunctionSpec>of( new AssertionFunctionSpec(\"goog.asserts.assert\"), new AssertionFunctionSpec(\"goog.asserts.assertNumber\", JSTypeNative.NUMBER_TYPE), new AssertionFunctionSpec(\"goog.asserts.assertString\", JSTypeNative.STRING_TYPE), new AssertionFunctionSpec(\"goog.asserts.assertFunction\", JSTypeNative.FUNCTION_INSTANCE_TYPE), new AssertionFunctionSpec(\"goog.asserts.assertObject\", JSTypeNative.OBJECT_TYPE), new AssertionFunctionSpec(\"goog.asserts.assertArray\", JSTypeNative.ARRAY_TYPE), new AssertInstanceofSpec(\"goog.asserts.assertInstanceof\") )",
+        "@Override\n  public Collection<AssertionFunctionSpec> getAssertionFunctions() {\n    return ImmutableList.<AssertionFunctionSpec>of(\n        new AssertionFunctionSpec(\"goog.asserts.assert\"),\n        new AssertionFunctionSpec(\"goog.asserts.assertNumber\",\n            JSTypeNative.NUMBER_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertString\",\n            JSTypeNative.STRING_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertFunction\",\n            JSTypeNative.FUNCTION_INSTANCE_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertObject\",\n            JSTypeNative.OBJECT_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertArray\",\n            JSTypeNative.ARRAY_TYPE),\n        new AssertInstanceofSpec(\"goog.asserts.assertInstanceof\")\n    );\n  }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.48484848484848486,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 7.0,
+        "source_tokens": 197.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 346.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 7
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)",
+      "source": "private void registerMismatch(JSType found, JSType required, JSError error) {\n    // Don't register a mismatch for differences in null or undefined or if the\n    // code didn't downcast.\n    found = found.restrictByNotNullOrUndefined();\n    required = required.restrictByNotNullOrUndefined();\n    if (found.canAssignTo(required) || required.canAssignTo(found)) {\n      return;\n    }\n\n    mismatches.add(new TypeMismatch(found, required, error));\n    if (found.isFunctionType() &&\n        required.isFunctionType()) {\n      FunctionType fnTypeA = found.toMaybeFunctionType();\n      FunctionType fnTypeB = required.toMaybeFunctionType();\n      Iterator<Node> paramItA = fnTypeA.getParameters().iterator();\n      Iterator<Node> paramItB = fnTypeB.getParameters().iterator();\n      while (paramItA.hasNext() && paramItB.hasNext()) {\n        registerIfMismatch(paramItA.next().getJSType(),\n            paramItB.next().getJSType(), error);\n      }\n\n      registerIfMismatch(\n          fnTypeA.getReturnType(), fnTypeB.getReturnType(), error);\n    }\n  }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)\nSIGNATURE: private void registerMismatch(JSType found, JSType required, JSError error)",
+        "METHOD: src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)\nSIGNATURE: private void registerMismatch(JSType found, JSType required, JSError error)\nSTRUCTURE (lossy):\nfound = found.restrictByNotNullOrUndefined()\nCALL found.restrictByNotNullOrUndefined()\nrequired = required.restrictByNotNullOrUndefined()\nCALL required.restrictByNotNullOrUndefined()\nif (found.canAssignTo(required) || required.canAssignTo(found))\nCALL found.canAssignTo(required)\nCALL required.canAssignTo(found)\nreturn;\nCALL mismatches.add(new TypeMismatch(found, required, error))\nif (found.isFunctionType() && required.isFunctionType())\nCALL found.isFunctionType()\nCALL required.isFunctionType()\nFunctionType fnTypeA = found.toMaybeFunctionType();\nCALL found.toMaybeFunctionType()\nFunctionType fnTypeB = required.toMaybeFunctionType();\nCALL required.toMaybeFunctionType()\nIterator<Node> paramItA = fnTypeA.getParameters().iterator();\nCALL fnTypeA.getParameters().iterator()\nCALL fnTypeA.getParameters()\nIterator<Node> paramItB = fnTypeB.getParameters().iterator();\nCALL fnTypeB.getParameters().iterator()\nCALL fnTypeB.getParameters()\nwhile (paramItA.hasNext() && paramItB.hasNext())\nCALL paramItA.hasNext()\nCALL paramItB.hasNext()\nCALL registerIfMismatch(paramItA.next().getJSType(), paramItB.next().getJSType(), error)\nCALL paramItA.next().getJSType()\nCALL paramItA.next()\nCALL paramItB.next().getJSType()\nCALL paramItB.next()\nCALL registerIfMismatch( fnTypeA.getReturnType(), fnTypeB.getReturnType(), error)\nCALL fnTypeA.getReturnType()\nCALL fnTypeB.getReturnType()",
+        "private void registerMismatch(JSType found, JSType required, JSError error) {\n    // Don't register a mismatch for differences in null or undefined or if the\n    // code didn't downcast.\n    found = found.restrictByNotNullOrUndefined();\n    required = required.restrictByNotNullOrUndefined();\n    if (found.canAssignTo(required) || required.canAssignTo(found)) {\n      return;\n    }\n\n    mismatches.add(new TypeMismatch(found, required, error));\n    if (found.isFunctionType() &&\n        required.isFunctionType()) {\n      FunctionType fnTypeA = found.toMaybeFunctionType();\n      FunctionType fnTypeB = required.toMaybeFunctionType();\n      Iterator<Node> paramItA = fnTypeA.getParameters().iterator();\n      Iterator<Node> paramItB = fnTypeB.getParameters().iterator();\n      while (paramItA.hasNext() && paramItB.hasNext()) {\n        registerIfMismatch(paramItA.next().getJSType(),\n            paramItB.next().getJSType(), error);\n      }\n\n      registerIfMismatch(\n          fnTypeA.getReturnType(), fnTypeB.getReturnType(), error);\n    }\n  }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3181818181818182,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 23.0,
+        "literal_count": 0.0,
+        "source_tokens": 262.0,
+        "l0_tokens": 56.0,
+        "l1_tokens": 404.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 23,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)",
+      "source": "private JSType createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope) {\n    switch (n.getType()) {\n      case Token.LC: // Record type.\n        return createRecordTypeFromNodes(\n            n.getFirstChild(), sourceName, scope);\n\n      case Token.BANG: // Not nullable\n        return createFromTypeNodesInternal(\n            n.getFirstChild(), sourceName, scope)\n            .restrictByNotNullOrUndefined();\n\n      case Token.QMARK: // Nullable or unknown\n        Node firstChild = n.getFirstChild();\n        if (firstChild == null) {\n          return getNativeType(UNKNOWN_TYPE);\n        }\n        return createDefaultObjectUnion(\n            createFromTypeNodesInternal(\n                firstChild, sourceName, scope));\n\n      case Token.EQUALS: // Optional\n        return createOptionalType(\n            createFromTypeNodesInternal(\n                n.getFirstChild(), sourceName, scope));\n\n      case Token.ELLIPSIS: // Var args\n        return createOptionalType(\n            createFromTypeNodesInternal(\n                n.getFirstChild(), sourceName, scope));\n\n      case Token.STAR: // The AllType\n        return getNativeType(ALL_TYPE);\n\n      case Token.LB: // Array type\n        // TODO(nicksantos): Enforce membership restrictions on the Array.\n        return getNativeType(ARRAY_TYPE);\n\n      case Token.PIPE: // Union type\n        UnionTypeBuilder builder = new UnionTypeBuilder(this);\n        for (Node child = n.getFirstChild(); child != null;\n             child = child.getNext()) {\n          builder.addAlternate(\n              createFromTypeNodesInternal(child, sourceName, scope));\n        }\n        return builder.build();\n\n      case Token.EMPTY: // When the return value of a function is not specified\n        return getNativeType(UNKNOWN_TYPE);\n\n      case Token.VOID: // Only allowed in the return value of a function.\n        return getNativeType(VOID_TYPE);\n\n      case Token.STRING:\n        JSType namedType = getType(scope, n.getString(), sourceName,\n            n.getLineno(), n.getCharno());\n        if (resolveMode != ResolveMode.LAZY_NAMES) {\n          namedType = namedType.resolveInternal(reporter, scope);\n        }\n        if ((namedType instanceof ObjectType) &&\n            !(nonNullableTypeNames.contains(n.getString()))) {\n          Node typeList = n.getFirstChild();\n          if (typeList != null &&\n              (\"Array\".equals(n.getString()) ||\n               \"Object\".equals(n.getString()))) {\n            JSType parameterType =\n                createFromTypeNodesInternal(\n                    typeList.getLastChild(), sourceName, scope);\n            namedType = new ParameterizedType(\n                this, (ObjectType) namedType, parameterType);\n            if (typeList.hasMoreThanOneChild()) {\n              JSType indexType =\n                  createFromTypeNodesInternal(\n                      typeList.getFirstChild(), sourceName, scope);\n              namedType = new IndexedType(\n                  this, (ObjectType) namedType, indexType);\n            }\n          }\n          return createDefaultObjectUnion(namedType);\n        } else {\n          return namedType;\n        }\n\n      case Token.FUNCTION:\n        ObjectType thisType = null;\n        boolean isConstructor = false;\n        Node current = n.getFirstChild();\n        if (current.getType() == Token.THIS ||\n            current.getType() == Token.NEW) {\n          Node contextNode = current.getFirstChild();\n          thisType =\n              ObjectType.cast(\n                  createFromTypeNodesInternal(\n                      contextNode, sourceName, scope)\n                  .restrictByNotNullOrUndefined());\n          if (thisType == null) {\n            reporter.warning(\n                ScriptRuntime.getMessage0(\n                    current.getType() == Token.THIS ?\n                    \"msg.jsdoc.function.thisnotobject\" :\n                    \"msg.jsdoc.function.newnotobject\"),\n                sourceName,\n                contextNode.getLineno(), contextNode.getCharno());\n          }\n\n          isConstructor = current.getType() == Token.NEW;\n          current = current.getNext();\n        }\n\n        FunctionParamBuilder paramBuilder = new FunctionParamBuilder(this);\n\n        if (current.getType() == Token.PARAM_LIST) {\n          Node args = current.getFirstChild();\n          for (Node arg = current.getFirstChild(); arg != null;\n               arg = arg.getNext()) {\n            if (arg.getType() == Token.ELLIPSIS) {\n              if (arg.getChildCount() == 0) {\n                paramBuilder.addVarArgs(getNativeType(UNKNOWN_TYPE));\n              } else {\n                paramBuilder.addVarArgs(\n                    createFromTypeNodesInternal(\n                        arg.getFirstChild(), sourceName, scope));\n              }\n            } else {\n              JSType type = createFromTypeNodesInternal(\n                  arg, sourceName, scope);\n              if (arg.getType() == Token.EQUALS) {\n                boolean addSuccess = paramBuilder.addOptionalParams(type);\n                if (!addSuccess) {\n                  reporter.warning(\n                      ScriptRuntime.getMessage0(\"msg.jsdoc.function.varargs\"),\n                      sourceName, arg.getLineno(), arg.getCharno());\n                }\n              } else {\n                paramBuilder.addRequiredParams(type);\n              }\n            }\n          }\n          current = current.getNext();\n        }\n\n        JSType returnType =\n            createFromTypeNodesInternal(current, sourceName, scope);\n\n        return new FunctionBuilder(this)\n            .withParams(paramBuilder)\n            .withReturnType(returnType)\n            .withTypeOfThis(thisType)\n            .setIsConstructor(isConstructor)\n            .build();\n    }\n\n    throw new IllegalStateException(\n        \"Unexpected node in type expression: \" + n.toString());\n  }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)\nSIGNATURE: private JSType createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)",
+        "METHOD: src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)\nSIGNATURE: private JSType createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)\nSTRUCTURE (lossy):\nswitch (n.getType()) { case Token.LC: // Record type. return createRecordTypeFromNodes( n.getFirstChild(), sourceName, scope); case Token.BANG: // Not nullable return createFromTypeNodesInternal( n.getFirstChild(), sourceName, scope) .restrictByNotNullOrUndefined(); case Token.QMARK: // Nullable or unknown Node firstChild = n.getFirstChild(); if (firstChild == null) { return getNativeType(UNKNOWN_TYPE); } return createDefaultObjectUnion( createFromTypeNodesInternal( firstChild, sourceName, scope)); case Token.EQUALS: // Optional return createOptionalType( createFromTypeNodesInternal( n.getFirstChild(), sourceName, scope)); case Token.ELLIPSIS: // Var args return createOptionalType( createFromTypeNodesInternal( n.getFirstChild(), sourceName, scope)); case Token.STAR: // The AllType return getNativeType(ALL_TYPE); case Token.LB: // Array type // TODO(nicksantos): Enforce membership restrictions on the Array. return getNativeType(ARRAY_TYPE); case Token.PIPE: // Union type UnionTypeBuilder builder = new UnionTypeBuilder(this); for (Node child = n.getFirstChild(); child != null; child = child.getNext()) { builder.addAlternate( createFromTypeNodesInternal(child, sourceName, scope)); } return builder.build(); case Token.EMPTY: // When the return value of a function is not specified return getNativeType(UNKNOWN_TYPE); case Token.VOID: // Only allowed in the return value of a function. return getNativeType(VOID_TYPE); case Token.STRING: JSType namedType = getType(scope, n.getString(), sourceName, n.getLineno(), n.getCharno()); if (resolveMode != ResolveMode.LAZY_NAMES) { namedType = namedType.resolveInternal(reporter, scope); } if ((namedType instanceof ObjectType) && !(nonNullableTypeNames.contains(n.getString()))) { Node typeList = n.getFirstChild(); if (typeList != null && (\"Array\".equals(n.getString()) || \"Object\".equals(n.getString()))) { JSType parameterType = creat\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "private JSType createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope) {\n    switch (n.getType()) {\n      case Token.LC: // Record type.\n        return createRecordTypeFromNodes(\n            n.getFirstChild(), sourceName, scope);\n\n      case Token.BANG: // Not nullable\n        return createFromTypeNodesInternal(\n            n.getFirstChild(), sourceName, scope)\n            .restrictByNotNullOrUndefined();\n\n      case Token.QMARK: // Nullable or unknown\n        Node firstChild = n.getFirstChild();\n        if (firstChild == null) {\n          return getNativeType(UNKNOWN_TYPE);\n        }\n        return createDefaultObjectUnion(\n            createFromTypeNodesInternal(\n                firstChild, sourceName, scope));\n\n      case Token.EQUALS: // Optional\n        return createOptionalType(\n            createFromTypeNodesInternal(\n                n.getFirstChild(), sourceName, scope));\n\n      case Token.ELLIPSIS: // Var args\n        return createOptionalType(\n            createFromTypeNodesInternal(\n                n.getFirstChild(), sourceName, scope));\n\n      case Token.STAR: // The AllType\n        return getNativeType(ALL_TYPE);\n\n      case Token.LB: // Array type\n        // TODO(nicksantos): Enforce membership restrictions on the Array.\n        return getNativeType(ARRAY_TYPE);\n\n      case Token.PIPE: // Union type\n        UnionTypeBuilder builder = new UnionTypeBuilder(this);\n        for (Node child = n.getFirstChild(); child != null;\n             child = child.getNext()) {\n          builder.addAlternate(\n              createFromTypeNodesInternal(child, sourceName, scope));\n        }\n        return builder.build();\n\n      case Token.EMPTY: // When the return value of a function is not specified\n        return getNativeType(UNKNOWN_TYPE);\n\n      case Token.VOID: // Only allowed in the return value of a function.\n        return getNativeType(VOID_TYPE);\n\n      case Token.STRING:\n        JSType namedType = getType(scope, n.getString(), sourceName,\n            n.getLineno(), n.getCharno());\n        if (resolveMode != ResolveMode.LAZY_NAMES) {\n          namedType = namedType.resolveInternal(reporter, scope);\n        }\n        if ((namedType instanceof ObjectType) &&\n            !(nonNullableTypeNames.contains(n.getString()))) {\n          Node typeList = n.getFirstChild();\n          if (typeList != null &&\n              (\"Array\".equals(n.getString()) ||\n               \"Object\".equals(n.getString()))) {\n            JSType parameterType =\n                createFromTypeNodesInternal(\n                    typeList.getLastChild(), sourceName, scope);\n            namedType = new ParameterizedType(\n                this, (ObjectType) namedType, parameterType);\n            if (typeList.hasMoreThanOneChild()) {\n              JSType indexType =\n                  createFromTypeNodesInternal(\n                      typeList.getFirstChild(), sourceName, scope);\n              namedType = new IndexedType(\n                  this, (ObjectType) namedType, indexType);\n            }\n          }\n          return createDefaultObjectUnion(namedType);\n        } else {\n          return namedType;\n        }\n\n      case Token.FUNCTION:\n        ObjectType thisType = null;\n        boolean isConstructor = false;\n        Node current = n.getFirstChild();\n        if (current.getType() == Token.THIS ||\n            current.getType() == Token.NEW) {\n          Node contextNode = current.getFirstChild();\n          thisType =\n              ObjectType.cast(\n                  createFromTypeNodesInternal(\n                      contextNode, sourceName, scope)\n                  .restrictByNotNullOrUndefined());\n          if (thisType == null) {\n            reporter.warning(\n                ScriptRuntime.getMessage0(\n                    current.getType() == Token.THIS ?\n                    \"msg.jsdoc.function.thisnotobject\" :\n                    \"msg.jsdoc.function.newnotobject\"),\n                sourceName,\n                contextNode.getLineno(), contextNode.getCharno());\n          }\n\n          isConstructor = current.getType() == Token.NEW;\n          current = current.getNext();\n        }\n\n        FunctionParamBuilder paramBuilder = new FunctionParamBuilder(this);\n\n        if (current.getType() == Token.PARAM_LIST) {\n          Node args = current.getFirstChild();\n          for (Node arg = current.getFirstChild(); arg != null;\n               arg = arg.getNext()) {\n            if (arg.getType() == Token.ELLIPSIS) {\n              if (arg.getChildCount() == 0) {\n                paramBuilder.addVarArgs(getNativeType(UNKNOWN_TYPE));\n              } else {\n                paramBuilder.addVarArgs(\n                    createFromTypeNodesInternal(\n                        arg.getFirstChild(), sourceName, scope));\n              }\n            } else {\n              JSType type = createFromTypeNodesInternal(\n                  arg, sourceName, scope);\n              if (arg.getType() == Token.EQUALS) {\n                boolean addSuccess = paramBuilder.addOptionalParams(type);\n                if (!addSuccess) {\n                  reporter.warning(\n                      ScriptRuntime.getMessage0(\"msg.jsdoc.function.varargs\"),\n                      sourceName, arg.getLineno(), arg.getCharno());\n                }\n              } else {\n                paramBuilder.addRequiredParams(type);\n              }\n            }\n          }\n          current = current.getNext();\n        }\n\n        JSType returnType =\n            createFromTypeNodesInternal(current, sourceName, scope);\n\n        return new FunctionBuilder(this)\n            .withParams(paramBuilder)\n            .withReturnType(returnType)\n            .withTypeOfThis(thisType)\n            .setIsConstructor(isConstructor)\n            .build();\n    }\n\n    throw new IllegalStateException(\n        \"Unexpected node in type expression: \" + n.toString());\n  }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.21311475409836064,
+        "trace_match": 0.0,
+        "complexity": 16.0,
+        "call_count": 84.0,
+        "literal_count": 13.0,
+        "source_tokens": 1469.0,
+        "l0_tokens": 71.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.3873383253914227,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 16,
+        "call_count": 84,
+        "literal_count": 13
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/deps/SortedDependencies.java::SortedDependencies.topologicalStableSort(\n      List<T> items, Multimap<T, T> deps)",
+      "source": "private static <T> List<T> topologicalStableSort(\n      List<T> items, Multimap<T, T> deps) {\n    if (items.size() == 0) {\n      // Priority queue blows up if we give it a size of 0. Since we need\n      // to special case this either way, just bail out.\n      return Lists.newArrayList();\n    }\n\n    final Map<T, Integer> originalIndex = Maps.newHashMap();\n    for (int i = 0; i < items.size(); i++) {\n      originalIndex.put(items.get(i), i);\n    }\n\n    PriorityQueue<T> inDegreeZero = new PriorityQueue<T>(items.size(),\n        new Comparator<T>() {\n      @Override\n      public int compare(T a, T b) {\n        return originalIndex.get(a).intValue() -\n            originalIndex.get(b).intValue();\n      }\n    });\n    List<T> result = Lists.newArrayList();\n\n    Multiset<T> inDegree = HashMultiset.create();\n    Multimap<T, T> reverseDeps = ArrayListMultimap.create();\n    Multimaps.invertFrom(deps, reverseDeps);\n\n    // First, add all the inputs with in-degree 0.\n    for (T item : items) {\n      Collection<T> itemDeps = deps.get(item);\n      inDegree.add(item, itemDeps.size());\n      if (itemDeps.isEmpty()) {\n        inDegreeZero.add(item);\n      }\n    }\n\n    // Then, iterate to a fixed point over the reverse dependency graph.\n    while (!inDegreeZero.isEmpty()) {\n      T item = inDegreeZero.remove();\n      result.add(item);\n      for (T inWaiting : reverseDeps.get(item)) {\n        inDegree.remove(inWaiting, 1);\n        if (inDegree.count(inWaiting) == 0) {\n          inDegreeZero.add(inWaiting);\n        }\n      }\n    }\n\n    return result;\n  }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/deps/SortedDependencies.java::SortedDependencies.topologicalStableSort(\n      List<T> items, Multimap<T, T> deps)\nSIGNATURE: private static <T> List<T> topologicalStableSort(\n      List<T> items, Multimap<T, T> deps)",
+        "METHOD: src/com/google/javascript/jscomp/deps/SortedDependencies.java::SortedDependencies.topologicalStableSort(\n      List<T> items, Multimap<T, T> deps)\nSIGNATURE: private static <T> List<T> topologicalStableSort(\n      List<T> items, Multimap<T, T> deps)\nSTRUCTURE (lossy):\nif (items.size() == 0)\nCALL items.size()\nreturn Lists.newArrayList();\nCALL Lists.newArrayList()\nfinal Map<T, Integer> originalIndex = Maps.newHashMap();\nCALL Maps.newHashMap()\nfor (int i = 0; i < items.size(); i++)\nint i = 0;\ni++\nCALL originalIndex.put(items.get(i), i)\nCALL items.get(i)\nPriorityQueue<T> inDegreeZero = new PriorityQueue<T>(items.size(), new Comparator<T>() { @Override public int compare(T a, T b) { return originalIndex.get(a).intValue() - originalIndex.get(b).intValue(); } });\nreturn originalIndex.get(a).intValue() - originalIndex.get(b).intValue();\nCALL originalIndex.get(a).intValue()\nCALL originalIndex.get(a)\nCALL originalIndex.get(b).intValue()\nCALL originalIndex.get(b)\nList<T> result = Lists.newArrayList();\nMultiset<T> inDegree = HashMultiset.create();\nCALL HashMultiset.create()\nMultimap<T, T> reverseDeps = ArrayListMultimap.create();\nCALL ArrayListMultimap.create()\nCALL Multimaps.invertFrom(deps, reverseDeps)\nfor (T item : items)\nCollection<T> itemDeps = deps.get(item);\nCALL deps.get(item)\nCALL inDegree.add(item, itemDeps.size())\nCALL itemDeps.size()\nif (itemDeps.isEmpty())\nCALL itemDeps.isEmpty()\nCALL inDegreeZero.add(item)\nwhile (!inDegreeZero.isEmpty())\nCALL inDegreeZero.isEmpty()\nT item = inDegreeZero.remove();\nCALL inDegreeZero.remove()\nCALL result.add(item)\nfor (T inWaiting : reverseDeps.get(item))\nCALL reverseDeps.get(item)\nCALL inDegree.remove(inWaiting, 1)\nif (inDegree.count(inWaiting) == 0)\nCALL inDegree.count(inWaiting)\nCALL inDegreeZero.add(inWaiting)\nreturn result;",
+        "private static <T> List<T> topologicalStableSort(\n      List<T> items, Multimap<T, T> deps) {\n    if (items.size() == 0) {\n      // Priority queue blows up if we give it a size of 0. Since we need\n      // to special case this either way, just bail out.\n      return Lists.newArrayList();\n    }\n\n    final Map<T, Integer> originalIndex = Maps.newHashMap();\n    for (int i = 0; i < items.size(); i++) {\n      originalIndex.put(items.get(i), i);\n    }\n\n    PriorityQueue<T> inDegreeZero = new PriorityQueue<T>(items.size(),\n        new Comparator<T>() {\n      @Override\n      public int compare(T a, T b) {\n        return originalIndex.get(a).intValue() -\n            originalIndex.get(b).intValue();\n      }\n    });\n    List<T> result = Lists.newArrayList();\n\n    Multiset<T> inDegree = HashMultiset.create();\n    Multimap<T, T> reverseDeps = ArrayListMultimap.create();\n    Multimaps.invertFrom(deps, reverseDeps);\n\n    // First, add all the inputs with in-degree 0.\n    for (T item : items) {\n      Collection<T> itemDeps = deps.get(item);\n      inDegree.add(item, itemDeps.size());\n      if (itemDeps.isEmpty()) {\n        inDegreeZero.add(item);\n      }\n    }\n\n    // Then, iterate to a fixed point over the reverse dependency graph.\n    while (!inDegreeZero.isEmpty()) {\n      T item = inDegreeZero.remove();\n      result.add(item);\n      for (T inWaiting : reverseDeps.get(item)) {\n        inDegree.remove(inWaiting, 1);\n        if (inDegree.count(inWaiting) == 0) {\n          inDegreeZero.add(inWaiting);\n        }\n      }\n    }\n\n    return result;\n  }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.19753086419753085,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 27.0,
+        "literal_count": 4.0,
+        "source_tokens": 390.0,
+        "l0_tokens": 65.0,
+        "l1_tokens": 450.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 27,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.findJavaScriptFiles(FileList fileList)",
+      "source": "private List<SourceFile> findJavaScriptFiles(FileList fileList) {\n    List<SourceFile> files = Lists.newLinkedList();\n    File baseDir = fileList.getDir(getProject());\n\n    for (String included : fileList.getFiles(getProject())) {\n      files.add(SourceFile.fromFile(new File(baseDir, included),\n          Charset.forName(encoding)));\n    }\n\n    return files;\n  }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.findJavaScriptFiles(FileList fileList)\nSIGNATURE: private List<SourceFile> findJavaScriptFiles(FileList fileList)",
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.findJavaScriptFiles(FileList fileList)\nSIGNATURE: private List<SourceFile> findJavaScriptFiles(FileList fileList)\nSTRUCTURE (lossy):\nList<SourceFile> files = Lists.newLinkedList();\nCALL Lists.newLinkedList()\nFile baseDir = fileList.getDir(getProject());\nCALL fileList.getDir(getProject())\nCALL getProject()\nfor (String included : fileList.getFiles(getProject()))\nCALL fileList.getFiles(getProject())\nCALL files.add(SourceFile.fromFile(new File(baseDir, included), Charset.forName(encoding)))\nCALL SourceFile.fromFile(new File(baseDir, included), Charset.forName(encoding))\nCALL Charset.forName(encoding)\nreturn files;",
+        "private List<SourceFile> findJavaScriptFiles(FileList fileList) {\n    List<SourceFile> files = Lists.newLinkedList();\n    File baseDir = fileList.getDir(getProject());\n\n    for (String included : fileList.getFiles(getProject())) {\n      files.add(SourceFile.fromFile(new File(baseDir, included),\n          Charset.forName(encoding)));\n    }\n\n    return files;\n  }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4375,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 8.0,
+        "literal_count": 0.0,
+        "source_tokens": 91.0,
+        "l0_tokens": 47.0,
+        "l1_tokens": 173.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 8,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()",
+      "source": "private List<SourceFile> getDefaultExterns() {\n    try {\n      return CommandLineRunner.getDefaultExterns();\n    } catch (IOException e) {\n      throw new BuildException(e);\n    }\n  }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()\nSIGNATURE: private List<SourceFile> getDefaultExterns()",
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()\nSIGNATURE: private List<SourceFile> getDefaultExterns()\nSTRUCTURE (lossy):\nreturn CommandLineRunner.getDefaultExterns();\nCALL CommandLineRunner.getDefaultExterns()\ncatch (IOException e)\nthrow new BuildException(e);",
+        "private List<SourceFile> getDefaultExterns() {\n    try {\n      return CommandLineRunner.getDefaultExterns();\n    } catch (IOException e) {\n      throw new BuildException(e);\n    }\n  }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5185185185185185,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 46.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 78.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ParallelCompilerPass.java::ParallelCompilerPass.execute()",
+      "source": "private Result execute() {\n    int numChildThread = numWorkers - 1;\n    Thread[] workers = new Thread[numChildThread];\n    final Result[] results = new Result[numChildThread];\n\n    for (int i = 0; i < numChildThread; i++) {\n      final int index = i;\n      Thread worker = new Thread() {\n        @Override\n          public void run() {\n            results[index] = processAllTasks();\n          }\n       };\n       workers[i] = worker;\n       worker.start();\n    }\n\n    Result result = processAllTasks();\n\n    // Wait for the child to finish.\n    for (int i = 0; i < numChildThread; i++) {\n      try {\n        workers[i].join();\n      } catch (InterruptedException e) {\n        // None of the children thread should be interrupted in the execution\n        // of this method. If, for whatever reason, this happens, we will\n        // re-throw it and investigate the cause.\n        result.exceptions.add(e);\n        // One of our thread was interrupted, we'll make the current thread to\n        // be interrupted so any caller that is interested in cancelable\n        // execution can cancel.\n        Thread.currentThread().interrupt();\n      }\n    }\n\n    // Combine the result.\n    for (int i = 0; i < numChildThread; i++) {\n      result.combine(results[i]);\n    }\n\n    return result;\n  }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ParallelCompilerPass.java::ParallelCompilerPass.execute()\nSIGNATURE: private Result execute()",
+        "METHOD: src/com/google/javascript/jscomp/ParallelCompilerPass.java::ParallelCompilerPass.execute()\nSIGNATURE: private Result execute()\nSTRUCTURE (lossy):\nint numChildThread = numWorkers - 1;\nThread[] workers = new Thread[numChildThread];\nfinal Result[] results = new Result[numChildThread];\nfor (int i = 0; i < numChildThread; i++)\nint i = 0;\ni++\nfinal int index = i;\nThread worker = new Thread() { @Override public void run() { results[index] = processAllTasks(); } };\nresults[index] = processAllTasks()\nCALL processAllTasks()\nworkers[i] = worker\nCALL worker.start()\nResult result = processAllTasks();\nCALL workers[i].join()\ncatch (InterruptedException e)\nCALL result.exceptions.add(e)\nCALL Thread.currentThread().interrupt()\nCALL Thread.currentThread()\nCALL result.combine(results[i])\nreturn result;",
+        "private Result execute() {\n    int numChildThread = numWorkers - 1;\n    Thread[] workers = new Thread[numChildThread];\n    final Result[] results = new Result[numChildThread];\n\n    for (int i = 0; i < numChildThread; i++) {\n      final int index = i;\n      Thread worker = new Thread() {\n        @Override\n          public void run() {\n            results[index] = processAllTasks();\n          }\n       };\n       workers[i] = worker;\n       worker.start();\n    }\n\n    Result result = processAllTasks();\n\n    // Wait for the child to finish.\n    for (int i = 0; i < numChildThread; i++) {\n      try {\n        workers[i].join();\n      } catch (InterruptedException e) {\n        // None of the children thread should be interrupted in the execution\n        // of this method. If, for whatever reason, this happens, we will\n        // re-throw it and investigate the cause.\n        result.exceptions.add(e);\n        // One of our thread was interrupted, we'll make the current thread to\n        // be interrupted so any caller that is interested in cancelable\n        // execution can cancel.\n        Thread.currentThread().interrupt();\n      }\n    }\n\n    // Combine the result.\n    for (int i = 0; i < numChildThread; i++) {\n      result.combine(results[i]);\n    }\n\n    return result;\n  }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.22857142857142856,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 8.0,
+        "literal_count": 4.0,
+        "source_tokens": 322.0,
+        "l0_tokens": 34.0,
+        "l1_tokens": 201.0,
+        "compression_ratio": 0.6242236024844721,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 8,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)",
+      "source": "@Override\n  public void println(CheckLevel level, JSError error) {\n    switch (level) {\n      case ERROR:\n        this.task.log(error.format(level, this.formatter), Project.MSG_ERR);\n        break;\n      case WARNING:\n        this.task.log(error.format(level, this.formatter), Project.MSG_WARN);\n        break;\n    }\n  }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)\nSIGNATURE: @Override\n  public void println(CheckLevel level, JSError error)",
+        "METHOD: src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)\nSIGNATURE: @Override\n  public void println(CheckLevel level, JSError error)\nSTRUCTURE (lossy):\nswitch (level) { case ERROR: this.task.log(error.format(level, this.formatter), Project.MSG_ERR); break; case WARNING: this.task.log(error.format(level, this.formatter), Project.MSG_WARN); break; }\nCALL this.task.log(error.format(level, this.formatter), Project.MSG_ERR)\nCALL error.format(level, this.formatter)\nCALL this.task.log(error.format(level, this.formatter), Project.MSG_WARN)",
+        "@Override\n  public void println(CheckLevel level, JSError error) {\n    switch (level) {\n      case ERROR:\n        this.task.log(error.format(level, this.formatter), Project.MSG_ERR);\n        break;\n      case WARNING:\n        this.task.log(error.format(level, this.formatter), Project.MSG_WARN);\n        break;\n    }\n  }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4482758620689655,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 4.0,
+        "literal_count": 0.0,
+        "source_tokens": 80.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 151.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 4,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.outputNameMaps(B options)",
+      "source": "private void outputNameMaps(B options) throws FlagUsageException,\n      IOException {\n\n    String propertyMapOutputPath = null;\n    String variableMapOutputPath = null;\n    String functionInformationMapOutputPath = null;\n\n    // Check the create_name_map_files FLAG.\n    if (config.createNameMapFiles) {\n      String basePath = getMapPath(config.jsOutputFile);\n\n      propertyMapOutputPath = basePath + \"_props_map.out\";\n      variableMapOutputPath = basePath + \"_vars_map.out\";\n      functionInformationMapOutputPath = basePath + \"_functions_map.out\";\n    }\n\n    // Check the individual FLAGS.\n    if (!config.variableMapOutputFile.equals(\"\")) {\n      if (variableMapOutputPath != null) {\n        throw new FlagUsageException(\"The flags variable_map_output_file and \"\n            + \"create_name_map_files cannot both be used simultaniously.\");\n      }\n\n      variableMapOutputPath = config.variableMapOutputFile;\n    }\n\n    if (!config.propertyMapOutputFile.equals(\"\")) {\n      if (propertyMapOutputPath != null) {\n        throw new FlagUsageException(\"The flags property_map_output_file and \"\n            + \"create_name_map_files cannot both be used simultaniously.\");\n      }\n\n      propertyMapOutputPath = config.propertyMapOutputFile;\n    }\n\n    // Output the maps.\n    if (variableMapOutputPath != null) {\n      if (compiler.getVariableMap() != null) {\n        compiler.getVariableMap().save(variableMapOutputPath);\n      }\n    }\n\n    if (propertyMapOutputPath != null) {\n      if (compiler.getPropertyMap() != null) {\n        compiler.getPropertyMap().save(propertyMapOutputPath);\n      }\n    }\n\n    if (functionInformationMapOutputPath != null) {\n      if (compiler.getFunctionalInformationMap() != null) {\n        OutputStream file =\n            filenameToOutputStream(functionInformationMapOutputPath);\n        CodedOutputStream outputStream = CodedOutputStream.newInstance(file);\n        compiler.getFunctionalInformationMap().writeTo(outputStream);\n        outputStream.flush();\n        file.flush();\n        file.close();\n      }\n    }\n  }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.outputNameMaps(B options)\nSIGNATURE: private void outputNameMaps(B options) throws FlagUsageException,\n      IOException",
+        "METHOD: src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.outputNameMaps(B options)\nSIGNATURE: private void outputNameMaps(B options) throws FlagUsageException,\n      IOException\nSTRUCTURE (lossy):\nString propertyMapOutputPath = null;\nString variableMapOutputPath = null;\nString functionInformationMapOutputPath = null;\nif (config.createNameMapFiles)\nString basePath = getMapPath(config.jsOutputFile);\nCALL getMapPath(config.jsOutputFile)\npropertyMapOutputPath = basePath + \"_props_map.out\"\nvariableMapOutputPath = basePath + \"_vars_map.out\"\nfunctionInformationMapOutputPath = basePath + \"_functions_map.out\"\nif (!config.variableMapOutputFile.equals(\"\"))\nCALL config.variableMapOutputFile.equals(\"\")\nif (variableMapOutputPath != null)\nthrow new FlagUsageException(\"The flags variable_map_output_file and \" + \"create_name_map_files cannot both be used simultaniously.\");\nvariableMapOutputPath = config.variableMapOutputFile\nif (!config.propertyMapOutputFile.equals(\"\"))\nCALL config.propertyMapOutputFile.equals(\"\")\nif (propertyMapOutputPath != null)\nthrow new FlagUsageException(\"The flags property_map_output_file and \" + \"create_name_map_files cannot both be used simultaniously.\");\npropertyMapOutputPath = config.propertyMapOutputFile\nif (compiler.getVariableMap() != null)\nCALL compiler.getVariableMap()\nCALL compiler.getVariableMap().save(variableMapOutputPath)\nif (compiler.getPropertyMap() != null)\nCALL compiler.getPropertyMap()\nCALL compiler.getPropertyMap().save(propertyMapOutputPath)\nif (functionInformationMapOutputPath != null)\nif (compiler.getFunctionalInformationMap() != null)\nCALL compiler.getFunctionalInformationMap()\nOutputStream file = filenameToOutputStream(functionInformationMapOutputPath);\nCALL filenameToOutputStream(functionInformationMapOutputPath)\nCodedOutputStream outputStream = CodedOutputStream.newInstance(file);\nCALL CodedOutputStream.newInstance(file)\nCALL compiler.getFunctionalInformationMap().writeTo(outputStream)\nCALL outputStream.flush()\nCALL file.flush()\nCALL file.close()",
+        "private void outputNameMaps(B options) throws FlagUsageException,\n      IOException {\n\n    String propertyMapOutputPath = null;\n    String variableMapOutputPath = null;\n    String functionInformationMapOutputPath = null;\n\n    // Check the create_name_map_files FLAG.\n    if (config.createNameMapFiles) {\n      String basePath = getMapPath(config.jsOutputFile);\n\n      propertyMapOutputPath = basePath + \"_props_map.out\";\n      variableMapOutputPath = basePath + \"_vars_map.out\";\n      functionInformationMapOutputPath = basePath + \"_functions_map.out\";\n    }\n\n    // Check the individual FLAGS.\n    if (!config.variableMapOutputFile.equals(\"\")) {\n      if (variableMapOutputPath != null) {\n        throw new FlagUsageException(\"The flags variable_map_output_file and \"\n            + \"create_name_map_files cannot both be used simultaniously.\");\n      }\n\n      variableMapOutputPath = config.variableMapOutputFile;\n    }\n\n    if (!config.propertyMapOutputFile.equals(\"\")) {\n      if (propertyMapOutputPath != null) {\n        throw new FlagUsageException(\"The flags property_map_output_file and \"\n            + \"create_name_map_files cannot both be used simultaniously.\");\n      }\n\n      propertyMapOutputPath = config.propertyMapOutputFile;\n    }\n\n    // Output the maps.\n    if (variableMapOutputPath != null) {\n      if (compiler.getVariableMap() != null) {\n        compiler.getVariableMap().save(variableMapOutputPath);\n      }\n    }\n\n    if (propertyMapOutputPath != null) {\n      if (compiler.getPropertyMap() != null) {\n        compiler.getPropertyMap().save(propertyMapOutputPath);\n      }\n    }\n\n    if (functionInformationMapOutputPath != null) {\n      if (compiler.getFunctionalInformationMap() != null) {\n        OutputStream file =\n            filenameToOutputStream(functionInformationMapOutputPath);\n        CodedOutputStream outputStream = CodedOutputStream.newInstance(file);\n        compiler.getFunctionalInformationMap().writeTo(outputStream);\n        outputStream.flush();\n        file.flush();\n        file.close();\n      }\n    }\n  }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.29508196721311475,
+        "trace_match": 0.0,
+        "complexity": 12.0,
+        "call_count": 17.0,
+        "literal_count": 20.0,
+        "source_tokens": 513.0,
+        "l0_tokens": 55.0,
+        "l1_tokens": 514.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 12,
+        "call_count": 17,
+        "literal_count": 20
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/deps/PathUtil.java::PathUtil.makeRelative(String basePath, String targetPath)",
+      "source": "public static String makeRelative(String basePath, String targetPath) {\n    // Ensure the paths are both absolute or both relative.\n    if (isAbsolute(basePath) !=\n        isAbsolute(targetPath)) {\n      throw new IllegalArgumentException(\n          \"Paths must both be relative or both absolute.\\n\" +\n          \"  basePath: \" + basePath + \"\\n\" +\n          \"  targetPath: \" + targetPath);\n    }\n\n    basePath = collapseDots(basePath);\n    targetPath = collapseDots(targetPath);\n    String[] baseFragments = basePath.split(\"/\");\n    String[] targetFragments = targetPath.split(\"/\");\n\n    int i = -1;\n    do {\n      i += 1;\n      if (i == baseFragments.length && i == targetFragments.length) {\n        // Eg) base: /java/com/google\n        //   target: /java/com/google\n        //   result: .  <-- . is better than \"\" since \"\" + \"/path\" = \"/path\"\n        return \".\";\n      } else if (i == baseFragments.length) {\n        // Eg) base: /java/com/google\n        //   target: /java/com/google/c/ui\n        //   result: c/ui\n        return Joiner.on(\"/\").join(\n            Lists.newArrayList(\n                Arrays.asList(targetFragments).listIterator(i)));\n      } else if (i == targetFragments.length) {\n        // Eg) base: /java/com/google/c/ui\n        //   target: /java/com/google\n        //   result: ../..\n        return Strings.repeat(\"../\", baseFragments.length - i - 1) + \"..\";\n      }\n\n    } while (baseFragments[i].equals(targetFragments[i]));\n\n    // Eg) base: /java/com/google/c\n    //   target: /java/com/google/common/base\n    //   result: ../common/base\n    return Strings.repeat(\"../\", baseFragments.length - i) +\n        Joiner.on(\"/\").join(\n            Lists.newArrayList(Arrays.asList(targetFragments).listIterator(i)));\n  }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/deps/PathUtil.java::PathUtil.makeRelative(String basePath, String targetPath)\nSIGNATURE: public static String makeRelative(String basePath, String targetPath)",
+        "METHOD: src/com/google/javascript/jscomp/deps/PathUtil.java::PathUtil.makeRelative(String basePath, String targetPath)\nSIGNATURE: public static String makeRelative(String basePath, String targetPath)\nSTRUCTURE (lossy):\nif (isAbsolute(basePath) != isAbsolute(targetPath))\nCALL isAbsolute(basePath)\nCALL isAbsolute(targetPath)\nthrow new IllegalArgumentException( \"Paths must both be relative or both absolute.\\n\" + \" basePath: \" + basePath + \"\\n\" + \" targetPath: \" + targetPath);\nbasePath = collapseDots(basePath)\nCALL collapseDots(basePath)\ntargetPath = collapseDots(targetPath)\nCALL collapseDots(targetPath)\nString[] baseFragments = basePath.split(\"/\");\nCALL basePath.split(\"/\")\nString[] targetFragments = targetPath.split(\"/\");\nCALL targetPath.split(\"/\")\nint i = -1;\ndo\ni += 1\nif (i == baseFragments.length && i == targetFragments.length)\nreturn \".\";\nif (i == baseFragments.length)\nreturn Joiner.on(\"/\").join( Lists.newArrayList( Arrays.asList(targetFragments).listIterator(i)));\nCALL Joiner.on(\"/\").join( Lists.newArrayList( Arrays.asList(targetFragments).listIterator(i)))\nCALL Joiner.on(\"/\")\nCALL Lists.newArrayList( Arrays.asList(targetFragments).listIterator(i))\nCALL Arrays.asList(targetFragments).listIterator(i)\nCALL Arrays.asList(targetFragments)\nif (i == targetFragments.length)\nreturn Strings.repeat(\"../\", baseFragments.length - i - 1) + \"..\";\nCALL Strings.repeat(\"../\", baseFragments.length - i - 1)\nCALL baseFragments[i].equals(targetFragments[i])\nreturn Strings.repeat(\"../\", baseFragments.length - i) + Joiner.on(\"/\").join( Lists.newArrayList(Arrays.asList(targetFragments).listIterator(i)));\nCALL Strings.repeat(\"../\", baseFragments.length - i)\nCALL Joiner.on(\"/\").join( Lists.newArrayList(Arrays.asList(targetFragments).listIterator(i)))\nCALL Lists.newArrayList(Arrays.asList(targetFragments).listIterator(i))",
+        "public static String makeRelative(String basePath, String targetPath) {\n    // Ensure the paths are both absolute or both relative.\n    if (isAbsolute(basePath) !=\n        isAbsolute(targetPath)) {\n      throw new IllegalArgumentException(\n          \"Paths must both be relative or both absolute.\\n\" +\n          \"  basePath: \" + basePath + \"\\n\" +\n          \"  targetPath: \" + targetPath);\n    }\n\n    basePath = collapseDots(basePath);\n    targetPath = collapseDots(targetPath);\n    String[] baseFragments = basePath.split(\"/\");\n    String[] targetFragments = targetPath.split(\"/\");\n\n    int i = -1;\n    do {\n      i += 1;\n      if (i == baseFragments.length && i == targetFragments.length) {\n        // Eg) base: /java/com/google\n        //   target: /java/com/google\n        //   result: .  <-- . is better than \"\" since \"\" + \"/path\" = \"/path\"\n        return \".\";\n      } else if (i == baseFragments.length) {\n        // Eg) base: /java/com/google\n        //   target: /java/com/google/c/ui\n        //   result: c/ui\n        return Joiner.on(\"/\").join(\n            Lists.newArrayList(\n                Arrays.asList(targetFragments).listIterator(i)));\n      } else if (i == targetFragments.length) {\n        // Eg) base: /java/com/google/c/ui\n        //   target: /java/com/google\n        //   result: ../..\n        return Strings.repeat(\"../\", baseFragments.length - i - 1) + \"..\";\n      }\n\n    } while (baseFragments[i].equals(targetFragments[i]));\n\n    // Eg) base: /java/com/google/c\n    //   target: /java/com/google/common/base\n    //   result: ../common/base\n    return Strings.repeat(\"../\", baseFragments.length - i) +\n        Joiner.on(\"/\").join(\n            Lists.newArrayList(Arrays.asList(targetFragments).listIterator(i)));\n  }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3076923076923077,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 19.0,
+        "literal_count": 15.0,
+        "source_tokens": 435.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 457.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 19,
+        "literal_count": 15
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/AstValidator.java::AstValidator.validateAssignmentTarget(Node n)",
+      "source": "private void validateAssignmentTarget(Node n) {\n    switch (n.getType()) {\n      case Token.NAME:\n      case Token.GETELEM:\n      case Token.GETPROP:\n        validateExpression(n);\n        return;\n      default:\n        violation(\"Expected assignment target expression but was \"\n            + Token.name(n.getType()), n);\n    }\n  }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/AstValidator.java::AstValidator.validateAssignmentTarget(Node n)\nSIGNATURE: private void validateAssignmentTarget(Node n)",
+        "METHOD: src/com/google/javascript/jscomp/AstValidator.java::AstValidator.validateAssignmentTarget(Node n)\nSIGNATURE: private void validateAssignmentTarget(Node n)\nSTRUCTURE (lossy):\nswitch (n.getType()) { case Token.NAME: case Token.GETELEM: case Token.GETPROP: validateExpression(n); return; default: violation(\"Expected assignment target expression but was \" + Token.name(n.getType()), n); }\nCALL n.getType()\nCALL validateExpression(n)\nreturn;\nCALL violation(\"Expected assignment target expression but was \" + Token.name(n.getType()), n)\nCALL Token.name(n.getType())",
+        "private void validateAssignmentTarget(Node n) {\n    switch (n.getType()) {\n      case Token.NAME:\n      case Token.GETELEM:\n      case Token.GETPROP:\n        validateExpression(n);\n        return;\n      default:\n        violation(\"Expected assignment target expression but was \"\n            + Token.name(n.getType()), n);\n    }\n  }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4827586206896552,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 5.0,
+        "literal_count": 1.0,
+        "source_tokens": 83.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 142.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 5,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/rhino/jstype/JSType.java::JSType.checkEquivalenceHelper(JSType that, EquivalenceMethod eqMethod)",
+      "source": "boolean checkEquivalenceHelper(JSType that, EquivalenceMethod eqMethod) {\n    if (this == that) {\n      return true;\n    }\n\n    boolean thisUnknown = isUnknownType();\n    boolean thatUnknown = that.isUnknownType();\n    if (thisUnknown || thatUnknown) {\n      if (eqMethod == EquivalenceMethod.INVARIANT) {\n        // If we're checking for invariance, the unknown type is invariant\n        // with everyone.\n        return true;\n      } else if (eqMethod == EquivalenceMethod.DATA_FLOW) {\n        // If we're checking data flow, then two types are the same if they're\n        // both unknown.\n        return thisUnknown && thatUnknown;\n      } else if (thisUnknown && thatUnknown &&\n          (isNominalType() ^ that.isNominalType())) {\n        // If they're both unknown, but one is a nominal type and the other\n        // is not, then we should fail out immediately. This ensures that\n        // we won't unbox the unknowns further down.\n        return false;\n      }\n    }\n\n    if (isUnionType() && that.isUnionType()) {\n      return toMaybeUnionType().checkUnionEquivalenceHelper(\n          that.toMaybeUnionType(), eqMethod);\n    }\n\n    if (isFunctionType() && that.isFunctionType()) {\n      return toMaybeFunctionType().checkFunctionEquivalenceHelper(\n          that.toMaybeFunctionType(), eqMethod);\n    }\n\n    if (isRecordType() && that.isRecordType()) {\n      return toMaybeRecordType().checkRecordEquivalenceHelper(\n          that.toMaybeRecordType(), eqMethod);\n    }\n\n    ParameterizedType thisParamType = toMaybeParameterizedType();\n    ParameterizedType thatParamType = that.toMaybeParameterizedType();\n    if (thisParamType != null || thatParamType != null) {\n      // Check if one type is parameterized, but the other is not.\n      boolean paramsMatch = false;\n      if (thisParamType != null && thatParamType != null) {\n        paramsMatch = thisParamType.getParameterType().checkEquivalenceHelper(\n            thatParamType.getParameterType(), eqMethod);\n      } else if (eqMethod == EquivalenceMethod.IDENTITY) {\n        paramsMatch = false;\n      } else {\n        // If one of the type parameters is unknown, but the other is not,\n        // then we consider these the same for the purposes of data flow\n        // and invariance.\n        paramsMatch = true;\n      }\n\n      JSType thisRootType = thisParamType == null ?\n          this : thisParamType.getReferencedTypeInternal();\n      JSType thatRootType = thatParamType == null ?\n          that : thatParamType.getReferencedTypeInternal();\n      return paramsMatch &&\n          thisRootType.checkEquivalenceHelper(thatRootType, eqMethod);\n    }\n\n    if (isNominalType() && that.isNominalType()) {\n      return toObjectType().getReferenceName().equals(\n          that.toObjectType().getReferenceName());\n    }\n\n    // Unbox other proxies.\n    if (this instanceof ProxyObjectType) {\n      return ((ProxyObjectType) this)\n          .getReferencedTypeInternal().checkEquivalenceHelper(\n              that, eqMethod);\n    }\n\n    if (that instanceof ProxyObjectType) {\n      return checkEquivalenceHelper(\n          ((ProxyObjectType) that).getReferencedTypeInternal(),\n          eqMethod);\n    }\n\n    // Relies on the fact that for the base {@link JSType}, only one\n    // instance of each sub-type will ever be created in a given registry, so\n    // there is no need to verify members. If the object pointers are not\n    // identical, then the type member must be different.\n    return this == that;\n  }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/com/google/javascript/rhino/jstype/JSType.java::JSType.checkEquivalenceHelper(JSType that, EquivalenceMethod eqMethod)\nSIGNATURE: boolean checkEquivalenceHelper(JSType that, EquivalenceMethod eqMethod)",
+        "METHOD: src/com/google/javascript/rhino/jstype/JSType.java::JSType.checkEquivalenceHelper(JSType that, EquivalenceMethod eqMethod)\nSIGNATURE: boolean checkEquivalenceHelper(JSType that, EquivalenceMethod eqMethod)\nSTRUCTURE (lossy):\nif (this == that)\nreturn true;\nboolean thisUnknown = isUnknownType();\nCALL isUnknownType()\nboolean thatUnknown = that.isUnknownType();\nCALL that.isUnknownType()\nif (thisUnknown || thatUnknown)\nif (eqMethod == EquivalenceMethod.INVARIANT)\nif (eqMethod == EquivalenceMethod.DATA_FLOW)\nreturn thisUnknown && thatUnknown;\nif (thisUnknown && thatUnknown && (isNominalType() ^ that.isNominalType()))\nCALL isNominalType()\nCALL that.isNominalType()\nreturn false;\nif (isUnionType() && that.isUnionType())\nCALL isUnionType()\nCALL that.isUnionType()\nreturn toMaybeUnionType().checkUnionEquivalenceHelper( that.toMaybeUnionType(), eqMethod);\nCALL toMaybeUnionType().checkUnionEquivalenceHelper( that.toMaybeUnionType(), eqMethod)\nCALL toMaybeUnionType()\nCALL that.toMaybeUnionType()\nif (isFunctionType() && that.isFunctionType())\nCALL isFunctionType()\nCALL that.isFunctionType()\nreturn toMaybeFunctionType().checkFunctionEquivalenceHelper( that.toMaybeFunctionType(), eqMethod);\nCALL toMaybeFunctionType().checkFunctionEquivalenceHelper( that.toMaybeFunctionType(), eqMethod)\nCALL toMaybeFunctionType()\nCALL that.toMaybeFunctionType()\nif (isRecordType() && that.isRecordType())\nCALL isRecordType()\nCALL that.isRecordType()\nreturn toMaybeRecordType().checkRecordEquivalenceHelper( that.toMaybeRecordType(), eqMethod);\nCALL toMaybeRecordType().checkRecordEquivalenceHelper( that.toMaybeRecordType(), eqMethod)\nCALL toMaybeRecordType()\nCALL that.toMaybeRecordType()\nParameterizedType thisParamType = toMaybeParameterizedType();\nCALL toMaybeParameterizedType()\nParameterizedType thatParamType = that.toMaybeParameterizedType();\nCALL that.toMaybeParameterizedType()\nif (thisParamType != null || thatParamType != null)\nboolean paramsMatch = false;\nif (thisParamType != null && thatParamType != null)\nparamsMatch = thisParamType.getParameterType().checkEquivalenceHelper( thatParamType.getParameterType(), eqMethod)\nCALL thisParamType.getParameterType().checkEquivalenceHelper( thatPara\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "boolean checkEquivalenceHelper(JSType that, EquivalenceMethod eqMethod) {\n    if (this == that) {\n      return true;\n    }\n\n    boolean thisUnknown = isUnknownType();\n    boolean thatUnknown = that.isUnknownType();\n    if (thisUnknown || thatUnknown) {\n      if (eqMethod == EquivalenceMethod.INVARIANT) {\n        // If we're checking for invariance, the unknown type is invariant\n        // with everyone.\n        return true;\n      } else if (eqMethod == EquivalenceMethod.DATA_FLOW) {\n        // If we're checking data flow, then two types are the same if they're\n        // both unknown.\n        return thisUnknown && thatUnknown;\n      } else if (thisUnknown && thatUnknown &&\n          (isNominalType() ^ that.isNominalType())) {\n        // If they're both unknown, but one is a nominal type and the other\n        // is not, then we should fail out immediately. This ensures that\n        // we won't unbox the unknowns further down.\n        return false;\n      }\n    }\n\n    if (isUnionType() && that.isUnionType()) {\n      return toMaybeUnionType().checkUnionEquivalenceHelper(\n          that.toMaybeUnionType(), eqMethod);\n    }\n\n    if (isFunctionType() && that.isFunctionType()) {\n      return toMaybeFunctionType().checkFunctionEquivalenceHelper(\n          that.toMaybeFunctionType(), eqMethod);\n    }\n\n    if (isRecordType() && that.isRecordType()) {\n      return toMaybeRecordType().checkRecordEquivalenceHelper(\n          that.toMaybeRecordType(), eqMethod);\n    }\n\n    ParameterizedType thisParamType = toMaybeParameterizedType();\n    ParameterizedType thatParamType = that.toMaybeParameterizedType();\n    if (thisParamType != null || thatParamType != null) {\n      // Check if one type is parameterized, but the other is not.\n      boolean paramsMatch = false;\n      if (thisParamType != null && thatParamType != null) {\n        paramsMatch = thisParamType.getParameterType().checkEquivalenceHelper(\n            thatParamType.getParameterType(), eqMethod);\n      } else if (eqMethod == EquivalenceMethod.IDENTITY) {\n        paramsMatch = false;\n      } else {\n        // If one of the type parameters is unknown, but the other is not,\n        // then we consider these the same for the purposes of data flow\n        // and invariance.\n        paramsMatch = true;\n      }\n\n      JSType thisRootType = thisParamType == null ?\n          this : thisParamType.getReferencedTypeInternal();\n      JSType thatRootType = thatParamType == null ?\n          that : thatParamType.getReferencedTypeInternal();\n      return paramsMatch &&\n          thisRootType.checkEquivalenceHelper(thatRootType, eqMethod);\n    }\n\n    if (isNominalType() && that.isNominalType()) {\n      return toObjectType().getReferenceName().equals(\n          that.toObjectType().getReferenceName());\n    }\n\n    // Unbox other proxies.\n    if (this instanceof ProxyObjectType) {\n      return ((ProxyObjectType) this)\n          .getReferencedTypeInternal().checkEquivalenceHelper(\n              that, eqMethod);\n    }\n\n    if (that instanceof ProxyObjectType) {\n      return checkEquivalenceHelper(\n          ((ProxyObjectType) that).getReferencedTypeInternal(),\n          eqMethod);\n    }\n\n    // Relies on the fact that for the base {@link JSType}, only one\n    // instance of each sub-type will ever be created in a given registry, so\n    // there is no need to verify members. If the object pointers are not\n    // identical, then the type member must be different.\n    return this == that;\n  }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.18,
+        "trace_match": 0.0,
+        "complexity": 15.0,
+        "call_count": 38.0,
+        "literal_count": 6.0,
+        "source_tokens": 868.0,
+        "l0_tokens": 54.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.6555299539170507,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 15,
+        "call_count": 38,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.createInputs(List<String> files,\n      boolean allowStdIn)",
+      "source": "protected List<SourceFile> createInputs(List<String> files,\n      boolean allowStdIn) throws FlagUsageException, IOException {\n    List<SourceFile> inputs = new ArrayList<SourceFile>(files.size());\n    boolean usingStdin = false;\n    for (String filename : files) {\n      if (!\"-\".equals(filename)) {\n        SourceFile newFile = SourceFile.fromFile(filename, inputCharset);\n        inputs.add(newFile);\n      } else {\n        if (!allowStdIn) {\n          throw new FlagUsageException(\"Can't specify stdin.\");\n        }\n        if (usingStdin) {\n          throw new FlagUsageException(\"Can't specify stdin twice.\");\n        }\n\n        if (!config.outputManifests.isEmpty()) {\n          throw new FlagUsageException(\"Manifest files cannot be generated \" +\n              \"when the input is from stdin.\");\n        }\n        if (!config.outputBundles.isEmpty()) {\n          throw new FlagUsageException(\"Bundle files cannot be generated \" +\n              \"when the input is from stdin.\");\n        }\n        inputs.add(SourceFile.fromInputStream(\"stdin\", System.in));\n        usingStdin = true;\n      }\n    }\n    return inputs;\n  }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.createInputs(List<String> files,\n      boolean allowStdIn)\nSIGNATURE: protected List<SourceFile> createInputs(List<String> files,\n      boolean allowStdIn) throws FlagUsageException, IOException",
+        "METHOD: src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.createInputs(List<String> files,\n      boolean allowStdIn)\nSIGNATURE: protected List<SourceFile> createInputs(List<String> files,\n      boolean allowStdIn) throws FlagUsageException, IOException\nSTRUCTURE (lossy):\nList<SourceFile> inputs = new ArrayList<SourceFile>(files.size());\nCALL files.size()\nboolean usingStdin = false;\nfor (String filename : files)\nif (!\"-\".equals(filename))\nCALL \"-\".equals(filename)\nSourceFile newFile = SourceFile.fromFile(filename, inputCharset);\nCALL SourceFile.fromFile(filename, inputCharset)\nCALL inputs.add(newFile)\nif (!allowStdIn)\nthrow new FlagUsageException(\"Can't specify stdin.\");\nif (usingStdin)\nthrow new FlagUsageException(\"Can't specify stdin twice.\");\nif (!config.outputManifests.isEmpty())\nCALL config.outputManifests.isEmpty()\nthrow new FlagUsageException(\"Manifest files cannot be generated \" + \"when the input is from stdin.\");\nif (!config.outputBundles.isEmpty())\nCALL config.outputBundles.isEmpty()\nthrow new FlagUsageException(\"Bundle files cannot be generated \" + \"when the input is from stdin.\");\nCALL inputs.add(SourceFile.fromInputStream(\"stdin\", System.in))\nCALL SourceFile.fromInputStream(\"stdin\", System.in)\nusingStdin = true\nreturn inputs;",
+        "protected List<SourceFile> createInputs(List<String> files,\n      boolean allowStdIn) throws FlagUsageException, IOException {\n    List<SourceFile> inputs = new ArrayList<SourceFile>(files.size());\n    boolean usingStdin = false;\n    for (String filename : files) {\n      if (!\"-\".equals(filename)) {\n        SourceFile newFile = SourceFile.fromFile(filename, inputCharset);\n        inputs.add(newFile);\n      } else {\n        if (!allowStdIn) {\n          throw new FlagUsageException(\"Can't specify stdin.\");\n        }\n        if (usingStdin) {\n          throw new FlagUsageException(\"Can't specify stdin twice.\");\n        }\n\n        if (!config.outputManifests.isEmpty()) {\n          throw new FlagUsageException(\"Manifest files cannot be generated \" +\n              \"when the input is from stdin.\");\n        }\n        if (!config.outputBundles.isEmpty()) {\n          throw new FlagUsageException(\"Bundle files cannot be generated \" +\n              \"when the input is from stdin.\");\n        }\n        inputs.add(SourceFile.fromInputStream(\"stdin\", System.in));\n        usingStdin = true;\n      }\n    }\n    return inputs;\n  }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.288135593220339,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 8.0,
+        "literal_count": 8.0,
+        "source_tokens": 282.0,
+        "l0_tokens": 74.0,
+        "l1_tokens": 325.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 8,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)",
+      "source": "ErrorFunctionType(JSTypeRegistry registry, String name) {\n    super(\n        registry, name, null,\n        registry.createArrowType(\n            registry.createOptionalParameters(\n                registry.getNativeType(ALL_TYPE),\n                registry.getNativeType(ALL_TYPE),\n                registry.getNativeType(ALL_TYPE)),\n            null),\n        null, null, true, true);\n\n    // NOTE(nicksantos): Errors have the weird behavior in that they can\n    // be called as functions, and they will return instances of themselves.\n    // Error('x') instanceof Error => true\n    //\n    // In user-defined types, we would deal with this case by creating\n    // a NamedType with the name \"Error\" and then resolve it later.\n    //\n    // For native types, we don't really want the native types to\n    // depend on type-resolution. So we just set the return type manually\n    // at the end of construction.\n    //\n    // There's similar logic in JSTypeRegistry for Array and RegExp.\n    getInternalArrowType().returnType = getInstanceType();\n  }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)\nSIGNATURE: ErrorFunctionType(JSTypeRegistry registry, String name)",
+        "METHOD: src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)\nSIGNATURE: ErrorFunctionType(JSTypeRegistry registry, String name)\nSTRUCTURE (lossy):\nCALL registry.createArrowType( registry.createOptionalParameters( registry.getNativeType(ALL_TYPE), registry.getNativeType(ALL_TYPE), registry.getNativeType(ALL_TYPE)), null)\nCALL registry.createOptionalParameters( registry.getNativeType(ALL_TYPE), registry.getNativeType(ALL_TYPE), registry.getNativeType(ALL_TYPE))\nCALL registry.getNativeType(ALL_TYPE)\ngetInternalArrowType().returnType = getInstanceType()\nCALL getInternalArrowType()\nCALL getInstanceType()",
+        "ErrorFunctionType(JSTypeRegistry registry, String name) {\n    super(\n        registry, name, null,\n        registry.createArrowType(\n            registry.createOptionalParameters(\n                registry.getNativeType(ALL_TYPE),\n                registry.getNativeType(ALL_TYPE),\n                registry.getNativeType(ALL_TYPE)),\n            null),\n        null, null, true, true);\n\n    // NOTE(nicksantos): Errors have the weird behavior in that they can\n    // be called as functions, and they will return instances of themselves.\n    // Error('x') instanceof Error => true\n    //\n    // In user-defined types, we would deal with this case by creating\n    // a NamedType with the name \"Error\" and then resolve it later.\n    //\n    // For native types, we don't really want the native types to\n    // depend on type-resolution. So we just set the return type manually\n    // at the end of construction.\n    //\n    // There's similar logic in JSTypeRegistry for Array and RegExp.\n    getInternalArrowType().returnType = getInstanceType();\n  }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2054794520547945,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 7.0,
+        "literal_count": 4.0,
+        "source_tokens": 261.0,
+        "l0_tokens": 53.0,
+        "l1_tokens": 173.0,
+        "compression_ratio": 0.6628352490421456,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 7,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/RenameVars.java::RenameVars.assignNames(Set<Assignment> varsToRename)",
+      "source": "private void assignNames(Set<Assignment> varsToRename) {\n    NameGenerator globalNameGenerator =\n        new NameGenerator(reservedNames, prefix, reservedCharacters);\n\n    // Local variables never need a prefix.\n    NameGenerator localNameGenerator =\n        prefix.isEmpty() ? globalNameGenerator : new NameGenerator(\n            reservedNames, \"\", reservedCharacters);\n\n    // Generated names and the assignments for non-local vars.\n    List<Assignment> pendingAssignments = new ArrayList<Assignment>();\n    List<String> generatedNamesForAssignments = new ArrayList<String>();\n\n    for (Assignment a : varsToRename) {\n      if (a.newName != null) {\n        continue;\n      }\n\n      if (externNames.contains(a.oldName)) {\n        continue;\n      }\n\n      String newName;\n      if (a.oldName.startsWith(LOCAL_VAR_PREFIX)) {\n        // For local variable, we make the assignment right away.\n        newName = localNameGenerator.generateNextName();\n        finalizeNameAssignment(a, newName);\n      } else {\n        // For non-local variable, delay finalizing the name assignment\n        // until we know how many new names we'll have of length 2, 3, etc.\n        newName = globalNameGenerator.generateNextName();\n        pendingAssignments.add(a);\n        generatedNamesForAssignments.add(newName);\n      }\n      reservedNames.add(newName);\n    }\n\n    // Now that we have a list of generated names, and a list of variable\n    // Assignment objects, we assign the generated names to the vars as\n    // follows:\n    // 1) The most frequent vars get the shorter names.\n    // 2) If N number of vars are going to be assigned names of the same\n    //    length, we assign the N names based on the order at which the vars\n    //    first appear in the source. This makes the output somewhat less\n    //    random, because symbols declared close together are assigned names\n    //    that are quite similar. With this heuristic, the output is more\n    //    compressible.\n    //    For instance, the output may look like:\n    //    var da = \"..\", ea = \"..\";\n    //    function fa() { .. } function ga() { .. }\n\n    int numPendingAssignments = generatedNamesForAssignments.size();\n    for (int i = 0; i < numPendingAssignments;) {\n      SortedSet<Assignment> varsByOrderOfOccurrence =\n          new TreeSet<Assignment>(ORDER_OF_OCCURRENCE_COMPARATOR);\n\n      // Add k number of Assignment to the set, where k is the number of\n      // generated names of the same length.\n      int len = generatedNamesForAssignments.get(i).length();\n      for (int j = i; j < numPendingAssignments\n          && generatedNamesForAssignments.get(j).length() == len; j++) {\n        varsByOrderOfOccurrence.add(pendingAssignments.get(j));\n      }\n\n      // Now, make the assignments\n      for (Assignment a : varsByOrderOfOccurrence) {\n        finalizeNameAssignment(a, generatedNamesForAssignments.get(i));\n        ++i;\n      }\n    }\n  }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/RenameVars.java::RenameVars.assignNames(Set<Assignment> varsToRename)\nSIGNATURE: private void assignNames(Set<Assignment> varsToRename)",
+        "METHOD: src/com/google/javascript/jscomp/RenameVars.java::RenameVars.assignNames(Set<Assignment> varsToRename)\nSIGNATURE: private void assignNames(Set<Assignment> varsToRename)\nSTRUCTURE (lossy):\nNameGenerator globalNameGenerator = new NameGenerator(reservedNames, prefix, reservedCharacters);\nNameGenerator localNameGenerator = prefix.isEmpty() ? globalNameGenerator : new NameGenerator( reservedNames, \"\", reservedCharacters);\nCALL prefix.isEmpty()\nList<Assignment> pendingAssignments = new ArrayList<Assignment>();\nList<String> generatedNamesForAssignments = new ArrayList<String>();\nfor (Assignment a : varsToRename)\nif (a.newName != null)\nif (externNames.contains(a.oldName))\nCALL externNames.contains(a.oldName)\nString newName;\nif (a.oldName.startsWith(LOCAL_VAR_PREFIX))\nCALL a.oldName.startsWith(LOCAL_VAR_PREFIX)\nnewName = localNameGenerator.generateNextName()\nCALL localNameGenerator.generateNextName()\nCALL finalizeNameAssignment(a, newName)\nnewName = globalNameGenerator.generateNextName()\nCALL globalNameGenerator.generateNextName()\nCALL pendingAssignments.add(a)\nCALL generatedNamesForAssignments.add(newName)\nCALL reservedNames.add(newName)\nint numPendingAssignments = generatedNamesForAssignments.size();\nCALL generatedNamesForAssignments.size()\nfor (int i = 0; i < numPendingAssignments;)\nint i = 0;\nSortedSet<Assignment> varsByOrderOfOccurrence = new TreeSet<Assignment>(ORDER_OF_OCCURRENCE_COMPARATOR);\nint len = generatedNamesForAssignments.get(i).length();\nCALL generatedNamesForAssignments.get(i).length()\nCALL generatedNamesForAssignments.get(i)\nfor (int j = i; j < numPendingAssignments && generatedNamesForAssignments.get(j).length() == len; j++)\nint j = i;\nCALL generatedNamesForAssignments.get(j).length()\nCALL generatedNamesForAssignments.get(j)\nj++\nCALL varsByOrderOfOccurrence.add(pendingAssignments.get(j))\nCALL pendingAssignments.get(j)\nfor (Assignment a : varsByOrderOfOccurrence)\nCALL finalizeNameAssignment(a, generatedNamesForAssignments.get(i))\n++i",
+        "private void assignNames(Set<Assignment> varsToRename) {\n    NameGenerator globalNameGenerator =\n        new NameGenerator(reservedNames, prefix, reservedCharacters);\n\n    // Local variables never need a prefix.\n    NameGenerator localNameGenerator =\n        prefix.isEmpty() ? globalNameGenerator : new NameGenerator(\n            reservedNames, \"\", reservedCharacters);\n\n    // Generated names and the assignments for non-local vars.\n    List<Assignment> pendingAssignments = new ArrayList<Assignment>();\n    List<String> generatedNamesForAssignments = new ArrayList<String>();\n\n    for (Assignment a : varsToRename) {\n      if (a.newName != null) {\n        continue;\n      }\n\n      if (externNames.contains(a.oldName)) {\n        continue;\n      }\n\n      String newName;\n      if (a.oldName.startsWith(LOCAL_VAR_PREFIX)) {\n        // For local variable, we make the assignment right away.\n        newName = localNameGenerator.generateNextName();\n        finalizeNameAssignment(a, newName);\n      } else {\n        // For non-local variable, delay finalizing the name assignment\n        // until we know how many new names we'll have of length 2, 3, etc.\n        newName = globalNameGenerator.generateNextName();\n        pendingAssignments.add(a);\n        generatedNamesForAssignments.add(newName);\n      }\n      reservedNames.add(newName);\n    }\n\n    // Now that we have a list of generated names, and a list of variable\n    // Assignment objects, we assign the generated names to the vars as\n    // follows:\n    // 1) The most frequent vars get the shorter names.\n    // 2) If N number of vars are going to be assigned names of the same\n    //    length, we assign the N names based on the order at which the vars\n    //    first appear in the source. This makes the output somewhat less\n    //    random, because symbols declared close together are assigned names\n    //    that are quite similar. With this heuristic, the output is more\n    //    compressible.\n    //    For instance, the output may look like:\n    //    var da = \"..\", ea = \"..\";\n    //    function fa() { .. } function ga() { .. }\n\n    int numPendingAssignments = generatedNamesForAssignments.size();\n    for (int i = 0; i < numPendingAssignments;) {\n      SortedSet<Assignment> varsByOrderOfOccurrence =\n          new TreeSet<Assignment>(ORDER_OF_OCCURRENCE_COMPARATOR);\n\n      // Add k number of Assignment to the set, where k is the number of\n      // generated names of the same length.\n      int len = generatedNamesForAssignments.get(i).length();\n      for (int j = i; j < numPendingAssignments\n          && generatedNamesForAssignments.get(j).length() == len; j++) {\n        varsByOrderOfOccurrence.add(pendingAssignments.get(j));\n      }\n\n      // Now, make the assignments\n      for (Assignment a : varsByOrderOfOccurrence) {\n        finalizeNameAssignment(a, generatedNamesForAssignments.get(i));\n        ++i;\n      }\n    }\n  }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.16216216216216217,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 18.0,
+        "literal_count": 3.0,
+        "source_tokens": 727.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 497.0,
+        "compression_ratio": 0.6836313617606602,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 18,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.CompileTask()",
+      "source": "public CompileTask() {\n    this.languageIn = CompilerOptions.LanguageMode.ECMASCRIPT3;\n    this.warningLevel = WarningLevel.DEFAULT;\n    this.debugOptions = false;\n    this.compilationLevel = CompilationLevel.SIMPLE_OPTIMIZATIONS;\n    this.customExternsOnly = false;\n    this.manageDependencies = false;\n    this.prettyPrint = false;\n    this.printInputDelimiter = false;\n    this.generateExports = false;\n    this.replaceProperties = false;\n    this.forceRecompile = false;\n    this.replacePropertiesPrefix = \"closure.define.\";\n    this.defineParams = Lists.newLinkedList();\n    this.externFileLists = Lists.newLinkedList();\n    this.sourceFileLists = Lists.newLinkedList();\n    this.sourcePaths = Lists.newLinkedList();\n    this.warnings = Lists.newLinkedList();\n  }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.CompileTask()\nSIGNATURE: public CompileTask()",
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.CompileTask()\nSIGNATURE: public CompileTask()\nSTRUCTURE (lossy):\nthis.languageIn = CompilerOptions.LanguageMode.ECMASCRIPT3\nthis.warningLevel = WarningLevel.DEFAULT\nthis.debugOptions = false\nthis.compilationLevel = CompilationLevel.SIMPLE_OPTIMIZATIONS\nthis.customExternsOnly = false\nthis.manageDependencies = false\nthis.prettyPrint = false\nthis.printInputDelimiter = false\nthis.generateExports = false\nthis.replaceProperties = false\nthis.forceRecompile = false\nthis.replacePropertiesPrefix = \"closure.define.\"\nthis.defineParams = Lists.newLinkedList()\nCALL Lists.newLinkedList()\nthis.externFileLists = Lists.newLinkedList()\nthis.sourceFileLists = Lists.newLinkedList()\nthis.sourcePaths = Lists.newLinkedList()\nthis.warnings = Lists.newLinkedList()",
+        "public CompileTask() {\n    this.languageIn = CompilerOptions.LanguageMode.ECMASCRIPT3;\n    this.warningLevel = WarningLevel.DEFAULT;\n    this.debugOptions = false;\n    this.compilationLevel = CompilationLevel.SIMPLE_OPTIMIZATIONS;\n    this.customExternsOnly = false;\n    this.manageDependencies = false;\n    this.prettyPrint = false;\n    this.printInputDelimiter = false;\n    this.generateExports = false;\n    this.replaceProperties = false;\n    this.forceRecompile = false;\n    this.replacePropertiesPrefix = \"closure.define.\";\n    this.defineParams = Lists.newLinkedList();\n    this.externFileLists = Lists.newLinkedList();\n    this.sourceFileLists = Lists.newLinkedList();\n    this.sourcePaths = Lists.newLinkedList();\n    this.warnings = Lists.newLinkedList();\n  }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.28846153846153844,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 5.0,
+        "literal_count": 1.0,
+        "source_tokens": 192.0,
+        "l0_tokens": 30.0,
+        "l1_tokens": 206.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 5,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.writeModuleOutput(Appendable out, JSModule m)",
+      "source": "@VisibleForTesting\n  void writeModuleOutput(Appendable out, JSModule m)\n      throws FlagUsageException, IOException {\n    if (parsedModuleWrappers == null) {\n      parsedModuleWrappers = parseModuleWrappers(\n          config.moduleWrapper,\n          Lists.newArrayList(\n              compiler.getDegenerateModuleGraph().getAllModules()));\n    }\n\n    String fileName = getModuleOutputFileName(m);\n    String baseName = new File(fileName).getName();\n    writeOutput(out, compiler, compiler.toSource(m),\n        parsedModuleWrappers.get(m.getName()).replace(\"%basename%\", baseName),\n        \"%s\", null);\n  }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.writeModuleOutput(Appendable out, JSModule m)\nSIGNATURE: @VisibleForTesting\n  void writeModuleOutput(Appendable out, JSModule m)\n      throws FlagUsageException, IOException",
+        "METHOD: src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.writeModuleOutput(Appendable out, JSModule m)\nSIGNATURE: @VisibleForTesting\n  void writeModuleOutput(Appendable out, JSModule m)\n      throws FlagUsageException, IOException\nSTRUCTURE (lossy):\nif (parsedModuleWrappers == null)\nparsedModuleWrappers = parseModuleWrappers( config.moduleWrapper, Lists.newArrayList( compiler.getDegenerateModuleGraph().getAllModules()))\nCALL parseModuleWrappers( config.moduleWrapper, Lists.newArrayList( compiler.getDegenerateModuleGraph().getAllModules()))\nCALL Lists.newArrayList( compiler.getDegenerateModuleGraph().getAllModules())\nCALL compiler.getDegenerateModuleGraph().getAllModules()\nCALL compiler.getDegenerateModuleGraph()\nString fileName = getModuleOutputFileName(m);\nCALL getModuleOutputFileName(m)\nString baseName = new File(fileName).getName();\nCALL new File(fileName).getName()\nCALL writeOutput(out, compiler, compiler.toSource(m), parsedModuleWrappers.get(m.getName()).replace(\"%basename%\", baseName), \"%s\", null)\nCALL compiler.toSource(m)\nCALL parsedModuleWrappers.get(m.getName()).replace(\"%basename%\", baseName)\nCALL parsedModuleWrappers.get(m.getName())\nCALL m.getName()",
+        "@VisibleForTesting\n  void writeModuleOutput(Appendable out, JSModule m)\n      throws FlagUsageException, IOException {\n    if (parsedModuleWrappers == null) {\n      parsedModuleWrappers = parseModuleWrappers(\n          config.moduleWrapper,\n          Lists.newArrayList(\n              compiler.getDegenerateModuleGraph().getAllModules()));\n    }\n\n    String fileName = getModuleOutputFileName(m);\n    String baseName = new File(fileName).getName();\n    writeOutput(out, compiler, compiler.toSource(m),\n        parsedModuleWrappers.get(m.getName()).replace(\"%basename%\", baseName),\n        \"%s\", null);\n  }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3541666666666667,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 11.0,
+        "literal_count": 4.0,
+        "source_tokens": 152.0,
+        "l0_tokens": 68.0,
+        "l1_tokens": 306.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 11,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/JSModule.java::JSModule.sortJsModules(Collection<JSModule> modules)",
+      "source": "public static JSModule[] sortJsModules(Collection<JSModule> modules)\n      throws CircularDependencyException {\n    // Sort the JSModule in this order.\n    List<JSModule> sortedList = (new SortedDependencies<JSModule>(\n            Lists.newArrayList(modules))).getSortedList();\n    return sortedList.toArray(new JSModule[sortedList.size()]);\n  }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/JSModule.java::JSModule.sortJsModules(Collection<JSModule> modules)\nSIGNATURE: public static JSModule[] sortJsModules(Collection<JSModule> modules)\n      throws CircularDependencyException",
+        "METHOD: src/com/google/javascript/jscomp/JSModule.java::JSModule.sortJsModules(Collection<JSModule> modules)\nSIGNATURE: public static JSModule[] sortJsModules(Collection<JSModule> modules)\n      throws CircularDependencyException\nSTRUCTURE (lossy):\nList<JSModule> sortedList = (new SortedDependencies<JSModule>( Lists.newArrayList(modules))).getSortedList();\nCALL (new SortedDependencies<JSModule>( Lists.newArrayList(modules))).getSortedList()\nCALL Lists.newArrayList(modules)\nreturn sortedList.toArray(new JSModule[sortedList.size()]);\nCALL sortedList.toArray(new JSModule[sortedList.size()])\nCALL sortedList.size()",
+        "public static JSModule[] sortJsModules(Collection<JSModule> modules)\n      throws CircularDependencyException {\n    // Sort the JSModule in this order.\n    List<JSModule> sortedList = (new SortedDependencies<JSModule>(\n            Lists.newArrayList(modules))).getSortedList();\n    return sortedList.toArray(new JSModule[sortedList.size()]);\n  }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4642857142857143,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 4.0,
+        "literal_count": 0.0,
+        "source_tokens": 87.0,
+        "l0_tokens": 58.0,
+        "l1_tokens": 155.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 4,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/CallGraph.java::CallGraph.lookupDefinitionsForTargetsOfCall(\n      Node callsite, DefinitionProvider definitionProvider)",
+      "source": "private Collection<Definition> lookupDefinitionsForTargetsOfCall(\n      Node callsite, DefinitionProvider definitionProvider) {\n    Preconditions.checkArgument(callsite.isCall()\n        || callsite.isNew());\n\n    Node targetExpression = callsite.getFirstChild();\n\n    // NameReferenceGraph throws an exception unless the node is\n    // a GETPROP or a NAME\n    if (!useNameReferenceGraph\n        || (targetExpression.isGetProp()\n        ||  targetExpression.isName())) {\n\n      Collection<Definition> definitions =\n        definitionProvider.getDefinitionsReferencedAt(targetExpression);\n\n      if (definitions != null && !definitions.isEmpty()) {\n        return definitions;\n      }\n    }\n\n    return null;\n  }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/CallGraph.java::CallGraph.lookupDefinitionsForTargetsOfCall(\n      Node callsite, DefinitionProvider definitionProvider)\nSIGNATURE: private Collection<Definition> lookupDefinitionsForTargetsOfCall(\n      Node callsite, DefinitionProvider definitionProvider)",
+        "METHOD: src/com/google/javascript/jscomp/CallGraph.java::CallGraph.lookupDefinitionsForTargetsOfCall(\n      Node callsite, DefinitionProvider definitionProvider)\nSIGNATURE: private Collection<Definition> lookupDefinitionsForTargetsOfCall(\n      Node callsite, DefinitionProvider definitionProvider)\nSTRUCTURE (lossy):\nCALL Preconditions.checkArgument(callsite.isCall() || callsite.isNew())\nCALL callsite.isCall()\nCALL callsite.isNew()\nNode targetExpression = callsite.getFirstChild();\nCALL callsite.getFirstChild()\nif (!useNameReferenceGraph || (targetExpression.isGetProp() || targetExpression.isName()))\nCALL targetExpression.isGetProp()\nCALL targetExpression.isName()\nCollection<Definition> definitions = definitionProvider.getDefinitionsReferencedAt(targetExpression);\nCALL definitionProvider.getDefinitionsReferencedAt(targetExpression)\nif (definitions != null && !definitions.isEmpty())\nCALL definitions.isEmpty()\nreturn definitions;\nreturn null;",
+        "private Collection<Definition> lookupDefinitionsForTargetsOfCall(\n      Node callsite, DefinitionProvider definitionProvider) {\n    Preconditions.checkArgument(callsite.isCall()\n        || callsite.isNew());\n\n    Node targetExpression = callsite.getFirstChild();\n\n    // NameReferenceGraph throws an exception unless the node is\n    // a GETPROP or a NAME\n    if (!useNameReferenceGraph\n        || (targetExpression.isGetProp()\n        ||  targetExpression.isName())) {\n\n      Collection<Definition> definitions =\n        definitionProvider.getDefinitionsReferencedAt(targetExpression);\n\n      if (definitions != null && !definitions.isEmpty()) {\n        return definitions;\n      }\n    }\n\n    return null;\n  }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 8.0,
+        "literal_count": 2.0,
+        "source_tokens": 178.0,
+        "l0_tokens": 75.0,
+        "l1_tokens": 238.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 8,
+        "literal_count": 2
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/TightenTypes.java::TightenTypes.CreateScope.createAssignmentActions(\n        Node lhs, Node rhs, Node parent)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/jsonml/SecureCompiler.java::SecureCompiler.generateReport(Result result)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/deps/SortedDependencies.java::SortedDependencies.topologicalStableSort(\n      List<T> items, Multimap<T, T> deps)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.findJavaScriptFiles(FileList fileList)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ParallelCompilerPass.java::ParallelCompilerPass.execute()": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.outputNameMaps(B options)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/deps/PathUtil.java::PathUtil.makeRelative(String basePath, String targetPath)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/AstValidator.java::AstValidator.validateAssignmentTarget(Node n)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/rhino/jstype/JSType.java::JSType.checkEquivalenceHelper(JSType that, EquivalenceMethod eqMethod)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.createInputs(List<String> files,\n      boolean allowStdIn)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/RenameVars.java::RenameVars.assignNames(Set<Assignment> varsToRename)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.CompileTask()": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.writeModuleOutput(Appendable out, JSModule m)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/JSModule.java::JSModule.sortJsModules(Collection<JSModule> modules)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/CallGraph.java::CallGraph.lookupDefinitionsForTargetsOfCall(\n      Node callsite, DefinitionProvider definitionProvider)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 8132,
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "c7229f63c743b145cac5daf82703cf077b4df69e0837f320454fc7e0aabd6fb6",
+  "evidence_sha256": "1fb299cef9065eaffcd3dcf5c7cfe389e58be90c52c94c49b3f4591be1fbc5ef"
+}
