@@ -1,0 +1,4443 @@
+{
+  "nodes": [
+    {
+      "id": "failure_67b454ff12aff7b2caec",
+      "kind": "failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Math-75\nEXECUTED BUGGY TEST: org.apache.commons.math.stat.FrequencyTest::testPcts\nTEST SOURCE: src/test/java/org/apache/commons/math/stat/FrequencyTest.java\nTEST SOURCE SHA256: 3d8865aa824cc46ac2e5c690ece8a1a8ab2043d407dffd1c9ad352f8c66ae2d6\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testPcts() {\n        f.addValue(oneL);\n        f.addValue(twoL);\n        f.addValue(oneI);\n        f.addValue(twoI);\n        f.addValue(threeL);\n        f.addValue(threeL);\n        f.addValue(3);\n        f.addValue(threeI);\n        assertEquals(\"one pct\",0.25,f.getPct(1),tolerance);\n        assertEquals(\"two pct\",0.25,f.getPct(Long.valueOf(2)),tolerance);\n        assertEquals(\"three pct\",0.5,f.getPct(threeL),tolerance);\n        // MATH-329\n        assertEquals(\"three (Object) pct\",0.5,f.getPct((Object) (Integer.valueOf(3))),tolerance);\n        assertEquals(\"five pct\",0,f.getPct(5),tolerance);\n        assertEquals(\"foo pct\",0,f.getPct(\"foo\"),tolerance);\n        assertEquals(\"one cum pct\",0.25,f.getCumPct(1),tolerance);\n        assertEquals(\"two cum pct\",0.50,f.getCumPct(Long.valueOf(2)),tolerance);\n        assertEquals(\"Integer argument\",0.50,f.getCumPct(Integer.valueOf(2)),tolerance);\n        assertEquals(\"three cum pct\",1.0,f.getCumPct(threeL),tolerance);\n        assertEquals(\"five cum pct\",1.0,f.getCumPct(5),tolerance);\n        assertEquals(\"zero cum pct\",0.0,f.getCumPct(0),tolerance);\n        assertEquals(\"foo cum pct\",0,f.getCumPct(\"foo\"),tolerance);\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.apache.commons.math.stat.FrequencyTest::testPcts\njunit.framework.AssertionFailedError: three (Object) pct expected:<0.5> but was:<1.0>\n\tat junit.framework.Assert.fail(Assert.java:57)\n\tat junit.framework.Assert.failNotEquals(Assert.java:329)\n\tat junit.framework.Assert.assertEquals(Assert.java:120)\n\tat junit.framework.TestCase.assertEquals(TestCase.java:279)\n\tat org.apache.commons.math.stat.FrequencyTest.testPcts(FrequencyTest.java:148)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 1,
+        "end_line": 69,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "supplied_text:observed_failure"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "method_f4e09d4a0f96156a9067",
+      "kind": "method",
+      "text": "public double getCumPct(long v)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 520,
+        "end_line": 522,
+        "source_hash": "909a90d1417d1683718d118b5eef32ffdadd50c52977d60d38179ac56050174a",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(long v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "v"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_af88acacc0362a28675b",
+      "kind": "code",
+      "text": "return getCumPct(Long.valueOf(v));",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 521,
+        "end_line": 521,
+        "source_hash": "909a90d1417d1683718d118b5eef32ffdadd50c52977d60d38179ac56050174a",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(long v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "Long",
+        "v"
+      ]
+    },
+    {
+      "id": "method_ac723913cccdbfa73880",
+      "kind": "method",
+      "text": "public double getCumPct(int v)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 507,
+        "end_line": 509,
+        "source_hash": "fc1e614fc288dc159916e85f3a3e41675ba356b355f97aab194e7a7bb32f373e",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(int v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "v"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_60cfcc257bb219053a0c",
+      "kind": "code",
+      "text": "return getCumPct(Long.valueOf(v));",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 508,
+        "end_line": 508,
+        "source_hash": "fc1e614fc288dc159916e85f3a3e41675ba356b355f97aab194e7a7bb32f373e",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(int v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "Long",
+        "v"
+      ]
+    },
+    {
+      "id": "method_ef6bffaed9ac16814a8d",
+      "kind": "method",
+      "text": "@Deprecated\n    public double getCumPct(Object v)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 473,
+        "end_line": 477,
+        "source_hash": "7bee8e192bbbbac8dfae3ceccddb3b8d3ba239bbd3254efb1a4dd625d45dd2a1",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(Object v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "v"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_1630b627808c96ca5331",
+      "kind": "code",
+      "text": "return getCumPct((Comparable<?>) v);",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 475,
+        "end_line": 475,
+        "source_hash": "7bee8e192bbbbac8dfae3ceccddb3b8d3ba239bbd3254efb1a4dd625d45dd2a1",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(Object v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "v"
+      ]
+    },
+    {
+      "id": "method_fe09f67836049d7c90e6",
+      "kind": "method",
+      "text": "public double getCumPct(char v)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 533,
+        "end_line": 535,
+        "source_hash": "e9d1090baef99488a0a1c4cd3d23ea1466129a805911459606536fc746c6809e",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(char v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "v"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_f3bb331f076df3a890e1",
+      "kind": "code",
+      "text": "return getCumPct(Character.valueOf(v));",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 534,
+        "end_line": 534,
+        "source_hash": "e9d1090baef99488a0a1c4cd3d23ea1466129a805911459606536fc746c6809e",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(char v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "Character",
+        "v"
+      ]
+    },
+    {
+      "id": "method_5c5448e4cca040f9cac1",
+      "kind": "method",
+      "text": "@SuppressWarnings(\"unchecked\")\n        public long getCumFreq(Comparable<?> v)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 380,
+        "end_line": 421,
+        "source_hash": "c92e2b4eda3e0aacd996e37d323dcb3fa8e7982560a1c73e11f50d4b7a6882ee",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(Comparable<?> v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "v"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_1e95e0571f6aa8fa2a13",
+      "kind": "code",
+      "text": "if (getSumFreq() == 0) {\n            return 0;\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 382,
+        "end_line": 384,
+        "source_hash": "c92e2b4eda3e0aacd996e37d323dcb3fa8e7982560a1c73e11f50d4b7a6882ee",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(Comparable<?> v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_96a222de1b1021f8d270",
+      "kind": "code",
+      "text": "if (v instanceof Integer) {\n            return getCumFreq(((Integer) v).longValue());\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 385,
+        "end_line": 387,
+        "source_hash": "c92e2b4eda3e0aacd996e37d323dcb3fa8e7982560a1c73e11f50d4b7a6882ee",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(Comparable<?> v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "v"
+      ]
+    },
+    {
+      "id": "code_ed5cf9d308a3f5304708",
+      "kind": "code",
+      "text": "Comparator<Comparable<?>> c = (Comparator<Comparable<?>>) freqTable.comparator();",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 388,
+        "end_line": 388,
+        "source_hash": "c92e2b4eda3e0aacd996e37d323dcb3fa8e7982560a1c73e11f50d4b7a6882ee",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(Comparable<?> v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "c"
+      ],
+      "uses": [
+        "freqTable"
+      ]
+    },
+    {
+      "id": "code_a6ae12ac39d771a99f97",
+      "kind": "code",
+      "text": "if (c == null) {\n            c = new NaturalComparator();\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 389,
+        "end_line": 391,
+        "source_hash": "c92e2b4eda3e0aacd996e37d323dcb3fa8e7982560a1c73e11f50d4b7a6882ee",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(Comparable<?> v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "c"
+      ]
+    },
+    {
+      "id": "code_7377886e7cb866a89bc6",
+      "kind": "code",
+      "text": "long result = 0;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 392,
+        "end_line": 392,
+        "source_hash": "c92e2b4eda3e0aacd996e37d323dcb3fa8e7982560a1c73e11f50d4b7a6882ee",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(Comparable<?> v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "result"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_2d3d828f08c7521c02eb",
+      "kind": "code",
+      "text": "try {\n            Long value = freqTable.get(v);\n            if (value != null) {\n                result = value.longValue();\n            }\n        } catch (ClassCastException ex) {\n            return result;   // v is not comparable\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 394,
+        "end_line": 401,
+        "source_hash": "c92e2b4eda3e0aacd996e37d323dcb3fa8e7982560a1c73e11f50d4b7a6882ee",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(Comparable<?> v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "value"
+      ],
+      "uses": [
+        "ex",
+        "freqTable",
+        "result",
+        "v"
+      ]
+    },
+    {
+      "id": "code_910f936719fd4f71eaa8",
+      "kind": "code",
+      "text": "if (c.compare(v, freqTable.firstKey()) < 0) {\n            return 0;  // v is comparable, but less than first value\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 403,
+        "end_line": 405,
+        "source_hash": "c92e2b4eda3e0aacd996e37d323dcb3fa8e7982560a1c73e11f50d4b7a6882ee",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(Comparable<?> v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "c",
+        "freqTable",
+        "v"
+      ]
+    },
+    {
+      "id": "code_74557d9ef6c8496b1e6c",
+      "kind": "code",
+      "text": "if (c.compare(v, freqTable.lastKey()) >= 0) {\n            return getSumFreq();    // v is comparable, but greater than the last value\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 407,
+        "end_line": 409,
+        "source_hash": "c92e2b4eda3e0aacd996e37d323dcb3fa8e7982560a1c73e11f50d4b7a6882ee",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(Comparable<?> v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "c",
+        "freqTable",
+        "v"
+      ]
+    },
+    {
+      "id": "code_a4010a3624537577ce3e",
+      "kind": "code",
+      "text": "Iterator<Comparable<?>> values = valuesIterator();",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 411,
+        "end_line": 411,
+        "source_hash": "c92e2b4eda3e0aacd996e37d323dcb3fa8e7982560a1c73e11f50d4b7a6882ee",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(Comparable<?> v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "values"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_ee4a36688e95253a2986",
+      "kind": "code",
+      "text": "while (values.hasNext()) {\n            Comparable<?> nextValue = values.next();\n            if (c.compare(v, nextValue) > 0) {\n                result += getCount(nextValue);\n            } else {\n                return result;\n            }\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 412,
+        "end_line": 419,
+        "source_hash": "c92e2b4eda3e0aacd996e37d323dcb3fa8e7982560a1c73e11f50d4b7a6882ee",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(Comparable<?> v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "nextValue"
+      ],
+      "uses": [
+        "c",
+        "result",
+        "v",
+        "values"
+      ]
+    },
+    {
+      "id": "code_608de7a8384abf5d5aa1",
+      "kind": "code",
+      "text": "return result;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 420,
+        "end_line": 420,
+        "source_hash": "c92e2b4eda3e0aacd996e37d323dcb3fa8e7982560a1c73e11f50d4b7a6882ee",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(Comparable<?> v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "result"
+      ]
+    },
+    {
+      "id": "method_c68e6b865008581a4947",
+      "kind": "method",
+      "text": "@Deprecated\n    public double getPct(Object v)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 301,
+        "end_line": 304,
+        "source_hash": "dabf8e8b18f01f3b93d56b71264ae32023b8f4aab6a6bfbe20512589beef904f",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getPct(Object v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "v"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_63789ad20975ec910539",
+      "kind": "code",
+      "text": "return getCumPct((Comparable<?>) v);",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 303,
+        "end_line": 303,
+        "source_hash": "dabf8e8b18f01f3b93d56b71264ae32023b8f4aab6a6bfbe20512589beef904f",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getPct(Object v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "v"
+      ]
+    },
+    {
+      "id": "method_9b7b1af5cac6f77dfc7e",
+      "kind": "method",
+      "text": "public void addValue(Integer v)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 167,
+        "end_line": 169,
+        "source_hash": "5e4a6193b6154080aaff54ec23e585bcbc374ac034c175e7bfa6b641452781a4",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.addValue(Integer v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "v"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_679813f0b3970ba8856d",
+      "kind": "code",
+      "text": "addValue(Long.valueOf(v.longValue()));",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 168,
+        "end_line": 168,
+        "source_hash": "5e4a6193b6154080aaff54ec23e585bcbc374ac034c175e7bfa6b641452781a4",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.addValue(Integer v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "Long",
+        "v"
+      ]
+    },
+    {
+      "id": "method_98bae635ff4fa606d99a",
+      "kind": "method",
+      "text": "public double getPct(long v)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 341,
+        "end_line": 343,
+        "source_hash": "5b2411a8648366fa61f683d0bfa5b0a2f777bca95c16a53628c860099058946d",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getPct(long v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "v"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_eac2c2fc318bb2053f3c",
+      "kind": "code",
+      "text": "return getPct(Long.valueOf(v));",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 342,
+        "end_line": 342,
+        "source_hash": "5b2411a8648366fa61f683d0bfa5b0a2f777bca95c16a53628c860099058946d",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getPct(long v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "Long",
+        "v"
+      ]
+    },
+    {
+      "id": "method_e864b09ebcbae70b5468",
+      "kind": "method",
+      "text": "public void addValue(Comparable<?> v)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 132,
+        "end_line": 150,
+        "source_hash": "584f12c2e33891306a083fa3048ba86479f0e0c9bd688edb102b4e1120182106",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.addValue(Comparable<?> v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "v"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_57f1a3aeb63efeba8994",
+      "kind": "code",
+      "text": "Comparable<?> obj = v;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 133,
+        "end_line": 133,
+        "source_hash": "584f12c2e33891306a083fa3048ba86479f0e0c9bd688edb102b4e1120182106",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.addValue(Comparable<?> v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "obj"
+      ],
+      "uses": [
+        "v"
+      ]
+    },
+    {
+      "id": "code_6fbd9d1c4a6686e2996b",
+      "kind": "code",
+      "text": "if (v instanceof Integer) {\n           obj = Long.valueOf(((Integer) v).longValue());\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 134,
+        "end_line": 136,
+        "source_hash": "584f12c2e33891306a083fa3048ba86479f0e0c9bd688edb102b4e1120182106",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.addValue(Comparable<?> v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "Long",
+        "obj",
+        "v"
+      ]
+    },
+    {
+      "id": "code_bfe64e4007e10da7af68",
+      "kind": "code",
+      "text": "try {\n            Long count = freqTable.get(obj);\n            if (count == null) {\n                freqTable.put(obj, Long.valueOf(1));\n            } else {\n                freqTable.put(obj, Long.valueOf(count.longValue() + 1));\n            }\n        } catch (ClassCastException ex) {\n            //TreeMap will throw ClassCastException if v is not comparable\n            throw MathRuntimeException.createIllegalArgumentException(\n                  \"instance of class {0} not comparable to existing values\",\n                  v.getClass().getName());\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 137,
+        "end_line": 149,
+        "source_hash": "584f12c2e33891306a083fa3048ba86479f0e0c9bd688edb102b4e1120182106",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.addValue(Comparable<?> v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "count"
+      ],
+      "uses": [
+        "Long",
+        "MathRuntimeException",
+        "ex",
+        "freqTable",
+        "obj",
+        "v"
+      ]
+    },
+    {
+      "id": "method_e472c2fbd59f92cd8865",
+      "kind": "method",
+      "text": "public long getCumFreq(long v)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 443,
+        "end_line": 445,
+        "source_hash": "96c555db627cec3abb18b830c38ed5325d85ceeaa831c471af0d2e74f1b734a4",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(long v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "v"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_bdf7016c1ed6555dbdff",
+      "kind": "code",
+      "text": "return getCumFreq(Long.valueOf(v));",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 444,
+        "end_line": 444,
+        "source_hash": "96c555db627cec3abb18b830c38ed5325d85ceeaa831c471af0d2e74f1b734a4",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(long v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "Long",
+        "v"
+      ]
+    },
+    {
+      "id": "method_ca490241eb354048a3f8",
+      "kind": "method",
+      "text": "public static RuntimeException createInternalError(final Throwable cause)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/MathRuntimeException.java",
+        "start_line": 490,
+        "end_line": 514,
+        "source_hash": "416fa672347c8347deee3d21493b78fe093d269281746f461e7383b91a10ec14",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/MathRuntimeException.java::MathRuntimeException.createInternalError(final Throwable cause)",
+      "document": "src/main/java/org/apache/commons/math/MathRuntimeException.java",
+      "defines": [
+        "cause"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_0335ec3186159c62c328",
+      "kind": "code",
+      "text": "final String pattern  = \"internal error, please fill a bug report at {0}\";",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/MathRuntimeException.java",
+        "start_line": 492,
+        "end_line": 492,
+        "source_hash": "416fa672347c8347deee3d21493b78fe093d269281746f461e7383b91a10ec14",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/MathRuntimeException.java::MathRuntimeException.createInternalError(final Throwable cause)",
+      "document": "src/main/java/org/apache/commons/math/MathRuntimeException.java",
+      "defines": [
+        "pattern"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_a3bd2a995abb89bfdce7",
+      "kind": "code",
+      "text": "final String argument = \"https://issues.apache.org/jira/browse/MATH\";",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/MathRuntimeException.java",
+        "start_line": 493,
+        "end_line": 493,
+        "source_hash": "416fa672347c8347deee3d21493b78fe093d269281746f461e7383b91a10ec14",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/MathRuntimeException.java::MathRuntimeException.createInternalError(final Throwable cause)",
+      "document": "src/main/java/org/apache/commons/math/MathRuntimeException.java",
+      "defines": [
+        "argument"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_78e10e361a7a1b897c5c",
+      "kind": "code",
+      "text": "return new RuntimeException() {\n\n            /** Serializable version identifier. */\n            private static final long serialVersionUID = -201865440834027016L;\n\n            /** {@inheritDoc} */\n            @Override\n            public String getMessage() {\n                return buildMessage(Locale.US, pattern, argument);\n            }\n\n            /** {@inheritDoc} */\n            @Override\n            public String getLocalizedMessage() {\n                return buildMessage(Locale.getDefault(), pattern, argument);\n            }\n\n        };",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/MathRuntimeException.java",
+        "start_line": 495,
+        "end_line": 512,
+        "source_hash": "416fa672347c8347deee3d21493b78fe093d269281746f461e7383b91a10ec14",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/MathRuntimeException.java::MathRuntimeException.createInternalError(final Throwable cause)",
+      "document": "src/main/java/org/apache/commons/math/MathRuntimeException.java",
+      "defines": [
+        "serialVersionUID"
+      ],
+      "uses": [
+        "Locale",
+        "Override",
+        "US",
+        "argument",
+        "getLocalizedMessage",
+        "getMessage",
+        "pattern"
+      ]
+    },
+    {
+      "id": "method_df5780f65fa5bb8c1e95",
+      "kind": "method",
+      "text": "public static double chiSquareTest(double[] expected, long[] observed)\n        throws IllegalArgumentException, MathException",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java",
+        "start_line": 330,
+        "end_line": 333,
+        "source_hash": "1fd3aefc614e389005b968f526c340f8a2883c3e2a592bf6429bde860d29d05c",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java::TestUtils.chiSquareTest(double[] expected, long[] observed)",
+      "document": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java",
+      "defines": [
+        "expected",
+        "observed"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_aea8489779132d315484",
+      "kind": "code",
+      "text": "return chiSquareTest.chiSquareTest(expected, observed);",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java",
+        "start_line": 332,
+        "end_line": 332,
+        "source_hash": "1fd3aefc614e389005b968f526c340f8a2883c3e2a592bf6429bde860d29d05c",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java::TestUtils.chiSquareTest(double[] expected, long[] observed)",
+      "document": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java",
+      "defines": [],
+      "uses": [
+        "chiSquareTest",
+        "expected",
+        "observed"
+      ]
+    },
+    {
+      "id": "method_ff52caf2f17b08edc3c8",
+      "kind": "method",
+      "text": "public double chiSquareTest(double[] expected, long[] observed)\n        throws IllegalArgumentException, MathException",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+        "start_line": 114,
+        "end_line": 119,
+        "source_hash": "a177f92190264ae3ab34a560379d2e26563d905627725e20df5254219f156d3a",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquareTest(double[] expected, long[] observed)",
+      "document": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "defines": [
+        "expected",
+        "observed"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_1381af5b4286b6399ee2",
+      "kind": "code",
+      "text": "distribution.setDegreesOfFreedom(expected.length - 1.0);",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+        "start_line": 116,
+        "end_line": 116,
+        "source_hash": "a177f92190264ae3ab34a560379d2e26563d905627725e20df5254219f156d3a",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquareTest(double[] expected, long[] observed)",
+      "document": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "defines": [],
+      "uses": [
+        "distribution",
+        "expected",
+        "length"
+      ]
+    },
+    {
+      "id": "code_73c6ac549c9bd43b7c81",
+      "kind": "code",
+      "text": "return 1.0 - distribution.cumulativeProbability(\n            chiSquare(expected, observed));",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+        "start_line": 117,
+        "end_line": 118,
+        "source_hash": "a177f92190264ae3ab34a560379d2e26563d905627725e20df5254219f156d3a",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquareTest(double[] expected, long[] observed)",
+      "document": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "defines": [],
+      "uses": [
+        "distribution",
+        "expected",
+        "observed"
+      ]
+    },
+    {
+      "id": "method_efdd4cb9e2299486fe60",
+      "kind": "method",
+      "text": "public static double chiSquare(double[] expected, long[] observed)\n        throws IllegalArgumentException",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java",
+        "start_line": 305,
+        "end_line": 308,
+        "source_hash": "9bbdd7ab390ad794a8876f48f95f2ec2d7f49f3694a171ddc3294f2e85e78ec5",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java::TestUtils.chiSquare(double[] expected, long[] observed)",
+      "document": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java",
+      "defines": [
+        "expected",
+        "observed"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_2b5cf651d3c892932cd9",
+      "kind": "code",
+      "text": "return chiSquareTest.chiSquare(expected, observed);",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java",
+        "start_line": 307,
+        "end_line": 307,
+        "source_hash": "9bbdd7ab390ad794a8876f48f95f2ec2d7f49f3694a171ddc3294f2e85e78ec5",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java::TestUtils.chiSquare(double[] expected, long[] observed)",
+      "document": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java",
+      "defines": [],
+      "uses": [
+        "chiSquareTest",
+        "expected",
+        "observed"
+      ]
+    },
+    {
+      "id": "method_a6a4667ce3dd5c63d062",
+      "kind": "method",
+      "text": "public long getCumFreq(int v)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 431,
+        "end_line": 433,
+        "source_hash": "b38337d7e6f0100a08ba0d9c7632e5d5dc93b0f75b5e928bef9214302820bb1a",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(int v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "v"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_3ec025278264ac0c1d29",
+      "kind": "code",
+      "text": "return getCumFreq(Long.valueOf(v));",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 432,
+        "end_line": 432,
+        "source_hash": "b38337d7e6f0100a08ba0d9c7632e5d5dc93b0f75b5e928bef9214302820bb1a",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(int v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "Long",
+        "v"
+      ]
+    },
+    {
+      "id": "method_40a77416db9d9c3a6309",
+      "kind": "method",
+      "text": "public double getCumPct(Comparable<?> v)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 490,
+        "end_line": 496,
+        "source_hash": "8b08ad9faf630c520aaaf96d914a994dc1dec5caf86e6640b032aebcfb9bc028",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(Comparable<?> v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "v"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_05a62e84a01f4ad0903d",
+      "kind": "code",
+      "text": "final long sumFreq = getSumFreq();",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 491,
+        "end_line": 491,
+        "source_hash": "8b08ad9faf630c520aaaf96d914a994dc1dec5caf86e6640b032aebcfb9bc028",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(Comparable<?> v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "sumFreq"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_12f4d59bd88c6d05c6a3",
+      "kind": "code",
+      "text": "if (sumFreq == 0) {\n            return Double.NaN;\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 492,
+        "end_line": 494,
+        "source_hash": "8b08ad9faf630c520aaaf96d914a994dc1dec5caf86e6640b032aebcfb9bc028",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(Comparable<?> v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "Double",
+        "NaN",
+        "sumFreq"
+      ]
+    },
+    {
+      "id": "code_ca2b3a6fcdc1c01c0aa2",
+      "kind": "code",
+      "text": "return (double) getCumFreq(v) / (double) sumFreq;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 495,
+        "end_line": 495,
+        "source_hash": "8b08ad9faf630c520aaaf96d914a994dc1dec5caf86e6640b032aebcfb9bc028",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(Comparable<?> v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "sumFreq",
+        "v"
+      ]
+    },
+    {
+      "id": "method_3646b5f76530490d19a2",
+      "kind": "method",
+      "text": "public double getPct(int v)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 330,
+        "end_line": 332,
+        "source_hash": "ff5dce35ba5e80a856233ce9432ecd172b5d4a1c99f4d46b8eeae2794e22ba52",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getPct(int v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "v"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_cf65a75bc711102a5d73",
+      "kind": "code",
+      "text": "return getPct(Long.valueOf(v));",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 331,
+        "end_line": 331,
+        "source_hash": "ff5dce35ba5e80a856233ce9432ecd172b5d4a1c99f4d46b8eeae2794e22ba52",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getPct(int v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "Long",
+        "v"
+      ]
+    },
+    {
+      "id": "method_429e0e3a23f37dcbe029",
+      "kind": "method",
+      "text": "public static boolean chiSquareTest(double[] expected, long[] observed,\n        double alpha)\n        throws IllegalArgumentException, MathException",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java",
+        "start_line": 321,
+        "end_line": 325,
+        "source_hash": "718b3a897563a7e27a1896f8554b7dd584103801c9099c051a498273ec1f95b1",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java::TestUtils.chiSquareTest(double[] expected, long[] observed,\n        double alpha)",
+      "document": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java",
+      "defines": [
+        "expected",
+        "observed",
+        "alpha"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_062cc2eefd24d644706f",
+      "kind": "code",
+      "text": "return chiSquareTest.chiSquareTest(expected, observed, alpha);",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java",
+        "start_line": 324,
+        "end_line": 324,
+        "source_hash": "718b3a897563a7e27a1896f8554b7dd584103801c9099c051a498273ec1f95b1",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java::TestUtils.chiSquareTest(double[] expected, long[] observed,\n        double alpha)",
+      "document": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java",
+      "defines": [],
+      "uses": [
+        "alpha",
+        "chiSquareTest",
+        "expected",
+        "observed"
+      ]
+    },
+    {
+      "id": "method_f138d64a0062ca52ff06",
+      "kind": "method",
+      "text": "@Deprecated\n    public long getCumFreq(Object v)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 367,
+        "end_line": 370,
+        "source_hash": "4c9eb675de11557bffab3560b8ee6cc8cc55c40b19bfb731d62266f1df2fd34e",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(Object v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "v"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_c0b4fa9d981647b11671",
+      "kind": "code",
+      "text": "return getCumFreq((Comparable<?>) v);",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 369,
+        "end_line": 369,
+        "source_hash": "4c9eb675de11557bffab3560b8ee6cc8cc55c40b19bfb731d62266f1df2fd34e",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(Object v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "v"
+      ]
+    },
+    {
+      "id": "method_e9e03a75abd7b810fcc3",
+      "kind": "method",
+      "text": "public long getCumFreq(char v)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 455,
+        "end_line": 457,
+        "source_hash": "e0e9f11e1b026ebe5c5d3742d563e55ec98a83c8fa2d9d00783db1e9e608c08a",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(char v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "v"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_0751587e7212df88fb17",
+      "kind": "code",
+      "text": "return getCumFreq(Character.valueOf(v));",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 456,
+        "end_line": 456,
+        "source_hash": "e0e9f11e1b026ebe5c5d3742d563e55ec98a83c8fa2d9d00783db1e9e608c08a",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(char v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "Character",
+        "v"
+      ]
+    },
+    {
+      "id": "method_fad92b9296bf6c007d91",
+      "kind": "method",
+      "text": "public double[] rank(double[] data)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 189,
+        "end_line": 248,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [
+        "data"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_e6e4fd5e679e33b22f0e",
+      "kind": "code",
+      "text": "// Array recording initial positions of data to be ranked",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 191,
+        "end_line": 191,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_dfde36480b2b328acb30",
+      "kind": "code",
+      "text": "IntDoublePair[] ranks = new IntDoublePair[data.length];",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 192,
+        "end_line": 192,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [
+        "ranks"
+      ],
+      "uses": [
+        "data",
+        "length"
+      ]
+    },
+    {
+      "id": "code_ab5be8d89c8f62c5399b",
+      "kind": "code",
+      "text": "for (int i = 0; i < data.length; i++) {\n            ranks[i] = new IntDoublePair(data[i], i);\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 193,
+        "end_line": 195,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [
+        "i"
+      ],
+      "uses": [
+        "data",
+        "length",
+        "ranks"
+      ]
+    },
+    {
+      "id": "code_3a80f3709e73a539f4df",
+      "kind": "code",
+      "text": "// Recode, remove or record positions of NaNs",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 197,
+        "end_line": 197,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_f18f82d4052e44154ab3",
+      "kind": "code",
+      "text": "List<Integer> nanPositions = null;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 198,
+        "end_line": 198,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [
+        "nanPositions"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_455b3917e606cf38ac67",
+      "kind": "code",
+      "text": "switch (nanStrategy) {\n            case MAXIMAL: // Replace NaNs with +INFs\n                recodeNaNs(ranks, Double.POSITIVE_INFINITY);\n                break;\n            case MINIMAL: // Replace NaNs with -INFs\n                recodeNaNs(ranks, Double.NEGATIVE_INFINITY);\n                break;\n            case REMOVED: // Drop NaNs from data\n                ranks = removeNaNs(ranks);\n                break;\n            case FIXED:   // Record positions of NaNs\n                nanPositions = getNanPositions(ranks);\n                break;\n            default: // this should not happen unless NaNStrategy enum is changed\n                throw MathRuntimeException.createInternalError(null);\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 199,
+        "end_line": 214,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [],
+      "uses": [
+        "Double",
+        "FIXED",
+        "MAXIMAL",
+        "MINIMAL",
+        "MathRuntimeException",
+        "NEGATIVE_INFINITY",
+        "POSITIVE_INFINITY",
+        "REMOVED",
+        "nanPositions",
+        "nanStrategy",
+        "ranks"
+      ]
+    },
+    {
+      "id": "code_5ced5265f69e7a55b0bf",
+      "kind": "code",
+      "text": "// Sort the IntDoublePairs",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 216,
+        "end_line": 216,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_5b34982ac6bf8a0808be",
+      "kind": "code",
+      "text": "Arrays.sort(ranks);",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 217,
+        "end_line": 217,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [],
+      "uses": [
+        "Arrays",
+        "ranks"
+      ]
+    },
+    {
+      "id": "code_a4f91bf5a8f96e6d9c3c",
+      "kind": "code",
+      "text": "// Walk the sorted array, filling output array using sorted positions,",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 219,
+        "end_line": 219,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_c7f295176512dda3efbe",
+      "kind": "code",
+      "text": "// resolving ties as we go",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 220,
+        "end_line": 220,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_cccb9d63e38f6cd77b43",
+      "kind": "code",
+      "text": "double[] out = new double[ranks.length];",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 221,
+        "end_line": 221,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [
+        "out"
+      ],
+      "uses": [
+        "length",
+        "ranks"
+      ]
+    },
+    {
+      "id": "code_12565e9139aab4316905",
+      "kind": "code",
+      "text": "int pos = 1;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 222,
+        "end_line": 222,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [
+        "pos"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_cd00fb2e41e277a9289d",
+      "kind": "code",
+      "text": "// position in sorted array",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 222,
+        "end_line": 222,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_28dd82248ffc3648e242",
+      "kind": "code",
+      "text": "out[ranks[0].getPosition()] = pos;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 223,
+        "end_line": 223,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [],
+      "uses": [
+        "out",
+        "pos",
+        "ranks"
+      ]
+    },
+    {
+      "id": "code_951c9b0932f2a4667a4a",
+      "kind": "code",
+      "text": "List<Integer> tiesTrace = new ArrayList<Integer>();",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 224,
+        "end_line": 224,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [
+        "tiesTrace"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_d2a8aa2932661d5c4d58",
+      "kind": "code",
+      "text": "tiesTrace.add(ranks[0].getPosition());",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 225,
+        "end_line": 225,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [],
+      "uses": [
+        "ranks",
+        "tiesTrace"
+      ]
+    },
+    {
+      "id": "code_6bf052f49444ca9bb89d",
+      "kind": "code",
+      "text": "for (int i = 1; i < ranks.length; i++) {\n            if (Double.compare(ranks[i].getValue(), ranks[i - 1].getValue()) > 0) {\n                // tie sequence has ended (or had length 1)\n                pos = i + 1;\n                if (tiesTrace.size() > 1) {  // if seq is nontrivial, resolve\n                    resolveTie(out, tiesTrace);\n                }\n                tiesTrace = new ArrayList<Integer>();\n                tiesTrace.add(ranks[i].getPosition());\n            } else {\n                // tie sequence continues\n                tiesTrace.add(ranks[i].getPosition());\n            }\n            out[ranks[i].getPosition()] = pos;\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 226,
+        "end_line": 240,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [
+        "i"
+      ],
+      "uses": [
+        "Double",
+        "length",
+        "out",
+        "pos",
+        "ranks",
+        "tiesTrace"
+      ]
+    },
+    {
+      "id": "code_23eeefa58d9851612e25",
+      "kind": "code",
+      "text": "if (tiesTrace.size() > 1) {  // handle tie sequence at end\n            resolveTie(out, tiesTrace);\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 241,
+        "end_line": 243,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [],
+      "uses": [
+        "out",
+        "tiesTrace"
+      ]
+    },
+    {
+      "id": "code_95c77097249a00a63e41",
+      "kind": "code",
+      "text": "if (nanStrategy == NaNStrategy.FIXED) {\n            restoreNaNs(out, nanPositions);\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 244,
+        "end_line": 246,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [],
+      "uses": [
+        "FIXED",
+        "NaNStrategy",
+        "nanPositions",
+        "nanStrategy",
+        "out"
+      ]
+    },
+    {
+      "id": "code_3b3636a5a59236eb75e0",
+      "kind": "code",
+      "text": "return out;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+        "start_line": 247,
+        "end_line": 247,
+        "source_hash": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)",
+      "document": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "defines": [],
+      "uses": [
+        "out"
+      ]
+    },
+    {
+      "id": "method_de7b76581393b530647b",
+      "kind": "method",
+      "text": "public static BigInteger pow(final BigInteger k, BigInteger e)\n        throws IllegalArgumentException",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/util/MathUtils.java",
+        "start_line": 1672,
+        "end_line": 1693,
+        "source_hash": "6d555a8a7ea7d3f2518f9d249c0ab46f7e0f6453b4e3accdc77cf77badafe8e9",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/util/MathUtils.java::MathUtils.pow(final BigInteger k, BigInteger e)",
+      "document": "src/main/java/org/apache/commons/math/util/MathUtils.java",
+      "defines": [
+        "k",
+        "e"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_21848aeb2f347c0f66bd",
+      "kind": "code",
+      "text": "if (e.compareTo(BigInteger.ZERO) < 0) {\n            throw MathRuntimeException.createIllegalArgumentException(\n                \"cannot raise an integral value to a negative power ({0}^{1})\",\n                k, e);\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/util/MathUtils.java",
+        "start_line": 1675,
+        "end_line": 1679,
+        "source_hash": "6d555a8a7ea7d3f2518f9d249c0ab46f7e0f6453b4e3accdc77cf77badafe8e9",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/util/MathUtils.java::MathUtils.pow(final BigInteger k, BigInteger e)",
+      "document": "src/main/java/org/apache/commons/math/util/MathUtils.java",
+      "defines": [],
+      "uses": [
+        "BigInteger",
+        "MathRuntimeException",
+        "ZERO",
+        "e",
+        "k"
+      ]
+    },
+    {
+      "id": "code_0b0edeb77babbdc8d0b0",
+      "kind": "code",
+      "text": "BigInteger result = BigInteger.ONE;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/util/MathUtils.java",
+        "start_line": 1681,
+        "end_line": 1681,
+        "source_hash": "6d555a8a7ea7d3f2518f9d249c0ab46f7e0f6453b4e3accdc77cf77badafe8e9",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/util/MathUtils.java::MathUtils.pow(final BigInteger k, BigInteger e)",
+      "document": "src/main/java/org/apache/commons/math/util/MathUtils.java",
+      "defines": [
+        "result"
+      ],
+      "uses": [
+        "BigInteger",
+        "ONE"
+      ]
+    },
+    {
+      "id": "code_f41041d7a64e35f37b9a",
+      "kind": "code",
+      "text": "BigInteger k2p    = k;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/util/MathUtils.java",
+        "start_line": 1682,
+        "end_line": 1682,
+        "source_hash": "6d555a8a7ea7d3f2518f9d249c0ab46f7e0f6453b4e3accdc77cf77badafe8e9",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/util/MathUtils.java::MathUtils.pow(final BigInteger k, BigInteger e)",
+      "document": "src/main/java/org/apache/commons/math/util/MathUtils.java",
+      "defines": [
+        "k2p"
+      ],
+      "uses": [
+        "k"
+      ]
+    },
+    {
+      "id": "code_f92885e9e97b2810bd4c",
+      "kind": "code",
+      "text": "while (!BigInteger.ZERO.equals(e)) {\n            if (e.testBit(0)) {\n                result = result.multiply(k2p);\n            }\n            k2p = k2p.multiply(k2p);\n            e = e.shiftRight(1);\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/util/MathUtils.java",
+        "start_line": 1683,
+        "end_line": 1689,
+        "source_hash": "6d555a8a7ea7d3f2518f9d249c0ab46f7e0f6453b4e3accdc77cf77badafe8e9",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/util/MathUtils.java::MathUtils.pow(final BigInteger k, BigInteger e)",
+      "document": "src/main/java/org/apache/commons/math/util/MathUtils.java",
+      "defines": [],
+      "uses": [
+        "BigInteger",
+        "ZERO",
+        "e",
+        "k2p",
+        "result"
+      ]
+    },
+    {
+      "id": "code_67c8e69a34363780a02d",
+      "kind": "code",
+      "text": "return result;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/util/MathUtils.java",
+        "start_line": 1691,
+        "end_line": 1691,
+        "source_hash": "6d555a8a7ea7d3f2518f9d249c0ab46f7e0f6453b4e3accdc77cf77badafe8e9",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/util/MathUtils.java::MathUtils.pow(final BigInteger k, BigInteger e)",
+      "document": "src/main/java/org/apache/commons/math/util/MathUtils.java",
+      "defines": [],
+      "uses": [
+        "result"
+      ]
+    },
+    {
+      "id": "method_e88a2e54c5e2e343c367",
+      "kind": "method",
+      "text": "public void addValue(long v)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 176,
+        "end_line": 178,
+        "source_hash": "20f8c6c613fab52b4b748f21550316038a253907bb0912028e41280108db6de2",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.addValue(long v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [
+        "v"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_d0d64ba24cb2d357c500",
+      "kind": "code",
+      "text": "addValue(Long.valueOf(v));",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+        "start_line": 177,
+        "end_line": 177,
+        "source_hash": "20f8c6c613fab52b4b748f21550316038a253907bb0912028e41280108db6de2",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.addValue(long v)",
+      "document": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "defines": [],
+      "uses": [
+        "Long",
+        "v"
+      ]
+    },
+    {
+      "id": "method_bfe356af58410a09a138",
+      "kind": "method",
+      "text": "public boolean chiSquareTest(double[] expected, long[] observed,\n            double alpha) throws IllegalArgumentException, MathException",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+        "start_line": 135,
+        "end_line": 143,
+        "source_hash": "5dc07afdf9cd3fa66c6181eba3c1040a95620a17b8ea79a6509b29682e2ab9a0",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquareTest(double[] expected, long[] observed,\n            double alpha)",
+      "document": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "defines": [
+        "expected",
+        "observed",
+        "alpha"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_b40261470a064488a5fd",
+      "kind": "code",
+      "text": "if ((alpha <= 0) || (alpha > 0.5)) {\n            throw MathRuntimeException.createIllegalArgumentException(\n                  \"out of bounds significance level {0}, must be between {1} and {2}\",\n                  alpha, 0, 0.5);\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+        "start_line": 137,
+        "end_line": 141,
+        "source_hash": "5dc07afdf9cd3fa66c6181eba3c1040a95620a17b8ea79a6509b29682e2ab9a0",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquareTest(double[] expected, long[] observed,\n            double alpha)",
+      "document": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "defines": [],
+      "uses": [
+        "MathRuntimeException",
+        "alpha"
+      ]
+    },
+    {
+      "id": "code_8789c656b2446e5ccebe",
+      "kind": "code",
+      "text": "return chiSquareTest(expected, observed) < alpha;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+        "start_line": 142,
+        "end_line": 142,
+        "source_hash": "5dc07afdf9cd3fa66c6181eba3c1040a95620a17b8ea79a6509b29682e2ab9a0",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquareTest(double[] expected, long[] observed,\n            double alpha)",
+      "document": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "defines": [],
+      "uses": [
+        "alpha",
+        "expected",
+        "observed"
+      ]
+    },
+    {
+      "id": "frame_aaec6a1219596cc5ea38",
+      "kind": "frame",
+      "text": "at junit.framework.Assert.fail(Assert.java:57)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 33,
+        "end_line": 33,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_8f4730197fe9914af845",
+      "kind": "frame",
+      "text": "at junit.framework.Assert.failNotEquals(Assert.java:329)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 34,
+        "end_line": 34,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_7003bb4dddb945c09bae",
+      "kind": "frame",
+      "text": "at junit.framework.Assert.assertEquals(Assert.java:120)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 35,
+        "end_line": 35,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_f2ddc24761f3eeffbdd8",
+      "kind": "frame",
+      "text": "at junit.framework.TestCase.assertEquals(TestCase.java:279)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 36,
+        "end_line": 36,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_29891145a53806335d55",
+      "kind": "frame",
+      "text": "at org.apache.commons.math.stat.FrequencyTest.testPcts(FrequencyTest.java:148)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 37,
+        "end_line": 37,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_ec2f009441c43f43f34c",
+      "kind": "frame",
+      "text": "at junit.framework.TestCase.runTest(TestCase.java:176)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 42,
+        "end_line": 42,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_4fa3e3922268d756c006",
+      "kind": "frame",
+      "text": "at junit.framework.TestCase.runBare(TestCase.java:141)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 43,
+        "end_line": 43,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_674d5743dc3859cbdfba",
+      "kind": "frame",
+      "text": "at junit.framework.TestResult$1.protect(TestResult.java:122)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 44,
+        "end_line": 44,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_bc4be999e939ce0ce79a",
+      "kind": "frame",
+      "text": "at junit.framework.TestResult.runProtected(TestResult.java:142)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 45,
+        "end_line": 45,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_bbcb530745faebb51f2b",
+      "kind": "frame",
+      "text": "at junit.framework.TestResult.run(TestResult.java:125)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 46,
+        "end_line": 46,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_6a954553f61d6420c123",
+      "kind": "frame",
+      "text": "at junit.framework.TestCase.run(TestCase.java:129)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 47,
+        "end_line": 47,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_f11e746058ab7446cca2",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 48,
+        "end_line": 48,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_a9dcd6e5d2c80dc36731",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 49,
+        "end_line": 49,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_167e5d19d881f061749b",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 50,
+        "end_line": 50,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_210cf37c6c470f9fc1fb",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 51,
+        "end_line": 51,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_d47b528c659db957127b",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 52,
+        "end_line": 52,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_49adf53544b518ac619c",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 53,
+        "end_line": 53,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_48dbecff0ee80b08b5e5",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 54,
+        "end_line": 54,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_25d984db29d7b2a9cb58",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 58,
+        "end_line": 58,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_bc466c7b236c5d1790b2",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.Task.perform(Task.java:348)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 59,
+        "end_line": 59,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_a11db7e1cee5f91faa4a",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.Target.execute(Target.java:392)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 60,
+        "end_line": 60,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_a17aad5e7ef30693a55e",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.Target.performTasks(Target.java:413)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 61,
+        "end_line": 61,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_960bbc6a9b9d31dd0449",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 62,
+        "end_line": 62,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_aed79933347d70ae8466",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.Project.executeTarget(Project.java:1368)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 63,
+        "end_line": 63,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_e0f7bb5a97f14c3e8b5b",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 64,
+        "end_line": 64,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_9516c6c37d5952a1f55c",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.Project.executeTargets(Project.java:1251)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 65,
+        "end_line": 65,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_0eb26b9eca1576c1a409",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.Main.runBuild(Main.java:811)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 66,
+        "end_line": 66,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_70ab28935b5d770d68d2",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.Main.startAnt(Main.java:217)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 67,
+        "end_line": 67,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_0e1ae1e853ad0727566d",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 68,
+        "end_line": 68,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_609cee33945a2534a556",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Math-75.txt",
+        "start_line": 69,
+        "end_line": 69,
+        "source_hash": "1d4769373cb99212b35da963ea6d7ab47884dba3fea2cbd853a4a1251c81cedc",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    }
+  ],
+  "edges": [
+    {
+      "source": "code_af88acacc0362a28675b",
+      "target": "method_f4e09d4a0f96156a9067",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_af88acacc0362a28675b",
+      "target": "method_f4e09d4a0f96156a9067",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_60cfcc257bb219053a0c",
+      "target": "method_ac723913cccdbfa73880",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_60cfcc257bb219053a0c",
+      "target": "method_ac723913cccdbfa73880",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_1630b627808c96ca5331",
+      "target": "method_ef6bffaed9ac16814a8d",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_1630b627808c96ca5331",
+      "target": "method_ef6bffaed9ac16814a8d",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_f3bb331f076df3a890e1",
+      "target": "method_fe09f67836049d7c90e6",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_f3bb331f076df3a890e1",
+      "target": "method_fe09f67836049d7c90e6",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_1e95e0571f6aa8fa2a13",
+      "target": "method_5c5448e4cca040f9cac1",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_96a222de1b1021f8d270",
+      "target": "method_5c5448e4cca040f9cac1",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_1e95e0571f6aa8fa2a13",
+      "target": "code_96a222de1b1021f8d270",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_96a222de1b1021f8d270",
+      "target": "code_1e95e0571f6aa8fa2a13",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ed5cf9d308a3f5304708",
+      "target": "method_5c5448e4cca040f9cac1",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_96a222de1b1021f8d270",
+      "target": "code_ed5cf9d308a3f5304708",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ed5cf9d308a3f5304708",
+      "target": "code_96a222de1b1021f8d270",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_a6ae12ac39d771a99f97",
+      "target": "method_5c5448e4cca040f9cac1",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ed5cf9d308a3f5304708",
+      "target": "code_a6ae12ac39d771a99f97",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_a6ae12ac39d771a99f97",
+      "target": "code_ed5cf9d308a3f5304708",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_7377886e7cb866a89bc6",
+      "target": "method_5c5448e4cca040f9cac1",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_a6ae12ac39d771a99f97",
+      "target": "code_7377886e7cb866a89bc6",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_7377886e7cb866a89bc6",
+      "target": "code_a6ae12ac39d771a99f97",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_2d3d828f08c7521c02eb",
+      "target": "method_5c5448e4cca040f9cac1",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_7377886e7cb866a89bc6",
+      "target": "code_2d3d828f08c7521c02eb",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_2d3d828f08c7521c02eb",
+      "target": "code_7377886e7cb866a89bc6",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_910f936719fd4f71eaa8",
+      "target": "method_5c5448e4cca040f9cac1",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_2d3d828f08c7521c02eb",
+      "target": "code_910f936719fd4f71eaa8",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_910f936719fd4f71eaa8",
+      "target": "code_2d3d828f08c7521c02eb",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_74557d9ef6c8496b1e6c",
+      "target": "method_5c5448e4cca040f9cac1",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_910f936719fd4f71eaa8",
+      "target": "code_74557d9ef6c8496b1e6c",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_74557d9ef6c8496b1e6c",
+      "target": "code_910f936719fd4f71eaa8",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_a4010a3624537577ce3e",
+      "target": "method_5c5448e4cca040f9cac1",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_74557d9ef6c8496b1e6c",
+      "target": "code_a4010a3624537577ce3e",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_a4010a3624537577ce3e",
+      "target": "code_74557d9ef6c8496b1e6c",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ee4a36688e95253a2986",
+      "target": "method_5c5448e4cca040f9cac1",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_a4010a3624537577ce3e",
+      "target": "code_ee4a36688e95253a2986",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ee4a36688e95253a2986",
+      "target": "code_a4010a3624537577ce3e",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_608de7a8384abf5d5aa1",
+      "target": "method_5c5448e4cca040f9cac1",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ee4a36688e95253a2986",
+      "target": "code_608de7a8384abf5d5aa1",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_608de7a8384abf5d5aa1",
+      "target": "code_ee4a36688e95253a2986",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_96a222de1b1021f8d270",
+      "target": "method_5c5448e4cca040f9cac1",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_a6ae12ac39d771a99f97",
+      "target": "code_ed5cf9d308a3f5304708",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_2d3d828f08c7521c02eb",
+      "target": "code_7377886e7cb866a89bc6",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_2d3d828f08c7521c02eb",
+      "target": "method_5c5448e4cca040f9cac1",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_910f936719fd4f71eaa8",
+      "target": "code_ed5cf9d308a3f5304708",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_910f936719fd4f71eaa8",
+      "target": "method_5c5448e4cca040f9cac1",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_74557d9ef6c8496b1e6c",
+      "target": "code_ed5cf9d308a3f5304708",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_74557d9ef6c8496b1e6c",
+      "target": "method_5c5448e4cca040f9cac1",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ee4a36688e95253a2986",
+      "target": "code_ed5cf9d308a3f5304708",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ee4a36688e95253a2986",
+      "target": "code_7377886e7cb866a89bc6",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ee4a36688e95253a2986",
+      "target": "method_5c5448e4cca040f9cac1",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ee4a36688e95253a2986",
+      "target": "code_a4010a3624537577ce3e",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_608de7a8384abf5d5aa1",
+      "target": "code_7377886e7cb866a89bc6",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_63789ad20975ec910539",
+      "target": "method_c68e6b865008581a4947",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_63789ad20975ec910539",
+      "target": "method_c68e6b865008581a4947",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_679813f0b3970ba8856d",
+      "target": "method_9b7b1af5cac6f77dfc7e",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_679813f0b3970ba8856d",
+      "target": "method_9b7b1af5cac6f77dfc7e",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_eac2c2fc318bb2053f3c",
+      "target": "method_98bae635ff4fa606d99a",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_eac2c2fc318bb2053f3c",
+      "target": "method_98bae635ff4fa606d99a",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_57f1a3aeb63efeba8994",
+      "target": "method_e864b09ebcbae70b5468",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6fbd9d1c4a6686e2996b",
+      "target": "method_e864b09ebcbae70b5468",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_57f1a3aeb63efeba8994",
+      "target": "code_6fbd9d1c4a6686e2996b",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6fbd9d1c4a6686e2996b",
+      "target": "code_57f1a3aeb63efeba8994",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_bfe64e4007e10da7af68",
+      "target": "method_e864b09ebcbae70b5468",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6fbd9d1c4a6686e2996b",
+      "target": "code_bfe64e4007e10da7af68",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_bfe64e4007e10da7af68",
+      "target": "code_6fbd9d1c4a6686e2996b",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_57f1a3aeb63efeba8994",
+      "target": "method_e864b09ebcbae70b5468",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6fbd9d1c4a6686e2996b",
+      "target": "code_57f1a3aeb63efeba8994",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6fbd9d1c4a6686e2996b",
+      "target": "method_e864b09ebcbae70b5468",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_bfe64e4007e10da7af68",
+      "target": "code_57f1a3aeb63efeba8994",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_bfe64e4007e10da7af68",
+      "target": "method_e864b09ebcbae70b5468",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_bdf7016c1ed6555dbdff",
+      "target": "method_e472c2fbd59f92cd8865",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_bdf7016c1ed6555dbdff",
+      "target": "method_e472c2fbd59f92cd8865",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0335ec3186159c62c328",
+      "target": "method_ca490241eb354048a3f8",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_a3bd2a995abb89bfdce7",
+      "target": "method_ca490241eb354048a3f8",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0335ec3186159c62c328",
+      "target": "code_a3bd2a995abb89bfdce7",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_a3bd2a995abb89bfdce7",
+      "target": "code_0335ec3186159c62c328",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_78e10e361a7a1b897c5c",
+      "target": "method_ca490241eb354048a3f8",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_a3bd2a995abb89bfdce7",
+      "target": "code_78e10e361a7a1b897c5c",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_78e10e361a7a1b897c5c",
+      "target": "code_a3bd2a995abb89bfdce7",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_78e10e361a7a1b897c5c",
+      "target": "code_a3bd2a995abb89bfdce7",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_78e10e361a7a1b897c5c",
+      "target": "code_0335ec3186159c62c328",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_aea8489779132d315484",
+      "target": "method_df5780f65fa5bb8c1e95",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_aea8489779132d315484",
+      "target": "method_df5780f65fa5bb8c1e95",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_1381af5b4286b6399ee2",
+      "target": "method_ff52caf2f17b08edc3c8",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_73c6ac549c9bd43b7c81",
+      "target": "method_ff52caf2f17b08edc3c8",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_1381af5b4286b6399ee2",
+      "target": "code_73c6ac549c9bd43b7c81",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_73c6ac549c9bd43b7c81",
+      "target": "code_1381af5b4286b6399ee2",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_1381af5b4286b6399ee2",
+      "target": "method_ff52caf2f17b08edc3c8",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_73c6ac549c9bd43b7c81",
+      "target": "method_ff52caf2f17b08edc3c8",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_2b5cf651d3c892932cd9",
+      "target": "method_efdd4cb9e2299486fe60",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_2b5cf651d3c892932cd9",
+      "target": "method_efdd4cb9e2299486fe60",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_3ec025278264ac0c1d29",
+      "target": "method_a6a4667ce3dd5c63d062",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_3ec025278264ac0c1d29",
+      "target": "method_a6a4667ce3dd5c63d062",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_05a62e84a01f4ad0903d",
+      "target": "method_40a77416db9d9c3a6309",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_12f4d59bd88c6d05c6a3",
+      "target": "method_40a77416db9d9c3a6309",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_05a62e84a01f4ad0903d",
+      "target": "code_12f4d59bd88c6d05c6a3",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_12f4d59bd88c6d05c6a3",
+      "target": "code_05a62e84a01f4ad0903d",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ca2b3a6fcdc1c01c0aa2",
+      "target": "method_40a77416db9d9c3a6309",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_12f4d59bd88c6d05c6a3",
+      "target": "code_ca2b3a6fcdc1c01c0aa2",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ca2b3a6fcdc1c01c0aa2",
+      "target": "code_12f4d59bd88c6d05c6a3",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_12f4d59bd88c6d05c6a3",
+      "target": "code_05a62e84a01f4ad0903d",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ca2b3a6fcdc1c01c0aa2",
+      "target": "code_05a62e84a01f4ad0903d",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ca2b3a6fcdc1c01c0aa2",
+      "target": "method_40a77416db9d9c3a6309",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_cf65a75bc711102a5d73",
+      "target": "method_3646b5f76530490d19a2",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_cf65a75bc711102a5d73",
+      "target": "method_3646b5f76530490d19a2",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_062cc2eefd24d644706f",
+      "target": "method_429e0e3a23f37dcbe029",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_062cc2eefd24d644706f",
+      "target": "method_429e0e3a23f37dcbe029",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_c0b4fa9d981647b11671",
+      "target": "method_f138d64a0062ca52ff06",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_c0b4fa9d981647b11671",
+      "target": "method_f138d64a0062ca52ff06",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0751587e7212df88fb17",
+      "target": "method_e9e03a75abd7b810fcc3",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0751587e7212df88fb17",
+      "target": "method_e9e03a75abd7b810fcc3",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_e6e4fd5e679e33b22f0e",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_dfde36480b2b328acb30",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_e6e4fd5e679e33b22f0e",
+      "target": "code_dfde36480b2b328acb30",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_dfde36480b2b328acb30",
+      "target": "code_e6e4fd5e679e33b22f0e",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ab5be8d89c8f62c5399b",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_dfde36480b2b328acb30",
+      "target": "code_ab5be8d89c8f62c5399b",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ab5be8d89c8f62c5399b",
+      "target": "code_dfde36480b2b328acb30",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_3a80f3709e73a539f4df",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ab5be8d89c8f62c5399b",
+      "target": "code_3a80f3709e73a539f4df",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_3a80f3709e73a539f4df",
+      "target": "code_ab5be8d89c8f62c5399b",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_f18f82d4052e44154ab3",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_3a80f3709e73a539f4df",
+      "target": "code_f18f82d4052e44154ab3",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_f18f82d4052e44154ab3",
+      "target": "code_3a80f3709e73a539f4df",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_455b3917e606cf38ac67",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_f18f82d4052e44154ab3",
+      "target": "code_455b3917e606cf38ac67",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_455b3917e606cf38ac67",
+      "target": "code_f18f82d4052e44154ab3",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5ced5265f69e7a55b0bf",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_455b3917e606cf38ac67",
+      "target": "code_5ced5265f69e7a55b0bf",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5ced5265f69e7a55b0bf",
+      "target": "code_455b3917e606cf38ac67",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5b34982ac6bf8a0808be",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5ced5265f69e7a55b0bf",
+      "target": "code_5b34982ac6bf8a0808be",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5b34982ac6bf8a0808be",
+      "target": "code_5ced5265f69e7a55b0bf",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_a4f91bf5a8f96e6d9c3c",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5b34982ac6bf8a0808be",
+      "target": "code_a4f91bf5a8f96e6d9c3c",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_a4f91bf5a8f96e6d9c3c",
+      "target": "code_5b34982ac6bf8a0808be",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_c7f295176512dda3efbe",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_a4f91bf5a8f96e6d9c3c",
+      "target": "code_c7f295176512dda3efbe",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_c7f295176512dda3efbe",
+      "target": "code_a4f91bf5a8f96e6d9c3c",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_cccb9d63e38f6cd77b43",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_c7f295176512dda3efbe",
+      "target": "code_cccb9d63e38f6cd77b43",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_cccb9d63e38f6cd77b43",
+      "target": "code_c7f295176512dda3efbe",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_12565e9139aab4316905",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_cccb9d63e38f6cd77b43",
+      "target": "code_12565e9139aab4316905",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_12565e9139aab4316905",
+      "target": "code_cccb9d63e38f6cd77b43",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_cd00fb2e41e277a9289d",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_12565e9139aab4316905",
+      "target": "code_cd00fb2e41e277a9289d",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_cd00fb2e41e277a9289d",
+      "target": "code_12565e9139aab4316905",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_28dd82248ffc3648e242",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_cd00fb2e41e277a9289d",
+      "target": "code_28dd82248ffc3648e242",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_28dd82248ffc3648e242",
+      "target": "code_cd00fb2e41e277a9289d",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_951c9b0932f2a4667a4a",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_28dd82248ffc3648e242",
+      "target": "code_951c9b0932f2a4667a4a",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_951c9b0932f2a4667a4a",
+      "target": "code_28dd82248ffc3648e242",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d2a8aa2932661d5c4d58",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_951c9b0932f2a4667a4a",
+      "target": "code_d2a8aa2932661d5c4d58",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d2a8aa2932661d5c4d58",
+      "target": "code_951c9b0932f2a4667a4a",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6bf052f49444ca9bb89d",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d2a8aa2932661d5c4d58",
+      "target": "code_6bf052f49444ca9bb89d",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6bf052f49444ca9bb89d",
+      "target": "code_d2a8aa2932661d5c4d58",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_23eeefa58d9851612e25",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6bf052f49444ca9bb89d",
+      "target": "code_23eeefa58d9851612e25",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_23eeefa58d9851612e25",
+      "target": "code_6bf052f49444ca9bb89d",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_95c77097249a00a63e41",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_23eeefa58d9851612e25",
+      "target": "code_95c77097249a00a63e41",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_95c77097249a00a63e41",
+      "target": "code_23eeefa58d9851612e25",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_3b3636a5a59236eb75e0",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_95c77097249a00a63e41",
+      "target": "code_3b3636a5a59236eb75e0",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_3b3636a5a59236eb75e0",
+      "target": "code_95c77097249a00a63e41",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_dfde36480b2b328acb30",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ab5be8d89c8f62c5399b",
+      "target": "method_fad92b9296bf6c007d91",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ab5be8d89c8f62c5399b",
+      "target": "code_dfde36480b2b328acb30",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_455b3917e606cf38ac67",
+      "target": "code_f18f82d4052e44154ab3",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_455b3917e606cf38ac67",
+      "target": "code_dfde36480b2b328acb30",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5b34982ac6bf8a0808be",
+      "target": "code_dfde36480b2b328acb30",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_cccb9d63e38f6cd77b43",
+      "target": "code_dfde36480b2b328acb30",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_28dd82248ffc3648e242",
+      "target": "code_cccb9d63e38f6cd77b43",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_28dd82248ffc3648e242",
+      "target": "code_12565e9139aab4316905",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_28dd82248ffc3648e242",
+      "target": "code_dfde36480b2b328acb30",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d2a8aa2932661d5c4d58",
+      "target": "code_dfde36480b2b328acb30",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d2a8aa2932661d5c4d58",
+      "target": "code_951c9b0932f2a4667a4a",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6bf052f49444ca9bb89d",
+      "target": "code_cccb9d63e38f6cd77b43",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6bf052f49444ca9bb89d",
+      "target": "code_12565e9139aab4316905",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6bf052f49444ca9bb89d",
+      "target": "code_dfde36480b2b328acb30",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6bf052f49444ca9bb89d",
+      "target": "code_951c9b0932f2a4667a4a",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_23eeefa58d9851612e25",
+      "target": "code_cccb9d63e38f6cd77b43",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_23eeefa58d9851612e25",
+      "target": "code_951c9b0932f2a4667a4a",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_95c77097249a00a63e41",
+      "target": "code_f18f82d4052e44154ab3",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_95c77097249a00a63e41",
+      "target": "code_cccb9d63e38f6cd77b43",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_3b3636a5a59236eb75e0",
+      "target": "code_cccb9d63e38f6cd77b43",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_21848aeb2f347c0f66bd",
+      "target": "method_de7b76581393b530647b",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0b0edeb77babbdc8d0b0",
+      "target": "method_de7b76581393b530647b",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_21848aeb2f347c0f66bd",
+      "target": "code_0b0edeb77babbdc8d0b0",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0b0edeb77babbdc8d0b0",
+      "target": "code_21848aeb2f347c0f66bd",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_f41041d7a64e35f37b9a",
+      "target": "method_de7b76581393b530647b",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0b0edeb77babbdc8d0b0",
+      "target": "code_f41041d7a64e35f37b9a",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_f41041d7a64e35f37b9a",
+      "target": "code_0b0edeb77babbdc8d0b0",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_f92885e9e97b2810bd4c",
+      "target": "method_de7b76581393b530647b",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_f41041d7a64e35f37b9a",
+      "target": "code_f92885e9e97b2810bd4c",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_f92885e9e97b2810bd4c",
+      "target": "code_f41041d7a64e35f37b9a",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_67c8e69a34363780a02d",
+      "target": "method_de7b76581393b530647b",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_f92885e9e97b2810bd4c",
+      "target": "code_67c8e69a34363780a02d",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_67c8e69a34363780a02d",
+      "target": "code_f92885e9e97b2810bd4c",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_21848aeb2f347c0f66bd",
+      "target": "method_de7b76581393b530647b",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_f41041d7a64e35f37b9a",
+      "target": "method_de7b76581393b530647b",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_f92885e9e97b2810bd4c",
+      "target": "method_de7b76581393b530647b",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_f92885e9e97b2810bd4c",
+      "target": "code_f41041d7a64e35f37b9a",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_f92885e9e97b2810bd4c",
+      "target": "code_0b0edeb77babbdc8d0b0",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_67c8e69a34363780a02d",
+      "target": "code_0b0edeb77babbdc8d0b0",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d0d64ba24cb2d357c500",
+      "target": "method_e88a2e54c5e2e343c367",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d0d64ba24cb2d357c500",
+      "target": "method_e88a2e54c5e2e343c367",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_b40261470a064488a5fd",
+      "target": "method_bfe356af58410a09a138",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_8789c656b2446e5ccebe",
+      "target": "method_bfe356af58410a09a138",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_b40261470a064488a5fd",
+      "target": "code_8789c656b2446e5ccebe",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_8789c656b2446e5ccebe",
+      "target": "code_b40261470a064488a5fd",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_b40261470a064488a5fd",
+      "target": "method_bfe356af58410a09a138",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_8789c656b2446e5ccebe",
+      "target": "method_bfe356af58410a09a138",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_8789c656b2446e5ccebe",
+      "target": "method_ff52caf2f17b08edc3c8",
+      "relation": "MAY_CALL",
+      "provenance": "unique same-owner static name/arity; dynamic dispatch unresolved",
+      "confidence": 0.7
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_aaec6a1219596cc5ea38",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_8f4730197fe9914af845",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_aaec6a1219596cc5ea38",
+      "target": "frame_8f4730197fe9914af845",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_7003bb4dddb945c09bae",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_8f4730197fe9914af845",
+      "target": "frame_7003bb4dddb945c09bae",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_f2ddc24761f3eeffbdd8",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_7003bb4dddb945c09bae",
+      "target": "frame_f2ddc24761f3eeffbdd8",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_29891145a53806335d55",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_f2ddc24761f3eeffbdd8",
+      "target": "frame_29891145a53806335d55",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_ec2f009441c43f43f34c",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_29891145a53806335d55",
+      "target": "frame_ec2f009441c43f43f34c",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_4fa3e3922268d756c006",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_ec2f009441c43f43f34c",
+      "target": "frame_4fa3e3922268d756c006",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_674d5743dc3859cbdfba",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_4fa3e3922268d756c006",
+      "target": "frame_674d5743dc3859cbdfba",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_bc4be999e939ce0ce79a",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_674d5743dc3859cbdfba",
+      "target": "frame_bc4be999e939ce0ce79a",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_bbcb530745faebb51f2b",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_bc4be999e939ce0ce79a",
+      "target": "frame_bbcb530745faebb51f2b",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_6a954553f61d6420c123",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_bbcb530745faebb51f2b",
+      "target": "frame_6a954553f61d6420c123",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_f11e746058ab7446cca2",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_6a954553f61d6420c123",
+      "target": "frame_f11e746058ab7446cca2",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_a9dcd6e5d2c80dc36731",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_f11e746058ab7446cca2",
+      "target": "frame_a9dcd6e5d2c80dc36731",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_167e5d19d881f061749b",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_a9dcd6e5d2c80dc36731",
+      "target": "frame_167e5d19d881f061749b",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_210cf37c6c470f9fc1fb",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_167e5d19d881f061749b",
+      "target": "frame_210cf37c6c470f9fc1fb",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_d47b528c659db957127b",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_210cf37c6c470f9fc1fb",
+      "target": "frame_d47b528c659db957127b",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_49adf53544b518ac619c",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_d47b528c659db957127b",
+      "target": "frame_49adf53544b518ac619c",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_48dbecff0ee80b08b5e5",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_49adf53544b518ac619c",
+      "target": "frame_48dbecff0ee80b08b5e5",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_25d984db29d7b2a9cb58",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_48dbecff0ee80b08b5e5",
+      "target": "frame_25d984db29d7b2a9cb58",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_bc466c7b236c5d1790b2",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_25d984db29d7b2a9cb58",
+      "target": "frame_bc466c7b236c5d1790b2",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_a11db7e1cee5f91faa4a",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_bc466c7b236c5d1790b2",
+      "target": "frame_a11db7e1cee5f91faa4a",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_a17aad5e7ef30693a55e",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_a11db7e1cee5f91faa4a",
+      "target": "frame_a17aad5e7ef30693a55e",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_960bbc6a9b9d31dd0449",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_a17aad5e7ef30693a55e",
+      "target": "frame_960bbc6a9b9d31dd0449",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_aed79933347d70ae8466",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_960bbc6a9b9d31dd0449",
+      "target": "frame_aed79933347d70ae8466",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_e0f7bb5a97f14c3e8b5b",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_aed79933347d70ae8466",
+      "target": "frame_e0f7bb5a97f14c3e8b5b",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_9516c6c37d5952a1f55c",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_e0f7bb5a97f14c3e8b5b",
+      "target": "frame_9516c6c37d5952a1f55c",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_0eb26b9eca1576c1a409",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_9516c6c37d5952a1f55c",
+      "target": "frame_0eb26b9eca1576c1a409",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_70ab28935b5d770d68d2",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_0eb26b9eca1576c1a409",
+      "target": "frame_70ab28935b5d770d68d2",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_0e1ae1e853ad0727566d",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_70ab28935b5d770d68d2",
+      "target": "frame_0e1ae1e853ad0727566d",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_67b454ff12aff7b2caec",
+      "target": "frame_609cee33945a2534a556",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_0e1ae1e853ad0727566d",
+      "target": "frame_609cee33945a2534a556",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    }
+  ],
+  "targets": {
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(long v)": "method_f4e09d4a0f96156a9067",
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(int v)": "method_ac723913cccdbfa73880",
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(Object v)": "method_ef6bffaed9ac16814a8d",
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(char v)": "method_fe09f67836049d7c90e6",
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(Comparable<?> v)": "method_5c5448e4cca040f9cac1",
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getPct(Object v)": "method_c68e6b865008581a4947",
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.addValue(Integer v)": "method_9b7b1af5cac6f77dfc7e",
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getPct(long v)": "method_98bae635ff4fa606d99a",
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.addValue(Comparable<?> v)": "method_e864b09ebcbae70b5468",
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(long v)": "method_e472c2fbd59f92cd8865",
+    "src/main/java/org/apache/commons/math/MathRuntimeException.java::MathRuntimeException.createInternalError(final Throwable cause)": "method_ca490241eb354048a3f8",
+    "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java::TestUtils.chiSquareTest(double[] expected, long[] observed)": "method_df5780f65fa5bb8c1e95",
+    "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquareTest(double[] expected, long[] observed)": "method_ff52caf2f17b08edc3c8",
+    "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java::TestUtils.chiSquare(double[] expected, long[] observed)": "method_efdd4cb9e2299486fe60",
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(int v)": "method_a6a4667ce3dd5c63d062",
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(Comparable<?> v)": "method_40a77416db9d9c3a6309",
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getPct(int v)": "method_3646b5f76530490d19a2",
+    "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java::TestUtils.chiSquareTest(double[] expected, long[] observed,\n        double alpha)": "method_429e0e3a23f37dcbe029",
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(Object v)": "method_f138d64a0062ca52ff06",
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(char v)": "method_e9e03a75abd7b810fcc3",
+    "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)": "method_fad92b9296bf6c007d91",
+    "src/main/java/org/apache/commons/math/util/MathUtils.java::MathUtils.pow(final BigInteger k, BigInteger e)": "method_de7b76581393b530647b",
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.addValue(long v)": "method_e88a2e54c5e2e343c367",
+    "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquareTest(double[] expected, long[] observed,\n            double alpha)": "method_bfe356af58410a09a138"
+  },
+  "sources": {
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(long v)": {
+      "source": "public double getCumPct(long v) {\n        return getCumPct(Long.valueOf(v));\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "sha256": "909a90d1417d1683718d118b5eef32ffdadd50c52977d60d38179ac56050174a",
+      "start_line": 520,
+      "end_line": 522
+    },
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(int v)": {
+      "source": "public double getCumPct(int v) {\n        return getCumPct(Long.valueOf(v));\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "sha256": "fc1e614fc288dc159916e85f3a3e41675ba356b355f97aab194e7a7bb32f373e",
+      "start_line": 507,
+      "end_line": 509
+    },
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(Object v)": {
+      "source": "@Deprecated\n    public double getCumPct(Object v) {\n        return getCumPct((Comparable<?>) v);\n\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "sha256": "7bee8e192bbbbac8dfae3ceccddb3b8d3ba239bbd3254efb1a4dd625d45dd2a1",
+      "start_line": 473,
+      "end_line": 477
+    },
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(char v)": {
+      "source": "public double getCumPct(char v) {\n        return getCumPct(Character.valueOf(v));\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "sha256": "e9d1090baef99488a0a1c4cd3d23ea1466129a805911459606536fc746c6809e",
+      "start_line": 533,
+      "end_line": 535
+    },
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(Comparable<?> v)": {
+      "source": "@SuppressWarnings(\"unchecked\")\n        public long getCumFreq(Comparable<?> v) {\n        if (getSumFreq() == 0) {\n            return 0;\n        }\n        if (v instanceof Integer) {\n            return getCumFreq(((Integer) v).longValue());\n        }\n        Comparator<Comparable<?>> c = (Comparator<Comparable<?>>) freqTable.comparator();\n        if (c == null) {\n            c = new NaturalComparator();\n        }\n        long result = 0;\n\n        try {\n            Long value = freqTable.get(v);\n            if (value != null) {\n                result = value.longValue();\n            }\n        } catch (ClassCastException ex) {\n            return result;   // v is not comparable\n        }\n\n        if (c.compare(v, freqTable.firstKey()) < 0) {\n            return 0;  // v is comparable, but less than first value\n        }\n\n        if (c.compare(v, freqTable.lastKey()) >= 0) {\n            return getSumFreq();    // v is comparable, but greater than the last value\n        }\n\n        Iterator<Comparable<?>> values = valuesIterator();\n        while (values.hasNext()) {\n            Comparable<?> nextValue = values.next();\n            if (c.compare(v, nextValue) > 0) {\n                result += getCount(nextValue);\n            } else {\n                return result;\n            }\n        }\n        return result;\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "sha256": "c92e2b4eda3e0aacd996e37d323dcb3fa8e7982560a1c73e11f50d4b7a6882ee",
+      "start_line": 380,
+      "end_line": 421
+    },
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getPct(Object v)": {
+      "source": "@Deprecated\n    public double getPct(Object v) {\n        return getCumPct((Comparable<?>) v);\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "sha256": "dabf8e8b18f01f3b93d56b71264ae32023b8f4aab6a6bfbe20512589beef904f",
+      "start_line": 301,
+      "end_line": 304
+    },
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.addValue(Integer v)": {
+      "source": "public void addValue(Integer v) {\n        addValue(Long.valueOf(v.longValue()));\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "sha256": "5e4a6193b6154080aaff54ec23e585bcbc374ac034c175e7bfa6b641452781a4",
+      "start_line": 167,
+      "end_line": 169
+    },
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getPct(long v)": {
+      "source": "public double getPct(long v) {\n        return getPct(Long.valueOf(v));\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "sha256": "5b2411a8648366fa61f683d0bfa5b0a2f777bca95c16a53628c860099058946d",
+      "start_line": 341,
+      "end_line": 343
+    },
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.addValue(Comparable<?> v)": {
+      "source": "public void addValue(Comparable<?> v){\n        Comparable<?> obj = v;\n        if (v instanceof Integer) {\n           obj = Long.valueOf(((Integer) v).longValue());\n        }\n        try {\n            Long count = freqTable.get(obj);\n            if (count == null) {\n                freqTable.put(obj, Long.valueOf(1));\n            } else {\n                freqTable.put(obj, Long.valueOf(count.longValue() + 1));\n            }\n        } catch (ClassCastException ex) {\n            //TreeMap will throw ClassCastException if v is not comparable\n            throw MathRuntimeException.createIllegalArgumentException(\n                  \"instance of class {0} not comparable to existing values\",\n                  v.getClass().getName());\n        }\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "sha256": "584f12c2e33891306a083fa3048ba86479f0e0c9bd688edb102b4e1120182106",
+      "start_line": 132,
+      "end_line": 150
+    },
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(long v)": {
+      "source": "public long getCumFreq(long v) {\n        return getCumFreq(Long.valueOf(v));\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "sha256": "96c555db627cec3abb18b830c38ed5325d85ceeaa831c471af0d2e74f1b734a4",
+      "start_line": 443,
+      "end_line": 445
+    },
+    "src/main/java/org/apache/commons/math/MathRuntimeException.java::MathRuntimeException.createInternalError(final Throwable cause)": {
+      "source": "public static RuntimeException createInternalError(final Throwable cause) {\n\n        final String pattern  = \"internal error, please fill a bug report at {0}\";\n        final String argument = \"https://issues.apache.org/jira/browse/MATH\";\n\n        return new RuntimeException() {\n\n            /** Serializable version identifier. */\n            private static final long serialVersionUID = -201865440834027016L;\n\n            /** {@inheritDoc} */\n            @Override\n            public String getMessage() {\n                return buildMessage(Locale.US, pattern, argument);\n            }\n\n            /** {@inheritDoc} */\n            @Override\n            public String getLocalizedMessage() {\n                return buildMessage(Locale.getDefault(), pattern, argument);\n            }\n\n        };\n\n    }",
+      "path": "src/main/java/org/apache/commons/math/MathRuntimeException.java",
+      "sha256": "416fa672347c8347deee3d21493b78fe093d269281746f461e7383b91a10ec14",
+      "start_line": 490,
+      "end_line": 514
+    },
+    "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java::TestUtils.chiSquareTest(double[] expected, long[] observed)": {
+      "source": "public static double chiSquareTest(double[] expected, long[] observed)\n        throws IllegalArgumentException, MathException {\n        return chiSquareTest.chiSquareTest(expected, observed);\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java",
+      "sha256": "1fd3aefc614e389005b968f526c340f8a2883c3e2a592bf6429bde860d29d05c",
+      "start_line": 330,
+      "end_line": 333
+    },
+    "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquareTest(double[] expected, long[] observed)": {
+      "source": "public double chiSquareTest(double[] expected, long[] observed)\n        throws IllegalArgumentException, MathException {\n        distribution.setDegreesOfFreedom(expected.length - 1.0);\n        return 1.0 - distribution.cumulativeProbability(\n            chiSquare(expected, observed));\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "sha256": "a177f92190264ae3ab34a560379d2e26563d905627725e20df5254219f156d3a",
+      "start_line": 114,
+      "end_line": 119
+    },
+    "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java::TestUtils.chiSquare(double[] expected, long[] observed)": {
+      "source": "public static double chiSquare(double[] expected, long[] observed)\n        throws IllegalArgumentException {\n        return chiSquareTest.chiSquare(expected, observed);\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java",
+      "sha256": "9bbdd7ab390ad794a8876f48f95f2ec2d7f49f3694a171ddc3294f2e85e78ec5",
+      "start_line": 305,
+      "end_line": 308
+    },
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(int v)": {
+      "source": "public long getCumFreq(int v) {\n        return getCumFreq(Long.valueOf(v));\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "sha256": "b38337d7e6f0100a08ba0d9c7632e5d5dc93b0f75b5e928bef9214302820bb1a",
+      "start_line": 431,
+      "end_line": 433
+    },
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(Comparable<?> v)": {
+      "source": "public double getCumPct(Comparable<?> v) {\n        final long sumFreq = getSumFreq();\n        if (sumFreq == 0) {\n            return Double.NaN;\n        }\n        return (double) getCumFreq(v) / (double) sumFreq;\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "sha256": "8b08ad9faf630c520aaaf96d914a994dc1dec5caf86e6640b032aebcfb9bc028",
+      "start_line": 490,
+      "end_line": 496
+    },
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getPct(int v)": {
+      "source": "public double getPct(int v) {\n        return getPct(Long.valueOf(v));\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "sha256": "ff5dce35ba5e80a856233ce9432ecd172b5d4a1c99f4d46b8eeae2794e22ba52",
+      "start_line": 330,
+      "end_line": 332
+    },
+    "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java::TestUtils.chiSquareTest(double[] expected, long[] observed,\n        double alpha)": {
+      "source": "public static boolean chiSquareTest(double[] expected, long[] observed,\n        double alpha)\n        throws IllegalArgumentException, MathException {\n        return chiSquareTest.chiSquareTest(expected, observed, alpha);\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/inference/TestUtils.java",
+      "sha256": "718b3a897563a7e27a1896f8554b7dd584103801c9099c051a498273ec1f95b1",
+      "start_line": 321,
+      "end_line": 325
+    },
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(Object v)": {
+      "source": "@Deprecated\n    public long getCumFreq(Object v) {\n        return getCumFreq((Comparable<?>) v);\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "sha256": "4c9eb675de11557bffab3560b8ee6cc8cc55c40b19bfb731d62266f1df2fd34e",
+      "start_line": 367,
+      "end_line": 370
+    },
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(char v)": {
+      "source": "public long getCumFreq(char v) {\n        return getCumFreq(Character.valueOf(v));\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "sha256": "e0e9f11e1b026ebe5c5d3742d563e55ec98a83c8fa2d9d00783db1e9e608c08a",
+      "start_line": 455,
+      "end_line": 457
+    },
+    "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java::NaturalRanking.rank(double[] data)": {
+      "source": "public double[] rank(double[] data) {\n\n        // Array recording initial positions of data to be ranked\n        IntDoublePair[] ranks = new IntDoublePair[data.length];\n        for (int i = 0; i < data.length; i++) {\n            ranks[i] = new IntDoublePair(data[i], i);\n        }\n\n        // Recode, remove or record positions of NaNs\n        List<Integer> nanPositions = null;\n        switch (nanStrategy) {\n            case MAXIMAL: // Replace NaNs with +INFs\n                recodeNaNs(ranks, Double.POSITIVE_INFINITY);\n                break;\n            case MINIMAL: // Replace NaNs with -INFs\n                recodeNaNs(ranks, Double.NEGATIVE_INFINITY);\n                break;\n            case REMOVED: // Drop NaNs from data\n                ranks = removeNaNs(ranks);\n                break;\n            case FIXED:   // Record positions of NaNs\n                nanPositions = getNanPositions(ranks);\n                break;\n            default: // this should not happen unless NaNStrategy enum is changed\n                throw MathRuntimeException.createInternalError(null);\n        }\n\n        // Sort the IntDoublePairs\n        Arrays.sort(ranks);\n\n        // Walk the sorted array, filling output array using sorted positions,\n        // resolving ties as we go\n        double[] out = new double[ranks.length];\n        int pos = 1;  // position in sorted array\n        out[ranks[0].getPosition()] = pos;\n        List<Integer> tiesTrace = new ArrayList<Integer>();\n        tiesTrace.add(ranks[0].getPosition());\n        for (int i = 1; i < ranks.length; i++) {\n            if (Double.compare(ranks[i].getValue(), ranks[i - 1].getValue()) > 0) {\n                // tie sequence has ended (or had length 1)\n                pos = i + 1;\n                if (tiesTrace.size() > 1) {  // if seq is nontrivial, resolve\n                    resolveTie(out, tiesTrace);\n                }\n                tiesTrace = new ArrayList<Integer>();\n                tiesTrace.add(ranks[i].getPosition());\n            } else {\n                // tie sequence continues\n                tiesTrace.add(ranks[i].getPosition());\n            }\n            out[ranks[i].getPosition()] = pos;\n        }\n        if (tiesTrace.size() > 1) {  // handle tie sequence at end\n            resolveTie(out, tiesTrace);\n        }\n        if (nanStrategy == NaNStrategy.FIXED) {\n            restoreNaNs(out, nanPositions);\n        }\n        return out;\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/ranking/NaturalRanking.java",
+      "sha256": "a731944c3e7341bdf9147dc83eff986cb50341f25c942e098ac69634483c1ba3",
+      "start_line": 189,
+      "end_line": 248
+    },
+    "src/main/java/org/apache/commons/math/util/MathUtils.java::MathUtils.pow(final BigInteger k, BigInteger e)": {
+      "source": "public static BigInteger pow(final BigInteger k, BigInteger e)\n        throws IllegalArgumentException {\n\n        if (e.compareTo(BigInteger.ZERO) < 0) {\n            throw MathRuntimeException.createIllegalArgumentException(\n                \"cannot raise an integral value to a negative power ({0}^{1})\",\n                k, e);\n        }\n\n        BigInteger result = BigInteger.ONE;\n        BigInteger k2p    = k;\n        while (!BigInteger.ZERO.equals(e)) {\n            if (e.testBit(0)) {\n                result = result.multiply(k2p);\n            }\n            k2p = k2p.multiply(k2p);\n            e = e.shiftRight(1);\n        }\n\n        return result;\n\n    }",
+      "path": "src/main/java/org/apache/commons/math/util/MathUtils.java",
+      "sha256": "6d555a8a7ea7d3f2518f9d249c0ab46f7e0f6453b4e3accdc77cf77badafe8e9",
+      "start_line": 1672,
+      "end_line": 1693
+    },
+    "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.addValue(long v)": {
+      "source": "public void addValue(long v) {\n        addValue(Long.valueOf(v));\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/Frequency.java",
+      "sha256": "20f8c6c613fab52b4b748f21550316038a253907bb0912028e41280108db6de2",
+      "start_line": 176,
+      "end_line": 178
+    },
+    "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquareTest(double[] expected, long[] observed,\n            double alpha)": {
+      "source": "public boolean chiSquareTest(double[] expected, long[] observed,\n            double alpha) throws IllegalArgumentException, MathException {\n        if ((alpha <= 0) || (alpha > 0.5)) {\n            throw MathRuntimeException.createIllegalArgumentException(\n                  \"out of bounds significance level {0}, must be between {1} and {2}\",\n                  alpha, 0, 0.5);\n        }\n        return chiSquareTest(expected, observed) < alpha;\n    }",
+      "path": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "sha256": "5dc07afdf9cd3fa66c6181eba3c1040a95620a17b8ea79a6509b29682e2ab9a0",
+      "start_line": 135,
+      "end_line": 143
+    }
+  },
+  "language": "java",
+  "revision": "a8827cabba4fcea904e2409034d8c51a8bc6cabe",
+  "diagnostics": [
+    {
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(long v)",
+      "kind": "ambiguous_call",
+      "name": "getCumPct",
+      "arity": 1
+    },
+    {
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(int v)",
+      "kind": "ambiguous_call",
+      "name": "getCumPct",
+      "arity": 1
+    },
+    {
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(Object v)",
+      "kind": "ambiguous_call",
+      "name": "getCumPct",
+      "arity": 1
+    },
+    {
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(char v)",
+      "kind": "ambiguous_call",
+      "name": "getCumPct",
+      "arity": 1
+    },
+    {
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(Comparable<?> v)",
+      "kind": "ambiguous_call",
+      "name": "getCumFreq",
+      "arity": 1
+    },
+    {
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getPct(Object v)",
+      "kind": "ambiguous_call",
+      "name": "getCumPct",
+      "arity": 1
+    },
+    {
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.addValue(Integer v)",
+      "kind": "ambiguous_call",
+      "name": "addValue",
+      "arity": 1
+    },
+    {
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getPct(long v)",
+      "kind": "ambiguous_call",
+      "name": "getPct",
+      "arity": 1
+    },
+    {
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(long v)",
+      "kind": "ambiguous_call",
+      "name": "getCumFreq",
+      "arity": 1
+    },
+    {
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(int v)",
+      "kind": "ambiguous_call",
+      "name": "getCumFreq",
+      "arity": 1
+    },
+    {
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumPct(Comparable<?> v)",
+      "kind": "ambiguous_call",
+      "name": "getCumFreq",
+      "arity": 1
+    },
+    {
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getPct(int v)",
+      "kind": "ambiguous_call",
+      "name": "getPct",
+      "arity": 1
+    },
+    {
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(Object v)",
+      "kind": "ambiguous_call",
+      "name": "getCumFreq",
+      "arity": 1
+    },
+    {
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.getCumFreq(char v)",
+      "kind": "ambiguous_call",
+      "name": "getCumFreq",
+      "arity": 1
+    },
+    {
+      "owner": "src/main/java/org/apache/commons/math/stat/Frequency.java::Frequency.addValue(long v)",
+      "kind": "ambiguous_call",
+      "name": "addValue",
+      "arity": 1
+    },
+    {
+      "kind": "coverage_status",
+      "detail": "not supplied; ranker scores do not create coverage edges"
+    }
+  ],
+  "schema": "graft-graph-v1"
+}

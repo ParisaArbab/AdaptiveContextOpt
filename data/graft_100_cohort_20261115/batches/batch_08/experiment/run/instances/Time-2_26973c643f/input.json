@@ -1,0 +1,1318 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Time-2",
+    "repository": "Time",
+    "language": "java",
+    "revision": "18f27045268a3216b9f49a0e205203e293d995c4",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/checkouts/Time-2",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Time-2\nEXECUTED BUGGY TEST: org.joda.time.TestPartial_Basics::testWith_baseAndArgHaveNoRange\nTEST SOURCE: src/test/java/org/joda/time/TestPartial_Basics.java\nTEST SOURCE SHA256: 3105329db3cb268b3e7f945341c0014da79b2d67f28c11eabb20817bdc6f3894\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testWith_baseAndArgHaveNoRange() {\n        Partial test = new Partial(DateTimeFieldType.year(), 1);\n        Partial result = test.with(DateTimeFieldType.era(), 1);\n        assertEquals(2, result.size());\n        assertEquals(0, result.indexOf(DateTimeFieldType.era()));\n        assertEquals(1, result.indexOf(DateTimeFieldType.year()));\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.joda.time.TestPartial_Basics::testWith_baseAndArgHaveNoRange\njava.lang.IllegalArgumentException: Types array must not contain duplicate: era and year\n\tat org.joda.time.Partial.<init>(Partial.java:225)\n\tat org.joda.time.Partial.with(Partial.java:466)\n\tat org.joda.time.TestPartial_Basics.testWith_baseAndArgHaveNoRange(TestPartial_Basics.java:469)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_08/prepared/evidence/Time-2.txt",
+      "sha256": "99350591fb0926f403ee63c5022af59b815c0b6368d6d31dfc3c2a7f0cb31172"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src/main/java",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Time-2",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/main/java/org/joda/time/Partial.java::Partial.Partial(DateTimeFieldType[] types, int[] values, Chronology chronology)",
+      "path": "src/main/java/org/joda/time/Partial.java",
+      "start_line": 189,
+      "end_line": 251,
+      "source": "public Partial(DateTimeFieldType[] types, int[] values, Chronology chronology) {\n        super();\n        chronology = DateTimeUtils.getChronology(chronology).withUTC();\n        iChronology = chronology;\n        if (types == null) {\n            throw new IllegalArgumentException(\"Types array must not be null\");\n        }\n        if (values == null) {\n            throw new IllegalArgumentException(\"Values array must not be null\");\n        }\n        if (values.length != types.length) {\n            throw new IllegalArgumentException(\"Values array must be the same length as the types array\");\n        }\n        if (types.length == 0) {\n            iTypes = types;\n            iValues = values;\n            return;\n        }\n        for (int i = 0; i < types.length; i++) {\n            if (types[i] == null) {\n                throw new IllegalArgumentException(\"Types array must not contain null: index \" + i);\n            }\n        }\n        DurationField lastUnitField = null;\n        for (int i = 0; i < types.length; i++) {\n            DateTimeFieldType loopType = types[i];\n            DurationField loopUnitField = loopType.getDurationType().getField(iChronology);\n            if (i > 0) {\n                int compare = lastUnitField.compareTo(loopUnitField);\n                if (compare < 0 || (compare != 0 && loopUnitField.isSupported() == false)) {\n                    throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                            types[i - 1].getName() + \" < \" + loopType.getName());\n                } else if (compare == 0) {\n                    if (types[i - 1].getRangeDurationType() == null) {\n                        if (loopType.getRangeDurationType() == null) {\n                            throw new IllegalArgumentException(\"Types array must not contain duplicate: \" +\n                                            types[i - 1].getName() + \" and \" + loopType.getName());\n                        }\n                    } else {\n                        if (loopType.getRangeDurationType() == null) {\n                            throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                                    types[i - 1].getName() + \" < \" + loopType.getName());\n                        }\n                        DurationField lastRangeField = types[i - 1].getRangeDurationType().getField(iChronology);\n                        DurationField loopRangeField = loopType.getRangeDurationType().getField(iChronology);\n                        if (lastRangeField.compareTo(loopRangeField) < 0) {\n                            throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                                    types[i - 1].getName() + \" < \" + loopType.getName());\n                        }\n                        if (lastRangeField.compareTo(loopRangeField) == 0) {\n                            throw new IllegalArgumentException(\"Types array must not contain duplicate: \" +\n                                            types[i - 1].getName() + \" and \" + loopType.getName());\n                        }\n                    }\n                }\n            }\n            lastUnitField = loopUnitField;\n        }\n        \n        iTypes = (DateTimeFieldType[]) types.clone();\n        chronology.validate(this, values);\n        iValues = (int[]) values.clone();\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 60.623155619207054
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Period.java::Period.fieldDifference(ReadablePartial start, ReadablePartial end)",
+      "path": "src/main/java/org/joda/time/Period.java",
+      "start_line": 256,
+      "end_line": 276,
+      "source": "public static Period fieldDifference(ReadablePartial start, ReadablePartial end) {\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start.size() != end.size()) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n        }\n        DurationFieldType[] types = new DurationFieldType[start.size()];\n        int[] values = new int[start.size()];\n        for (int i = 0, isize = start.size(); i < isize; i++) {\n            if (start.getFieldType(i) != end.getFieldType(i)) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n            types[i] = start.getFieldType(i).getDurationType();\n            if (i > 0 && types[i - 1] == types[i]) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must not have overlapping fields\");\n            }\n            values[i] = end.getValue(i) - start.getValue(i);\n        }\n        return new Period(values, PeriodType.forFields(types));\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 52.474174885534794
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)",
+      "path": "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java",
+      "start_line": 89,
+      "end_line": 107,
+      "source": "protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance) {\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start.size() != end.size()) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n        }\n        for (int i = 0, isize = start.size(); i < isize; i++) {\n            if (start.getFieldType(i) != end.getFieldType(i)) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n        }\n        if (DateTimeUtils.isContiguous(start) == false) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n        }\n        Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n        int[] values = chrono.get(zeroInstance, chrono.set(start, START_1972), chrono.set(end, START_1972));\n        return values[0];\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 46.69424367700539
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)",
+      "path": "src/main/java/org/joda/time/base/BasePeriod.java",
+      "start_line": 154,
+      "end_line": 184,
+      "source": "protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type) {\n        super();\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start instanceof BaseLocal && end instanceof BaseLocal && start.getClass() == end.getClass()) {\n            // for performance\n            type = checkPeriodType(type);\n            long startMillis = ((BaseLocal) start).getLocalMillis();\n            long endMillis = ((BaseLocal) end).getLocalMillis();\n            Chronology chrono = start.getChronology();\n            chrono = DateTimeUtils.getChronology(chrono);\n            iType = type;\n            iValues = chrono.get(this, startMillis, endMillis);\n        } else {\n            if (start.size() != end.size()) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n            for (int i = 0, isize = start.size(); i < isize; i++) {\n                if (start.getFieldType(i) != end.getFieldType(i)) {\n                    throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n                }\n            }\n            if (DateTimeUtils.isContiguous(start) == false) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n            }\n            iType = checkPeriodType(type);\n            Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n            iValues = chrono.get(this, chrono.set(start, 0L), chrono.set(end, 0L));\n        }\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 44.233579370753596
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Partial.java::Partial.Partial(ReadablePartial partial)",
+      "path": "src/main/java/org/joda/time/Partial.java",
+      "start_line": 259,
+      "end_line": 271,
+      "source": "public Partial(ReadablePartial partial) {\n        super();\n        if (partial == null) {\n            throw new IllegalArgumentException(\"The partial must not be null\");\n        }\n        iChronology = DateTimeUtils.getChronology(partial.getChronology()).withUTC();\n        iTypes = new DateTimeFieldType[partial.size()];\n        iValues = new int[partial.size()];\n        for (int i = 0; i < partial.size(); i++) {\n            iTypes[i] = partial.getFieldType(i);\n            iValues[i] = partial.getValue(i);\n        }\n    }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.19342619296539
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/PeriodType.java::PeriodType.forFields(DurationFieldType[] types)",
+      "path": "src/main/java/org/joda/time/PeriodType.java",
+      "start_line": 501,
+      "end_line": 577,
+      "source": "public static synchronized PeriodType forFields(DurationFieldType[] types) {\n        if (types == null || types.length == 0) {\n            throw new IllegalArgumentException(\"Types array must not be null or empty\");\n        }\n        for (int i = 0; i < types.length; i++) {\n            if (types[i] == null) {\n                throw new IllegalArgumentException(\"Types array must not contain null\");\n            }\n        }\n        Map<PeriodType, Object> cache = cTypes;\n        if (cache.isEmpty()) {\n            cache.put(standard(), standard());\n            cache.put(yearMonthDayTime(), yearMonthDayTime());\n            cache.put(yearMonthDay(), yearMonthDay());\n            cache.put(yearWeekDayTime(), yearWeekDayTime());\n            cache.put(yearWeekDay(), yearWeekDay());\n            cache.put(yearDayTime(), yearDayTime());\n            cache.put(yearDay(), yearDay());\n            cache.put(dayTime(), dayTime());\n            cache.put(time(), time());\n            cache.put(years(), years());\n            cache.put(months(), months());\n            cache.put(weeks(), weeks());\n            cache.put(days(), days());\n            cache.put(hours(), hours());\n            cache.put(minutes(), minutes());\n            cache.put(seconds(), seconds());\n            cache.put(millis(), millis());\n        }\n        PeriodType inPartType = new PeriodType(null, types, null);\n        Object cached = cache.get(inPartType);\n        if (cached instanceof PeriodType) {\n            return (PeriodType) cached;\n        }\n        if (cached != null) {\n            throw new IllegalArgumentException(\"PeriodType does not support fields: \" + cached);\n        }\n        PeriodType type = standard();\n        List<DurationFieldType> list = new ArrayList<DurationFieldType>(Arrays.asList(types));\n        if (list.remove(DurationFieldType.years()) == false) {\n            type = type.withYearsRemoved();\n        }\n        if (list.remove(DurationFieldType.months()) == false) {\n            type = type.withMonthsRemoved();\n        }\n        if (list.remove(DurationFieldType.weeks()) == false) {\n            type = type.withWeeksRemoved();\n        }\n        if (list.remove(DurationFieldType.days()) == false) {\n            type = type.withDaysRemoved();\n        }\n        if (list.remove(DurationFieldType.hours()) == false) {\n            type = type.withHoursRemoved();\n        }\n        if (list.remove(DurationFieldType.minutes()) == false) {\n            type = type.withMinutesRemoved();\n        }\n        if (list.remove(DurationFieldType.seconds()) == false) {\n            type = type.withSecondsRemoved();\n        }\n        if (list.remove(DurationFieldType.millis()) == false) {\n            type = type.withMillisRemoved();\n        }\n        if (list.size() > 0) {\n            cache.put(inPartType, list);\n            throw new IllegalArgumentException(\"PeriodType does not support fields: \" + list);\n        }\n        // recheck cache in case initial array order was wrong\n        PeriodType checkPartType = new PeriodType(null, type.iTypes, null);\n        PeriodType checkedType = (PeriodType) cache.get(checkPartType);\n        if (checkedType != null) {\n            cache.put(checkPartType, checkedType);\n            return checkedType;\n        }\n        cache.put(checkPartType, type);\n        return type;\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 37.312533784639825
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/AbstractPartial.java::AbstractPartial.indexOfSupported(DateTimeFieldType type)",
+      "path": "src/main/java/org/joda/time/base/AbstractPartial.java",
+      "start_line": 186,
+      "end_line": 192,
+      "source": "protected int indexOfSupported(DateTimeFieldType type) {\n        int index = indexOf(type);\n        if (index == -1) {\n            throw new IllegalArgumentException(\"Field '\" + type + \"' is not supported\");\n        }\n        return index;\n    }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.94197638043936
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/AbstractPartial.java::AbstractPartial.indexOfSupported(DurationFieldType type)",
+      "path": "src/main/java/org/joda/time/base/AbstractPartial.java",
+      "start_line": 218,
+      "end_line": 224,
+      "source": "protected int indexOfSupported(DurationFieldType type) {\n        int index = indexOf(type);\n        if (index == -1) {\n            throw new IllegalArgumentException(\"Field '\" + type + \"' is not supported\");\n        }\n        return index;\n    }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.71570957114922
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Partial.java::Partial.with(DateTimeFieldType fieldType, int value)",
+      "path": "src/main/java/org/joda/time/Partial.java",
+      "start_line": 428,
+      "end_line": 476,
+      "source": "public Partial with(DateTimeFieldType fieldType, int value) {\n        if (fieldType == null) {\n            throw new IllegalArgumentException(\"The field type must not be null\");\n        }\n        int index = indexOf(fieldType);\n        if (index == -1) {\n            DateTimeFieldType[] newTypes = new DateTimeFieldType[iTypes.length + 1];\n            int[] newValues = new int[newTypes.length];\n            \n            // find correct insertion point to keep largest-smallest order\n            int i = 0;\n            DurationField unitField = fieldType.getDurationType().getField(iChronology);\n            if (unitField.isSupported()) {\n                for (; i < iTypes.length; i++) {\n                    DateTimeFieldType loopType = iTypes[i];\n                    DurationField loopUnitField = loopType.getDurationType().getField(iChronology);\n                    if (loopUnitField.isSupported()) {\n                        int compare = unitField.compareTo(loopUnitField);\n                        if (compare > 0) {\n                            break;\n                        } else if (compare == 0) {\n                            DurationField rangeField = fieldType.getRangeDurationType().getField(iChronology);\n                            DurationField loopRangeField = loopType.getRangeDurationType().getField(iChronology);\n                            if (rangeField.compareTo(loopRangeField) > 0) {\n                                break;\n                            }\n                        }\n                    }\n                }\n            }\n            System.arraycopy(iTypes, 0, newTypes, 0, i);\n            System.arraycopy(iValues, 0, newValues, 0, i);\n            newTypes[i] = fieldType;\n            newValues[i] = value;\n            System.arraycopy(iTypes, i, newTypes, i + 1, newTypes.length - i - 1);\n            System.arraycopy(iValues, i, newValues, i + 1, newValues.length - i - 1);\n            // use public constructor to ensure full validation\n            // this isn't overly efficient, but is safe\n            Partial newPartial = new Partial(newTypes, newValues, iChronology);\n            iChronology.validate(newPartial, newValues);\n            return newPartial;\n        }\n        if (value == getValue(index)) {\n            return this;\n        }\n        int[] newValues = getValues();\n        newValues = getField(index).set(this, index, newValues, value);\n        return new Partial(this, newValues);\n    }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.55737498082062
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.checkAndUpdate(DurationFieldType type, int[] values, int newValue)",
+      "path": "src/main/java/org/joda/time/base/BasePeriod.java",
+      "start_line": 389,
+      "end_line": 399,
+      "source": "private void checkAndUpdate(DurationFieldType type, int[] values, int newValue) {\n        int index = indexOf(type);\n        if (index == -1) {\n            if (newValue != 0) {\n                throw new IllegalArgumentException(\n                    \"Period does not support field '\" + type.getName() + \"'\");\n            }\n        } else {\n            values[index] = newValue;\n        }\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.05182421552542
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/AbstractPartial.java::AbstractPartial.getFieldTypes()",
+      "path": "src/main/java/org/joda/time/base/AbstractPartial.java",
+      "start_line": 89,
+      "end_line": 95,
+      "source": "public DateTimeFieldType[] getFieldTypes() {\n        DateTimeFieldType[] result = new DateTimeFieldType[size()];\n        for (int i = 0; i < result.length; i++) {\n            result[i] = getFieldType(i);\n        }\n        return result;\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.5873489995359
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/AbstractPartial.java::AbstractPartial.compareTo(ReadablePartial other)",
+      "path": "src/main/java/org/joda/time/base/AbstractPartial.java",
+      "start_line": 310,
+      "end_line": 332,
+      "source": "public int compareTo(ReadablePartial other) {\n        if (this == other) {\n            return 0;\n        }\n        if (size() != other.size()) {\n            throw new ClassCastException(\"ReadablePartial objects must have matching field types\");\n        }\n        for (int i = 0, isize = size(); i < isize; i++) {\n            if (getFieldType(i) != other.getFieldType(i)) {\n                throw new ClassCastException(\"ReadablePartial objects must have matching field types\");\n            }\n        }\n        // fields are ordered largest first\n        for (int i = 0, isize = size(); i < isize; i++) {\n            if (getValue(i) > other.getValue(i)) {\n                return 1;\n            }\n            if (getValue(i) < other.getValue(i)) {\n                return -1;\n            }\n        }\n        return 0;\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.2431367839775
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Partial.java::Partial.without(DateTimeFieldType fieldType)",
+      "path": "src/main/java/org/joda/time/Partial.java",
+      "start_line": 486,
+      "end_line": 500,
+      "source": "public Partial without(DateTimeFieldType fieldType) {\n        int index = indexOf(fieldType);\n        if (index != -1) {\n            DateTimeFieldType[] newTypes = new DateTimeFieldType[size() - 1];\n            int[] newValues = new int[size() - 1];\n            System.arraycopy(iTypes, 0, newTypes, 0, index);\n            System.arraycopy(iTypes, index + 1, newTypes, index, newTypes.length - index);\n            System.arraycopy(iValues, 0, newValues, 0, index);\n            System.arraycopy(iValues, index + 1, newValues, index, newValues.length - index);\n            Partial newPartial = new Partial(iChronology, newTypes, newValues);\n            iChronology.validate(newPartial, newValues);\n            return newPartial;\n        }\n        return this;\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.954261926951474
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/AbstractInterval.java::AbstractInterval.checkInterval(long start, long end)",
+      "path": "src/main/java/org/joda/time/base/AbstractInterval.java",
+      "start_line": 61,
+      "end_line": 65,
+      "source": "protected void checkInterval(long start, long end) {\n        if (end < start) {\n            throw new IllegalArgumentException(\"The end instant must be greater or equal to the start\");\n        }\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.3318907983818
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/DateTimeUtils.java::DateTimeUtils.isContiguous(ReadablePartial partial)",
+      "path": "src/main/java/org/joda/time/DateTimeUtils.java",
+      "start_line": 365,
+      "end_line": 380,
+      "source": "public static final boolean isContiguous(ReadablePartial partial) {\n        if (partial == null) {\n            throw new IllegalArgumentException(\"Partial must not be null\");\n        }\n        DurationFieldType lastType = null;\n        for (int i = 0; i < partial.size(); i++) {\n            DateTimeField loopField = partial.getField(i);\n            if (i > 0) {\n                if (loopField.getRangeDurationField() == null || loopField.getRangeDurationField().getType() != lastType) {\n                    return false;\n                }\n            }\n            lastType = loopField.getDurationField().getType();\n        }\n        return true;\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.919253446716258
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Partial.java::Partial.Partial(DateTimeFieldType type, int value, Chronology chronology)",
+      "path": "src/main/java/org/joda/time/Partial.java",
+      "start_line": 152,
+      "end_line": 162,
+      "source": "public Partial(DateTimeFieldType type, int value, Chronology chronology) {\n        super();\n        chronology = DateTimeUtils.getChronology(chronology).withUTC();\n        iChronology = chronology;\n        if (type == null) {\n            throw new IllegalArgumentException(\"The field type must not be null\");\n        }\n        iTypes = new DateTimeFieldType[] {type};\n        iValues = new int[] {value};\n        chronology.validate(this, iValues);\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.790607997495094
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.addFieldInto(int[] values, DurationFieldType field, int value)",
+      "path": "src/main/java/org/joda/time/base/BasePeriod.java",
+      "start_line": 516,
+      "end_line": 526,
+      "source": "protected void addFieldInto(int[] values, DurationFieldType field, int value) {\n        int index = indexOf(field);\n        if (index == -1) {\n            if (value != 0 || field == null) {\n                throw new IllegalArgumentException(\n                    \"Period does not support field '\" + field + \"'\");\n            }\n        } else {\n            values[index] = FieldUtils.safeAdd(values[index], value);\n        }\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.280880034316894
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/field/PreciseDateTimeField.java::PreciseDateTimeField.PreciseDateTimeField(DateTimeFieldType type,\n                                DurationField unit, DurationField range)",
+      "path": "src/main/java/org/joda/time/field/PreciseDateTimeField.java",
+      "start_line": 56,
+      "end_line": 71,
+      "source": "public PreciseDateTimeField(DateTimeFieldType type,\n                                DurationField unit, DurationField range) {\n        super(type, unit);\n\n        if (!range.isPrecise()) {\n            throw new IllegalArgumentException(\"Range duration field must be precise\");\n        }\n\n        long rangeMillis = range.getUnitMillis();\n        iRange = (int)(rangeMillis / getUnitMillis());\n        if (iRange < 2) {\n            throw new IllegalArgumentException(\"The effective range must be at least 2\");\n        }\n\n        iRangeField = range;\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.076599805197695
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/chrono/BaseChronology.java::BaseChronology.validate(ReadablePartial partial, int[] values)",
+      "path": "src/main/java/org/joda/time/chrono/BaseChronology.java",
+      "start_line": 180,
+      "end_line": 213,
+      "source": "public void validate(ReadablePartial partial, int[] values) {\n        // check values in standard range, catching really stupid cases like -1\n        // this means that the second check will not hit trouble\n        int size = partial.size();\n        for (int i = 0; i < size; i++) {\n            int value = values[i];\n            DateTimeField field = partial.getField(i);\n            if (value < field.getMinimumValue()) {\n                throw new IllegalFieldValueException\n                    (field.getType(), Integer.valueOf(value),\n                     Integer.valueOf(field.getMinimumValue()), null);\n            }\n            if (value > field.getMaximumValue()) {\n                throw new IllegalFieldValueException\n                    (field.getType(), Integer.valueOf(value),\n                     null, Integer.valueOf(field.getMaximumValue()));\n            }\n        }\n        // check values in specific range, catching really odd cases like 30th Feb\n        for (int i = 0; i < size; i++) {\n            int value = values[i];\n            DateTimeField field = partial.getField(i);\n            if (value < field.getMinimumValue(partial, values)) {\n                throw new IllegalFieldValueException\n                    (field.getType(), Integer.valueOf(value),\n                     Integer.valueOf(field.getMinimumValue(partial, values)), null);\n            }\n            if (value > field.getMaximumValue(partial, values)) {\n                throw new IllegalFieldValueException\n                    (field.getType(), Integer.valueOf(value),\n                     null, Integer.valueOf(field.getMaximumValue(partial, values)));\n            }\n        }\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 30.840095699438653
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setFieldInto(int[] values, DurationFieldType field, int value)",
+      "path": "src/main/java/org/joda/time/base/BasePeriod.java",
+      "start_line": 485,
+      "end_line": 495,
+      "source": "protected void setFieldInto(int[] values, DurationFieldType field, int value) {\n        int index = indexOf(field);\n        if (index == -1) {\n            if (value != 0 || field == null) {\n                throw new IllegalArgumentException(\n                    \"Period does not support field '\" + field + \"'\");\n            }\n        } else {\n            values[index] = value;\n        }\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 30.085877679578886
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/YearMonth.java::YearMonth.getField(int index, Chronology chrono)",
+      "path": "src/main/java/org/joda/time/YearMonth.java",
+      "start_line": 399,
+      "end_line": 408,
+      "source": "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 29.971285725506977
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/LocalDate.java::LocalDate.getField(int index, Chronology chrono)",
+      "path": "src/main/java/org/joda/time/LocalDate.java",
+      "start_line": 498,
+      "end_line": 509,
+      "source": "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            case DAY_OF_MONTH:\n                return chrono.dayOfMonth();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 29.95488256874294
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.addPeriodInto(int[] values, ReadablePeriod period)",
+      "path": "src/main/java/org/joda/time/base/BasePeriod.java",
+      "start_line": 577,
+      "end_line": 592,
+      "source": "protected int[] addPeriodInto(int[] values, ReadablePeriod period) {\n        for (int i = 0, isize = period.size(); i < isize; i++) {\n            DurationFieldType type = period.getFieldType(i);\n            int value = period.getValue(i);\n            if (value != 0) {\n                int index = indexOf(type);\n                if (index == -1) {\n                    throw new IllegalArgumentException(\n                        \"Period does not support field '\" + type.getName() + \"'\");\n                } else {\n                    values[index] = FieldUtils.safeAdd(getValue(index), value);\n                }\n            }\n        }\n        return values;\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 29.941782302185317
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/YearMonthDay.java::YearMonthDay.getField(int index, Chronology chrono)",
+      "path": "src/main/java/org/joda/time/YearMonthDay.java",
+      "start_line": 330,
+      "end_line": 341,
+      "source": "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            case DAY_OF_MONTH:\n                return chrono.dayOfMonth();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 29.80500146799409
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/main/java/org/joda/time/Partial.java::Partial.Partial(DateTimeFieldType[] types, int[] values, Chronology chronology)",
+      "source": "public Partial(DateTimeFieldType[] types, int[] values, Chronology chronology) {\n        super();\n        chronology = DateTimeUtils.getChronology(chronology).withUTC();\n        iChronology = chronology;\n        if (types == null) {\n            throw new IllegalArgumentException(\"Types array must not be null\");\n        }\n        if (values == null) {\n            throw new IllegalArgumentException(\"Values array must not be null\");\n        }\n        if (values.length != types.length) {\n            throw new IllegalArgumentException(\"Values array must be the same length as the types array\");\n        }\n        if (types.length == 0) {\n            iTypes = types;\n            iValues = values;\n            return;\n        }\n        for (int i = 0; i < types.length; i++) {\n            if (types[i] == null) {\n                throw new IllegalArgumentException(\"Types array must not contain null: index \" + i);\n            }\n        }\n        DurationField lastUnitField = null;\n        for (int i = 0; i < types.length; i++) {\n            DateTimeFieldType loopType = types[i];\n            DurationField loopUnitField = loopType.getDurationType().getField(iChronology);\n            if (i > 0) {\n                int compare = lastUnitField.compareTo(loopUnitField);\n                if (compare < 0 || (compare != 0 && loopUnitField.isSupported() == false)) {\n                    throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                            types[i - 1].getName() + \" < \" + loopType.getName());\n                } else if (compare == 0) {\n                    if (types[i - 1].getRangeDurationType() == null) {\n                        if (loopType.getRangeDurationType() == null) {\n                            throw new IllegalArgumentException(\"Types array must not contain duplicate: \" +\n                                            types[i - 1].getName() + \" and \" + loopType.getName());\n                        }\n                    } else {\n                        if (loopType.getRangeDurationType() == null) {\n                            throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                                    types[i - 1].getName() + \" < \" + loopType.getName());\n                        }\n                        DurationField lastRangeField = types[i - 1].getRangeDurationType().getField(iChronology);\n                        DurationField loopRangeField = loopType.getRangeDurationType().getField(iChronology);\n                        if (lastRangeField.compareTo(loopRangeField) < 0) {\n                            throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                                    types[i - 1].getName() + \" < \" + loopType.getName());\n                        }\n                        if (lastRangeField.compareTo(loopRangeField) == 0) {\n                            throw new IllegalArgumentException(\"Types array must not contain duplicate: \" +\n                                            types[i - 1].getName() + \" and \" + loopType.getName());\n                        }\n                    }\n                }\n            }\n            lastUnitField = loopUnitField;\n        }\n        \n        iTypes = (DateTimeFieldType[]) types.clone();\n        chronology.validate(this, values);\n        iValues = (int[]) values.clone();\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Partial.java::Partial.Partial(DateTimeFieldType[] types, int[] values, Chronology chronology)\nSIGNATURE: public Partial(DateTimeFieldType[] types, int[] values, Chronology chronology)",
+        "METHOD: src/main/java/org/joda/time/Partial.java::Partial.Partial(DateTimeFieldType[] types, int[] values, Chronology chronology)\nSIGNATURE: public Partial(DateTimeFieldType[] types, int[] values, Chronology chronology)\nSTRUCTURE (lossy):\nchronology = DateTimeUtils.getChronology(chronology).withUTC()\nCALL DateTimeUtils.getChronology(chronology).withUTC()\nCALL DateTimeUtils.getChronology(chronology)\niChronology = chronology\nif (types == null)\nthrow new IllegalArgumentException(\"Types array must not be null\");\nif (values == null)\nthrow new IllegalArgumentException(\"Values array must not be null\");\nif (values.length != types.length)\nthrow new IllegalArgumentException(\"Values array must be the same length as the types array\");\nif (types.length == 0)\niTypes = types\niValues = values\nreturn;\nfor (int i = 0; i < types.length; i++)\nint i = 0;\ni++\nif (types[i] == null)\nthrow new IllegalArgumentException(\"Types array must not contain null: index \" + i);\nDurationField lastUnitField = null;\nDateTimeFieldType loopType = types[i];\nDurationField loopUnitField = loopType.getDurationType().getField(iChronology);\nCALL loopType.getDurationType().getField(iChronology)\nCALL loopType.getDurationType()\nif (i > 0)\nint compare = lastUnitField.compareTo(loopUnitField);\nCALL lastUnitField.compareTo(loopUnitField)\nif (compare < 0 || (compare != 0 && loopUnitField.isSupported() == false))\nCALL loopUnitField.isSupported()\nthrow new IllegalArgumentException(\"Types array must be in order largest-smallest: \" + types[i - 1].getName() + \" < \" + loopType.getName());\nCALL types[i - 1].getName()\nCALL loopType.getName()\nif (compare == 0)\nif (types[i - 1].getRangeDurationType() == null)\nCALL types[i - 1].getRangeDurationType()\nif (loopType.getRangeDurationType() == null)\nCALL loopType.getRangeDurationType()\nthrow new IllegalArgumentException(\"Types array must not contain duplicate: \" + types[i - 1].getName() + \" and \" + loopType.getName());\nDurationField lastRangeField = types[i - 1].getRangeDurationType().getField(iChronology);\nCALL types[i - 1].getRangeDurationType().getField(iChronology)\nDurationField loopRangeField = loopType.getRangeDurationType().getField(iChronology);\nCALL loopType.getRangeDurat\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public Partial(DateTimeFieldType[] types, int[] values, Chronology chronology) {\n        super();\n        chronology = DateTimeUtils.getChronology(chronology).withUTC();\n        iChronology = chronology;\n        if (types == null) {\n            throw new IllegalArgumentException(\"Types array must not be null\");\n        }\n        if (values == null) {\n            throw new IllegalArgumentException(\"Values array must not be null\");\n        }\n        if (values.length != types.length) {\n            throw new IllegalArgumentException(\"Values array must be the same length as the types array\");\n        }\n        if (types.length == 0) {\n            iTypes = types;\n            iValues = values;\n            return;\n        }\n        for (int i = 0; i < types.length; i++) {\n            if (types[i] == null) {\n                throw new IllegalArgumentException(\"Types array must not contain null: index \" + i);\n            }\n        }\n        DurationField lastUnitField = null;\n        for (int i = 0; i < types.length; i++) {\n            DateTimeFieldType loopType = types[i];\n            DurationField loopUnitField = loopType.getDurationType().getField(iChronology);\n            if (i > 0) {\n                int compare = lastUnitField.compareTo(loopUnitField);\n                if (compare < 0 || (compare != 0 && loopUnitField.isSupported() == false)) {\n                    throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                            types[i - 1].getName() + \" < \" + loopType.getName());\n                } else if (compare == 0) {\n                    if (types[i - 1].getRangeDurationType() == null) {\n                        if (loopType.getRangeDurationType() == null) {\n                            throw new IllegalArgumentException(\"Types array must not contain duplicate: \" +\n                                            types[i - 1].getName() + \" and \" + loopType.getName());\n                        }\n                    } else {\n                        if (loopType.getRangeDurationType() == null) {\n                            throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                                    types[i - 1].getName() + \" < \" + loopType.getName());\n                        }\n                        DurationField lastRangeField = types[i - 1].getRangeDurationType().getField(iChronology);\n                        DurationField loopRangeField = loopType.getRangeDurationType().getField(iChronology);\n                        if (lastRangeField.compareTo(loopRangeField) < 0) {\n                            throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                                    types[i - 1].getName() + \" < \" + loopType.getName());\n                        }\n                        if (lastRangeField.compareTo(loopRangeField) == 0) {\n                            throw new IllegalArgumentException(\"Types array must not contain duplicate: \" +\n                                            types[i - 1].getName() + \" and \" + loopType.getName());\n                        }\n                    }\n                }\n            }\n            lastUnitField = loopUnitField;\n        }\n        \n        iTypes = (DateTimeFieldType[]) types.clone();\n        chronology.validate(this, values);\n        iValues = (int[]) values.clone();\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.48148148148148145,
+        "trace_match": 0.0,
+        "complexity": 16.0,
+        "call_count": 28.0,
+        "literal_count": 37.0,
+        "source_tokens": 851.0,
+        "l0_tokens": 55.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.6686251468860165,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 16,
+        "call_count": 28,
+        "literal_count": 37
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Period.java::Period.fieldDifference(ReadablePartial start, ReadablePartial end)",
+      "source": "public static Period fieldDifference(ReadablePartial start, ReadablePartial end) {\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start.size() != end.size()) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n        }\n        DurationFieldType[] types = new DurationFieldType[start.size()];\n        int[] values = new int[start.size()];\n        for (int i = 0, isize = start.size(); i < isize; i++) {\n            if (start.getFieldType(i) != end.getFieldType(i)) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n            types[i] = start.getFieldType(i).getDurationType();\n            if (i > 0 && types[i - 1] == types[i]) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must not have overlapping fields\");\n            }\n            values[i] = end.getValue(i) - start.getValue(i);\n        }\n        return new Period(values, PeriodType.forFields(types));\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.fieldDifference(ReadablePartial start, ReadablePartial end)\nSIGNATURE: public static Period fieldDifference(ReadablePartial start, ReadablePartial end)",
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.fieldDifference(ReadablePartial start, ReadablePartial end)\nSIGNATURE: public static Period fieldDifference(ReadablePartial start, ReadablePartial end)\nSTRUCTURE (lossy):\nif (start == null || end == null)\nthrow new IllegalArgumentException(\"ReadablePartial objects must not be null\");\nif (start.size() != end.size())\nCALL start.size()\nCALL end.size()\nthrow new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\nDurationFieldType[] types = new DurationFieldType[start.size()];\nint[] values = new int[start.size()];\nfor (int i = 0, isize = start.size(); i < isize; i++)\nint i = 0, isize = start.size();\ni++\nif (start.getFieldType(i) != end.getFieldType(i))\nCALL start.getFieldType(i)\nCALL end.getFieldType(i)\ntypes[i] = start.getFieldType(i).getDurationType()\nCALL start.getFieldType(i).getDurationType()\nif (i > 0 && types[i - 1] == types[i])\nthrow new IllegalArgumentException(\"ReadablePartial objects must not have overlapping fields\");\nvalues[i] = end.getValue(i) - start.getValue(i)\nCALL end.getValue(i)\nCALL start.getValue(i)\nreturn new Period(values, PeriodType.forFields(types));\nCALL PeriodType.forFields(types)",
+        "public static Period fieldDifference(ReadablePartial start, ReadablePartial end) {\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start.size() != end.size()) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n        }\n        DurationFieldType[] types = new DurationFieldType[start.size()];\n        int[] values = new int[start.size()];\n        for (int i = 0, isize = start.size(); i < isize; i++) {\n            if (start.getFieldType(i) != end.getFieldType(i)) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n            types[i] = start.getFieldType(i).getDurationType();\n            if (i > 0 && types[i - 1] == types[i]) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must not have overlapping fields\");\n            }\n            values[i] = end.getValue(i) - start.getValue(i);\n        }\n        return new Period(values, PeriodType.forFields(types));\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4878048780487805,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 12.0,
+        "literal_count": 9.0,
+        "source_tokens": 287.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 303.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 12,
+        "literal_count": 9
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)",
+      "source": "protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance) {\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start.size() != end.size()) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n        }\n        for (int i = 0, isize = start.size(); i < isize; i++) {\n            if (start.getFieldType(i) != end.getFieldType(i)) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n        }\n        if (DateTimeUtils.isContiguous(start) == false) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n        }\n        Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n        int[] values = chrono.get(zeroInstance, chrono.set(start, START_1972), chrono.set(end, START_1972));\n        return values[0];\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)\nSIGNATURE: protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)",
+        "METHOD: src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)\nSIGNATURE: protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)\nSTRUCTURE (lossy):\nif (start == null || end == null)\nthrow new IllegalArgumentException(\"ReadablePartial objects must not be null\");\nif (start.size() != end.size())\nCALL start.size()\nCALL end.size()\nthrow new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\nfor (int i = 0, isize = start.size(); i < isize; i++)\nint i = 0, isize = start.size();\ni++\nif (start.getFieldType(i) != end.getFieldType(i))\nCALL start.getFieldType(i)\nCALL end.getFieldType(i)\nif (DateTimeUtils.isContiguous(start) == false)\nCALL DateTimeUtils.isContiguous(start)\nthrow new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\nChronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\nCALL DateTimeUtils.getChronology(start.getChronology()).withUTC()\nCALL DateTimeUtils.getChronology(start.getChronology())\nCALL start.getChronology()\nint[] values = chrono.get(zeroInstance, chrono.set(start, START_1972), chrono.set(end, START_1972));\nCALL chrono.get(zeroInstance, chrono.set(start, START_1972), chrono.set(end, START_1972))\nCALL chrono.set(start, START_1972)\nCALL chrono.set(end, START_1972)\nreturn values[0];",
+        "protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance) {\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start.size() != end.size()) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n        }\n        for (int i = 0, isize = start.size(); i < isize; i++) {\n            if (start.getFieldType(i) != end.getFieldType(i)) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n        }\n        if (DateTimeUtils.isContiguous(start) == false) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n        }\n        Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n        int[] values = chrono.get(zeroInstance, chrono.set(start, START_1972), chrono.set(end, START_1972));\n        return values[0];\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.46938775510204084,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 12.0,
+        "literal_count": 8.0,
+        "source_tokens": 267.0,
+        "l0_tokens": 71.0,
+        "l1_tokens": 363.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 12,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)",
+      "source": "protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type) {\n        super();\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start instanceof BaseLocal && end instanceof BaseLocal && start.getClass() == end.getClass()) {\n            // for performance\n            type = checkPeriodType(type);\n            long startMillis = ((BaseLocal) start).getLocalMillis();\n            long endMillis = ((BaseLocal) end).getLocalMillis();\n            Chronology chrono = start.getChronology();\n            chrono = DateTimeUtils.getChronology(chrono);\n            iType = type;\n            iValues = chrono.get(this, startMillis, endMillis);\n        } else {\n            if (start.size() != end.size()) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n            for (int i = 0, isize = start.size(); i < isize; i++) {\n                if (start.getFieldType(i) != end.getFieldType(i)) {\n                    throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n                }\n            }\n            if (DateTimeUtils.isContiguous(start) == false) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n            }\n            iType = checkPeriodType(type);\n            Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n            iValues = chrono.get(this, chrono.set(start, 0L), chrono.set(end, 0L));\n        }\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)\nSIGNATURE: protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)",
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)\nSIGNATURE: protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)\nSTRUCTURE (lossy):\nif (start == null || end == null)\nthrow new IllegalArgumentException(\"ReadablePartial objects must not be null\");\nif (start instanceof BaseLocal && end instanceof BaseLocal && start.getClass() == end.getClass())\nCALL start.getClass()\nCALL end.getClass()\ntype = checkPeriodType(type)\nCALL checkPeriodType(type)\nlong startMillis = ((BaseLocal) start).getLocalMillis();\nCALL ((BaseLocal) start).getLocalMillis()\nlong endMillis = ((BaseLocal) end).getLocalMillis();\nCALL ((BaseLocal) end).getLocalMillis()\nChronology chrono = start.getChronology();\nCALL start.getChronology()\nchrono = DateTimeUtils.getChronology(chrono)\nCALL DateTimeUtils.getChronology(chrono)\niType = type\niValues = chrono.get(this, startMillis, endMillis)\nCALL chrono.get(this, startMillis, endMillis)\nif (start.size() != end.size())\nCALL start.size()\nCALL end.size()\nthrow new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\nfor (int i = 0, isize = start.size(); i < isize; i++)\nint i = 0, isize = start.size();\ni++\nif (start.getFieldType(i) != end.getFieldType(i))\nCALL start.getFieldType(i)\nCALL end.getFieldType(i)\nif (DateTimeUtils.isContiguous(start) == false)\nCALL DateTimeUtils.isContiguous(start)\nthrow new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\niType = checkPeriodType(type)\nChronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\nCALL DateTimeUtils.getChronology(start.getChronology()).withUTC()\nCALL DateTimeUtils.getChronology(start.getChronology())\niValues = chrono.get(this, chrono.set(start, 0L), chrono.set(end, 0L))\nCALL chrono.get(this, chrono.set(start, 0L), chrono.set(end, 0L))\nCALL chrono.set(start, 0L)\nCALL chrono.set(end, 0L)",
+        "protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type) {\n        super();\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start instanceof BaseLocal && end instanceof BaseLocal && start.getClass() == end.getClass()) {\n            // for performance\n            type = checkPeriodType(type);\n            long startMillis = ((BaseLocal) start).getLocalMillis();\n            long endMillis = ((BaseLocal) end).getLocalMillis();\n            Chronology chrono = start.getChronology();\n            chrono = DateTimeUtils.getChronology(chrono);\n            iType = type;\n            iValues = chrono.get(this, startMillis, endMillis);\n        } else {\n            if (start.size() != end.size()) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n            for (int i = 0, isize = start.size(); i < isize; i++) {\n                if (start.getFieldType(i) != end.getFieldType(i)) {\n                    throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n                }\n            }\n            if (DateTimeUtils.isContiguous(start) == false) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n            }\n            iType = checkPeriodType(type);\n            Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n            iValues = chrono.get(this, chrono.set(start, 0L), chrono.set(end, 0L));\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4339622641509434,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 21.0,
+        "literal_count": 9.0,
+        "source_tokens": 412.0,
+        "l0_tokens": 59.0,
+        "l1_tokens": 492.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 21,
+        "literal_count": 9
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Partial.java::Partial.Partial(ReadablePartial partial)",
+      "source": "public Partial(ReadablePartial partial) {\n        super();\n        if (partial == null) {\n            throw new IllegalArgumentException(\"The partial must not be null\");\n        }\n        iChronology = DateTimeUtils.getChronology(partial.getChronology()).withUTC();\n        iTypes = new DateTimeFieldType[partial.size()];\n        iValues = new int[partial.size()];\n        for (int i = 0; i < partial.size(); i++) {\n            iTypes[i] = partial.getFieldType(i);\n            iValues[i] = partial.getValue(i);\n        }\n    }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Partial.java::Partial.Partial(ReadablePartial partial)\nSIGNATURE: public Partial(ReadablePartial partial)",
+        "METHOD: src/main/java/org/joda/time/Partial.java::Partial.Partial(ReadablePartial partial)\nSIGNATURE: public Partial(ReadablePartial partial)\nSTRUCTURE (lossy):\nif (partial == null)\nthrow new IllegalArgumentException(\"The partial must not be null\");\niChronology = DateTimeUtils.getChronology(partial.getChronology()).withUTC()\nCALL DateTimeUtils.getChronology(partial.getChronology()).withUTC()\nCALL DateTimeUtils.getChronology(partial.getChronology())\nCALL partial.getChronology()\niTypes = new DateTimeFieldType[partial.size()]\nCALL partial.size()\niValues = new int[partial.size()]\nfor (int i = 0; i < partial.size(); i++)\nint i = 0;\ni++\niTypes[i] = partial.getFieldType(i)\nCALL partial.getFieldType(i)\niValues[i] = partial.getValue(i)\nCALL partial.getValue(i)",
+        "public Partial(ReadablePartial partial) {\n        super();\n        if (partial == null) {\n            throw new IllegalArgumentException(\"The partial must not be null\");\n        }\n        iChronology = DateTimeUtils.getChronology(partial.getChronology()).withUTC();\n        iTypes = new DateTimeFieldType[partial.size()];\n        iValues = new int[partial.size()];\n        for (int i = 0; i < partial.size(); i++) {\n            iTypes[i] = partial.getFieldType(i);\n            iValues[i] = partial.getValue(i);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6363636363636364,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 8.0,
+        "literal_count": 3.0,
+        "source_tokens": 132.0,
+        "l0_tokens": 36.0,
+        "l1_tokens": 191.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 8,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/PeriodType.java::PeriodType.forFields(DurationFieldType[] types)",
+      "source": "public static synchronized PeriodType forFields(DurationFieldType[] types) {\n        if (types == null || types.length == 0) {\n            throw new IllegalArgumentException(\"Types array must not be null or empty\");\n        }\n        for (int i = 0; i < types.length; i++) {\n            if (types[i] == null) {\n                throw new IllegalArgumentException(\"Types array must not contain null\");\n            }\n        }\n        Map<PeriodType, Object> cache = cTypes;\n        if (cache.isEmpty()) {\n            cache.put(standard(), standard());\n            cache.put(yearMonthDayTime(), yearMonthDayTime());\n            cache.put(yearMonthDay(), yearMonthDay());\n            cache.put(yearWeekDayTime(), yearWeekDayTime());\n            cache.put(yearWeekDay(), yearWeekDay());\n            cache.put(yearDayTime(), yearDayTime());\n            cache.put(yearDay(), yearDay());\n            cache.put(dayTime(), dayTime());\n            cache.put(time(), time());\n            cache.put(years(), years());\n            cache.put(months(), months());\n            cache.put(weeks(), weeks());\n            cache.put(days(), days());\n            cache.put(hours(), hours());\n            cache.put(minutes(), minutes());\n            cache.put(seconds(), seconds());\n            cache.put(millis(), millis());\n        }\n        PeriodType inPartType = new PeriodType(null, types, null);\n        Object cached = cache.get(inPartType);\n        if (cached instanceof PeriodType) {\n            return (PeriodType) cached;\n        }\n        if (cached != null) {\n            throw new IllegalArgumentException(\"PeriodType does not support fields: \" + cached);\n        }\n        PeriodType type = standard();\n        List<DurationFieldType> list = new ArrayList<DurationFieldType>(Arrays.asList(types));\n        if (list.remove(DurationFieldType.years()) == false) {\n            type = type.withYearsRemoved();\n        }\n        if (list.remove(DurationFieldType.months()) == false) {\n            type = type.withMonthsRemoved();\n        }\n        if (list.remove(DurationFieldType.weeks()) == false) {\n            type = type.withWeeksRemoved();\n        }\n        if (list.remove(DurationFieldType.days()) == false) {\n            type = type.withDaysRemoved();\n        }\n        if (list.remove(DurationFieldType.hours()) == false) {\n            type = type.withHoursRemoved();\n        }\n        if (list.remove(DurationFieldType.minutes()) == false) {\n            type = type.withMinutesRemoved();\n        }\n        if (list.remove(DurationFieldType.seconds()) == false) {\n            type = type.withSecondsRemoved();\n        }\n        if (list.remove(DurationFieldType.millis()) == false) {\n            type = type.withMillisRemoved();\n        }\n        if (list.size() > 0) {\n            cache.put(inPartType, list);\n            throw new IllegalArgumentException(\"PeriodType does not support fields: \" + list);\n        }\n        // recheck cache in case initial array order was wrong\n        PeriodType checkPartType = new PeriodType(null, type.iTypes, null);\n        PeriodType checkedType = (PeriodType) cache.get(checkPartType);\n        if (checkedType != null) {\n            cache.put(checkPartType, checkedType);\n            return checkedType;\n        }\n        cache.put(checkPartType, type);\n        return type;\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/PeriodType.java::PeriodType.forFields(DurationFieldType[] types)\nSIGNATURE: public static synchronized PeriodType forFields(DurationFieldType[] types)",
+        "METHOD: src/main/java/org/joda/time/PeriodType.java::PeriodType.forFields(DurationFieldType[] types)\nSIGNATURE: public static synchronized PeriodType forFields(DurationFieldType[] types)\nSTRUCTURE (lossy):\nif (types == null || types.length == 0)\nthrow new IllegalArgumentException(\"Types array must not be null or empty\");\nfor (int i = 0; i < types.length; i++)\nint i = 0;\ni++\nif (types[i] == null)\nthrow new IllegalArgumentException(\"Types array must not contain null\");\nMap<PeriodType, Object> cache = cTypes;\nif (cache.isEmpty())\nCALL cache.isEmpty()\nCALL cache.put(standard(), standard())\nCALL standard()\nCALL cache.put(yearMonthDayTime(), yearMonthDayTime())\nCALL yearMonthDayTime()\nCALL cache.put(yearMonthDay(), yearMonthDay())\nCALL yearMonthDay()\nCALL cache.put(yearWeekDayTime(), yearWeekDayTime())\nCALL yearWeekDayTime()\nCALL cache.put(yearWeekDay(), yearWeekDay())\nCALL yearWeekDay()\nCALL cache.put(yearDayTime(), yearDayTime())\nCALL yearDayTime()\nCALL cache.put(yearDay(), yearDay())\nCALL yearDay()\nCALL cache.put(dayTime(), dayTime())\nCALL dayTime()\nCALL cache.put(time(), time())\nCALL time()\nCALL cache.put(years(), years())\nCALL years()\nCALL cache.put(months(), months())\nCALL months()\nCALL cache.put(weeks(), weeks())\nCALL weeks()\nCALL cache.put(days(), days())\nCALL days()\nCALL cache.put(hours(), hours())\nCALL hours()\nCALL cache.put(minutes(), minutes())\nCALL minutes()\nCALL cache.put(seconds(), seconds())\nCALL seconds()\nCALL cache.put(millis(), millis())\nCALL millis()\nPeriodType inPartType = new PeriodType(null, types, null);\nObject cached = cache.get(inPartType);\nCALL cache.get(inPartType)\nif (cached instanceof PeriodType)\nreturn (PeriodType) cached;\nif (cached != null)\nthrow new IllegalArgumentException(\"PeriodType does not support fields: \" + cached);\nPeriodType type = standard();\nList<DurationFieldType> list = new ArrayList<DurationFieldType>(Arrays.asList(types));\nCALL Arrays.asList(types)\nif (list.remove(DurationFieldType.years()) == false)\nCALL list.remove(DurationFieldType.years())\nCALL DurationFieldType.years()\ntype = type.withYearsRemoved()\nCALL type.withYearsRemoved()\nif (list.remove(DurationFieldType.months()) == false)\nCALL list.remove(DurationFieldType\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public static synchronized PeriodType forFields(DurationFieldType[] types) {\n        if (types == null || types.length == 0) {\n            throw new IllegalArgumentException(\"Types array must not be null or empty\");\n        }\n        for (int i = 0; i < types.length; i++) {\n            if (types[i] == null) {\n                throw new IllegalArgumentException(\"Types array must not contain null\");\n            }\n        }\n        Map<PeriodType, Object> cache = cTypes;\n        if (cache.isEmpty()) {\n            cache.put(standard(), standard());\n            cache.put(yearMonthDayTime(), yearMonthDayTime());\n            cache.put(yearMonthDay(), yearMonthDay());\n            cache.put(yearWeekDayTime(), yearWeekDayTime());\n            cache.put(yearWeekDay(), yearWeekDay());\n            cache.put(yearDayTime(), yearDayTime());\n            cache.put(yearDay(), yearDay());\n            cache.put(dayTime(), dayTime());\n            cache.put(time(), time());\n            cache.put(years(), years());\n            cache.put(months(), months());\n            cache.put(weeks(), weeks());\n            cache.put(days(), days());\n            cache.put(hours(), hours());\n            cache.put(minutes(), minutes());\n            cache.put(seconds(), seconds());\n            cache.put(millis(), millis());\n        }\n        PeriodType inPartType = new PeriodType(null, types, null);\n        Object cached = cache.get(inPartType);\n        if (cached instanceof PeriodType) {\n            return (PeriodType) cached;\n        }\n        if (cached != null) {\n            throw new IllegalArgumentException(\"PeriodType does not support fields: \" + cached);\n        }\n        PeriodType type = standard();\n        List<DurationFieldType> list = new ArrayList<DurationFieldType>(Arrays.asList(types));\n        if (list.remove(DurationFieldType.years()) == false) {\n            type = type.withYearsRemoved();\n        }\n        if (list.remove(DurationFieldType.months()) == false) {\n            type = type.withMonthsRemoved();\n        }\n        if (list.remove(DurationFieldType.weeks()) == false) {\n            type = type.withWeeksRemoved();\n        }\n        if (list.remove(DurationFieldType.days()) == false) {\n            type = type.withDaysRemoved();\n        }\n        if (list.remove(DurationFieldType.hours()) == false) {\n            type = type.withHoursRemoved();\n        }\n        if (list.remove(DurationFieldType.minutes()) == false) {\n            type = type.withMinutesRemoved();\n        }\n        if (list.remove(DurationFieldType.seconds()) == false) {\n            type = type.withSecondsRemoved();\n        }\n        if (list.remove(DurationFieldType.millis()) == false) {\n            type = type.withMillisRemoved();\n        }\n        if (list.size() > 0) {\n            cache.put(inPartType, list);\n            throw new IllegalArgumentException(\"PeriodType does not support fields: \" + list);\n        }\n        // recheck cache in case initial array order was wrong\n        PeriodType checkPartType = new PeriodType(null, type.iTypes, null);\n        PeriodType checkedType = (PeriodType) cache.get(checkPartType);\n        if (checkedType != null) {\n            cache.put(checkPartType, checkedType);\n            return checkedType;\n        }\n        cache.put(checkPartType, type);\n        return type;\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3235294117647059,
+        "trace_match": 0.0,
+        "complexity": 17.0,
+        "call_count": 84.0,
+        "literal_count": 15.0,
+        "source_tokens": 830.0,
+        "l0_tokens": 47.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.6855421686746987,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 17,
+        "call_count": 84,
+        "literal_count": 15
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/AbstractPartial.java::AbstractPartial.indexOfSupported(DateTimeFieldType type)",
+      "source": "protected int indexOfSupported(DateTimeFieldType type) {\n        int index = indexOf(type);\n        if (index == -1) {\n            throw new IllegalArgumentException(\"Field '\" + type + \"' is not supported\");\n        }\n        return index;\n    }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/AbstractPartial.java::AbstractPartial.indexOfSupported(DateTimeFieldType type)\nSIGNATURE: protected int indexOfSupported(DateTimeFieldType type)",
+        "METHOD: src/main/java/org/joda/time/base/AbstractPartial.java::AbstractPartial.indexOfSupported(DateTimeFieldType type)\nSIGNATURE: protected int indexOfSupported(DateTimeFieldType type)\nSTRUCTURE (lossy):\nint index = indexOf(type);\nCALL indexOf(type)\nif (index == -1)\nthrow new IllegalArgumentException(\"Field '\" + type + \"' is not supported\");\nreturn index;",
+        "protected int indexOfSupported(DateTimeFieldType type) {\n        int index = indexOf(type);\n        if (index == -1) {\n            throw new IllegalArgumentException(\"Field '\" + type + \"' is not supported\");\n        }\n        return index;\n    }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.782608695652174,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 3.0,
+        "source_tokens": 62.0,
+        "l0_tokens": 47.0,
+        "l1_tokens": 90.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/AbstractPartial.java::AbstractPartial.indexOfSupported(DurationFieldType type)",
+      "source": "protected int indexOfSupported(DurationFieldType type) {\n        int index = indexOf(type);\n        if (index == -1) {\n            throw new IllegalArgumentException(\"Field '\" + type + \"' is not supported\");\n        }\n        return index;\n    }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/AbstractPartial.java::AbstractPartial.indexOfSupported(DurationFieldType type)\nSIGNATURE: protected int indexOfSupported(DurationFieldType type)",
+        "METHOD: src/main/java/org/joda/time/base/AbstractPartial.java::AbstractPartial.indexOfSupported(DurationFieldType type)\nSIGNATURE: protected int indexOfSupported(DurationFieldType type)\nSTRUCTURE (lossy):\nint index = indexOf(type);\nCALL indexOf(type)\nif (index == -1)\nthrow new IllegalArgumentException(\"Field '\" + type + \"' is not supported\");\nreturn index;",
+        "protected int indexOfSupported(DurationFieldType type) {\n        int index = indexOf(type);\n        if (index == -1) {\n            throw new IllegalArgumentException(\"Field '\" + type + \"' is not supported\");\n        }\n        return index;\n    }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7391304347826086,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 3.0,
+        "source_tokens": 62.0,
+        "l0_tokens": 47.0,
+        "l1_tokens": 90.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Partial.java::Partial.with(DateTimeFieldType fieldType, int value)",
+      "source": "public Partial with(DateTimeFieldType fieldType, int value) {\n        if (fieldType == null) {\n            throw new IllegalArgumentException(\"The field type must not be null\");\n        }\n        int index = indexOf(fieldType);\n        if (index == -1) {\n            DateTimeFieldType[] newTypes = new DateTimeFieldType[iTypes.length + 1];\n            int[] newValues = new int[newTypes.length];\n            \n            // find correct insertion point to keep largest-smallest order\n            int i = 0;\n            DurationField unitField = fieldType.getDurationType().getField(iChronology);\n            if (unitField.isSupported()) {\n                for (; i < iTypes.length; i++) {\n                    DateTimeFieldType loopType = iTypes[i];\n                    DurationField loopUnitField = loopType.getDurationType().getField(iChronology);\n                    if (loopUnitField.isSupported()) {\n                        int compare = unitField.compareTo(loopUnitField);\n                        if (compare > 0) {\n                            break;\n                        } else if (compare == 0) {\n                            DurationField rangeField = fieldType.getRangeDurationType().getField(iChronology);\n                            DurationField loopRangeField = loopType.getRangeDurationType().getField(iChronology);\n                            if (rangeField.compareTo(loopRangeField) > 0) {\n                                break;\n                            }\n                        }\n                    }\n                }\n            }\n            System.arraycopy(iTypes, 0, newTypes, 0, i);\n            System.arraycopy(iValues, 0, newValues, 0, i);\n            newTypes[i] = fieldType;\n            newValues[i] = value;\n            System.arraycopy(iTypes, i, newTypes, i + 1, newTypes.length - i - 1);\n            System.arraycopy(iValues, i, newValues, i + 1, newValues.length - i - 1);\n            // use public constructor to ensure full validation\n            // this isn't overly efficient, but is safe\n            Partial newPartial = new Partial(newTypes, newValues, iChronology);\n            iChronology.validate(newPartial, newValues);\n            return newPartial;\n        }\n        if (value == getValue(index)) {\n            return this;\n        }\n        int[] newValues = getValues();\n        newValues = getField(index).set(this, index, newValues, value);\n        return new Partial(this, newValues);\n    }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Partial.java::Partial.with(DateTimeFieldType fieldType, int value)\nSIGNATURE: public Partial with(DateTimeFieldType fieldType, int value)",
+        "METHOD: src/main/java/org/joda/time/Partial.java::Partial.with(DateTimeFieldType fieldType, int value)\nSIGNATURE: public Partial with(DateTimeFieldType fieldType, int value)\nSTRUCTURE (lossy):\nif (fieldType == null)\nthrow new IllegalArgumentException(\"The field type must not be null\");\nint index = indexOf(fieldType);\nCALL indexOf(fieldType)\nif (index == -1)\nDateTimeFieldType[] newTypes = new DateTimeFieldType[iTypes.length + 1];\nint[] newValues = new int[newTypes.length];\nint i = 0;\nDurationField unitField = fieldType.getDurationType().getField(iChronology);\nCALL fieldType.getDurationType().getField(iChronology)\nCALL fieldType.getDurationType()\nif (unitField.isSupported())\nCALL unitField.isSupported()\nfor (; i < iTypes.length; i++)\ni++\nDateTimeFieldType loopType = iTypes[i];\nDurationField loopUnitField = loopType.getDurationType().getField(iChronology);\nCALL loopType.getDurationType().getField(iChronology)\nCALL loopType.getDurationType()\nif (loopUnitField.isSupported())\nCALL loopUnitField.isSupported()\nint compare = unitField.compareTo(loopUnitField);\nCALL unitField.compareTo(loopUnitField)\nif (compare > 0)\nif (compare == 0)\nDurationField rangeField = fieldType.getRangeDurationType().getField(iChronology);\nCALL fieldType.getRangeDurationType().getField(iChronology)\nCALL fieldType.getRangeDurationType()\nDurationField loopRangeField = loopType.getRangeDurationType().getField(iChronology);\nCALL loopType.getRangeDurationType().getField(iChronology)\nCALL loopType.getRangeDurationType()\nif (rangeField.compareTo(loopRangeField) > 0)\nCALL rangeField.compareTo(loopRangeField)\nCALL System.arraycopy(iTypes, 0, newTypes, 0, i)\nCALL System.arraycopy(iValues, 0, newValues, 0, i)\nnewTypes[i] = fieldType\nnewValues[i] = value\nCALL System.arraycopy(iTypes, i, newTypes, i + 1, newTypes.length - i - 1)\nCALL System.arraycopy(iValues, i, newValues, i + 1, newValues.length - i - 1)\nPartial newPartial = new Partial(newTypes, newValues, iChronology);\nCALL iChronology.validate(newPartial, newValues)\nreturn newPartial;\nif (value == getValue(index))\nCALL getValue(index)\nreturn this;\nint[] newValues = getValues();\nCALL getValues()\nnewValues = getField(index).set(this, index, newValues, valu\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public Partial with(DateTimeFieldType fieldType, int value) {\n        if (fieldType == null) {\n            throw new IllegalArgumentException(\"The field type must not be null\");\n        }\n        int index = indexOf(fieldType);\n        if (index == -1) {\n            DateTimeFieldType[] newTypes = new DateTimeFieldType[iTypes.length + 1];\n            int[] newValues = new int[newTypes.length];\n            \n            // find correct insertion point to keep largest-smallest order\n            int i = 0;\n            DurationField unitField = fieldType.getDurationType().getField(iChronology);\n            if (unitField.isSupported()) {\n                for (; i < iTypes.length; i++) {\n                    DateTimeFieldType loopType = iTypes[i];\n                    DurationField loopUnitField = loopType.getDurationType().getField(iChronology);\n                    if (loopUnitField.isSupported()) {\n                        int compare = unitField.compareTo(loopUnitField);\n                        if (compare > 0) {\n                            break;\n                        } else if (compare == 0) {\n                            DurationField rangeField = fieldType.getRangeDurationType().getField(iChronology);\n                            DurationField loopRangeField = loopType.getRangeDurationType().getField(iChronology);\n                            if (rangeField.compareTo(loopRangeField) > 0) {\n                                break;\n                            }\n                        }\n                    }\n                }\n            }\n            System.arraycopy(iTypes, 0, newTypes, 0, i);\n            System.arraycopy(iValues, 0, newValues, 0, i);\n            newTypes[i] = fieldType;\n            newValues[i] = value;\n            System.arraycopy(iTypes, i, newTypes, i + 1, newTypes.length - i - 1);\n            System.arraycopy(iValues, i, newValues, i + 1, newValues.length - i - 1);\n            // use public constructor to ensure full validation\n            // this isn't overly efficient, but is safe\n            Partial newPartial = new Partial(newTypes, newValues, iChronology);\n            iChronology.validate(newPartial, newValues);\n            return newPartial;\n        }\n        if (value == getValue(index)) {\n            return this;\n        }\n        int[] newValues = getValues();\n        newValues = getField(index).set(this, index, newValues, value);\n        return new Partial(this, newValues);\n    }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3387096774193548,
+        "trace_match": 0.0,
+        "complexity": 10.0,
+        "call_count": 22.0,
+        "literal_count": 16.0,
+        "source_tokens": 612.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.9297385620915033,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 10,
+        "call_count": 22,
+        "literal_count": 16
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.checkAndUpdate(DurationFieldType type, int[] values, int newValue)",
+      "source": "private void checkAndUpdate(DurationFieldType type, int[] values, int newValue) {\n        int index = indexOf(type);\n        if (index == -1) {\n            if (newValue != 0) {\n                throw new IllegalArgumentException(\n                    \"Period does not support field '\" + type.getName() + \"'\");\n            }\n        } else {\n            values[index] = newValue;\n        }\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.checkAndUpdate(DurationFieldType type, int[] values, int newValue)\nSIGNATURE: private void checkAndUpdate(DurationFieldType type, int[] values, int newValue)",
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.checkAndUpdate(DurationFieldType type, int[] values, int newValue)\nSIGNATURE: private void checkAndUpdate(DurationFieldType type, int[] values, int newValue)\nSTRUCTURE (lossy):\nint index = indexOf(type);\nCALL indexOf(type)\nif (index == -1)\nif (newValue != 0)\nthrow new IllegalArgumentException( \"Period does not support field '\" + type.getName() + \"'\");\nCALL type.getName()\nvalues[index] = newValue",
+        "private void checkAndUpdate(DurationFieldType type, int[] values, int newValue) {\n        int index = indexOf(type);\n        if (index == -1) {\n            if (newValue != 0) {\n                throw new IllegalArgumentException(\n                    \"Period does not support field '\" + type.getName() + \"'\");\n            }\n        } else {\n            values[index] = newValue;\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5483870967741935,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 2.0,
+        "literal_count": 4.0,
+        "source_tokens": 98.0,
+        "l0_tokens": 57.0,
+        "l1_tokens": 117.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 2,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/AbstractPartial.java::AbstractPartial.getFieldTypes()",
+      "source": "public DateTimeFieldType[] getFieldTypes() {\n        DateTimeFieldType[] result = new DateTimeFieldType[size()];\n        for (int i = 0; i < result.length; i++) {\n            result[i] = getFieldType(i);\n        }\n        return result;\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/AbstractPartial.java::AbstractPartial.getFieldTypes()\nSIGNATURE: public DateTimeFieldType[] getFieldTypes()",
+        "METHOD: src/main/java/org/joda/time/base/AbstractPartial.java::AbstractPartial.getFieldTypes()\nSIGNATURE: public DateTimeFieldType[] getFieldTypes()\nSTRUCTURE (lossy):\nDateTimeFieldType[] result = new DateTimeFieldType[size()];\nCALL size()\nfor (int i = 0; i < result.length; i++)\nint i = 0;\ni++\nresult[i] = getFieldType(i)\nCALL getFieldType(i)\nreturn result;",
+        "public DateTimeFieldType[] getFieldTypes() {\n        DateTimeFieldType[] result = new DateTimeFieldType[size()];\n        for (int i = 0; i < result.length; i++) {\n            result[i] = getFieldType(i);\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7272727272727273,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 61.0,
+        "l0_tokens": 37.0,
+        "l1_tokens": 90.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/AbstractPartial.java::AbstractPartial.compareTo(ReadablePartial other)",
+      "source": "public int compareTo(ReadablePartial other) {\n        if (this == other) {\n            return 0;\n        }\n        if (size() != other.size()) {\n            throw new ClassCastException(\"ReadablePartial objects must have matching field types\");\n        }\n        for (int i = 0, isize = size(); i < isize; i++) {\n            if (getFieldType(i) != other.getFieldType(i)) {\n                throw new ClassCastException(\"ReadablePartial objects must have matching field types\");\n            }\n        }\n        // fields are ordered largest first\n        for (int i = 0, isize = size(); i < isize; i++) {\n            if (getValue(i) > other.getValue(i)) {\n                return 1;\n            }\n            if (getValue(i) < other.getValue(i)) {\n                return -1;\n            }\n        }\n        return 0;\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/AbstractPartial.java::AbstractPartial.compareTo(ReadablePartial other)\nSIGNATURE: public int compareTo(ReadablePartial other)",
+        "METHOD: src/main/java/org/joda/time/base/AbstractPartial.java::AbstractPartial.compareTo(ReadablePartial other)\nSIGNATURE: public int compareTo(ReadablePartial other)\nSTRUCTURE (lossy):\nif (this == other)\nreturn 0;\nif (size() != other.size())\nCALL size()\nCALL other.size()\nthrow new ClassCastException(\"ReadablePartial objects must have matching field types\");\nfor (int i = 0, isize = size(); i < isize; i++)\nint i = 0, isize = size();\ni++\nif (getFieldType(i) != other.getFieldType(i))\nCALL getFieldType(i)\nCALL other.getFieldType(i)\nif (getValue(i) > other.getValue(i))\nCALL getValue(i)\nCALL other.getValue(i)\nreturn 1;\nif (getValue(i) < other.getValue(i))\nreturn -1;",
+        "public int compareTo(ReadablePartial other) {\n        if (this == other) {\n            return 0;\n        }\n        if (size() != other.size()) {\n            throw new ClassCastException(\"ReadablePartial objects must have matching field types\");\n        }\n        for (int i = 0, isize = size(); i < isize; i++) {\n            if (getFieldType(i) != other.getFieldType(i)) {\n                throw new ClassCastException(\"ReadablePartial objects must have matching field types\");\n            }\n        }\n        // fields are ordered largest first\n        for (int i = 0, isize = size(); i < isize; i++) {\n            if (getValue(i) > other.getValue(i)) {\n                return 1;\n            }\n            if (getValue(i) < other.getValue(i)) {\n                return -1;\n            }\n        }\n        return 0;\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4473684210526316,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 10.0,
+        "literal_count": 8.0,
+        "source_tokens": 205.0,
+        "l0_tokens": 42.0,
+        "l1_tokens": 167.0,
+        "compression_ratio": 0.8146341463414634,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 10,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Partial.java::Partial.without(DateTimeFieldType fieldType)",
+      "source": "public Partial without(DateTimeFieldType fieldType) {\n        int index = indexOf(fieldType);\n        if (index != -1) {\n            DateTimeFieldType[] newTypes = new DateTimeFieldType[size() - 1];\n            int[] newValues = new int[size() - 1];\n            System.arraycopy(iTypes, 0, newTypes, 0, index);\n            System.arraycopy(iTypes, index + 1, newTypes, index, newTypes.length - index);\n            System.arraycopy(iValues, 0, newValues, 0, index);\n            System.arraycopy(iValues, index + 1, newValues, index, newValues.length - index);\n            Partial newPartial = new Partial(iChronology, newTypes, newValues);\n            iChronology.validate(newPartial, newValues);\n            return newPartial;\n        }\n        return this;\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Partial.java::Partial.without(DateTimeFieldType fieldType)\nSIGNATURE: public Partial without(DateTimeFieldType fieldType)",
+        "METHOD: src/main/java/org/joda/time/Partial.java::Partial.without(DateTimeFieldType fieldType)\nSIGNATURE: public Partial without(DateTimeFieldType fieldType)\nSTRUCTURE (lossy):\nint index = indexOf(fieldType);\nCALL indexOf(fieldType)\nif (index != -1)\nDateTimeFieldType[] newTypes = new DateTimeFieldType[size() - 1];\nCALL size()\nint[] newValues = new int[size() - 1];\nCALL System.arraycopy(iTypes, 0, newTypes, 0, index)\nCALL System.arraycopy(iTypes, index + 1, newTypes, index, newTypes.length - index)\nCALL System.arraycopy(iValues, 0, newValues, 0, index)\nCALL System.arraycopy(iValues, index + 1, newValues, index, newValues.length - index)\nPartial newPartial = new Partial(iChronology, newTypes, newValues);\nCALL iChronology.validate(newPartial, newValues)\nreturn newPartial;\nreturn this;",
+        "public Partial without(DateTimeFieldType fieldType) {\n        int index = indexOf(fieldType);\n        if (index != -1) {\n            DateTimeFieldType[] newTypes = new DateTimeFieldType[size() - 1];\n            int[] newValues = new int[size() - 1];\n            System.arraycopy(iTypes, 0, newTypes, 0, index);\n            System.arraycopy(iTypes, index + 1, newTypes, index, newTypes.length - index);\n            System.arraycopy(iValues, 0, newValues, 0, index);\n            System.arraycopy(iValues, index + 1, newValues, index, newValues.length - index);\n            Partial newPartial = new Partial(iChronology, newTypes, newValues);\n            iChronology.validate(newPartial, newValues);\n            return newPartial;\n        }\n        return this;\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 8.0,
+        "literal_count": 9.0,
+        "source_tokens": 191.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 198.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 8,
+        "literal_count": 9
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/AbstractInterval.java::AbstractInterval.checkInterval(long start, long end)",
+      "source": "protected void checkInterval(long start, long end) {\n        if (end < start) {\n            throw new IllegalArgumentException(\"The end instant must be greater or equal to the start\");\n        }\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/AbstractInterval.java::AbstractInterval.checkInterval(long start, long end)\nSIGNATURE: protected void checkInterval(long start, long end)",
+        "METHOD: src/main/java/org/joda/time/base/AbstractInterval.java::AbstractInterval.checkInterval(long start, long end)\nSIGNATURE: protected void checkInterval(long start, long end)\nSTRUCTURE (lossy):\nif (end < start)\nthrow new IllegalArgumentException(\"The end instant must be greater or equal to the start\");",
+        "protected void checkInterval(long start, long end) {\n        if (end < start) {\n            throw new IllegalArgumentException(\"The end instant must be greater or equal to the start\");\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 0.0,
+        "literal_count": 1.0,
+        "source_tokens": 50.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 77.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 0,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/DateTimeUtils.java::DateTimeUtils.isContiguous(ReadablePartial partial)",
+      "source": "public static final boolean isContiguous(ReadablePartial partial) {\n        if (partial == null) {\n            throw new IllegalArgumentException(\"Partial must not be null\");\n        }\n        DurationFieldType lastType = null;\n        for (int i = 0; i < partial.size(); i++) {\n            DateTimeField loopField = partial.getField(i);\n            if (i > 0) {\n                if (loopField.getRangeDurationField() == null || loopField.getRangeDurationField().getType() != lastType) {\n                    return false;\n                }\n            }\n            lastType = loopField.getDurationField().getType();\n        }\n        return true;\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/DateTimeUtils.java::DateTimeUtils.isContiguous(ReadablePartial partial)\nSIGNATURE: public static final boolean isContiguous(ReadablePartial partial)",
+        "METHOD: src/main/java/org/joda/time/DateTimeUtils.java::DateTimeUtils.isContiguous(ReadablePartial partial)\nSIGNATURE: public static final boolean isContiguous(ReadablePartial partial)\nSTRUCTURE (lossy):\nif (partial == null)\nthrow new IllegalArgumentException(\"Partial must not be null\");\nDurationFieldType lastType = null;\nfor (int i = 0; i < partial.size(); i++)\nint i = 0;\nCALL partial.size()\ni++\nDateTimeField loopField = partial.getField(i);\nCALL partial.getField(i)\nif (i > 0)\nif (loopField.getRangeDurationField() == null || loopField.getRangeDurationField().getType() != lastType)\nCALL loopField.getRangeDurationField()\nCALL loopField.getRangeDurationField().getType()\nreturn false;\nlastType = loopField.getDurationField().getType()\nCALL loopField.getDurationField().getType()\nCALL loopField.getDurationField()\nreturn true;",
+        "public static final boolean isContiguous(ReadablePartial partial) {\n        if (partial == null) {\n            throw new IllegalArgumentException(\"Partial must not be null\");\n        }\n        DurationFieldType lastType = null;\n        for (int i = 0; i < partial.size(); i++) {\n            DateTimeField loopField = partial.getField(i);\n            if (i > 0) {\n                if (loopField.getRangeDurationField() == null || loopField.getRangeDurationField().getType() != lastType) {\n                    return false;\n                }\n            }\n            lastType = loopField.getDurationField().getType();\n        }\n        return true;\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5555555555555556,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 7.0,
+        "literal_count": 6.0,
+        "source_tokens": 163.0,
+        "l0_tokens": 46.0,
+        "l1_tokens": 208.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 7,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Partial.java::Partial.Partial(DateTimeFieldType type, int value, Chronology chronology)",
+      "source": "public Partial(DateTimeFieldType type, int value, Chronology chronology) {\n        super();\n        chronology = DateTimeUtils.getChronology(chronology).withUTC();\n        iChronology = chronology;\n        if (type == null) {\n            throw new IllegalArgumentException(\"The field type must not be null\");\n        }\n        iTypes = new DateTimeFieldType[] {type};\n        iValues = new int[] {value};\n        chronology.validate(this, iValues);\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Partial.java::Partial.Partial(DateTimeFieldType type, int value, Chronology chronology)\nSIGNATURE: public Partial(DateTimeFieldType type, int value, Chronology chronology)",
+        "METHOD: src/main/java/org/joda/time/Partial.java::Partial.Partial(DateTimeFieldType type, int value, Chronology chronology)\nSIGNATURE: public Partial(DateTimeFieldType type, int value, Chronology chronology)\nSTRUCTURE (lossy):\nchronology = DateTimeUtils.getChronology(chronology).withUTC()\nCALL DateTimeUtils.getChronology(chronology).withUTC()\nCALL DateTimeUtils.getChronology(chronology)\niChronology = chronology\nif (type == null)\nthrow new IllegalArgumentException(\"The field type must not be null\");\niTypes = new DateTimeFieldType[] {type}\niValues = new int[] {value}\nCALL chronology.validate(this, iValues)",
+        "public Partial(DateTimeFieldType type, int value, Chronology chronology) {\n        super();\n        chronology = DateTimeUtils.getChronology(chronology).withUTC();\n        iChronology = chronology;\n        if (type == null) {\n            throw new IllegalArgumentException(\"The field type must not be null\");\n        }\n        iTypes = new DateTimeFieldType[] {type};\n        iValues = new int[] {value};\n        chronology.validate(this, iValues);\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.625,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 3.0,
+        "literal_count": 2.0,
+        "source_tokens": 114.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 153.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 3,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.addFieldInto(int[] values, DurationFieldType field, int value)",
+      "source": "protected void addFieldInto(int[] values, DurationFieldType field, int value) {\n        int index = indexOf(field);\n        if (index == -1) {\n            if (value != 0 || field == null) {\n                throw new IllegalArgumentException(\n                    \"Period does not support field '\" + field + \"'\");\n            }\n        } else {\n            values[index] = FieldUtils.safeAdd(values[index], value);\n        }\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.addFieldInto(int[] values, DurationFieldType field, int value)\nSIGNATURE: protected void addFieldInto(int[] values, DurationFieldType field, int value)",
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.addFieldInto(int[] values, DurationFieldType field, int value)\nSIGNATURE: protected void addFieldInto(int[] values, DurationFieldType field, int value)\nSTRUCTURE (lossy):\nint index = indexOf(field);\nCALL indexOf(field)\nif (index == -1)\nif (value != 0 || field == null)\nthrow new IllegalArgumentException( \"Period does not support field '\" + field + \"'\");\nvalues[index] = FieldUtils.safeAdd(values[index], value)\nCALL FieldUtils.safeAdd(values[index], value)",
+        "protected void addFieldInto(int[] values, DurationFieldType field, int value) {\n        int index = indexOf(field);\n        if (index == -1) {\n            if (value != 0 || field == null) {\n                throw new IllegalArgumentException(\n                    \"Period does not support field '\" + field + \"'\");\n            }\n        } else {\n            values[index] = FieldUtils.safeAdd(values[index], value);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5806451612903226,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 2.0,
+        "literal_count": 5.0,
+        "source_tokens": 107.0,
+        "l0_tokens": 55.0,
+        "l1_tokens": 132.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 2,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/field/PreciseDateTimeField.java::PreciseDateTimeField.PreciseDateTimeField(DateTimeFieldType type,\n                                DurationField unit, DurationField range)",
+      "source": "public PreciseDateTimeField(DateTimeFieldType type,\n                                DurationField unit, DurationField range) {\n        super(type, unit);\n\n        if (!range.isPrecise()) {\n            throw new IllegalArgumentException(\"Range duration field must be precise\");\n        }\n\n        long rangeMillis = range.getUnitMillis();\n        iRange = (int)(rangeMillis / getUnitMillis());\n        if (iRange < 2) {\n            throw new IllegalArgumentException(\"The effective range must be at least 2\");\n        }\n\n        iRangeField = range;\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/field/PreciseDateTimeField.java::PreciseDateTimeField.PreciseDateTimeField(DateTimeFieldType type,\n                                DurationField unit, DurationField range)\nSIGNATURE: public PreciseDateTimeField(DateTimeFieldType type,\n                                DurationField unit, DurationField range)",
+        "METHOD: src/main/java/org/joda/time/field/PreciseDateTimeField.java::PreciseDateTimeField.PreciseDateTimeField(DateTimeFieldType type,\n                                DurationField unit, DurationField range)\nSIGNATURE: public PreciseDateTimeField(DateTimeFieldType type,\n                                DurationField unit, DurationField range)\nSTRUCTURE (lossy):\nif (!range.isPrecise())\nCALL range.isPrecise()\nthrow new IllegalArgumentException(\"Range duration field must be precise\");\nlong rangeMillis = range.getUnitMillis();\nCALL range.getUnitMillis()\niRange = (int)(rangeMillis / getUnitMillis())\nCALL getUnitMillis()\nif (iRange < 2)\nthrow new IllegalArgumentException(\"The effective range must be at least 2\");\niRangeField = range",
+        "public PreciseDateTimeField(DateTimeFieldType type,\n                                DurationField unit, DurationField range) {\n        super(type, unit);\n\n        if (!range.isPrecise()) {\n            throw new IllegalArgumentException(\"Range duration field must be precise\");\n        }\n\n        long rangeMillis = range.getUnitMillis();\n        iRange = (int)(rangeMillis / getUnitMillis());\n        if (iRange < 2) {\n            throw new IllegalArgumentException(\"The effective range must be at least 2\");\n        }\n\n        iRangeField = range;\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5714285714285714,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 3.0,
+        "literal_count": 3.0,
+        "source_tokens": 139.0,
+        "l0_tokens": 86.0,
+        "l1_tokens": 184.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 3,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/chrono/BaseChronology.java::BaseChronology.validate(ReadablePartial partial, int[] values)",
+      "source": "public void validate(ReadablePartial partial, int[] values) {\n        // check values in standard range, catching really stupid cases like -1\n        // this means that the second check will not hit trouble\n        int size = partial.size();\n        for (int i = 0; i < size; i++) {\n            int value = values[i];\n            DateTimeField field = partial.getField(i);\n            if (value < field.getMinimumValue()) {\n                throw new IllegalFieldValueException\n                    (field.getType(), Integer.valueOf(value),\n                     Integer.valueOf(field.getMinimumValue()), null);\n            }\n            if (value > field.getMaximumValue()) {\n                throw new IllegalFieldValueException\n                    (field.getType(), Integer.valueOf(value),\n                     null, Integer.valueOf(field.getMaximumValue()));\n            }\n        }\n        // check values in specific range, catching really odd cases like 30th Feb\n        for (int i = 0; i < size; i++) {\n            int value = values[i];\n            DateTimeField field = partial.getField(i);\n            if (value < field.getMinimumValue(partial, values)) {\n                throw new IllegalFieldValueException\n                    (field.getType(), Integer.valueOf(value),\n                     Integer.valueOf(field.getMinimumValue(partial, values)), null);\n            }\n            if (value > field.getMaximumValue(partial, values)) {\n                throw new IllegalFieldValueException\n                    (field.getType(), Integer.valueOf(value),\n                     null, Integer.valueOf(field.getMaximumValue(partial, values)));\n            }\n        }\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/chrono/BaseChronology.java::BaseChronology.validate(ReadablePartial partial, int[] values)\nSIGNATURE: public void validate(ReadablePartial partial, int[] values)",
+        "METHOD: src/main/java/org/joda/time/chrono/BaseChronology.java::BaseChronology.validate(ReadablePartial partial, int[] values)\nSIGNATURE: public void validate(ReadablePartial partial, int[] values)\nSTRUCTURE (lossy):\nint size = partial.size();\nCALL partial.size()\nfor (int i = 0; i < size; i++)\nint i = 0;\ni++\nint value = values[i];\nDateTimeField field = partial.getField(i);\nCALL partial.getField(i)\nif (value < field.getMinimumValue())\nCALL field.getMinimumValue()\nthrow new IllegalFieldValueException (field.getType(), Integer.valueOf(value), Integer.valueOf(field.getMinimumValue()), null);\nCALL field.getType()\nCALL Integer.valueOf(value)\nCALL Integer.valueOf(field.getMinimumValue())\nif (value > field.getMaximumValue())\nCALL field.getMaximumValue()\nthrow new IllegalFieldValueException (field.getType(), Integer.valueOf(value), null, Integer.valueOf(field.getMaximumValue()));\nCALL Integer.valueOf(field.getMaximumValue())\nif (value < field.getMinimumValue(partial, values))\nCALL field.getMinimumValue(partial, values)\nthrow new IllegalFieldValueException (field.getType(), Integer.valueOf(value), Integer.valueOf(field.getMinimumValue(partial, values)), null);\nCALL Integer.valueOf(field.getMinimumValue(partial, values))\nif (value > field.getMaximumValue(partial, values))\nCALL field.getMaximumValue(partial, values)\nthrow new IllegalFieldValueException (field.getType(), Integer.valueOf(value), null, Integer.valueOf(field.getMaximumValue(partial, values)));\nCALL Integer.valueOf(field.getMaximumValue(partial, values))",
+        "public void validate(ReadablePartial partial, int[] values) {\n        // check values in standard range, catching really stupid cases like -1\n        // this means that the second check will not hit trouble\n        int size = partial.size();\n        for (int i = 0; i < size; i++) {\n            int value = values[i];\n            DateTimeField field = partial.getField(i);\n            if (value < field.getMinimumValue()) {\n                throw new IllegalFieldValueException\n                    (field.getType(), Integer.valueOf(value),\n                     Integer.valueOf(field.getMinimumValue()), null);\n            }\n            if (value > field.getMaximumValue()) {\n                throw new IllegalFieldValueException\n                    (field.getType(), Integer.valueOf(value),\n                     null, Integer.valueOf(field.getMaximumValue()));\n            }\n        }\n        // check values in specific range, catching really odd cases like 30th Feb\n        for (int i = 0; i < size; i++) {\n            int value = values[i];\n            DateTimeField field = partial.getField(i);\n            if (value < field.getMinimumValue(partial, values)) {\n                throw new IllegalFieldValueException\n                    (field.getType(), Integer.valueOf(value),\n                     Integer.valueOf(field.getMinimumValue(partial, values)), null);\n            }\n            if (value > field.getMaximumValue(partial, values)) {\n                throw new IllegalFieldValueException\n                    (field.getType(), Integer.valueOf(value),\n                     null, Integer.valueOf(field.getMaximumValue(partial, values)));\n            }\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.37254901960784315,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 23.0,
+        "literal_count": 6.0,
+        "source_tokens": 418.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 383.0,
+        "compression_ratio": 0.916267942583732,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 23,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setFieldInto(int[] values, DurationFieldType field, int value)",
+      "source": "protected void setFieldInto(int[] values, DurationFieldType field, int value) {\n        int index = indexOf(field);\n        if (index == -1) {\n            if (value != 0 || field == null) {\n                throw new IllegalArgumentException(\n                    \"Period does not support field '\" + field + \"'\");\n            }\n        } else {\n            values[index] = value;\n        }\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setFieldInto(int[] values, DurationFieldType field, int value)\nSIGNATURE: protected void setFieldInto(int[] values, DurationFieldType field, int value)",
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setFieldInto(int[] values, DurationFieldType field, int value)\nSIGNATURE: protected void setFieldInto(int[] values, DurationFieldType field, int value)\nSTRUCTURE (lossy):\nint index = indexOf(field);\nCALL indexOf(field)\nif (index == -1)\nif (value != 0 || field == null)\nthrow new IllegalArgumentException( \"Period does not support field '\" + field + \"'\");\nvalues[index] = value",
+        "protected void setFieldInto(int[] values, DurationFieldType field, int value) {\n        int index = indexOf(field);\n        if (index == -1) {\n            if (value != 0 || field == null) {\n                throw new IllegalArgumentException(\n                    \"Period does not support field '\" + field + \"'\");\n            }\n        } else {\n            values[index] = value;\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5862068965517241,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 1.0,
+        "literal_count": 5.0,
+        "source_tokens": 99.0,
+        "l0_tokens": 55.0,
+        "l1_tokens": 112.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 1,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/YearMonth.java::YearMonth.getField(int index, Chronology chrono)",
+      "source": "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/YearMonth.java::YearMonth.getField(int index, Chronology chrono)\nSIGNATURE: protected DateTimeField getField(int index, Chronology chrono)",
+        "METHOD: src/main/java/org/joda/time/YearMonth.java::YearMonth.getField(int index, Chronology chrono)\nSIGNATURE: protected DateTimeField getField(int index, Chronology chrono)\nSTRUCTURE (lossy):\nswitch (index) { case YEAR: return chrono.year(); case MONTH_OF_YEAR: return chrono.monthOfYear(); default: throw new IndexOutOfBoundsException(\"Invalid index: \" + index); }\nreturn chrono.year();\nCALL chrono.year()\nreturn chrono.monthOfYear();\nCALL chrono.monthOfYear()\nthrow new IndexOutOfBoundsException(\"Invalid index: \" + index);",
+        "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5769230769230769,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 86.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 132.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/LocalDate.java::LocalDate.getField(int index, Chronology chrono)",
+      "source": "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            case DAY_OF_MONTH:\n                return chrono.dayOfMonth();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/LocalDate.java::LocalDate.getField(int index, Chronology chrono)\nSIGNATURE: protected DateTimeField getField(int index, Chronology chrono)",
+        "METHOD: src/main/java/org/joda/time/LocalDate.java::LocalDate.getField(int index, Chronology chrono)\nSIGNATURE: protected DateTimeField getField(int index, Chronology chrono)\nSTRUCTURE (lossy):\nswitch (index) { case YEAR: return chrono.year(); case MONTH_OF_YEAR: return chrono.monthOfYear(); case DAY_OF_MONTH: return chrono.dayOfMonth(); default: throw new IndexOutOfBoundsException(\"Invalid index: \" + index); }\nreturn chrono.year();\nCALL chrono.year()\nreturn chrono.monthOfYear();\nCALL chrono.monthOfYear()\nreturn chrono.dayOfMonth();\nCALL chrono.dayOfMonth()\nthrow new IndexOutOfBoundsException(\"Invalid index: \" + index);",
+        "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            case DAY_OF_MONTH:\n                return chrono.dayOfMonth();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5357142857142857,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 3.0,
+        "literal_count": 1.0,
+        "source_tokens": 105.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 157.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 3,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.addPeriodInto(int[] values, ReadablePeriod period)",
+      "source": "protected int[] addPeriodInto(int[] values, ReadablePeriod period) {\n        for (int i = 0, isize = period.size(); i < isize; i++) {\n            DurationFieldType type = period.getFieldType(i);\n            int value = period.getValue(i);\n            if (value != 0) {\n                int index = indexOf(type);\n                if (index == -1) {\n                    throw new IllegalArgumentException(\n                        \"Period does not support field '\" + type.getName() + \"'\");\n                } else {\n                    values[index] = FieldUtils.safeAdd(getValue(index), value);\n                }\n            }\n        }\n        return values;\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.addPeriodInto(int[] values, ReadablePeriod period)\nSIGNATURE: protected int[] addPeriodInto(int[] values, ReadablePeriod period)",
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.addPeriodInto(int[] values, ReadablePeriod period)\nSIGNATURE: protected int[] addPeriodInto(int[] values, ReadablePeriod period)\nSTRUCTURE (lossy):\nfor (int i = 0, isize = period.size(); i < isize; i++)\nint i = 0, isize = period.size();\nCALL period.size()\ni++\nDurationFieldType type = period.getFieldType(i);\nCALL period.getFieldType(i)\nint value = period.getValue(i);\nCALL period.getValue(i)\nif (value != 0)\nint index = indexOf(type);\nCALL indexOf(type)\nif (index == -1)\nthrow new IllegalArgumentException( \"Period does not support field '\" + type.getName() + \"'\");\nCALL type.getName()\nvalues[index] = FieldUtils.safeAdd(getValue(index), value)\nCALL FieldUtils.safeAdd(getValue(index), value)\nCALL getValue(index)\nreturn values;",
+        "protected int[] addPeriodInto(int[] values, ReadablePeriod period) {\n        for (int i = 0, isize = period.size(); i < isize; i++) {\n            DurationFieldType type = period.getFieldType(i);\n            int value = period.getValue(i);\n            if (value != 0) {\n                int index = indexOf(type);\n                if (index == -1) {\n                    throw new IllegalArgumentException(\n                        \"Period does not support field '\" + type.getName() + \"'\");\n                } else {\n                    values[index] = FieldUtils.safeAdd(getValue(index), value);\n                }\n            }\n        }\n        return values;\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 7.0,
+        "literal_count": 5.0,
+        "source_tokens": 166.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 200.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 7,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/YearMonthDay.java::YearMonthDay.getField(int index, Chronology chrono)",
+      "source": "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            case DAY_OF_MONTH:\n                return chrono.dayOfMonth();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/YearMonthDay.java::YearMonthDay.getField(int index, Chronology chrono)\nSIGNATURE: protected DateTimeField getField(int index, Chronology chrono)",
+        "METHOD: src/main/java/org/joda/time/YearMonthDay.java::YearMonthDay.getField(int index, Chronology chrono)\nSIGNATURE: protected DateTimeField getField(int index, Chronology chrono)\nSTRUCTURE (lossy):\nswitch (index) { case YEAR: return chrono.year(); case MONTH_OF_YEAR: return chrono.monthOfYear(); case DAY_OF_MONTH: return chrono.dayOfMonth(); default: throw new IndexOutOfBoundsException(\"Invalid index: \" + index); }\nreturn chrono.year();\nCALL chrono.year()\nreturn chrono.monthOfYear();\nCALL chrono.monthOfYear()\nreturn chrono.dayOfMonth();\nCALL chrono.dayOfMonth()\nthrow new IndexOutOfBoundsException(\"Invalid index: \" + index);",
+        "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            case DAY_OF_MONTH:\n                return chrono.dayOfMonth();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5555555555555556,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 3.0,
+        "literal_count": 1.0,
+        "source_tokens": 105.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 159.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 3,
+        "literal_count": 1
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/main/java/org/joda/time/Partial.java::Partial.Partial(DateTimeFieldType[] types, int[] values, Chronology chronology)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Period.java::Period.fieldDifference(ReadablePartial start, ReadablePartial end)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Partial.java::Partial.Partial(ReadablePartial partial)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/PeriodType.java::PeriodType.forFields(DurationFieldType[] types)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/AbstractPartial.java::AbstractPartial.indexOfSupported(DateTimeFieldType type)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/AbstractPartial.java::AbstractPartial.indexOfSupported(DurationFieldType type)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Partial.java::Partial.with(DateTimeFieldType fieldType, int value)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.checkAndUpdate(DurationFieldType type, int[] values, int newValue)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/AbstractPartial.java::AbstractPartial.getFieldTypes()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/AbstractPartial.java::AbstractPartial.compareTo(ReadablePartial other)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Partial.java::Partial.without(DateTimeFieldType fieldType)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/AbstractInterval.java::AbstractInterval.checkInterval(long start, long end)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/DateTimeUtils.java::DateTimeUtils.isContiguous(ReadablePartial partial)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Partial.java::Partial.Partial(DateTimeFieldType type, int value, Chronology chronology)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.addFieldInto(int[] values, DurationFieldType field, int value)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/field/PreciseDateTimeField.java::PreciseDateTimeField.PreciseDateTimeField(DateTimeFieldType type,\n                                DurationField unit, DurationField range)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/chrono/BaseChronology.java::BaseChronology.validate(ReadablePartial partial, int[] values)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setFieldInto(int[] values, DurationFieldType field, int value)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/YearMonth.java::YearMonth.getField(int index, Chronology chrono)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/LocalDate.java::LocalDate.getField(int index, Chronology chrono)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.addPeriodInto(int[] values, ReadablePeriod period)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/YearMonthDay.java::YearMonthDay.getField(int index, Chronology chrono)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 4165,
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "e8a98de3781b41c4d452af4459ea37dde249ac98190467d9b426fd7991a1679a",
+  "evidence_sha256": "99350591fb0926f403ee63c5022af59b815c0b6368d6d31dfc3c2a7f0cb31172"
+}
