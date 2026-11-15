@@ -19,7 +19,7 @@ if [[ "$MODE" != "status" && "$MODE" != "aggregate" ]]; then
     exit 2
   fi
 fi
-if [[ "$MODE" == "collect" || "$MODE" == "run" || "$MODE" == "all" || "$MODE" == "launch-all" ]]; then
+if [[ "$MODE" == "freeze" || "$MODE" == "collect" || "$MODE" == "run" || "$MODE" == "all" || "$MODE" == "launch-all" ]]; then
   export PERL5LIB="$HOME/perl5/lib/perl5"
   export PATH="$HOME/defects4j/framework/bin:$PATH"
   export TZ="America/Los_Angeles"
