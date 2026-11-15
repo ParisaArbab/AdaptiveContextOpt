@@ -114,7 +114,7 @@ def render_focused(graph, target, ids, selector="focused_compact_v1"):
         "target": target,
         "sources": sources,
     }
-    full_failure = "\\n".join(n.text for n in failures)
+    full_failure = "\n".join(n.text for n in failures)
     if compressed:
         from rave_fl.graft.failure_excerpt import bounded_failure_excerpt
         payload["failure_excerpt"] = bounded_failure_excerpt(full_failure)
