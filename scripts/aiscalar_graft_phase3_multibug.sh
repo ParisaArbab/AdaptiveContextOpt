@@ -34,6 +34,7 @@ python -m pytest -q \
   tests/test_graft_phase3_real_bugs.py \
   tests/test_graft_phase3_cache_seed.py \
   tests/test_graft_phase3_completion_gate.py \
+  tests/test_graft_phase3_bounded_failure.py \
   tests/test_graft_phase3_bm25_java_spans.py \
   tests/test_graft_test_aware.py \
   tests/test_graft_test_aware_live_config.py \
@@ -99,6 +100,15 @@ assert {i.instance_id for i in instances}==expected
 assert all(i.evidence.kind=="observed_failure" for i in instances)
 print("All three buggy revisions, candidate pools and observed evidence validated.")
 PY
+
+# Fail before any new Qwen inference if the *real* saved L1 observations
+# cannot form at least one 4096-unit focused/test-aware graph package per bug.
+if [[ "${#SEED_ARGS[@]}" -gt 0 ]]; then
+  python -m scripts.verify_graft_phase3_graph_feasibility \
+    --source-run "${SEED_ARGS[1]}" \
+    --config "$ROOT/config.json" \
+    --output "$ROOT/graph_readiness.json"
+fi
 
 echo "Starting bounded Qwen run, up to 135 physical calls and 240,000 provider tokens."
 set +e
