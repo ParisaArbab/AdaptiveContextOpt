@@ -141,3 +141,33 @@ def test_preparation_seeds_isolated_cache_and_keeps_original_counters(tmp_path):
     audit = json.loads((target / "cache_seed_provenance.json").read_text())
     assert audit["new_provider_calls_during_seeding"] == 0
     assert audit["original_sqlite_journal_copied"] is False
+
+
+
+def test_seed_reuses_followup_run_sibling_cache(tmp_path):
+    """The completed 90k policy run stores responses beside run/, not inside."""
+    dataset, source_run, config = fixture(tmp_path)
+    manifest_file = source_run / "manifest.json"
+    manifest = json.loads(manifest_file.read_text())
+    sibling = source_run.parent / "cache"
+    sibling.mkdir()
+    previous = next((source_run / "cache").glob("*.json"))
+    previous.rename(sibling / previous.name)
+    manifest["config"]["benchmark"]["cache_dir"] = str(sibling.resolve())
+    manifest_file.write_text(json.dumps(manifest))
+    audit = seed(source_run, tmp_path / "third-run-cache", dataset=dataset, config=config)
+    assert audit["source_verified_cache_dir"] == str(sibling.resolve())
+    assert audit["seeded_response_files"] == 1
+    assert audit["new_provider_calls_during_seeding"] == 0
+
+
+def test_seed_rejects_external_cache_location(tmp_path):
+    dataset, source_run, config = fixture(tmp_path)
+    manifest_file = source_run / "manifest.json"
+    manifest = json.loads(manifest_file.read_text())
+    external = tmp_path / "elsewhere" / "cache"
+    external.mkdir(parents=True)
+    manifest["config"]["benchmark"]["cache_dir"] = str(external.resolve())
+    manifest_file.write_text(json.dumps(manifest))
+    with pytest.raises(CompatibilityError, match="Source cache must be under"):
+        seed(source_run, tmp_path / "unsafe-cache", dataset=dataset, config=config)
