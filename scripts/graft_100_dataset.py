@@ -194,6 +194,7 @@ def collect_batch(root: Path, cohort: dict, batch: int, cli: str, max_bytes: int
                 case, audit = collect_case(
                     {"bug": bug, "source_repository": row["project"]},
                     cli, prepared, max_bytes=max_bytes,
+                    test_scope="official_trigger",
                 )
                 write_new(case_path, case)
                 write_new(audit_path, audit)
@@ -214,6 +215,8 @@ def collect_batch(root: Path, cohort: dict, batch: int, cli: str, max_bytes: int
             "errors": issues,
             "audits": audits,
             "status": "ready" if len(ready) == BATCH_SIZE else "incomplete",
+            "test_execution_scope": "first_official_trigger_only",
+            "full_benchmark_suite_was_not_run": True,
             "model_calls": 0,
         }
         (prepared / "preparation_report.json").write_text(json.dumps(report, indent=2) + "\n")
