@@ -1,0 +1,109 @@
+OFFICIAL DEFECTS4J BUG: Closure-85
+EXECUTED BUGGY TEST: com.google.javascript.jscomp.UnreachableCodeEliminationTest::testCascadedRemovalOfUnlessUnconditonalJumps
+TEST SOURCE: test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java
+TEST SOURCE SHA256: 98aa66ae24e9d6b1263b2c72c312a3acffe5aa9f7100df80e5cdf4f924decf7d
+COMPLETE EXECUTED TEST METHOD (verbatim):
+public void testCascadedRemovalOfUnlessUnconditonalJumps() {
+    test("switch (a) { case 'a': break; case 'b': break; case 'c': break }",
+         "switch (a) { case 'a': break; case 'b': case 'c': }");
+    // Only one break removed per pass.
+    test("switch (a) { case 'a': break; case 'b': case 'c': }",
+         "switch (a) { case 'a': case 'b': case 'c': }");
+
+    test("function foo() {" +
+      "  switch (a) { case 'a':return; case 'b':return; case 'c':return }}",
+      "function foo() { switch (a) { case 'a':return; case 'b': case 'c': }}");
+    test("function foo() {" +
+      "  switch (a) { case 'a':return; case 'b': case 'c': }}",
+      "function foo() { switch (a) { case 'a': case 'b': case 'c': }}");
+
+    testSame("function foo() {" +
+             "switch (a) { case 'a':return 2; case 'b':return 1}}");
+  }
+OBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):
+--- com.google.javascript.jscomp.UnreachableCodeEliminationTest::testCascadedRemovalOfUnlessUnconditonalJumps
+junit.framework.AssertionFailedError: 
+Expected: switch(a){case "a":break;case "b":case "c":}
+Result: switch(a){case "a":case "b":case "c":}
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [sourcename: expected0] [synthetic: 1]
+        SWITCH 1 [sourcename: expected0]
+            NAME a 1 [sourcename: expected0]
+            CASE 1 [sourcename: expected0]
+                STRING a 1 [sourcename: expected0]
+                BLOCK 1 [sourcename: expected0] [synthetic: 1]
+                    BREAK 1 [sourcename: expected0]
+            CASE 1 [sourcename: expected0]
+                STRING b 1 [sourcename: expected0]
+                BLOCK 1 [sourcename: expected0] [synthetic: 1]
+            CASE 1 [sourcename: expected0]
+                STRING c 1 [sourcename: expected0]
+                BLOCK 1 [sourcename: expected0] [synthetic: 1]
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [sourcename: testcode] [synthetic: 1]
+        SWITCH 1 [sourcename: testcode]
+            NAME a 1 [sourcename: testcode]
+            CASE 1 [sourcename: testcode]
+                STRING a 1 [sourcename: testcode]
+                BLOCK 1 [sourcename: testcode] [synthetic: 1]
+            CASE 1 [sourcename: testcode]
+                STRING b 1 [sourcename: testcode]
+                BLOCK 1 [sourcename: testcode] [synthetic: 1]
+            CASE 1 [sourcename: testcode]
+                STRING c 1 [sourcename: testcode]
+                BLOCK 1 [sourcename: testcode] [synthetic: 1]
+
+
+Subtree1: BLOCK 1 [sourcename: expected0] [synthetic: 1]
+    BREAK 1 [sourcename: expected0]
+
+
+Subtree2: BLOCK 1 [sourcename: testcode] [synthetic: 1]
+
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:818)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:398)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:323)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:292)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:280)
+	at com.google.javascript.jscomp.UnreachableCodeEliminationTest.testCascadedRemovalOfUnlessUnconditonalJumps(UnreachableCodeEliminationTest.java:235)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)

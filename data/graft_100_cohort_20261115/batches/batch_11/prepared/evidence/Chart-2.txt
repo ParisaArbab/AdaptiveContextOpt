@@ -1,0 +1,60 @@
+OFFICIAL DEFECTS4J BUG: Chart-2
+EXECUTED BUGGY TEST: org.jfree.data.general.junit.DatasetUtilitiesTests::testBug2849731_2
+TEST SOURCE: tests/org/jfree/data/general/junit/DatasetUtilitiesTests.java
+TEST SOURCE SHA256: 9c51d1dc8fc1dd6e41418f471904eb7bc66ff567760b2d23c854654fee78aeff
+COMPLETE EXECUTED TEST METHOD (verbatim):
+public void testBug2849731_2() {
+        XYIntervalSeriesCollection d = new XYIntervalSeriesCollection();
+        XYIntervalSeries s = new XYIntervalSeries("S1");
+        s.add(1.0, Double.NaN, Double.NaN, Double.NaN, 1.5, Double.NaN);
+        d.addSeries(s);
+        Range r = DatasetUtilities.iterateDomainBounds(d);
+        assertEquals(1.0, r.getLowerBound(), EPSILON);
+        assertEquals(1.0, r.getUpperBound(), EPSILON);
+
+        s.add(1.0, 1.5, Double.NaN, Double.NaN, 1.5, Double.NaN);
+        r = DatasetUtilities.iterateDomainBounds(d);
+        assertEquals(1.0, r.getLowerBound(), EPSILON);
+        assertEquals(1.5, r.getUpperBound(), EPSILON);
+
+        s.add(1.0, Double.NaN, 0.5, Double.NaN, 1.5, Double.NaN);
+        r = DatasetUtilities.iterateDomainBounds(d);
+        assertEquals(0.5, r.getLowerBound(), EPSILON);
+        assertEquals(1.5, r.getUpperBound(), EPSILON);
+    }
+OBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):
+--- org.jfree.data.general.junit.DatasetUtilitiesTests::testBug2849731_2
+java.lang.NullPointerException
+	at org.jfree.data.general.junit.DatasetUtilitiesTests.testBug2849731_2(DatasetUtilitiesTests.java:1276)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
