@@ -50,7 +50,7 @@ archive() {
     [[ ! -e "$path" ]] || git add -f -- "$path"
   done
   if ! git diff --cached --quiet; then
-    git -c core.whitespace=-blank-at-eol diff --cached --check
+    git -c core.whitespace=-blank-at-eol,-space-before-tab diff --cached --check
     git commit -m "$message" | tail -n 6
     git push origin "$BRANCH"
   fi
