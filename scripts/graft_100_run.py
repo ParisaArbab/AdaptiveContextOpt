@@ -245,6 +245,7 @@ def check_batch(audit: dict, expected: list[str]) -> dict:
     complete = (
         not missing and not incomplete and not graph_free
         and set(indexed) == expected_keys
+        and len(records) == len(expected_keys)
         and expected_pairs == complete_pairs
         and audit.get("all_pairs_completed") is True
         and safe
@@ -337,7 +338,13 @@ def aggregate(root: Path, cohort: dict):
                 metrics = {
                     policy: metric_rows.get((b["bug"], fusion, policy)) for policy in POLICIES
                 }
-                if all(v and v.get("status") == "completed" for v in metrics.values()):
+                if all(
+                    v and v.get("status") == "completed"
+                    and isinstance(v.get("file_mrr"), (int, float))
+                    and isinstance(v.get("file_hit_at_1"), (int, float))
+                    and isinstance(v.get("file_hit_at_5"), (int, float))
+                    for v in metrics.values()
+                ):
                     label = (
                         "complete_with_graph"
                         if all(metrics[p]["graph_call_count"] > 0
