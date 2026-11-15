@@ -1,0 +1,1318 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Lang-11",
+    "repository": "Lang",
+    "language": "java",
+    "revision": "95d36b59f7070772e696a0ac4e1ec49de48eba12",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_12/prepared/checkouts/Lang-11",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Lang-11\nEXECUTED BUGGY TEST: org.apache.commons.lang3.RandomStringUtilsTest::testLANG807\nTEST SOURCE: src/test/java/org/apache/commons/lang3/RandomStringUtilsTest.java\nTEST SOURCE SHA256: c023bb07e7ee8c276dd62ec11268efadc7a2eee78742d20bd466fd9ba5b2a622\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testLANG807() {\n        try {\n            RandomStringUtils.random(3,5,5,false,false);\n            fail(\"Expected IllegalArgumentException\");\n        } catch (IllegalArgumentException ex) { // distinguish from Random#nextInt message\n            final String msg = ex.getMessage();\n            assertTrue(\"Message (\" + msg + \") must contain 'start'\", msg.contains(\"start\"));\n            assertTrue(\"Message (\" + msg + \") must contain 'end'\", msg.contains(\"end\"));\n        }\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.apache.commons.lang3.RandomStringUtilsTest::testLANG807\njunit.framework.AssertionFailedError: Message (bound must be positive) must contain 'start'\n\tat junit.framework.Assert.fail(Assert.java:57)\n\tat junit.framework.Assert.assertTrue(Assert.java:22)\n\tat junit.framework.TestCase.assertTrue(TestCase.java:192)\n\tat org.apache.commons.lang3.RandomStringUtilsTest.testLANG807(RandomStringUtilsTest.java:139)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_12/prepared/evidence/Lang-11.txt",
+      "sha256": "47d6b132befabae3384a5c1f67e2e3ac74e3aef000c43a19e2a3ba23407c1e8c"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src/main/java",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Lang-11",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java::ExtendedMessageFormat.readArgumentIndex(String pattern, ParsePosition pos)",
+      "path": "src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java",
+      "start_line": 330,
+      "end_line": 363,
+      "source": "private int readArgumentIndex(String pattern, ParsePosition pos) {\n        int start = pos.getIndex();\n        seekNonWs(pattern, pos);\n        StringBuffer result = new StringBuffer();\n        boolean error = false;\n        for (; !error && pos.getIndex() < pattern.length(); next(pos)) {\n            char c = pattern.charAt(pos.getIndex());\n            if (Character.isWhitespace(c)) {\n                seekNonWs(pattern, pos);\n                c = pattern.charAt(pos.getIndex());\n                if (c != START_FMT && c != END_FE) {\n                    error = true;\n                    continue;\n                }\n            }\n            if ((c == START_FMT || c == END_FE) && result.length() > 0) {\n                try {\n                    return Integer.parseInt(result.toString());\n                } catch (NumberFormatException e) { // NOPMD\n                    // we've already ensured only digits, so unless something\n                    // outlandishly large was specified we should be okay.\n                }\n            }\n            error = !Character.isDigit(c);\n            result.append(c);\n        }\n        if (error) {\n            throw new IllegalArgumentException(\n                    \"Invalid format argument index at position \" + start + \": \"\n                            + pattern.substring(start, pos.getIndex()));\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated format element at position \" + start);\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 45.777012350566814
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.or(Boolean... array)",
+      "path": "src/main/java/org/apache/commons/lang3/BooleanUtils.java",
+      "start_line": 993,
+      "end_line": 1006,
+      "source": "public static Boolean or(Boolean... array) {\n        if (array == null) {\n            throw new IllegalArgumentException(\"The Array must not be null\");\n        }\n        if (array.length == 0) {\n            throw new IllegalArgumentException(\"Array is empty\");\n        }\n        try {\n            boolean[] primitive = ArrayUtils.toPrimitive(array);\n            return or(primitive) ? Boolean.TRUE : Boolean.FALSE;\n        } catch (NullPointerException ex) {\n            throw new IllegalArgumentException(\"The array must not contain any null elements\");\n        }\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.60908289036341
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/ObjectUtils.java::ObjectUtils.clone(final T obj)",
+      "path": "src/main/java/org/apache/commons/lang3/ObjectUtils.java",
+      "start_line": 509,
+      "end_line": 545,
+      "source": "public static <T> T clone(final T obj) {\n        if (obj instanceof Cloneable) {\n            final Object result;\n            if (obj.getClass().isArray()) {\n                final Class<?> componentType = obj.getClass().getComponentType();\n                if (!componentType.isPrimitive()) {\n                    result = ((Object[]) obj).clone();\n                } else {\n                    int length = Array.getLength(obj);\n                    result = Array.newInstance(componentType, length);\n                    while (length-- > 0) {\n                        Array.set(result, length, Array.get(obj, length));\n                    }\n                }\n            } else {\n                try {\n                    final Method clone = obj.getClass().getMethod(\"clone\");\n                    result = clone.invoke(obj);\n                } catch (final NoSuchMethodException e) {\n                    throw new CloneFailedException(\"Cloneable type \"\n                        + obj.getClass().getName()\n                        + \" has no clone method\", e);\n                } catch (final IllegalAccessException e) {\n                    throw new CloneFailedException(\"Cannot clone Cloneable type \"\n                        + obj.getClass().getName(), e);\n                } catch (final InvocationTargetException e) {\n                    throw new CloneFailedException(\"Exception cloning Cloneable type \"\n                        + obj.getClass().getName(), e.getCause());\n                }\n            }\n            @SuppressWarnings(\"unchecked\")\n            final T checked = (T) result;\n            return checked;\n        }\n\n        return null;\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.36993005929918
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/SerializationUtils.java::SerializationUtils.serialize(Serializable obj, OutputStream outputStream)",
+      "path": "src/main/java/org/apache/commons/lang3/SerializationUtils.java",
+      "start_line": 130,
+      "end_line": 151,
+      "source": "public static void serialize(Serializable obj, OutputStream outputStream) {\n        if (outputStream == null) {\n            throw new IllegalArgumentException(\"The OutputStream must not be null\");\n        }\n        ObjectOutputStream out = null;\n        try {\n            // stream closed in the finally\n            out = new ObjectOutputStream(outputStream);\n            out.writeObject(obj);\n\n        } catch (IOException ex) {\n            throw new SerializationException(ex);\n        } finally {\n            try {\n                if (out != null) {\n                    out.close();\n                }\n            } catch (IOException ex) { // NOPMD\n                // ignore close exception\n            }\n        }\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.8838405504612
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/AnnotationUtils.java::AnnotationUtils.toString(final Annotation a)",
+      "path": "src/main/java/org/apache/commons/lang3/AnnotationUtils.java",
+      "start_line": 195,
+      "end_line": 210,
+      "source": "public static String toString(final Annotation a) {\n        ToStringBuilder builder = new ToStringBuilder(a, TO_STRING_STYLE);\n        for (Method m : a.annotationType().getDeclaredMethods()) {\n            if (m.getParameterTypes().length > 0) {\n                continue; //wtf?\n            }\n            try {\n                builder.append(m.getName(), m.invoke(a));\n            } catch (RuntimeException ex) {\n                throw ex;\n            } catch (Exception ex) {\n                throw new RuntimeException(ex);\n            }\n        }\n        return builder.build();\n    }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.63525579490506
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/AnnotationUtils.java::AnnotationUtils.hashCode(Annotation a)",
+      "path": "src/main/java/org/apache/commons/lang3/AnnotationUtils.java",
+      "start_line": 167,
+      "end_line": 185,
+      "source": "public static int hashCode(Annotation a) {\n        int result = 0;\n        Class<? extends Annotation> type = a.annotationType();\n        for (Method m : type.getDeclaredMethods()) {\n            try {\n                Object value = m.invoke(a);\n                if (value == null) {\n                    throw new IllegalStateException(\n                            String.format(\"Annotation method %s returned null\", m));\n                }\n                result += hashMember(m.getName(), value);\n            } catch (RuntimeException ex) {\n                throw ex;\n            } catch (Exception ex) {\n                throw new RuntimeException(ex);\n            }\n        }\n        return result;\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.38529228275533
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/exception/ExceptionUtils.java::ExceptionUtils.getCauseUsingMethodName(Throwable throwable, String methodName)",
+      "path": "src/main/java/org/apache/commons/lang3/exception/ExceptionUtils.java",
+      "start_line": 192,
+      "end_line": 214,
+      "source": "private static Throwable getCauseUsingMethodName(Throwable throwable, String methodName) {\n        Method method = null;\n        try {\n            method = throwable.getClass().getMethod(methodName);\n        } catch (NoSuchMethodException ignored) { // NOPMD\n            // exception ignored\n        } catch (SecurityException ignored) { // NOPMD\n            // exception ignored\n        }\n\n        if (method != null && Throwable.class.isAssignableFrom(method.getReturnType())) {\n            try {\n                return (Throwable) method.invoke(throwable);\n            } catch (IllegalAccessException ignored) { // NOPMD\n                // exception ignored\n            } catch (IllegalArgumentException ignored) { // NOPMD\n                // exception ignored\n            } catch (InvocationTargetException ignored) { // NOPMD\n                // exception ignored\n            }\n        }\n        return null;\n    }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 38.98422666945892
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/builder/ReflectionToStringBuilder.java::ReflectionToStringBuilder.appendFieldsIn(Class<?> clazz)",
+      "path": "src/main/java/org/apache/commons/lang3/builder/ReflectionToStringBuilder.java",
+      "start_line": 508,
+      "end_line": 532,
+      "source": "protected void appendFieldsIn(Class<?> clazz) {\n        if (clazz.isArray()) {\n            this.reflectionAppendArray(this.getObject());\n            return;\n        }\n        Field[] fields = clazz.getDeclaredFields();\n        AccessibleObject.setAccessible(fields, true);\n        for (Field field : fields) {\n            String fieldName = field.getName();\n            if (this.accept(field)) {\n                try {\n                    // Warning: Field.get(Object) creates wrappers objects\n                    // for primitive types.\n                    Object fieldValue = this.getValue(field);\n                    this.append(fieldName, fieldValue);\n                } catch (IllegalAccessException ex) {\n                    //this can't happen. Would get a Security exception\n                    // instead\n                    //throw a runtime exception in case the impossible\n                    // happens.\n                    throw new InternalError(\"Unexpected IllegalAccessException: \" + ex.getMessage());\n                }\n            }\n        }\n    }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 37.225584806300574
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/event/EventUtils.java::EventUtils.addEventListener(Object eventSource, Class<L> listenerType, L listener)",
+      "path": "src/main/java/org/apache/commons/lang3/event/EventUtils.java",
+      "start_line": 48,
+      "end_line": 62,
+      "source": "public static <L> void addEventListener(Object eventSource, Class<L> listenerType, L listener) {\n        try {\n            MethodUtils.invokeMethod(eventSource, \"add\" + listenerType.getSimpleName(), listener);\n        } catch (NoSuchMethodException e) {\n            throw new IllegalArgumentException(\"Class \" + eventSource.getClass().getName()\n                    + \" does not have a public add\" + listenerType.getSimpleName()\n                    + \" method which takes a parameter of type \" + listenerType.getName() + \".\");\n        } catch (IllegalAccessException e) {\n            throw new IllegalArgumentException(\"Class \" + eventSource.getClass().getName()\n                    + \" does not have an accessible add\" + listenerType.getSimpleName ()\n                    + \" method which takes a parameter of type \" + listenerType.getName() + \".\");\n        } catch (InvocationTargetException e) {\n            throw new RuntimeException(\"Unable to add listener.\", e.getCause());\n        }\n    }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.872424144387786
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.and(Boolean... array)",
+      "path": "src/main/java/org/apache/commons/lang3/BooleanUtils.java",
+      "start_line": 924,
+      "end_line": 937,
+      "source": "public static Boolean and(Boolean... array) {\n        if (array == null) {\n            throw new IllegalArgumentException(\"The Array must not be null\");\n        }\n        if (array.length == 0) {\n            throw new IllegalArgumentException(\"Array is empty\");\n        }\n        try {\n            boolean[] primitive = ArrayUtils.toPrimitive(array);\n            return and(primitive) ? Boolean.TRUE : Boolean.FALSE;\n        } catch (NullPointerException ex) {\n            throw new IllegalArgumentException(\"The array must not contain any null elements\");\n        }\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.25092968582069
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.xor(Boolean... array)",
+      "path": "src/main/java/org/apache/commons/lang3/BooleanUtils.java",
+      "start_line": 1067,
+      "end_line": 1080,
+      "source": "public static Boolean xor(Boolean... array) {\n        if (array == null) {\n            throw new IllegalArgumentException(\"The Array must not be null\");\n        }\n        if (array.length == 0) {\n            throw new IllegalArgumentException(\"Array is empty\");\n        }\n        try {\n            boolean[] primitive = ArrayUtils.toPrimitive(array);\n            return xor(primitive) ? Boolean.TRUE : Boolean.FALSE;\n        } catch (NullPointerException ex) {\n            throw new IllegalArgumentException(\"The array must not contain any null elements\");\n        }\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.25092968582069
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)",
+      "path": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java",
+      "start_line": 200,
+      "end_line": 222,
+      "source": "public TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit) {\n        if (timePeriod <= 0) {\n            throw new IllegalArgumentException(\"Time period must be greater 0!\");\n        }\n\n        period = timePeriod;\n        unit = timeUnit;\n\n        if (service != null) {\n            executorService = service;\n            ownExecutor = false;\n        } else {\n            ScheduledThreadPoolExecutor s = new ScheduledThreadPoolExecutor(\n                    THREAD_POOL_SIZE);\n            s.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);\n            s.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);\n            executorService = s;\n            ownExecutor = true;\n        }\n\n        setLimit(limit);\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.931774952165505
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/RandomStringUtils.java::RandomStringUtils.random(int count, int start, int end, boolean letters, boolean numbers,\n                                char[] chars, Random random)",
+      "path": "src/main/java/org/apache/commons/lang3/RandomStringUtils.java",
+      "start_line": 223,
+      "end_line": 289,
+      "source": "public static String random(int count, int start, int end, boolean letters, boolean numbers,\n                                char[] chars, Random random) {\n        if (count == 0) {\n            return \"\";\n        } else if (count < 0) {\n            throw new IllegalArgumentException(\"Requested random string length \" + count + \" is less than 0.\");\n        }\n        if (chars != null && chars.length == 0) {\n            throw new IllegalArgumentException(\"The chars array must not be empty\");\n        }\n\n        if (start == 0 && end == 0) {\n            if (chars != null) {\n                end = chars.length;\n            } else {\n                if (!letters && !numbers) {\n                    end = Integer.MAX_VALUE;\n                } else {\n                    end = 'z' + 1;\n                    start = ' ';                \n                }\n            }\n        }\n\n        char[] buffer = new char[count];\n        int gap = end - start;\n\n        while (count-- != 0) {\n            char ch;\n            if (chars == null) {\n                ch = (char) (random.nextInt(gap) + start);\n            } else {\n                ch = chars[random.nextInt(gap) + start];\n            }\n            if (letters && Character.isLetter(ch)\n                    || numbers && Character.isDigit(ch)\n                    || !letters && !numbers) {\n                if(ch >= 56320 && ch <= 57343) {\n                    if(count == 0) {\n                        count++;\n                    } else {\n                        // low surrogate, insert high surrogate after putting it in\n                        buffer[count] = ch;\n                        count--;\n                        buffer[count] = (char) (55296 + random.nextInt(128));\n                    }\n                } else if(ch >= 55296 && ch <= 56191) {\n                    if(count == 0) {\n                        count++;\n                    } else {\n                        // high surrogate, insert low surrogate before putting it in\n                        buffer[count] = (char) (56320 + random.nextInt(128));\n                        count--;\n                        buffer[count] = ch;\n                    }\n                } else if(ch >= 56192 && ch <= 56319) {\n                    // private high surrogate, no effing clue, so skip it\n                    count++;\n                } else {\n                    buffer[count] = ch;\n                }\n            } else {\n                count++;\n            }\n        }\n        return new String(buffer);\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.02268484527322
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/exception/DefaultExceptionContext.java::DefaultExceptionContext.getFormattedExceptionMessage(String baseMessage)",
+      "path": "src/main/java/org/apache/commons/lang3/exception/DefaultExceptionContext.java",
+      "start_line": 126,
+      "end_line": 163,
+      "source": "@Override\n    public String getFormattedExceptionMessage(String baseMessage){\n        StringBuilder buffer = new StringBuilder(256);\n        if (baseMessage != null) {\n            buffer.append(baseMessage);\n        }\n        \n        if (contextValues.size() > 0) {\n            if (buffer.length() > 0) {\n                buffer.append('\\n');\n            }\n            buffer.append(\"Exception Context:\\n\");\n            \n            int i = 0;\n            for (final Pair<String, Object> pair : contextValues) {\n                buffer.append(\"\\t[\");\n                buffer.append(++i);\n                buffer.append(':');\n                buffer.append(pair.getKey());\n                buffer.append(\"=\");\n                final Object value = pair.getValue();\n                if (value == null) {\n                    buffer.append(\"null\");\n                } else {\n                    String valueStr;\n                    try {\n                        valueStr = value.toString();\n                    } catch (Exception e) {\n                        valueStr = \"Exception thrown on toString(): \" + ExceptionUtils.getStackTrace(e);\n                    }\n                    buffer.append(valueStr);\n                }\n                buffer.append(\"]\\n\");\n            }\n            buffer.append(\"---------------------------------\");\n        }\n        return buffer.toString();\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.41270959591292
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/FieldUtils.java::FieldUtils.getField(final Class<?> cls, String fieldName, boolean forceAccess)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/FieldUtils.java",
+      "start_line": 74,
+      "end_line": 129,
+      "source": "public static Field getField(final Class<?> cls, String fieldName, boolean forceAccess) {\n        if (cls == null) {\n            throw new IllegalArgumentException(\"The class must not be null\");\n        }\n        if (fieldName == null) {\n            throw new IllegalArgumentException(\"The field name must not be null\");\n        }\n        // Sun Java 1.3 has a bugged implementation of getField hence we write the\n        // code ourselves\n\n        // getField() will return the Field object with the declaring class\n        // set correctly to the class that declares the field. Thus requesting the\n        // field on a subclass will return the field from the superclass.\n        //\n        // priority order for lookup:\n        // searchclass private/protected/package/public\n        // superclass protected/package/public\n        //  private/different package blocks access to further superclasses\n        // implementedinterface public\n\n        // check up the superclass hierarchy\n        for (Class<?> acls = cls; acls != null; acls = acls.getSuperclass()) {\n            try {\n                Field field = acls.getDeclaredField(fieldName);\n                // getDeclaredField checks for non-public scopes as well\n                // and it returns accurate results\n                if (!Modifier.isPublic(field.getModifiers())) {\n                    if (forceAccess) {\n                        field.setAccessible(true);\n                    } else {\n                        continue;\n                    }\n                }\n                return field;\n            } catch (NoSuchFieldException ex) { // NOPMD\n                // ignore\n            }\n        }\n        // check the public interface case. This must be manually searched for\n        // incase there is a public supersuperclass field hidden by a private/package\n        // superclass field.\n        Field match = null;\n        for (Class<?> class1 : ClassUtils.getAllInterfaces(cls)) {\n            try {\n                Field test = ((Class<?>) class1).getField(fieldName);\n                if (match != null) {\n                    throw new IllegalArgumentException(\"Reference to field \" + fieldName + \" is ambiguous relative to \" + cls\n                            + \"; a matching field exists on two or more implemented interfaces.\");\n                }\n                match = test;\n            } catch (NoSuchFieldException ex) { // NOPMD\n                // ignore\n            }\n        }\n        return match;\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.16073255767852
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/event/EventUtils.java::EventUtils.EventBindingInvocationHandler.invoke(final Object proxy, final Method method, final Object[] parameters)",
+      "path": "src/main/java/org/apache/commons/lang3/event/EventUtils.java",
+      "start_line": 109,
+      "end_line": 119,
+      "source": "@Override\n        public Object invoke(final Object proxy, final Method method, final Object[] parameters) throws Throwable {\n            if (eventTypes.isEmpty() || eventTypes.contains(method.getName())) {\n                if (hasMatchingParametersMethod(method)) {\n                    return MethodUtils.invokeMethod(target, methodName, parameters);\n                } else {\n                    return MethodUtils.invokeMethod(target, methodName);\n                }\n            }\n            return null;\n        }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.00886875341375
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/SerializationUtils.java::SerializationUtils.deserialize(InputStream inputStream)",
+      "path": "src/main/java/org/apache/commons/lang3/SerializationUtils.java",
+      "start_line": 198,
+      "end_line": 223,
+      "source": "@SuppressWarnings(\"unchecked\")\n    // Don't warn about \"(T) deserialize\" because we want the avoid type casting call sites.\n    public static <T> T deserialize(InputStream inputStream) {\n        if (inputStream == null) {\n            throw new IllegalArgumentException(\"The InputStream must not be null\");\n        }\n        ObjectInputStream in = null;\n        try {\n            // stream closed in the finally\n            in = new ObjectInputStream(inputStream);\n            return (T) in.readObject();\n\n        } catch (ClassNotFoundException ex) {\n            throw new SerializationException(ex);\n        } catch (IOException ex) {\n            throw new SerializationException(ex);\n        } finally {\n            try {\n                if (in != null) {\n                    in.close();\n                }\n            } catch (IOException ex) { // NOPMD\n                // ignore close exception\n            }\n        }\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.79268697650538
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.or(boolean... array)",
+      "path": "src/main/java/org/apache/commons/lang3/BooleanUtils.java",
+      "start_line": 957,
+      "end_line": 971,
+      "source": "public static boolean or(boolean... array) {\n        // Validates input\n        if (array == null) {\n            throw new IllegalArgumentException(\"The Array must not be null\");\n        }\n        if (array.length == 0) {\n            throw new IllegalArgumentException(\"Array is empty\");\n        }\n        for (boolean element : array) {\n            if (element) {\n                return true;\n            }\n        }\n        return false;\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.513243593292653
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java::ExtendedMessageFormat.parseFormatDescription(String pattern, ParsePosition pos)",
+      "path": "src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java",
+      "start_line": 372,
+      "end_line": 395,
+      "source": "private String parseFormatDescription(String pattern, ParsePosition pos) {\n        int start = pos.getIndex();\n        seekNonWs(pattern, pos);\n        int text = pos.getIndex();\n        int depth = 1;\n        for (; pos.getIndex() < pattern.length(); next(pos)) {\n            switch (pattern.charAt(pos.getIndex())) {\n            case START_FE:\n                depth++;\n                break;\n            case END_FE:\n                depth--;\n                if (depth == 0) {\n                    return pattern.substring(text, pos.getIndex());\n                }\n                break;\n            case QUOTE:\n                getQuotedString(pattern, pos, false);\n                break;\n            }\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated format element at position \" + start);\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.17194692449945
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/AnnotationUtils.java::AnnotationUtils.equals(Annotation a1, Annotation a2)",
+      "path": "src/main/java/org/apache/commons/lang3/AnnotationUtils.java",
+      "start_line": 122,
+      "end_line": 153,
+      "source": "public static boolean equals(Annotation a1, Annotation a2) {\n        if (a1 == a2) {\n            return true;\n        }\n        if (a1 == null || a2 == null) {\n            return false;\n        }\n        Class<? extends Annotation> type = a1.annotationType();\n        Class<? extends Annotation> type2 = a2.annotationType();\n        Validate.notNull(type, \"Annotation %s with null annotationType()\", a1);\n        Validate.notNull(type2, \"Annotation %s with null annotationType()\", a2);\n        if (!type.equals(type2)) {\n            return false;\n        }\n        try {\n            for (Method m : type.getDeclaredMethods()) {\n                if (m.getParameterTypes().length == 0\n                        && isValidAnnotationMemberType(m.getReturnType())) {\n                    Object v1 = m.invoke(a1);\n                    Object v2 = m.invoke(a2);\n                    if (!memberEquals(m.getReturnType(), v1, v2)) {\n                        return false;\n                    }\n                }\n            }\n        } catch (IllegalAccessException ex) {\n            return false;\n        } catch (InvocationTargetException ex) {\n            return false;\n        }\n        return true;\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 30.7174387371621
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object... args)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 83,
+      "end_line": 95,
+      "source": "public static Object invokeMethod(Object object, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class<?>[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeMethod(object, methodName, args, parameterTypes);\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 30.30470625586534
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.startTimer()",
+      "path": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java",
+      "start_line": 401,
+      "end_line": 408,
+      "source": "protected ScheduledFuture<?> startTimer() {\n        return getExecutorService().scheduleAtFixedRate(new Runnable() {\n            @Override\n            public void run() {\n                endOfPeriod();\n            }\n        }, getPeriod(), getPeriod(), getUnit());\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 30.198692955806386
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/event/EventListenerSupport.java::EventListenerSupport.writeObject(ObjectOutputStream objectOutputStream)",
+      "path": "src/main/java/org/apache/commons/lang3/event/EventListenerSupport.java",
+      "start_line": 220,
+      "end_line": 239,
+      "source": "private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {\n        ArrayList<L> serializableListeners = new ArrayList<L>();\n\n        // don't just rely on instanceof Serializable:\n        ObjectOutputStream testObjectOutputStream = new ObjectOutputStream(new ByteArrayOutputStream());\n        for (L listener : listeners) {\n            try {\n                testObjectOutputStream.writeObject(listener);\n                serializableListeners.add(listener);\n            } catch (IOException exception) {\n                //recreate test stream in case of indeterminate state\n                testObjectOutputStream = new ObjectOutputStream(new ByteArrayOutputStream());\n            }\n        }\n        /*\n         * we can reconstitute everything we need from an array of our listeners,\n         * which has the additional advantage of typically requiring less storage than a list:\n         */\n        objectOutputStream.writeObject(serializableListeners.toArray(prototypeArray));\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 29.99815317118337
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object... args)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 154,
+      "end_line": 166,
+      "source": "public static Object invokeExactMethod(Object object, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class<?>[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeExactMethod(object, methodName, args, parameterTypes);\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 29.894057478059196
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java::ExtendedMessageFormat.readArgumentIndex(String pattern, ParsePosition pos)",
+      "source": "private int readArgumentIndex(String pattern, ParsePosition pos) {\n        int start = pos.getIndex();\n        seekNonWs(pattern, pos);\n        StringBuffer result = new StringBuffer();\n        boolean error = false;\n        for (; !error && pos.getIndex() < pattern.length(); next(pos)) {\n            char c = pattern.charAt(pos.getIndex());\n            if (Character.isWhitespace(c)) {\n                seekNonWs(pattern, pos);\n                c = pattern.charAt(pos.getIndex());\n                if (c != START_FMT && c != END_FE) {\n                    error = true;\n                    continue;\n                }\n            }\n            if ((c == START_FMT || c == END_FE) && result.length() > 0) {\n                try {\n                    return Integer.parseInt(result.toString());\n                } catch (NumberFormatException e) { // NOPMD\n                    // we've already ensured only digits, so unless something\n                    // outlandishly large was specified we should be okay.\n                }\n            }\n            error = !Character.isDigit(c);\n            result.append(c);\n        }\n        if (error) {\n            throw new IllegalArgumentException(\n                    \"Invalid format argument index at position \" + start + \": \"\n                            + pattern.substring(start, pos.getIndex()));\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated format element at position \" + start);\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java::ExtendedMessageFormat.readArgumentIndex(String pattern, ParsePosition pos)\nSIGNATURE: private int readArgumentIndex(String pattern, ParsePosition pos)",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java::ExtendedMessageFormat.readArgumentIndex(String pattern, ParsePosition pos)\nSIGNATURE: private int readArgumentIndex(String pattern, ParsePosition pos)\nSTRUCTURE (lossy):\nint start = pos.getIndex();\nCALL pos.getIndex()\nCALL seekNonWs(pattern, pos)\nStringBuffer result = new StringBuffer();\nboolean error = false;\nfor (; !error && pos.getIndex() < pattern.length(); next(pos))\nCALL pattern.length()\nCALL next(pos)\nchar c = pattern.charAt(pos.getIndex());\nCALL pattern.charAt(pos.getIndex())\nif (Character.isWhitespace(c))\nCALL Character.isWhitespace(c)\nc = pattern.charAt(pos.getIndex())\nif (c != START_FMT && c != END_FE)\nerror = true\nif ((c == START_FMT || c == END_FE) && result.length() > 0)\nCALL result.length()\nreturn Integer.parseInt(result.toString());\nCALL Integer.parseInt(result.toString())\nCALL result.toString()\ncatch (NumberFormatException e)\nerror = !Character.isDigit(c)\nCALL Character.isDigit(c)\nCALL result.append(c)\nif (error)\nthrow new IllegalArgumentException( \"Invalid format argument index at position \" + start + \": \" + pattern.substring(start, pos.getIndex()));\nCALL pattern.substring(start, pos.getIndex())\nthrow new IllegalArgumentException( \"Unterminated format element at position \" + start);",
+        "private int readArgumentIndex(String pattern, ParsePosition pos) {\n        int start = pos.getIndex();\n        seekNonWs(pattern, pos);\n        StringBuffer result = new StringBuffer();\n        boolean error = false;\n        for (; !error && pos.getIndex() < pattern.length(); next(pos)) {\n            char c = pattern.charAt(pos.getIndex());\n            if (Character.isWhitespace(c)) {\n                seekNonWs(pattern, pos);\n                c = pattern.charAt(pos.getIndex());\n                if (c != START_FMT && c != END_FE) {\n                    error = true;\n                    continue;\n                }\n            }\n            if ((c == START_FMT || c == END_FE) && result.length() > 0) {\n                try {\n                    return Integer.parseInt(result.toString());\n                } catch (NumberFormatException e) { // NOPMD\n                    // we've already ensured only digits, so unless something\n                    // outlandishly large was specified we should be okay.\n                }\n            }\n            error = !Character.isDigit(c);\n            result.append(c);\n        }\n        if (error) {\n            throw new IllegalArgumentException(\n                    \"Invalid format argument index at position \" + start + \": \"\n                            + pattern.substring(start, pos.getIndex()));\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated format element at position \" + start);\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.35294117647058826,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 18.0,
+        "literal_count": 4.0,
+        "source_tokens": 368.0,
+        "l0_tokens": 58.0,
+        "l1_tokens": 325.0,
+        "compression_ratio": 0.8831521739130435,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 18,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.or(Boolean... array)",
+      "source": "public static Boolean or(Boolean... array) {\n        if (array == null) {\n            throw new IllegalArgumentException(\"The Array must not be null\");\n        }\n        if (array.length == 0) {\n            throw new IllegalArgumentException(\"Array is empty\");\n        }\n        try {\n            boolean[] primitive = ArrayUtils.toPrimitive(array);\n            return or(primitive) ? Boolean.TRUE : Boolean.FALSE;\n        } catch (NullPointerException ex) {\n            throw new IllegalArgumentException(\"The array must not contain any null elements\");\n        }\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.or(Boolean... array)\nSIGNATURE: public static Boolean or(Boolean... array)",
+        "METHOD: src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.or(Boolean... array)\nSIGNATURE: public static Boolean or(Boolean... array)\nSTRUCTURE (lossy):\nif (array == null)\nthrow new IllegalArgumentException(\"The Array must not be null\");\nif (array.length == 0)\nthrow new IllegalArgumentException(\"Array is empty\");\nboolean[] primitive = ArrayUtils.toPrimitive(array);\nCALL ArrayUtils.toPrimitive(array)\nreturn or(primitive) ? Boolean.TRUE : Boolean.FALSE;\nCALL or(primitive)\ncatch (NullPointerException ex)\nthrow new IllegalArgumentException(\"The array must not contain any null elements\");",
+        "public static Boolean or(Boolean... array) {\n        if (array == null) {\n            throw new IllegalArgumentException(\"The Array must not be null\");\n        }\n        if (array.length == 0) {\n            throw new IllegalArgumentException(\"Array is empty\");\n        }\n        try {\n            boolean[] primitive = ArrayUtils.toPrimitive(array);\n            return or(primitive) ? Boolean.TRUE : Boolean.FALSE;\n        } catch (NullPointerException ex) {\n            throw new IllegalArgumentException(\"The array must not contain any null elements\");\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5454545454545454,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 2.0,
+        "literal_count": 5.0,
+        "source_tokens": 143.0,
+        "l0_tokens": 39.0,
+        "l1_tokens": 153.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 2,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/ObjectUtils.java::ObjectUtils.clone(final T obj)",
+      "source": "public static <T> T clone(final T obj) {\n        if (obj instanceof Cloneable) {\n            final Object result;\n            if (obj.getClass().isArray()) {\n                final Class<?> componentType = obj.getClass().getComponentType();\n                if (!componentType.isPrimitive()) {\n                    result = ((Object[]) obj).clone();\n                } else {\n                    int length = Array.getLength(obj);\n                    result = Array.newInstance(componentType, length);\n                    while (length-- > 0) {\n                        Array.set(result, length, Array.get(obj, length));\n                    }\n                }\n            } else {\n                try {\n                    final Method clone = obj.getClass().getMethod(\"clone\");\n                    result = clone.invoke(obj);\n                } catch (final NoSuchMethodException e) {\n                    throw new CloneFailedException(\"Cloneable type \"\n                        + obj.getClass().getName()\n                        + \" has no clone method\", e);\n                } catch (final IllegalAccessException e) {\n                    throw new CloneFailedException(\"Cannot clone Cloneable type \"\n                        + obj.getClass().getName(), e);\n                } catch (final InvocationTargetException e) {\n                    throw new CloneFailedException(\"Exception cloning Cloneable type \"\n                        + obj.getClass().getName(), e.getCause());\n                }\n            }\n            @SuppressWarnings(\"unchecked\")\n            final T checked = (T) result;\n            return checked;\n        }\n\n        return null;\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/ObjectUtils.java::ObjectUtils.clone(final T obj)\nSIGNATURE: public static <T> T clone(final T obj)",
+        "METHOD: src/main/java/org/apache/commons/lang3/ObjectUtils.java::ObjectUtils.clone(final T obj)\nSIGNATURE: public static <T> T clone(final T obj)\nSTRUCTURE (lossy):\nif (obj instanceof Cloneable)\nfinal Object result;\nif (obj.getClass().isArray())\nCALL obj.getClass().isArray()\nCALL obj.getClass()\nfinal Class<?> componentType = obj.getClass().getComponentType();\nCALL obj.getClass().getComponentType()\nif (!componentType.isPrimitive())\nCALL componentType.isPrimitive()\nresult = ((Object[]) obj).clone()\nCALL ((Object[]) obj).clone()\nint length = Array.getLength(obj);\nCALL Array.getLength(obj)\nresult = Array.newInstance(componentType, length)\nCALL Array.newInstance(componentType, length)\nwhile (length-- > 0)\nlength--\nCALL Array.set(result, length, Array.get(obj, length))\nCALL Array.get(obj, length)\nfinal Method clone = obj.getClass().getMethod(\"clone\");\nCALL obj.getClass().getMethod(\"clone\")\nresult = clone.invoke(obj)\nCALL clone.invoke(obj)\ncatch (final NoSuchMethodException e)\nthrow new CloneFailedException(\"Cloneable type \" + obj.getClass().getName() + \" has no clone method\", e);\nCALL obj.getClass().getName()\ncatch (final IllegalAccessException e)\nthrow new CloneFailedException(\"Cannot clone Cloneable type \" + obj.getClass().getName(), e);\ncatch (final InvocationTargetException e)\nthrow new CloneFailedException(\"Exception cloning Cloneable type \" + obj.getClass().getName(), e.getCause());\nCALL e.getCause()\n@SuppressWarnings(\"unchecked\") final T checked = (T) result;\nreturn checked;\nreturn null;",
+        "public static <T> T clone(final T obj) {\n        if (obj instanceof Cloneable) {\n            final Object result;\n            if (obj.getClass().isArray()) {\n                final Class<?> componentType = obj.getClass().getComponentType();\n                if (!componentType.isPrimitive()) {\n                    result = ((Object[]) obj).clone();\n                } else {\n                    int length = Array.getLength(obj);\n                    result = Array.newInstance(componentType, length);\n                    while (length-- > 0) {\n                        Array.set(result, length, Array.get(obj, length));\n                    }\n                }\n            } else {\n                try {\n                    final Method clone = obj.getClass().getMethod(\"clone\");\n                    result = clone.invoke(obj);\n                } catch (final NoSuchMethodException e) {\n                    throw new CloneFailedException(\"Cloneable type \"\n                        + obj.getClass().getName()\n                        + \" has no clone method\", e);\n                } catch (final IllegalAccessException e) {\n                    throw new CloneFailedException(\"Cannot clone Cloneable type \"\n                        + obj.getClass().getName(), e);\n                } catch (final InvocationTargetException e) {\n                    throw new CloneFailedException(\"Exception cloning Cloneable type \"\n                        + obj.getClass().getName(), e.getCause());\n                }\n            }\n            @SuppressWarnings(\"unchecked\")\n            final T checked = (T) result;\n            return checked;\n        }\n\n        return null;\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.39622641509433965,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 20.0,
+        "literal_count": 8.0,
+        "source_tokens": 413.0,
+        "l0_tokens": 37.0,
+        "l1_tokens": 379.0,
+        "compression_ratio": 0.9176755447941889,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 20,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/SerializationUtils.java::SerializationUtils.serialize(Serializable obj, OutputStream outputStream)",
+      "source": "public static void serialize(Serializable obj, OutputStream outputStream) {\n        if (outputStream == null) {\n            throw new IllegalArgumentException(\"The OutputStream must not be null\");\n        }\n        ObjectOutputStream out = null;\n        try {\n            // stream closed in the finally\n            out = new ObjectOutputStream(outputStream);\n            out.writeObject(obj);\n\n        } catch (IOException ex) {\n            throw new SerializationException(ex);\n        } finally {\n            try {\n                if (out != null) {\n                    out.close();\n                }\n            } catch (IOException ex) { // NOPMD\n                // ignore close exception\n            }\n        }\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/SerializationUtils.java::SerializationUtils.serialize(Serializable obj, OutputStream outputStream)\nSIGNATURE: public static void serialize(Serializable obj, OutputStream outputStream)",
+        "METHOD: src/main/java/org/apache/commons/lang3/SerializationUtils.java::SerializationUtils.serialize(Serializable obj, OutputStream outputStream)\nSIGNATURE: public static void serialize(Serializable obj, OutputStream outputStream)\nSTRUCTURE (lossy):\nif (outputStream == null)\nthrow new IllegalArgumentException(\"The OutputStream must not be null\");\nObjectOutputStream out = null;\nout = new ObjectOutputStream(outputStream)\nCALL out.writeObject(obj)\ncatch (IOException ex)\nthrow new SerializationException(ex);\nif (out != null)\nCALL out.close()",
+        "public static void serialize(Serializable obj, OutputStream outputStream) {\n        if (outputStream == null) {\n            throw new IllegalArgumentException(\"The OutputStream must not be null\");\n        }\n        ObjectOutputStream out = null;\n        try {\n            // stream closed in the finally\n            out = new ObjectOutputStream(outputStream);\n            out.writeObject(obj);\n\n        } catch (IOException ex) {\n            throw new SerializationException(ex);\n        } finally {\n            try {\n                if (out != null) {\n                    out.close();\n                }\n            } catch (IOException ex) { // NOPMD\n                // ignore close exception\n            }\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4594594594594595,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 2.0,
+        "literal_count": 4.0,
+        "source_tokens": 181.0,
+        "l0_tokens": 58.0,
+        "l1_tokens": 136.0,
+        "compression_ratio": 0.7513812154696132,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 2,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/AnnotationUtils.java::AnnotationUtils.toString(final Annotation a)",
+      "source": "public static String toString(final Annotation a) {\n        ToStringBuilder builder = new ToStringBuilder(a, TO_STRING_STYLE);\n        for (Method m : a.annotationType().getDeclaredMethods()) {\n            if (m.getParameterTypes().length > 0) {\n                continue; //wtf?\n            }\n            try {\n                builder.append(m.getName(), m.invoke(a));\n            } catch (RuntimeException ex) {\n                throw ex;\n            } catch (Exception ex) {\n                throw new RuntimeException(ex);\n            }\n        }\n        return builder.build();\n    }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/AnnotationUtils.java::AnnotationUtils.toString(final Annotation a)\nSIGNATURE: public static String toString(final Annotation a)",
+        "METHOD: src/main/java/org/apache/commons/lang3/AnnotationUtils.java::AnnotationUtils.toString(final Annotation a)\nSIGNATURE: public static String toString(final Annotation a)\nSTRUCTURE (lossy):\nToStringBuilder builder = new ToStringBuilder(a, TO_STRING_STYLE);\nfor (Method m : a.annotationType().getDeclaredMethods())\nCALL a.annotationType().getDeclaredMethods()\nCALL a.annotationType()\nif (m.getParameterTypes().length > 0)\nCALL m.getParameterTypes()\nCALL builder.append(m.getName(), m.invoke(a))\nCALL m.getName()\nCALL m.invoke(a)\ncatch (RuntimeException ex)\nthrow ex;\ncatch (Exception ex)\nthrow new RuntimeException(ex);\nreturn builder.build();\nCALL builder.build()",
+        "public static String toString(final Annotation a) {\n        ToStringBuilder builder = new ToStringBuilder(a, TO_STRING_STYLE);\n        for (Method m : a.annotationType().getDeclaredMethods()) {\n            if (m.getParameterTypes().length > 0) {\n                continue; //wtf?\n            }\n            try {\n                builder.append(m.getName(), m.invoke(a));\n            } catch (RuntimeException ex) {\n                throw ex;\n            } catch (Exception ex) {\n                throw new RuntimeException(ex);\n            }\n        }\n        return builder.build();\n    }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4864864864864865,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 7.0,
+        "literal_count": 1.0,
+        "source_tokens": 147.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 167.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 7,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/AnnotationUtils.java::AnnotationUtils.hashCode(Annotation a)",
+      "source": "public static int hashCode(Annotation a) {\n        int result = 0;\n        Class<? extends Annotation> type = a.annotationType();\n        for (Method m : type.getDeclaredMethods()) {\n            try {\n                Object value = m.invoke(a);\n                if (value == null) {\n                    throw new IllegalStateException(\n                            String.format(\"Annotation method %s returned null\", m));\n                }\n                result += hashMember(m.getName(), value);\n            } catch (RuntimeException ex) {\n                throw ex;\n            } catch (Exception ex) {\n                throw new RuntimeException(ex);\n            }\n        }\n        return result;\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/AnnotationUtils.java::AnnotationUtils.hashCode(Annotation a)\nSIGNATURE: public static int hashCode(Annotation a)",
+        "METHOD: src/main/java/org/apache/commons/lang3/AnnotationUtils.java::AnnotationUtils.hashCode(Annotation a)\nSIGNATURE: public static int hashCode(Annotation a)\nSTRUCTURE (lossy):\nint result = 0;\nClass<? extends Annotation> type = a.annotationType();\nCALL a.annotationType()\nfor (Method m : type.getDeclaredMethods())\nCALL type.getDeclaredMethods()\nObject value = m.invoke(a);\nCALL m.invoke(a)\nif (value == null)\nthrow new IllegalStateException( String.format(\"Annotation method %s returned null\", m));\nCALL String.format(\"Annotation method %s returned null\", m)\nresult += hashMember(m.getName(), value)\nCALL hashMember(m.getName(), value)\nCALL m.getName()\ncatch (RuntimeException ex)\nthrow ex;\ncatch (Exception ex)\nthrow new RuntimeException(ex);\nreturn result;",
+        "public static int hashCode(Annotation a) {\n        int result = 0;\n        Class<? extends Annotation> type = a.annotationType();\n        for (Method m : type.getDeclaredMethods()) {\n            try {\n                Object value = m.invoke(a);\n                if (value == null) {\n                    throw new IllegalStateException(\n                            String.format(\"Annotation method %s returned null\", m));\n                }\n                result += hashMember(m.getName(), value);\n            } catch (RuntimeException ex) {\n                throw ex;\n            } catch (Exception ex) {\n                throw new RuntimeException(ex);\n            }\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4634146341463415,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 6.0,
+        "literal_count": 3.0,
+        "source_tokens": 176.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 191.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 6,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/exception/ExceptionUtils.java::ExceptionUtils.getCauseUsingMethodName(Throwable throwable, String methodName)",
+      "source": "private static Throwable getCauseUsingMethodName(Throwable throwable, String methodName) {\n        Method method = null;\n        try {\n            method = throwable.getClass().getMethod(methodName);\n        } catch (NoSuchMethodException ignored) { // NOPMD\n            // exception ignored\n        } catch (SecurityException ignored) { // NOPMD\n            // exception ignored\n        }\n\n        if (method != null && Throwable.class.isAssignableFrom(method.getReturnType())) {\n            try {\n                return (Throwable) method.invoke(throwable);\n            } catch (IllegalAccessException ignored) { // NOPMD\n                // exception ignored\n            } catch (IllegalArgumentException ignored) { // NOPMD\n                // exception ignored\n            } catch (InvocationTargetException ignored) { // NOPMD\n                // exception ignored\n            }\n        }\n        return null;\n    }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/exception/ExceptionUtils.java::ExceptionUtils.getCauseUsingMethodName(Throwable throwable, String methodName)\nSIGNATURE: private static Throwable getCauseUsingMethodName(Throwable throwable, String methodName)",
+        "METHOD: src/main/java/org/apache/commons/lang3/exception/ExceptionUtils.java::ExceptionUtils.getCauseUsingMethodName(Throwable throwable, String methodName)\nSIGNATURE: private static Throwable getCauseUsingMethodName(Throwable throwable, String methodName)\nSTRUCTURE (lossy):\nMethod method = null;\nmethod = throwable.getClass().getMethod(methodName)\nCALL throwable.getClass().getMethod(methodName)\nCALL throwable.getClass()\ncatch (NoSuchMethodException ignored)\ncatch (SecurityException ignored)\nif (method != null && Throwable.class.isAssignableFrom(method.getReturnType()))\nCALL Throwable.class.isAssignableFrom(method.getReturnType())\nCALL method.getReturnType()\nreturn (Throwable) method.invoke(throwable);\nCALL method.invoke(throwable)\ncatch (IllegalAccessException ignored)\ncatch (IllegalArgumentException ignored)\ncatch (InvocationTargetException ignored)\nreturn null;",
+        "private static Throwable getCauseUsingMethodName(Throwable throwable, String methodName) {\n        Method method = null;\n        try {\n            method = throwable.getClass().getMethod(methodName);\n        } catch (NoSuchMethodException ignored) { // NOPMD\n            // exception ignored\n        } catch (SecurityException ignored) { // NOPMD\n            // exception ignored\n        }\n\n        if (method != null && Throwable.class.isAssignableFrom(method.getReturnType())) {\n            try {\n                return (Throwable) method.invoke(throwable);\n            } catch (IllegalAccessException ignored) { // NOPMD\n                // exception ignored\n            } catch (IllegalArgumentException ignored) { // NOPMD\n                // exception ignored\n            } catch (InvocationTargetException ignored) { // NOPMD\n                // exception ignored\n            }\n        }\n        return null;\n    }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5277777777777778,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 5.0,
+        "literal_count": 4.0,
+        "source_tokens": 230.0,
+        "l0_tokens": 64.0,
+        "l1_tokens": 219.0,
+        "compression_ratio": 0.9521739130434783,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 5,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/builder/ReflectionToStringBuilder.java::ReflectionToStringBuilder.appendFieldsIn(Class<?> clazz)",
+      "source": "protected void appendFieldsIn(Class<?> clazz) {\n        if (clazz.isArray()) {\n            this.reflectionAppendArray(this.getObject());\n            return;\n        }\n        Field[] fields = clazz.getDeclaredFields();\n        AccessibleObject.setAccessible(fields, true);\n        for (Field field : fields) {\n            String fieldName = field.getName();\n            if (this.accept(field)) {\n                try {\n                    // Warning: Field.get(Object) creates wrappers objects\n                    // for primitive types.\n                    Object fieldValue = this.getValue(field);\n                    this.append(fieldName, fieldValue);\n                } catch (IllegalAccessException ex) {\n                    //this can't happen. Would get a Security exception\n                    // instead\n                    //throw a runtime exception in case the impossible\n                    // happens.\n                    throw new InternalError(\"Unexpected IllegalAccessException: \" + ex.getMessage());\n                }\n            }\n        }\n    }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/builder/ReflectionToStringBuilder.java::ReflectionToStringBuilder.appendFieldsIn(Class<?> clazz)\nSIGNATURE: protected void appendFieldsIn(Class<?> clazz)",
+        "METHOD: src/main/java/org/apache/commons/lang3/builder/ReflectionToStringBuilder.java::ReflectionToStringBuilder.appendFieldsIn(Class<?> clazz)\nSIGNATURE: protected void appendFieldsIn(Class<?> clazz)\nSTRUCTURE (lossy):\nif (clazz.isArray())\nCALL clazz.isArray()\nCALL this.reflectionAppendArray(this.getObject())\nCALL this.getObject()\nreturn;\nField[] fields = clazz.getDeclaredFields();\nCALL clazz.getDeclaredFields()\nCALL AccessibleObject.setAccessible(fields, true)\nfor (Field field : fields)\nString fieldName = field.getName();\nCALL field.getName()\nif (this.accept(field))\nCALL this.accept(field)\nObject fieldValue = this.getValue(field);\nCALL this.getValue(field)\nCALL this.append(fieldName, fieldValue)\ncatch (IllegalAccessException ex)\nthrow new InternalError(\"Unexpected IllegalAccessException: \" + ex.getMessage());\nCALL ex.getMessage()",
+        "protected void appendFieldsIn(Class<?> clazz) {\n        if (clazz.isArray()) {\n            this.reflectionAppendArray(this.getObject());\n            return;\n        }\n        Field[] fields = clazz.getDeclaredFields();\n        AccessibleObject.setAccessible(fields, true);\n        for (Field field : fields) {\n            String fieldName = field.getName();\n            if (this.accept(field)) {\n                try {\n                    // Warning: Field.get(Object) creates wrappers objects\n                    // for primitive types.\n                    Object fieldValue = this.getValue(field);\n                    this.append(fieldName, fieldValue);\n                } catch (IllegalAccessException ex) {\n                    //this can't happen. Would get a Security exception\n                    // instead\n                    //throw a runtime exception in case the impossible\n                    // happens.\n                    throw new InternalError(\"Unexpected IllegalAccessException: \" + ex.getMessage());\n                }\n            }\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3508771929824561,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 10.0,
+        "literal_count": 1.0,
+        "source_tokens": 266.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 211.0,
+        "compression_ratio": 0.793233082706767,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 10,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/event/EventUtils.java::EventUtils.addEventListener(Object eventSource, Class<L> listenerType, L listener)",
+      "source": "public static <L> void addEventListener(Object eventSource, Class<L> listenerType, L listener) {\n        try {\n            MethodUtils.invokeMethod(eventSource, \"add\" + listenerType.getSimpleName(), listener);\n        } catch (NoSuchMethodException e) {\n            throw new IllegalArgumentException(\"Class \" + eventSource.getClass().getName()\n                    + \" does not have a public add\" + listenerType.getSimpleName()\n                    + \" method which takes a parameter of type \" + listenerType.getName() + \".\");\n        } catch (IllegalAccessException e) {\n            throw new IllegalArgumentException(\"Class \" + eventSource.getClass().getName()\n                    + \" does not have an accessible add\" + listenerType.getSimpleName ()\n                    + \" method which takes a parameter of type \" + listenerType.getName() + \".\");\n        } catch (InvocationTargetException e) {\n            throw new RuntimeException(\"Unable to add listener.\", e.getCause());\n        }\n    }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/event/EventUtils.java::EventUtils.addEventListener(Object eventSource, Class<L> listenerType, L listener)\nSIGNATURE: public static <L> void addEventListener(Object eventSource, Class<L> listenerType, L listener)",
+        "METHOD: src/main/java/org/apache/commons/lang3/event/EventUtils.java::EventUtils.addEventListener(Object eventSource, Class<L> listenerType, L listener)\nSIGNATURE: public static <L> void addEventListener(Object eventSource, Class<L> listenerType, L listener)\nSTRUCTURE (lossy):\nCALL MethodUtils.invokeMethod(eventSource, \"add\" + listenerType.getSimpleName(), listener)\nCALL listenerType.getSimpleName()\ncatch (NoSuchMethodException e)\nthrow new IllegalArgumentException(\"Class \" + eventSource.getClass().getName() + \" does not have a public add\" + listenerType.getSimpleName() + \" method which takes a parameter of type \" + listenerType.getName() + \".\");\nCALL eventSource.getClass().getName()\nCALL eventSource.getClass()\nCALL listenerType.getName()\ncatch (IllegalAccessException e)\nthrow new IllegalArgumentException(\"Class \" + eventSource.getClass().getName() + \" does not have an accessible add\" + listenerType.getSimpleName () + \" method which takes a parameter of type \" + listenerType.getName() + \".\");\nCALL listenerType.getSimpleName ()\ncatch (InvocationTargetException e)\nthrow new RuntimeException(\"Unable to add listener.\", e.getCause());\nCALL e.getCause()",
+        "public static <L> void addEventListener(Object eventSource, Class<L> listenerType, L listener) {\n        try {\n            MethodUtils.invokeMethod(eventSource, \"add\" + listenerType.getSimpleName(), listener);\n        } catch (NoSuchMethodException e) {\n            throw new IllegalArgumentException(\"Class \" + eventSource.getClass().getName()\n                    + \" does not have a public add\" + listenerType.getSimpleName()\n                    + \" method which takes a parameter of type \" + listenerType.getName() + \".\");\n        } catch (IllegalAccessException e) {\n            throw new IllegalArgumentException(\"Class \" + eventSource.getClass().getName()\n                    + \" does not have an accessible add\" + listenerType.getSimpleName ()\n                    + \" method which takes a parameter of type \" + listenerType.getName() + \".\");\n        } catch (InvocationTargetException e) {\n            throw new RuntimeException(\"Unable to add listener.\", e.getCause());\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.45454545454545453,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 11.0,
+        "literal_count": 10.0,
+        "source_tokens": 249.0,
+        "l0_tokens": 65.0,
+        "l1_tokens": 292.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 11,
+        "literal_count": 10
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.and(Boolean... array)",
+      "source": "public static Boolean and(Boolean... array) {\n        if (array == null) {\n            throw new IllegalArgumentException(\"The Array must not be null\");\n        }\n        if (array.length == 0) {\n            throw new IllegalArgumentException(\"Array is empty\");\n        }\n        try {\n            boolean[] primitive = ArrayUtils.toPrimitive(array);\n            return and(primitive) ? Boolean.TRUE : Boolean.FALSE;\n        } catch (NullPointerException ex) {\n            throw new IllegalArgumentException(\"The array must not contain any null elements\");\n        }\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.and(Boolean... array)\nSIGNATURE: public static Boolean and(Boolean... array)",
+        "METHOD: src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.and(Boolean... array)\nSIGNATURE: public static Boolean and(Boolean... array)\nSTRUCTURE (lossy):\nif (array == null)\nthrow new IllegalArgumentException(\"The Array must not be null\");\nif (array.length == 0)\nthrow new IllegalArgumentException(\"Array is empty\");\nboolean[] primitive = ArrayUtils.toPrimitive(array);\nCALL ArrayUtils.toPrimitive(array)\nreturn and(primitive) ? Boolean.TRUE : Boolean.FALSE;\nCALL and(primitive)\ncatch (NullPointerException ex)\nthrow new IllegalArgumentException(\"The array must not contain any null elements\");",
+        "public static Boolean and(Boolean... array) {\n        if (array == null) {\n            throw new IllegalArgumentException(\"The Array must not be null\");\n        }\n        if (array.length == 0) {\n            throw new IllegalArgumentException(\"Array is empty\");\n        }\n        try {\n            boolean[] primitive = ArrayUtils.toPrimitive(array);\n            return and(primitive) ? Boolean.TRUE : Boolean.FALSE;\n        } catch (NullPointerException ex) {\n            throw new IllegalArgumentException(\"The array must not contain any null elements\");\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5294117647058824,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 2.0,
+        "literal_count": 5.0,
+        "source_tokens": 143.0,
+        "l0_tokens": 39.0,
+        "l1_tokens": 154.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 2,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.xor(Boolean... array)",
+      "source": "public static Boolean xor(Boolean... array) {\n        if (array == null) {\n            throw new IllegalArgumentException(\"The Array must not be null\");\n        }\n        if (array.length == 0) {\n            throw new IllegalArgumentException(\"Array is empty\");\n        }\n        try {\n            boolean[] primitive = ArrayUtils.toPrimitive(array);\n            return xor(primitive) ? Boolean.TRUE : Boolean.FALSE;\n        } catch (NullPointerException ex) {\n            throw new IllegalArgumentException(\"The array must not contain any null elements\");\n        }\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.xor(Boolean... array)\nSIGNATURE: public static Boolean xor(Boolean... array)",
+        "METHOD: src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.xor(Boolean... array)\nSIGNATURE: public static Boolean xor(Boolean... array)\nSTRUCTURE (lossy):\nif (array == null)\nthrow new IllegalArgumentException(\"The Array must not be null\");\nif (array.length == 0)\nthrow new IllegalArgumentException(\"Array is empty\");\nboolean[] primitive = ArrayUtils.toPrimitive(array);\nCALL ArrayUtils.toPrimitive(array)\nreturn xor(primitive) ? Boolean.TRUE : Boolean.FALSE;\nCALL xor(primitive)\ncatch (NullPointerException ex)\nthrow new IllegalArgumentException(\"The array must not contain any null elements\");",
+        "public static Boolean xor(Boolean... array) {\n        if (array == null) {\n            throw new IllegalArgumentException(\"The Array must not be null\");\n        }\n        if (array.length == 0) {\n            throw new IllegalArgumentException(\"Array is empty\");\n        }\n        try {\n            boolean[] primitive = ArrayUtils.toPrimitive(array);\n            return xor(primitive) ? Boolean.TRUE : Boolean.FALSE;\n        } catch (NullPointerException ex) {\n            throw new IllegalArgumentException(\"The array must not contain any null elements\");\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5294117647058824,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 2.0,
+        "literal_count": 5.0,
+        "source_tokens": 143.0,
+        "l0_tokens": 39.0,
+        "l1_tokens": 154.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 2,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)",
+      "source": "public TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit) {\n        if (timePeriod <= 0) {\n            throw new IllegalArgumentException(\"Time period must be greater 0!\");\n        }\n\n        period = timePeriod;\n        unit = timeUnit;\n\n        if (service != null) {\n            executorService = service;\n            ownExecutor = false;\n        } else {\n            ScheduledThreadPoolExecutor s = new ScheduledThreadPoolExecutor(\n                    THREAD_POOL_SIZE);\n            s.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);\n            s.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);\n            executorService = s;\n            ownExecutor = true;\n        }\n\n        setLimit(limit);\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)\nSIGNATURE: public TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)",
+        "METHOD: src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)\nSIGNATURE: public TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)\nSTRUCTURE (lossy):\nif (timePeriod <= 0)\nthrow new IllegalArgumentException(\"Time period must be greater 0!\");\nperiod = timePeriod\nunit = timeUnit\nif (service != null)\nexecutorService = service\nownExecutor = false\nScheduledThreadPoolExecutor s = new ScheduledThreadPoolExecutor( THREAD_POOL_SIZE);\nCALL s.setContinueExistingPeriodicTasksAfterShutdownPolicy(false)\nCALL s.setExecuteExistingDelayedTasksAfterShutdownPolicy(false)\nexecutorService = s\nownExecutor = true\nCALL setLimit(limit)",
+        "public TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit) {\n        if (timePeriod <= 0) {\n            throw new IllegalArgumentException(\"Time period must be greater 0!\");\n        }\n\n        period = timePeriod;\n        unit = timeUnit;\n\n        if (service != null) {\n            executorService = service;\n            ownExecutor = false;\n        } else {\n            ScheduledThreadPoolExecutor s = new ScheduledThreadPoolExecutor(\n                    THREAD_POOL_SIZE);\n            s.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);\n            s.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);\n            executorService = s;\n            ownExecutor = true;\n        }\n\n        setLimit(limit);\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 3.0,
+        "literal_count": 3.0,
+        "source_tokens": 196.0,
+        "l0_tokens": 82.0,
+        "l1_tokens": 204.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 3,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/RandomStringUtils.java::RandomStringUtils.random(int count, int start, int end, boolean letters, boolean numbers,\n                                char[] chars, Random random)",
+      "source": "public static String random(int count, int start, int end, boolean letters, boolean numbers,\n                                char[] chars, Random random) {\n        if (count == 0) {\n            return \"\";\n        } else if (count < 0) {\n            throw new IllegalArgumentException(\"Requested random string length \" + count + \" is less than 0.\");\n        }\n        if (chars != null && chars.length == 0) {\n            throw new IllegalArgumentException(\"The chars array must not be empty\");\n        }\n\n        if (start == 0 && end == 0) {\n            if (chars != null) {\n                end = chars.length;\n            } else {\n                if (!letters && !numbers) {\n                    end = Integer.MAX_VALUE;\n                } else {\n                    end = 'z' + 1;\n                    start = ' ';                \n                }\n            }\n        }\n\n        char[] buffer = new char[count];\n        int gap = end - start;\n\n        while (count-- != 0) {\n            char ch;\n            if (chars == null) {\n                ch = (char) (random.nextInt(gap) + start);\n            } else {\n                ch = chars[random.nextInt(gap) + start];\n            }\n            if (letters && Character.isLetter(ch)\n                    || numbers && Character.isDigit(ch)\n                    || !letters && !numbers) {\n                if(ch >= 56320 && ch <= 57343) {\n                    if(count == 0) {\n                        count++;\n                    } else {\n                        // low surrogate, insert high surrogate after putting it in\n                        buffer[count] = ch;\n                        count--;\n                        buffer[count] = (char) (55296 + random.nextInt(128));\n                    }\n                } else if(ch >= 55296 && ch <= 56191) {\n                    if(count == 0) {\n                        count++;\n                    } else {\n                        // high surrogate, insert low surrogate before putting it in\n                        buffer[count] = (char) (56320 + random.nextInt(128));\n                        count--;\n                        buffer[count] = ch;\n                    }\n                } else if(ch >= 56192 && ch <= 56319) {\n                    // private high surrogate, no effing clue, so skip it\n                    count++;\n                } else {\n                    buffer[count] = ch;\n                }\n            } else {\n                count++;\n            }\n        }\n        return new String(buffer);\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/RandomStringUtils.java::RandomStringUtils.random(int count, int start, int end, boolean letters, boolean numbers,\n                                char[] chars, Random random)\nSIGNATURE: public static String random(int count, int start, int end, boolean letters, boolean numbers,\n                                char[] chars, Random random)",
+        "METHOD: src/main/java/org/apache/commons/lang3/RandomStringUtils.java::RandomStringUtils.random(int count, int start, int end, boolean letters, boolean numbers,\n                                char[] chars, Random random)\nSIGNATURE: public static String random(int count, int start, int end, boolean letters, boolean numbers,\n                                char[] chars, Random random)\nSTRUCTURE (lossy):\nif (count == 0)\nreturn \"\";\nif (count < 0)\nthrow new IllegalArgumentException(\"Requested random string length \" + count + \" is less than 0.\");\nif (chars != null && chars.length == 0)\nthrow new IllegalArgumentException(\"The chars array must not be empty\");\nif (start == 0 && end == 0)\nif (chars != null)\nend = chars.length\nif (!letters && !numbers)\nend = Integer.MAX_VALUE\nend = 'z' + 1\nstart = ' '\nchar[] buffer = new char[count];\nint gap = end - start;\nwhile (count-- != 0)\ncount--\nchar ch;\nif (chars == null)\nch = (char) (random.nextInt(gap) + start)\nCALL random.nextInt(gap)\nch = chars[random.nextInt(gap) + start]\nif (letters && Character.isLetter(ch) || numbers && Character.isDigit(ch) || !letters && !numbers)\nCALL Character.isLetter(ch)\nCALL Character.isDigit(ch)\nif(ch >= 56320 && ch <= 57343)\nif(count == 0)\ncount++\nbuffer[count] = ch\nbuffer[count] = (char) (55296 + random.nextInt(128))\nCALL random.nextInt(128)\nif(ch >= 55296 && ch <= 56191)\nbuffer[count] = (char) (56320 + random.nextInt(128))\nif(ch >= 56192 && ch <= 56319)\nreturn new String(buffer);",
+        "public static String random(int count, int start, int end, boolean letters, boolean numbers,\n                                char[] chars, Random random) {\n        if (count == 0) {\n            return \"\";\n        } else if (count < 0) {\n            throw new IllegalArgumentException(\"Requested random string length \" + count + \" is less than 0.\");\n        }\n        if (chars != null && chars.length == 0) {\n            throw new IllegalArgumentException(\"The chars array must not be empty\");\n        }\n\n        if (start == 0 && end == 0) {\n            if (chars != null) {\n                end = chars.length;\n            } else {\n                if (!letters && !numbers) {\n                    end = Integer.MAX_VALUE;\n                } else {\n                    end = 'z' + 1;\n                    start = ' ';                \n                }\n            }\n        }\n\n        char[] buffer = new char[count];\n        int gap = end - start;\n\n        while (count-- != 0) {\n            char ch;\n            if (chars == null) {\n                ch = (char) (random.nextInt(gap) + start);\n            } else {\n                ch = chars[random.nextInt(gap) + start];\n            }\n            if (letters && Character.isLetter(ch)\n                    || numbers && Character.isDigit(ch)\n                    || !letters && !numbers) {\n                if(ch >= 56320 && ch <= 57343) {\n                    if(count == 0) {\n                        count++;\n                    } else {\n                        // low surrogate, insert high surrogate after putting it in\n                        buffer[count] = ch;\n                        count--;\n                        buffer[count] = (char) (55296 + random.nextInt(128));\n                    }\n                } else if(ch >= 55296 && ch <= 56191) {\n                    if(count == 0) {\n                        count++;\n                    } else {\n                        // high surrogate, insert low surrogate before putting it in\n                        buffer[count] = (char) (56320 + random.nextInt(128));\n                        count--;\n                        buffer[count] = ch;\n                    }\n                } else if(ch >= 56192 && ch <= 56319) {\n                    // private high surrogate, no effing clue, so skip it\n                    count++;\n                } else {\n                    buffer[count] = ch;\n                }\n            } else {\n                count++;\n            }\n        }\n        return new String(buffer);\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3220338983050847,
+        "trace_match": 0.0,
+        "complexity": 15.0,
+        "call_count": 6.0,
+        "literal_count": 28.0,
+        "source_tokens": 629.0,
+        "l0_tokens": 97.0,
+        "l1_tokens": 368.0,
+        "compression_ratio": 0.5850556438791733,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 15,
+        "call_count": 6,
+        "literal_count": 28
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/exception/DefaultExceptionContext.java::DefaultExceptionContext.getFormattedExceptionMessage(String baseMessage)",
+      "source": "@Override\n    public String getFormattedExceptionMessage(String baseMessage){\n        StringBuilder buffer = new StringBuilder(256);\n        if (baseMessage != null) {\n            buffer.append(baseMessage);\n        }\n        \n        if (contextValues.size() > 0) {\n            if (buffer.length() > 0) {\n                buffer.append('\\n');\n            }\n            buffer.append(\"Exception Context:\\n\");\n            \n            int i = 0;\n            for (final Pair<String, Object> pair : contextValues) {\n                buffer.append(\"\\t[\");\n                buffer.append(++i);\n                buffer.append(':');\n                buffer.append(pair.getKey());\n                buffer.append(\"=\");\n                final Object value = pair.getValue();\n                if (value == null) {\n                    buffer.append(\"null\");\n                } else {\n                    String valueStr;\n                    try {\n                        valueStr = value.toString();\n                    } catch (Exception e) {\n                        valueStr = \"Exception thrown on toString(): \" + ExceptionUtils.getStackTrace(e);\n                    }\n                    buffer.append(valueStr);\n                }\n                buffer.append(\"]\\n\");\n            }\n            buffer.append(\"---------------------------------\");\n        }\n        return buffer.toString();\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/exception/DefaultExceptionContext.java::DefaultExceptionContext.getFormattedExceptionMessage(String baseMessage)\nSIGNATURE: @Override\n    public String getFormattedExceptionMessage(String baseMessage)",
+        "METHOD: src/main/java/org/apache/commons/lang3/exception/DefaultExceptionContext.java::DefaultExceptionContext.getFormattedExceptionMessage(String baseMessage)\nSIGNATURE: @Override\n    public String getFormattedExceptionMessage(String baseMessage)\nSTRUCTURE (lossy):\nStringBuilder buffer = new StringBuilder(256);\nif (baseMessage != null)\nCALL buffer.append(baseMessage)\nif (contextValues.size() > 0)\nCALL contextValues.size()\nif (buffer.length() > 0)\nCALL buffer.length()\nCALL buffer.append('\\n')\nCALL buffer.append(\"Exception Context:\\n\")\nint i = 0;\nfor (final Pair<String, Object> pair : contextValues)\nCALL buffer.append(\"\\t[\")\nCALL buffer.append(++i)\n++i\nCALL buffer.append(':')\nCALL buffer.append(pair.getKey())\nCALL pair.getKey()\nCALL buffer.append(\"=\")\nfinal Object value = pair.getValue();\nCALL pair.getValue()\nif (value == null)\nCALL buffer.append(\"null\")\nString valueStr;\nvalueStr = value.toString()\nCALL value.toString()\ncatch (Exception e)\nvalueStr = \"Exception thrown on toString(): \" + ExceptionUtils.getStackTrace(e)\nCALL ExceptionUtils.getStackTrace(e)\nCALL buffer.append(valueStr)\nCALL buffer.append(\"]\\n\")\nCALL buffer.append(\"---------------------------------\")\nreturn buffer.toString();\nCALL buffer.toString()",
+        "@Override\n    public String getFormattedExceptionMessage(String baseMessage){\n        StringBuilder buffer = new StringBuilder(256);\n        if (baseMessage != null) {\n            buffer.append(baseMessage);\n        }\n        \n        if (contextValues.size() > 0) {\n            if (buffer.length() > 0) {\n                buffer.append('\\n');\n            }\n            buffer.append(\"Exception Context:\\n\");\n            \n            int i = 0;\n            for (final Pair<String, Object> pair : contextValues) {\n                buffer.append(\"\\t[\");\n                buffer.append(++i);\n                buffer.append(':');\n                buffer.append(pair.getKey());\n                buffer.append(\"=\");\n                final Object value = pair.getValue();\n                if (value == null) {\n                    buffer.append(\"null\");\n                } else {\n                    String valueStr;\n                    try {\n                        valueStr = value.toString();\n                    } catch (Exception e) {\n                        valueStr = \"Exception thrown on toString(): \" + ExceptionUtils.getStackTrace(e);\n                    }\n                    buffer.append(valueStr);\n                }\n                buffer.append(\"]\\n\");\n            }\n            buffer.append(\"---------------------------------\");\n        }\n        return buffer.toString();\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4634146341463415,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 19.0,
+        "literal_count": 15.0,
+        "source_tokens": 345.0,
+        "l0_tokens": 62.0,
+        "l1_tokens": 308.0,
+        "compression_ratio": 0.8927536231884058,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 19,
+        "literal_count": 15
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/FieldUtils.java::FieldUtils.getField(final Class<?> cls, String fieldName, boolean forceAccess)",
+      "source": "public static Field getField(final Class<?> cls, String fieldName, boolean forceAccess) {\n        if (cls == null) {\n            throw new IllegalArgumentException(\"The class must not be null\");\n        }\n        if (fieldName == null) {\n            throw new IllegalArgumentException(\"The field name must not be null\");\n        }\n        // Sun Java 1.3 has a bugged implementation of getField hence we write the\n        // code ourselves\n\n        // getField() will return the Field object with the declaring class\n        // set correctly to the class that declares the field. Thus requesting the\n        // field on a subclass will return the field from the superclass.\n        //\n        // priority order for lookup:\n        // searchclass private/protected/package/public\n        // superclass protected/package/public\n        //  private/different package blocks access to further superclasses\n        // implementedinterface public\n\n        // check up the superclass hierarchy\n        for (Class<?> acls = cls; acls != null; acls = acls.getSuperclass()) {\n            try {\n                Field field = acls.getDeclaredField(fieldName);\n                // getDeclaredField checks for non-public scopes as well\n                // and it returns accurate results\n                if (!Modifier.isPublic(field.getModifiers())) {\n                    if (forceAccess) {\n                        field.setAccessible(true);\n                    } else {\n                        continue;\n                    }\n                }\n                return field;\n            } catch (NoSuchFieldException ex) { // NOPMD\n                // ignore\n            }\n        }\n        // check the public interface case. This must be manually searched for\n        // incase there is a public supersuperclass field hidden by a private/package\n        // superclass field.\n        Field match = null;\n        for (Class<?> class1 : ClassUtils.getAllInterfaces(cls)) {\n            try {\n                Field test = ((Class<?>) class1).getField(fieldName);\n                if (match != null) {\n                    throw new IllegalArgumentException(\"Reference to field \" + fieldName + \" is ambiguous relative to \" + cls\n                            + \"; a matching field exists on two or more implemented interfaces.\");\n                }\n                match = test;\n            } catch (NoSuchFieldException ex) { // NOPMD\n                // ignore\n            }\n        }\n        return match;\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/FieldUtils.java::FieldUtils.getField(final Class<?> cls, String fieldName, boolean forceAccess)\nSIGNATURE: public static Field getField(final Class<?> cls, String fieldName, boolean forceAccess)",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/FieldUtils.java::FieldUtils.getField(final Class<?> cls, String fieldName, boolean forceAccess)\nSIGNATURE: public static Field getField(final Class<?> cls, String fieldName, boolean forceAccess)\nSTRUCTURE (lossy):\nif (cls == null)\nthrow new IllegalArgumentException(\"The class must not be null\");\nif (fieldName == null)\nthrow new IllegalArgumentException(\"The field name must not be null\");\nfor (Class<?> acls = cls; acls != null; acls = acls.getSuperclass())\nClass<?> acls = cls;\nacls = acls.getSuperclass()\nCALL acls.getSuperclass()\nField field = acls.getDeclaredField(fieldName);\nCALL acls.getDeclaredField(fieldName)\nif (!Modifier.isPublic(field.getModifiers()))\nCALL Modifier.isPublic(field.getModifiers())\nCALL field.getModifiers()\nif (forceAccess)\nCALL field.setAccessible(true)\nreturn field;\ncatch (NoSuchFieldException ex)\nField match = null;\nfor (Class<?> class1 : ClassUtils.getAllInterfaces(cls))\nCALL ClassUtils.getAllInterfaces(cls)\nField test = ((Class<?>) class1).getField(fieldName);\nCALL ((Class<?>) class1).getField(fieldName)\nif (match != null)\nthrow new IllegalArgumentException(\"Reference to field \" + fieldName + \" is ambiguous relative to \" + cls + \"; a matching field exists on two or more implemented interfaces.\");\nmatch = test\nreturn match;",
+        "public static Field getField(final Class<?> cls, String fieldName, boolean forceAccess) {\n        if (cls == null) {\n            throw new IllegalArgumentException(\"The class must not be null\");\n        }\n        if (fieldName == null) {\n            throw new IllegalArgumentException(\"The field name must not be null\");\n        }\n        // Sun Java 1.3 has a bugged implementation of getField hence we write the\n        // code ourselves\n\n        // getField() will return the Field object with the declaring class\n        // set correctly to the class that declares the field. Thus requesting the\n        // field on a subclass will return the field from the superclass.\n        //\n        // priority order for lookup:\n        // searchclass private/protected/package/public\n        // superclass protected/package/public\n        //  private/different package blocks access to further superclasses\n        // implementedinterface public\n\n        // check up the superclass hierarchy\n        for (Class<?> acls = cls; acls != null; acls = acls.getSuperclass()) {\n            try {\n                Field field = acls.getDeclaredField(fieldName);\n                // getDeclaredField checks for non-public scopes as well\n                // and it returns accurate results\n                if (!Modifier.isPublic(field.getModifiers())) {\n                    if (forceAccess) {\n                        field.setAccessible(true);\n                    } else {\n                        continue;\n                    }\n                }\n                return field;\n            } catch (NoSuchFieldException ex) { // NOPMD\n                // ignore\n            }\n        }\n        // check the public interface case. This must be manually searched for\n        // incase there is a public supersuperclass field hidden by a private/package\n        // superclass field.\n        Field match = null;\n        for (Class<?> class1 : ClassUtils.getAllInterfaces(cls)) {\n            try {\n                Field test = ((Class<?>) class1).getField(fieldName);\n                if (match != null) {\n                    throw new IllegalArgumentException(\"Reference to field \" + fieldName + \" is ambiguous relative to \" + cls\n                            + \"; a matching field exists on two or more implemented interfaces.\");\n                }\n                match = test;\n            } catch (NoSuchFieldException ex) { // NOPMD\n                // ignore\n            }\n        }\n        return match;\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.21818181818181817,
+        "trace_match": 0.0,
+        "complexity": 10.0,
+        "call_count": 7.0,
+        "literal_count": 10.0,
+        "source_tokens": 622.0,
+        "l0_tokens": 63.0,
+        "l1_tokens": 331.0,
+        "compression_ratio": 0.5321543408360129,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 10,
+        "call_count": 7,
+        "literal_count": 10
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/event/EventUtils.java::EventUtils.EventBindingInvocationHandler.invoke(final Object proxy, final Method method, final Object[] parameters)",
+      "source": "@Override\n        public Object invoke(final Object proxy, final Method method, final Object[] parameters) throws Throwable {\n            if (eventTypes.isEmpty() || eventTypes.contains(method.getName())) {\n                if (hasMatchingParametersMethod(method)) {\n                    return MethodUtils.invokeMethod(target, methodName, parameters);\n                } else {\n                    return MethodUtils.invokeMethod(target, methodName);\n                }\n            }\n            return null;\n        }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/event/EventUtils.java::EventUtils.EventBindingInvocationHandler.invoke(final Object proxy, final Method method, final Object[] parameters)\nSIGNATURE: @Override\n        public Object invoke(final Object proxy, final Method method, final Object[] parameters) throws Throwable",
+        "METHOD: src/main/java/org/apache/commons/lang3/event/EventUtils.java::EventUtils.EventBindingInvocationHandler.invoke(final Object proxy, final Method method, final Object[] parameters)\nSIGNATURE: @Override\n        public Object invoke(final Object proxy, final Method method, final Object[] parameters) throws Throwable\nSTRUCTURE (lossy):\nif (eventTypes.isEmpty() || eventTypes.contains(method.getName()))\nCALL eventTypes.isEmpty()\nCALL eventTypes.contains(method.getName())\nCALL method.getName()\nif (hasMatchingParametersMethod(method))\nCALL hasMatchingParametersMethod(method)\nreturn MethodUtils.invokeMethod(target, methodName, parameters);\nCALL MethodUtils.invokeMethod(target, methodName, parameters)\nreturn MethodUtils.invokeMethod(target, methodName);\nCALL MethodUtils.invokeMethod(target, methodName)\nreturn null;",
+        "@Override\n        public Object invoke(final Object proxy, final Method method, final Object[] parameters) throws Throwable {\n            if (eventTypes.isEmpty() || eventTypes.contains(method.getName())) {\n                if (hasMatchingParametersMethod(method)) {\n                    return MethodUtils.invokeMethod(target, methodName, parameters);\n                } else {\n                    return MethodUtils.invokeMethod(target, methodName);\n                }\n            }\n            return null;\n        }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.45454545454545453,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 6.0,
+        "literal_count": 1.0,
+        "source_tokens": 129.0,
+        "l0_tokens": 80.0,
+        "l1_tokens": 206.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 6,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/SerializationUtils.java::SerializationUtils.deserialize(InputStream inputStream)",
+      "source": "@SuppressWarnings(\"unchecked\")\n    // Don't warn about \"(T) deserialize\" because we want the avoid type casting call sites.\n    public static <T> T deserialize(InputStream inputStream) {\n        if (inputStream == null) {\n            throw new IllegalArgumentException(\"The InputStream must not be null\");\n        }\n        ObjectInputStream in = null;\n        try {\n            // stream closed in the finally\n            in = new ObjectInputStream(inputStream);\n            return (T) in.readObject();\n\n        } catch (ClassNotFoundException ex) {\n            throw new SerializationException(ex);\n        } catch (IOException ex) {\n            throw new SerializationException(ex);\n        } finally {\n            try {\n                if (in != null) {\n                    in.close();\n                }\n            } catch (IOException ex) { // NOPMD\n                // ignore close exception\n            }\n        }\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/SerializationUtils.java::SerializationUtils.deserialize(InputStream inputStream)\nSIGNATURE: @SuppressWarnings(\"unchecked\")\n    // Don't warn about \"(T) deserialize\" because we want the avoid type casting call sites.\n    public static <T> T deserialize(InputStream inputStream)",
+        "METHOD: src/main/java/org/apache/commons/lang3/SerializationUtils.java::SerializationUtils.deserialize(InputStream inputStream)\nSIGNATURE: @SuppressWarnings(\"unchecked\")\n    // Don't warn about \"(T) deserialize\" because we want the avoid type casting call sites.\n    public static <T> T deserialize(InputStream inputStream)\nSTRUCTURE (lossy):\nif (inputStream == null)\nthrow new IllegalArgumentException(\"The InputStream must not be null\");\nObjectInputStream in = null;\nin = new ObjectInputStream(inputStream)\nreturn (T) in.readObject();\nCALL in.readObject()\ncatch (ClassNotFoundException ex)\nthrow new SerializationException(ex);\ncatch (IOException ex)\nif (in != null)\nCALL in.close()",
+        "@SuppressWarnings(\"unchecked\")\n    // Don't warn about \"(T) deserialize\" because we want the avoid type casting call sites.\n    public static <T> T deserialize(InputStream inputStream) {\n        if (inputStream == null) {\n            throw new IllegalArgumentException(\"The InputStream must not be null\");\n        }\n        ObjectInputStream in = null;\n        try {\n            // stream closed in the finally\n            in = new ObjectInputStream(inputStream);\n            return (T) in.readObject();\n\n        } catch (ClassNotFoundException ex) {\n            throw new SerializationException(ex);\n        } catch (IOException ex) {\n            throw new SerializationException(ex);\n        } finally {\n            try {\n                if (in != null) {\n                    in.close();\n                }\n            } catch (IOException ex) { // NOPMD\n                // ignore close exception\n            }\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.30612244897959184,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 2.0,
+        "literal_count": 4.0,
+        "source_tokens": 232.0,
+        "l0_tokens": 81.0,
+        "l1_tokens": 171.0,
+        "compression_ratio": 0.7370689655172413,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 2,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.or(boolean... array)",
+      "source": "public static boolean or(boolean... array) {\n        // Validates input\n        if (array == null) {\n            throw new IllegalArgumentException(\"The Array must not be null\");\n        }\n        if (array.length == 0) {\n            throw new IllegalArgumentException(\"Array is empty\");\n        }\n        for (boolean element : array) {\n            if (element) {\n                return true;\n            }\n        }\n        return false;\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.or(boolean... array)\nSIGNATURE: public static boolean or(boolean... array)",
+        "METHOD: src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.or(boolean... array)\nSIGNATURE: public static boolean or(boolean... array)\nSTRUCTURE (lossy):\nif (array == null)\nthrow new IllegalArgumentException(\"The Array must not be null\");\nif (array.length == 0)\nthrow new IllegalArgumentException(\"Array is empty\");\nfor (boolean element : array)\nif (element)\nreturn true;\nreturn false;",
+        "public static boolean or(boolean... array) {\n        // Validates input\n        if (array == null) {\n            throw new IllegalArgumentException(\"The Array must not be null\");\n        }\n        if (array.length == 0) {\n            throw new IllegalArgumentException(\"Array is empty\");\n        }\n        for (boolean element : array) {\n            if (element) {\n                return true;\n            }\n        }\n        return false;\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5333333333333333,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 0.0,
+        "literal_count": 4.0,
+        "source_tokens": 112.0,
+        "l0_tokens": 39.0,
+        "l1_tokens": 101.0,
+        "compression_ratio": 0.9017857142857143,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 0,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java::ExtendedMessageFormat.parseFormatDescription(String pattern, ParsePosition pos)",
+      "source": "private String parseFormatDescription(String pattern, ParsePosition pos) {\n        int start = pos.getIndex();\n        seekNonWs(pattern, pos);\n        int text = pos.getIndex();\n        int depth = 1;\n        for (; pos.getIndex() < pattern.length(); next(pos)) {\n            switch (pattern.charAt(pos.getIndex())) {\n            case START_FE:\n                depth++;\n                break;\n            case END_FE:\n                depth--;\n                if (depth == 0) {\n                    return pattern.substring(text, pos.getIndex());\n                }\n                break;\n            case QUOTE:\n                getQuotedString(pattern, pos, false);\n                break;\n            }\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated format element at position \" + start);\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java::ExtendedMessageFormat.parseFormatDescription(String pattern, ParsePosition pos)\nSIGNATURE: private String parseFormatDescription(String pattern, ParsePosition pos)",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java::ExtendedMessageFormat.parseFormatDescription(String pattern, ParsePosition pos)\nSIGNATURE: private String parseFormatDescription(String pattern, ParsePosition pos)\nSTRUCTURE (lossy):\nint start = pos.getIndex();\nCALL pos.getIndex()\nCALL seekNonWs(pattern, pos)\nint text = pos.getIndex();\nint depth = 1;\nfor (; pos.getIndex() < pattern.length(); next(pos))\nCALL pattern.length()\nCALL next(pos)\nswitch (pattern.charAt(pos.getIndex())) { case START_FE: depth++; break; case END_FE: depth--; if (depth == 0) { return pattern.substring(text, pos.getIndex()); } break; case QUOTE: getQuotedString(pattern, pos, false); break; }\nCALL pattern.charAt(pos.getIndex())\ndepth++\ndepth--\nif (depth == 0)\nreturn pattern.substring(text, pos.getIndex());\nCALL pattern.substring(text, pos.getIndex())\nCALL getQuotedString(pattern, pos, false)\nthrow new IllegalArgumentException( \"Unterminated format element at position \" + start);",
+        "private String parseFormatDescription(String pattern, ParsePosition pos) {\n        int start = pos.getIndex();\n        seekNonWs(pattern, pos);\n        int text = pos.getIndex();\n        int depth = 1;\n        for (; pos.getIndex() < pattern.length(); next(pos)) {\n            switch (pattern.charAt(pos.getIndex())) {\n            case START_FE:\n                depth++;\n                break;\n            case END_FE:\n                depth--;\n                if (depth == 0) {\n                    return pattern.substring(text, pos.getIndex());\n                }\n                break;\n            case QUOTE:\n                getQuotedString(pattern, pos, false);\n                break;\n            }\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated format element at position \" + start);\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4444444444444444,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 11.0,
+        "literal_count": 3.0,
+        "source_tokens": 208.0,
+        "l0_tokens": 61.0,
+        "l1_tokens": 248.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 11,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/AnnotationUtils.java::AnnotationUtils.equals(Annotation a1, Annotation a2)",
+      "source": "public static boolean equals(Annotation a1, Annotation a2) {\n        if (a1 == a2) {\n            return true;\n        }\n        if (a1 == null || a2 == null) {\n            return false;\n        }\n        Class<? extends Annotation> type = a1.annotationType();\n        Class<? extends Annotation> type2 = a2.annotationType();\n        Validate.notNull(type, \"Annotation %s with null annotationType()\", a1);\n        Validate.notNull(type2, \"Annotation %s with null annotationType()\", a2);\n        if (!type.equals(type2)) {\n            return false;\n        }\n        try {\n            for (Method m : type.getDeclaredMethods()) {\n                if (m.getParameterTypes().length == 0\n                        && isValidAnnotationMemberType(m.getReturnType())) {\n                    Object v1 = m.invoke(a1);\n                    Object v2 = m.invoke(a2);\n                    if (!memberEquals(m.getReturnType(), v1, v2)) {\n                        return false;\n                    }\n                }\n            }\n        } catch (IllegalAccessException ex) {\n            return false;\n        } catch (InvocationTargetException ex) {\n            return false;\n        }\n        return true;\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/AnnotationUtils.java::AnnotationUtils.equals(Annotation a1, Annotation a2)\nSIGNATURE: public static boolean equals(Annotation a1, Annotation a2)",
+        "METHOD: src/main/java/org/apache/commons/lang3/AnnotationUtils.java::AnnotationUtils.equals(Annotation a1, Annotation a2)\nSIGNATURE: public static boolean equals(Annotation a1, Annotation a2)\nSTRUCTURE (lossy):\nif (a1 == a2)\nreturn true;\nif (a1 == null || a2 == null)\nreturn false;\nClass<? extends Annotation> type = a1.annotationType();\nCALL a1.annotationType()\nClass<? extends Annotation> type2 = a2.annotationType();\nCALL a2.annotationType()\nCALL Validate.notNull(type, \"Annotation %s with null annotationType()\", a1)\nCALL Validate.notNull(type2, \"Annotation %s with null annotationType()\", a2)\nif (!type.equals(type2))\nCALL type.equals(type2)\nfor (Method m : type.getDeclaredMethods())\nCALL type.getDeclaredMethods()\nif (m.getParameterTypes().length == 0 && isValidAnnotationMemberType(m.getReturnType()))\nCALL m.getParameterTypes()\nCALL isValidAnnotationMemberType(m.getReturnType())\nCALL m.getReturnType()\nObject v1 = m.invoke(a1);\nCALL m.invoke(a1)\nObject v2 = m.invoke(a2);\nCALL m.invoke(a2)\nif (!memberEquals(m.getReturnType(), v1, v2))\nCALL memberEquals(m.getReturnType(), v1, v2)\ncatch (IllegalAccessException ex)\ncatch (InvocationTargetException ex)",
+        "public static boolean equals(Annotation a1, Annotation a2) {\n        if (a1 == a2) {\n            return true;\n        }\n        if (a1 == null || a2 == null) {\n            return false;\n        }\n        Class<? extends Annotation> type = a1.annotationType();\n        Class<? extends Annotation> type2 = a2.annotationType();\n        Validate.notNull(type, \"Annotation %s with null annotationType()\", a1);\n        Validate.notNull(type2, \"Annotation %s with null annotationType()\", a2);\n        if (!type.equals(type2)) {\n            return false;\n        }\n        try {\n            for (Method m : type.getDeclaredMethods()) {\n                if (m.getParameterTypes().length == 0\n                        && isValidAnnotationMemberType(m.getReturnType())) {\n                    Object v1 = m.invoke(a1);\n                    Object v2 = m.invoke(a2);\n                    if (!memberEquals(m.getReturnType(), v1, v2)) {\n                        return false;\n                    }\n                }\n            }\n        } catch (IllegalAccessException ex) {\n            return false;\n        } catch (InvocationTargetException ex) {\n            return false;\n        }\n        return true;\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4418604651162791,
+        "trace_match": 0.0,
+        "complexity": 9.0,
+        "call_count": 13.0,
+        "literal_count": 5.0,
+        "source_tokens": 299.0,
+        "l0_tokens": 48.0,
+        "l1_tokens": 291.0,
+        "compression_ratio": 0.9732441471571907,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 9,
+        "call_count": 13,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object... args)",
+      "source": "public static Object invokeMethod(Object object, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class<?>[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeMethod(object, methodName, args, parameterTypes);\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object... args)\nSIGNATURE: public static Object invokeMethod(Object object, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object... args)\nSIGNATURE: public static Object invokeMethod(Object object, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException\nSTRUCTURE (lossy):\nif (args == null)\nargs = ArrayUtils.EMPTY_OBJECT_ARRAY\nint arguments = args.length;\nClass<?>[] parameterTypes = new Class[arguments];\nfor (int i = 0; i < arguments; i++)\nint i = 0;\ni++\nparameterTypes[i] = args[i].getClass()\nCALL args[i].getClass()\nreturn invokeMethod(object, methodName, args, parameterTypes);\nCALL invokeMethod(object, methodName, args, parameterTypes)",
+        "public static Object invokeMethod(Object object, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class<?>[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeMethod(object, methodName, args, parameterTypes);\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4864864864864865,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 140.0,
+        "l0_tokens": 90.0,
+        "l1_tokens": 187.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.startTimer()",
+      "source": "protected ScheduledFuture<?> startTimer() {\n        return getExecutorService().scheduleAtFixedRate(new Runnable() {\n            @Override\n            public void run() {\n                endOfPeriod();\n            }\n        }, getPeriod(), getPeriod(), getUnit());\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.startTimer()\nSIGNATURE: protected ScheduledFuture<?> startTimer()",
+        "METHOD: src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.startTimer()\nSIGNATURE: protected ScheduledFuture<?> startTimer()\nSTRUCTURE (lossy):\nreturn getExecutorService().scheduleAtFixedRate(new Runnable() { @Override public void run() { endOfPeriod(); } }, getPeriod(), getPeriod(), getUnit());\nCALL getExecutorService().scheduleAtFixedRate(new Runnable() { @Override public void run() { endOfPeriod(); } }, getPeriod(), getPeriod(), getUnit())\nCALL getExecutorService()\nCALL endOfPeriod()\nCALL getPeriod()\nCALL getUnit()",
+        "protected ScheduledFuture<?> startTimer() {\n        return getExecutorService().scheduleAtFixedRate(new Runnable() {\n            @Override\n            public void run() {\n                endOfPeriod();\n            }\n        }, getPeriod(), getPeriod(), getUnit());\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4838709677419355,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 6.0,
+        "literal_count": 0.0,
+        "source_tokens": 68.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 140.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 6,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/event/EventListenerSupport.java::EventListenerSupport.writeObject(ObjectOutputStream objectOutputStream)",
+      "source": "private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {\n        ArrayList<L> serializableListeners = new ArrayList<L>();\n\n        // don't just rely on instanceof Serializable:\n        ObjectOutputStream testObjectOutputStream = new ObjectOutputStream(new ByteArrayOutputStream());\n        for (L listener : listeners) {\n            try {\n                testObjectOutputStream.writeObject(listener);\n                serializableListeners.add(listener);\n            } catch (IOException exception) {\n                //recreate test stream in case of indeterminate state\n                testObjectOutputStream = new ObjectOutputStream(new ByteArrayOutputStream());\n            }\n        }\n        /*\n         * we can reconstitute everything we need from an array of our listeners,\n         * which has the additional advantage of typically requiring less storage than a list:\n         */\n        objectOutputStream.writeObject(serializableListeners.toArray(prototypeArray));\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/event/EventListenerSupport.java::EventListenerSupport.writeObject(ObjectOutputStream objectOutputStream)\nSIGNATURE: private void writeObject(ObjectOutputStream objectOutputStream) throws IOException",
+        "METHOD: src/main/java/org/apache/commons/lang3/event/EventListenerSupport.java::EventListenerSupport.writeObject(ObjectOutputStream objectOutputStream)\nSIGNATURE: private void writeObject(ObjectOutputStream objectOutputStream) throws IOException\nSTRUCTURE (lossy):\nArrayList<L> serializableListeners = new ArrayList<L>();\nObjectOutputStream testObjectOutputStream = new ObjectOutputStream(new ByteArrayOutputStream());\nfor (L listener : listeners)\nCALL testObjectOutputStream.writeObject(listener)\nCALL serializableListeners.add(listener)\ncatch (IOException exception)\ntestObjectOutputStream = new ObjectOutputStream(new ByteArrayOutputStream())\nCALL objectOutputStream.writeObject(serializableListeners.toArray(prototypeArray))\nCALL serializableListeners.toArray(prototypeArray)",
+        "private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {\n        ArrayList<L> serializableListeners = new ArrayList<L>();\n\n        // don't just rely on instanceof Serializable:\n        ObjectOutputStream testObjectOutputStream = new ObjectOutputStream(new ByteArrayOutputStream());\n        for (L listener : listeners) {\n            try {\n                testObjectOutputStream.writeObject(listener);\n                serializableListeners.add(listener);\n            } catch (IOException exception) {\n                //recreate test stream in case of indeterminate state\n                testObjectOutputStream = new ObjectOutputStream(new ByteArrayOutputStream());\n            }\n        }\n        /*\n         * we can reconstitute everything we need from an array of our listeners,\n         * which has the additional advantage of typically requiring less storage than a list:\n         */\n        objectOutputStream.writeObject(serializableListeners.toArray(prototypeArray));\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2727272727272727,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 4.0,
+        "literal_count": 0.0,
+        "source_tokens": 253.0,
+        "l0_tokens": 62.0,
+        "l1_tokens": 195.0,
+        "compression_ratio": 0.7707509881422925,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 4,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object... args)",
+      "source": "public static Object invokeExactMethod(Object object, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class<?>[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeExactMethod(object, methodName, args, parameterTypes);\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object... args)\nSIGNATURE: public static Object invokeExactMethod(Object object, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object... args)\nSIGNATURE: public static Object invokeExactMethod(Object object, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException\nSTRUCTURE (lossy):\nif (args == null)\nargs = ArrayUtils.EMPTY_OBJECT_ARRAY\nint arguments = args.length;\nClass<?>[] parameterTypes = new Class[arguments];\nfor (int i = 0; i < arguments; i++)\nint i = 0;\ni++\nparameterTypes[i] = args[i].getClass()\nCALL args[i].getClass()\nreturn invokeExactMethod(object, methodName, args, parameterTypes);\nCALL invokeExactMethod(object, methodName, args, parameterTypes)",
+        "public static Object invokeExactMethod(Object object, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class<?>[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeExactMethod(object, methodName, args, parameterTypes);\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.47368421052631576,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 142.0,
+        "l0_tokens": 92.0,
+        "l1_tokens": 192.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java::ExtendedMessageFormat.readArgumentIndex(String pattern, ParsePosition pos)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.or(Boolean... array)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/ObjectUtils.java::ObjectUtils.clone(final T obj)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/SerializationUtils.java::SerializationUtils.serialize(Serializable obj, OutputStream outputStream)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/AnnotationUtils.java::AnnotationUtils.toString(final Annotation a)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/AnnotationUtils.java::AnnotationUtils.hashCode(Annotation a)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/exception/ExceptionUtils.java::ExceptionUtils.getCauseUsingMethodName(Throwable throwable, String methodName)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/builder/ReflectionToStringBuilder.java::ReflectionToStringBuilder.appendFieldsIn(Class<?> clazz)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/event/EventUtils.java::EventUtils.addEventListener(Object eventSource, Class<L> listenerType, L listener)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.and(Boolean... array)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.xor(Boolean... array)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/RandomStringUtils.java::RandomStringUtils.random(int count, int start, int end, boolean letters, boolean numbers,\n                                char[] chars, Random random)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/exception/DefaultExceptionContext.java::DefaultExceptionContext.getFormattedExceptionMessage(String baseMessage)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/FieldUtils.java::FieldUtils.getField(final Class<?> cls, String fieldName, boolean forceAccess)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/event/EventUtils.java::EventUtils.EventBindingInvocationHandler.invoke(final Object proxy, final Method method, final Object[] parameters)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/SerializationUtils.java::SerializationUtils.deserialize(InputStream inputStream)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.or(boolean... array)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java::ExtendedMessageFormat.parseFormatDescription(String pattern, ParsePosition pos)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/AnnotationUtils.java::AnnotationUtils.equals(Annotation a1, Annotation a2)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object... args)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.startTimer()": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/event/EventListenerSupport.java::EventListenerSupport.writeObject(ObjectOutputStream objectOutputStream)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object... args)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 2343,
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "c91b6dae6c1f441fffbe69b411ddb95f41351b55d7e687d246fce20c739f8ca3",
+  "evidence_sha256": "47d6b132befabae3384a5c1f67e2e3ac74e3aef000c43a19e2a3ba23407c1e8c"
+}
