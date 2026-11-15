@@ -56,7 +56,19 @@ def seed(source_run: Path, destination: Path, *, dataset: Path, config: dict) ->
         raise CompatibilityError("Seed source must be a completed-accounting real-model run")
     environment = json.loads((source_run / "environment.json").read_text())
     digest = environment["provider"]["digest"]
-    old_cache = source_run / "cache"
+    declared_cache = prior_opts.get("cache_dir")
+    old_cache = (
+        Path(declared_cache).resolve()
+        if declared_cache else source_run / "cache"
+    )
+    # Allow only the two immutable archive layouts used by this project,
+    # never arbitrary config-controlled external directories.
+    if old_cache not in {source_run / "cache", source_run.parent / "cache"}:
+        raise CompatibilityError(
+            "Source cache must be under its archived run or its experiment folder"
+        )
+    if not old_cache.is_dir():
+        raise CompatibilityError(f"Archived provider cache absent: {old_cache}")
     files = sorted(old_cache.glob("*.json"))
     if not files:
         raise CompatibilityError("Source run contains no Qwen response cache")
@@ -106,6 +118,7 @@ def seed(source_run: Path, destination: Path, *, dataset: Path, config: dict) ->
     provenance = {
         "schema": "graft-phase3-exact-cache-seed-v1",
         "source_run": str(source_run),
+        "source_verified_cache_dir": str(old_cache),
         "source_run_manifest_sha256": sha256(
             (source_run / "manifest.json").read_bytes()
         ).hexdigest(),
