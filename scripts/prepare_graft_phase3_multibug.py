@@ -20,7 +20,13 @@ POLICIES = (
 FUSIONS = ("rrf", "suspicion_rank_blend")
 
 
-def prepare(source_config: Path, dataset: Path, output: Path) -> Path:
+def prepare(
+    source_config: Path,
+    dataset: Path,
+    output: Path,
+    *,
+    seed_run: Path | None = None,
+) -> Path:
     if output.exists():
         raise FileExistsError(f"Output already exists: {output}")
     config = json.loads(source_config.read_text())
@@ -49,10 +55,16 @@ def prepare(source_config: Path, dataset: Path, output: Path) -> Path:
     b["policies"] = ["fixed_l1"]
     b["fusions"] = list(FUSIONS)
     b["require_observed_failure"] = True
+    # Feasibility correction after 40k stopped before 24 candidates completed.
+    # This is a per-policy logical cap, not a new physical provider allowance.
+    b["budget"] = 90000
     b["max_new_calls"] = 135
     b["physical_budget"] = 240000
     b["per_bug_physical_budget"] = 80000
     b["run_id"] = "graft_phase3_real_bugs_" + output.name
+    # Store future cache entries only in a NEW independent cache directory.
+    b["cache_dir"] = str((output / "cache").resolve()) if seed_run else None
+    b["cache_mode"] = "use"
     config["graft_policies"] = list(POLICIES)
     from rave_fl.graft.runner import validate_config
     config = validate_config(config)
@@ -74,9 +86,25 @@ def prepare(source_config: Path, dataset: Path, output: Path) -> Path:
         "new_calls_during_preparation": 0,
         "known_physical_provider_token_cap": 240000,
         "provider_calls_cap": 135,
+        "logical_policy_token_budget": 90000,
+        "logical_budget_adjustment": "40k blocked 24-candidate L1 screening; changed before graph comparison, not accuracy-tuned",
+        "cache_seeding_requested": bool(seed_run),
         "selects_gold_online": False,
         "development_or_exploratory_not_heldout": True,
     }, indent=2) + "\n")
+    if seed_run:
+        # Seed only verified exact prior provider responses; no journal or
+        # policy decisions are reused and the source run remains read-only.
+        from scripts.seed_graft_phase3_cache import seed
+
+        record = seed(seed_run, output / "cache", dataset=dataset, config=config)
+        (output / "cache_seed_provenance.json").write_text(
+            json.dumps(record, indent=2) + "\n"
+        )
+        print(
+            f"Exact cached Qwen responses: {record['seeded_response_files']}; "
+            "new model calls: 0"
+        )
     return path
 
 
@@ -85,5 +113,11 @@ if __name__ == "__main__":
     parser.add_argument("--source", type=Path, default=Path("configs/graft_independent_qwen7b_control.json"))
     parser.add_argument("--dataset", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--seed-run", type=Path,
+        help="Archived prior Qwen run directory; validated cache only, no journal",
+    )
     args = parser.parse_args()
-    print("Prepared:", prepare(args.source, args.dataset, args.output))
+    print("Prepared:", prepare(
+        args.source, args.dataset, args.output, seed_run=args.seed_run,
+    ))
