@@ -7,7 +7,7 @@ Missing data remain visible. Offline aggregation makes zero model calls.
 from __future__ import annotations
 
 import argparse
-from collections import defaultdict
+from collections import Counter
 from hashlib import sha256
 import json
 from pathlib import Path
