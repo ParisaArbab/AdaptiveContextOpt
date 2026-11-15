@@ -169,7 +169,16 @@ def _file_labels(checkout: Path, classes: str, source_dir: str) -> list[str]:
 
 def collect_case(row: dict, cli: str, root: Path, *, max_bytes: int = _MAX_BYTES) -> tuple[dict, dict]:
     bug = row["bug"]
-    project, number = FIXED[bug]
+    # Reuse this audited collector for the frozen 100-bug cohort while
+    # preserving the original three-bug behavior. The 100-bug selector
+    # validates the project/ID against defects4j bids before calling here.
+    if bug in FIXED:
+        project, number = FIXED[bug]
+    else:
+        match = re.fullmatch(r"([A-Za-z][A-Za-z0-9]*)-([1-9][0-9]*)", bug)
+        if not match:
+            raise ValueError(f"Invalid official Defects4J bug ID: {bug}")
+        project, number = match.groups()
     # Normalize the checkout before passing it to Defects4J and comparing
     # absolute AST-discovered test paths. The runner supplies a relative ROOT.
     checkout = (root / "checkouts" / bug).resolve()
@@ -256,7 +265,12 @@ def collect_case(row: dict, cli: str, root: Path, *, max_bytes: int = _MAX_BYTES
         "bug": bug,
         "original_declared_sha": row.get("buggy_revision", ""),
         "actual_official_d4j_checkout_sha": actual_sha,
-        "original_sha_matches": actual_sha == row.get("buggy_revision"),
+        "revision_was_predeclared": bool(row.get("buggy_revision")),
+        "original_sha_matches": (
+            actual_sha == row["buggy_revision"]
+            if row.get("buggy_revision") else None
+        ),
+        "official_revision_pinned_at_collection": actual_sha,
         "test_method": selected,
         "test_method_path": str(test_path),
         "test_method_full_raw_sha256": digest(method_raw),
