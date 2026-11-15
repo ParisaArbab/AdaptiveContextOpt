@@ -297,3 +297,109 @@ def test_paired_audit_reports_file_level_only_and_real_stopping_status(tmp_path)
     (run / "results.json").write_text(json.dumps(sample))
     incomplete = inspect(run)
     assert not incomplete["all_pairs_completed"]
+
+
+
+def test_real_collector_optin_executes_only_first_official_trigger(tmp_path, monkeypatch):
+    """The 100-bug condition must observe, not merely assume, test failure."""
+    import subprocess
+    from scripts import prepare_graft_phase3_real_bugs as prep
+
+    checkout_root = tmp_path / "source"
+    seen = []
+
+    def cmd(args, **kwargs):
+        def done(out="", rc=0):
+            return subprocess.CompletedProcess(args, rc, stdout=out, stderr="")
+
+        if args[0] == "defects4j" and args[1] == "checkout":
+            checkout = Path(args[args.index("-w") + 1])
+            source = checkout / "src/test/java/org/example/TestLogic.java"
+            source.parent.mkdir(parents=True)
+            source.write_text(
+                "package org.example;\n"
+                "public class TestLogic {\n"
+                "  public void testOne() { throw new AssertionError(); }\n"
+                "  public void testTwo() { throw new AssertionError(); }\n"
+                "}\n"
+            )
+            production = checkout / "src/main/java/org/example/Logic.java"
+            production.parent.mkdir(parents=True)
+            production.write_text("package org.example; public class Logic {}\n")
+            return done()
+        if args[:2] == ["git", "-C"]:
+            if args[3] == "rev-parse":
+                return done("f" * 40 + "\n")
+            if args[3] == "status":
+                return done()
+        if args[0] == "defects4j" and args[1] == "export":
+            prop = args[args.index("-p") + 1]
+            return done({
+                "dir.src.tests": "src/test/java\n",
+                "dir.src.classes": "src/main/java\n",
+                "tests.trigger": (
+                    "org.example.TestLogic::testOne\n"
+                    "org.example.TestLogic::testTwo\n"
+                ),
+                "classes.modified": "org.example.Logic\n",
+            }[prop])
+        if args[0] == "defects4j" and args[1] == "test":
+            assert "-t" in args
+            selected = args[args.index("-t") + 1]
+            seen.append(selected)
+            path = Path(args[args.index("-w") + 1]) / "failing_tests"
+            path.write_text(
+                "--- " + selected + "\n"
+                "java.lang.AssertionError: actual synthetic test execution\n"
+            )
+            return done("Tests run: 1, Failing tests: 1\n")
+        raise AssertionError(f"Unexpected command {args}")
+
+    monkeypatch.setattr(prep, "cmd", cmd)
+    case, audit = prep.collect_case(
+        {"bug": "Chart-2"}, "defects4j", checkout_root,
+        max_bytes=9000, test_scope="official_trigger",
+    )
+    assert seen == ["org.example.TestLogic::testOne"]
+    assert audit["test_execution_scope"] == "official_trigger"
+    assert audit["test_command"][audit["test_command"].index("-t") + 1] == seen[0]
+    assert audit["test_method"] == seen[0]
+    assert case["gold"]["functions"] == []
+    assert "testTwo" not in Path(case["evidence_file"]).read_text()
+
+
+def test_real_collector_fails_if_declared_trigger_not_observed(tmp_path, monkeypatch):
+    """An unavailable official trigger cannot be replaced by another failure."""
+    import subprocess
+    from scripts import prepare_graft_phase3_real_bugs as prep
+
+    def fake(args, **kwargs):
+        def done(out=""):
+            return subprocess.CompletedProcess(args, 0, stdout=out, stderr="")
+        if args[:2] == ["defects4j", "checkout"]:
+            Path(args[args.index("-w") + 1]).mkdir(parents=True)
+            return done()
+        if args[:2] == ["git", "-C"]:
+            return done("a" * 40 + "\n" if args[3] == "rev-parse" else "")
+        if args[:2] == ["defects4j", "export"]:
+            prop = args[args.index("-p") + 1]
+            return done({
+                "dir.src.tests": "src/test/java\n",
+                "dir.src.classes": "src/main/java\n",
+                "tests.trigger": "org.example.TestLogic::testOne\n",
+            }[prop])
+        if args[:2] == ["defects4j", "test"]:
+            checkout = Path(args[args.index("-w") + 1])
+            (checkout / "failing_tests").write_text(
+                "--- org.example.TestLogic::testUnrelated\n"
+                "java.lang.AssertionError\n"
+            )
+            return done()
+        raise AssertionError(str(args))
+
+    monkeypatch.setattr(prep, "cmd", fake)
+    with pytest.raises(RuntimeError, match="was not observed failing"):
+        prep.collect_case(
+            {"bug": "Math-2"}, "defects4j", tmp_path / "source",
+            max_bytes=9000, test_scope="official_trigger",
+        )
