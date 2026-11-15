@@ -80,6 +80,14 @@ archive_experiment() {
   fi
 }
 
+# All expensive actions require deterministic offline regression checks.
+if [[ "$MODE" == "freeze" || "$MODE" == "launch-all" || "$MODE" == "all" ]]; then
+  python -m pytest -q \
+    tests/test_graft_100_cohort.py \
+    tests/test_graft_phase3_bounded_failure.py \
+    tests/test_graft_phase3_real_bugs.py
+fi
+
 case "$MODE" in
   freeze)
     [[ ! -e "$ROOT/cohort.json" ]] || { echo "Cohort already frozen." >&2; exit 2; }
