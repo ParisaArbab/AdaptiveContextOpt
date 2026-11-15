@@ -65,7 +65,7 @@ def resolve_callees(graph, target: str, hints: list[str]):
     return list(dict.fromkeys(resolved)), unresolved
 
 
-def focus_select(graph, target, budget, counter=None, missing_evidence=""):
+def focus_select(graph, target, budget, counter=None, missing_evidence="", *, failure_digest_mode="full"):
     """Pack target flow + source-verified requested callee bodies first.
 
     Requires complete available code fragments for explicitly requested
@@ -84,7 +84,12 @@ def focus_select(graph, target, budget, counter=None, missing_evidence=""):
     )
     requested = call_names(missing_evidence)
     callees, unresolved = resolve_callees(graph, target, requested)
-    selector = FOCUSED_SELECTOR
+    if failure_digest_mode not in {"full", "bounded_excerpt"}:
+        raise ValueError("Unknown graph failure excerpt mode")
+    selector = (
+        "focused_bounded_failure_v2"
+        if failure_digest_mode == "bounded_excerpt" else FOCUSED_SELECTOR
+    )
 
     def attempt(ids):
         return package(graph, target, ids, budget, counter, selector=selector)
