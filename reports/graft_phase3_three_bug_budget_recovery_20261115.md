@@ -73,3 +73,30 @@ logical policy token counts as physical Qwen usage. Any comparison with
 the old 40,000-budget run must be labeled a feasibility/config change.
 
 No new Qwen calls were executed by preparing this fix on GitHub.
+
+
+## Detached execution and explicit completion check
+
+To make the physical AIScalar experiment robust to SSH disconnects, run:
+
+    cd ~/RAVE_FL_Research/GRAFT_FL_New_Run
+    conda activate rave-fl
+    git fetch origin graft-fl-aiscalar-20261113
+    git merge --ff-only FETCH_HEAD
+    bash scripts/aiscalar_graft_phase3_finish.sh
+
+The detached launcher uses an advisory flock to avoid accidental duplicate runs,
+writes a timestamped launcher log, and calls the exact-cache-seeded 90k logical
+budget experiment. The original incomplete run is never overwritten.
+
+The experiment runner now writes completion_gate.json and completion_gate.log
+next to the audit. The completion flag is true only when all six bug/fusion
+pairs have all four policies complete, accounting has no unknown provider
+usage, and both graph-focused and no-stop variants actually queried graph
+evidence for each bug/fusion pair. A test-aware stop policy can legitimately
+make zero graph calls. This file reports an operational comparison completion,
+not a statistically supported accuracy improvement.
+
+The new experiment must be executed on AIScalar, where the local Defects4J
+checkouts and Qwen2.5 7B Ollama model live. GitHub code commits do not execute
+that physical experiment and must not be described as finished results.
