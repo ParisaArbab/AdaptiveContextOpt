@@ -65,10 +65,13 @@ class GraftConfig:
     propagation: bool = True
     guard_unsupported_graph_downgrade: bool = True
     failure_name_anchor: bool = False
+    failure_digest_mode: str = "full"
 
     def __post_init__(self):
         if self.selector not in {"bm25", "topo"}:
             raise ValueError("Explicit bm25 or topo selector required")
+        if self.failure_digest_mode not in {"full", "bounded_excerpt"}:
+            raise ValueError("Unknown failure digest mode")
         if any(type(v) is not int or v < 0 for v in [self.max_graph, self.max_full]):
             raise ValueError("Nonnegative action caps required")
         if (
@@ -446,12 +449,14 @@ class Router:
                                         self.graph, ident, self.config.input_budget,
                                         self.session.counter,
                                         missing_evidence=obs.missing_evidence if obs else "",
+                                        failure_digest_mode=self.config.failure_digest_mode,
                                     )
                                 elif self.policy in {"l1_graph_test_aware", "l1_graph_test_aware_nostop"}:
                                     self.packages[ident] = test_aware_select(
                                         self.graph, ident, self.config.input_budget,
                                         self.session.counter,
                                         missing_evidence=obs.missing_evidence if obs else "",
+                                        failure_digest_mode=self.config.failure_digest_mode,
                                     )
                                 else:
                                     self.packages[ident] = select_evidence(
