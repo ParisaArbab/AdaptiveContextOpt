@@ -1,0 +1,1318 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Time-14",
+    "repository": "Time",
+    "language": "java",
+    "revision": "aae9b13c2654ba733f5711240ac81c71c9874180",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_01/prepared/checkouts/Time-14",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Time-14\nEXECUTED BUGGY TEST: org.joda.time.TestMonthDay_Basics::testPlusMonths_int_negativeFromLeap\nTEST SOURCE: src/test/java/org/joda/time/TestMonthDay_Basics.java\nTEST SOURCE SHA256: c118cb77278b2ba8d72a3097c0def8c2e21cf9de22ae428cef02b18a25125706\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testPlusMonths_int_negativeFromLeap() {\n        MonthDay test = new MonthDay(2, 29, ISOChronology.getInstanceUTC());\n        MonthDay result = test.plusMonths(-1);\n        MonthDay expected = new MonthDay(1, 29, ISOChronology.getInstance());\n        assertEquals(expected, result);\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.joda.time.TestMonthDay_Basics::testPlusMonths_int_negativeFromLeap\norg.joda.time.IllegalFieldValueException: Value 29 for dayOfMonth must be in the range [1,28]\n\tat org.joda.time.field.FieldUtils.verifyValueBounds(FieldUtils.java:220)\n\tat org.joda.time.field.PreciseDurationDateTimeField.set(PreciseDurationDateTimeField.java:78)\n\tat org.joda.time.chrono.BasicMonthOfYearDateTimeField.add(BasicMonthOfYearDateTimeField.java:213)\n\tat org.joda.time.MonthDay.withFieldAdded(MonthDay.java:519)\n\tat org.joda.time.MonthDay.plusMonths(MonthDay.java:592)\n\tat org.joda.time.TestMonthDay_Basics.testPlusMonths_int_negativeFromLeap(TestMonthDay_Basics.java:460)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_01/prepared/evidence/Time-14.txt",
+      "sha256": "d049754333b0d7cb9e7049d12239734bd9080900f249452fa2979f0b731f1ab0"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src/main/java",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Time-14",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)",
+      "path": "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java",
+      "start_line": 87,
+      "end_line": 105,
+      "source": "protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance) {\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start.size() != end.size()) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n        }\n        for (int i = 0, isize = start.size(); i < isize; i++) {\n            if (start.getFieldType(i) != end.getFieldType(i)) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n        }\n        if (DateTimeUtils.isContiguous(start) == false) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n        }\n        Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n        int[] values = chrono.get(zeroInstance, chrono.set(start, 0L), chrono.set(end, 0L));\n        return values[0];\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 44.586899215744005
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/chrono/BasicWeekyearDateTimeField.java::BasicWeekyearDateTimeField.set(long instant, int year)",
+      "path": "src/main/java/org/joda/time/chrono/BasicWeekyearDateTimeField.java",
+      "start_line": 127,
+      "end_line": 205,
+      "source": "public long set(long instant, int year) {\n        FieldUtils.verifyValueBounds(this, Math.abs(year),\n                                     iChronology.getMinYear(), iChronology.getMaxYear());\n        //\n        // Do nothing if no real change is requested.\n        //\n        int thisWeekyear = get( instant );\n        if ( thisWeekyear == year ) {\n            return instant;\n        }\n        //\n        // Calculate the DayOfWeek (to be preserved).\n        //\n        int thisDow = iChronology.getDayOfWeek(instant);\n        //\n        // Calculate the maximum weeks in the target year.\n        //\n        int weeksInFromYear = iChronology.getWeeksInYear( thisWeekyear );\n        int weeksInToYear = iChronology.getWeeksInYear( year );\n        int maxOutWeeks = (weeksInToYear < weeksInFromYear) ?\n            weeksInToYear : weeksInFromYear;\n        //\n        // Get the current week of the year. This will be preserved in\n        // the output unless it is greater than the maximum possible\n        // for the target weekyear.  In that case it is adjusted\n        // to the maximum possible.\n        //\n        int setToWeek = iChronology.getWeekOfWeekyear(instant);\n        if ( setToWeek > maxOutWeeks ) {\n            setToWeek = maxOutWeeks;\n        }\n        //\n        // Get a wroking copy of the current date-time.\n        // This can be a convenience for debugging.\n        //\n        long workInstant = instant; // Get a copy\n        //\n        // Attempt to get close to the proper weekyear.\n        // Note - we cannot currently call ourself, so we just call\n        // set for the year.  This at least gets us close.\n        //\n        workInstant = iChronology.setYear( workInstant, year );\n        //\n        // Calculate the weekyear number for the get close to value\n        // (which might not be equal to the year just set).\n        //\n        int workWoyYear = get( workInstant );\n\n        //\n        // At most we are off by one year, which can be \"fixed\" by\n        // adding/subtracting a week.\n        //\n        if ( workWoyYear < year ) {\n            workInstant += DateTimeConstants.MILLIS_PER_WEEK;\n        } else if ( workWoyYear > year ) {\n            workInstant -= DateTimeConstants.MILLIS_PER_WEEK;\n        }\n        //\n        // Set the proper week in the current weekyear.\n        //\n\n        // BEGIN: possible set WeekOfWeekyear logic.\n        int currentWoyWeek = iChronology.getWeekOfWeekyear(workInstant);\n        // No range check required (we already know it is OK).\n        workInstant = workInstant + (setToWeek - currentWoyWeek)\n            * (long)DateTimeConstants.MILLIS_PER_WEEK;\n        // END: possible set WeekOfWeekyear logic.\n\n        //\n        // Reset DayOfWeek to previous value.\n        //\n        // Note: This works fine, but it ideally shouldn't invoke other\n        // fields from within a field.\n        workInstant = iChronology.dayOfWeek().set( workInstant, thisDow );\n        //\n        // Return result.\n        //\n        return workInstant;\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 44.155032018804725
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/field/PreciseDateTimeField.java::PreciseDateTimeField.PreciseDateTimeField(DateTimeFieldType type,\n                                DurationField unit, DurationField range)",
+      "path": "src/main/java/org/joda/time/field/PreciseDateTimeField.java",
+      "start_line": 55,
+      "end_line": 70,
+      "source": "public PreciseDateTimeField(DateTimeFieldType type,\n                                DurationField unit, DurationField range) {\n        super(type, unit);\n\n        if (!range.isPrecise()) {\n            throw new IllegalArgumentException(\"Range duration field must be precise\");\n        }\n\n        long rangeMillis = range.getUnitMillis();\n        iRange = (int)(rangeMillis / getUnitMillis());\n        if (iRange < 2) {\n            throw new IllegalArgumentException(\"The effective range must be at least 2\");\n        }\n\n        iRangeField = range;\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.547157626628625
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/chrono/BasicChronology.java::BasicChronology.getDateMidnightMillis(int year, int monthOfYear, int dayOfMonth)",
+      "path": "src/main/java/org/joda/time/chrono/BasicChronology.java",
+      "start_line": 602,
+      "end_line": 607,
+      "source": "long getDateMidnightMillis(int year, int monthOfYear, int dayOfMonth) {\n        FieldUtils.verifyValueBounds(DateTimeFieldType.year(), year, getMinYear(), getMaxYear());\n        FieldUtils.verifyValueBounds(DateTimeFieldType.monthOfYear(), monthOfYear, 1, getMaxMonth(year));\n        FieldUtils.verifyValueBounds(DateTimeFieldType.dayOfMonth(), dayOfMonth, 1, getDaysInYearMonth(year, monthOfYear));\n        return getYearMonthDayMillis(year, monthOfYear, dayOfMonth);\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.473428209793965
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)",
+      "path": "src/main/java/org/joda/time/base/BasePeriod.java",
+      "start_line": 154,
+      "end_line": 184,
+      "source": "protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type) {\n        super();\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start instanceof BaseLocal && end instanceof BaseLocal && start.getClass() == end.getClass()) {\n            // for performance\n            type = checkPeriodType(type);\n            long startMillis = ((BaseLocal) start).getLocalMillis();\n            long endMillis = ((BaseLocal) end).getLocalMillis();\n            Chronology chrono = start.getChronology();\n            chrono = DateTimeUtils.getChronology(chrono);\n            iType = type;\n            iValues = chrono.get(this, startMillis, endMillis);\n        } else {\n            if (start.size() != end.size()) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n            for (int i = 0, isize = start.size(); i < isize; i++) {\n                if (start.getFieldType(i) != end.getFieldType(i)) {\n                    throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n                }\n            }\n            if (DateTimeUtils.isContiguous(start) == false) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n            }\n            iType = checkPeriodType(type);\n            Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n            iValues = chrono.get(this, chrono.set(start, 0L), chrono.set(end, 0L));\n        }\n    }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.016881136013296
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/YearMonthDay.java::YearMonthDay.getField(int index, Chronology chrono)",
+      "path": "src/main/java/org/joda/time/YearMonthDay.java",
+      "start_line": 330,
+      "end_line": 341,
+      "source": "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            case DAY_OF_MONTH:\n                return chrono.dayOfMonth();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 38.13973640778256
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.standardPeriodIn(ReadablePeriod period, long millisPerUnit)",
+      "path": "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java",
+      "start_line": 127,
+      "end_line": 146,
+      "source": "protected static int standardPeriodIn(ReadablePeriod period, long millisPerUnit) {\n        if (period == null) {\n            return 0;\n        }\n        Chronology iso = ISOChronology.getInstanceUTC();\n        long duration = 0L;\n        for (int i = 0; i < period.size(); i++) {\n            int value = period.getValue(i);\n            if (value != 0) {\n                DurationField field = period.getFieldType(i).getField(iso);\n                if (field.isPrecise() == false) {\n                    throw new IllegalArgumentException(\n                            \"Cannot convert period to duration as \" + field.getName() +\n                            \" is not precise in the period \" + period);\n                }\n                duration = FieldUtils.safeAdd(duration, FieldUtils.safeMultiply(field.getUnitMillis(), value));\n            }\n        }\n        return FieldUtils.safeToInt(duration / millisPerUnit);\n    }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 37.79744436768936
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/tz/DateTimeZoneBuilder.java::DateTimeZoneBuilder.Rule.next(final long instant, int standardOffset, int saveMillis)",
+      "path": "src/main/java/org/joda/time/tz/DateTimeZoneBuilder.java",
+      "start_line": 842,
+      "end_line": 874,
+      "source": "public long next(final long instant, int standardOffset, int saveMillis) {\n            Chronology chrono = ISOChronology.getInstanceUTC();\n\n            final int wallOffset = standardOffset + saveMillis;\n            long testInstant = instant;\n\n            int year;\n            if (instant == Long.MIN_VALUE) {\n                year = Integer.MIN_VALUE;\n            } else {\n                year = chrono.year().get(instant + wallOffset);\n            }\n\n            if (year < iFromYear) {\n                // First advance instant to start of from year.\n                testInstant = chrono.year().set(0, iFromYear) - wallOffset;\n                // Back off one millisecond to account for next recurrence\n                // being exactly at the beginning of the year.\n                testInstant -= 1;\n            }\n\n            long next = iRecurrence.next(testInstant, standardOffset, saveMillis);\n\n            if (next > instant) {\n                year = chrono.year().get(next + wallOffset);\n                if (year > iToYear) {\n                    // Out of range, return original value.\n                    next = instant;\n                }\n            }\n\n            return next;\n        }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 37.64724682469069
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/AbstractInterval.java::AbstractInterval.checkInterval(long start, long end)",
+      "path": "src/main/java/org/joda/time/base/AbstractInterval.java",
+      "start_line": 61,
+      "end_line": 65,
+      "source": "protected void checkInterval(long start, long end) {\n        if (end < start) {\n            throw new IllegalArgumentException(\"The end instant must be greater or equal to the start\");\n        }\n    }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 37.51643601271414
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/chrono/BasicChronology.java::BasicChronology.getDateTimeMillis(\n            int year, int monthOfYear, int dayOfMonth,\n            int hourOfDay, int minuteOfHour, int secondOfMinute, int millisOfSecond)",
+      "path": "src/main/java/org/joda/time/chrono/BasicChronology.java",
+      "start_line": 162,
+      "end_line": 182,
+      "source": "public long getDateTimeMillis(\n            int year, int monthOfYear, int dayOfMonth,\n            int hourOfDay, int minuteOfHour, int secondOfMinute, int millisOfSecond)\n            throws IllegalArgumentException {\n        Chronology base;\n        if ((base = getBase()) != null) {\n            return base.getDateTimeMillis(year, monthOfYear, dayOfMonth,\n                                          hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);\n        }\n\n        FieldUtils.verifyValueBounds(DateTimeFieldType.hourOfDay(), hourOfDay, 0, 23);\n        FieldUtils.verifyValueBounds(DateTimeFieldType.minuteOfHour(), minuteOfHour, 0, 59);\n        FieldUtils.verifyValueBounds(DateTimeFieldType.secondOfMinute(), secondOfMinute, 0, 59);\n        FieldUtils.verifyValueBounds(DateTimeFieldType.millisOfSecond(), millisOfSecond, 0, 999);\n\n        return getDateMidnightMillis(year, monthOfYear, dayOfMonth)\n            + hourOfDay * DateTimeConstants.MILLIS_PER_HOUR\n            + minuteOfHour * DateTimeConstants.MILLIS_PER_MINUTE\n            + secondOfMinute * DateTimeConstants.MILLIS_PER_SECOND\n            + millisOfSecond;\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 37.076076759428
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/MonthDay.java::MonthDay.getField(int index, Chronology chrono)",
+      "path": "src/main/java/org/joda/time/MonthDay.java",
+      "start_line": 407,
+      "end_line": 416,
+      "source": "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n        case MONTH_OF_YEAR:\n            return chrono.monthOfYear();\n        case DAY_OF_MONTH:\n            return chrono.dayOfMonth();\n        default:\n            throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.77611591507773
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/tz/ZoneInfoCompiler.java::ZoneInfoCompiler.test(String id, DateTimeZone tz)",
+      "path": "src/main/java/org/joda/time/tz/ZoneInfoCompiler.java",
+      "start_line": 268,
+      "end_line": 343,
+      "source": "static boolean test(String id, DateTimeZone tz) {\n        if (!id.equals(tz.getID())) {\n            return true;\n        }\n\n        // Test to ensure that reported transitions are not duplicated.\n\n        long millis = ISOChronology.getInstanceUTC().year().set(0, 1850);\n        long end = ISOChronology.getInstanceUTC().year().set(0, 2050);\n\n        int offset = tz.getOffset(millis);\n        String key = tz.getNameKey(millis);\n\n        List<Long> transitions = new ArrayList<Long>();\n\n        while (true) {\n            long next = tz.nextTransition(millis);\n            if (next == millis || next > end) {\n                break;\n            }\n\n            millis = next;\n\n            int nextOffset = tz.getOffset(millis);\n            String nextKey = tz.getNameKey(millis);\n\n            if (offset == nextOffset\n                && key.equals(nextKey)) {\n                System.out.println(\"*d* Error in \" + tz.getID() + \" \"\n                                   + new DateTime(millis,\n                                                  ISOChronology.getInstanceUTC()));\n                return false;\n            }\n\n            if (nextKey == null || (nextKey.length() < 3 && !\"??\".equals(nextKey))) {\n                System.out.println(\"*s* Error in \" + tz.getID() + \" \"\n                                   + new DateTime(millis,\n                                                  ISOChronology.getInstanceUTC())\n                                   + \", nameKey=\" + nextKey);\n                return false;\n            }\n\n            transitions.add(Long.valueOf(millis));\n\n            offset = nextOffset;\n            key = nextKey;\n        }\n\n        // Now verify that reverse transitions match up.\n\n        millis = ISOChronology.getInstanceUTC().year().set(0, 2050);\n        end = ISOChronology.getInstanceUTC().year().set(0, 1850);\n\n        for (int i=transitions.size(); --i>= 0; ) {\n            long prev = tz.previousTransition(millis);\n            if (prev == millis || prev < end) {\n                break;\n            }\n\n            millis = prev;\n\n            long trans = transitions.get(i).longValue();\n            \n            if (trans - 1 != millis) {\n                System.out.println(\"*r* Error in \" + tz.getID() + \" \"\n                                   + new DateTime(millis,\n                                                  ISOChronology.getInstanceUTC()) + \" != \"\n                                   + new DateTime(trans - 1,\n                                                  ISOChronology.getInstanceUTC()));\n                                   \n                return false;\n            }\n        }\n\n        return true;\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.24357668534543
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/LocalDate.java::LocalDate.getField(int index, Chronology chrono)",
+      "path": "src/main/java/org/joda/time/LocalDate.java",
+      "start_line": 485,
+      "end_line": 496,
+      "source": "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            case DAY_OF_MONTH:\n                return chrono.dayOfMonth();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.12581007066622
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/LocalDateTime.java::LocalDateTime.getField(int index, Chronology chrono)",
+      "path": "src/main/java/org/joda/time/LocalDateTime.java",
+      "start_line": 538,
+      "end_line": 551,
+      "source": "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            case DAY_OF_MONTH:\n                return chrono.dayOfMonth();\n            case MILLIS_OF_DAY:\n                return chrono.millisOfDay();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.06480587867969
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/chrono/BasicChronology.java::BasicChronology.getDateTimeMillis(\n            int year, int monthOfYear, int dayOfMonth, int millisOfDay)",
+      "path": "src/main/java/org/joda/time/chrono/BasicChronology.java",
+      "start_line": 149,
+      "end_line": 160,
+      "source": "public long getDateTimeMillis(\n            int year, int monthOfYear, int dayOfMonth, int millisOfDay)\n            throws IllegalArgumentException {\n        Chronology base;\n        if ((base = getBase()) != null) {\n            return base.getDateTimeMillis(year, monthOfYear, dayOfMonth, millisOfDay);\n        }\n\n        FieldUtils.verifyValueBounds\n            (DateTimeFieldType.millisOfDay(), millisOfDay, 0, DateTimeConstants.MILLIS_PER_DAY - 1);\n        return getDateMidnightMillis(year, monthOfYear, dayOfMonth) + millisOfDay;\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.757587342705335
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/field/PreciseDurationDateTimeField.java::PreciseDurationDateTimeField.PreciseDurationDateTimeField(DateTimeFieldType type, DurationField unit)",
+      "path": "src/main/java/org/joda/time/field/PreciseDurationDateTimeField.java",
+      "start_line": 47,
+      "end_line": 60,
+      "source": "public PreciseDurationDateTimeField(DateTimeFieldType type, DurationField unit) {\n        super(type);\n\n        if (!unit.isPrecise()) {\n            throw new IllegalArgumentException(\"Unit duration field must be precise\");\n        }\n\n        iUnitMillis = unit.getUnitMillis();\n        if (iUnitMillis < 1) {\n            throw new IllegalArgumentException(\"The unit milliseconds must be at least 1\");\n        }\n\n        iUnitField = unit;\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.32820322561156
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/YearMonth.java::YearMonth.getField(int index, Chronology chrono)",
+      "path": "src/main/java/org/joda/time/YearMonth.java",
+      "start_line": 399,
+      "end_line": 408,
+      "source": "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.100955661462166
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/YearMonthDay.java::YearMonthDay.fromDateFields(Date date)",
+      "path": "src/main/java/org/joda/time/YearMonthDay.java",
+      "start_line": 132,
+      "end_line": 141,
+      "source": "public static YearMonthDay fromDateFields(Date date) {\n        if (date == null) {\n            throw new IllegalArgumentException(\"The date must not be null\");\n        }\n        return new YearMonthDay(\n            date.getYear() + 1900,\n            date.getMonth() + 1,\n            date.getDate()\n        );\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.73718049459294
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/YearMonthDay.java::YearMonthDay.plusMonths(int months)",
+      "path": "src/main/java/org/joda/time/YearMonthDay.java",
+      "start_line": 535,
+      "end_line": 537,
+      "source": "public YearMonthDay plusMonths(int months) {\n        return withFieldAdded(DurationFieldType.months(), months);\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.555240168419935
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Partial.java::Partial.Partial(DateTimeFieldType[] types, int[] values, Chronology chronology)",
+      "path": "src/main/java/org/joda/time/Partial.java",
+      "start_line": 189,
+      "end_line": 249,
+      "source": "public Partial(DateTimeFieldType[] types, int[] values, Chronology chronology) {\n        super();\n        chronology = DateTimeUtils.getChronology(chronology).withUTC();\n        iChronology = chronology;\n        if (types == null) {\n            throw new IllegalArgumentException(\"Types array must not be null\");\n        }\n        if (values == null) {\n            throw new IllegalArgumentException(\"Values array must not be null\");\n        }\n        if (values.length != types.length) {\n            throw new IllegalArgumentException(\"Values array must be the same length as the types array\");\n        }\n        if (types.length == 0) {\n            iTypes = types;\n            iValues = values;\n            return;\n        }\n        for (int i = 0; i < types.length; i++) {\n            if (types[i] == null) {\n                throw new IllegalArgumentException(\"Types array must not contain null: index \" + i);\n            }\n        }\n        DurationField lastUnitField = null;\n        for (int i = 0; i < types.length; i++) {\n            DateTimeFieldType loopType = types[i];\n            DurationField loopUnitField = loopType.getDurationType().getField(iChronology);\n            if (i > 0) {\n                int compare = lastUnitField.compareTo(loopUnitField);\n                if (compare < 0 || (compare != 0 && loopUnitField.isSupported() == false)) {\n                    throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                            types[i - 1].getName() + \" < \" + loopType.getName());\n                } else if (compare == 0) {\n                    if (types[i - 1].getRangeDurationType() == null) {\n                        if (loopType.getRangeDurationType() == null) {\n                            throw new IllegalArgumentException(\"Types array must not contain duplicate: \" + loopType.getName());\n                        }\n                    } else {\n                        if (loopType.getRangeDurationType() == null) {\n                            throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                                    types[i - 1].getName() + \" < \" + loopType.getName());\n                        }\n                        DurationField lastRangeField = types[i - 1].getRangeDurationType().getField(iChronology);\n                        DurationField loopRangeField = loopType.getRangeDurationType().getField(iChronology);\n                        if (lastRangeField.compareTo(loopRangeField) < 0) {\n                            throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                                    types[i - 1].getName() + \" < \" + loopType.getName());\n                        }\n                        if (lastRangeField.compareTo(loopRangeField) == 0) {\n                            throw new IllegalArgumentException(\"Types array must not contain duplicate: \" + loopType.getName());\n                        }\n                    }\n                }\n            }\n            lastUnitField = loopUnitField;\n        }\n        \n        iTypes = (DateTimeFieldType[]) types.clone();\n        chronology.validate(this, values);\n        iValues = (int[]) values.clone();\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.51027351801532
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Period.java::Period.fieldDifference(ReadablePartial start, ReadablePartial end)",
+      "path": "src/main/java/org/joda/time/Period.java",
+      "start_line": 256,
+      "end_line": 276,
+      "source": "public static Period fieldDifference(ReadablePartial start, ReadablePartial end) {\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start.size() != end.size()) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n        }\n        DurationFieldType[] types = new DurationFieldType[start.size()];\n        int[] values = new int[start.size()];\n        for (int i = 0, isize = start.size(); i < isize; i++) {\n            if (start.getFieldType(i) != end.getFieldType(i)) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n            types[i] = start.getFieldType(i).getDurationType();\n            if (i > 0 && types[i - 1] == types[i]) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must not have overlapping fields\");\n            }\n            values[i] = end.getValue(i) - start.getValue(i);\n        }\n        return new Period(values, PeriodType.forFields(types));\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.36466753332027
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(long duration)",
+      "path": "src/main/java/org/joda/time/base/BasePeriod.java",
+      "start_line": 230,
+      "end_line": 239,
+      "source": "protected BasePeriod(long duration) {\n        super();\n        // bug [3264409]\n        // calculation uses period type from a period object (bad design)\n        // thus we use a dummy period object with the time type\n        iType = PeriodType.standard();\n        int[] values = ISOChronology.getInstanceUTC().get(DUMMY_PERIOD, duration);\n        iValues = new int[8];\n        System.arraycopy(values, 0, iValues, 4, 4);\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.3420967254107
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/chrono/BasicDayOfMonthDateTimeField.java::BasicDayOfMonthDateTimeField.getMaximumValueForSet(long instant, int value)",
+      "path": "src/main/java/org/joda/time/chrono/BasicDayOfMonthDateTimeField.java",
+      "start_line": 95,
+      "end_line": 97,
+      "source": "protected int getMaximumValueForSet(long instant, int value) {\n        return iChronology.getDaysInMonthMaxForSet(instant, value);\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.18893159369879
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/chrono/ZonedChronology.java::ZonedChronology.getInstance(Chronology base, DateTimeZone zone)",
+      "path": "src/main/java/org/joda/time/chrono/ZonedChronology.java",
+      "start_line": 55,
+      "end_line": 67,
+      "source": "public static ZonedChronology getInstance(Chronology base, DateTimeZone zone) {\n        if (base == null) {\n            throw new IllegalArgumentException(\"Must supply a chronology\");\n        }\n        base = base.withUTC();\n        if (base == null) {\n            throw new IllegalArgumentException(\"UTC chronology must not be null\");\n        }\n        if (zone == null) {\n            throw new IllegalArgumentException(\"DateTimeZone must not be null\");\n        }\n        return new ZonedChronology(base, zone);\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.92300131154887
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)",
+      "source": "protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance) {\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start.size() != end.size()) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n        }\n        for (int i = 0, isize = start.size(); i < isize; i++) {\n            if (start.getFieldType(i) != end.getFieldType(i)) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n        }\n        if (DateTimeUtils.isContiguous(start) == false) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n        }\n        Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n        int[] values = chrono.get(zeroInstance, chrono.set(start, 0L), chrono.set(end, 0L));\n        return values[0];\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)\nSIGNATURE: protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)",
+        "METHOD: src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)\nSIGNATURE: protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)\nSTRUCTURE (lossy):\nif (start == null || end == null)\nthrow new IllegalArgumentException(\"ReadablePartial objects must not be null\");\nif (start.size() != end.size())\nCALL start.size()\nCALL end.size()\nthrow new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\nfor (int i = 0, isize = start.size(); i < isize; i++)\nint i = 0, isize = start.size();\ni++\nif (start.getFieldType(i) != end.getFieldType(i))\nCALL start.getFieldType(i)\nCALL end.getFieldType(i)\nif (DateTimeUtils.isContiguous(start) == false)\nCALL DateTimeUtils.isContiguous(start)\nthrow new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\nChronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\nCALL DateTimeUtils.getChronology(start.getChronology()).withUTC()\nCALL DateTimeUtils.getChronology(start.getChronology())\nCALL start.getChronology()\nint[] values = chrono.get(zeroInstance, chrono.set(start, 0L), chrono.set(end, 0L));\nCALL chrono.get(zeroInstance, chrono.set(start, 0L), chrono.set(end, 0L))\nCALL chrono.set(start, 0L)\nCALL chrono.set(end, 0L)\nreturn values[0];",
+        "protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance) {\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start.size() != end.size()) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n        }\n        for (int i = 0, isize = start.size(); i < isize; i++) {\n            if (start.getFieldType(i) != end.getFieldType(i)) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n        }\n        if (DateTimeUtils.isContiguous(start) == false) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n        }\n        Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n        int[] values = chrono.get(zeroInstance, chrono.set(start, 0L), chrono.set(end, 0L));\n        return values[0];\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5102040816326531,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 12.0,
+        "literal_count": 10.0,
+        "source_tokens": 263.0,
+        "l0_tokens": 71.0,
+        "l1_tokens": 351.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 12,
+        "literal_count": 10
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/chrono/BasicWeekyearDateTimeField.java::BasicWeekyearDateTimeField.set(long instant, int year)",
+      "source": "public long set(long instant, int year) {\n        FieldUtils.verifyValueBounds(this, Math.abs(year),\n                                     iChronology.getMinYear(), iChronology.getMaxYear());\n        //\n        // Do nothing if no real change is requested.\n        //\n        int thisWeekyear = get( instant );\n        if ( thisWeekyear == year ) {\n            return instant;\n        }\n        //\n        // Calculate the DayOfWeek (to be preserved).\n        //\n        int thisDow = iChronology.getDayOfWeek(instant);\n        //\n        // Calculate the maximum weeks in the target year.\n        //\n        int weeksInFromYear = iChronology.getWeeksInYear( thisWeekyear );\n        int weeksInToYear = iChronology.getWeeksInYear( year );\n        int maxOutWeeks = (weeksInToYear < weeksInFromYear) ?\n            weeksInToYear : weeksInFromYear;\n        //\n        // Get the current week of the year. This will be preserved in\n        // the output unless it is greater than the maximum possible\n        // for the target weekyear.  In that case it is adjusted\n        // to the maximum possible.\n        //\n        int setToWeek = iChronology.getWeekOfWeekyear(instant);\n        if ( setToWeek > maxOutWeeks ) {\n            setToWeek = maxOutWeeks;\n        }\n        //\n        // Get a wroking copy of the current date-time.\n        // This can be a convenience for debugging.\n        //\n        long workInstant = instant; // Get a copy\n        //\n        // Attempt to get close to the proper weekyear.\n        // Note - we cannot currently call ourself, so we just call\n        // set for the year.  This at least gets us close.\n        //\n        workInstant = iChronology.setYear( workInstant, year );\n        //\n        // Calculate the weekyear number for the get close to value\n        // (which might not be equal to the year just set).\n        //\n        int workWoyYear = get( workInstant );\n\n        //\n        // At most we are off by one year, which can be \"fixed\" by\n        // adding/subtracting a week.\n        //\n        if ( workWoyYear < year ) {\n            workInstant += DateTimeConstants.MILLIS_PER_WEEK;\n        } else if ( workWoyYear > year ) {\n            workInstant -= DateTimeConstants.MILLIS_PER_WEEK;\n        }\n        //\n        // Set the proper week in the current weekyear.\n        //\n\n        // BEGIN: possible set WeekOfWeekyear logic.\n        int currentWoyWeek = iChronology.getWeekOfWeekyear(workInstant);\n        // No range check required (we already know it is OK).\n        workInstant = workInstant + (setToWeek - currentWoyWeek)\n            * (long)DateTimeConstants.MILLIS_PER_WEEK;\n        // END: possible set WeekOfWeekyear logic.\n\n        //\n        // Reset DayOfWeek to previous value.\n        //\n        // Note: This works fine, but it ideally shouldn't invoke other\n        // fields from within a field.\n        workInstant = iChronology.dayOfWeek().set( workInstant, thisDow );\n        //\n        // Return result.\n        //\n        return workInstant;\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/chrono/BasicWeekyearDateTimeField.java::BasicWeekyearDateTimeField.set(long instant, int year)\nSIGNATURE: public long set(long instant, int year)",
+        "METHOD: src/main/java/org/joda/time/chrono/BasicWeekyearDateTimeField.java::BasicWeekyearDateTimeField.set(long instant, int year)\nSIGNATURE: public long set(long instant, int year)\nSTRUCTURE (lossy):\nCALL FieldUtils.verifyValueBounds(this, Math.abs(year), iChronology.getMinYear(), iChronology.getMaxYear())\nCALL Math.abs(year)\nCALL iChronology.getMinYear()\nCALL iChronology.getMaxYear()\nint thisWeekyear = get( instant );\nCALL get( instant )\nif ( thisWeekyear == year )\nreturn instant;\nint thisDow = iChronology.getDayOfWeek(instant);\nCALL iChronology.getDayOfWeek(instant)\nint weeksInFromYear = iChronology.getWeeksInYear( thisWeekyear );\nCALL iChronology.getWeeksInYear( thisWeekyear )\nint weeksInToYear = iChronology.getWeeksInYear( year );\nCALL iChronology.getWeeksInYear( year )\nint maxOutWeeks = (weeksInToYear < weeksInFromYear) ? weeksInToYear : weeksInFromYear;\nint setToWeek = iChronology.getWeekOfWeekyear(instant);\nCALL iChronology.getWeekOfWeekyear(instant)\nif ( setToWeek > maxOutWeeks )\nsetToWeek = maxOutWeeks\nlong workInstant = instant;\nworkInstant = iChronology.setYear( workInstant, year )\nCALL iChronology.setYear( workInstant, year )\nint workWoyYear = get( workInstant );\nCALL get( workInstant )\nif ( workWoyYear < year )\nworkInstant += DateTimeConstants.MILLIS_PER_WEEK\nif ( workWoyYear > year )\nworkInstant -= DateTimeConstants.MILLIS_PER_WEEK\nint currentWoyWeek = iChronology.getWeekOfWeekyear(workInstant);\nCALL iChronology.getWeekOfWeekyear(workInstant)\nworkInstant = workInstant + (setToWeek - currentWoyWeek) * (long)DateTimeConstants.MILLIS_PER_WEEK\nworkInstant = iChronology.dayOfWeek().set( workInstant, thisDow )\nCALL iChronology.dayOfWeek().set( workInstant, thisDow )\nCALL iChronology.dayOfWeek()\nreturn workInstant;",
+        "public long set(long instant, int year) {\n        FieldUtils.verifyValueBounds(this, Math.abs(year),\n                                     iChronology.getMinYear(), iChronology.getMaxYear());\n        //\n        // Do nothing if no real change is requested.\n        //\n        int thisWeekyear = get( instant );\n        if ( thisWeekyear == year ) {\n            return instant;\n        }\n        //\n        // Calculate the DayOfWeek (to be preserved).\n        //\n        int thisDow = iChronology.getDayOfWeek(instant);\n        //\n        // Calculate the maximum weeks in the target year.\n        //\n        int weeksInFromYear = iChronology.getWeeksInYear( thisWeekyear );\n        int weeksInToYear = iChronology.getWeeksInYear( year );\n        int maxOutWeeks = (weeksInToYear < weeksInFromYear) ?\n            weeksInToYear : weeksInFromYear;\n        //\n        // Get the current week of the year. This will be preserved in\n        // the output unless it is greater than the maximum possible\n        // for the target weekyear.  In that case it is adjusted\n        // to the maximum possible.\n        //\n        int setToWeek = iChronology.getWeekOfWeekyear(instant);\n        if ( setToWeek > maxOutWeeks ) {\n            setToWeek = maxOutWeeks;\n        }\n        //\n        // Get a wroking copy of the current date-time.\n        // This can be a convenience for debugging.\n        //\n        long workInstant = instant; // Get a copy\n        //\n        // Attempt to get close to the proper weekyear.\n        // Note - we cannot currently call ourself, so we just call\n        // set for the year.  This at least gets us close.\n        //\n        workInstant = iChronology.setYear( workInstant, year );\n        //\n        // Calculate the weekyear number for the get close to value\n        // (which might not be equal to the year just set).\n        //\n        int workWoyYear = get( workInstant );\n\n        //\n        // At most we are off by one year, which can be \"fixed\" by\n        // adding/subtracting a week.\n        //\n        if ( workWoyYear < year ) {\n            workInstant += DateTimeConstants.MILLIS_PER_WEEK;\n        } else if ( workWoyYear > year ) {\n            workInstant -= DateTimeConstants.MILLIS_PER_WEEK;\n        }\n        //\n        // Set the proper week in the current weekyear.\n        //\n\n        // BEGIN: possible set WeekOfWeekyear logic.\n        int currentWoyWeek = iChronology.getWeekOfWeekyear(workInstant);\n        // No range check required (we already know it is OK).\n        workInstant = workInstant + (setToWeek - currentWoyWeek)\n            * (long)DateTimeConstants.MILLIS_PER_WEEK;\n        // END: possible set WeekOfWeekyear logic.\n\n        //\n        // Reset DayOfWeek to previous value.\n        //\n        // Note: This works fine, but it ideally shouldn't invoke other\n        // fields from within a field.\n        workInstant = iChronology.dayOfWeek().set( workInstant, thisDow );\n        //\n        // Return result.\n        //\n        return workInstant;\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.26605504587155965,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 14.0,
+        "literal_count": 0.0,
+        "source_tokens": 756.0,
+        "l0_tokens": 46.0,
+        "l1_tokens": 438.0,
+        "compression_ratio": 0.5793650793650794,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 14,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/field/PreciseDateTimeField.java::PreciseDateTimeField.PreciseDateTimeField(DateTimeFieldType type,\n                                DurationField unit, DurationField range)",
+      "source": "public PreciseDateTimeField(DateTimeFieldType type,\n                                DurationField unit, DurationField range) {\n        super(type, unit);\n\n        if (!range.isPrecise()) {\n            throw new IllegalArgumentException(\"Range duration field must be precise\");\n        }\n\n        long rangeMillis = range.getUnitMillis();\n        iRange = (int)(rangeMillis / getUnitMillis());\n        if (iRange < 2) {\n            throw new IllegalArgumentException(\"The effective range must be at least 2\");\n        }\n\n        iRangeField = range;\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/field/PreciseDateTimeField.java::PreciseDateTimeField.PreciseDateTimeField(DateTimeFieldType type,\n                                DurationField unit, DurationField range)\nSIGNATURE: public PreciseDateTimeField(DateTimeFieldType type,\n                                DurationField unit, DurationField range)",
+        "METHOD: src/main/java/org/joda/time/field/PreciseDateTimeField.java::PreciseDateTimeField.PreciseDateTimeField(DateTimeFieldType type,\n                                DurationField unit, DurationField range)\nSIGNATURE: public PreciseDateTimeField(DateTimeFieldType type,\n                                DurationField unit, DurationField range)\nSTRUCTURE (lossy):\nif (!range.isPrecise())\nCALL range.isPrecise()\nthrow new IllegalArgumentException(\"Range duration field must be precise\");\nlong rangeMillis = range.getUnitMillis();\nCALL range.getUnitMillis()\niRange = (int)(rangeMillis / getUnitMillis())\nCALL getUnitMillis()\nif (iRange < 2)\nthrow new IllegalArgumentException(\"The effective range must be at least 2\");\niRangeField = range",
+        "public PreciseDateTimeField(DateTimeFieldType type,\n                                DurationField unit, DurationField range) {\n        super(type, unit);\n\n        if (!range.isPrecise()) {\n            throw new IllegalArgumentException(\"Range duration field must be precise\");\n        }\n\n        long rangeMillis = range.getUnitMillis();\n        iRange = (int)(rangeMillis / getUnitMillis());\n        if (iRange < 2) {\n            throw new IllegalArgumentException(\"The effective range must be at least 2\");\n        }\n\n        iRangeField = range;\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6785714285714286,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 3.0,
+        "literal_count": 3.0,
+        "source_tokens": 139.0,
+        "l0_tokens": 86.0,
+        "l1_tokens": 184.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 3,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/chrono/BasicChronology.java::BasicChronology.getDateMidnightMillis(int year, int monthOfYear, int dayOfMonth)",
+      "source": "long getDateMidnightMillis(int year, int monthOfYear, int dayOfMonth) {\n        FieldUtils.verifyValueBounds(DateTimeFieldType.year(), year, getMinYear(), getMaxYear());\n        FieldUtils.verifyValueBounds(DateTimeFieldType.monthOfYear(), monthOfYear, 1, getMaxMonth(year));\n        FieldUtils.verifyValueBounds(DateTimeFieldType.dayOfMonth(), dayOfMonth, 1, getDaysInYearMonth(year, monthOfYear));\n        return getYearMonthDayMillis(year, monthOfYear, dayOfMonth);\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/chrono/BasicChronology.java::BasicChronology.getDateMidnightMillis(int year, int monthOfYear, int dayOfMonth)\nSIGNATURE: long getDateMidnightMillis(int year, int monthOfYear, int dayOfMonth)",
+        "METHOD: src/main/java/org/joda/time/chrono/BasicChronology.java::BasicChronology.getDateMidnightMillis(int year, int monthOfYear, int dayOfMonth)\nSIGNATURE: long getDateMidnightMillis(int year, int monthOfYear, int dayOfMonth)\nSTRUCTURE (lossy):\nCALL FieldUtils.verifyValueBounds(DateTimeFieldType.year(), year, getMinYear(), getMaxYear())\nCALL DateTimeFieldType.year()\nCALL getMinYear()\nCALL getMaxYear()\nCALL FieldUtils.verifyValueBounds(DateTimeFieldType.monthOfYear(), monthOfYear, 1, getMaxMonth(year))\nCALL DateTimeFieldType.monthOfYear()\nCALL getMaxMonth(year)\nCALL FieldUtils.verifyValueBounds(DateTimeFieldType.dayOfMonth(), dayOfMonth, 1, getDaysInYearMonth(year, monthOfYear))\nCALL DateTimeFieldType.dayOfMonth()\nCALL getDaysInYearMonth(year, monthOfYear)\nreturn getYearMonthDayMillis(year, monthOfYear, dayOfMonth);\nCALL getYearMonthDayMillis(year, monthOfYear, dayOfMonth)",
+        "long getDateMidnightMillis(int year, int monthOfYear, int dayOfMonth) {\n        FieldUtils.verifyValueBounds(DateTimeFieldType.year(), year, getMinYear(), getMaxYear());\n        FieldUtils.verifyValueBounds(DateTimeFieldType.monthOfYear(), monthOfYear, 1, getMaxMonth(year));\n        FieldUtils.verifyValueBounds(DateTimeFieldType.dayOfMonth(), dayOfMonth, 1, getDaysInYearMonth(year, monthOfYear));\n        return getYearMonthDayMillis(year, monthOfYear, dayOfMonth);\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6785714285714286,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 11.0,
+        "literal_count": 2.0,
+        "source_tokens": 119.0,
+        "l0_tokens": 57.0,
+        "l1_tokens": 222.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 11,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)",
+      "source": "protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type) {\n        super();\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start instanceof BaseLocal && end instanceof BaseLocal && start.getClass() == end.getClass()) {\n            // for performance\n            type = checkPeriodType(type);\n            long startMillis = ((BaseLocal) start).getLocalMillis();\n            long endMillis = ((BaseLocal) end).getLocalMillis();\n            Chronology chrono = start.getChronology();\n            chrono = DateTimeUtils.getChronology(chrono);\n            iType = type;\n            iValues = chrono.get(this, startMillis, endMillis);\n        } else {\n            if (start.size() != end.size()) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n            for (int i = 0, isize = start.size(); i < isize; i++) {\n                if (start.getFieldType(i) != end.getFieldType(i)) {\n                    throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n                }\n            }\n            if (DateTimeUtils.isContiguous(start) == false) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n            }\n            iType = checkPeriodType(type);\n            Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n            iValues = chrono.get(this, chrono.set(start, 0L), chrono.set(end, 0L));\n        }\n    }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)\nSIGNATURE: protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)",
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)\nSIGNATURE: protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)\nSTRUCTURE (lossy):\nif (start == null || end == null)\nthrow new IllegalArgumentException(\"ReadablePartial objects must not be null\");\nif (start instanceof BaseLocal && end instanceof BaseLocal && start.getClass() == end.getClass())\nCALL start.getClass()\nCALL end.getClass()\ntype = checkPeriodType(type)\nCALL checkPeriodType(type)\nlong startMillis = ((BaseLocal) start).getLocalMillis();\nCALL ((BaseLocal) start).getLocalMillis()\nlong endMillis = ((BaseLocal) end).getLocalMillis();\nCALL ((BaseLocal) end).getLocalMillis()\nChronology chrono = start.getChronology();\nCALL start.getChronology()\nchrono = DateTimeUtils.getChronology(chrono)\nCALL DateTimeUtils.getChronology(chrono)\niType = type\niValues = chrono.get(this, startMillis, endMillis)\nCALL chrono.get(this, startMillis, endMillis)\nif (start.size() != end.size())\nCALL start.size()\nCALL end.size()\nthrow new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\nfor (int i = 0, isize = start.size(); i < isize; i++)\nint i = 0, isize = start.size();\ni++\nif (start.getFieldType(i) != end.getFieldType(i))\nCALL start.getFieldType(i)\nCALL end.getFieldType(i)\nif (DateTimeUtils.isContiguous(start) == false)\nCALL DateTimeUtils.isContiguous(start)\nthrow new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\niType = checkPeriodType(type)\nChronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\nCALL DateTimeUtils.getChronology(start.getChronology()).withUTC()\nCALL DateTimeUtils.getChronology(start.getChronology())\niValues = chrono.get(this, chrono.set(start, 0L), chrono.set(end, 0L))\nCALL chrono.get(this, chrono.set(start, 0L), chrono.set(end, 0L))\nCALL chrono.set(start, 0L)\nCALL chrono.set(end, 0L)",
+        "protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type) {\n        super();\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start instanceof BaseLocal && end instanceof BaseLocal && start.getClass() == end.getClass()) {\n            // for performance\n            type = checkPeriodType(type);\n            long startMillis = ((BaseLocal) start).getLocalMillis();\n            long endMillis = ((BaseLocal) end).getLocalMillis();\n            Chronology chrono = start.getChronology();\n            chrono = DateTimeUtils.getChronology(chrono);\n            iType = type;\n            iValues = chrono.get(this, startMillis, endMillis);\n        } else {\n            if (start.size() != end.size()) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n            for (int i = 0, isize = start.size(); i < isize; i++) {\n                if (start.getFieldType(i) != end.getFieldType(i)) {\n                    throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n                }\n            }\n            if (DateTimeUtils.isContiguous(start) == false) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n            }\n            iType = checkPeriodType(type);\n            Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n            iValues = chrono.get(this, chrono.set(start, 0L), chrono.set(end, 0L));\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4528301886792453,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 21.0,
+        "literal_count": 9.0,
+        "source_tokens": 412.0,
+        "l0_tokens": 59.0,
+        "l1_tokens": 492.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 21,
+        "literal_count": 9
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/YearMonthDay.java::YearMonthDay.getField(int index, Chronology chrono)",
+      "source": "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            case DAY_OF_MONTH:\n                return chrono.dayOfMonth();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/YearMonthDay.java::YearMonthDay.getField(int index, Chronology chrono)\nSIGNATURE: protected DateTimeField getField(int index, Chronology chrono)",
+        "METHOD: src/main/java/org/joda/time/YearMonthDay.java::YearMonthDay.getField(int index, Chronology chrono)\nSIGNATURE: protected DateTimeField getField(int index, Chronology chrono)\nSTRUCTURE (lossy):\nswitch (index) { case YEAR: return chrono.year(); case MONTH_OF_YEAR: return chrono.monthOfYear(); case DAY_OF_MONTH: return chrono.dayOfMonth(); default: throw new IndexOutOfBoundsException(\"Invalid index: \" + index); }\nreturn chrono.year();\nCALL chrono.year()\nreturn chrono.monthOfYear();\nCALL chrono.monthOfYear()\nreturn chrono.dayOfMonth();\nCALL chrono.dayOfMonth()\nthrow new IndexOutOfBoundsException(\"Invalid index: \" + index);",
+        "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            case DAY_OF_MONTH:\n                return chrono.dayOfMonth();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7407407407407407,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 3.0,
+        "literal_count": 1.0,
+        "source_tokens": 105.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 159.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 3,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.standardPeriodIn(ReadablePeriod period, long millisPerUnit)",
+      "source": "protected static int standardPeriodIn(ReadablePeriod period, long millisPerUnit) {\n        if (period == null) {\n            return 0;\n        }\n        Chronology iso = ISOChronology.getInstanceUTC();\n        long duration = 0L;\n        for (int i = 0; i < period.size(); i++) {\n            int value = period.getValue(i);\n            if (value != 0) {\n                DurationField field = period.getFieldType(i).getField(iso);\n                if (field.isPrecise() == false) {\n                    throw new IllegalArgumentException(\n                            \"Cannot convert period to duration as \" + field.getName() +\n                            \" is not precise in the period \" + period);\n                }\n                duration = FieldUtils.safeAdd(duration, FieldUtils.safeMultiply(field.getUnitMillis(), value));\n            }\n        }\n        return FieldUtils.safeToInt(duration / millisPerUnit);\n    }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.standardPeriodIn(ReadablePeriod period, long millisPerUnit)\nSIGNATURE: protected static int standardPeriodIn(ReadablePeriod period, long millisPerUnit)",
+        "METHOD: src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.standardPeriodIn(ReadablePeriod period, long millisPerUnit)\nSIGNATURE: protected static int standardPeriodIn(ReadablePeriod period, long millisPerUnit)\nSTRUCTURE (lossy):\nif (period == null)\nreturn 0;\nChronology iso = ISOChronology.getInstanceUTC();\nCALL ISOChronology.getInstanceUTC()\nlong duration = 0L;\nfor (int i = 0; i < period.size(); i++)\nint i = 0;\nCALL period.size()\ni++\nint value = period.getValue(i);\nCALL period.getValue(i)\nif (value != 0)\nDurationField field = period.getFieldType(i).getField(iso);\nCALL period.getFieldType(i).getField(iso)\nCALL period.getFieldType(i)\nif (field.isPrecise() == false)\nCALL field.isPrecise()\nthrow new IllegalArgumentException( \"Cannot convert period to duration as \" + field.getName() + \" is not precise in the period \" + period);\nCALL field.getName()\nduration = FieldUtils.safeAdd(duration, FieldUtils.safeMultiply(field.getUnitMillis(), value))\nCALL FieldUtils.safeAdd(duration, FieldUtils.safeMultiply(field.getUnitMillis(), value))\nCALL FieldUtils.safeMultiply(field.getUnitMillis(), value)\nCALL field.getUnitMillis()\nreturn FieldUtils.safeToInt(duration / millisPerUnit);\nCALL FieldUtils.safeToInt(duration / millisPerUnit)",
+        "protected static int standardPeriodIn(ReadablePeriod period, long millisPerUnit) {\n        if (period == null) {\n            return 0;\n        }\n        Chronology iso = ISOChronology.getInstanceUTC();\n        long duration = 0L;\n        for (int i = 0; i < period.size(); i++) {\n            int value = period.getValue(i);\n            if (value != 0) {\n                DurationField field = period.getFieldType(i).getField(iso);\n                if (field.isPrecise() == false) {\n                    throw new IllegalArgumentException(\n                            \"Cannot convert period to duration as \" + field.getName() +\n                            \" is not precise in the period \" + period);\n                }\n                duration = FieldUtils.safeAdd(duration, FieldUtils.safeMultiply(field.getUnitMillis(), value));\n            }\n        }\n        return FieldUtils.safeToInt(duration / millisPerUnit);\n    }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 11.0,
+        "literal_count": 7.0,
+        "source_tokens": 230.0,
+        "l0_tokens": 61.0,
+        "l1_tokens": 317.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 11,
+        "literal_count": 7
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/tz/DateTimeZoneBuilder.java::DateTimeZoneBuilder.Rule.next(final long instant, int standardOffset, int saveMillis)",
+      "source": "public long next(final long instant, int standardOffset, int saveMillis) {\n            Chronology chrono = ISOChronology.getInstanceUTC();\n\n            final int wallOffset = standardOffset + saveMillis;\n            long testInstant = instant;\n\n            int year;\n            if (instant == Long.MIN_VALUE) {\n                year = Integer.MIN_VALUE;\n            } else {\n                year = chrono.year().get(instant + wallOffset);\n            }\n\n            if (year < iFromYear) {\n                // First advance instant to start of from year.\n                testInstant = chrono.year().set(0, iFromYear) - wallOffset;\n                // Back off one millisecond to account for next recurrence\n                // being exactly at the beginning of the year.\n                testInstant -= 1;\n            }\n\n            long next = iRecurrence.next(testInstant, standardOffset, saveMillis);\n\n            if (next > instant) {\n                year = chrono.year().get(next + wallOffset);\n                if (year > iToYear) {\n                    // Out of range, return original value.\n                    next = instant;\n                }\n            }\n\n            return next;\n        }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/tz/DateTimeZoneBuilder.java::DateTimeZoneBuilder.Rule.next(final long instant, int standardOffset, int saveMillis)\nSIGNATURE: public long next(final long instant, int standardOffset, int saveMillis)",
+        "METHOD: src/main/java/org/joda/time/tz/DateTimeZoneBuilder.java::DateTimeZoneBuilder.Rule.next(final long instant, int standardOffset, int saveMillis)\nSIGNATURE: public long next(final long instant, int standardOffset, int saveMillis)\nSTRUCTURE (lossy):\nChronology chrono = ISOChronology.getInstanceUTC();\nCALL ISOChronology.getInstanceUTC()\nfinal int wallOffset = standardOffset + saveMillis;\nlong testInstant = instant;\nint year;\nif (instant == Long.MIN_VALUE)\nyear = Integer.MIN_VALUE\nyear = chrono.year().get(instant + wallOffset)\nCALL chrono.year().get(instant + wallOffset)\nCALL chrono.year()\nif (year < iFromYear)\ntestInstant = chrono.year().set(0, iFromYear) - wallOffset\nCALL chrono.year().set(0, iFromYear)\ntestInstant -= 1\nlong next = iRecurrence.next(testInstant, standardOffset, saveMillis);\nCALL iRecurrence.next(testInstant, standardOffset, saveMillis)\nif (next > instant)\nyear = chrono.year().get(next + wallOffset)\nCALL chrono.year().get(next + wallOffset)\nif (year > iToYear)\nnext = instant\nreturn next;",
+        "public long next(final long instant, int standardOffset, int saveMillis) {\n            Chronology chrono = ISOChronology.getInstanceUTC();\n\n            final int wallOffset = standardOffset + saveMillis;\n            long testInstant = instant;\n\n            int year;\n            if (instant == Long.MIN_VALUE) {\n                year = Integer.MIN_VALUE;\n            } else {\n                year = chrono.year().get(instant + wallOffset);\n            }\n\n            if (year < iFromYear) {\n                // First advance instant to start of from year.\n                testInstant = chrono.year().set(0, iFromYear) - wallOffset;\n                // Back off one millisecond to account for next recurrence\n                // being exactly at the beginning of the year.\n                testInstant -= 1;\n            }\n\n            long next = iRecurrence.next(testInstant, standardOffset, saveMillis);\n\n            if (next > instant) {\n                year = chrono.year().get(next + wallOffset);\n                if (year > iToYear) {\n                    // Out of range, return original value.\n                    next = instant;\n                }\n            }\n\n            return next;\n        }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4339622641509434,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 8.0,
+        "literal_count": 2.0,
+        "source_tokens": 300.0,
+        "l0_tokens": 59.0,
+        "l1_tokens": 256.0,
+        "compression_ratio": 0.8533333333333334,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 8,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/AbstractInterval.java::AbstractInterval.checkInterval(long start, long end)",
+      "source": "protected void checkInterval(long start, long end) {\n        if (end < start) {\n            throw new IllegalArgumentException(\"The end instant must be greater or equal to the start\");\n        }\n    }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/AbstractInterval.java::AbstractInterval.checkInterval(long start, long end)\nSIGNATURE: protected void checkInterval(long start, long end)",
+        "METHOD: src/main/java/org/joda/time/base/AbstractInterval.java::AbstractInterval.checkInterval(long start, long end)\nSIGNATURE: protected void checkInterval(long start, long end)\nSTRUCTURE (lossy):\nif (end < start)\nthrow new IllegalArgumentException(\"The end instant must be greater or equal to the start\");",
+        "protected void checkInterval(long start, long end) {\n        if (end < start) {\n            throw new IllegalArgumentException(\"The end instant must be greater or equal to the start\");\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 0.0,
+        "literal_count": 1.0,
+        "source_tokens": 50.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 77.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 0,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/chrono/BasicChronology.java::BasicChronology.getDateTimeMillis(\n            int year, int monthOfYear, int dayOfMonth,\n            int hourOfDay, int minuteOfHour, int secondOfMinute, int millisOfSecond)",
+      "source": "public long getDateTimeMillis(\n            int year, int monthOfYear, int dayOfMonth,\n            int hourOfDay, int minuteOfHour, int secondOfMinute, int millisOfSecond)\n            throws IllegalArgumentException {\n        Chronology base;\n        if ((base = getBase()) != null) {\n            return base.getDateTimeMillis(year, monthOfYear, dayOfMonth,\n                                          hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);\n        }\n\n        FieldUtils.verifyValueBounds(DateTimeFieldType.hourOfDay(), hourOfDay, 0, 23);\n        FieldUtils.verifyValueBounds(DateTimeFieldType.minuteOfHour(), minuteOfHour, 0, 59);\n        FieldUtils.verifyValueBounds(DateTimeFieldType.secondOfMinute(), secondOfMinute, 0, 59);\n        FieldUtils.verifyValueBounds(DateTimeFieldType.millisOfSecond(), millisOfSecond, 0, 999);\n\n        return getDateMidnightMillis(year, monthOfYear, dayOfMonth)\n            + hourOfDay * DateTimeConstants.MILLIS_PER_HOUR\n            + minuteOfHour * DateTimeConstants.MILLIS_PER_MINUTE\n            + secondOfMinute * DateTimeConstants.MILLIS_PER_SECOND\n            + millisOfSecond;\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/chrono/BasicChronology.java::BasicChronology.getDateTimeMillis(\n            int year, int monthOfYear, int dayOfMonth,\n            int hourOfDay, int minuteOfHour, int secondOfMinute, int millisOfSecond)\nSIGNATURE: public long getDateTimeMillis(\n            int year, int monthOfYear, int dayOfMonth,\n            int hourOfDay, int minuteOfHour, int secondOfMinute, int millisOfSecond)\n            throws IllegalArgumentException",
+        "METHOD: src/main/java/org/joda/time/chrono/BasicChronology.java::BasicChronology.getDateTimeMillis(\n            int year, int monthOfYear, int dayOfMonth,\n            int hourOfDay, int minuteOfHour, int secondOfMinute, int millisOfSecond)\nSIGNATURE: public long getDateTimeMillis(\n            int year, int monthOfYear, int dayOfMonth,\n            int hourOfDay, int minuteOfHour, int secondOfMinute, int millisOfSecond)\n            throws IllegalArgumentException\nSTRUCTURE (lossy):\nChronology base;\nif ((base = getBase()) != null)\nbase = getBase()\nCALL getBase()\nreturn base.getDateTimeMillis(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);\nCALL base.getDateTimeMillis(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond)\nCALL FieldUtils.verifyValueBounds(DateTimeFieldType.hourOfDay(), hourOfDay, 0, 23)\nCALL DateTimeFieldType.hourOfDay()\nCALL FieldUtils.verifyValueBounds(DateTimeFieldType.minuteOfHour(), minuteOfHour, 0, 59)\nCALL DateTimeFieldType.minuteOfHour()\nCALL FieldUtils.verifyValueBounds(DateTimeFieldType.secondOfMinute(), secondOfMinute, 0, 59)\nCALL DateTimeFieldType.secondOfMinute()\nCALL FieldUtils.verifyValueBounds(DateTimeFieldType.millisOfSecond(), millisOfSecond, 0, 999)\nCALL DateTimeFieldType.millisOfSecond()\nreturn getDateMidnightMillis(year, monthOfYear, dayOfMonth) + hourOfDay * DateTimeConstants.MILLIS_PER_HOUR + minuteOfHour * DateTimeConstants.MILLIS_PER_MINUTE + secondOfMinute * DateTimeConstants.MILLIS_PER_SECOND + millisOfSecond;\nCALL getDateMidnightMillis(year, monthOfYear, dayOfMonth)",
+        "public long getDateTimeMillis(\n            int year, int monthOfYear, int dayOfMonth,\n            int hourOfDay, int minuteOfHour, int secondOfMinute, int millisOfSecond)\n            throws IllegalArgumentException {\n        Chronology base;\n        if ((base = getBase()) != null) {\n            return base.getDateTimeMillis(year, monthOfYear, dayOfMonth,\n                                          hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);\n        }\n\n        FieldUtils.verifyValueBounds(DateTimeFieldType.hourOfDay(), hourOfDay, 0, 23);\n        FieldUtils.verifyValueBounds(DateTimeFieldType.minuteOfHour(), minuteOfHour, 0, 59);\n        FieldUtils.verifyValueBounds(DateTimeFieldType.secondOfMinute(), secondOfMinute, 0, 59);\n        FieldUtils.verifyValueBounds(DateTimeFieldType.millisOfSecond(), millisOfSecond, 0, 999);\n\n        return getDateMidnightMillis(year, monthOfYear, dayOfMonth)\n            + hourOfDay * DateTimeConstants.MILLIS_PER_HOUR\n            + minuteOfHour * DateTimeConstants.MILLIS_PER_MINUTE\n            + secondOfMinute * DateTimeConstants.MILLIS_PER_SECOND\n            + millisOfSecond;\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6216216216216216,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 11.0,
+        "literal_count": 9.0,
+        "source_tokens": 285.0,
+        "l0_tokens": 117.0,
+        "l1_tokens": 401.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 11,
+        "literal_count": 9
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/MonthDay.java::MonthDay.getField(int index, Chronology chrono)",
+      "source": "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n        case MONTH_OF_YEAR:\n            return chrono.monthOfYear();\n        case DAY_OF_MONTH:\n            return chrono.dayOfMonth();\n        default:\n            throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/MonthDay.java::MonthDay.getField(int index, Chronology chrono)\nSIGNATURE: protected DateTimeField getField(int index, Chronology chrono)",
+        "METHOD: src/main/java/org/joda/time/MonthDay.java::MonthDay.getField(int index, Chronology chrono)\nSIGNATURE: protected DateTimeField getField(int index, Chronology chrono)\nSTRUCTURE (lossy):\nswitch (index) { case MONTH_OF_YEAR: return chrono.monthOfYear(); case DAY_OF_MONTH: return chrono.dayOfMonth(); default: throw new IndexOutOfBoundsException(\"Invalid index: \" + index); }\nreturn chrono.monthOfYear();\nCALL chrono.monthOfYear()\nreturn chrono.dayOfMonth();\nCALL chrono.dayOfMonth()\nthrow new IndexOutOfBoundsException(\"Invalid index: \" + index);",
+        "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n        case MONTH_OF_YEAR:\n            return chrono.monthOfYear();\n        case DAY_OF_MONTH:\n            return chrono.dayOfMonth();\n        default:\n            throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7407407407407407,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 84.0,
+        "l0_tokens": 43.0,
+        "l1_tokens": 138.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/tz/ZoneInfoCompiler.java::ZoneInfoCompiler.test(String id, DateTimeZone tz)",
+      "source": "static boolean test(String id, DateTimeZone tz) {\n        if (!id.equals(tz.getID())) {\n            return true;\n        }\n\n        // Test to ensure that reported transitions are not duplicated.\n\n        long millis = ISOChronology.getInstanceUTC().year().set(0, 1850);\n        long end = ISOChronology.getInstanceUTC().year().set(0, 2050);\n\n        int offset = tz.getOffset(millis);\n        String key = tz.getNameKey(millis);\n\n        List<Long> transitions = new ArrayList<Long>();\n\n        while (true) {\n            long next = tz.nextTransition(millis);\n            if (next == millis || next > end) {\n                break;\n            }\n\n            millis = next;\n\n            int nextOffset = tz.getOffset(millis);\n            String nextKey = tz.getNameKey(millis);\n\n            if (offset == nextOffset\n                && key.equals(nextKey)) {\n                System.out.println(\"*d* Error in \" + tz.getID() + \" \"\n                                   + new DateTime(millis,\n                                                  ISOChronology.getInstanceUTC()));\n                return false;\n            }\n\n            if (nextKey == null || (nextKey.length() < 3 && !\"??\".equals(nextKey))) {\n                System.out.println(\"*s* Error in \" + tz.getID() + \" \"\n                                   + new DateTime(millis,\n                                                  ISOChronology.getInstanceUTC())\n                                   + \", nameKey=\" + nextKey);\n                return false;\n            }\n\n            transitions.add(Long.valueOf(millis));\n\n            offset = nextOffset;\n            key = nextKey;\n        }\n\n        // Now verify that reverse transitions match up.\n\n        millis = ISOChronology.getInstanceUTC().year().set(0, 2050);\n        end = ISOChronology.getInstanceUTC().year().set(0, 1850);\n\n        for (int i=transitions.size(); --i>= 0; ) {\n            long prev = tz.previousTransition(millis);\n            if (prev == millis || prev < end) {\n                break;\n            }\n\n            millis = prev;\n\n            long trans = transitions.get(i).longValue();\n            \n            if (trans - 1 != millis) {\n                System.out.println(\"*r* Error in \" + tz.getID() + \" \"\n                                   + new DateTime(millis,\n                                                  ISOChronology.getInstanceUTC()) + \" != \"\n                                   + new DateTime(trans - 1,\n                                                  ISOChronology.getInstanceUTC()));\n                                   \n                return false;\n            }\n        }\n\n        return true;\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/tz/ZoneInfoCompiler.java::ZoneInfoCompiler.test(String id, DateTimeZone tz)\nSIGNATURE: static boolean test(String id, DateTimeZone tz)",
+        "METHOD: src/main/java/org/joda/time/tz/ZoneInfoCompiler.java::ZoneInfoCompiler.test(String id, DateTimeZone tz)\nSIGNATURE: static boolean test(String id, DateTimeZone tz)\nSTRUCTURE (lossy):\nif (!id.equals(tz.getID()))\nCALL id.equals(tz.getID())\nCALL tz.getID()\nreturn true;\nlong millis = ISOChronology.getInstanceUTC().year().set(0, 1850);\nCALL ISOChronology.getInstanceUTC().year().set(0, 1850)\nCALL ISOChronology.getInstanceUTC().year()\nCALL ISOChronology.getInstanceUTC()\nlong end = ISOChronology.getInstanceUTC().year().set(0, 2050);\nCALL ISOChronology.getInstanceUTC().year().set(0, 2050)\nint offset = tz.getOffset(millis);\nCALL tz.getOffset(millis)\nString key = tz.getNameKey(millis);\nCALL tz.getNameKey(millis)\nList<Long> transitions = new ArrayList<Long>();\nwhile (true)\nlong next = tz.nextTransition(millis);\nCALL tz.nextTransition(millis)\nif (next == millis || next > end)\nmillis = next\nint nextOffset = tz.getOffset(millis);\nString nextKey = tz.getNameKey(millis);\nif (offset == nextOffset && key.equals(nextKey))\nCALL key.equals(nextKey)\nCALL System.out.println(\"*d* Error in \" + tz.getID() + \" \" + new DateTime(millis, ISOChronology.getInstanceUTC()))\nreturn false;\nif (nextKey == null || (nextKey.length() < 3 && !\"??\".equals(nextKey)))\nCALL nextKey.length()\nCALL \"??\".equals(nextKey)\nCALL System.out.println(\"*s* Error in \" + tz.getID() + \" \" + new DateTime(millis, ISOChronology.getInstanceUTC()) + \", nameKey=\" + nextKey)\nCALL transitions.add(Long.valueOf(millis))\nCALL Long.valueOf(millis)\noffset = nextOffset\nkey = nextKey\nmillis = ISOChronology.getInstanceUTC().year().set(0, 2050)\nend = ISOChronology.getInstanceUTC().year().set(0, 1850)\nfor (int i=transitions.size(); --i>= 0; )\nint i=transitions.size();\nCALL transitions.size()\n--i\nlong prev = tz.previousTransition(millis);\nCALL tz.previousTransition(millis)\nif (prev == millis || prev < end)\nmillis = prev\nlong trans = transitions.get(i).longValue();\nCALL transitions.get(i).longValue()\nCALL transitions.get(i)\nif (trans - 1 != millis)\nCALL System.out.println(\"*r* Error in \" + tz.getID() + \" \" + new DateTime(millis, ISOChronology.getInstanceUTC()) + \" != \" + new DateTime(trans - 1, ISOChronology.getInstanceUTC()))",
+        "static boolean test(String id, DateTimeZone tz) {\n        if (!id.equals(tz.getID())) {\n            return true;\n        }\n\n        // Test to ensure that reported transitions are not duplicated.\n\n        long millis = ISOChronology.getInstanceUTC().year().set(0, 1850);\n        long end = ISOChronology.getInstanceUTC().year().set(0, 2050);\n\n        int offset = tz.getOffset(millis);\n        String key = tz.getNameKey(millis);\n\n        List<Long> transitions = new ArrayList<Long>();\n\n        while (true) {\n            long next = tz.nextTransition(millis);\n            if (next == millis || next > end) {\n                break;\n            }\n\n            millis = next;\n\n            int nextOffset = tz.getOffset(millis);\n            String nextKey = tz.getNameKey(millis);\n\n            if (offset == nextOffset\n                && key.equals(nextKey)) {\n                System.out.println(\"*d* Error in \" + tz.getID() + \" \"\n                                   + new DateTime(millis,\n                                                  ISOChronology.getInstanceUTC()));\n                return false;\n            }\n\n            if (nextKey == null || (nextKey.length() < 3 && !\"??\".equals(nextKey))) {\n                System.out.println(\"*s* Error in \" + tz.getID() + \" \"\n                                   + new DateTime(millis,\n                                                  ISOChronology.getInstanceUTC())\n                                   + \", nameKey=\" + nextKey);\n                return false;\n            }\n\n            transitions.add(Long.valueOf(millis));\n\n            offset = nextOffset;\n            key = nextKey;\n        }\n\n        // Now verify that reverse transitions match up.\n\n        millis = ISOChronology.getInstanceUTC().year().set(0, 2050);\n        end = ISOChronology.getInstanceUTC().year().set(0, 1850);\n\n        for (int i=transitions.size(); --i>= 0; ) {\n            long prev = tz.previousTransition(millis);\n            if (prev == millis || prev < end) {\n                break;\n            }\n\n            millis = prev;\n\n            long trans = transitions.get(i).longValue();\n            \n            if (trans - 1 != millis) {\n                System.out.println(\"*r* Error in \" + tz.getID() + \" \"\n                                   + new DateTime(millis,\n                                                  ISOChronology.getInstanceUTC()) + \" != \"\n                                   + new DateTime(trans - 1,\n                                                  ISOChronology.getInstanceUTC()));\n                                   \n                return false;\n            }\n        }\n\n        return true;\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3387096774193548,
+        "trace_match": 0.0,
+        "complexity": 9.0,
+        "call_count": 38.0,
+        "literal_count": 22.0,
+        "source_tokens": 662.0,
+        "l0_tokens": 43.0,
+        "l1_tokens": 548.0,
+        "compression_ratio": 0.8277945619335347,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 9,
+        "call_count": 38,
+        "literal_count": 22
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/LocalDate.java::LocalDate.getField(int index, Chronology chrono)",
+      "source": "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            case DAY_OF_MONTH:\n                return chrono.dayOfMonth();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/LocalDate.java::LocalDate.getField(int index, Chronology chrono)\nSIGNATURE: protected DateTimeField getField(int index, Chronology chrono)",
+        "METHOD: src/main/java/org/joda/time/LocalDate.java::LocalDate.getField(int index, Chronology chrono)\nSIGNATURE: protected DateTimeField getField(int index, Chronology chrono)\nSTRUCTURE (lossy):\nswitch (index) { case YEAR: return chrono.year(); case MONTH_OF_YEAR: return chrono.monthOfYear(); case DAY_OF_MONTH: return chrono.dayOfMonth(); default: throw new IndexOutOfBoundsException(\"Invalid index: \" + index); }\nreturn chrono.year();\nCALL chrono.year()\nreturn chrono.monthOfYear();\nCALL chrono.monthOfYear()\nreturn chrono.dayOfMonth();\nCALL chrono.dayOfMonth()\nthrow new IndexOutOfBoundsException(\"Invalid index: \" + index);",
+        "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            case DAY_OF_MONTH:\n                return chrono.dayOfMonth();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7142857142857143,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 3.0,
+        "literal_count": 1.0,
+        "source_tokens": 105.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 157.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 3,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/LocalDateTime.java::LocalDateTime.getField(int index, Chronology chrono)",
+      "source": "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            case DAY_OF_MONTH:\n                return chrono.dayOfMonth();\n            case MILLIS_OF_DAY:\n                return chrono.millisOfDay();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/LocalDateTime.java::LocalDateTime.getField(int index, Chronology chrono)\nSIGNATURE: protected DateTimeField getField(int index, Chronology chrono)",
+        "METHOD: src/main/java/org/joda/time/LocalDateTime.java::LocalDateTime.getField(int index, Chronology chrono)\nSIGNATURE: protected DateTimeField getField(int index, Chronology chrono)\nSTRUCTURE (lossy):\nswitch (index) { case YEAR: return chrono.year(); case MONTH_OF_YEAR: return chrono.monthOfYear(); case DAY_OF_MONTH: return chrono.dayOfMonth(); case MILLIS_OF_DAY: return chrono.millisOfDay(); default: throw new IndexOutOfBoundsException(\"Invalid index: \" + index); }\nreturn chrono.year();\nCALL chrono.year()\nreturn chrono.monthOfYear();\nCALL chrono.monthOfYear()\nreturn chrono.dayOfMonth();\nCALL chrono.dayOfMonth()\nreturn chrono.millisOfDay();\nCALL chrono.millisOfDay()\nthrow new IndexOutOfBoundsException(\"Invalid index: \" + index);",
+        "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            case DAY_OF_MONTH:\n                return chrono.dayOfMonth();\n            case MILLIS_OF_DAY:\n                return chrono.millisOfDay();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6896551724137931,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 4.0,
+        "literal_count": 1.0,
+        "source_tokens": 124.0,
+        "l0_tokens": 46.0,
+        "l1_tokens": 185.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 4,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/chrono/BasicChronology.java::BasicChronology.getDateTimeMillis(\n            int year, int monthOfYear, int dayOfMonth, int millisOfDay)",
+      "source": "public long getDateTimeMillis(\n            int year, int monthOfYear, int dayOfMonth, int millisOfDay)\n            throws IllegalArgumentException {\n        Chronology base;\n        if ((base = getBase()) != null) {\n            return base.getDateTimeMillis(year, monthOfYear, dayOfMonth, millisOfDay);\n        }\n\n        FieldUtils.verifyValueBounds\n            (DateTimeFieldType.millisOfDay(), millisOfDay, 0, DateTimeConstants.MILLIS_PER_DAY - 1);\n        return getDateMidnightMillis(year, monthOfYear, dayOfMonth) + millisOfDay;\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/chrono/BasicChronology.java::BasicChronology.getDateTimeMillis(\n            int year, int monthOfYear, int dayOfMonth, int millisOfDay)\nSIGNATURE: public long getDateTimeMillis(\n            int year, int monthOfYear, int dayOfMonth, int millisOfDay)\n            throws IllegalArgumentException",
+        "METHOD: src/main/java/org/joda/time/chrono/BasicChronology.java::BasicChronology.getDateTimeMillis(\n            int year, int monthOfYear, int dayOfMonth, int millisOfDay)\nSIGNATURE: public long getDateTimeMillis(\n            int year, int monthOfYear, int dayOfMonth, int millisOfDay)\n            throws IllegalArgumentException\nSTRUCTURE (lossy):\nChronology base;\nif ((base = getBase()) != null)\nbase = getBase()\nCALL getBase()\nreturn base.getDateTimeMillis(year, monthOfYear, dayOfMonth, millisOfDay);\nCALL base.getDateTimeMillis(year, monthOfYear, dayOfMonth, millisOfDay)\nCALL FieldUtils.verifyValueBounds (DateTimeFieldType.millisOfDay(), millisOfDay, 0, DateTimeConstants.MILLIS_PER_DAY - 1)\nCALL DateTimeFieldType.millisOfDay()\nreturn getDateMidnightMillis(year, monthOfYear, dayOfMonth) + millisOfDay;\nCALL getDateMidnightMillis(year, monthOfYear, dayOfMonth)",
+        "public long getDateTimeMillis(\n            int year, int monthOfYear, int dayOfMonth, int millisOfDay)\n            throws IllegalArgumentException {\n        Chronology base;\n        if ((base = getBase()) != null) {\n            return base.getDateTimeMillis(year, monthOfYear, dayOfMonth, millisOfDay);\n        }\n\n        FieldUtils.verifyValueBounds\n            (DateTimeFieldType.millisOfDay(), millisOfDay, 0, DateTimeConstants.MILLIS_PER_DAY - 1);\n        return getDateMidnightMillis(year, monthOfYear, dayOfMonth) + millisOfDay;\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6764705882352942,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 5.0,
+        "literal_count": 3.0,
+        "source_tokens": 135.0,
+        "l0_tokens": 83.0,
+        "l1_tokens": 217.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 5,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/field/PreciseDurationDateTimeField.java::PreciseDurationDateTimeField.PreciseDurationDateTimeField(DateTimeFieldType type, DurationField unit)",
+      "source": "public PreciseDurationDateTimeField(DateTimeFieldType type, DurationField unit) {\n        super(type);\n\n        if (!unit.isPrecise()) {\n            throw new IllegalArgumentException(\"Unit duration field must be precise\");\n        }\n\n        iUnitMillis = unit.getUnitMillis();\n        if (iUnitMillis < 1) {\n            throw new IllegalArgumentException(\"The unit milliseconds must be at least 1\");\n        }\n\n        iUnitField = unit;\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/field/PreciseDurationDateTimeField.java::PreciseDurationDateTimeField.PreciseDurationDateTimeField(DateTimeFieldType type, DurationField unit)\nSIGNATURE: public PreciseDurationDateTimeField(DateTimeFieldType type, DurationField unit)",
+        "METHOD: src/main/java/org/joda/time/field/PreciseDurationDateTimeField.java::PreciseDurationDateTimeField.PreciseDurationDateTimeField(DateTimeFieldType type, DurationField unit)\nSIGNATURE: public PreciseDurationDateTimeField(DateTimeFieldType type, DurationField unit)\nSTRUCTURE (lossy):\nif (!unit.isPrecise())\nCALL unit.isPrecise()\nthrow new IllegalArgumentException(\"Unit duration field must be precise\");\niUnitMillis = unit.getUnitMillis()\nCALL unit.getUnitMillis()\nif (iUnitMillis < 1)\nthrow new IllegalArgumentException(\"The unit milliseconds must be at least 1\");\niUnitField = unit",
+        "public PreciseDurationDateTimeField(DateTimeFieldType type, DurationField unit) {\n        super(type);\n\n        if (!unit.isPrecise()) {\n            throw new IllegalArgumentException(\"Unit duration field must be precise\");\n        }\n\n        iUnitMillis = unit.getUnitMillis();\n        if (iUnitMillis < 1) {\n            throw new IllegalArgumentException(\"The unit milliseconds must be at least 1\");\n        }\n\n        iUnitField = unit;\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.68,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 2.0,
+        "literal_count": 3.0,
+        "source_tokens": 112.0,
+        "l0_tokens": 68.0,
+        "l1_tokens": 147.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 2,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/YearMonth.java::YearMonth.getField(int index, Chronology chrono)",
+      "source": "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/YearMonth.java::YearMonth.getField(int index, Chronology chrono)\nSIGNATURE: protected DateTimeField getField(int index, Chronology chrono)",
+        "METHOD: src/main/java/org/joda/time/YearMonth.java::YearMonth.getField(int index, Chronology chrono)\nSIGNATURE: protected DateTimeField getField(int index, Chronology chrono)\nSTRUCTURE (lossy):\nswitch (index) { case YEAR: return chrono.year(); case MONTH_OF_YEAR: return chrono.monthOfYear(); default: throw new IndexOutOfBoundsException(\"Invalid index: \" + index); }\nreturn chrono.year();\nCALL chrono.year()\nreturn chrono.monthOfYear();\nCALL chrono.monthOfYear()\nthrow new IndexOutOfBoundsException(\"Invalid index: \" + index);",
+        "protected DateTimeField getField(int index, Chronology chrono) {\n        switch (index) {\n            case YEAR:\n                return chrono.year();\n            case MONTH_OF_YEAR:\n                return chrono.monthOfYear();\n            default:\n                throw new IndexOutOfBoundsException(\"Invalid index: \" + index);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7307692307692307,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 86.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 132.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/YearMonthDay.java::YearMonthDay.fromDateFields(Date date)",
+      "source": "public static YearMonthDay fromDateFields(Date date) {\n        if (date == null) {\n            throw new IllegalArgumentException(\"The date must not be null\");\n        }\n        return new YearMonthDay(\n            date.getYear() + 1900,\n            date.getMonth() + 1,\n            date.getDate()\n        );\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/YearMonthDay.java::YearMonthDay.fromDateFields(Date date)\nSIGNATURE: public static YearMonthDay fromDateFields(Date date)",
+        "METHOD: src/main/java/org/joda/time/YearMonthDay.java::YearMonthDay.fromDateFields(Date date)\nSIGNATURE: public static YearMonthDay fromDateFields(Date date)\nSTRUCTURE (lossy):\nif (date == null)\nthrow new IllegalArgumentException(\"The date must not be null\");\nreturn new YearMonthDay( date.getYear() + 1900, date.getMonth() + 1, date.getDate() );\nCALL date.getYear()\nCALL date.getMonth()\nCALL date.getDate()",
+        "public static YearMonthDay fromDateFields(Date date) {\n        if (date == null) {\n            throw new IllegalArgumentException(\"The date must not be null\");\n        }\n        return new YearMonthDay(\n            date.getYear() + 1900,\n            date.getMonth() + 1,\n            date.getDate()\n        );\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.72,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 3.0,
+        "literal_count": 4.0,
+        "source_tokens": 79.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 102.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 3,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/YearMonthDay.java::YearMonthDay.plusMonths(int months)",
+      "source": "public YearMonthDay plusMonths(int months) {\n        return withFieldAdded(DurationFieldType.months(), months);\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/YearMonthDay.java::YearMonthDay.plusMonths(int months)\nSIGNATURE: public YearMonthDay plusMonths(int months)",
+        "METHOD: src/main/java/org/joda/time/YearMonthDay.java::YearMonthDay.plusMonths(int months)\nSIGNATURE: public YearMonthDay plusMonths(int months)\nSTRUCTURE (lossy):\nreturn withFieldAdded(DurationFieldType.months(), months);\nCALL withFieldAdded(DurationFieldType.months(), months)\nCALL DurationFieldType.months()",
+        "public YearMonthDay plusMonths(int months) {\n        return withFieldAdded(DurationFieldType.months(), months);\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8947368421052632,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 30.0,
+        "l0_tokens": 36.0,
+        "l1_tokens": 78.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Partial.java::Partial.Partial(DateTimeFieldType[] types, int[] values, Chronology chronology)",
+      "source": "public Partial(DateTimeFieldType[] types, int[] values, Chronology chronology) {\n        super();\n        chronology = DateTimeUtils.getChronology(chronology).withUTC();\n        iChronology = chronology;\n        if (types == null) {\n            throw new IllegalArgumentException(\"Types array must not be null\");\n        }\n        if (values == null) {\n            throw new IllegalArgumentException(\"Values array must not be null\");\n        }\n        if (values.length != types.length) {\n            throw new IllegalArgumentException(\"Values array must be the same length as the types array\");\n        }\n        if (types.length == 0) {\n            iTypes = types;\n            iValues = values;\n            return;\n        }\n        for (int i = 0; i < types.length; i++) {\n            if (types[i] == null) {\n                throw new IllegalArgumentException(\"Types array must not contain null: index \" + i);\n            }\n        }\n        DurationField lastUnitField = null;\n        for (int i = 0; i < types.length; i++) {\n            DateTimeFieldType loopType = types[i];\n            DurationField loopUnitField = loopType.getDurationType().getField(iChronology);\n            if (i > 0) {\n                int compare = lastUnitField.compareTo(loopUnitField);\n                if (compare < 0 || (compare != 0 && loopUnitField.isSupported() == false)) {\n                    throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                            types[i - 1].getName() + \" < \" + loopType.getName());\n                } else if (compare == 0) {\n                    if (types[i - 1].getRangeDurationType() == null) {\n                        if (loopType.getRangeDurationType() == null) {\n                            throw new IllegalArgumentException(\"Types array must not contain duplicate: \" + loopType.getName());\n                        }\n                    } else {\n                        if (loopType.getRangeDurationType() == null) {\n                            throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                                    types[i - 1].getName() + \" < \" + loopType.getName());\n                        }\n                        DurationField lastRangeField = types[i - 1].getRangeDurationType().getField(iChronology);\n                        DurationField loopRangeField = loopType.getRangeDurationType().getField(iChronology);\n                        if (lastRangeField.compareTo(loopRangeField) < 0) {\n                            throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                                    types[i - 1].getName() + \" < \" + loopType.getName());\n                        }\n                        if (lastRangeField.compareTo(loopRangeField) == 0) {\n                            throw new IllegalArgumentException(\"Types array must not contain duplicate: \" + loopType.getName());\n                        }\n                    }\n                }\n            }\n            lastUnitField = loopUnitField;\n        }\n        \n        iTypes = (DateTimeFieldType[]) types.clone();\n        chronology.validate(this, values);\n        iValues = (int[]) values.clone();\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Partial.java::Partial.Partial(DateTimeFieldType[] types, int[] values, Chronology chronology)\nSIGNATURE: public Partial(DateTimeFieldType[] types, int[] values, Chronology chronology)",
+        "METHOD: src/main/java/org/joda/time/Partial.java::Partial.Partial(DateTimeFieldType[] types, int[] values, Chronology chronology)\nSIGNATURE: public Partial(DateTimeFieldType[] types, int[] values, Chronology chronology)\nSTRUCTURE (lossy):\nchronology = DateTimeUtils.getChronology(chronology).withUTC()\nCALL DateTimeUtils.getChronology(chronology).withUTC()\nCALL DateTimeUtils.getChronology(chronology)\niChronology = chronology\nif (types == null)\nthrow new IllegalArgumentException(\"Types array must not be null\");\nif (values == null)\nthrow new IllegalArgumentException(\"Values array must not be null\");\nif (values.length != types.length)\nthrow new IllegalArgumentException(\"Values array must be the same length as the types array\");\nif (types.length == 0)\niTypes = types\niValues = values\nreturn;\nfor (int i = 0; i < types.length; i++)\nint i = 0;\ni++\nif (types[i] == null)\nthrow new IllegalArgumentException(\"Types array must not contain null: index \" + i);\nDurationField lastUnitField = null;\nDateTimeFieldType loopType = types[i];\nDurationField loopUnitField = loopType.getDurationType().getField(iChronology);\nCALL loopType.getDurationType().getField(iChronology)\nCALL loopType.getDurationType()\nif (i > 0)\nint compare = lastUnitField.compareTo(loopUnitField);\nCALL lastUnitField.compareTo(loopUnitField)\nif (compare < 0 || (compare != 0 && loopUnitField.isSupported() == false))\nCALL loopUnitField.isSupported()\nthrow new IllegalArgumentException(\"Types array must be in order largest-smallest: \" + types[i - 1].getName() + \" < \" + loopType.getName());\nCALL types[i - 1].getName()\nCALL loopType.getName()\nif (compare == 0)\nif (types[i - 1].getRangeDurationType() == null)\nCALL types[i - 1].getRangeDurationType()\nif (loopType.getRangeDurationType() == null)\nCALL loopType.getRangeDurationType()\nthrow new IllegalArgumentException(\"Types array must not contain duplicate: \" + loopType.getName());\nDurationField lastRangeField = types[i - 1].getRangeDurationType().getField(iChronology);\nCALL types[i - 1].getRangeDurationType().getField(iChronology)\nDurationField loopRangeField = loopType.getRangeDurationType().getField(iChronology);\nCALL loopType.getRangeDurationType().getField(iChronology)\nif \n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public Partial(DateTimeFieldType[] types, int[] values, Chronology chronology) {\n        super();\n        chronology = DateTimeUtils.getChronology(chronology).withUTC();\n        iChronology = chronology;\n        if (types == null) {\n            throw new IllegalArgumentException(\"Types array must not be null\");\n        }\n        if (values == null) {\n            throw new IllegalArgumentException(\"Values array must not be null\");\n        }\n        if (values.length != types.length) {\n            throw new IllegalArgumentException(\"Values array must be the same length as the types array\");\n        }\n        if (types.length == 0) {\n            iTypes = types;\n            iValues = values;\n            return;\n        }\n        for (int i = 0; i < types.length; i++) {\n            if (types[i] == null) {\n                throw new IllegalArgumentException(\"Types array must not contain null: index \" + i);\n            }\n        }\n        DurationField lastUnitField = null;\n        for (int i = 0; i < types.length; i++) {\n            DateTimeFieldType loopType = types[i];\n            DurationField loopUnitField = loopType.getDurationType().getField(iChronology);\n            if (i > 0) {\n                int compare = lastUnitField.compareTo(loopUnitField);\n                if (compare < 0 || (compare != 0 && loopUnitField.isSupported() == false)) {\n                    throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                            types[i - 1].getName() + \" < \" + loopType.getName());\n                } else if (compare == 0) {\n                    if (types[i - 1].getRangeDurationType() == null) {\n                        if (loopType.getRangeDurationType() == null) {\n                            throw new IllegalArgumentException(\"Types array must not contain duplicate: \" + loopType.getName());\n                        }\n                    } else {\n                        if (loopType.getRangeDurationType() == null) {\n                            throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                                    types[i - 1].getName() + \" < \" + loopType.getName());\n                        }\n                        DurationField lastRangeField = types[i - 1].getRangeDurationType().getField(iChronology);\n                        DurationField loopRangeField = loopType.getRangeDurationType().getField(iChronology);\n                        if (lastRangeField.compareTo(loopRangeField) < 0) {\n                            throw new IllegalArgumentException(\"Types array must be in order largest-smallest: \" +\n                                    types[i - 1].getName() + \" < \" + loopType.getName());\n                        }\n                        if (lastRangeField.compareTo(loopRangeField) == 0) {\n                            throw new IllegalArgumentException(\"Types array must not contain duplicate: \" + loopType.getName());\n                        }\n                    }\n                }\n            }\n            lastUnitField = loopUnitField;\n        }\n        \n        iTypes = (DateTimeFieldType[]) types.clone();\n        chronology.validate(this, values);\n        iValues = (int[]) values.clone();\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.41509433962264153,
+        "trace_match": 0.0,
+        "complexity": 16.0,
+        "call_count": 26.0,
+        "literal_count": 33.0,
+        "source_tokens": 811.0,
+        "l0_tokens": 55.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.7016029593094945,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 16,
+        "call_count": 26,
+        "literal_count": 33
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Period.java::Period.fieldDifference(ReadablePartial start, ReadablePartial end)",
+      "source": "public static Period fieldDifference(ReadablePartial start, ReadablePartial end) {\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start.size() != end.size()) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n        }\n        DurationFieldType[] types = new DurationFieldType[start.size()];\n        int[] values = new int[start.size()];\n        for (int i = 0, isize = start.size(); i < isize; i++) {\n            if (start.getFieldType(i) != end.getFieldType(i)) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n            types[i] = start.getFieldType(i).getDurationType();\n            if (i > 0 && types[i - 1] == types[i]) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must not have overlapping fields\");\n            }\n            values[i] = end.getValue(i) - start.getValue(i);\n        }\n        return new Period(values, PeriodType.forFields(types));\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.fieldDifference(ReadablePartial start, ReadablePartial end)\nSIGNATURE: public static Period fieldDifference(ReadablePartial start, ReadablePartial end)",
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.fieldDifference(ReadablePartial start, ReadablePartial end)\nSIGNATURE: public static Period fieldDifference(ReadablePartial start, ReadablePartial end)\nSTRUCTURE (lossy):\nif (start == null || end == null)\nthrow new IllegalArgumentException(\"ReadablePartial objects must not be null\");\nif (start.size() != end.size())\nCALL start.size()\nCALL end.size()\nthrow new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\nDurationFieldType[] types = new DurationFieldType[start.size()];\nint[] values = new int[start.size()];\nfor (int i = 0, isize = start.size(); i < isize; i++)\nint i = 0, isize = start.size();\ni++\nif (start.getFieldType(i) != end.getFieldType(i))\nCALL start.getFieldType(i)\nCALL end.getFieldType(i)\ntypes[i] = start.getFieldType(i).getDurationType()\nCALL start.getFieldType(i).getDurationType()\nif (i > 0 && types[i - 1] == types[i])\nthrow new IllegalArgumentException(\"ReadablePartial objects must not have overlapping fields\");\nvalues[i] = end.getValue(i) - start.getValue(i)\nCALL end.getValue(i)\nCALL start.getValue(i)\nreturn new Period(values, PeriodType.forFields(types));\nCALL PeriodType.forFields(types)",
+        "public static Period fieldDifference(ReadablePartial start, ReadablePartial end) {\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start.size() != end.size()) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n        }\n        DurationFieldType[] types = new DurationFieldType[start.size()];\n        int[] values = new int[start.size()];\n        for (int i = 0, isize = start.size(); i < isize; i++) {\n            if (start.getFieldType(i) != end.getFieldType(i)) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n            types[i] = start.getFieldType(i).getDurationType();\n            if (i > 0 && types[i - 1] == types[i]) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must not have overlapping fields\");\n            }\n            values[i] = end.getValue(i) - start.getValue(i);\n        }\n        return new Period(values, PeriodType.forFields(types));\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4878048780487805,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 12.0,
+        "literal_count": 9.0,
+        "source_tokens": 287.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 303.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 12,
+        "literal_count": 9
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(long duration)",
+      "source": "protected BasePeriod(long duration) {\n        super();\n        // bug [3264409]\n        // calculation uses period type from a period object (bad design)\n        // thus we use a dummy period object with the time type\n        iType = PeriodType.standard();\n        int[] values = ISOChronology.getInstanceUTC().get(DUMMY_PERIOD, duration);\n        iValues = new int[8];\n        System.arraycopy(values, 0, iValues, 4, 4);\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(long duration)\nSIGNATURE: protected BasePeriod(long duration)",
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(long duration)\nSIGNATURE: protected BasePeriod(long duration)\nSTRUCTURE (lossy):\niType = PeriodType.standard()\nCALL PeriodType.standard()\nint[] values = ISOChronology.getInstanceUTC().get(DUMMY_PERIOD, duration);\nCALL ISOChronology.getInstanceUTC().get(DUMMY_PERIOD, duration)\nCALL ISOChronology.getInstanceUTC()\niValues = new int[8]\nCALL System.arraycopy(values, 0, iValues, 4, 4)",
+        "protected BasePeriod(long duration) {\n        super();\n        // bug [3264409]\n        // calculation uses period type from a period object (bad design)\n        // thus we use a dummy period object with the time type\n        iType = PeriodType.standard();\n        int[] values = ISOChronology.getInstanceUTC().get(DUMMY_PERIOD, duration);\n        iValues = new int[8];\n        System.arraycopy(values, 0, iValues, 4, 4);\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5428571428571428,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 4.0,
+        "literal_count": 4.0,
+        "source_tokens": 107.0,
+        "l0_tokens": 36.0,
+        "l1_tokens": 116.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 4,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/chrono/BasicDayOfMonthDateTimeField.java::BasicDayOfMonthDateTimeField.getMaximumValueForSet(long instant, int value)",
+      "source": "protected int getMaximumValueForSet(long instant, int value) {\n        return iChronology.getDaysInMonthMaxForSet(instant, value);\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/chrono/BasicDayOfMonthDateTimeField.java::BasicDayOfMonthDateTimeField.getMaximumValueForSet(long instant, int value)\nSIGNATURE: protected int getMaximumValueForSet(long instant, int value)",
+        "METHOD: src/main/java/org/joda/time/chrono/BasicDayOfMonthDateTimeField.java::BasicDayOfMonthDateTimeField.getMaximumValueForSet(long instant, int value)\nSIGNATURE: protected int getMaximumValueForSet(long instant, int value)\nSTRUCTURE (lossy):\nreturn iChronology.getDaysInMonthMaxForSet(instant, value);\nCALL iChronology.getDaysInMonthMaxForSet(instant, value)",
+        "protected int getMaximumValueForSet(long instant, int value) {\n        return iChronology.getDaysInMonthMaxForSet(instant, value);\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.72,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 34.0,
+        "l0_tokens": 57.0,
+        "l1_tokens": 91.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/chrono/ZonedChronology.java::ZonedChronology.getInstance(Chronology base, DateTimeZone zone)",
+      "source": "public static ZonedChronology getInstance(Chronology base, DateTimeZone zone) {\n        if (base == null) {\n            throw new IllegalArgumentException(\"Must supply a chronology\");\n        }\n        base = base.withUTC();\n        if (base == null) {\n            throw new IllegalArgumentException(\"UTC chronology must not be null\");\n        }\n        if (zone == null) {\n            throw new IllegalArgumentException(\"DateTimeZone must not be null\");\n        }\n        return new ZonedChronology(base, zone);\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/chrono/ZonedChronology.java::ZonedChronology.getInstance(Chronology base, DateTimeZone zone)\nSIGNATURE: public static ZonedChronology getInstance(Chronology base, DateTimeZone zone)",
+        "METHOD: src/main/java/org/joda/time/chrono/ZonedChronology.java::ZonedChronology.getInstance(Chronology base, DateTimeZone zone)\nSIGNATURE: public static ZonedChronology getInstance(Chronology base, DateTimeZone zone)\nSTRUCTURE (lossy):\nif (base == null)\nthrow new IllegalArgumentException(\"Must supply a chronology\");\nbase = base.withUTC()\nCALL base.withUTC()\nthrow new IllegalArgumentException(\"UTC chronology must not be null\");\nif (zone == null)\nthrow new IllegalArgumentException(\"DateTimeZone must not be null\");\nreturn new ZonedChronology(base, zone);",
+        "public static ZonedChronology getInstance(Chronology base, DateTimeZone zone) {\n        if (base == null) {\n            throw new IllegalArgumentException(\"Must supply a chronology\");\n        }\n        base = base.withUTC();\n        if (base == null) {\n            throw new IllegalArgumentException(\"UTC chronology must not be null\");\n        }\n        if (zone == null) {\n            throw new IllegalArgumentException(\"DateTimeZone must not be null\");\n        }\n        return new ZonedChronology(base, zone);\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6428571428571429,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 1.0,
+        "literal_count": 6.0,
+        "source_tokens": 130.0,
+        "l0_tokens": 55.0,
+        "l1_tokens": 140.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 1,
+        "literal_count": 6
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/chrono/BasicWeekyearDateTimeField.java::BasicWeekyearDateTimeField.set(long instant, int year)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/field/PreciseDateTimeField.java::PreciseDateTimeField.PreciseDateTimeField(DateTimeFieldType type,\n                                DurationField unit, DurationField range)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/chrono/BasicChronology.java::BasicChronology.getDateMidnightMillis(int year, int monthOfYear, int dayOfMonth)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/YearMonthDay.java::YearMonthDay.getField(int index, Chronology chrono)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.standardPeriodIn(ReadablePeriod period, long millisPerUnit)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/tz/DateTimeZoneBuilder.java::DateTimeZoneBuilder.Rule.next(final long instant, int standardOffset, int saveMillis)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/AbstractInterval.java::AbstractInterval.checkInterval(long start, long end)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/chrono/BasicChronology.java::BasicChronology.getDateTimeMillis(\n            int year, int monthOfYear, int dayOfMonth,\n            int hourOfDay, int minuteOfHour, int secondOfMinute, int millisOfSecond)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/MonthDay.java::MonthDay.getField(int index, Chronology chrono)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/tz/ZoneInfoCompiler.java::ZoneInfoCompiler.test(String id, DateTimeZone tz)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/LocalDate.java::LocalDate.getField(int index, Chronology chrono)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/LocalDateTime.java::LocalDateTime.getField(int index, Chronology chrono)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/chrono/BasicChronology.java::BasicChronology.getDateTimeMillis(\n            int year, int monthOfYear, int dayOfMonth, int millisOfDay)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/field/PreciseDurationDateTimeField.java::PreciseDurationDateTimeField.PreciseDurationDateTimeField(DateTimeFieldType type, DurationField unit)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/YearMonth.java::YearMonth.getField(int index, Chronology chrono)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/YearMonthDay.java::YearMonthDay.fromDateFields(Date date)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/YearMonthDay.java::YearMonthDay.plusMonths(int months)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Partial.java::Partial.Partial(DateTimeFieldType[] types, int[] values, Chronology chronology)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Period.java::Period.fieldDifference(ReadablePartial start, ReadablePartial end)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(long duration)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/chrono/BasicDayOfMonthDateTimeField.java::BasicDayOfMonthDateTimeField.getMaximumValueForSet(long instant, int value)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/chrono/ZonedChronology.java::ZonedChronology.getInstance(Chronology base, DateTimeZone zone)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 4081,
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "cc6098fb8ff71a621ecef732a1c19c17b2a0e68355e1a92cb342a8ccc4ae4e3a",
+  "evidence_sha256": "d049754333b0d7cb9e7049d12239734bd9080900f249452fa2979f0b731f1ab0"
+}
