@@ -99,24 +99,42 @@ def render_focused(graph, target, ids, selector="focused_compact_v1"):
         }
         for (owner, path), units in sorted(grouped.items())
     ]
+    compressed = selector in {
+        "focused_bounded_failure_v2", "test_aware_bounded_failure_v2"
+    }
     payload = {
-        "schema": "graft-focused-v1" if selector == "focused_compact_v1" else "graft-test-aware-v1",
+        "schema": (
+            "graft-focused-bounded-failure-v2"
+            if selector == "focused_bounded_failure_v2"
+            else "graft-test-aware-bounded-failure-v2"
+            if selector == "test_aware_bounded_failure_v2"
+            else "graft-focused-v1" if selector == "focused_compact_v1"
+            else "graft-test-aware-v1"
+        ),
         "target": target,
-        "failure": "\n".join(n.text for n in failures),
         "sources": sources,
     }
-    if selector == "test_aware_compact_v1":
+    full_failure = "\\n".join(n.text for n in failures)
+    if compressed:
+        from rave_fl.graft.failure_excerpt import bounded_failure_excerpt
+        payload["failure_excerpt"] = bounded_failure_excerpt(full_failure)
+    else:
+        payload["failure"] = full_failure
+    if selector in {"test_aware_compact_v1", "test_aware_bounded_failure_v2"}:
         # Derived only from the same mandatory failure node; no gold, unseen
         # tests, or model predictions. The prompt explicitly marks uncertainty.
         from rave_fl.graft.test_aware import failure_signal
         source = failures[0].origin.extractor if failures else ""
-        payload["test_signal"] = failure_signal(payload["failure"], source)
+        payload["test_signal"] = failure_signal(full_failure, source)
     return json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
 def package(graph,target,ids,budget,counter=None,selector='manual',scores=None,diagnostics=None,reason=''):
     if type(budget) is not int or budget<1:raise ValueError('Positive input budget required')
-    counter=counter or ByteCounter();ids=tuple(sorted(set(ids)));text=(render_focused(graph,target,ids,selector) if selector in {"focused_compact_v1","test_aware_compact_v1"} else render(graph,target,ids))
+    counter=counter or ByteCounter();ids=tuple(sorted(set(ids)));text=(render_focused(graph,target,ids,selector) if selector in {
+        "focused_compact_v1", "test_aware_compact_v1",
+        "focused_bounded_failure_v2", "test_aware_bounded_failure_v2",
+    } else render(graph,target,ids))
     units=counter.count([{'role':'system','content':SYSTEM},{'role':'user','content':text}])
     if type(units) is not int or units<0:raise ValueError('Counter must return a nonnegative integer')
     complete=set(mandatory_ids(graph,target))<=set(ids)
