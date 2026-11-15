@@ -1,0 +1,1318 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Lang-27",
+    "repository": "Lang",
+    "language": "java",
+    "revision": "3f01241faadc0978da9cb99fed4be5bf845c9b7e",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_17/prepared/checkouts/Lang-27",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Lang-27\nEXECUTED BUGGY TEST: org.apache.commons.lang3.math.NumberUtilsTest::testCreateNumber\nTEST SOURCE: src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java\nTEST SOURCE SHA256: 91b392f34c3b15431a1c26cfdbf29fb78ea5699a6247a140a2c5134eef962ffd\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testCreateNumber() {\n        // a lot of things can go wrong\n        assertEquals(\"createNumber(String) 1 failed\", new Float(\"1234.5\"), NumberUtils.createNumber(\"1234.5\"));\n        assertEquals(\"createNumber(String) 2 failed\", new Integer(\"12345\"), NumberUtils.createNumber(\"12345\"));\n        assertEquals(\"createNumber(String) 3 failed\", new Double(\"1234.5\"), NumberUtils.createNumber(\"1234.5D\"));\n        assertEquals(\"createNumber(String) 3 failed\", new Double(\"1234.5\"), NumberUtils.createNumber(\"1234.5d\"));\n        assertEquals(\"createNumber(String) 4 failed\", new Float(\"1234.5\"), NumberUtils.createNumber(\"1234.5F\"));\n        assertEquals(\"createNumber(String) 4 failed\", new Float(\"1234.5\"), NumberUtils.createNumber(\"1234.5f\"));\n        assertEquals(\"createNumber(String) 5 failed\", new Long(Integer.MAX_VALUE + 1L), NumberUtils.createNumber(\"\"\n            + (Integer.MAX_VALUE + 1L)));\n        assertEquals(\"createNumber(String) 6 failed\", new Long(12345), NumberUtils.createNumber(\"12345L\"));\n        assertEquals(\"createNumber(String) 6 failed\", new Long(12345), NumberUtils.createNumber(\"12345l\"));\n        assertEquals(\"createNumber(String) 7 failed\", new Float(\"-1234.5\"), NumberUtils.createNumber(\"-1234.5\"));\n        assertEquals(\"createNumber(String) 8 failed\", new Integer(\"-12345\"), NumberUtils.createNumber(\"-12345\"));\n        assertTrue(\"createNumber(String) 9 failed\", 0xFADE == NumberUtils.createNumber(\"0xFADE\").intValue());\n        assertTrue(\"createNumber(String) 10 failed\", -0xFADE == NumberUtils.createNumber(\"-0xFADE\").intValue());\n        assertEquals(\"createNumber(String) 11 failed\", new Double(\"1.1E200\"), NumberUtils.createNumber(\"1.1E200\"));\n        assertEquals(\"createNumber(String) 12 failed\", new Float(\"1.1E20\"), NumberUtils.createNumber(\"1.1E20\"));\n        assertEquals(\"createNumber(String) 13 failed\", new Double(\"-1.1E200\"), NumberUtils.createNumber(\"-1.1E200\"));\n        assertEquals(\"createNumber(String) 14 failed\", new Double(\"1.1E-200\"), NumberUtils.createNumber(\"1.1E-200\"));\n        assertEquals(\"createNumber(null) failed\", null, NumberUtils.createNumber(null));\n        assertEquals(\"createNumber(String) failed\", new BigInteger(\"12345678901234567890\"), NumberUtils\n                .createNumber(\"12345678901234567890L\"));\n\n        // jdk 1.2 doesn't support this. unsure about jdk 1.2.2\n        if (SystemUtils.isJavaVersionAtLeast(1.3f)) {\n            assertEquals(\"createNumber(String) 15 failed\", new BigDecimal(\"1.1E-700\"), NumberUtils\n                    .createNumber(\"1.1E-700F\"));\n        }\n        assertEquals(\"createNumber(String) 16 failed\", new Long(\"10\" + Integer.MAX_VALUE), NumberUtils\n                .createNumber(\"10\" + Integer.MAX_VALUE + \"L\"));\n        assertEquals(\"createNumber(String) 17 failed\", new Long(\"10\" + Integer.MAX_VALUE), NumberUtils\n                .createNumber(\"10\" + Integer.MAX_VALUE));\n        assertEquals(\"createNumber(String) 18 failed\", new BigInteger(\"10\" + Long.MAX_VALUE), NumberUtils\n                .createNumber(\"10\" + Long.MAX_VALUE));\n\n        // LANG-521\n        assertEquals(\"createNumber(String) LANG-521 failed\", new Float(\"2.\"), NumberUtils.createNumber(\"2.\"));\n\n        // LANG-638\n        assertFalse(\"createNumber(String) succeeded\", checkCreateNumber(\"1eE\"));\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.apache.commons.lang3.math.NumberUtilsTest::testCreateNumber\njava.lang.StringIndexOutOfBoundsException: begin 0, end 4, length 3\n\tat java.base/java.lang.String.checkBoundsBeginEnd(String.java:3319)\n\tat java.base/java.lang.String.substring(String.java:1874)\n\tat org.apache.commons.lang3.math.NumberUtils.createNumber(NumberUtils.java:489)\n\tat org.apache.commons.lang3.math.NumberUtilsTest.checkCreateNumber(NumberUtilsTest.java:1146)\n\tat org.apache.commons.lang3.math.NumberUtilsTest.testCreateNumber(NumberUtilsTest.java:216)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_17/prepared/evidence/Lang-27.txt",
+      "sha256": "1918ceb9e6aca5db36b7211f56a0142080a3372b24ccbbd7fc2db111ac23f096"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src/main/java",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Lang-27",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.createBigDecimal(String str)",
+      "path": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java",
+      "start_line": 713,
+      "end_line": 722,
+      "source": "public static BigDecimal createBigDecimal(String str) {\n        if (str == null) {\n            return null;\n        }\n        // handle JDK1.3.1 bug where \"\" throws IndexOutOfBoundsException\n        if (StringUtils.isBlank(str)) {\n            throw new NumberFormatException(\"A blank string is not a valid number\");\n        }  \n        return new BigDecimal(str);\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 64.90568475827116
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.createNumber(String str)",
+      "path": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java",
+      "start_line": 452,
+      "end_line": 599,
+      "source": "public static Number createNumber(String str) throws NumberFormatException {\n        if (str == null) {\n            return null;\n        }\n        if (StringUtils.isBlank(str)) {\n            throw new NumberFormatException(\"A blank string is not a valid number\");\n        }  \n        if (str.startsWith(\"--\")) {\n            // this is protection for poorness in java.lang.BigDecimal.\n            // it accepts this as a legal value, but it does not appear \n            // to be in specification of class. OS X Java parses it to \n            // a wrong value.\n            return null;\n        }\n        if (str.startsWith(\"0x\") || str.startsWith(\"-0x\")) {\n            return createInteger(str);\n        }   \n        char lastChar = str.charAt(str.length() - 1);\n        String mant;\n        String dec;\n        String exp;\n        int decPos = str.indexOf('.');\n        int expPos = str.indexOf('e') + str.indexOf('E') + 1;\n\n        if (decPos > -1) {\n\n            if (expPos > -1) {\n                if (expPos < decPos) {\n                    throw new NumberFormatException(str + \" is not a valid number.\");\n                }\n                dec = str.substring(decPos + 1, expPos);\n            } else {\n                dec = str.substring(decPos + 1);\n            }\n            mant = str.substring(0, decPos);\n        } else {\n            if (expPos > -1) {\n                mant = str.substring(0, expPos);\n            } else {\n                mant = str;\n            }\n            dec = null;\n        }\n        if (!Character.isDigit(lastChar) && lastChar != '.') {\n            if (expPos > -1 && expPos < str.length() - 1) {\n                exp = str.substring(expPos + 1, str.length() - 1);\n            } else {\n                exp = null;\n            }\n            //Requesting a specific type..\n            String numeric = str.substring(0, str.length() - 1);\n            boolean allZeros = isAllZeros(mant) && isAllZeros(exp);\n            switch (lastChar) {\n                case 'l' :\n                case 'L' :\n                    if (dec == null\n                        && exp == null\n                        && (numeric.charAt(0) == '-' && isDigits(numeric.substring(1)) || isDigits(numeric))) {\n                        try {\n                            return createLong(numeric);\n                        } catch (NumberFormatException nfe) {\n                            //Too big for a long\n                        }\n                        return createBigInteger(numeric);\n\n                    }\n                    throw new NumberFormatException(str + \" is not a valid number.\");\n                case 'f' :\n                case 'F' :\n                    try {\n                        Float f = NumberUtils.createFloat(numeric);\n                        if (!(f.isInfinite() || (f.floatValue() == 0.0F && !allZeros))) {\n                            //If it's too big for a float or the float value = 0 and the string\n                            //has non-zeros in it, then float does not have the precision we want\n                            return f;\n                        }\n\n                    } catch (NumberFormatException nfe) {\n                        // ignore the bad number\n                    }\n                    //$FALL-THROUGH$\n                case 'd' :\n                case 'D' :\n                    try {\n                        Double d = NumberUtils.createDouble(numeric);\n                        if (!(d.isInfinite() || (d.floatValue() == 0.0D && !allZeros))) {\n                            return d;\n                        }\n                    } catch (NumberFormatException nfe) {\n                        // ignore the bad number\n                    }\n                    try {\n                        return createBigDecimal(numeric);\n                    } catch (NumberFormatException e) {\n                        // ignore the bad number\n                    }\n                    //$FALL-THROUGH$\n                default :\n                    throw new NumberFormatException(str + \" is not a valid number.\");\n\n            }\n        } else {\n            //User doesn't have a preference on the return type, so let's start\n            //small and go from there...\n            if (expPos > -1 && expPos < str.length() - 1) {\n                exp = str.substring(expPos + 1, str.length());\n            } else {\n                exp = null;\n            }\n            if (dec == null && exp == null) {\n                //Must be an int,long,bigint\n                try {\n                    return createInteger(str);\n                } catch (NumberFormatException nfe) {\n                    // ignore the bad number\n                }\n                try {\n                    return createLong(str);\n                } catch (NumberFormatException nfe) {\n                    // ignore the bad number\n                }\n                return createBigInteger(str);\n\n            } else {\n                //Must be a float,double,BigDec\n                boolean allZeros = isAllZeros(mant) && isAllZeros(exp);\n                try {\n                    Float f = createFloat(str);\n                    if (!(f.isInfinite() || (f.floatValue() == 0.0F && !allZeros))) {\n                        return f;\n                    }\n                } catch (NumberFormatException nfe) {\n                    // ignore the bad number\n                }\n                try {\n                    Double d = createDouble(str);\n                    if (!(d.isInfinite() || (d.doubleValue() == 0.0D && !allZeros))) {\n                        return d;\n                    }\n                } catch (NumberFormatException nfe) {\n                    // ignore the bad number\n                }\n\n                return createBigDecimal(str);\n\n            }\n        }\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 63.21401003171337
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java::NumericEntityUnescaper.translate(CharSequence input, int index, Writer out)",
+      "path": "src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java",
+      "start_line": 35,
+      "end_line": 74,
+      "source": "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        // TODO: Protect from ArrayIndexOutOfBounds\n        if(input.charAt(index) == '&' && input.charAt(index + 1) == '#') {\n            int start = index + 2;\n            boolean isHex = false;\n\n            char firstChar = input.charAt(start);\n            if(firstChar == 'x' || firstChar == 'X') {\n                start++;\n                isHex = true;\n            }\n\n            int end = start;\n            while(input.charAt(end) != ';') {\n                end++;\n            }\n\n            int entityValue;\n            try {\n                if(isHex) {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 16);\n                } else {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 10);\n                }\n            } catch(NumberFormatException nfe) {\n                return 0;\n            }\n\n            if(entityValue > 0xFFFF) {\n                char[] chrs = Character.toChars(entityValue);\n                out.write(chrs[0]);\n                out.write(chrs[1]);\n            } else {\n                out.write(entityValue);\n            }\n            return 2 + (end - start) + (isHex ? 1 : 0) + 1;\n        }\n        return 0;\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 44.1592573249692
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/math/Fraction.java::Fraction.addSub(Fraction fraction, boolean isAdd)",
+      "path": "src/main/java/org/apache/commons/lang3/math/Fraction.java",
+      "start_line": 733,
+      "end_line": 777,
+      "source": "private Fraction addSub(Fraction fraction, boolean isAdd) {\n        if (fraction == null) {\n            throw new IllegalArgumentException(\"The fraction must not be null\");\n        }\n        // zero is identity for addition.\n        if (numerator == 0) {\n            return isAdd ? fraction : fraction.negate();\n        }\n        if (fraction.numerator == 0) {\n            return this;\n        }     \n        // if denominators are randomly distributed, d1 will be 1 about 61%\n        // of the time.\n        int d1 = greatestCommonDivisor(denominator, fraction.denominator);\n        if (d1==1) {\n            // result is ( (u*v' +/- u'v) / u'v')\n            int uvp = mulAndCheck(numerator, fraction.denominator);\n            int upv = mulAndCheck(fraction.numerator, denominator);\n            return new Fraction\n                (isAdd ? addAndCheck(uvp, upv) : subAndCheck(uvp, upv),\n                 mulPosAndCheck(denominator, fraction.denominator));\n        }\n        // the quantity 't' requires 65 bits of precision; see knuth 4.5.1\n        // exercise 7.  we're going to use a BigInteger.\n        // t = u(v'/d1) +/- v(u'/d1)\n        BigInteger uvp = BigInteger.valueOf(numerator)\n            .multiply(BigInteger.valueOf(fraction.denominator/d1));\n        BigInteger upv = BigInteger.valueOf(fraction.numerator)\n            .multiply(BigInteger.valueOf(denominator/d1));\n        BigInteger t = isAdd ? uvp.add(upv) : uvp.subtract(upv);\n        // but d2 doesn't need extra precision because\n        // d2 = gcd(t,d1) = gcd(t mod d1, d1)\n        int tmodd1 = t.mod(BigInteger.valueOf(d1)).intValue();\n        int d2 = (tmodd1==0)?d1:greatestCommonDivisor(tmodd1, d1);\n\n        // result is (t/d2) / (u'/d1)(v'/d2)\n        BigInteger w = t.divide(BigInteger.valueOf(d2));\n        if (w.bitLength() > 31) {\n            throw new ArithmeticException\n                (\"overflow: numerator too large after multiply\");\n        }\n        return new Fraction\n            (w.intValue(),\n             mulPosAndCheck(denominator/d1, fraction.denominator/d2));\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.27368533108858
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.getChars(int startIndex, int endIndex, char destination[], int destinationIndex)",
+      "path": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java",
+      "start_line": 408,
+      "end_line": 419,
+      "source": "public void getChars(int startIndex, int endIndex, char destination[], int destinationIndex) {\n        if (startIndex < 0) {\n            throw new StringIndexOutOfBoundsException(startIndex);\n        }\n        if (endIndex < 0 || endIndex > length()) {\n            throw new StringIndexOutOfBoundsException(endIndex);\n        }\n        if (startIndex > endIndex) {\n            throw new StringIndexOutOfBoundsException(\"end < start\");\n        }\n        System.arraycopy(buffer, startIndex, destination, destinationIndex, endIndex - startIndex);\n    }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.241445415422895
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.createBigInteger(String str)",
+      "path": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java",
+      "start_line": 697,
+      "end_line": 702,
+      "source": "public static BigInteger createBigInteger(String str) {\n        if (str == null) {\n            return null;\n        }\n        return new BigInteger(str);\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.622744775811135
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.subSequence(int startIndex, int endIndex)",
+      "path": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java",
+      "start_line": 2005,
+      "end_line": 2016,
+      "source": "public CharSequence subSequence(int startIndex, int endIndex) {\n      if (startIndex < 0) {\n          throw new StringIndexOutOfBoundsException(startIndex);\n      }\n      if (endIndex > size) {\n          throw new StringIndexOutOfBoundsException(endIndex);\n      }\n      if (startIndex > endIndex) {\n          throw new StringIndexOutOfBoundsException(endIndex - startIndex);\n      }\n      return substring(startIndex, endIndex);\n    }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.52209584684109
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/ArrayUtils.java::ArrayUtils.add(Object array, int index, Object element, Class<?> clss)",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "start_line": 4278,
+      "end_line": 4298,
+      "source": "private static Object add(Object array, int index, Object element, Class<?> clss) {\n        if (array == null) {\n            if (index != 0) {\n                throw new IndexOutOfBoundsException(\"Index: \" + index + \", Length: 0\");\n            }\n            Object joinedArray = Array.newInstance(clss, 1);\n            Array.set(joinedArray, 0, element);\n            return joinedArray;\n        }\n        int length = Array.getLength(array);\n        if (index > length || index < 0) {\n            throw new IndexOutOfBoundsException(\"Index: \" + index + \", Length: \" + length);\n        }\n        Object result = Array.newInstance(clss, length + 1);\n        System.arraycopy(array, 0, result, 0, index);\n        Array.set(result, index, element);\n        if (index < length) {\n            System.arraycopy(array, index, result, index + 1, length - index);\n        }\n        return result;\n    }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.35215044134467
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.stripAccents(String input)",
+      "path": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "start_line": 631,
+      "end_line": 677,
+      "source": "public static String stripAccents(String input) {\n        if(input == null) {\n            return null;\n        }\n        if(SystemUtils.isJavaVersionAtLeast(1.6f)) {\n\n            // String decomposed = Normalizer.normalize(input, Normalizer.Form.NFD);\n\n            // START of 1.5 reflection - in 1.6 use the line commented out above\n            try {\n                // get java.text.Normalizer.Form class\n                Class<?> normalizerFormClass = ClassUtils.getClass(\"java.text.Normalizer$Form\", false);\n\n                // get Normlizer class\n                Class<?> normalizerClass = ClassUtils.getClass(\"java.text.Normalizer\", false);\n\n                // get static method on Normalizer\n                java.lang.reflect.Method method = normalizerClass.getMethod(\"normalize\", CharSequence.class, normalizerFormClass );\n\n                // get Normalizer.NFD field\n                java.lang.reflect.Field nfd = normalizerFormClass.getField(\"NFD\");\n\n                // invoke method\n                String decomposed = (String) method.invoke( null, input, nfd.get(null) );\n                // END of 1.5 reflection\n\n                java.util.regex.Pattern accentPattern = java.util.regex.Pattern.compile(\"\\\\p{InCombiningDiacriticalMarks}+\");\n                return accentPattern.matcher(decomposed).replaceAll(\"\");\n            } catch(ClassNotFoundException cnfe) {\n                throw new RuntimeException(\"ClassNotFoundException occurred during 1.6 backcompat code\", cnfe);\n            } catch(NoSuchMethodException nsme) {\n                throw new RuntimeException(\"NoSuchMethodException occurred during 1.6 backcompat code\", nsme);\n            } catch(NoSuchFieldException nsfe) {\n                throw new RuntimeException(\"NoSuchFieldException occurred during 1.6 backcompat code\", nsfe);\n            } catch(IllegalAccessException iae) {\n                throw new RuntimeException(\"IllegalAccessException occurred during 1.6 backcompat code\", iae);\n            } catch(IllegalArgumentException iae) {\n                throw new RuntimeException(\"IllegalArgumentException occurred during 1.6 backcompat code\", iae);\n            } catch(java.lang.reflect.InvocationTargetException ite) {\n                throw new RuntimeException(\"InvocationTargetException occurred during 1.6 backcompat code\", ite);\n            } catch(SecurityException se) {\n                throw new RuntimeException(\"SecurityException occurred during 1.6 backcompat code\", se);\n            }\n        } else {\n            throw new UnsupportedOperationException(\"The stripAccents(String) method is not supported until Java 1.6\");\n        }\n    }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 38.55516303366946
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.validateRange(int startIndex, int endIndex)",
+      "path": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java",
+      "start_line": 2640,
+      "end_line": 2651,
+      "source": "protected int validateRange(int startIndex, int endIndex) {\n        if (startIndex < 0) {\n            throw new StringIndexOutOfBoundsException(startIndex);\n        }\n        if (endIndex > size) {\n            endIndex = size;\n        }\n        if (startIndex > endIndex) {\n            throw new StringIndexOutOfBoundsException(\"end < start\");\n        }\n        return endIndex;\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 38.10545488046319
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/SystemUtils.java::SystemUtils.isJavaVersionAtLeast(float requiredVersion)",
+      "path": "src/main/java/org/apache/commons/lang3/SystemUtils.java",
+      "start_line": 1533,
+      "end_line": 1535,
+      "source": "public static boolean isJavaVersionAtLeast(float requiredVersion) {\n        return JAVA_VERSION_FLOAT >= requiredVersion;\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 37.32929773364767
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/math/Fraction.java::Fraction.getFraction(double value)",
+      "path": "src/main/java/org/apache/commons/lang3/math/Fraction.java",
+      "start_line": 249,
+      "end_line": 299,
+      "source": "public static Fraction getFraction(double value) {\n        int sign = (value < 0 ? -1 : 1);\n        value = Math.abs(value);\n        if (value  > Integer.MAX_VALUE || Double.isNaN(value)) {\n            throw new ArithmeticException\n                (\"The value must not be greater than Integer.MAX_VALUE or NaN\");\n        }\n        int wholeNumber = (int) value;\n        value -= wholeNumber;\n        \n        int numer0 = 0;  // the pre-previous\n        int denom0 = 1;  // the pre-previous\n        int numer1 = 1;  // the previous\n        int denom1 = 0;  // the previous\n        int numer2 = 0;  // the current, setup in calculation\n        int denom2 = 0;  // the current, setup in calculation\n        int a1 = (int) value;\n        int a2 = 0;\n        double x1 = 1;\n        double x2 = 0;\n        double y1 = value - a1;\n        double y2 = 0;\n        double delta1, delta2 = Double.MAX_VALUE;\n        double fraction;\n        int i = 1;\n//        System.out.println(\"---\");\n        do {\n            delta1 = delta2;\n            a2 = (int) (x1 / y1);\n            x2 = y1;\n            y2 = x1 - a2 * y1;\n            numer2 = a1 * numer1 + numer0;\n            denom2 = a1 * denom1 + denom0;\n            fraction = (double) numer2 / (double) denom2;\n            delta2 = Math.abs(value - fraction);\n//            System.out.println(numer2 + \" \" + denom2 + \" \" + fraction + \" \" + delta2 + \" \" + y1);\n            a1 = a2;\n            x1 = x2;\n            y1 = y2;\n            numer0 = numer1;\n            denom0 = denom1;\n            numer1 = numer2;\n            denom1 = denom2;\n            i++;\n//            System.out.println(\">>\" + delta1 +\" \"+ delta2+\" \"+(delta1 > delta2)+\" \"+i+\" \"+denom2);\n        } while ((delta1 > delta2) && (denom2 <= 10000) && (denom2 > 0) && (i < 25));\n        if (i == 25) {\n            throw new ArithmeticException(\"Unable to convert double to fraction\");\n        }\n        return getReducedFraction((numer0 + wholeNumber * denom0) * sign, denom0);\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.88681885825457
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/translate/UnicodeUnescaper.java::UnicodeUnescaper.translate(CharSequence input, int index, Writer out)",
+      "path": "src/main/java/org/apache/commons/lang3/text/translate/UnicodeUnescaper.java",
+      "start_line": 55,
+      "end_line": 91,
+      "source": "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        if(input.charAt(index) == '\\\\') {\n            if( (index + 1 < input.length()) && input.charAt(index + 1) == 'u') {\n                // consume optional additional 'u' chars\n                int i=2;\n                while( (index + i < input.length()) && input.charAt(index + i) == 'u') {\n                    i++;\n                }\n\n                // consume + symbol in \\\\u+0045\n                if(isSet(OPTION.escapePlus)) {\n                    if( (index + i < input.length()) && (input.charAt(index + i) == '+') ) {\n                        i++;\n                    }\n                }\n\n                if( (index + i + 4 <= input.length()) ) {\n                    // Get 4 hex digits\n                    CharSequence unicode = input.subSequence(index + i, index + i + 4);\n\n                    try {\n                        int value = Integer.parseInt(unicode.toString(), 16);\n                        out.write((char) value);\n                    } catch (NumberFormatException nfe) {\n                        throw new IllegalArgumentException(\"Unable to parse unicode value: \" + unicode, nfe);\n                    }\n                    return i + 4;\n                } else {\n                    throw new IllegalArgumentException(\"Less than 4 hex digits in unicode value: '\" + \n                                                       input.subSequence(index, input.length()) +\n                                                       \"' due to end of CharSequence\");\n                }\n            }\n        }\n        return 0;\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.80711609628394
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/math/Fraction.java::Fraction.mulPosAndCheck(int x, int y)",
+      "path": "src/main/java/org/apache/commons/lang3/math/Fraction.java",
+      "start_line": 650,
+      "end_line": 657,
+      "source": "private static int mulPosAndCheck(int x, int y) {\n        /* assert x>=0 && y>=0; */\n        long m = ((long)x)*((long)y);\n        if (m > Integer.MAX_VALUE) {\n            throw new ArithmeticException(\"overflow: mulPos\");\n        }\n        return (int)m;\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.097957952141606
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/WordUtils.java::WordUtils.abbreviate(String str, int lower, int upper, String appendToEnd)",
+      "path": "src/main/java/org/apache/commons/lang3/text/WordUtils.java",
+      "start_line": 534,
+      "end_line": 574,
+      "source": "public static String abbreviate(String str, int lower, int upper, String appendToEnd) {\n        // initial parameter checks\n        if (str == null) {\n            return null;\n        }\n        if (str.length() == 0) {\n            return StringUtils.EMPTY;\n        }\n\n        // if the lower value is greater than the length of the string,\n        // set to the length of the string\n        if (lower > str.length()) {\n            lower = str.length();    \n        }\n        // if the upper value is -1 (i.e. no limit) or is greater\n        // than the length of the string, set to the length of the string\n        if (upper == -1 || upper > str.length()) {\n            upper = str.length();\n        }\n        // if upper is less than lower, raise it to lower\n        if (upper < lower) {\n            upper = lower;\n        }\n\n        StringBuilder result = new StringBuilder();\n        int index = StringUtils.indexOf(str, \" \", lower);\n        if (index == -1) {\n            result.append(str.substring(0, upper));\n            // only if abbreviation has occured do we append the appendToEnd value\n            if (upper != str.length()) {\n                result.append(StringUtils.defaultString(appendToEnd));\n            }\n        } else if (index > upper) {\n            result.append(str.substring(0, upper));\n            result.append(StringUtils.defaultString(appendToEnd));\n        } else {\n            result.append(str.substring(0, index));\n            result.append(StringUtils.defaultString(appendToEnd));\n        }\n        return result.toString();\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.83231542075965
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.isNumber(String str)",
+      "path": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java",
+      "start_line": 1316,
+      "end_line": 1418,
+      "source": "public static boolean isNumber(String str) {\n        if (StringUtils.isEmpty(str)) {\n            return false;\n        }\n        char[] chars = str.toCharArray();\n        int sz = chars.length;\n        boolean hasExp = false;\n        boolean hasDecPoint = false;\n        boolean allowSigns = false;\n        boolean foundDigit = false;\n        // deal with any possible sign up front\n        int start = (chars[0] == '-') ? 1 : 0;\n        if (sz > start + 1) {\n            if (chars[start] == '0' && chars[start + 1] == 'x') {\n                int i = start + 2;\n                if (i == sz) {\n                    return false; // str == \"0x\"\n                }\n                // checking hex (it can't be anything else)\n                for (; i < chars.length; i++) {\n                    if ((chars[i] < '0' || chars[i] > '9')\n                        && (chars[i] < 'a' || chars[i] > 'f')\n                        && (chars[i] < 'A' || chars[i] > 'F')) {\n                        return false;\n                    }\n                }\n                return true;\n            }\n        }\n        sz--; // don't want to loop to the last char, check it afterwords\n              // for type qualifiers\n        int i = start;\n        // loop to the next to last char or to the last char if we need another digit to\n        // make a valid number (e.g. chars[0..5] = \"1234E\")\n        while (i < sz || (i < sz + 1 && allowSigns && !foundDigit)) {\n            if (chars[i] >= '0' && chars[i] <= '9') {\n                foundDigit = true;\n                allowSigns = false;\n\n            } else if (chars[i] == '.') {\n                if (hasDecPoint || hasExp) {\n                    // two decimal points or dec in exponent   \n                    return false;\n                }\n                hasDecPoint = true;\n            } else if (chars[i] == 'e' || chars[i] == 'E') {\n                // we've already taken care of hex.\n                if (hasExp) {\n                    // two E's\n                    return false;\n                }\n                if (!foundDigit) {\n                    return false;\n                }\n                hasExp = true;\n                allowSigns = true;\n            } else if (chars[i] == '+' || chars[i] == '-') {\n                if (!allowSigns) {\n                    return false;\n                }\n                allowSigns = false;\n                foundDigit = false; // we need a digit after the E\n            } else {\n                return false;\n            }\n            i++;\n        }\n        if (i < chars.length) {\n            if (chars[i] >= '0' && chars[i] <= '9') {\n                // no type qualifier, OK\n                return true;\n            }\n            if (chars[i] == 'e' || chars[i] == 'E') {\n                // can't have an E at the last byte\n                return false;\n            }\n            if (chars[i] == '.') {\n                if (hasDecPoint || hasExp) {\n                    // two decimal points or dec in exponent\n                    return false;\n                }\n                // single trailing decimal point after non-exponent is ok\n                return foundDigit;\n            }\n            if (!allowSigns\n                && (chars[i] == 'd'\n                    || chars[i] == 'D'\n                    || chars[i] == 'f'\n                    || chars[i] == 'F')) {\n                return foundDigit;\n            }\n            if (chars[i] == 'l'\n                || chars[i] == 'L') {\n                // not allowing L with an exponent\n                return foundDigit && !hasExp;\n            }\n            // last character is illegal\n            return false;\n        }\n        // allowSigns is true iff the val ends in 'E'\n        // found digit it to make sure weird stuff like '.' and '1E-' doesn't pass\n        return !allowSigns && foundDigit;\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.47867766599381
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)",
+      "path": "src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java",
+      "start_line": 381,
+      "end_line": 428,
+      "source": "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf \n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars, \n        // then a subclass can test equals to a superclass.\n        Class<?> lhsClass = lhs.getClass();\n        Class<?> rhsClass = rhs.getClass();\n        Class<?> testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and \n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.313899185214005
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.append(char[] chars, int startIndex, int length)",
+      "path": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java",
+      "start_line": 672,
+      "end_line": 689,
+      "source": "public StrBuilder append(char[] chars, int startIndex, int length) {\n        if (chars == null) {\n            return appendNull();\n        }\n        if (startIndex < 0 || startIndex > chars.length) {\n            throw new StringIndexOutOfBoundsException(\"Invalid startIndex: \" + length);\n        }\n        if (length < 0 || (startIndex + length) > chars.length) {\n            throw new StringIndexOutOfBoundsException(\"Invalid length: \" + length);\n        }\n        if (length > 0) {\n            int len = length();\n            ensureCapacity(len + length);\n            System.arraycopy(chars, startIndex, buffer, len, length);\n            size += length;\n        }\n        return this;\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.88570691259153
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/SystemUtils.java::SystemUtils.isJavaVersionAtLeast(int requiredVersion)",
+      "path": "src/main/java/org/apache/commons/lang3/SystemUtils.java",
+      "start_line": 1555,
+      "end_line": 1557,
+      "source": "public static boolean isJavaVersionAtLeast(int requiredVersion) {\n        return JAVA_VERSION_INT >= requiredVersion;\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.027693943443374
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/ObjectUtils.java::ObjectUtils.clone(final T o)",
+      "path": "src/main/java/org/apache/commons/lang3/ObjectUtils.java",
+      "start_line": 328,
+      "end_line": 364,
+      "source": "public static <T> T clone(final T o) {\n        if (o instanceof Cloneable) {\n            final Object result;\n            if (o.getClass().isArray()) {\n                final Class<?> componentType = o.getClass().getComponentType();\n                if (!componentType.isPrimitive()) {\n                    result = ((Object[])o).clone();\n                } else {\n                    int length = Array.getLength(o);\n                    result = Array.newInstance(componentType, length);\n                    while (length-- > 0) {\n                        Array.set(result, length, Array.get(o, length));\n                    }\n                }\n            } else {\n                try {\n                    final Method clone = o.getClass().getMethod(\"clone\");\n                    result = clone.invoke(o);\n                } catch (final NoSuchMethodException e) {\n                    throw new CloneFailedException(\"Cloneable type \"\n                        + o.getClass().getName()\n                        + \" has no clone method\", e);\n                } catch (final IllegalAccessException e) {\n                    throw new CloneFailedException(\"Cannot clone Cloneable type \"\n                        + o.getClass().getName(), e);\n                } catch (final InvocationTargetException e) {\n                    throw new CloneFailedException(\"Exception cloning Cloneable type \"\n                        + o.getClass().getName(), e.getCause());\n                }\n            }\n            @SuppressWarnings(\"unchecked\")\n            final T checked = (T)result;\n            return checked;\n        }\n\n        return null;\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.001681542955495
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)",
+      "path": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java",
+      "start_line": 199,
+      "end_line": 221,
+      "source": "public TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit) {\n        if (timePeriod <= 0) {\n            throw new IllegalArgumentException(\"Time period must be greater 0!\");\n        }\n\n        period = timePeriod;\n        unit = timeUnit;\n\n        if (service != null) {\n            executorService = service;\n            ownExecutor = false;\n        } else {\n            ScheduledThreadPoolExecutor s = new ScheduledThreadPoolExecutor(\n                    THREAD_POOL_SIZE);\n            s.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);\n            s.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);\n            executorService = s;\n            ownExecutor = true;\n        }\n\n        setLimit(limit);\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.94822274760163
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java::ExtendedMessageFormat.readArgumentIndex(String pattern, ParsePosition pos)",
+      "path": "src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java",
+      "start_line": 276,
+      "end_line": 309,
+      "source": "private int readArgumentIndex(String pattern, ParsePosition pos) {\n        int start = pos.getIndex();\n        seekNonWs(pattern, pos);\n        StringBuffer result = new StringBuffer();\n        boolean error = false;\n        for (; !error && pos.getIndex() < pattern.length(); next(pos)) {\n            char c = pattern.charAt(pos.getIndex());\n            if (Character.isWhitespace(c)) {\n                seekNonWs(pattern, pos);\n                c = pattern.charAt(pos.getIndex());\n                if (c != START_FMT && c != END_FE) {\n                    error = true;\n                    continue;\n                }\n            }\n            if ((c == START_FMT || c == END_FE) && result.length() > 0) {\n                try {\n                    return Integer.parseInt(result.toString());\n                } catch (NumberFormatException e) {\n                    // we've already ensured only digits, so unless something\n                    // outlandishly large was specified we should be okay.\n                }\n            }\n            error = !Character.isDigit(c);\n            result.append(c);\n        }\n        if (error) {\n            throw new IllegalArgumentException(\n                    \"Invalid format argument index at position \" + start + \": \"\n                            + pattern.substring(start, pos.getIndex()));\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated format element at position \" + start);\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.907221325968536
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.deleteCharAt(int index)",
+      "path": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java",
+      "start_line": 339,
+      "end_line": 345,
+      "source": "public StrBuilder deleteCharAt(int index) {\n        if (index < 0 || index >= size) {\n            throw new StringIndexOutOfBoundsException(index);\n        }\n        deleteImpl(index, index + 1, 1);\n        return this;\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.26494463314004
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/ClassUtils.java::ClassUtils.isAssignable(Class<?> cls, Class<?> toClass, boolean autoboxing)",
+      "path": "src/main/java/org/apache/commons/lang3/ClassUtils.java",
+      "start_line": 554,
+      "end_line": 625,
+      "source": "public static boolean isAssignable(Class<?> cls, Class<?> toClass, boolean autoboxing) {\n        if (toClass == null) {\n            return false;\n        }\n        // have to check for null, as isAssignableFrom doesn't\n        if (cls == null) {\n            return !(toClass.isPrimitive());\n        }\n        //autoboxing:\n        if (autoboxing) {\n            if (cls.isPrimitive() && !toClass.isPrimitive()) {\n                cls = primitiveToWrapper(cls);\n                if (cls == null) {\n                    return false;\n                }\n            }\n            if (toClass.isPrimitive() && !cls.isPrimitive()) {\n                cls = wrapperToPrimitive(cls);\n                if (cls == null) {\n                    return false;\n                }\n            }\n        }\n        if (cls.equals(toClass)) {\n            return true;\n        }\n        if (cls.isPrimitive()) {\n            if (toClass.isPrimitive() == false) {\n                return false;\n            }\n            if (Integer.TYPE.equals(cls)) {\n                return Long.TYPE.equals(toClass)\n                    || Float.TYPE.equals(toClass)\n                    || Double.TYPE.equals(toClass);\n            }\n            if (Long.TYPE.equals(cls)) {\n                return Float.TYPE.equals(toClass)\n                    || Double.TYPE.equals(toClass);\n            }\n            if (Boolean.TYPE.equals(cls)) {\n                return false;\n            }\n            if (Double.TYPE.equals(cls)) {\n                return false;\n            }\n            if (Float.TYPE.equals(cls)) {\n                return Double.TYPE.equals(toClass);\n            }\n            if (Character.TYPE.equals(cls)) {\n                return Integer.TYPE.equals(toClass)\n                    || Long.TYPE.equals(toClass)\n                    || Float.TYPE.equals(toClass)\n                    || Double.TYPE.equals(toClass);\n            }\n            if (Short.TYPE.equals(cls)) {\n                return Integer.TYPE.equals(toClass)\n                    || Long.TYPE.equals(toClass)\n                    || Float.TYPE.equals(toClass)\n                    || Double.TYPE.equals(toClass);\n            }\n            if (Byte.TYPE.equals(cls)) {\n                return Short.TYPE.equals(toClass)\n                    || Integer.TYPE.equals(toClass)\n                    || Long.TYPE.equals(toClass)\n                    || Float.TYPE.equals(toClass)\n                    || Double.TYPE.equals(toClass);\n            }\n            // should never get here\n            return false;\n        }\n        return toClass.isAssignableFrom(cls);\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.161562618620295
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.createBigDecimal(String str)",
+      "source": "public static BigDecimal createBigDecimal(String str) {\n        if (str == null) {\n            return null;\n        }\n        // handle JDK1.3.1 bug where \"\" throws IndexOutOfBoundsException\n        if (StringUtils.isBlank(str)) {\n            throw new NumberFormatException(\"A blank string is not a valid number\");\n        }  \n        return new BigDecimal(str);\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.createBigDecimal(String str)\nSIGNATURE: public static BigDecimal createBigDecimal(String str)",
+        "METHOD: src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.createBigDecimal(String str)\nSIGNATURE: public static BigDecimal createBigDecimal(String str)\nSTRUCTURE (lossy):\nif (str == null)\nreturn null;\nif (StringUtils.isBlank(str))\nCALL StringUtils.isBlank(str)\nthrow new NumberFormatException(\"A blank string is not a valid number\");\nreturn new BigDecimal(str);",
+        "public static BigDecimal createBigDecimal(String str) {\n        if (str == null) {\n            return null;\n        }\n        // handle JDK1.3.1 bug where \"\" throws IndexOutOfBoundsException\n        if (StringUtils.isBlank(str)) {\n            throw new NumberFormatException(\"A blank string is not a valid number\");\n        }  \n        return new BigDecimal(str);\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6470588235294118,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 1.0,
+        "literal_count": 3.0,
+        "source_tokens": 93.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 97.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 1,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.createNumber(String str)",
+      "source": "public static Number createNumber(String str) throws NumberFormatException {\n        if (str == null) {\n            return null;\n        }\n        if (StringUtils.isBlank(str)) {\n            throw new NumberFormatException(\"A blank string is not a valid number\");\n        }  \n        if (str.startsWith(\"--\")) {\n            // this is protection for poorness in java.lang.BigDecimal.\n            // it accepts this as a legal value, but it does not appear \n            // to be in specification of class. OS X Java parses it to \n            // a wrong value.\n            return null;\n        }\n        if (str.startsWith(\"0x\") || str.startsWith(\"-0x\")) {\n            return createInteger(str);\n        }   \n        char lastChar = str.charAt(str.length() - 1);\n        String mant;\n        String dec;\n        String exp;\n        int decPos = str.indexOf('.');\n        int expPos = str.indexOf('e') + str.indexOf('E') + 1;\n\n        if (decPos > -1) {\n\n            if (expPos > -1) {\n                if (expPos < decPos) {\n                    throw new NumberFormatException(str + \" is not a valid number.\");\n                }\n                dec = str.substring(decPos + 1, expPos);\n            } else {\n                dec = str.substring(decPos + 1);\n            }\n            mant = str.substring(0, decPos);\n        } else {\n            if (expPos > -1) {\n                mant = str.substring(0, expPos);\n            } else {\n                mant = str;\n            }\n            dec = null;\n        }\n        if (!Character.isDigit(lastChar) && lastChar != '.') {\n            if (expPos > -1 && expPos < str.length() - 1) {\n                exp = str.substring(expPos + 1, str.length() - 1);\n            } else {\n                exp = null;\n            }\n            //Requesting a specific type..\n            String numeric = str.substring(0, str.length() - 1);\n            boolean allZeros = isAllZeros(mant) && isAllZeros(exp);\n            switch (lastChar) {\n                case 'l' :\n                case 'L' :\n                    if (dec == null\n                        && exp == null\n                        && (numeric.charAt(0) == '-' && isDigits(numeric.substring(1)) || isDigits(numeric))) {\n                        try {\n                            return createLong(numeric);\n                        } catch (NumberFormatException nfe) {\n                            //Too big for a long\n                        }\n                        return createBigInteger(numeric);\n\n                    }\n                    throw new NumberFormatException(str + \" is not a valid number.\");\n                case 'f' :\n                case 'F' :\n                    try {\n                        Float f = NumberUtils.createFloat(numeric);\n                        if (!(f.isInfinite() || (f.floatValue() == 0.0F && !allZeros))) {\n                            //If it's too big for a float or the float value = 0 and the string\n                            //has non-zeros in it, then float does not have the precision we want\n                            return f;\n                        }\n\n                    } catch (NumberFormatException nfe) {\n                        // ignore the bad number\n                    }\n                    //$FALL-THROUGH$\n                case 'd' :\n                case 'D' :\n                    try {\n                        Double d = NumberUtils.createDouble(numeric);\n                        if (!(d.isInfinite() || (d.floatValue() == 0.0D && !allZeros))) {\n                            return d;\n                        }\n                    } catch (NumberFormatException nfe) {\n                        // ignore the bad number\n                    }\n                    try {\n                        return createBigDecimal(numeric);\n                    } catch (NumberFormatException e) {\n                        // ignore the bad number\n                    }\n                    //$FALL-THROUGH$\n                default :\n                    throw new NumberFormatException(str + \" is not a valid number.\");\n\n            }\n        } else {\n            //User doesn't have a preference on the return type, so let's start\n            //small and go from there...\n            if (expPos > -1 && expPos < str.length() - 1) {\n                exp = str.substring(expPos + 1, str.length());\n            } else {\n                exp = null;\n            }\n            if (dec == null && exp == null) {\n                //Must be an int,long,bigint\n                try {\n                    return createInteger(str);\n                } catch (NumberFormatException nfe) {\n                    // ignore the bad number\n                }\n                try {\n                    return createLong(str);\n                } catch (NumberFormatException nfe) {\n                    // ignore the bad number\n                }\n                return createBigInteger(str);\n\n            } else {\n                //Must be a float,double,BigDec\n                boolean allZeros = isAllZeros(mant) && isAllZeros(exp);\n                try {\n                    Float f = createFloat(str);\n                    if (!(f.isInfinite() || (f.floatValue() == 0.0F && !allZeros))) {\n                        return f;\n                    }\n                } catch (NumberFormatException nfe) {\n                    // ignore the bad number\n                }\n                try {\n                    Double d = createDouble(str);\n                    if (!(d.isInfinite() || (d.doubleValue() == 0.0D && !allZeros))) {\n                        return d;\n                    }\n                } catch (NumberFormatException nfe) {\n                    // ignore the bad number\n                }\n\n                return createBigDecimal(str);\n\n            }\n        }\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.createNumber(String str)\nSIGNATURE: public static Number createNumber(String str) throws NumberFormatException",
+        "METHOD: src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.createNumber(String str)\nSIGNATURE: public static Number createNumber(String str) throws NumberFormatException\nSTRUCTURE (lossy):\nif (str == null)\nreturn null;\nif (StringUtils.isBlank(str))\nCALL StringUtils.isBlank(str)\nthrow new NumberFormatException(\"A blank string is not a valid number\");\nif (str.startsWith(\"--\"))\nCALL str.startsWith(\"--\")\nif (str.startsWith(\"0x\") || str.startsWith(\"-0x\"))\nCALL str.startsWith(\"0x\")\nCALL str.startsWith(\"-0x\")\nreturn createInteger(str);\nCALL createInteger(str)\nchar lastChar = str.charAt(str.length() - 1);\nCALL str.charAt(str.length() - 1)\nCALL str.length()\nString mant;\nString dec;\nString exp;\nint decPos = str.indexOf('.');\nCALL str.indexOf('.')\nint expPos = str.indexOf('e') + str.indexOf('E') + 1;\nCALL str.indexOf('e')\nCALL str.indexOf('E')\nif (decPos > -1)\nif (expPos > -1)\nif (expPos < decPos)\nthrow new NumberFormatException(str + \" is not a valid number.\");\ndec = str.substring(decPos + 1, expPos)\nCALL str.substring(decPos + 1, expPos)\ndec = str.substring(decPos + 1)\nCALL str.substring(decPos + 1)\nmant = str.substring(0, decPos)\nCALL str.substring(0, decPos)\nmant = str.substring(0, expPos)\nCALL str.substring(0, expPos)\nmant = str\ndec = null\nif (!Character.isDigit(lastChar) && lastChar != '.')\nCALL Character.isDigit(lastChar)\nif (expPos > -1 && expPos < str.length() - 1)\nexp = str.substring(expPos + 1, str.length() - 1)\nCALL str.substring(expPos + 1, str.length() - 1)\nexp = null\nString numeric = str.substring(0, str.length() - 1);\nCALL str.substring(0, str.length() - 1)\nboolean allZeros = isAllZeros(mant) && isAllZeros(exp);\nCALL isAllZeros(mant)\nCALL isAllZeros(exp)\nswitch (lastChar) { case 'l' : case 'L' : if (dec == null && exp == null && (numeric.charAt(0) == '-' && isDigits(numeric.substring(1)) || isDigits(numeric))) { try { return createLong(numeric); } catch (NumberFormatException nfe) { //Too big for a long } return createBigInteger(numeric); } throw new NumberFormatException(str + \" is not a valid number.\"); case 'f' : case 'F' : try { Float f = NumberUtils.createFloat(numeric); if (!(f.isInfinite() || (f.floatValue() == 0.0F && !allZero\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public static Number createNumber(String str) throws NumberFormatException {\n        if (str == null) {\n            return null;\n        }\n        if (StringUtils.isBlank(str)) {\n            throw new NumberFormatException(\"A blank string is not a valid number\");\n        }  \n        if (str.startsWith(\"--\")) {\n            // this is protection for poorness in java.lang.BigDecimal.\n            // it accepts this as a legal value, but it does not appear \n            // to be in specification of class. OS X Java parses it to \n            // a wrong value.\n            return null;\n        }\n        if (str.startsWith(\"0x\") || str.startsWith(\"-0x\")) {\n            return createInteger(str);\n        }   \n        char lastChar = str.charAt(str.length() - 1);\n        String mant;\n        String dec;\n        String exp;\n        int decPos = str.indexOf('.');\n        int expPos = str.indexOf('e') + str.indexOf('E') + 1;\n\n        if (decPos > -1) {\n\n            if (expPos > -1) {\n                if (expPos < decPos) {\n                    throw new NumberFormatException(str + \" is not a valid number.\");\n                }\n                dec = str.substring(decPos + 1, expPos);\n            } else {\n                dec = str.substring(decPos + 1);\n            }\n            mant = str.substring(0, decPos);\n        } else {\n            if (expPos > -1) {\n                mant = str.substring(0, expPos);\n            } else {\n                mant = str;\n            }\n            dec = null;\n        }\n        if (!Character.isDigit(lastChar) && lastChar != '.') {\n            if (expPos > -1 && expPos < str.length() - 1) {\n                exp = str.substring(expPos + 1, str.length() - 1);\n            } else {\n                exp = null;\n            }\n            //Requesting a specific type..\n            String numeric = str.substring(0, str.length() - 1);\n            boolean allZeros = isAllZeros(mant) && isAllZeros(exp);\n            switch (lastChar) {\n                case 'l' :\n                case 'L' :\n                    if (dec == null\n                        && exp == null\n                        && (numeric.charAt(0) == '-' && isDigits(numeric.substring(1)) || isDigits(numeric))) {\n                        try {\n                            return createLong(numeric);\n                        } catch (NumberFormatException nfe) {\n                            //Too big for a long\n                        }\n                        return createBigInteger(numeric);\n\n                    }\n                    throw new NumberFormatException(str + \" is not a valid number.\");\n                case 'f' :\n                case 'F' :\n                    try {\n                        Float f = NumberUtils.createFloat(numeric);\n                        if (!(f.isInfinite() || (f.floatValue() == 0.0F && !allZeros))) {\n                            //If it's too big for a float or the float value = 0 and the string\n                            //has non-zeros in it, then float does not have the precision we want\n                            return f;\n                        }\n\n                    } catch (NumberFormatException nfe) {\n                        // ignore the bad number\n                    }\n                    //$FALL-THROUGH$\n                case 'd' :\n                case 'D' :\n                    try {\n                        Double d = NumberUtils.createDouble(numeric);\n                        if (!(d.isInfinite() || (d.floatValue() == 0.0D && !allZeros))) {\n                            return d;\n                        }\n                    } catch (NumberFormatException nfe) {\n                        // ignore the bad number\n                    }\n                    try {\n                        return createBigDecimal(numeric);\n                    } catch (NumberFormatException e) {\n                        // ignore the bad number\n                    }\n                    //$FALL-THROUGH$\n                default :\n                    throw new NumberFormatException(str + \" is not a valid number.\");\n\n            }\n        } else {\n            //User doesn't have a preference on the return type, so let's start\n            //small and go from there...\n            if (expPos > -1 && expPos < str.length() - 1) {\n                exp = str.substring(expPos + 1, str.length());\n            } else {\n                exp = null;\n            }\n            if (dec == null && exp == null) {\n                //Must be an int,long,bigint\n                try {\n                    return createInteger(str);\n                } catch (NumberFormatException nfe) {\n                    // ignore the bad number\n                }\n                try {\n                    return createLong(str);\n                } catch (NumberFormatException nfe) {\n                    // ignore the bad number\n                }\n                return createBigInteger(str);\n\n            } else {\n                //Must be a float,double,BigDec\n                boolean allZeros = isAllZeros(mant) && isAllZeros(exp);\n                try {\n                    Float f = createFloat(str);\n                    if (!(f.isInfinite() || (f.floatValue() == 0.0F && !allZeros))) {\n                        return f;\n                    }\n                } catch (NumberFormatException nfe) {\n                    // ignore the bad number\n                }\n                try {\n                    Double d = createDouble(str);\n                    if (!(d.isInfinite() || (d.doubleValue() == 0.0D && !allZeros))) {\n                        return d;\n                    }\n                } catch (NumberFormatException nfe) {\n                    // ignore the bad number\n                }\n\n                return createBigDecimal(str);\n\n            }\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3434343434343434,
+        "trace_match": 0.0,
+        "complexity": 27.0,
+        "call_count": 50.0,
+        "literal_count": 52.0,
+        "source_tokens": 1445.0,
+        "l0_tokens": 48.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.39377162629757784,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 27,
+        "call_count": 50,
+        "literal_count": 52
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java::NumericEntityUnescaper.translate(CharSequence input, int index, Writer out)",
+      "source": "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        // TODO: Protect from ArrayIndexOutOfBounds\n        if(input.charAt(index) == '&' && input.charAt(index + 1) == '#') {\n            int start = index + 2;\n            boolean isHex = false;\n\n            char firstChar = input.charAt(start);\n            if(firstChar == 'x' || firstChar == 'X') {\n                start++;\n                isHex = true;\n            }\n\n            int end = start;\n            while(input.charAt(end) != ';') {\n                end++;\n            }\n\n            int entityValue;\n            try {\n                if(isHex) {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 16);\n                } else {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 10);\n                }\n            } catch(NumberFormatException nfe) {\n                return 0;\n            }\n\n            if(entityValue > 0xFFFF) {\n                char[] chrs = Character.toChars(entityValue);\n                out.write(chrs[0]);\n                out.write(chrs[1]);\n            } else {\n                out.write(entityValue);\n            }\n            return 2 + (end - start) + (isHex ? 1 : 0) + 1;\n        }\n        return 0;\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java::NumericEntityUnescaper.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java::NumericEntityUnescaper.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException\nSTRUCTURE (lossy):\nif(input.charAt(index) == '&' && input.charAt(index + 1) == '#')\nCALL input.charAt(index)\nCALL input.charAt(index + 1)\nint start = index + 2;\nboolean isHex = false;\nchar firstChar = input.charAt(start);\nCALL input.charAt(start)\nif(firstChar == 'x' || firstChar == 'X')\nstart++\nisHex = true\nint end = start;\nwhile(input.charAt(end) != ';')\nCALL input.charAt(end)\nend++\nint entityValue;\nif(isHex)\nentityValue = Integer.parseInt(input.subSequence(start, end).toString(), 16)\nCALL Integer.parseInt(input.subSequence(start, end).toString(), 16)\nCALL input.subSequence(start, end).toString()\nCALL input.subSequence(start, end)\nentityValue = Integer.parseInt(input.subSequence(start, end).toString(), 10)\nCALL Integer.parseInt(input.subSequence(start, end).toString(), 10)\ncatch(NumberFormatException nfe)\nreturn 0;\nif(entityValue > 0xFFFF)\nchar[] chrs = Character.toChars(entityValue);\nCALL Character.toChars(entityValue)\nCALL out.write(chrs[0])\nCALL out.write(chrs[1])\nCALL out.write(entityValue)\nreturn 2 + (end - start) + (isHex ? 1 : 0) + 1;",
+        "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        // TODO: Protect from ArrayIndexOutOfBounds\n        if(input.charAt(index) == '&' && input.charAt(index + 1) == '#') {\n            int start = index + 2;\n            boolean isHex = false;\n\n            char firstChar = input.charAt(start);\n            if(firstChar == 'x' || firstChar == 'X') {\n                start++;\n                isHex = true;\n            }\n\n            int end = start;\n            while(input.charAt(end) != ';') {\n                end++;\n            }\n\n            int entityValue;\n            try {\n                if(isHex) {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 16);\n                } else {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 10);\n                }\n            } catch(NumberFormatException nfe) {\n                return 0;\n            }\n\n            if(entityValue > 0xFFFF) {\n                char[] chrs = Character.toChars(entityValue);\n                out.write(chrs[0]);\n                out.write(chrs[1]);\n            } else {\n                out.write(entityValue);\n            }\n            return 2 + (end - start) + (isHex ? 1 : 0) + 1;\n        }\n        return 0;\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4074074074074074,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 14.0,
+        "literal_count": 18.0,
+        "source_tokens": 333.0,
+        "l0_tokens": 69.0,
+        "l1_tokens": 334.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 14,
+        "literal_count": 18
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/math/Fraction.java::Fraction.addSub(Fraction fraction, boolean isAdd)",
+      "source": "private Fraction addSub(Fraction fraction, boolean isAdd) {\n        if (fraction == null) {\n            throw new IllegalArgumentException(\"The fraction must not be null\");\n        }\n        // zero is identity for addition.\n        if (numerator == 0) {\n            return isAdd ? fraction : fraction.negate();\n        }\n        if (fraction.numerator == 0) {\n            return this;\n        }     \n        // if denominators are randomly distributed, d1 will be 1 about 61%\n        // of the time.\n        int d1 = greatestCommonDivisor(denominator, fraction.denominator);\n        if (d1==1) {\n            // result is ( (u*v' +/- u'v) / u'v')\n            int uvp = mulAndCheck(numerator, fraction.denominator);\n            int upv = mulAndCheck(fraction.numerator, denominator);\n            return new Fraction\n                (isAdd ? addAndCheck(uvp, upv) : subAndCheck(uvp, upv),\n                 mulPosAndCheck(denominator, fraction.denominator));\n        }\n        // the quantity 't' requires 65 bits of precision; see knuth 4.5.1\n        // exercise 7.  we're going to use a BigInteger.\n        // t = u(v'/d1) +/- v(u'/d1)\n        BigInteger uvp = BigInteger.valueOf(numerator)\n            .multiply(BigInteger.valueOf(fraction.denominator/d1));\n        BigInteger upv = BigInteger.valueOf(fraction.numerator)\n            .multiply(BigInteger.valueOf(denominator/d1));\n        BigInteger t = isAdd ? uvp.add(upv) : uvp.subtract(upv);\n        // but d2 doesn't need extra precision because\n        // d2 = gcd(t,d1) = gcd(t mod d1, d1)\n        int tmodd1 = t.mod(BigInteger.valueOf(d1)).intValue();\n        int d2 = (tmodd1==0)?d1:greatestCommonDivisor(tmodd1, d1);\n\n        // result is (t/d2) / (u'/d1)(v'/d2)\n        BigInteger w = t.divide(BigInteger.valueOf(d2));\n        if (w.bitLength() > 31) {\n            throw new ArithmeticException\n                (\"overflow: numerator too large after multiply\");\n        }\n        return new Fraction\n            (w.intValue(),\n             mulPosAndCheck(denominator/d1, fraction.denominator/d2));\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/math/Fraction.java::Fraction.addSub(Fraction fraction, boolean isAdd)\nSIGNATURE: private Fraction addSub(Fraction fraction, boolean isAdd)",
+        "METHOD: src/main/java/org/apache/commons/lang3/math/Fraction.java::Fraction.addSub(Fraction fraction, boolean isAdd)\nSIGNATURE: private Fraction addSub(Fraction fraction, boolean isAdd)\nSTRUCTURE (lossy):\nif (fraction == null)\nthrow new IllegalArgumentException(\"The fraction must not be null\");\nif (numerator == 0)\nreturn isAdd ? fraction : fraction.negate();\nCALL fraction.negate()\nif (fraction.numerator == 0)\nreturn this;\nint d1 = greatestCommonDivisor(denominator, fraction.denominator);\nCALL greatestCommonDivisor(denominator, fraction.denominator)\nif (d1==1)\nint uvp = mulAndCheck(numerator, fraction.denominator);\nCALL mulAndCheck(numerator, fraction.denominator)\nint upv = mulAndCheck(fraction.numerator, denominator);\nCALL mulAndCheck(fraction.numerator, denominator)\nreturn new Fraction (isAdd ? addAndCheck(uvp, upv) : subAndCheck(uvp, upv), mulPosAndCheck(denominator, fraction.denominator));\nCALL addAndCheck(uvp, upv)\nCALL subAndCheck(uvp, upv)\nCALL mulPosAndCheck(denominator, fraction.denominator)\nBigInteger uvp = BigInteger.valueOf(numerator) .multiply(BigInteger.valueOf(fraction.denominator/d1));\nCALL BigInteger.valueOf(numerator) .multiply(BigInteger.valueOf(fraction.denominator/d1))\nCALL BigInteger.valueOf(numerator)\nCALL BigInteger.valueOf(fraction.denominator/d1)\nBigInteger upv = BigInteger.valueOf(fraction.numerator) .multiply(BigInteger.valueOf(denominator/d1));\nCALL BigInteger.valueOf(fraction.numerator) .multiply(BigInteger.valueOf(denominator/d1))\nCALL BigInteger.valueOf(fraction.numerator)\nCALL BigInteger.valueOf(denominator/d1)\nBigInteger t = isAdd ? uvp.add(upv) : uvp.subtract(upv);\nCALL uvp.add(upv)\nCALL uvp.subtract(upv)\nint tmodd1 = t.mod(BigInteger.valueOf(d1)).intValue();\nCALL t.mod(BigInteger.valueOf(d1)).intValue()\nCALL t.mod(BigInteger.valueOf(d1))\nCALL BigInteger.valueOf(d1)\nint d2 = (tmodd1==0)?d1:greatestCommonDivisor(tmodd1, d1);\nCALL greatestCommonDivisor(tmodd1, d1)\nBigInteger w = t.divide(BigInteger.valueOf(d2));\nCALL t.divide(BigInteger.valueOf(d2))\nCALL BigInteger.valueOf(d2)\nif (w.bitLength() > 31)\nCALL w.bitLength()\nthrow new ArithmeticException (\"overflow: numerator too large after multiply\");\nreturn new Fraction (w.intValue()\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "private Fraction addSub(Fraction fraction, boolean isAdd) {\n        if (fraction == null) {\n            throw new IllegalArgumentException(\"The fraction must not be null\");\n        }\n        // zero is identity for addition.\n        if (numerator == 0) {\n            return isAdd ? fraction : fraction.negate();\n        }\n        if (fraction.numerator == 0) {\n            return this;\n        }     \n        // if denominators are randomly distributed, d1 will be 1 about 61%\n        // of the time.\n        int d1 = greatestCommonDivisor(denominator, fraction.denominator);\n        if (d1==1) {\n            // result is ( (u*v' +/- u'v) / u'v')\n            int uvp = mulAndCheck(numerator, fraction.denominator);\n            int upv = mulAndCheck(fraction.numerator, denominator);\n            return new Fraction\n                (isAdd ? addAndCheck(uvp, upv) : subAndCheck(uvp, upv),\n                 mulPosAndCheck(denominator, fraction.denominator));\n        }\n        // the quantity 't' requires 65 bits of precision; see knuth 4.5.1\n        // exercise 7.  we're going to use a BigInteger.\n        // t = u(v'/d1) +/- v(u'/d1)\n        BigInteger uvp = BigInteger.valueOf(numerator)\n            .multiply(BigInteger.valueOf(fraction.denominator/d1));\n        BigInteger upv = BigInteger.valueOf(fraction.numerator)\n            .multiply(BigInteger.valueOf(denominator/d1));\n        BigInteger t = isAdd ? uvp.add(upv) : uvp.subtract(upv);\n        // but d2 doesn't need extra precision because\n        // d2 = gcd(t,d1) = gcd(t mod d1, d1)\n        int tmodd1 = t.mod(BigInteger.valueOf(d1)).intValue();\n        int d2 = (tmodd1==0)?d1:greatestCommonDivisor(tmodd1, d1);\n\n        // result is (t/d2) / (u'/d1)(v'/d2)\n        BigInteger w = t.divide(BigInteger.valueOf(d2));\n        if (w.bitLength() > 31) {\n            throw new ArithmeticException\n                (\"overflow: numerator too large after multiply\");\n        }\n        return new Fraction\n            (w.intValue(),\n             mulPosAndCheck(denominator/d1, fraction.denominator/d2));\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.26582278481012656,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 24.0,
+        "literal_count": 8.0,
+        "source_tokens": 516.0,
+        "l0_tokens": 47.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 6,
+        "call_count": 24,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.getChars(int startIndex, int endIndex, char destination[], int destinationIndex)",
+      "source": "public void getChars(int startIndex, int endIndex, char destination[], int destinationIndex) {\n        if (startIndex < 0) {\n            throw new StringIndexOutOfBoundsException(startIndex);\n        }\n        if (endIndex < 0 || endIndex > length()) {\n            throw new StringIndexOutOfBoundsException(endIndex);\n        }\n        if (startIndex > endIndex) {\n            throw new StringIndexOutOfBoundsException(\"end < start\");\n        }\n        System.arraycopy(buffer, startIndex, destination, destinationIndex, endIndex - startIndex);\n    }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.getChars(int startIndex, int endIndex, char destination[], int destinationIndex)\nSIGNATURE: public void getChars(int startIndex, int endIndex, char destination[], int destinationIndex)",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.getChars(int startIndex, int endIndex, char destination[], int destinationIndex)\nSIGNATURE: public void getChars(int startIndex, int endIndex, char destination[], int destinationIndex)\nSTRUCTURE (lossy):\nif (startIndex < 0)\nthrow new StringIndexOutOfBoundsException(startIndex);\nif (endIndex < 0 || endIndex > length())\nCALL length()\nthrow new StringIndexOutOfBoundsException(endIndex);\nif (startIndex > endIndex)\nthrow new StringIndexOutOfBoundsException(\"end < start\");\nCALL System.arraycopy(buffer, startIndex, destination, destinationIndex, endIndex - startIndex)",
+        "public void getChars(int startIndex, int endIndex, char destination[], int destinationIndex) {\n        if (startIndex < 0) {\n            throw new StringIndexOutOfBoundsException(startIndex);\n        }\n        if (endIndex < 0 || endIndex > length()) {\n            throw new StringIndexOutOfBoundsException(endIndex);\n        }\n        if (startIndex > endIndex) {\n            throw new StringIndexOutOfBoundsException(\"end < start\");\n        }\n        System.arraycopy(buffer, startIndex, destination, destinationIndex, endIndex - startIndex);\n    }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6666666666666666,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 2.0,
+        "literal_count": 3.0,
+        "source_tokens": 138.0,
+        "l0_tokens": 66.0,
+        "l1_tokens": 162.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 2,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.createBigInteger(String str)",
+      "source": "public static BigInteger createBigInteger(String str) {\n        if (str == null) {\n            return null;\n        }\n        return new BigInteger(str);\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.createBigInteger(String str)\nSIGNATURE: public static BigInteger createBigInteger(String str)",
+        "METHOD: src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.createBigInteger(String str)\nSIGNATURE: public static BigInteger createBigInteger(String str)\nSTRUCTURE (lossy):\nif (str == null)\nreturn null;\nreturn new BigInteger(str);",
+        "public static BigInteger createBigInteger(String str) {\n        if (str == null) {\n            return null;\n        }\n        return new BigInteger(str);\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.85,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 0.0,
+        "literal_count": 2.0,
+        "source_tokens": 40.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 63.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 0,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.subSequence(int startIndex, int endIndex)",
+      "source": "public CharSequence subSequence(int startIndex, int endIndex) {\n      if (startIndex < 0) {\n          throw new StringIndexOutOfBoundsException(startIndex);\n      }\n      if (endIndex > size) {\n          throw new StringIndexOutOfBoundsException(endIndex);\n      }\n      if (startIndex > endIndex) {\n          throw new StringIndexOutOfBoundsException(endIndex - startIndex);\n      }\n      return substring(startIndex, endIndex);\n    }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.subSequence(int startIndex, int endIndex)\nSIGNATURE: public CharSequence subSequence(int startIndex, int endIndex)",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.subSequence(int startIndex, int endIndex)\nSIGNATURE: public CharSequence subSequence(int startIndex, int endIndex)\nSTRUCTURE (lossy):\nif (startIndex < 0)\nthrow new StringIndexOutOfBoundsException(startIndex);\nif (endIndex > size)\nthrow new StringIndexOutOfBoundsException(endIndex);\nif (startIndex > endIndex)\nthrow new StringIndexOutOfBoundsException(endIndex - startIndex);\nreturn substring(startIndex, endIndex);\nCALL substring(startIndex, endIndex)",
+        "public CharSequence subSequence(int startIndex, int endIndex) {\n      if (startIndex < 0) {\n          throw new StringIndexOutOfBoundsException(startIndex);\n      }\n      if (endIndex > size) {\n          throw new StringIndexOutOfBoundsException(endIndex);\n      }\n      if (startIndex > endIndex) {\n          throw new StringIndexOutOfBoundsException(endIndex - startIndex);\n      }\n      return substring(startIndex, endIndex);\n    }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6666666666666666,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 109.0,
+        "l0_tokens": 49.0,
+        "l1_tokens": 133.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/ArrayUtils.java::ArrayUtils.add(Object array, int index, Object element, Class<?> clss)",
+      "source": "private static Object add(Object array, int index, Object element, Class<?> clss) {\n        if (array == null) {\n            if (index != 0) {\n                throw new IndexOutOfBoundsException(\"Index: \" + index + \", Length: 0\");\n            }\n            Object joinedArray = Array.newInstance(clss, 1);\n            Array.set(joinedArray, 0, element);\n            return joinedArray;\n        }\n        int length = Array.getLength(array);\n        if (index > length || index < 0) {\n            throw new IndexOutOfBoundsException(\"Index: \" + index + \", Length: \" + length);\n        }\n        Object result = Array.newInstance(clss, length + 1);\n        System.arraycopy(array, 0, result, 0, index);\n        Array.set(result, index, element);\n        if (index < length) {\n            System.arraycopy(array, index, result, index + 1, length - index);\n        }\n        return result;\n    }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/ArrayUtils.java::ArrayUtils.add(Object array, int index, Object element, Class<?> clss)\nSIGNATURE: private static Object add(Object array, int index, Object element, Class<?> clss)",
+        "METHOD: src/main/java/org/apache/commons/lang3/ArrayUtils.java::ArrayUtils.add(Object array, int index, Object element, Class<?> clss)\nSIGNATURE: private static Object add(Object array, int index, Object element, Class<?> clss)\nSTRUCTURE (lossy):\nif (array == null)\nif (index != 0)\nthrow new IndexOutOfBoundsException(\"Index: \" + index + \", Length: 0\");\nObject joinedArray = Array.newInstance(clss, 1);\nCALL Array.newInstance(clss, 1)\nCALL Array.set(joinedArray, 0, element)\nreturn joinedArray;\nint length = Array.getLength(array);\nCALL Array.getLength(array)\nif (index > length || index < 0)\nthrow new IndexOutOfBoundsException(\"Index: \" + index + \", Length: \" + length);\nObject result = Array.newInstance(clss, length + 1);\nCALL Array.newInstance(clss, length + 1)\nCALL System.arraycopy(array, 0, result, 0, index)\nCALL Array.set(result, index, element)\nif (index < length)\nCALL System.arraycopy(array, index, result, index + 1, length - index)\nreturn result;",
+        "private static Object add(Object array, int index, Object element, Class<?> clss) {\n        if (array == null) {\n            if (index != 0) {\n                throw new IndexOutOfBoundsException(\"Index: \" + index + \", Length: 0\");\n            }\n            Object joinedArray = Array.newInstance(clss, 1);\n            Array.set(joinedArray, 0, element);\n            return joinedArray;\n        }\n        int length = Array.getLength(array);\n        if (index > length || index < 0) {\n            throw new IndexOutOfBoundsException(\"Index: \" + index + \", Length: \" + length);\n        }\n        Object result = Array.newInstance(clss, length + 1);\n        System.arraycopy(array, 0, result, 0, index);\n        Array.set(result, index, element);\n        if (index < length) {\n            System.arraycopy(array, index, result, index + 1, length - index);\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5757575757575758,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 7.0,
+        "literal_count": 13.0,
+        "source_tokens": 223.0,
+        "l0_tokens": 57.0,
+        "l1_tokens": 241.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 7,
+        "literal_count": 13
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.stripAccents(String input)",
+      "source": "public static String stripAccents(String input) {\n        if(input == null) {\n            return null;\n        }\n        if(SystemUtils.isJavaVersionAtLeast(1.6f)) {\n\n            // String decomposed = Normalizer.normalize(input, Normalizer.Form.NFD);\n\n            // START of 1.5 reflection - in 1.6 use the line commented out above\n            try {\n                // get java.text.Normalizer.Form class\n                Class<?> normalizerFormClass = ClassUtils.getClass(\"java.text.Normalizer$Form\", false);\n\n                // get Normlizer class\n                Class<?> normalizerClass = ClassUtils.getClass(\"java.text.Normalizer\", false);\n\n                // get static method on Normalizer\n                java.lang.reflect.Method method = normalizerClass.getMethod(\"normalize\", CharSequence.class, normalizerFormClass );\n\n                // get Normalizer.NFD field\n                java.lang.reflect.Field nfd = normalizerFormClass.getField(\"NFD\");\n\n                // invoke method\n                String decomposed = (String) method.invoke( null, input, nfd.get(null) );\n                // END of 1.5 reflection\n\n                java.util.regex.Pattern accentPattern = java.util.regex.Pattern.compile(\"\\\\p{InCombiningDiacriticalMarks}+\");\n                return accentPattern.matcher(decomposed).replaceAll(\"\");\n            } catch(ClassNotFoundException cnfe) {\n                throw new RuntimeException(\"ClassNotFoundException occurred during 1.6 backcompat code\", cnfe);\n            } catch(NoSuchMethodException nsme) {\n                throw new RuntimeException(\"NoSuchMethodException occurred during 1.6 backcompat code\", nsme);\n            } catch(NoSuchFieldException nsfe) {\n                throw new RuntimeException(\"NoSuchFieldException occurred during 1.6 backcompat code\", nsfe);\n            } catch(IllegalAccessException iae) {\n                throw new RuntimeException(\"IllegalAccessException occurred during 1.6 backcompat code\", iae);\n            } catch(IllegalArgumentException iae) {\n                throw new RuntimeException(\"IllegalArgumentException occurred during 1.6 backcompat code\", iae);\n            } catch(java.lang.reflect.InvocationTargetException ite) {\n                throw new RuntimeException(\"InvocationTargetException occurred during 1.6 backcompat code\", ite);\n            } catch(SecurityException se) {\n                throw new RuntimeException(\"SecurityException occurred during 1.6 backcompat code\", se);\n            }\n        } else {\n            throw new UnsupportedOperationException(\"The stripAccents(String) method is not supported until Java 1.6\");\n        }\n    }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.stripAccents(String input)\nSIGNATURE: public static String stripAccents(String input)",
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.stripAccents(String input)\nSIGNATURE: public static String stripAccents(String input)\nSTRUCTURE (lossy):\nif(input == null)\nreturn null;\nif(SystemUtils.isJavaVersionAtLeast(1.6f))\nCALL SystemUtils.isJavaVersionAtLeast(1.6f)\nClass<?> normalizerFormClass = ClassUtils.getClass(\"java.text.Normalizer$Form\", false);\nCALL ClassUtils.getClass(\"java.text.Normalizer$Form\", false)\nClass<?> normalizerClass = ClassUtils.getClass(\"java.text.Normalizer\", false);\nCALL ClassUtils.getClass(\"java.text.Normalizer\", false)\njava.lang.reflect.Method method = normalizerClass.getMethod(\"normalize\", CharSequence.class, normalizerFormClass );\nCALL normalizerClass.getMethod(\"normalize\", CharSequence.class, normalizerFormClass )\njava.lang.reflect.Field nfd = normalizerFormClass.getField(\"NFD\");\nCALL normalizerFormClass.getField(\"NFD\")\nString decomposed = (String) method.invoke( null, input, nfd.get(null) );\nCALL method.invoke( null, input, nfd.get(null) )\nCALL nfd.get(null)\njava.util.regex.Pattern accentPattern = java.util.regex.Pattern.compile(\"\\\\p{InCombiningDiacriticalMarks}+\");\nCALL java.util.regex.Pattern.compile(\"\\\\p{InCombiningDiacriticalMarks}+\")\nreturn accentPattern.matcher(decomposed).replaceAll(\"\");\nCALL accentPattern.matcher(decomposed).replaceAll(\"\")\nCALL accentPattern.matcher(decomposed)\ncatch(ClassNotFoundException cnfe)\nthrow new RuntimeException(\"ClassNotFoundException occurred during 1.6 backcompat code\", cnfe);\ncatch(NoSuchMethodException nsme)\nthrow new RuntimeException(\"NoSuchMethodException occurred during 1.6 backcompat code\", nsme);\ncatch(NoSuchFieldException nsfe)\nthrow new RuntimeException(\"NoSuchFieldException occurred during 1.6 backcompat code\", nsfe);\ncatch(IllegalAccessException iae)\nthrow new RuntimeException(\"IllegalAccessException occurred during 1.6 backcompat code\", iae);\ncatch(IllegalArgumentException iae)\nthrow new RuntimeException(\"IllegalArgumentException occurred during 1.6 backcompat code\", iae);\ncatch(java.lang.reflect.InvocationTargetException ite)\nthrow new RuntimeException(\"InvocationTargetException occurred during 1.6 backcompat code\", ite);\ncatch(SecurityException se)\n\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public static String stripAccents(String input) {\n        if(input == null) {\n            return null;\n        }\n        if(SystemUtils.isJavaVersionAtLeast(1.6f)) {\n\n            // String decomposed = Normalizer.normalize(input, Normalizer.Form.NFD);\n\n            // START of 1.5 reflection - in 1.6 use the line commented out above\n            try {\n                // get java.text.Normalizer.Form class\n                Class<?> normalizerFormClass = ClassUtils.getClass(\"java.text.Normalizer$Form\", false);\n\n                // get Normlizer class\n                Class<?> normalizerClass = ClassUtils.getClass(\"java.text.Normalizer\", false);\n\n                // get static method on Normalizer\n                java.lang.reflect.Method method = normalizerClass.getMethod(\"normalize\", CharSequence.class, normalizerFormClass );\n\n                // get Normalizer.NFD field\n                java.lang.reflect.Field nfd = normalizerFormClass.getField(\"NFD\");\n\n                // invoke method\n                String decomposed = (String) method.invoke( null, input, nfd.get(null) );\n                // END of 1.5 reflection\n\n                java.util.regex.Pattern accentPattern = java.util.regex.Pattern.compile(\"\\\\p{InCombiningDiacriticalMarks}+\");\n                return accentPattern.matcher(decomposed).replaceAll(\"\");\n            } catch(ClassNotFoundException cnfe) {\n                throw new RuntimeException(\"ClassNotFoundException occurred during 1.6 backcompat code\", cnfe);\n            } catch(NoSuchMethodException nsme) {\n                throw new RuntimeException(\"NoSuchMethodException occurred during 1.6 backcompat code\", nsme);\n            } catch(NoSuchFieldException nsfe) {\n                throw new RuntimeException(\"NoSuchFieldException occurred during 1.6 backcompat code\", nsfe);\n            } catch(IllegalAccessException iae) {\n                throw new RuntimeException(\"IllegalAccessException occurred during 1.6 backcompat code\", iae);\n            } catch(IllegalArgumentException iae) {\n                throw new RuntimeException(\"IllegalArgumentException occurred during 1.6 backcompat code\", iae);\n            } catch(java.lang.reflect.InvocationTargetException ite) {\n                throw new RuntimeException(\"InvocationTargetException occurred during 1.6 backcompat code\", ite);\n            } catch(SecurityException se) {\n                throw new RuntimeException(\"SecurityException occurred during 1.6 backcompat code\", se);\n            }\n        } else {\n            throw new UnsupportedOperationException(\"The stripAccents(String) method is not supported until Java 1.6\");\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.29411764705882354,
+        "trace_match": 0.0,
+        "complexity": 10.0,
+        "call_count": 10.0,
+        "literal_count": 20.0,
+        "source_tokens": 658.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.8647416413373861,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 10,
+        "call_count": 10,
+        "literal_count": 20
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.validateRange(int startIndex, int endIndex)",
+      "source": "protected int validateRange(int startIndex, int endIndex) {\n        if (startIndex < 0) {\n            throw new StringIndexOutOfBoundsException(startIndex);\n        }\n        if (endIndex > size) {\n            endIndex = size;\n        }\n        if (startIndex > endIndex) {\n            throw new StringIndexOutOfBoundsException(\"end < start\");\n        }\n        return endIndex;\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.validateRange(int startIndex, int endIndex)\nSIGNATURE: protected int validateRange(int startIndex, int endIndex)",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.validateRange(int startIndex, int endIndex)\nSIGNATURE: protected int validateRange(int startIndex, int endIndex)\nSTRUCTURE (lossy):\nif (startIndex < 0)\nthrow new StringIndexOutOfBoundsException(startIndex);\nif (endIndex > size)\nendIndex = size\nif (startIndex > endIndex)\nthrow new StringIndexOutOfBoundsException(\"end < start\");\nreturn endIndex;",
+        "protected int validateRange(int startIndex, int endIndex) {\n        if (startIndex < 0) {\n            throw new StringIndexOutOfBoundsException(startIndex);\n        }\n        if (endIndex > size) {\n            endIndex = size;\n        }\n        if (startIndex > endIndex) {\n            throw new StringIndexOutOfBoundsException(\"end < start\");\n        }\n        return endIndex;\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.68,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 0.0,
+        "literal_count": 2.0,
+        "source_tokens": 96.0,
+        "l0_tokens": 48.0,
+        "l1_tokens": 107.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 0,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/SystemUtils.java::SystemUtils.isJavaVersionAtLeast(float requiredVersion)",
+      "source": "public static boolean isJavaVersionAtLeast(float requiredVersion) {\n        return JAVA_VERSION_FLOAT >= requiredVersion;\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/SystemUtils.java::SystemUtils.isJavaVersionAtLeast(float requiredVersion)\nSIGNATURE: public static boolean isJavaVersionAtLeast(float requiredVersion)",
+        "METHOD: src/main/java/org/apache/commons/lang3/SystemUtils.java::SystemUtils.isJavaVersionAtLeast(float requiredVersion)\nSIGNATURE: public static boolean isJavaVersionAtLeast(float requiredVersion)\nSTRUCTURE (lossy):\nreturn JAVA_VERSION_FLOAT >= requiredVersion;",
+        "public static boolean isJavaVersionAtLeast(float requiredVersion) {\n        return JAVA_VERSION_FLOAT >= requiredVersion;\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7647058823529411,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 32.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 66.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/math/Fraction.java::Fraction.getFraction(double value)",
+      "source": "public static Fraction getFraction(double value) {\n        int sign = (value < 0 ? -1 : 1);\n        value = Math.abs(value);\n        if (value  > Integer.MAX_VALUE || Double.isNaN(value)) {\n            throw new ArithmeticException\n                (\"The value must not be greater than Integer.MAX_VALUE or NaN\");\n        }\n        int wholeNumber = (int) value;\n        value -= wholeNumber;\n        \n        int numer0 = 0;  // the pre-previous\n        int denom0 = 1;  // the pre-previous\n        int numer1 = 1;  // the previous\n        int denom1 = 0;  // the previous\n        int numer2 = 0;  // the current, setup in calculation\n        int denom2 = 0;  // the current, setup in calculation\n        int a1 = (int) value;\n        int a2 = 0;\n        double x1 = 1;\n        double x2 = 0;\n        double y1 = value - a1;\n        double y2 = 0;\n        double delta1, delta2 = Double.MAX_VALUE;\n        double fraction;\n        int i = 1;\n//        System.out.println(\"---\");\n        do {\n            delta1 = delta2;\n            a2 = (int) (x1 / y1);\n            x2 = y1;\n            y2 = x1 - a2 * y1;\n            numer2 = a1 * numer1 + numer0;\n            denom2 = a1 * denom1 + denom0;\n            fraction = (double) numer2 / (double) denom2;\n            delta2 = Math.abs(value - fraction);\n//            System.out.println(numer2 + \" \" + denom2 + \" \" + fraction + \" \" + delta2 + \" \" + y1);\n            a1 = a2;\n            x1 = x2;\n            y1 = y2;\n            numer0 = numer1;\n            denom0 = denom1;\n            numer1 = numer2;\n            denom1 = denom2;\n            i++;\n//            System.out.println(\">>\" + delta1 +\" \"+ delta2+\" \"+(delta1 > delta2)+\" \"+i+\" \"+denom2);\n        } while ((delta1 > delta2) && (denom2 <= 10000) && (denom2 > 0) && (i < 25));\n        if (i == 25) {\n            throw new ArithmeticException(\"Unable to convert double to fraction\");\n        }\n        return getReducedFraction((numer0 + wholeNumber * denom0) * sign, denom0);\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/math/Fraction.java::Fraction.getFraction(double value)\nSIGNATURE: public static Fraction getFraction(double value)",
+        "METHOD: src/main/java/org/apache/commons/lang3/math/Fraction.java::Fraction.getFraction(double value)\nSIGNATURE: public static Fraction getFraction(double value)\nSTRUCTURE (lossy):\nint sign = (value < 0 ? -1 : 1);\nvalue = Math.abs(value)\nCALL Math.abs(value)\nif (value > Integer.MAX_VALUE || Double.isNaN(value))\nCALL Double.isNaN(value)\nthrow new ArithmeticException (\"The value must not be greater than Integer.MAX_VALUE or NaN\");\nint wholeNumber = (int) value;\nvalue -= wholeNumber\nint numer0 = 0;\nint denom0 = 1;\nint numer1 = 1;\nint denom1 = 0;\nint numer2 = 0;\nint denom2 = 0;\nint a1 = (int) value;\nint a2 = 0;\ndouble x1 = 1;\ndouble x2 = 0;\ndouble y1 = value - a1;\ndouble y2 = 0;\ndouble delta1, delta2 = Double.MAX_VALUE;\ndouble fraction;\nint i = 1;\ndo\ndelta1 = delta2\na2 = (int) (x1 / y1)\nx2 = y1\ny2 = x1 - a2 * y1\nnumer2 = a1 * numer1 + numer0\ndenom2 = a1 * denom1 + denom0\nfraction = (double) numer2 / (double) denom2\ndelta2 = Math.abs(value - fraction)\nCALL Math.abs(value - fraction)\na1 = a2\nx1 = x2\ny1 = y2\nnumer0 = numer1\ndenom0 = denom1\nnumer1 = numer2\ndenom1 = denom2\ni++\nif (i == 25)\nthrow new ArithmeticException(\"Unable to convert double to fraction\");\nreturn getReducedFraction((numer0 + wholeNumber * denom0) * sign, denom0);\nCALL getReducedFraction((numer0 + wholeNumber * denom0) * sign, denom0)",
+        "public static Fraction getFraction(double value) {\n        int sign = (value < 0 ? -1 : 1);\n        value = Math.abs(value);\n        if (value  > Integer.MAX_VALUE || Double.isNaN(value)) {\n            throw new ArithmeticException\n                (\"The value must not be greater than Integer.MAX_VALUE or NaN\");\n        }\n        int wholeNumber = (int) value;\n        value -= wholeNumber;\n        \n        int numer0 = 0;  // the pre-previous\n        int denom0 = 1;  // the pre-previous\n        int numer1 = 1;  // the previous\n        int denom1 = 0;  // the previous\n        int numer2 = 0;  // the current, setup in calculation\n        int denom2 = 0;  // the current, setup in calculation\n        int a1 = (int) value;\n        int a2 = 0;\n        double x1 = 1;\n        double x2 = 0;\n        double y1 = value - a1;\n        double y2 = 0;\n        double delta1, delta2 = Double.MAX_VALUE;\n        double fraction;\n        int i = 1;\n//        System.out.println(\"---\");\n        do {\n            delta1 = delta2;\n            a2 = (int) (x1 / y1);\n            x2 = y1;\n            y2 = x1 - a2 * y1;\n            numer2 = a1 * numer1 + numer0;\n            denom2 = a1 * denom1 + denom0;\n            fraction = (double) numer2 / (double) denom2;\n            delta2 = Math.abs(value - fraction);\n//            System.out.println(numer2 + \" \" + denom2 + \" \" + fraction + \" \" + delta2 + \" \" + y1);\n            a1 = a2;\n            x1 = x2;\n            y1 = y2;\n            numer0 = numer1;\n            denom0 = denom1;\n            numer1 = numer2;\n            denom1 = denom2;\n            i++;\n//            System.out.println(\">>\" + delta1 +\" \"+ delta2+\" \"+(delta1 > delta2)+\" \"+i+\" \"+denom2);\n        } while ((delta1 > delta2) && (denom2 <= 10000) && (denom2 > 0) && (i < 25));\n        if (i == 25) {\n            throw new ArithmeticException(\"Unable to convert double to fraction\");\n        }\n        return getReducedFraction((numer0 + wholeNumber * denom0) * sign, denom0);\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.37254901960784315,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 4.0,
+        "literal_count": 20.0,
+        "source_tokens": 497.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 329.0,
+        "compression_ratio": 0.6619718309859155,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 4,
+        "literal_count": 20
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/translate/UnicodeUnescaper.java::UnicodeUnescaper.translate(CharSequence input, int index, Writer out)",
+      "source": "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        if(input.charAt(index) == '\\\\') {\n            if( (index + 1 < input.length()) && input.charAt(index + 1) == 'u') {\n                // consume optional additional 'u' chars\n                int i=2;\n                while( (index + i < input.length()) && input.charAt(index + i) == 'u') {\n                    i++;\n                }\n\n                // consume + symbol in \\\\u+0045\n                if(isSet(OPTION.escapePlus)) {\n                    if( (index + i < input.length()) && (input.charAt(index + i) == '+') ) {\n                        i++;\n                    }\n                }\n\n                if( (index + i + 4 <= input.length()) ) {\n                    // Get 4 hex digits\n                    CharSequence unicode = input.subSequence(index + i, index + i + 4);\n\n                    try {\n                        int value = Integer.parseInt(unicode.toString(), 16);\n                        out.write((char) value);\n                    } catch (NumberFormatException nfe) {\n                        throw new IllegalArgumentException(\"Unable to parse unicode value: \" + unicode, nfe);\n                    }\n                    return i + 4;\n                } else {\n                    throw new IllegalArgumentException(\"Less than 4 hex digits in unicode value: '\" + \n                                                       input.subSequence(index, input.length()) +\n                                                       \"' due to end of CharSequence\");\n                }\n            }\n        }\n        return 0;\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/UnicodeUnescaper.java::UnicodeUnescaper.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/UnicodeUnescaper.java::UnicodeUnescaper.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException\nSTRUCTURE (lossy):\nif(input.charAt(index) == '\\\\')\nCALL input.charAt(index)\nif( (index + 1 < input.length()) && input.charAt(index + 1) == 'u')\nCALL input.length()\nCALL input.charAt(index + 1)\nint i=2;\nwhile( (index + i < input.length()) && input.charAt(index + i) == 'u')\nCALL input.charAt(index + i)\ni++\nif(isSet(OPTION.escapePlus))\nCALL isSet(OPTION.escapePlus)\nif( (index + i < input.length()) && (input.charAt(index + i) == '+') )\nif( (index + i + 4 <= input.length()) )\nCharSequence unicode = input.subSequence(index + i, index + i + 4);\nCALL input.subSequence(index + i, index + i + 4)\nint value = Integer.parseInt(unicode.toString(), 16);\nCALL Integer.parseInt(unicode.toString(), 16)\nCALL unicode.toString()\nCALL out.write((char) value)\ncatch (NumberFormatException nfe)\nthrow new IllegalArgumentException(\"Unable to parse unicode value: \" + unicode, nfe);\nreturn i + 4;\nthrow new IllegalArgumentException(\"Less than 4 hex digits in unicode value: '\" + input.subSequence(index, input.length()) + \"' due to end of CharSequence\");\nCALL input.subSequence(index, input.length())\nreturn 0;",
+        "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        if(input.charAt(index) == '\\\\') {\n            if( (index + 1 < input.length()) && input.charAt(index + 1) == 'u') {\n                // consume optional additional 'u' chars\n                int i=2;\n                while( (index + i < input.length()) && input.charAt(index + i) == 'u') {\n                    i++;\n                }\n\n                // consume + symbol in \\\\u+0045\n                if(isSet(OPTION.escapePlus)) {\n                    if( (index + i < input.length()) && (input.charAt(index + i) == '+') ) {\n                        i++;\n                    }\n                }\n\n                if( (index + i + 4 <= input.length()) ) {\n                    // Get 4 hex digits\n                    CharSequence unicode = input.subSequence(index + i, index + i + 4);\n\n                    try {\n                        int value = Integer.parseInt(unicode.toString(), 16);\n                        out.write((char) value);\n                    } catch (NumberFormatException nfe) {\n                        throw new IllegalArgumentException(\"Unable to parse unicode value: \" + unicode, nfe);\n                    }\n                    return i + 4;\n                } else {\n                    throw new IllegalArgumentException(\"Less than 4 hex digits in unicode value: '\" + \n                                                       input.subSequence(index, input.length()) +\n                                                       \"' due to end of CharSequence\");\n                }\n            }\n        }\n        return 0;\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3389830508474576,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 15.0,
+        "literal_count": 15.0,
+        "source_tokens": 410.0,
+        "l0_tokens": 66.0,
+        "l1_tokens": 339.0,
+        "compression_ratio": 0.8268292682926829,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 15,
+        "literal_count": 15
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/math/Fraction.java::Fraction.mulPosAndCheck(int x, int y)",
+      "source": "private static int mulPosAndCheck(int x, int y) {\n        /* assert x>=0 && y>=0; */\n        long m = ((long)x)*((long)y);\n        if (m > Integer.MAX_VALUE) {\n            throw new ArithmeticException(\"overflow: mulPos\");\n        }\n        return (int)m;\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/math/Fraction.java::Fraction.mulPosAndCheck(int x, int y)\nSIGNATURE: private static int mulPosAndCheck(int x, int y)",
+        "METHOD: src/main/java/org/apache/commons/lang3/math/Fraction.java::Fraction.mulPosAndCheck(int x, int y)\nSIGNATURE: private static int mulPosAndCheck(int x, int y)\nSTRUCTURE (lossy):\nlong m = ((long)x)*((long)y);\nif (m > Integer.MAX_VALUE)\nthrow new ArithmeticException(\"overflow: mulPos\");\nreturn (int)m;",
+        "private static int mulPosAndCheck(int x, int y) {\n        /* assert x>=0 && y>=0; */\n        long m = ((long)x)*((long)y);\n        if (m > Integer.MAX_VALUE) {\n            throw new ArithmeticException(\"overflow: mulPos\");\n        }\n        return (int)m;\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6296296296296297,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 0.0,
+        "literal_count": 1.0,
+        "source_tokens": 66.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 77.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 0,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/WordUtils.java::WordUtils.abbreviate(String str, int lower, int upper, String appendToEnd)",
+      "source": "public static String abbreviate(String str, int lower, int upper, String appendToEnd) {\n        // initial parameter checks\n        if (str == null) {\n            return null;\n        }\n        if (str.length() == 0) {\n            return StringUtils.EMPTY;\n        }\n\n        // if the lower value is greater than the length of the string,\n        // set to the length of the string\n        if (lower > str.length()) {\n            lower = str.length();    \n        }\n        // if the upper value is -1 (i.e. no limit) or is greater\n        // than the length of the string, set to the length of the string\n        if (upper == -1 || upper > str.length()) {\n            upper = str.length();\n        }\n        // if upper is less than lower, raise it to lower\n        if (upper < lower) {\n            upper = lower;\n        }\n\n        StringBuilder result = new StringBuilder();\n        int index = StringUtils.indexOf(str, \" \", lower);\n        if (index == -1) {\n            result.append(str.substring(0, upper));\n            // only if abbreviation has occured do we append the appendToEnd value\n            if (upper != str.length()) {\n                result.append(StringUtils.defaultString(appendToEnd));\n            }\n        } else if (index > upper) {\n            result.append(str.substring(0, upper));\n            result.append(StringUtils.defaultString(appendToEnd));\n        } else {\n            result.append(str.substring(0, index));\n            result.append(StringUtils.defaultString(appendToEnd));\n        }\n        return result.toString();\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/WordUtils.java::WordUtils.abbreviate(String str, int lower, int upper, String appendToEnd)\nSIGNATURE: public static String abbreviate(String str, int lower, int upper, String appendToEnd)",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/WordUtils.java::WordUtils.abbreviate(String str, int lower, int upper, String appendToEnd)\nSIGNATURE: public static String abbreviate(String str, int lower, int upper, String appendToEnd)\nSTRUCTURE (lossy):\nif (str == null)\nreturn null;\nif (str.length() == 0)\nCALL str.length()\nreturn StringUtils.EMPTY;\nif (lower > str.length())\nlower = str.length()\nif (upper == -1 || upper > str.length())\nupper = str.length()\nif (upper < lower)\nupper = lower\nStringBuilder result = new StringBuilder();\nint index = StringUtils.indexOf(str, \" \", lower);\nCALL StringUtils.indexOf(str, \" \", lower)\nif (index == -1)\nCALL result.append(str.substring(0, upper))\nCALL str.substring(0, upper)\nif (upper != str.length())\nCALL result.append(StringUtils.defaultString(appendToEnd))\nCALL StringUtils.defaultString(appendToEnd)\nif (index > upper)\nCALL result.append(str.substring(0, index))\nCALL str.substring(0, index)\nreturn result.toString();\nCALL result.toString()",
+        "public static String abbreviate(String str, int lower, int upper, String appendToEnd) {\n        // initial parameter checks\n        if (str == null) {\n            return null;\n        }\n        if (str.length() == 0) {\n            return StringUtils.EMPTY;\n        }\n\n        // if the lower value is greater than the length of the string,\n        // set to the length of the string\n        if (lower > str.length()) {\n            lower = str.length();    \n        }\n        // if the upper value is -1 (i.e. no limit) or is greater\n        // than the length of the string, set to the length of the string\n        if (upper == -1 || upper > str.length()) {\n            upper = str.length();\n        }\n        // if upper is less than lower, raise it to lower\n        if (upper < lower) {\n            upper = lower;\n        }\n\n        StringBuilder result = new StringBuilder();\n        int index = StringUtils.indexOf(str, \" \", lower);\n        if (index == -1) {\n            result.append(str.substring(0, upper));\n            // only if abbreviation has occured do we append the appendToEnd value\n            if (upper != str.length()) {\n                result.append(StringUtils.defaultString(appendToEnd));\n            }\n        } else if (index > upper) {\n            result.append(str.substring(0, upper));\n            result.append(StringUtils.defaultString(appendToEnd));\n        } else {\n            result.append(str.substring(0, index));\n            result.append(StringUtils.defaultString(appendToEnd));\n        }\n        return result.toString();\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.43478260869565216,
+        "trace_match": 0.0,
+        "complexity": 9.0,
+        "call_count": 20.0,
+        "literal_count": 9.0,
+        "source_tokens": 392.0,
+        "l0_tokens": 60.0,
+        "l1_tokens": 249.0,
+        "compression_ratio": 0.6352040816326531,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 9,
+        "call_count": 20,
+        "literal_count": 9
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.isNumber(String str)",
+      "source": "public static boolean isNumber(String str) {\n        if (StringUtils.isEmpty(str)) {\n            return false;\n        }\n        char[] chars = str.toCharArray();\n        int sz = chars.length;\n        boolean hasExp = false;\n        boolean hasDecPoint = false;\n        boolean allowSigns = false;\n        boolean foundDigit = false;\n        // deal with any possible sign up front\n        int start = (chars[0] == '-') ? 1 : 0;\n        if (sz > start + 1) {\n            if (chars[start] == '0' && chars[start + 1] == 'x') {\n                int i = start + 2;\n                if (i == sz) {\n                    return false; // str == \"0x\"\n                }\n                // checking hex (it can't be anything else)\n                for (; i < chars.length; i++) {\n                    if ((chars[i] < '0' || chars[i] > '9')\n                        && (chars[i] < 'a' || chars[i] > 'f')\n                        && (chars[i] < 'A' || chars[i] > 'F')) {\n                        return false;\n                    }\n                }\n                return true;\n            }\n        }\n        sz--; // don't want to loop to the last char, check it afterwords\n              // for type qualifiers\n        int i = start;\n        // loop to the next to last char or to the last char if we need another digit to\n        // make a valid number (e.g. chars[0..5] = \"1234E\")\n        while (i < sz || (i < sz + 1 && allowSigns && !foundDigit)) {\n            if (chars[i] >= '0' && chars[i] <= '9') {\n                foundDigit = true;\n                allowSigns = false;\n\n            } else if (chars[i] == '.') {\n                if (hasDecPoint || hasExp) {\n                    // two decimal points or dec in exponent   \n                    return false;\n                }\n                hasDecPoint = true;\n            } else if (chars[i] == 'e' || chars[i] == 'E') {\n                // we've already taken care of hex.\n                if (hasExp) {\n                    // two E's\n                    return false;\n                }\n                if (!foundDigit) {\n                    return false;\n                }\n                hasExp = true;\n                allowSigns = true;\n            } else if (chars[i] == '+' || chars[i] == '-') {\n                if (!allowSigns) {\n                    return false;\n                }\n                allowSigns = false;\n                foundDigit = false; // we need a digit after the E\n            } else {\n                return false;\n            }\n            i++;\n        }\n        if (i < chars.length) {\n            if (chars[i] >= '0' && chars[i] <= '9') {\n                // no type qualifier, OK\n                return true;\n            }\n            if (chars[i] == 'e' || chars[i] == 'E') {\n                // can't have an E at the last byte\n                return false;\n            }\n            if (chars[i] == '.') {\n                if (hasDecPoint || hasExp) {\n                    // two decimal points or dec in exponent\n                    return false;\n                }\n                // single trailing decimal point after non-exponent is ok\n                return foundDigit;\n            }\n            if (!allowSigns\n                && (chars[i] == 'd'\n                    || chars[i] == 'D'\n                    || chars[i] == 'f'\n                    || chars[i] == 'F')) {\n                return foundDigit;\n            }\n            if (chars[i] == 'l'\n                || chars[i] == 'L') {\n                // not allowing L with an exponent\n                return foundDigit && !hasExp;\n            }\n            // last character is illegal\n            return false;\n        }\n        // allowSigns is true iff the val ends in 'E'\n        // found digit it to make sure weird stuff like '.' and '1E-' doesn't pass\n        return !allowSigns && foundDigit;\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.isNumber(String str)\nSIGNATURE: public static boolean isNumber(String str)",
+        "METHOD: src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.isNumber(String str)\nSIGNATURE: public static boolean isNumber(String str)\nSTRUCTURE (lossy):\nif (StringUtils.isEmpty(str))\nCALL StringUtils.isEmpty(str)\nreturn false;\nchar[] chars = str.toCharArray();\nCALL str.toCharArray()\nint sz = chars.length;\nboolean hasExp = false;\nboolean hasDecPoint = false;\nboolean allowSigns = false;\nboolean foundDigit = false;\nint start = (chars[0] == '-') ? 1 : 0;\nif (sz > start + 1)\nif (chars[start] == '0' && chars[start + 1] == 'x')\nint i = start + 2;\nif (i == sz)\nfor (; i < chars.length; i++)\ni++\nif ((chars[i] < '0' || chars[i] > '9') && (chars[i] < 'a' || chars[i] > 'f') && (chars[i] < 'A' || chars[i] > 'F'))\nreturn true;\nsz--\nint i = start;\nwhile (i < sz || (i < sz + 1 && allowSigns && !foundDigit))\nif (chars[i] >= '0' && chars[i] <= '9')\nfoundDigit = true\nallowSigns = false\nif (chars[i] == '.')\nif (hasDecPoint || hasExp)\nhasDecPoint = true\nif (chars[i] == 'e' || chars[i] == 'E')\nif (hasExp)\nif (!foundDigit)\nhasExp = true\nallowSigns = true\nif (chars[i] == '+' || chars[i] == '-')\nif (!allowSigns)\nfoundDigit = false\nif (i < chars.length)\nreturn foundDigit;\nif (!allowSigns && (chars[i] == 'd' || chars[i] == 'D' || chars[i] == 'f' || chars[i] == 'F'))\nif (chars[i] == 'l' || chars[i] == 'L')\nreturn foundDigit && !hasExp;\nreturn !allowSigns && foundDigit;",
+        "public static boolean isNumber(String str) {\n        if (StringUtils.isEmpty(str)) {\n            return false;\n        }\n        char[] chars = str.toCharArray();\n        int sz = chars.length;\n        boolean hasExp = false;\n        boolean hasDecPoint = false;\n        boolean allowSigns = false;\n        boolean foundDigit = false;\n        // deal with any possible sign up front\n        int start = (chars[0] == '-') ? 1 : 0;\n        if (sz > start + 1) {\n            if (chars[start] == '0' && chars[start + 1] == 'x') {\n                int i = start + 2;\n                if (i == sz) {\n                    return false; // str == \"0x\"\n                }\n                // checking hex (it can't be anything else)\n                for (; i < chars.length; i++) {\n                    if ((chars[i] < '0' || chars[i] > '9')\n                        && (chars[i] < 'a' || chars[i] > 'f')\n                        && (chars[i] < 'A' || chars[i] > 'F')) {\n                        return false;\n                    }\n                }\n                return true;\n            }\n        }\n        sz--; // don't want to loop to the last char, check it afterwords\n              // for type qualifiers\n        int i = start;\n        // loop to the next to last char or to the last char if we need another digit to\n        // make a valid number (e.g. chars[0..5] = \"1234E\")\n        while (i < sz || (i < sz + 1 && allowSigns && !foundDigit)) {\n            if (chars[i] >= '0' && chars[i] <= '9') {\n                foundDigit = true;\n                allowSigns = false;\n\n            } else if (chars[i] == '.') {\n                if (hasDecPoint || hasExp) {\n                    // two decimal points or dec in exponent   \n                    return false;\n                }\n                hasDecPoint = true;\n            } else if (chars[i] == 'e' || chars[i] == 'E') {\n                // we've already taken care of hex.\n                if (hasExp) {\n                    // two E's\n                    return false;\n                }\n                if (!foundDigit) {\n                    return false;\n                }\n                hasExp = true;\n                allowSigns = true;\n            } else if (chars[i] == '+' || chars[i] == '-') {\n                if (!allowSigns) {\n                    return false;\n                }\n                allowSigns = false;\n                foundDigit = false; // we need a digit after the E\n            } else {\n                return false;\n            }\n            i++;\n        }\n        if (i < chars.length) {\n            if (chars[i] >= '0' && chars[i] <= '9') {\n                // no type qualifier, OK\n                return true;\n            }\n            if (chars[i] == 'e' || chars[i] == 'E') {\n                // can't have an E at the last byte\n                return false;\n            }\n            if (chars[i] == '.') {\n                if (hasDecPoint || hasExp) {\n                    // two decimal points or dec in exponent\n                    return false;\n                }\n                // single trailing decimal point after non-exponent is ok\n                return foundDigit;\n            }\n            if (!allowSigns\n                && (chars[i] == 'd'\n                    || chars[i] == 'D'\n                    || chars[i] == 'f'\n                    || chars[i] == 'F')) {\n                return foundDigit;\n            }\n            if (chars[i] == 'l'\n                || chars[i] == 'L') {\n                // not allowing L with an exponent\n                return foundDigit && !hasExp;\n            }\n            // last character is illegal\n            return false;\n        }\n        // allowSigns is true iff the val ends in 'E'\n        // found digit it to make sure weird stuff like '.' and '1E-' doesn't pass\n        return !allowSigns && foundDigit;\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.23863636363636365,
+        "trace_match": 0.0,
+        "complexity": 23.0,
+        "call_count": 2.0,
+        "literal_count": 34.0,
+        "source_tokens": 959.0,
+        "l0_tokens": 39.0,
+        "l1_tokens": 347.0,
+        "compression_ratio": 0.3618352450469239,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 23,
+        "call_count": 2,
+        "literal_count": 34
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)",
+      "source": "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf \n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars, \n        // then a subclass can test equals to a superclass.\n        Class<?> lhsClass = lhs.getClass();\n        Class<?> rhsClass = rhs.getClass();\n        Class<?> testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and \n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)\nSIGNATURE: public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)",
+        "METHOD: src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)\nSIGNATURE: public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)\nSTRUCTURE (lossy):\nif (lhs == rhs)\nreturn true;\nif (lhs == null || rhs == null)\nreturn false;\nClass<?> lhsClass = lhs.getClass();\nCALL lhs.getClass()\nClass<?> rhsClass = rhs.getClass();\nCALL rhs.getClass()\nClass<?> testClass;\nif (lhsClass.isInstance(rhs))\nCALL lhsClass.isInstance(rhs)\ntestClass = lhsClass\nif (!rhsClass.isInstance(lhs))\nCALL rhsClass.isInstance(lhs)\ntestClass = rhsClass\nif (rhsClass.isInstance(lhs))\nif (!lhsClass.isInstance(rhs))\nEqualsBuilder equalsBuilder = new EqualsBuilder();\nCALL reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields)\nwhile (testClass.getSuperclass() != null && testClass != reflectUpToClass)\nCALL testClass.getSuperclass()\ntestClass = testClass.getSuperclass()\ncatch (IllegalArgumentException e)\nreturn equalsBuilder.isEquals();\nCALL equalsBuilder.isEquals()",
+        "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf \n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars, \n        // then a subclass can test equals to a superclass.\n        Class<?> lhsClass = lhs.getClass();\n        Class<?> rhsClass = rhs.getClass();\n        Class<?> testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and \n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2898550724637681,
+        "trace_match": 0.0,
+        "complexity": 9.0,
+        "call_count": 11.0,
+        "literal_count": 3.0,
+        "source_tokens": 533.0,
+        "l0_tokens": 95.0,
+        "l1_tokens": 303.0,
+        "compression_ratio": 0.5684803001876173,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 9,
+        "call_count": 11,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.append(char[] chars, int startIndex, int length)",
+      "source": "public StrBuilder append(char[] chars, int startIndex, int length) {\n        if (chars == null) {\n            return appendNull();\n        }\n        if (startIndex < 0 || startIndex > chars.length) {\n            throw new StringIndexOutOfBoundsException(\"Invalid startIndex: \" + length);\n        }\n        if (length < 0 || (startIndex + length) > chars.length) {\n            throw new StringIndexOutOfBoundsException(\"Invalid length: \" + length);\n        }\n        if (length > 0) {\n            int len = length();\n            ensureCapacity(len + length);\n            System.arraycopy(chars, startIndex, buffer, len, length);\n            size += length;\n        }\n        return this;\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.append(char[] chars, int startIndex, int length)\nSIGNATURE: public StrBuilder append(char[] chars, int startIndex, int length)",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.append(char[] chars, int startIndex, int length)\nSIGNATURE: public StrBuilder append(char[] chars, int startIndex, int length)\nSTRUCTURE (lossy):\nif (chars == null)\nreturn appendNull();\nCALL appendNull()\nif (startIndex < 0 || startIndex > chars.length)\nthrow new StringIndexOutOfBoundsException(\"Invalid startIndex: \" + length);\nif (length < 0 || (startIndex + length) > chars.length)\nthrow new StringIndexOutOfBoundsException(\"Invalid length: \" + length);\nif (length > 0)\nint len = length();\nCALL length()\nCALL ensureCapacity(len + length)\nCALL System.arraycopy(chars, startIndex, buffer, len, length)\nsize += length\nreturn this;",
+        "public StrBuilder append(char[] chars, int startIndex, int length) {\n        if (chars == null) {\n            return appendNull();\n        }\n        if (startIndex < 0 || startIndex > chars.length) {\n            throw new StringIndexOutOfBoundsException(\"Invalid startIndex: \" + length);\n        }\n        if (length < 0 || (startIndex + length) > chars.length) {\n            throw new StringIndexOutOfBoundsException(\"Invalid length: \" + length);\n        }\n        if (length > 0) {\n            int len = length();\n            ensureCapacity(len + length);\n            System.arraycopy(chars, startIndex, buffer, len, length);\n            size += length;\n        }\n        return this;\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5714285714285714,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 4.0,
+        "literal_count": 6.0,
+        "source_tokens": 173.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 178.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 4,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/SystemUtils.java::SystemUtils.isJavaVersionAtLeast(int requiredVersion)",
+      "source": "public static boolean isJavaVersionAtLeast(int requiredVersion) {\n        return JAVA_VERSION_INT >= requiredVersion;\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/SystemUtils.java::SystemUtils.isJavaVersionAtLeast(int requiredVersion)\nSIGNATURE: public static boolean isJavaVersionAtLeast(int requiredVersion)",
+        "METHOD: src/main/java/org/apache/commons/lang3/SystemUtils.java::SystemUtils.isJavaVersionAtLeast(int requiredVersion)\nSIGNATURE: public static boolean isJavaVersionAtLeast(int requiredVersion)\nSTRUCTURE (lossy):\nreturn JAVA_VERSION_INT >= requiredVersion;",
+        "public static boolean isJavaVersionAtLeast(int requiredVersion) {\n        return JAVA_VERSION_INT >= requiredVersion;\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7647058823529411,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 31.0,
+        "l0_tokens": 49.0,
+        "l1_tokens": 64.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/ObjectUtils.java::ObjectUtils.clone(final T o)",
+      "source": "public static <T> T clone(final T o) {\n        if (o instanceof Cloneable) {\n            final Object result;\n            if (o.getClass().isArray()) {\n                final Class<?> componentType = o.getClass().getComponentType();\n                if (!componentType.isPrimitive()) {\n                    result = ((Object[])o).clone();\n                } else {\n                    int length = Array.getLength(o);\n                    result = Array.newInstance(componentType, length);\n                    while (length-- > 0) {\n                        Array.set(result, length, Array.get(o, length));\n                    }\n                }\n            } else {\n                try {\n                    final Method clone = o.getClass().getMethod(\"clone\");\n                    result = clone.invoke(o);\n                } catch (final NoSuchMethodException e) {\n                    throw new CloneFailedException(\"Cloneable type \"\n                        + o.getClass().getName()\n                        + \" has no clone method\", e);\n                } catch (final IllegalAccessException e) {\n                    throw new CloneFailedException(\"Cannot clone Cloneable type \"\n                        + o.getClass().getName(), e);\n                } catch (final InvocationTargetException e) {\n                    throw new CloneFailedException(\"Exception cloning Cloneable type \"\n                        + o.getClass().getName(), e.getCause());\n                }\n            }\n            @SuppressWarnings(\"unchecked\")\n            final T checked = (T)result;\n            return checked;\n        }\n\n        return null;\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/ObjectUtils.java::ObjectUtils.clone(final T o)\nSIGNATURE: public static <T> T clone(final T o)",
+        "METHOD: src/main/java/org/apache/commons/lang3/ObjectUtils.java::ObjectUtils.clone(final T o)\nSIGNATURE: public static <T> T clone(final T o)\nSTRUCTURE (lossy):\nif (o instanceof Cloneable)\nfinal Object result;\nif (o.getClass().isArray())\nCALL o.getClass().isArray()\nCALL o.getClass()\nfinal Class<?> componentType = o.getClass().getComponentType();\nCALL o.getClass().getComponentType()\nif (!componentType.isPrimitive())\nCALL componentType.isPrimitive()\nresult = ((Object[])o).clone()\nCALL ((Object[])o).clone()\nint length = Array.getLength(o);\nCALL Array.getLength(o)\nresult = Array.newInstance(componentType, length)\nCALL Array.newInstance(componentType, length)\nwhile (length-- > 0)\nlength--\nCALL Array.set(result, length, Array.get(o, length))\nCALL Array.get(o, length)\nfinal Method clone = o.getClass().getMethod(\"clone\");\nCALL o.getClass().getMethod(\"clone\")\nresult = clone.invoke(o)\nCALL clone.invoke(o)\ncatch (final NoSuchMethodException e)\nthrow new CloneFailedException(\"Cloneable type \" + o.getClass().getName() + \" has no clone method\", e);\nCALL o.getClass().getName()\ncatch (final IllegalAccessException e)\nthrow new CloneFailedException(\"Cannot clone Cloneable type \" + o.getClass().getName(), e);\ncatch (final InvocationTargetException e)\nthrow new CloneFailedException(\"Exception cloning Cloneable type \" + o.getClass().getName(), e.getCause());\nCALL e.getCause()\n@SuppressWarnings(\"unchecked\") final T checked = (T)result;\nreturn checked;\nreturn null;",
+        "public static <T> T clone(final T o) {\n        if (o instanceof Cloneable) {\n            final Object result;\n            if (o.getClass().isArray()) {\n                final Class<?> componentType = o.getClass().getComponentType();\n                if (!componentType.isPrimitive()) {\n                    result = ((Object[])o).clone();\n                } else {\n                    int length = Array.getLength(o);\n                    result = Array.newInstance(componentType, length);\n                    while (length-- > 0) {\n                        Array.set(result, length, Array.get(o, length));\n                    }\n                }\n            } else {\n                try {\n                    final Method clone = o.getClass().getMethod(\"clone\");\n                    result = clone.invoke(o);\n                } catch (final NoSuchMethodException e) {\n                    throw new CloneFailedException(\"Cloneable type \"\n                        + o.getClass().getName()\n                        + \" has no clone method\", e);\n                } catch (final IllegalAccessException e) {\n                    throw new CloneFailedException(\"Cannot clone Cloneable type \"\n                        + o.getClass().getName(), e);\n                } catch (final InvocationTargetException e) {\n                    throw new CloneFailedException(\"Exception cloning Cloneable type \"\n                        + o.getClass().getName(), e.getCause());\n                }\n            }\n            @SuppressWarnings(\"unchecked\")\n            final T checked = (T)result;\n            return checked;\n        }\n\n        return null;\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.36538461538461536,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 20.0,
+        "literal_count": 8.0,
+        "source_tokens": 406.0,
+        "l0_tokens": 36.0,
+        "l1_tokens": 367.0,
+        "compression_ratio": 0.9039408866995073,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 20,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)",
+      "source": "public TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit) {\n        if (timePeriod <= 0) {\n            throw new IllegalArgumentException(\"Time period must be greater 0!\");\n        }\n\n        period = timePeriod;\n        unit = timeUnit;\n\n        if (service != null) {\n            executorService = service;\n            ownExecutor = false;\n        } else {\n            ScheduledThreadPoolExecutor s = new ScheduledThreadPoolExecutor(\n                    THREAD_POOL_SIZE);\n            s.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);\n            s.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);\n            executorService = s;\n            ownExecutor = true;\n        }\n\n        setLimit(limit);\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)\nSIGNATURE: public TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)",
+        "METHOD: src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)\nSIGNATURE: public TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)\nSTRUCTURE (lossy):\nif (timePeriod <= 0)\nthrow new IllegalArgumentException(\"Time period must be greater 0!\");\nperiod = timePeriod\nunit = timeUnit\nif (service != null)\nexecutorService = service\nownExecutor = false\nScheduledThreadPoolExecutor s = new ScheduledThreadPoolExecutor( THREAD_POOL_SIZE);\nCALL s.setContinueExistingPeriodicTasksAfterShutdownPolicy(false)\nCALL s.setExecuteExistingDelayedTasksAfterShutdownPolicy(false)\nexecutorService = s\nownExecutor = true\nCALL setLimit(limit)",
+        "public TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit) {\n        if (timePeriod <= 0) {\n            throw new IllegalArgumentException(\"Time period must be greater 0!\");\n        }\n\n        period = timePeriod;\n        unit = timeUnit;\n\n        if (service != null) {\n            executorService = service;\n            ownExecutor = false;\n        } else {\n            ScheduledThreadPoolExecutor s = new ScheduledThreadPoolExecutor(\n                    THREAD_POOL_SIZE);\n            s.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);\n            s.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);\n            executorService = s;\n            ownExecutor = true;\n        }\n\n        setLimit(limit);\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 3.0,
+        "literal_count": 3.0,
+        "source_tokens": 196.0,
+        "l0_tokens": 82.0,
+        "l1_tokens": 204.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 3,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java::ExtendedMessageFormat.readArgumentIndex(String pattern, ParsePosition pos)",
+      "source": "private int readArgumentIndex(String pattern, ParsePosition pos) {\n        int start = pos.getIndex();\n        seekNonWs(pattern, pos);\n        StringBuffer result = new StringBuffer();\n        boolean error = false;\n        for (; !error && pos.getIndex() < pattern.length(); next(pos)) {\n            char c = pattern.charAt(pos.getIndex());\n            if (Character.isWhitespace(c)) {\n                seekNonWs(pattern, pos);\n                c = pattern.charAt(pos.getIndex());\n                if (c != START_FMT && c != END_FE) {\n                    error = true;\n                    continue;\n                }\n            }\n            if ((c == START_FMT || c == END_FE) && result.length() > 0) {\n                try {\n                    return Integer.parseInt(result.toString());\n                } catch (NumberFormatException e) {\n                    // we've already ensured only digits, so unless something\n                    // outlandishly large was specified we should be okay.\n                }\n            }\n            error = !Character.isDigit(c);\n            result.append(c);\n        }\n        if (error) {\n            throw new IllegalArgumentException(\n                    \"Invalid format argument index at position \" + start + \": \"\n                            + pattern.substring(start, pos.getIndex()));\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated format element at position \" + start);\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java::ExtendedMessageFormat.readArgumentIndex(String pattern, ParsePosition pos)\nSIGNATURE: private int readArgumentIndex(String pattern, ParsePosition pos)",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java::ExtendedMessageFormat.readArgumentIndex(String pattern, ParsePosition pos)\nSIGNATURE: private int readArgumentIndex(String pattern, ParsePosition pos)\nSTRUCTURE (lossy):\nint start = pos.getIndex();\nCALL pos.getIndex()\nCALL seekNonWs(pattern, pos)\nStringBuffer result = new StringBuffer();\nboolean error = false;\nfor (; !error && pos.getIndex() < pattern.length(); next(pos))\nCALL pattern.length()\nCALL next(pos)\nchar c = pattern.charAt(pos.getIndex());\nCALL pattern.charAt(pos.getIndex())\nif (Character.isWhitespace(c))\nCALL Character.isWhitespace(c)\nc = pattern.charAt(pos.getIndex())\nif (c != START_FMT && c != END_FE)\nerror = true\nif ((c == START_FMT || c == END_FE) && result.length() > 0)\nCALL result.length()\nreturn Integer.parseInt(result.toString());\nCALL Integer.parseInt(result.toString())\nCALL result.toString()\ncatch (NumberFormatException e)\nerror = !Character.isDigit(c)\nCALL Character.isDigit(c)\nCALL result.append(c)\nif (error)\nthrow new IllegalArgumentException( \"Invalid format argument index at position \" + start + \": \" + pattern.substring(start, pos.getIndex()));\nCALL pattern.substring(start, pos.getIndex())\nthrow new IllegalArgumentException( \"Unterminated format element at position \" + start);",
+        "private int readArgumentIndex(String pattern, ParsePosition pos) {\n        int start = pos.getIndex();\n        seekNonWs(pattern, pos);\n        StringBuffer result = new StringBuffer();\n        boolean error = false;\n        for (; !error && pos.getIndex() < pattern.length(); next(pos)) {\n            char c = pattern.charAt(pos.getIndex());\n            if (Character.isWhitespace(c)) {\n                seekNonWs(pattern, pos);\n                c = pattern.charAt(pos.getIndex());\n                if (c != START_FMT && c != END_FE) {\n                    error = true;\n                    continue;\n                }\n            }\n            if ((c == START_FMT || c == END_FE) && result.length() > 0) {\n                try {\n                    return Integer.parseInt(result.toString());\n                } catch (NumberFormatException e) {\n                    // we've already ensured only digits, so unless something\n                    // outlandishly large was specified we should be okay.\n                }\n            }\n            error = !Character.isDigit(c);\n            result.append(c);\n        }\n        if (error) {\n            throw new IllegalArgumentException(\n                    \"Invalid format argument index at position \" + start + \": \"\n                            + pattern.substring(start, pos.getIndex()));\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated format element at position \" + start);\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3283582089552239,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 18.0,
+        "literal_count": 4.0,
+        "source_tokens": 365.0,
+        "l0_tokens": 58.0,
+        "l1_tokens": 325.0,
+        "compression_ratio": 0.8904109589041096,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 18,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.deleteCharAt(int index)",
+      "source": "public StrBuilder deleteCharAt(int index) {\n        if (index < 0 || index >= size) {\n            throw new StringIndexOutOfBoundsException(index);\n        }\n        deleteImpl(index, index + 1, 1);\n        return this;\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.deleteCharAt(int index)\nSIGNATURE: public StrBuilder deleteCharAt(int index)",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.deleteCharAt(int index)\nSIGNATURE: public StrBuilder deleteCharAt(int index)\nSTRUCTURE (lossy):\nif (index < 0 || index >= size)\nthrow new StringIndexOutOfBoundsException(index);\nCALL deleteImpl(index, index + 1, 1)\nreturn this;",
+        "public StrBuilder deleteCharAt(int index) {\n        if (index < 0 || index >= size) {\n            throw new StringIndexOutOfBoundsException(index);\n        }\n        deleteImpl(index, index + 1, 1);\n        return this;\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.68,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 3.0,
+        "source_tokens": 57.0,
+        "l0_tokens": 39.0,
+        "l1_tokens": 77.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/ClassUtils.java::ClassUtils.isAssignable(Class<?> cls, Class<?> toClass, boolean autoboxing)",
+      "source": "public static boolean isAssignable(Class<?> cls, Class<?> toClass, boolean autoboxing) {\n        if (toClass == null) {\n            return false;\n        }\n        // have to check for null, as isAssignableFrom doesn't\n        if (cls == null) {\n            return !(toClass.isPrimitive());\n        }\n        //autoboxing:\n        if (autoboxing) {\n            if (cls.isPrimitive() && !toClass.isPrimitive()) {\n                cls = primitiveToWrapper(cls);\n                if (cls == null) {\n                    return false;\n                }\n            }\n            if (toClass.isPrimitive() && !cls.isPrimitive()) {\n                cls = wrapperToPrimitive(cls);\n                if (cls == null) {\n                    return false;\n                }\n            }\n        }\n        if (cls.equals(toClass)) {\n            return true;\n        }\n        if (cls.isPrimitive()) {\n            if (toClass.isPrimitive() == false) {\n                return false;\n            }\n            if (Integer.TYPE.equals(cls)) {\n                return Long.TYPE.equals(toClass)\n                    || Float.TYPE.equals(toClass)\n                    || Double.TYPE.equals(toClass);\n            }\n            if (Long.TYPE.equals(cls)) {\n                return Float.TYPE.equals(toClass)\n                    || Double.TYPE.equals(toClass);\n            }\n            if (Boolean.TYPE.equals(cls)) {\n                return false;\n            }\n            if (Double.TYPE.equals(cls)) {\n                return false;\n            }\n            if (Float.TYPE.equals(cls)) {\n                return Double.TYPE.equals(toClass);\n            }\n            if (Character.TYPE.equals(cls)) {\n                return Integer.TYPE.equals(toClass)\n                    || Long.TYPE.equals(toClass)\n                    || Float.TYPE.equals(toClass)\n                    || Double.TYPE.equals(toClass);\n            }\n            if (Short.TYPE.equals(cls)) {\n                return Integer.TYPE.equals(toClass)\n                    || Long.TYPE.equals(toClass)\n                    || Float.TYPE.equals(toClass)\n                    || Double.TYPE.equals(toClass);\n            }\n            if (Byte.TYPE.equals(cls)) {\n                return Short.TYPE.equals(toClass)\n                    || Integer.TYPE.equals(toClass)\n                    || Long.TYPE.equals(toClass)\n                    || Float.TYPE.equals(toClass)\n                    || Double.TYPE.equals(toClass);\n            }\n            // should never get here\n            return false;\n        }\n        return toClass.isAssignableFrom(cls);\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/ClassUtils.java::ClassUtils.isAssignable(Class<?> cls, Class<?> toClass, boolean autoboxing)\nSIGNATURE: public static boolean isAssignable(Class<?> cls, Class<?> toClass, boolean autoboxing)",
+        "METHOD: src/main/java/org/apache/commons/lang3/ClassUtils.java::ClassUtils.isAssignable(Class<?> cls, Class<?> toClass, boolean autoboxing)\nSIGNATURE: public static boolean isAssignable(Class<?> cls, Class<?> toClass, boolean autoboxing)\nSTRUCTURE (lossy):\nif (toClass == null)\nreturn false;\nif (cls == null)\nreturn !(toClass.isPrimitive());\nCALL toClass.isPrimitive()\nif (autoboxing)\nif (cls.isPrimitive() && !toClass.isPrimitive())\nCALL cls.isPrimitive()\ncls = primitiveToWrapper(cls)\nCALL primitiveToWrapper(cls)\nif (toClass.isPrimitive() && !cls.isPrimitive())\ncls = wrapperToPrimitive(cls)\nCALL wrapperToPrimitive(cls)\nif (cls.equals(toClass))\nCALL cls.equals(toClass)\nreturn true;\nif (cls.isPrimitive())\nif (toClass.isPrimitive() == false)\nif (Integer.TYPE.equals(cls))\nCALL Integer.TYPE.equals(cls)\nreturn Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);\nCALL Long.TYPE.equals(toClass)\nCALL Float.TYPE.equals(toClass)\nCALL Double.TYPE.equals(toClass)\nif (Long.TYPE.equals(cls))\nCALL Long.TYPE.equals(cls)\nreturn Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);\nif (Boolean.TYPE.equals(cls))\nCALL Boolean.TYPE.equals(cls)\nif (Double.TYPE.equals(cls))\nCALL Double.TYPE.equals(cls)\nif (Float.TYPE.equals(cls))\nCALL Float.TYPE.equals(cls)\nreturn Double.TYPE.equals(toClass);\nif (Character.TYPE.equals(cls))\nCALL Character.TYPE.equals(cls)\nreturn Integer.TYPE.equals(toClass) || Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);\nCALL Integer.TYPE.equals(toClass)\nif (Short.TYPE.equals(cls))\nCALL Short.TYPE.equals(cls)\nif (Byte.TYPE.equals(cls))\nCALL Byte.TYPE.equals(cls)\nreturn Short.TYPE.equals(toClass) || Integer.TYPE.equals(toClass) || Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);\nCALL Short.TYPE.equals(toClass)\nreturn toClass.isAssignableFrom(cls);\nCALL toClass.isAssignableFrom(cls)",
+        "public static boolean isAssignable(Class<?> cls, Class<?> toClass, boolean autoboxing) {\n        if (toClass == null) {\n            return false;\n        }\n        // have to check for null, as isAssignableFrom doesn't\n        if (cls == null) {\n            return !(toClass.isPrimitive());\n        }\n        //autoboxing:\n        if (autoboxing) {\n            if (cls.isPrimitive() && !toClass.isPrimitive()) {\n                cls = primitiveToWrapper(cls);\n                if (cls == null) {\n                    return false;\n                }\n            }\n            if (toClass.isPrimitive() && !cls.isPrimitive()) {\n                cls = wrapperToPrimitive(cls);\n                if (cls == null) {\n                    return false;\n                }\n            }\n        }\n        if (cls.equals(toClass)) {\n            return true;\n        }\n        if (cls.isPrimitive()) {\n            if (toClass.isPrimitive() == false) {\n                return false;\n            }\n            if (Integer.TYPE.equals(cls)) {\n                return Long.TYPE.equals(toClass)\n                    || Float.TYPE.equals(toClass)\n                    || Double.TYPE.equals(toClass);\n            }\n            if (Long.TYPE.equals(cls)) {\n                return Float.TYPE.equals(toClass)\n                    || Double.TYPE.equals(toClass);\n            }\n            if (Boolean.TYPE.equals(cls)) {\n                return false;\n            }\n            if (Double.TYPE.equals(cls)) {\n                return false;\n            }\n            if (Float.TYPE.equals(cls)) {\n                return Double.TYPE.equals(toClass);\n            }\n            if (Character.TYPE.equals(cls)) {\n                return Integer.TYPE.equals(toClass)\n                    || Long.TYPE.equals(toClass)\n                    || Float.TYPE.equals(toClass)\n                    || Double.TYPE.equals(toClass);\n            }\n            if (Short.TYPE.equals(cls)) {\n                return Integer.TYPE.equals(toClass)\n                    || Long.TYPE.equals(toClass)\n                    || Float.TYPE.equals(toClass)\n                    || Double.TYPE.equals(toClass);\n            }\n            if (Byte.TYPE.equals(cls)) {\n                return Short.TYPE.equals(toClass)\n                    || Integer.TYPE.equals(toClass)\n                    || Long.TYPE.equals(toClass)\n                    || Float.TYPE.equals(toClass)\n                    || Double.TYPE.equals(toClass);\n            }\n            // should never get here\n            return false;\n        }\n        return toClass.isAssignableFrom(cls);\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.48717948717948717,
+        "trace_match": 0.0,
+        "complexity": 19.0,
+        "call_count": 38.0,
+        "literal_count": 4.0,
+        "source_tokens": 646.0,
+        "l0_tokens": 60.0,
+        "l1_tokens": 481.0,
+        "compression_ratio": 0.7445820433436533,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 19,
+        "call_count": 38,
+        "literal_count": 4
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.createBigDecimal(String str)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.createNumber(String str)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java::NumericEntityUnescaper.translate(CharSequence input, int index, Writer out)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/math/Fraction.java::Fraction.addSub(Fraction fraction, boolean isAdd)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.getChars(int startIndex, int endIndex, char destination[], int destinationIndex)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.createBigInteger(String str)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.subSequence(int startIndex, int endIndex)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/ArrayUtils.java::ArrayUtils.add(Object array, int index, Object element, Class<?> clss)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.stripAccents(String input)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.validateRange(int startIndex, int endIndex)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/SystemUtils.java::SystemUtils.isJavaVersionAtLeast(float requiredVersion)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/math/Fraction.java::Fraction.getFraction(double value)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/translate/UnicodeUnescaper.java::UnicodeUnescaper.translate(CharSequence input, int index, Writer out)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/math/Fraction.java::Fraction.mulPosAndCheck(int x, int y)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/WordUtils.java::WordUtils.abbreviate(String str, int lower, int upper, String appendToEnd)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.isNumber(String str)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.append(char[] chars, int startIndex, int length)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/SystemUtils.java::SystemUtils.isJavaVersionAtLeast(int requiredVersion)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/ObjectUtils.java::ObjectUtils.clone(final T o)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java::ExtendedMessageFormat.readArgumentIndex(String pattern, ParsePosition pos)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.deleteCharAt(int index)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/ClassUtils.java::ClassUtils.isAssignable(Class<?> cls, Class<?> toClass, boolean autoboxing)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 2126,
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "b15599fbe02777a6aa83fa291a8a7a8bccda0efa5697b8e83586b353b0c38a54",
+  "evidence_sha256": "1918ceb9e6aca5db36b7211f56a0142080a3372b24ccbbd7fc2db111ac23f096"
+}
