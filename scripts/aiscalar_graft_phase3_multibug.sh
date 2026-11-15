@@ -33,6 +33,7 @@ fi
 python -m pytest -q \
   tests/test_graft_phase3_real_bugs.py \
   tests/test_graft_phase3_cache_seed.py \
+  tests/test_graft_phase3_completion_gate.py \
   tests/test_graft_phase3_bm25_java_spans.py \
   tests/test_graft_test_aware.py \
   tests/test_graft_test_aware_live_config.py \
@@ -115,6 +116,13 @@ if [[ -f "$ROOT/run/results.json" && -f "$ROOT/run/accounting.json" ]]; then
     --output "$ROOT/paired_audit.json" \
     > "$ROOT/paired_audit.txt" 2>&1 || true
   cat "$ROOT/paired_audit.txt"
+  if [[ -s "$ROOT/paired_audit.json" ]]; then
+    python -m scripts.verify_graft_phase3_complete \
+      --audit "$ROOT/paired_audit.json" \
+      --output "$ROOT/completion_gate.json" \
+      > "$ROOT/completion_gate.log" 2>&1 || true
+    cat "$ROOT/completion_gate.log"
+  fi
 fi
 if [[ -f "$ROOT/run/manifest.json" ]]; then
   python -m rave_fl.graft.cli report \
