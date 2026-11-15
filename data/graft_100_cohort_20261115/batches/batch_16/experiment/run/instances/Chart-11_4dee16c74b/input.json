@@ -1,0 +1,1318 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Chart-11",
+    "repository": "Chart",
+    "language": "java",
+    "revision": "372ed7716e9a5e95c3fbafab6f8f36982b913d95",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_16/prepared/checkouts/Chart-11",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Chart-11\nEXECUTED BUGGY TEST: org.jfree.chart.util.junit.ShapeUtilitiesTests::testEqualGeneralPaths\nTEST SOURCE: tests/org/jfree/chart/util/junit/ShapeUtilitiesTests.java\nTEST SOURCE SHA256: 08e43b513cce1771ff58d8186f8bef4832a5bc50fa8af85b906eccc52e6aa847\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testEqualGeneralPaths() {\n        GeneralPath g1 = new GeneralPath();\n        g1.moveTo(1.0f, 2.0f);\n        g1.lineTo(3.0f, 4.0f);\n        g1.curveTo(5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f);\n        g1.quadTo(1.0f, 2.0f, 3.0f, 4.0f);\n        g1.closePath();\n        GeneralPath g2 = new GeneralPath();\n        g2.moveTo(1.0f, 2.0f);\n        g2.lineTo(3.0f, 4.0f);\n        g2.curveTo(5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f);\n        g2.quadTo(1.0f, 2.0f, 3.0f, 4.0f);\n        g2.closePath();\n        assertTrue(ShapeUtilities.equal(g1, g2));\n\n        g2 = new GeneralPath();\n        g2.moveTo(11.0f, 22.0f);\n        g2.lineTo(3.0f, 4.0f);\n        g2.curveTo(5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f);\n        g2.quadTo(1.0f, 2.0f, 3.0f, 4.0f);\n        g2.closePath();\n        assertFalse(ShapeUtilities.equal(g1, g2));\n\n        g2 = new GeneralPath();\n        g2.moveTo(1.0f, 2.0f);\n        g2.lineTo(33.0f, 44.0f);\n        g2.curveTo(5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f);\n        g2.quadTo(1.0f, 2.0f, 3.0f, 4.0f);\n        g2.closePath();\n        assertFalse(ShapeUtilities.equal(g1, g2));\n\n        g2 = new GeneralPath();\n        g2.moveTo(1.0f, 2.0f);\n        g2.lineTo(3.0f, 4.0f);\n        g2.curveTo(55.0f, 66.0f, 77.0f, 88.0f, 99.0f, 100.0f);\n        g2.quadTo(1.0f, 2.0f, 3.0f, 4.0f);\n        g2.closePath();\n        assertFalse(ShapeUtilities.equal(g1, g2));\n\n        g2 = new GeneralPath();\n        g2.moveTo(1.0f, 2.0f);\n        g2.lineTo(3.0f, 4.0f);\n        g2.curveTo(5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f);\n        g2.quadTo(11.0f, 22.0f, 33.0f, 44.0f);\n        g2.closePath();\n        assertFalse(ShapeUtilities.equal(g1, g2));\n\n        g2 = new GeneralPath();\n        g2.moveTo(1.0f, 2.0f);\n        g2.lineTo(3.0f, 4.0f);\n        g2.curveTo(5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f);\n        g2.quadTo(1.0f, 2.0f, 3.0f, 4.0f);\n        g2.lineTo(3.0f, 4.0f);\n        g2.closePath();\n        assertFalse(ShapeUtilities.equal(g1, g2));\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.jfree.chart.util.junit.ShapeUtilitiesTests::testEqualGeneralPaths\njunit.framework.AssertionFailedError\n\tat junit.framework.Assert.fail(Assert.java:55)\n\tat junit.framework.Assert.assertTrue(Assert.java:22)\n\tat junit.framework.Assert.assertFalse(Assert.java:39)\n\tat junit.framework.Assert.assertFalse(Assert.java:47)\n\tat junit.framework.TestCase.assertFalse(TestCase.java:219)\n\tat org.jfree.chart.util.junit.ShapeUtilitiesTests.testEqualGeneralPaths(ShapeUtilitiesTests.java:212)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_16/prepared/evidence/Chart-11.txt",
+      "sha256": "de08fc5d3c37dc4a013cfe2fb3c752248553026b5d420c0cf53ad8be593576b9"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "source",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Chart-11",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createDiamond(float s)",
+      "path": "source/org/jfree/chart/util/ShapeUtilities.java",
+      "start_line": 450,
+      "end_line": 458,
+      "source": "public static Shape createDiamond(float s) {\n        GeneralPath p0 = new GeneralPath();\n        p0.moveTo(0.0f, -s);\n        p0.lineTo(s, 0.0f);\n        p0.lineTo(0.0f, s);\n        p0.lineTo(-s, 0.0f);\n        p0.closePath();\n        return p0;\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 48.8244984393317
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createDownTriangle(float s)",
+      "path": "source/org/jfree/chart/util/ShapeUtilities.java",
+      "start_line": 483,
+      "end_line": 490,
+      "source": "public static Shape createDownTriangle(float s) {\n        GeneralPath p0 = new GeneralPath();\n        p0.moveTo(0.0f, s);\n        p0.lineTo(s, -s);\n        p0.lineTo(-s, -s);\n        p0.closePath();\n        return p0;\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 48.14022421662682
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createUpTriangle(float s)",
+      "path": "source/org/jfree/chart/util/ShapeUtilities.java",
+      "start_line": 467,
+      "end_line": 474,
+      "source": "public static Shape createUpTriangle(float s) {\n        GeneralPath p0 = new GeneralPath();\n        p0.moveTo(0.0f, -s);\n        p0.lineTo(s, s);\n        p0.lineTo(-s, s);\n        p0.closePath();\n        return p0;\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 48.14022421662682
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createLineRegion(Line2D line, float width)",
+      "path": "source/org/jfree/chart/util/ShapeUtilities.java",
+      "start_line": 502,
+      "end_line": 527,
+      "source": "public static Shape createLineRegion(Line2D line, float width) {\n        GeneralPath result = new GeneralPath();\n        float x1 = (float) line.getX1();\n        float x2 = (float) line.getX2();\n        float y1 = (float) line.getY1();\n        float y2 = (float) line.getY2();\n        if ((x2 - x1) != 0.0) {\n            double theta = Math.atan((y2 - y1) / (x2 - x1));\n            float dx = (float) Math.sin(theta) * width;\n            float dy = (float) Math.cos(theta) * width;\n            result.moveTo(x1 - dx, y1 + dy);\n            result.lineTo(x1 + dx, y1 - dy);\n            result.lineTo(x2 + dx, y2 - dy);\n            result.lineTo(x2 - dx, y2 + dy);\n            result.closePath();\n        }\n        else {\n            // special case, vertical line\n            result.moveTo(x1 - width / 2.0f, y1);\n            result.lineTo(x1 + width / 2.0f, y1);\n            result.lineTo(x2 + width / 2.0f, y2);\n            result.lineTo(x2 - width / 2.0f, y2);\n            result.closePath();\n        }\n        return result;\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 45.71207102147764
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createRegularCross(float l, float t)",
+      "path": "source/org/jfree/chart/util/ShapeUtilities.java",
+      "start_line": 425,
+      "end_line": 441,
+      "source": "public static Shape createRegularCross(float l, float t) {\n        GeneralPath p0 = new GeneralPath();\n        p0.moveTo(-l, t);\n        p0.lineTo(-t, t);\n        p0.lineTo(-t, l);\n        p0.lineTo(t, l);\n        p0.lineTo(t, t);\n        p0.lineTo(l, t);\n        p0.lineTo(l, -t);\n        p0.lineTo(t, -t);\n        p0.lineTo(t, -l);\n        p0.lineTo(-t, -l);\n        p0.lineTo(-t, -t);\n        p0.lineTo(-l, -t);\n        p0.closePath();\n        return p0;\n    }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 44.429746314740285
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createDiagonalCross(float l, float t)",
+      "path": "source/org/jfree/chart/util/ShapeUtilities.java",
+      "start_line": 399,
+      "end_line": 415,
+      "source": "public static Shape createDiagonalCross(float l, float t) {\n        GeneralPath p0 = new GeneralPath();\n        p0.moveTo(-l - t, -l + t);\n        p0.lineTo(-l + t, -l - t);\n        p0.lineTo(0.0f, -t * SQRT2);\n        p0.lineTo(l - t, -l - t);\n        p0.lineTo(l + t, -l + t);\n        p0.lineTo(t * SQRT2, 0.0f);\n        p0.lineTo(l + t, l - t);\n        p0.lineTo(l - t, l + t);\n        p0.lineTo(0.0f, t * SQRT2);\n        p0.lineTo(-l + t, l + t);\n        p0.lineTo(-l - t, l - t);\n        p0.lineTo(-t * SQRT2, 0.0f);\n        p0.closePath();\n        return p0;\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 43.648696045818916
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/SerialUtilities.java::SerialUtilities.readShape(ObjectInputStream stream)",
+      "path": "source/org/jfree/chart/util/SerialUtilities.java",
+      "start_line": 260,
+      "end_line": 342,
+      "source": "public static Shape readShape(ObjectInputStream stream)\n            throws IOException, ClassNotFoundException {\n\n        if (stream == null) {\n            throw new IllegalArgumentException(\"Null 'stream' argument.\");\n        }\n        Shape result = null;\n        boolean isNull = stream.readBoolean();\n        if (!isNull) {\n            Class c = (Class) stream.readObject();\n            if (c.equals(Line2D.class)) {\n                double x1 = stream.readDouble();\n                double y1 = stream.readDouble();\n                double x2 = stream.readDouble();\n                double y2 = stream.readDouble();\n                result = new Line2D.Double(x1, y1, x2, y2);\n            }\n            else if (c.equals(Rectangle2D.class)) {\n                double x = stream.readDouble();\n                double y = stream.readDouble();\n                double w = stream.readDouble();\n                double h = stream.readDouble();\n                result = new Rectangle2D.Double(x, y, w, h);\n            }\n            else if (c.equals(Ellipse2D.class)) {\n                double x = stream.readDouble();\n                double y = stream.readDouble();\n                double w = stream.readDouble();\n                double h = stream.readDouble();\n                result = new Ellipse2D.Double(x, y, w, h);\n            }\n            else if (c.equals(Arc2D.class)) {\n                double x = stream.readDouble();\n                double y = stream.readDouble();\n                double w = stream.readDouble();\n                double h = stream.readDouble();\n                double as = stream.readDouble(); // Angle Start\n                double ae = stream.readDouble(); // Angle Extent\n                int at = stream.readInt();       // Arc type\n                result = new Arc2D.Double(x, y, w, h, as, ae, at);\n            }\n            else if (c.equals(GeneralPath.class)) {\n                GeneralPath gp = new GeneralPath();\n                float[] args = new float[6];\n                boolean hasNext = stream.readBoolean();\n                while (!hasNext) {\n                    int type = stream.readInt();\n                    for (int i = 0; i < 6; i++) {\n                        args[i] = stream.readFloat();\n                    }\n                    switch (type) {\n                        case PathIterator.SEG_MOVETO :\n                            gp.moveTo(args[0], args[1]);\n                            break;\n                        case PathIterator.SEG_LINETO :\n                            gp.lineTo(args[0], args[1]);\n                            break;\n                        case PathIterator.SEG_CUBICTO :\n                            gp.curveTo(args[0], args[1], args[2],\n                                    args[3], args[4], args[5]);\n                            break;\n                        case PathIterator.SEG_QUADTO :\n                            gp.quadTo(args[0], args[1], args[2], args[3]);\n                            break;\n                        case PathIterator.SEG_CLOSE :\n                            gp.closePath();\n                            break;\n                        default :\n                            throw new RuntimeException(\n                                    \"JFreeChart - No path exists\");\n                    }\n                    gp.setWindingRule(stream.readInt());\n                    hasNext = stream.readBoolean();\n                }\n                result = gp;\n            }\n            else {\n                result = (Shape) stream.readObject();\n            }\n        }\n        return result;\n\n    }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.21239330220534
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/needle/ArrowNeedle.java::ArrowNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)",
+      "path": "source/org/jfree/chart/needle/ArrowNeedle.java",
+      "start_line": 87,
+      "end_line": 128,
+      "source": "protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle) {\n\n        Line2D shape = new Line2D.Float();\n        Shape d = null;\n\n        float x = (float) (plotArea.getMinX() +  (plotArea.getWidth() / 2));\n        float minY = (float) plotArea.getMinY();\n        float maxY = (float) plotArea.getMaxY();\n        shape.setLine(x, minY, x, maxY);\n\n        GeneralPath shape1 = new GeneralPath();\n        if (this.isArrowAtTop) {\n            shape1.moveTo(x, minY);\n            minY += 4 * getSize();\n        }\n        else {\n            shape1.moveTo(x, maxY);\n            minY = maxY - 4 * getSize();\n        }\n        shape1.lineTo(x + getSize(), minY);\n        shape1.lineTo(x - getSize(), minY);\n        shape1.closePath();\n\n        if ((rotate != null) && (angle != 0)) {\n            getTransform().setToRotation(angle, rotate.getX(), rotate.getY());\n            d = getTransform().createTransformedShape(shape);\n        }\n        else {\n            d = shape;\n        }\n        defaultDisplay(g2, d);\n\n        if ((rotate != null) && (angle != 0)) {\n            d = getTransform().createTransformedShape(shape1);\n        }\n        else {\n            d = shape1;\n        }\n        defaultDisplay(g2, d);\n\n    }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.135334321238986
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/renderer/category/StackedBarRenderer3D.java::StackedBarRenderer3D.createVerticalBlock(double x0, double width, double y0, \n            double y1, boolean inverted)",
+      "path": "source/org/jfree/chart/renderer/category/StackedBarRenderer3D.java",
+      "start_line": 740,
+      "end_line": 811,
+      "source": "private Shape[] createVerticalBlock(double x0, double width, double y0, \n            double y1, boolean inverted) {\n        Shape[] result = new Shape[6];\n        Point2D p00 = new Point2D.Double(x0, y0);\n        Point2D p01 = new Point2D.Double(x0 + width, y0);\n        Point2D p02 = new Point2D.Double(p01.getX() + getXOffset(), \n                p01.getY() - getYOffset());\n        Point2D p03 = new Point2D.Double(p00.getX() + getXOffset(), \n                p00.getY() - getYOffset());\n\n\n        Point2D p0 = new Point2D.Double(x0, y1);\n        Point2D p1 = new Point2D.Double(x0 + width, y1);\n        Point2D p2 = new Point2D.Double(p1.getX() + getXOffset(), \n                p1.getY() - getYOffset());\n        Point2D p3 = new Point2D.Double(p0.getX() + getXOffset(), \n                p0.getY() - getYOffset());\n        \n        GeneralPath right = new GeneralPath();\n        right.moveTo((float) p1.getX(), (float) p1.getY());\n        right.lineTo((float) p01.getX(), (float) p01.getY());\n        right.lineTo((float) p02.getX(), (float) p02.getY());\n        right.lineTo((float) p2.getX(), (float) p2.getY());\n        right.closePath();\n        \n        GeneralPath left = new GeneralPath();\n        left.moveTo((float) p0.getX(), (float) p0.getY());\n        left.lineTo((float) p00.getX(), (float) p00.getY());\n        left.lineTo((float) p03.getX(), (float) p03.getY());\n        left.lineTo((float) p3.getX(), (float) p3.getY());\n        left.closePath();\n\n        GeneralPath back = new GeneralPath();\n        back.moveTo((float) p2.getX(), (float) p2.getY());\n        back.lineTo((float) p02.getX(), (float) p02.getY());\n        back.lineTo((float) p03.getX(), (float) p03.getY());\n        back.lineTo((float) p3.getX(), (float) p3.getY());\n        back.closePath();\n        \n        GeneralPath front = new GeneralPath();\n        front.moveTo((float) p0.getX(), (float) p0.getY());\n        front.lineTo((float) p1.getX(), (float) p1.getY());\n        front.lineTo((float) p01.getX(), (float) p01.getY());\n        front.lineTo((float) p00.getX(), (float) p00.getY());\n        front.closePath();\n\n        GeneralPath top = new GeneralPath();\n        top.moveTo((float) p0.getX(), (float) p0.getY());\n        top.lineTo((float) p1.getX(), (float) p1.getY());\n        top.lineTo((float) p2.getX(), (float) p2.getY());\n        top.lineTo((float) p3.getX(), (float) p3.getY());\n        top.closePath();\n        \n        GeneralPath bottom = new GeneralPath();\n        bottom.moveTo((float) p00.getX(), (float) p00.getY());\n        bottom.lineTo((float) p01.getX(), (float) p01.getY());\n        bottom.lineTo((float) p02.getX(), (float) p02.getY());\n        bottom.lineTo((float) p03.getX(), (float) p03.getY());\n        bottom.closePath();\n        \n        result[0] = bottom;\n        result[1] = back;\n        result[2] = left;\n        result[3] = right;\n        result[4] = top;\n        result[5] = front;\n        if (inverted) {\n            result[0] = top;\n            result[4] = bottom;\n        }\n        return result;\n    }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.778949747512485
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/renderer/category/StackedBarRenderer3D.java::StackedBarRenderer3D.createHorizontalBlock(double x0, double width, double y0, \n            double y1, boolean inverted)",
+      "path": "source/org/jfree/chart/renderer/category/StackedBarRenderer3D.java",
+      "start_line": 543,
+      "end_line": 614,
+      "source": "private Shape[] createHorizontalBlock(double x0, double width, double y0, \n            double y1, boolean inverted) {\n        Shape[] result = new Shape[6];\n        Point2D p00 = new Point2D.Double(y0, x0);\n        Point2D p01 = new Point2D.Double(y0, x0 + width);\n        Point2D p02 = new Point2D.Double(p01.getX() + getXOffset(), \n                p01.getY() - getYOffset());\n        Point2D p03 = new Point2D.Double(p00.getX() + getXOffset(), \n                p00.getY() - getYOffset());\n\n        Point2D p0 = new Point2D.Double(y1, x0);\n        Point2D p1 = new Point2D.Double(y1, x0 + width);\n        Point2D p2 = new Point2D.Double(p1.getX() + getXOffset(), \n                p1.getY() - getYOffset());\n        Point2D p3 = new Point2D.Double(p0.getX() + getXOffset(), \n                p0.getY() - getYOffset());\n        \n        GeneralPath bottom = new GeneralPath();\n        bottom.moveTo((float) p1.getX(), (float) p1.getY());\n        bottom.lineTo((float) p01.getX(), (float) p01.getY());\n        bottom.lineTo((float) p02.getX(), (float) p02.getY());\n        bottom.lineTo((float) p2.getX(), (float) p2.getY());\n        bottom.closePath();\n        \n        GeneralPath top = new GeneralPath();\n        top.moveTo((float) p0.getX(), (float) p0.getY());\n        top.lineTo((float) p00.getX(), (float) p00.getY());\n        top.lineTo((float) p03.getX(), (float) p03.getY());\n        top.lineTo((float) p3.getX(), (float) p3.getY());\n        top.closePath();\n\n        GeneralPath back = new GeneralPath();\n        back.moveTo((float) p2.getX(), (float) p2.getY());\n        back.lineTo((float) p02.getX(), (float) p02.getY());\n        back.lineTo((float) p03.getX(), (float) p03.getY());\n        back.lineTo((float) p3.getX(), (float) p3.getY());\n        back.closePath();\n        \n        GeneralPath front = new GeneralPath();\n        front.moveTo((float) p0.getX(), (float) p0.getY());\n        front.lineTo((float) p1.getX(), (float) p1.getY());\n        front.lineTo((float) p01.getX(), (float) p01.getY());\n        front.lineTo((float) p00.getX(), (float) p00.getY());\n        front.closePath();\n\n        GeneralPath left = new GeneralPath();\n        left.moveTo((float) p0.getX(), (float) p0.getY());\n        left.lineTo((float) p1.getX(), (float) p1.getY());\n        left.lineTo((float) p2.getX(), (float) p2.getY());\n        left.lineTo((float) p3.getX(), (float) p3.getY());\n        left.closePath();\n        \n        GeneralPath right = new GeneralPath();\n        right.moveTo((float) p00.getX(), (float) p00.getY());\n        right.lineTo((float) p01.getX(), (float) p01.getY());\n        right.lineTo((float) p02.getX(), (float) p02.getY());\n        right.lineTo((float) p03.getX(), (float) p03.getY());\n        right.closePath();\n        result[0] = bottom;\n        result[1] = back;\n        if (inverted) {\n            result[2] = right;\n            result[3] = left;\n        }\n        else {\n            result[2] = left;\n            result[3] = right;\n        }\n        result[4] = top;\n        result[5] = front;\n        return result;\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.74003093961913
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/needle/LongNeedle.java::LongNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)",
+      "path": "source/org/jfree/chart/needle/LongNeedle.java",
+      "start_line": 78,
+      "end_line": 145,
+      "source": "protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle) {\n\n        GeneralPath shape1 = new GeneralPath();\n        GeneralPath shape2 = new GeneralPath();\n        GeneralPath shape3 = new GeneralPath();\n\n        float minX = (float) plotArea.getMinX();\n        float minY = (float) plotArea.getMinY();\n        float maxX = (float) plotArea.getMaxX();\n        float maxY = (float) plotArea.getMaxY();\n        //float midX = (float) (minX + (plotArea.getWidth() * getRotateX()));\n        //float midY = (float) (minY + (plotArea.getHeight() * getRotateY()));\n        float midX = (float) (minX + (plotArea.getWidth() * 0.5));\n        float midY = (float) (minY + (plotArea.getHeight() * 0.8));\n        float y = maxY - (2 * (maxY - midY));\n        if (y < minY) {\n            y = minY;\n        }\n        shape1.moveTo(minX, midY);\n        shape1.lineTo(midX, minY);\n        shape1.lineTo(midX, y);\n        shape1.closePath();\n\n        shape2.moveTo(maxX, midY);\n        shape2.lineTo(midX, minY);\n        shape2.lineTo(midX, y);\n        shape2.closePath();\n\n        shape3.moveTo(minX, midY);\n        shape3.lineTo(midX, maxY);\n        shape3.lineTo(maxX, midY);\n        shape3.lineTo(midX, y);\n        shape3.closePath();\n\n        Shape s1 = shape1;\n        Shape s2 = shape2;\n        Shape s3 = shape3;\n\n        if ((rotate != null) && (angle != 0)) {\n            /// we have rotation huston, please spin me\n            getTransform().setToRotation(angle, rotate.getX(), rotate.getY());\n            s1 = shape1.createTransformedShape(transform);\n            s2 = shape2.createTransformedShape(transform);\n            s3 = shape3.createTransformedShape(transform);\n        }\n\n\n        if (getHighlightPaint() != null) {\n            g2.setPaint(getHighlightPaint());\n            g2.fill(s3);\n        }\n\n        if (getFillPaint() != null) {\n            g2.setPaint(getFillPaint());\n            g2.fill(s1);\n            g2.fill(s2);\n        }\n\n\n        if (getOutlinePaint() != null) {\n            g2.setStroke(getOutlineStroke());\n            g2.setPaint(getOutlinePaint());\n            g2.draw(s1);\n            g2.draw(s2);\n            g2.draw(s3);\n        }\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 38.31012351910882
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getCenterPoint()",
+      "path": "source/org/jfree/chart/util/RefineryUtilities.java",
+      "start_line": 108,
+      "end_line": 124,
+      "source": "public static Point getCenterPoint ()\n    {\n      GraphicsEnvironment localGraphicsEnvironment \n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\"getCenterPoint\", \n                  (Class[]) null);\n          return (Point) method.invoke(localGraphicsEnvironment, \n                  (Object[]) null);\n      }\n      catch (Exception e) {\n        // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Point (s.width / 2, s.height / 2);\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 37.53165512048247
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/renderer/category/LineRenderer3D.java::LineRenderer3D.drawRangeMarker(Graphics2D g2,\n                                CategoryPlot plot,\n                                ValueAxis axis,\n                                Marker marker,\n                                Rectangle2D dataArea)",
+      "path": "source/org/jfree/chart/renderer/category/LineRenderer3D.java",
+      "start_line": 434,
+      "end_line": 489,
+      "source": "public void drawRangeMarker(Graphics2D g2,\n                                CategoryPlot plot,\n                                ValueAxis axis,\n                                Marker marker,\n                                Rectangle2D dataArea) {\n\n        Rectangle2D adjusted = new Rectangle2D.Double(dataArea.getX(), \n                dataArea.getY() + getYOffset(), \n                dataArea.getWidth() - getXOffset(), \n                dataArea.getHeight() - getYOffset());\n\n        if (marker instanceof ValueMarker) {\n            ValueMarker vm = (ValueMarker) marker;\n            double value = vm.getValue();\n            Range range = axis.getRange();\n            if (!range.contains(value)) {\n                return;\n            }\n\n            GeneralPath path = null;\n            PlotOrientation orientation = plot.getOrientation();\n            if (orientation == PlotOrientation.HORIZONTAL) {\n                float x = (float) axis.valueToJava2D(value, adjusted, \n                        plot.getRangeAxisEdge());\n                float y = (float) adjusted.getMaxY();\n                path = new GeneralPath();\n                path.moveTo(x, y);\n                path.lineTo((float) (x + getXOffset()), \n                        y - (float) getYOffset());\n                path.lineTo((float) (x + getXOffset()), \n                        (float) (adjusted.getMinY() - getYOffset()));\n                path.lineTo(x, (float) adjusted.getMinY());\n                path.closePath();\n            }\n            else if (orientation == PlotOrientation.VERTICAL) {\n                float y = (float) axis.valueToJava2D(value, adjusted, \n                        plot.getRangeAxisEdge());\n                float x = (float) dataArea.getX();\n                path = new GeneralPath();\n                path.moveTo(x, y);\n                path.lineTo(x + (float) this.xOffset, y - (float) this.yOffset);\n                path.lineTo((float) (adjusted.getMaxX() + this.xOffset), \n                        y - (float) this.yOffset);\n                path.lineTo((float) (adjusted.getMaxX()), y);\n                path.closePath();\n            }\n            g2.setPaint(marker.getPaint());\n            g2.fill(path);\n            g2.setPaint(marker.getOutlinePaint());\n            g2.draw(path);\n        }\n        else {\n            super.drawRangeMarker(g2, plot, axis, marker, adjusted);\n            // TODO: draw the interval marker with a 3D effect\n        }\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 37.08289616348537
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getMaximumWindowBounds()",
+      "path": "source/org/jfree/chart/util/RefineryUtilities.java",
+      "start_line": 133,
+      "end_line": 148,
+      "source": "public static Rectangle getMaximumWindowBounds() {\n      GraphicsEnvironment localGraphicsEnvironment\n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\n                  \"getMaximumWindowBounds\", (Class[]) null);\n          return (Rectangle) method.invoke(localGraphicsEnvironment, \n                  (Object[]) null);\n      }\n      catch (Exception e) {\n          // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Rectangle (0, 0, s.width, s.height);\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.888996647753146
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/renderer/xy/XYAreaRenderer2.java::XYAreaRenderer2.XYAreaRenderer2(XYToolTipGenerator labelGenerator, \n                           XYURLGenerator urlGenerator)",
+      "path": "source/org/jfree/chart/renderer/xy/XYAreaRenderer2.java",
+      "start_line": 148,
+      "end_line": 162,
+      "source": "public XYAreaRenderer2(XYToolTipGenerator labelGenerator, \n                           XYURLGenerator urlGenerator) {\n        super();\n        this.showOutline = false;\n        setBaseToolTipGenerator(labelGenerator);\n        setBaseURLGenerator(urlGenerator);\n        GeneralPath area = new GeneralPath();\n        area.moveTo(0.0f, -4.0f);\n        area.lineTo(3.0f, -2.0f);\n        area.lineTo(4.0f, 4.0f);\n        area.lineTo(-4.0f, 4.0f);\n        area.lineTo(-3.0f, -2.0f);\n        area.closePath();\n        this.legendArea = area;\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.83635765752292
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/gantt/Task.java::Task.equals(Object object)",
+      "path": "source/org/jfree/data/gantt/Task.java",
+      "start_line": 220,
+      "end_line": 242,
+      "source": "public boolean equals(Object object) {\n        if (object == this) {\n            return true;\n        }\n        if (!(object instanceof Task)) {\n            return false;\n        }\n        Task that = (Task) object;\n        if (!ObjectUtilities.equal(this.description, that.description)) {\n            return false;\n        }\n        if (!ObjectUtilities.equal(this.duration, that.duration)) {\n            return false;\n        }\n        if (!ObjectUtilities.equal(this.percentComplete, \n                that.percentComplete)) {\n            return false;\n        }\n        if (!ObjectUtilities.equal(this.subtasks, that.subtasks)) {\n            return false;\n        }\n        return true;\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.82394900961551
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.OptionalLibraryHolder.loadLibrary(String classname)",
+      "path": "source/org/jfree/chart/ui/BasicProjectInfo.java",
+      "start_line": 109,
+      "end_line": 130,
+      "source": "protected Library loadLibrary(String classname) {\n            if (classname == null) {\n                return null;\n            }\n            try {\n                Class c = ObjectUtilities.getClassLoader(\n                        getClass()).loadClass(classname);\n                try {\n                    Method m = c.getMethod(\"getInstance\", (Class[]) null);\n                    return (Library) m.invoke(null, (Object[]) null);\n                }\n                catch(Exception e) {\n                    // ok, fall back ...\n                }\n                return (Library) c.newInstance();\n            }\n            catch (Exception e) {\n                // ok, this library has no 'getInstance()' method. Check the\n                // default constructor ...\n                return null;\n            }\n        }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.244587619771195
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/renderer/xy/XYAreaRenderer.java::XYAreaRenderer.XYAreaRenderer(int type, XYToolTipGenerator toolTipGenerator, \n                          XYURLGenerator urlGenerator)",
+      "path": "source/org/jfree/chart/renderer/xy/XYAreaRenderer.java",
+      "start_line": 214,
+      "end_line": 248,
+      "source": "public XYAreaRenderer(int type, XYToolTipGenerator toolTipGenerator, \n                          XYURLGenerator urlGenerator) {\n\n        super();\n        setBaseToolTipGenerator(toolTipGenerator);\n        setBaseURLGenerator(urlGenerator);\n\n        if (type == SHAPES) {\n            this.plotShapes = true;\n        }\n        if (type == LINES) {\n            this.plotLines = true;\n        }\n        if (type == SHAPES_AND_LINES) {\n            this.plotShapes = true;\n            this.plotLines = true;\n        }\n        if (type == AREA) {\n            this.plotArea = true;\n        }\n        if (type == AREA_AND_SHAPES) {\n            this.plotArea = true;\n            this.plotShapes = true;\n        }\n        this.showOutline = false;\n        GeneralPath area = new GeneralPath();\n        area.moveTo(0.0f, -4.0f);\n        area.lineTo(3.0f, -2.0f);\n        area.lineTo(4.0f, 4.0f);\n        area.lineTo(-4.0f, 4.0f);\n        area.lineTo(-3.0f, -2.0f);\n        area.closePath();\n        this.legendArea = area;\n\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.05620900890935
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/renderer/category/BarRenderer3D.java::BarRenderer3D.drawRangeMarker(Graphics2D g2,\n                                CategoryPlot plot,\n                                ValueAxis axis,\n                                Marker marker,\n                                Rectangle2D dataArea)",
+      "path": "source/org/jfree/chart/renderer/category/BarRenderer3D.java",
+      "start_line": 512,
+      "end_line": 582,
+      "source": "public void drawRangeMarker(Graphics2D g2,\n                                CategoryPlot plot,\n                                ValueAxis axis,\n                                Marker marker,\n                                Rectangle2D dataArea) {\n\n\n        Rectangle2D adjusted = new Rectangle2D.Double(dataArea.getX(), \n                dataArea.getY() + getYOffset(), dataArea.getWidth() \n                - getXOffset(), dataArea.getHeight() - getYOffset());\n        if (marker instanceof ValueMarker) {\n            ValueMarker vm = (ValueMarker) marker;\n            double value = vm.getValue();\n            Range range = axis.getRange();\n            if (!range.contains(value)) {\n                return;\n            }\n\n            GeneralPath path = null;\n            PlotOrientation orientation = plot.getOrientation();\n            if (orientation == PlotOrientation.HORIZONTAL) {\n                float x = (float) axis.valueToJava2D(value, adjusted, \n                        plot.getRangeAxisEdge());\n                float y = (float) adjusted.getMaxY();\n                path = new GeneralPath();\n                path.moveTo(x, y);\n                path.lineTo((float) (x + getXOffset()), \n                        y - (float) getYOffset());\n                path.lineTo((float) (x + getXOffset()), \n                        (float) (adjusted.getMinY() - getYOffset()));\n                path.lineTo(x, (float) adjusted.getMinY());\n                path.closePath();\n            }\n            else if (orientation == PlotOrientation.VERTICAL) {\n                float y = (float) axis.valueToJava2D(value, adjusted, \n                        plot.getRangeAxisEdge());\n                float x = (float) dataArea.getX();\n                path = new GeneralPath();\n                path.moveTo(x, y);\n                path.lineTo(x + (float) this.xOffset, y - (float) this.yOffset);\n                path.lineTo((float) (adjusted.getMaxX() + this.xOffset), \n                        y - (float) this.yOffset);\n                path.lineTo((float) (adjusted.getMaxX()), y);\n                path.closePath();\n            }\n            g2.setPaint(marker.getPaint());\n            g2.fill(path);\n            g2.setPaint(marker.getOutlinePaint());\n            g2.draw(path);\n        \n            String label = marker.getLabel();\n            RectangleAnchor anchor = marker.getLabelAnchor();\n            if (label != null) {\n                Font labelFont = marker.getLabelFont();\n                g2.setFont(labelFont);\n                g2.setPaint(marker.getLabelPaint());\n                Point2D coordinates = calculateRangeMarkerTextAnchorPoint(\n                        g2, orientation, dataArea, path.getBounds2D(), \n                        marker.getLabelOffset(), LengthAdjustmentType.EXPAND, \n                        anchor);\n                TextUtilities.drawAlignedString(label, g2, \n                        (float) coordinates.getX(), (float) coordinates.getY(), \n                        marker.getLabelTextAnchor());\n            }\n        \n        }\n        else {\n            super.drawRangeMarker(g2, plot, axis, marker, adjusted);\n            // TODO: draw the interval marker with a 3D effect\n        }\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.94903441721496
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/needle/ShipNeedle.java::ShipNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)",
+      "path": "source/org/jfree/chart/needle/ShipNeedle.java",
+      "start_line": 72,
+      "end_line": 92,
+      "source": "protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle) {\n\n        GeneralPath shape = new GeneralPath();\n        shape.append(new Arc2D.Double(-9.0, -7.0, 10, 14, 0.0, 25.5, \n                Arc2D.OPEN), true);\n        shape.append(new Arc2D.Double(0.0, -7.0, 10, 14, 154.5, 25.5, \n                Arc2D.OPEN), true);\n        shape.closePath();\n        getTransform().setToTranslation(plotArea.getMinX(), plotArea.getMaxY());\n        getTransform().scale(plotArea.getWidth(), plotArea.getHeight() / 3);\n        shape.transform(getTransform());\n\n        if ((rotate != null) && (angle != 0)) {\n            /// we have rotation\n            getTransform().setToRotation(angle, rotate.getX(), rotate.getY());\n            shape.transform(getTransform());\n        }\n\n        defaultDisplay(g2, shape);\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.897495620937505
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/needle/PointerNeedle.java::PointerNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)",
+      "path": "source/org/jfree/chart/needle/PointerNeedle.java",
+      "start_line": 71,
+      "end_line": 116,
+      "source": "protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle) {\n\n        GeneralPath shape1 = new GeneralPath();\n        GeneralPath shape2 = new GeneralPath();\n        float minX = (float) plotArea.getMinX();\n        float minY = (float) plotArea.getMinY();\n        float maxX = (float) plotArea.getMaxX();\n        float maxY = (float) plotArea.getMaxY();\n        float midX = (float) (minX + (plotArea.getWidth() / 2));\n        float midY = (float) (minY + (plotArea.getHeight() / 2));\n\n        shape1.moveTo(minX, midY);\n        shape1.lineTo(midX, minY);\n        shape1.lineTo(maxX, midY);\n        shape1.closePath();\n\n        shape2.moveTo(minX, midY);\n        shape2.lineTo(midX, maxY);\n        shape2.lineTo(maxX, midY);\n        shape2.closePath();\n\n        if ((rotate != null) && (angle != 0)) {\n            /// we have rotation huston, please spin me\n            getTransform().setToRotation(angle, rotate.getX(), rotate.getY());\n            shape1.transform(getTransform());\n            shape2.transform(getTransform());\n        }\n\n        if (getFillPaint() != null) {\n            g2.setPaint(getFillPaint());\n            g2.fill(shape1);\n        }\n\n        if (getHighlightPaint() != null) {\n            g2.setPaint(getHighlightPaint());\n            g2.fill(shape2);\n        }\n\n        if (getOutlinePaint() != null) {\n            g2.setStroke(getOutlineStroke());\n            g2.setPaint(getOutlinePaint());\n            g2.draw(shape1);\n            g2.draw(shape2);\n        }\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.37455316343983
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)",
+      "path": "source/org/jfree/data/jdbc/JDBCXYDataset.java",
+      "start_line": 231,
+      "end_line": 414,
+      "source": "public void executeQuery(Connection con, String query) \n        throws SQLException {\n\n        if (con == null) {\n            throw new SQLException(\n                \"There is no database to execute the query.\"\n            );\n        }\n\n        ResultSet resultSet = null;\n        Statement statement = null;\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int numberOfColumns = metaData.getColumnCount();\n            int numberOfValidColumns = 0;\n            int [] columnTypes = new int[numberOfColumns];\n            for (int column = 0; column < numberOfColumns; column++) {\n                try {\n                    int type = metaData.getColumnType(column + 1);\n                    switch (type) {\n\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIT:\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            ++numberOfValidColumns;\n                            columnTypes[column] = type;\n                            break;\n                        default:\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                catch (SQLException e) {\n                    columnTypes[column] = Types.NULL;\n                    throw e;\n                }\n            }\n\n\n            if (numberOfValidColumns <= 1) {\n                throw new SQLException(\n                    \"Not enough valid columns where generated by query.\"\n                );\n            }\n\n            /// First column is X data\n            this.columnNames = new String[numberOfValidColumns - 1];\n            /// Get the column names and cache them.\n            int currentColumn = 0;\n            for (int column = 1; column < numberOfColumns; column++) {\n                if (columnTypes[column] != Types.NULL) {\n                    this.columnNames[currentColumn] \n                        = metaData.getColumnLabel(column + 1);\n                    ++currentColumn;\n                }\n            }\n\n            // Might need to add, to free memory from any previous result sets\n            if (this.rows != null) {\n                for (int column = 0; column < this.rows.size(); column++) {\n                    ArrayList row = (ArrayList) this.rows.get(column);\n                    row.clear();\n                }\n                this.rows.clear();\n            }\n\n            // Are we working with a time series.\n            switch (columnTypes[0]) {\n                case Types.DATE:\n                case Types.TIME:\n                case Types.TIMESTAMP:\n                    this.isTimeSeries = true;\n                    break;\n                default :\n                    this.isTimeSeries = false;\n                    break;\n            }\n\n            // Get all rows.\n            // rows = new ArrayList();\n            while (resultSet.next()) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    Object xObject = resultSet.getObject(column + 1);\n                    switch (columnTypes[column]) {\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            newRow.add(xObject);\n                            break;\n\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                            newRow.add(new Long(((Date) xObject).getTime()));\n                            break;\n                        case Types.NULL:\n                            break;\n                        default:\n                            System.err.println(\"Unknown data\");\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// a kludge to make everything work when no rows returned\n            if (this.rows.size() == 0) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    if (columnTypes[column] != Types.NULL) {\n                        newRow.add(new Integer(0));\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// Determine max and min values.\n            if (this.rows.size() < 1) {\n                this.maxValue = 0.0;\n                this.minValue = 0.0;\n            }\n            else {\n                ArrayList row = (ArrayList) this.rows.get(0);\n                this.maxValue = Double.NEGATIVE_INFINITY;\n                this.minValue = Double.POSITIVE_INFINITY;\n                for (int rowNum = 0; rowNum < this.rows.size(); ++rowNum) {\n                    row = (ArrayList) this.rows.get(rowNum);\n                    for (int column = 1; column < numberOfColumns; column++) {\n                        Object testValue = row.get(column);\n                        if (testValue != null) {\n                            double test = ((Number) testValue).doubleValue();\n                        \n                            if (test < this.minValue) {\n                                this.minValue = test;\n                            }\n                            if (test > this.maxValue) {\n                                this.maxValue = test;\n                            }\n                        }\n                    }\n                }\n            }\n\n            fireDatasetChanged(); // Tell the listeners a new table has arrived.\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n        }\n\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.019400411906375
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.clone(final Object object)",
+      "path": "source/org/jfree/chart/util/ObjectUtilities.java",
+      "start_line": 160,
+      "end_line": 188,
+      "source": "public static Object clone(final Object object)\n        throws CloneNotSupportedException {\n        if (object == null) {\n            throw new IllegalArgumentException(\"Null 'object' argument.\");\n        }\n        if (object instanceof PublicCloneable) {\n            final PublicCloneable pc = (PublicCloneable) object;\n            return pc.clone();\n        }\n        else {\n            try {\n                final Method method = object.getClass().getMethod(\"clone\",\n                        (Class[]) null);\n                if (Modifier.isPublic(method.getModifiers())) {\n                    return method.invoke(object, (Object[]) null);\n                }\n            }\n            catch (NoSuchMethodException e) {\n                e.printStackTrace();\n            }\n            catch (IllegalAccessException e) {\n                e.printStackTrace();\n            }\n            catch (InvocationTargetException e) {\n                e.printStackTrace();\n            }\n        }\n        throw new CloneNotSupportedException(\"Failed to clone.\");\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.99257228237295
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/StringUtilities.java::StringUtilities.startsWithIgnoreCase(String base, String start)",
+      "path": "source/org/jfree/chart/util/StringUtilities.java",
+      "start_line": 64,
+      "end_line": 69,
+      "source": "public static boolean startsWithIgnoreCase(String base, String start) {\n        if (base.length() < start.length()) {\n            return false;\n        }\n        return base.regionMatches(true, 0, start, 0, start.length());\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.769142201203024
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createDiamond(float s)",
+      "source": "public static Shape createDiamond(float s) {\n        GeneralPath p0 = new GeneralPath();\n        p0.moveTo(0.0f, -s);\n        p0.lineTo(s, 0.0f);\n        p0.lineTo(0.0f, s);\n        p0.lineTo(-s, 0.0f);\n        p0.closePath();\n        return p0;\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createDiamond(float s)\nSIGNATURE: public static Shape createDiamond(float s)",
+        "METHOD: source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createDiamond(float s)\nSIGNATURE: public static Shape createDiamond(float s)\nSTRUCTURE (lossy):\nGeneralPath p0 = new GeneralPath();\nCALL p0.moveTo(0.0f, -s)\nCALL p0.lineTo(s, 0.0f)\nCALL p0.lineTo(0.0f, s)\nCALL p0.lineTo(-s, 0.0f)\nCALL p0.closePath()\nreturn p0;",
+        "public static Shape createDiamond(float s) {\n        GeneralPath p0 = new GeneralPath();\n        p0.moveTo(0.0f, -s);\n        p0.lineTo(s, 0.0f);\n        p0.lineTo(0.0f, s);\n        p0.lineTo(-s, 0.0f);\n        p0.closePath();\n        return p0;\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.75,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 5.0,
+        "literal_count": 4.0,
+        "source_tokens": 63.0,
+        "l0_tokens": 37.0,
+        "l1_tokens": 83.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 5,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createDownTriangle(float s)",
+      "source": "public static Shape createDownTriangle(float s) {\n        GeneralPath p0 = new GeneralPath();\n        p0.moveTo(0.0f, s);\n        p0.lineTo(s, -s);\n        p0.lineTo(-s, -s);\n        p0.closePath();\n        return p0;\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createDownTriangle(float s)\nSIGNATURE: public static Shape createDownTriangle(float s)",
+        "METHOD: source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createDownTriangle(float s)\nSIGNATURE: public static Shape createDownTriangle(float s)\nSTRUCTURE (lossy):\nGeneralPath p0 = new GeneralPath();\nCALL p0.moveTo(0.0f, s)\nCALL p0.lineTo(s, -s)\nCALL p0.lineTo(-s, -s)\nCALL p0.closePath()\nreturn p0;",
+        "public static Shape createDownTriangle(float s) {\n        GeneralPath p0 = new GeneralPath();\n        p0.moveTo(0.0f, s);\n        p0.lineTo(s, -s);\n        p0.lineTo(-s, -s);\n        p0.closePath();\n        return p0;\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7142857142857143,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 4.0,
+        "literal_count": 1.0,
+        "source_tokens": 56.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 79.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 4,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createUpTriangle(float s)",
+      "source": "public static Shape createUpTriangle(float s) {\n        GeneralPath p0 = new GeneralPath();\n        p0.moveTo(0.0f, -s);\n        p0.lineTo(s, s);\n        p0.lineTo(-s, s);\n        p0.closePath();\n        return p0;\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createUpTriangle(float s)\nSIGNATURE: public static Shape createUpTriangle(float s)",
+        "METHOD: source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createUpTriangle(float s)\nSIGNATURE: public static Shape createUpTriangle(float s)\nSTRUCTURE (lossy):\nGeneralPath p0 = new GeneralPath();\nCALL p0.moveTo(0.0f, -s)\nCALL p0.lineTo(s, s)\nCALL p0.lineTo(-s, s)\nCALL p0.closePath()\nreturn p0;",
+        "public static Shape createUpTriangle(float s) {\n        GeneralPath p0 = new GeneralPath();\n        p0.moveTo(0.0f, -s);\n        p0.lineTo(s, s);\n        p0.lineTo(-s, s);\n        p0.closePath();\n        return p0;\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.75,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 4.0,
+        "literal_count": 1.0,
+        "source_tokens": 55.0,
+        "l0_tokens": 39.0,
+        "l1_tokens": 77.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 4,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createLineRegion(Line2D line, float width)",
+      "source": "public static Shape createLineRegion(Line2D line, float width) {\n        GeneralPath result = new GeneralPath();\n        float x1 = (float) line.getX1();\n        float x2 = (float) line.getX2();\n        float y1 = (float) line.getY1();\n        float y2 = (float) line.getY2();\n        if ((x2 - x1) != 0.0) {\n            double theta = Math.atan((y2 - y1) / (x2 - x1));\n            float dx = (float) Math.sin(theta) * width;\n            float dy = (float) Math.cos(theta) * width;\n            result.moveTo(x1 - dx, y1 + dy);\n            result.lineTo(x1 + dx, y1 - dy);\n            result.lineTo(x2 + dx, y2 - dy);\n            result.lineTo(x2 - dx, y2 + dy);\n            result.closePath();\n        }\n        else {\n            // special case, vertical line\n            result.moveTo(x1 - width / 2.0f, y1);\n            result.lineTo(x1 + width / 2.0f, y1);\n            result.lineTo(x2 + width / 2.0f, y2);\n            result.lineTo(x2 - width / 2.0f, y2);\n            result.closePath();\n        }\n        return result;\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createLineRegion(Line2D line, float width)\nSIGNATURE: public static Shape createLineRegion(Line2D line, float width)",
+        "METHOD: source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createLineRegion(Line2D line, float width)\nSIGNATURE: public static Shape createLineRegion(Line2D line, float width)\nSTRUCTURE (lossy):\nGeneralPath result = new GeneralPath();\nfloat x1 = (float) line.getX1();\nCALL line.getX1()\nfloat x2 = (float) line.getX2();\nCALL line.getX2()\nfloat y1 = (float) line.getY1();\nCALL line.getY1()\nfloat y2 = (float) line.getY2();\nCALL line.getY2()\nif ((x2 - x1) != 0.0)\ndouble theta = Math.atan((y2 - y1) / (x2 - x1));\nCALL Math.atan((y2 - y1) / (x2 - x1))\nfloat dx = (float) Math.sin(theta) * width;\nCALL Math.sin(theta)\nfloat dy = (float) Math.cos(theta) * width;\nCALL Math.cos(theta)\nCALL result.moveTo(x1 - dx, y1 + dy)\nCALL result.lineTo(x1 + dx, y1 - dy)\nCALL result.lineTo(x2 + dx, y2 - dy)\nCALL result.lineTo(x2 - dx, y2 + dy)\nCALL result.closePath()\nCALL result.moveTo(x1 - width / 2.0f, y1)\nCALL result.lineTo(x1 + width / 2.0f, y1)\nCALL result.lineTo(x2 + width / 2.0f, y2)\nCALL result.lineTo(x2 - width / 2.0f, y2)\nreturn result;",
+        "public static Shape createLineRegion(Line2D line, float width) {\n        GeneralPath result = new GeneralPath();\n        float x1 = (float) line.getX1();\n        float x2 = (float) line.getX2();\n        float y1 = (float) line.getY1();\n        float y2 = (float) line.getY2();\n        if ((x2 - x1) != 0.0) {\n            double theta = Math.atan((y2 - y1) / (x2 - x1));\n            float dx = (float) Math.sin(theta) * width;\n            float dy = (float) Math.cos(theta) * width;\n            result.moveTo(x1 - dx, y1 + dy);\n            result.lineTo(x1 + dx, y1 - dy);\n            result.lineTo(x2 + dx, y2 - dy);\n            result.lineTo(x2 - dx, y2 + dy);\n            result.closePath();\n        }\n        else {\n            // special case, vertical line\n            result.moveTo(x1 - width / 2.0f, y1);\n            result.lineTo(x1 + width / 2.0f, y1);\n            result.lineTo(x2 + width / 2.0f, y2);\n            result.lineTo(x2 - width / 2.0f, y2);\n            result.closePath();\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 17.0,
+        "literal_count": 5.0,
+        "source_tokens": 258.0,
+        "l0_tokens": 47.0,
+        "l1_tokens": 262.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 17,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createRegularCross(float l, float t)",
+      "source": "public static Shape createRegularCross(float l, float t) {\n        GeneralPath p0 = new GeneralPath();\n        p0.moveTo(-l, t);\n        p0.lineTo(-t, t);\n        p0.lineTo(-t, l);\n        p0.lineTo(t, l);\n        p0.lineTo(t, t);\n        p0.lineTo(l, t);\n        p0.lineTo(l, -t);\n        p0.lineTo(t, -t);\n        p0.lineTo(t, -l);\n        p0.lineTo(-t, -l);\n        p0.lineTo(-t, -t);\n        p0.lineTo(-l, -t);\n        p0.closePath();\n        return p0;\n    }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createRegularCross(float l, float t)\nSIGNATURE: public static Shape createRegularCross(float l, float t)",
+        "METHOD: source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createRegularCross(float l, float t)\nSIGNATURE: public static Shape createRegularCross(float l, float t)\nSTRUCTURE (lossy):\nGeneralPath p0 = new GeneralPath();\nCALL p0.moveTo(-l, t)\nCALL p0.lineTo(-t, t)\nCALL p0.lineTo(-t, l)\nCALL p0.lineTo(t, l)\nCALL p0.lineTo(t, t)\nCALL p0.lineTo(l, t)\nCALL p0.lineTo(l, -t)\nCALL p0.lineTo(t, -t)\nCALL p0.lineTo(t, -l)\nCALL p0.lineTo(-t, -l)\nCALL p0.lineTo(-t, -t)\nCALL p0.lineTo(-l, -t)\nCALL p0.closePath()\nreturn p0;",
+        "public static Shape createRegularCross(float l, float t) {\n        GeneralPath p0 = new GeneralPath();\n        p0.moveTo(-l, t);\n        p0.lineTo(-t, t);\n        p0.lineTo(-t, l);\n        p0.lineTo(t, l);\n        p0.lineTo(t, t);\n        p0.lineTo(l, t);\n        p0.lineTo(l, -t);\n        p0.lineTo(t, -t);\n        p0.lineTo(t, -l);\n        p0.lineTo(-t, -l);\n        p0.lineTo(-t, -t);\n        p0.lineTo(-l, -t);\n        p0.closePath();\n        return p0;\n    }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7142857142857143,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 13.0,
+        "literal_count": 0.0,
+        "source_tokens": 116.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 132.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 13,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createDiagonalCross(float l, float t)",
+      "source": "public static Shape createDiagonalCross(float l, float t) {\n        GeneralPath p0 = new GeneralPath();\n        p0.moveTo(-l - t, -l + t);\n        p0.lineTo(-l + t, -l - t);\n        p0.lineTo(0.0f, -t * SQRT2);\n        p0.lineTo(l - t, -l - t);\n        p0.lineTo(l + t, -l + t);\n        p0.lineTo(t * SQRT2, 0.0f);\n        p0.lineTo(l + t, l - t);\n        p0.lineTo(l - t, l + t);\n        p0.lineTo(0.0f, t * SQRT2);\n        p0.lineTo(-l + t, l + t);\n        p0.lineTo(-l - t, l - t);\n        p0.lineTo(-t * SQRT2, 0.0f);\n        p0.closePath();\n        return p0;\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createDiagonalCross(float l, float t)\nSIGNATURE: public static Shape createDiagonalCross(float l, float t)",
+        "METHOD: source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createDiagonalCross(float l, float t)\nSIGNATURE: public static Shape createDiagonalCross(float l, float t)\nSTRUCTURE (lossy):\nGeneralPath p0 = new GeneralPath();\nCALL p0.moveTo(-l - t, -l + t)\nCALL p0.lineTo(-l + t, -l - t)\nCALL p0.lineTo(0.0f, -t * SQRT2)\nCALL p0.lineTo(l - t, -l - t)\nCALL p0.lineTo(l + t, -l + t)\nCALL p0.lineTo(t * SQRT2, 0.0f)\nCALL p0.lineTo(l + t, l - t)\nCALL p0.lineTo(l - t, l + t)\nCALL p0.lineTo(0.0f, t * SQRT2)\nCALL p0.lineTo(-l + t, l + t)\nCALL p0.lineTo(-l - t, l - t)\nCALL p0.lineTo(-t * SQRT2, 0.0f)\nCALL p0.closePath()\nreturn p0;",
+        "public static Shape createDiagonalCross(float l, float t) {\n        GeneralPath p0 = new GeneralPath();\n        p0.moveTo(-l - t, -l + t);\n        p0.lineTo(-l + t, -l - t);\n        p0.lineTo(0.0f, -t * SQRT2);\n        p0.lineTo(l - t, -l - t);\n        p0.lineTo(l + t, -l + t);\n        p0.lineTo(t * SQRT2, 0.0f);\n        p0.lineTo(l + t, l - t);\n        p0.lineTo(l - t, l + t);\n        p0.lineTo(0.0f, t * SQRT2);\n        p0.lineTo(-l + t, l + t);\n        p0.lineTo(-l - t, l - t);\n        p0.lineTo(-t * SQRT2, 0.0f);\n        p0.closePath();\n        return p0;\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6818181818181818,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 13.0,
+        "literal_count": 4.0,
+        "source_tokens": 143.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 159.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 13,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/SerialUtilities.java::SerialUtilities.readShape(ObjectInputStream stream)",
+      "source": "public static Shape readShape(ObjectInputStream stream)\n            throws IOException, ClassNotFoundException {\n\n        if (stream == null) {\n            throw new IllegalArgumentException(\"Null 'stream' argument.\");\n        }\n        Shape result = null;\n        boolean isNull = stream.readBoolean();\n        if (!isNull) {\n            Class c = (Class) stream.readObject();\n            if (c.equals(Line2D.class)) {\n                double x1 = stream.readDouble();\n                double y1 = stream.readDouble();\n                double x2 = stream.readDouble();\n                double y2 = stream.readDouble();\n                result = new Line2D.Double(x1, y1, x2, y2);\n            }\n            else if (c.equals(Rectangle2D.class)) {\n                double x = stream.readDouble();\n                double y = stream.readDouble();\n                double w = stream.readDouble();\n                double h = stream.readDouble();\n                result = new Rectangle2D.Double(x, y, w, h);\n            }\n            else if (c.equals(Ellipse2D.class)) {\n                double x = stream.readDouble();\n                double y = stream.readDouble();\n                double w = stream.readDouble();\n                double h = stream.readDouble();\n                result = new Ellipse2D.Double(x, y, w, h);\n            }\n            else if (c.equals(Arc2D.class)) {\n                double x = stream.readDouble();\n                double y = stream.readDouble();\n                double w = stream.readDouble();\n                double h = stream.readDouble();\n                double as = stream.readDouble(); // Angle Start\n                double ae = stream.readDouble(); // Angle Extent\n                int at = stream.readInt();       // Arc type\n                result = new Arc2D.Double(x, y, w, h, as, ae, at);\n            }\n            else if (c.equals(GeneralPath.class)) {\n                GeneralPath gp = new GeneralPath();\n                float[] args = new float[6];\n                boolean hasNext = stream.readBoolean();\n                while (!hasNext) {\n                    int type = stream.readInt();\n                    for (int i = 0; i < 6; i++) {\n                        args[i] = stream.readFloat();\n                    }\n                    switch (type) {\n                        case PathIterator.SEG_MOVETO :\n                            gp.moveTo(args[0], args[1]);\n                            break;\n                        case PathIterator.SEG_LINETO :\n                            gp.lineTo(args[0], args[1]);\n                            break;\n                        case PathIterator.SEG_CUBICTO :\n                            gp.curveTo(args[0], args[1], args[2],\n                                    args[3], args[4], args[5]);\n                            break;\n                        case PathIterator.SEG_QUADTO :\n                            gp.quadTo(args[0], args[1], args[2], args[3]);\n                            break;\n                        case PathIterator.SEG_CLOSE :\n                            gp.closePath();\n                            break;\n                        default :\n                            throw new RuntimeException(\n                                    \"JFreeChart - No path exists\");\n                    }\n                    gp.setWindingRule(stream.readInt());\n                    hasNext = stream.readBoolean();\n                }\n                result = gp;\n            }\n            else {\n                result = (Shape) stream.readObject();\n            }\n        }\n        return result;\n\n    }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/SerialUtilities.java::SerialUtilities.readShape(ObjectInputStream stream)\nSIGNATURE: public static Shape readShape(ObjectInputStream stream)\n            throws IOException, ClassNotFoundException",
+        "METHOD: source/org/jfree/chart/util/SerialUtilities.java::SerialUtilities.readShape(ObjectInputStream stream)\nSIGNATURE: public static Shape readShape(ObjectInputStream stream)\n            throws IOException, ClassNotFoundException\nSTRUCTURE (lossy):\nif (stream == null)\nthrow new IllegalArgumentException(\"Null 'stream' argument.\");\nShape result = null;\nboolean isNull = stream.readBoolean();\nCALL stream.readBoolean()\nif (!isNull)\nClass c = (Class) stream.readObject();\nCALL stream.readObject()\nif (c.equals(Line2D.class))\nCALL c.equals(Line2D.class)\ndouble x1 = stream.readDouble();\nCALL stream.readDouble()\ndouble y1 = stream.readDouble();\ndouble x2 = stream.readDouble();\ndouble y2 = stream.readDouble();\nresult = new Line2D.Double(x1, y1, x2, y2)\nif (c.equals(Rectangle2D.class))\nCALL c.equals(Rectangle2D.class)\ndouble x = stream.readDouble();\ndouble y = stream.readDouble();\ndouble w = stream.readDouble();\ndouble h = stream.readDouble();\nresult = new Rectangle2D.Double(x, y, w, h)\nif (c.equals(Ellipse2D.class))\nCALL c.equals(Ellipse2D.class)\nresult = new Ellipse2D.Double(x, y, w, h)\nif (c.equals(Arc2D.class))\nCALL c.equals(Arc2D.class)\ndouble as = stream.readDouble();\ndouble ae = stream.readDouble();\nint at = stream.readInt();\nCALL stream.readInt()\nresult = new Arc2D.Double(x, y, w, h, as, ae, at)\nif (c.equals(GeneralPath.class))\nCALL c.equals(GeneralPath.class)\nGeneralPath gp = new GeneralPath();\nfloat[] args = new float[6];\nboolean hasNext = stream.readBoolean();\nwhile (!hasNext)\nint type = stream.readInt();\nfor (int i = 0; i < 6; i++)\nint i = 0;\ni++\nargs[i] = stream.readFloat()\nCALL stream.readFloat()\nswitch (type) { case PathIterator.SEG_MOVETO : gp.moveTo(args[0], args[1]); break; case PathIterator.SEG_LINETO : gp.lineTo(args[0], args[1]); break; case PathIterator.SEG_CUBICTO : gp.curveTo(args[0], args[1], args[2], args[3], args[4], args[5]); break; case PathIterator.SEG_QUADTO : gp.quadTo(args[0], args[1], args[2], args[3]); break; case PathIterator.SEG_CLOSE : gp.closePath(); break; default : throw new RuntimeException( \"JFreeChart - No path exists\"); }\nCALL gp.moveTo(args[0], args[1])\nCALL gp.lineTo(args[0], args[1])\nCALL gp.curveTo(args[0], args[1], args[2],\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public static Shape readShape(ObjectInputStream stream)\n            throws IOException, ClassNotFoundException {\n\n        if (stream == null) {\n            throw new IllegalArgumentException(\"Null 'stream' argument.\");\n        }\n        Shape result = null;\n        boolean isNull = stream.readBoolean();\n        if (!isNull) {\n            Class c = (Class) stream.readObject();\n            if (c.equals(Line2D.class)) {\n                double x1 = stream.readDouble();\n                double y1 = stream.readDouble();\n                double x2 = stream.readDouble();\n                double y2 = stream.readDouble();\n                result = new Line2D.Double(x1, y1, x2, y2);\n            }\n            else if (c.equals(Rectangle2D.class)) {\n                double x = stream.readDouble();\n                double y = stream.readDouble();\n                double w = stream.readDouble();\n                double h = stream.readDouble();\n                result = new Rectangle2D.Double(x, y, w, h);\n            }\n            else if (c.equals(Ellipse2D.class)) {\n                double x = stream.readDouble();\n                double y = stream.readDouble();\n                double w = stream.readDouble();\n                double h = stream.readDouble();\n                result = new Ellipse2D.Double(x, y, w, h);\n            }\n            else if (c.equals(Arc2D.class)) {\n                double x = stream.readDouble();\n                double y = stream.readDouble();\n                double w = stream.readDouble();\n                double h = stream.readDouble();\n                double as = stream.readDouble(); // Angle Start\n                double ae = stream.readDouble(); // Angle Extent\n                int at = stream.readInt();       // Arc type\n                result = new Arc2D.Double(x, y, w, h, as, ae, at);\n            }\n            else if (c.equals(GeneralPath.class)) {\n                GeneralPath gp = new GeneralPath();\n                float[] args = new float[6];\n                boolean hasNext = stream.readBoolean();\n                while (!hasNext) {\n                    int type = stream.readInt();\n                    for (int i = 0; i < 6; i++) {\n                        args[i] = stream.readFloat();\n                    }\n                    switch (type) {\n                        case PathIterator.SEG_MOVETO :\n                            gp.moveTo(args[0], args[1]);\n                            break;\n                        case PathIterator.SEG_LINETO :\n                            gp.lineTo(args[0], args[1]);\n                            break;\n                        case PathIterator.SEG_CUBICTO :\n                            gp.curveTo(args[0], args[1], args[2],\n                                    args[3], args[4], args[5]);\n                            break;\n                        case PathIterator.SEG_QUADTO :\n                            gp.quadTo(args[0], args[1], args[2], args[3]);\n                            break;\n                        case PathIterator.SEG_CLOSE :\n                            gp.closePath();\n                            break;\n                        default :\n                            throw new RuntimeException(\n                                    \"JFreeChart - No path exists\");\n                    }\n                    gp.setWindingRule(stream.readInt());\n                    hasNext = stream.readBoolean();\n                }\n                result = gp;\n            }\n            else {\n                result = (Shape) stream.readObject();\n            }\n        }\n        return result;\n\n    }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3,
+        "trace_match": 0.0,
+        "complexity": 11.0,
+        "call_count": 38.0,
+        "literal_count": 26.0,
+        "source_tokens": 894.0,
+        "l0_tokens": 58.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.6364653243847874,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 11,
+        "call_count": 38,
+        "literal_count": 26
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/needle/ArrowNeedle.java::ArrowNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)",
+      "source": "protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle) {\n\n        Line2D shape = new Line2D.Float();\n        Shape d = null;\n\n        float x = (float) (plotArea.getMinX() +  (plotArea.getWidth() / 2));\n        float minY = (float) plotArea.getMinY();\n        float maxY = (float) plotArea.getMaxY();\n        shape.setLine(x, minY, x, maxY);\n\n        GeneralPath shape1 = new GeneralPath();\n        if (this.isArrowAtTop) {\n            shape1.moveTo(x, minY);\n            minY += 4 * getSize();\n        }\n        else {\n            shape1.moveTo(x, maxY);\n            minY = maxY - 4 * getSize();\n        }\n        shape1.lineTo(x + getSize(), minY);\n        shape1.lineTo(x - getSize(), minY);\n        shape1.closePath();\n\n        if ((rotate != null) && (angle != 0)) {\n            getTransform().setToRotation(angle, rotate.getX(), rotate.getY());\n            d = getTransform().createTransformedShape(shape);\n        }\n        else {\n            d = shape;\n        }\n        defaultDisplay(g2, d);\n\n        if ((rotate != null) && (angle != 0)) {\n            d = getTransform().createTransformedShape(shape1);\n        }\n        else {\n            d = shape1;\n        }\n        defaultDisplay(g2, d);\n\n    }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: source/org/jfree/chart/needle/ArrowNeedle.java::ArrowNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)\nSIGNATURE: protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)",
+        "METHOD: source/org/jfree/chart/needle/ArrowNeedle.java::ArrowNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)\nSIGNATURE: protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)\nSTRUCTURE (lossy):\nLine2D shape = new Line2D.Float();\nShape d = null;\nfloat x = (float) (plotArea.getMinX() + (plotArea.getWidth() / 2));\nCALL plotArea.getMinX()\nCALL plotArea.getWidth()\nfloat minY = (float) plotArea.getMinY();\nCALL plotArea.getMinY()\nfloat maxY = (float) plotArea.getMaxY();\nCALL plotArea.getMaxY()\nCALL shape.setLine(x, minY, x, maxY)\nGeneralPath shape1 = new GeneralPath();\nif (this.isArrowAtTop)\nCALL shape1.moveTo(x, minY)\nminY += 4 * getSize()\nCALL getSize()\nCALL shape1.moveTo(x, maxY)\nminY = maxY - 4 * getSize()\nCALL shape1.lineTo(x + getSize(), minY)\nCALL shape1.lineTo(x - getSize(), minY)\nCALL shape1.closePath()\nif ((rotate != null) && (angle != 0))\nCALL getTransform().setToRotation(angle, rotate.getX(), rotate.getY())\nCALL getTransform()\nCALL rotate.getX()\nCALL rotate.getY()\nd = getTransform().createTransformedShape(shape)\nCALL getTransform().createTransformedShape(shape)\nd = shape\nCALL defaultDisplay(g2, d)\nd = getTransform().createTransformedShape(shape1)\nCALL getTransform().createTransformedShape(shape1)\nd = shape1",
+        "protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle) {\n\n        Line2D shape = new Line2D.Float();\n        Shape d = null;\n\n        float x = (float) (plotArea.getMinX() +  (plotArea.getWidth() / 2));\n        float minY = (float) plotArea.getMinY();\n        float maxY = (float) plotArea.getMaxY();\n        shape.setLine(x, minY, x, maxY);\n\n        GeneralPath shape1 = new GeneralPath();\n        if (this.isArrowAtTop) {\n            shape1.moveTo(x, minY);\n            minY += 4 * getSize();\n        }\n        else {\n            shape1.moveTo(x, maxY);\n            minY = maxY - 4 * getSize();\n        }\n        shape1.lineTo(x + getSize(), minY);\n        shape1.lineTo(x - getSize(), minY);\n        shape1.closePath();\n\n        if ((rotate != null) && (angle != 0)) {\n            getTransform().setToRotation(angle, rotate.getX(), rotate.getY());\n            d = getTransform().createTransformedShape(shape);\n        }\n        else {\n            d = shape;\n        }\n        defaultDisplay(g2, d);\n\n        if ((rotate != null) && (angle != 0)) {\n            d = getTransform().createTransformedShape(shape1);\n        }\n        else {\n            d = shape1;\n        }\n        defaultDisplay(g2, d);\n\n    }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3409090909090909,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 24.0,
+        "literal_count": 8.0,
+        "source_tokens": 320.0,
+        "l0_tokens": 78.0,
+        "l1_tokens": 342.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 24,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/renderer/category/StackedBarRenderer3D.java::StackedBarRenderer3D.createVerticalBlock(double x0, double width, double y0, \n            double y1, boolean inverted)",
+      "source": "private Shape[] createVerticalBlock(double x0, double width, double y0, \n            double y1, boolean inverted) {\n        Shape[] result = new Shape[6];\n        Point2D p00 = new Point2D.Double(x0, y0);\n        Point2D p01 = new Point2D.Double(x0 + width, y0);\n        Point2D p02 = new Point2D.Double(p01.getX() + getXOffset(), \n                p01.getY() - getYOffset());\n        Point2D p03 = new Point2D.Double(p00.getX() + getXOffset(), \n                p00.getY() - getYOffset());\n\n\n        Point2D p0 = new Point2D.Double(x0, y1);\n        Point2D p1 = new Point2D.Double(x0 + width, y1);\n        Point2D p2 = new Point2D.Double(p1.getX() + getXOffset(), \n                p1.getY() - getYOffset());\n        Point2D p3 = new Point2D.Double(p0.getX() + getXOffset(), \n                p0.getY() - getYOffset());\n        \n        GeneralPath right = new GeneralPath();\n        right.moveTo((float) p1.getX(), (float) p1.getY());\n        right.lineTo((float) p01.getX(), (float) p01.getY());\n        right.lineTo((float) p02.getX(), (float) p02.getY());\n        right.lineTo((float) p2.getX(), (float) p2.getY());\n        right.closePath();\n        \n        GeneralPath left = new GeneralPath();\n        left.moveTo((float) p0.getX(), (float) p0.getY());\n        left.lineTo((float) p00.getX(), (float) p00.getY());\n        left.lineTo((float) p03.getX(), (float) p03.getY());\n        left.lineTo((float) p3.getX(), (float) p3.getY());\n        left.closePath();\n\n        GeneralPath back = new GeneralPath();\n        back.moveTo((float) p2.getX(), (float) p2.getY());\n        back.lineTo((float) p02.getX(), (float) p02.getY());\n        back.lineTo((float) p03.getX(), (float) p03.getY());\n        back.lineTo((float) p3.getX(), (float) p3.getY());\n        back.closePath();\n        \n        GeneralPath front = new GeneralPath();\n        front.moveTo((float) p0.getX(), (float) p0.getY());\n        front.lineTo((float) p1.getX(), (float) p1.getY());\n        front.lineTo((float) p01.getX(), (float) p01.getY());\n        front.lineTo((float) p00.getX(), (float) p00.getY());\n        front.closePath();\n\n        GeneralPath top = new GeneralPath();\n        top.moveTo((float) p0.getX(), (float) p0.getY());\n        top.lineTo((float) p1.getX(), (float) p1.getY());\n        top.lineTo((float) p2.getX(), (float) p2.getY());\n        top.lineTo((float) p3.getX(), (float) p3.getY());\n        top.closePath();\n        \n        GeneralPath bottom = new GeneralPath();\n        bottom.moveTo((float) p00.getX(), (float) p00.getY());\n        bottom.lineTo((float) p01.getX(), (float) p01.getY());\n        bottom.lineTo((float) p02.getX(), (float) p02.getY());\n        bottom.lineTo((float) p03.getX(), (float) p03.getY());\n        bottom.closePath();\n        \n        result[0] = bottom;\n        result[1] = back;\n        result[2] = left;\n        result[3] = right;\n        result[4] = top;\n        result[5] = front;\n        if (inverted) {\n            result[0] = top;\n            result[4] = bottom;\n        }\n        return result;\n    }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: source/org/jfree/chart/renderer/category/StackedBarRenderer3D.java::StackedBarRenderer3D.createVerticalBlock(double x0, double width, double y0, \n            double y1, boolean inverted)\nSIGNATURE: private Shape[] createVerticalBlock(double x0, double width, double y0, \n            double y1, boolean inverted)",
+        "METHOD: source/org/jfree/chart/renderer/category/StackedBarRenderer3D.java::StackedBarRenderer3D.createVerticalBlock(double x0, double width, double y0, \n            double y1, boolean inverted)\nSIGNATURE: private Shape[] createVerticalBlock(double x0, double width, double y0, \n            double y1, boolean inverted)\nSTRUCTURE (lossy):\nShape[] result = new Shape[6];\nPoint2D p00 = new Point2D.Double(x0, y0);\nPoint2D p01 = new Point2D.Double(x0 + width, y0);\nPoint2D p02 = new Point2D.Double(p01.getX() + getXOffset(), p01.getY() - getYOffset());\nCALL p01.getX()\nCALL getXOffset()\nCALL p01.getY()\nCALL getYOffset()\nPoint2D p03 = new Point2D.Double(p00.getX() + getXOffset(), p00.getY() - getYOffset());\nCALL p00.getX()\nCALL p00.getY()\nPoint2D p0 = new Point2D.Double(x0, y1);\nPoint2D p1 = new Point2D.Double(x0 + width, y1);\nPoint2D p2 = new Point2D.Double(p1.getX() + getXOffset(), p1.getY() - getYOffset());\nCALL p1.getX()\nCALL p1.getY()\nPoint2D p3 = new Point2D.Double(p0.getX() + getXOffset(), p0.getY() - getYOffset());\nCALL p0.getX()\nCALL p0.getY()\nGeneralPath right = new GeneralPath();\nCALL right.moveTo((float) p1.getX(), (float) p1.getY())\nCALL right.lineTo((float) p01.getX(), (float) p01.getY())\nCALL right.lineTo((float) p02.getX(), (float) p02.getY())\nCALL p02.getX()\nCALL p02.getY()\nCALL right.lineTo((float) p2.getX(), (float) p2.getY())\nCALL p2.getX()\nCALL p2.getY()\nCALL right.closePath()\nGeneralPath left = new GeneralPath();\nCALL left.moveTo((float) p0.getX(), (float) p0.getY())\nCALL left.lineTo((float) p00.getX(), (float) p00.getY())\nCALL left.lineTo((float) p03.getX(), (float) p03.getY())\nCALL p03.getX()\nCALL p03.getY()\nCALL left.lineTo((float) p3.getX(), (float) p3.getY())\nCALL p3.getX()\nCALL p3.getY()\nCALL left.closePath()\nGeneralPath back = new GeneralPath();\nCALL back.moveTo((float) p2.getX(), (float) p2.getY())\nCALL back.lineTo((float) p02.getX(), (float) p02.getY())\nCALL back.lineTo((float) p03.getX(), (float) p03.getY())\nCALL back.lineTo((float) p3.getX(), (float) p3.getY())\nCALL back.closePath()\nGeneralPath front = new GeneralPath();\nCALL front.moveTo((float) p0.getX(), (float) p0.getY())\nCALL front.lineTo((float) p1.getX(), (float) p1.getY())\nCALL fron\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "private Shape[] createVerticalBlock(double x0, double width, double y0, \n            double y1, boolean inverted) {\n        Shape[] result = new Shape[6];\n        Point2D p00 = new Point2D.Double(x0, y0);\n        Point2D p01 = new Point2D.Double(x0 + width, y0);\n        Point2D p02 = new Point2D.Double(p01.getX() + getXOffset(), \n                p01.getY() - getYOffset());\n        Point2D p03 = new Point2D.Double(p00.getX() + getXOffset(), \n                p00.getY() - getYOffset());\n\n\n        Point2D p0 = new Point2D.Double(x0, y1);\n        Point2D p1 = new Point2D.Double(x0 + width, y1);\n        Point2D p2 = new Point2D.Double(p1.getX() + getXOffset(), \n                p1.getY() - getYOffset());\n        Point2D p3 = new Point2D.Double(p0.getX() + getXOffset(), \n                p0.getY() - getYOffset());\n        \n        GeneralPath right = new GeneralPath();\n        right.moveTo((float) p1.getX(), (float) p1.getY());\n        right.lineTo((float) p01.getX(), (float) p01.getY());\n        right.lineTo((float) p02.getX(), (float) p02.getY());\n        right.lineTo((float) p2.getX(), (float) p2.getY());\n        right.closePath();\n        \n        GeneralPath left = new GeneralPath();\n        left.moveTo((float) p0.getX(), (float) p0.getY());\n        left.lineTo((float) p00.getX(), (float) p00.getY());\n        left.lineTo((float) p03.getX(), (float) p03.getY());\n        left.lineTo((float) p3.getX(), (float) p3.getY());\n        left.closePath();\n\n        GeneralPath back = new GeneralPath();\n        back.moveTo((float) p2.getX(), (float) p2.getY());\n        back.lineTo((float) p02.getX(), (float) p02.getY());\n        back.lineTo((float) p03.getX(), (float) p03.getY());\n        back.lineTo((float) p3.getX(), (float) p3.getY());\n        back.closePath();\n        \n        GeneralPath front = new GeneralPath();\n        front.moveTo((float) p0.getX(), (float) p0.getY());\n        front.lineTo((float) p1.getX(), (float) p1.getY());\n        front.lineTo((float) p01.getX(), (float) p01.getY());\n        front.lineTo((float) p00.getX(), (float) p00.getY());\n        front.closePath();\n\n        GeneralPath top = new GeneralPath();\n        top.moveTo((float) p0.getX(), (float) p0.getY());\n        top.lineTo((float) p1.getX(), (float) p1.getY());\n        top.lineTo((float) p2.getX(), (float) p2.getY());\n        top.lineTo((float) p3.getX(), (float) p3.getY());\n        top.closePath();\n        \n        GeneralPath bottom = new GeneralPath();\n        bottom.moveTo((float) p00.getX(), (float) p00.getY());\n        bottom.lineTo((float) p01.getX(), (float) p01.getY());\n        bottom.lineTo((float) p02.getX(), (float) p02.getY());\n        bottom.lineTo((float) p03.getX(), (float) p03.getY());\n        bottom.closePath();\n        \n        result[0] = bottom;\n        result[1] = back;\n        result[2] = left;\n        result[3] = right;\n        result[4] = top;\n        result[5] = front;\n        if (inverted) {\n            result[0] = top;\n            result[4] = bottom;\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.30952380952380953,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 94.0,
+        "literal_count": 9.0,
+        "source_tokens": 759.0,
+        "l0_tokens": 80.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.7496706192358367,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 2,
+        "call_count": 94,
+        "literal_count": 9
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/renderer/category/StackedBarRenderer3D.java::StackedBarRenderer3D.createHorizontalBlock(double x0, double width, double y0, \n            double y1, boolean inverted)",
+      "source": "private Shape[] createHorizontalBlock(double x0, double width, double y0, \n            double y1, boolean inverted) {\n        Shape[] result = new Shape[6];\n        Point2D p00 = new Point2D.Double(y0, x0);\n        Point2D p01 = new Point2D.Double(y0, x0 + width);\n        Point2D p02 = new Point2D.Double(p01.getX() + getXOffset(), \n                p01.getY() - getYOffset());\n        Point2D p03 = new Point2D.Double(p00.getX() + getXOffset(), \n                p00.getY() - getYOffset());\n\n        Point2D p0 = new Point2D.Double(y1, x0);\n        Point2D p1 = new Point2D.Double(y1, x0 + width);\n        Point2D p2 = new Point2D.Double(p1.getX() + getXOffset(), \n                p1.getY() - getYOffset());\n        Point2D p3 = new Point2D.Double(p0.getX() + getXOffset(), \n                p0.getY() - getYOffset());\n        \n        GeneralPath bottom = new GeneralPath();\n        bottom.moveTo((float) p1.getX(), (float) p1.getY());\n        bottom.lineTo((float) p01.getX(), (float) p01.getY());\n        bottom.lineTo((float) p02.getX(), (float) p02.getY());\n        bottom.lineTo((float) p2.getX(), (float) p2.getY());\n        bottom.closePath();\n        \n        GeneralPath top = new GeneralPath();\n        top.moveTo((float) p0.getX(), (float) p0.getY());\n        top.lineTo((float) p00.getX(), (float) p00.getY());\n        top.lineTo((float) p03.getX(), (float) p03.getY());\n        top.lineTo((float) p3.getX(), (float) p3.getY());\n        top.closePath();\n\n        GeneralPath back = new GeneralPath();\n        back.moveTo((float) p2.getX(), (float) p2.getY());\n        back.lineTo((float) p02.getX(), (float) p02.getY());\n        back.lineTo((float) p03.getX(), (float) p03.getY());\n        back.lineTo((float) p3.getX(), (float) p3.getY());\n        back.closePath();\n        \n        GeneralPath front = new GeneralPath();\n        front.moveTo((float) p0.getX(), (float) p0.getY());\n        front.lineTo((float) p1.getX(), (float) p1.getY());\n        front.lineTo((float) p01.getX(), (float) p01.getY());\n        front.lineTo((float) p00.getX(), (float) p00.getY());\n        front.closePath();\n\n        GeneralPath left = new GeneralPath();\n        left.moveTo((float) p0.getX(), (float) p0.getY());\n        left.lineTo((float) p1.getX(), (float) p1.getY());\n        left.lineTo((float) p2.getX(), (float) p2.getY());\n        left.lineTo((float) p3.getX(), (float) p3.getY());\n        left.closePath();\n        \n        GeneralPath right = new GeneralPath();\n        right.moveTo((float) p00.getX(), (float) p00.getY());\n        right.lineTo((float) p01.getX(), (float) p01.getY());\n        right.lineTo((float) p02.getX(), (float) p02.getY());\n        right.lineTo((float) p03.getX(), (float) p03.getY());\n        right.closePath();\n        result[0] = bottom;\n        result[1] = back;\n        if (inverted) {\n            result[2] = right;\n            result[3] = left;\n        }\n        else {\n            result[2] = left;\n            result[3] = right;\n        }\n        result[4] = top;\n        result[5] = front;\n        return result;\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: source/org/jfree/chart/renderer/category/StackedBarRenderer3D.java::StackedBarRenderer3D.createHorizontalBlock(double x0, double width, double y0, \n            double y1, boolean inverted)\nSIGNATURE: private Shape[] createHorizontalBlock(double x0, double width, double y0, \n            double y1, boolean inverted)",
+        "METHOD: source/org/jfree/chart/renderer/category/StackedBarRenderer3D.java::StackedBarRenderer3D.createHorizontalBlock(double x0, double width, double y0, \n            double y1, boolean inverted)\nSIGNATURE: private Shape[] createHorizontalBlock(double x0, double width, double y0, \n            double y1, boolean inverted)\nSTRUCTURE (lossy):\nShape[] result = new Shape[6];\nPoint2D p00 = new Point2D.Double(y0, x0);\nPoint2D p01 = new Point2D.Double(y0, x0 + width);\nPoint2D p02 = new Point2D.Double(p01.getX() + getXOffset(), p01.getY() - getYOffset());\nCALL p01.getX()\nCALL getXOffset()\nCALL p01.getY()\nCALL getYOffset()\nPoint2D p03 = new Point2D.Double(p00.getX() + getXOffset(), p00.getY() - getYOffset());\nCALL p00.getX()\nCALL p00.getY()\nPoint2D p0 = new Point2D.Double(y1, x0);\nPoint2D p1 = new Point2D.Double(y1, x0 + width);\nPoint2D p2 = new Point2D.Double(p1.getX() + getXOffset(), p1.getY() - getYOffset());\nCALL p1.getX()\nCALL p1.getY()\nPoint2D p3 = new Point2D.Double(p0.getX() + getXOffset(), p0.getY() - getYOffset());\nCALL p0.getX()\nCALL p0.getY()\nGeneralPath bottom = new GeneralPath();\nCALL bottom.moveTo((float) p1.getX(), (float) p1.getY())\nCALL bottom.lineTo((float) p01.getX(), (float) p01.getY())\nCALL bottom.lineTo((float) p02.getX(), (float) p02.getY())\nCALL p02.getX()\nCALL p02.getY()\nCALL bottom.lineTo((float) p2.getX(), (float) p2.getY())\nCALL p2.getX()\nCALL p2.getY()\nCALL bottom.closePath()\nGeneralPath top = new GeneralPath();\nCALL top.moveTo((float) p0.getX(), (float) p0.getY())\nCALL top.lineTo((float) p00.getX(), (float) p00.getY())\nCALL top.lineTo((float) p03.getX(), (float) p03.getY())\nCALL p03.getX()\nCALL p03.getY()\nCALL top.lineTo((float) p3.getX(), (float) p3.getY())\nCALL p3.getX()\nCALL p3.getY()\nCALL top.closePath()\nGeneralPath back = new GeneralPath();\nCALL back.moveTo((float) p2.getX(), (float) p2.getY())\nCALL back.lineTo((float) p02.getX(), (float) p02.getY())\nCALL back.lineTo((float) p03.getX(), (float) p03.getY())\nCALL back.lineTo((float) p3.getX(), (float) p3.getY())\nCALL back.closePath()\nGeneralPath front = new GeneralPath();\nCALL front.moveTo((float) p0.getX(), (float) p0.getY())\nCALL front.lineTo((float) p1.getX(), (float) p1.getY())\nCALL \n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "private Shape[] createHorizontalBlock(double x0, double width, double y0, \n            double y1, boolean inverted) {\n        Shape[] result = new Shape[6];\n        Point2D p00 = new Point2D.Double(y0, x0);\n        Point2D p01 = new Point2D.Double(y0, x0 + width);\n        Point2D p02 = new Point2D.Double(p01.getX() + getXOffset(), \n                p01.getY() - getYOffset());\n        Point2D p03 = new Point2D.Double(p00.getX() + getXOffset(), \n                p00.getY() - getYOffset());\n\n        Point2D p0 = new Point2D.Double(y1, x0);\n        Point2D p1 = new Point2D.Double(y1, x0 + width);\n        Point2D p2 = new Point2D.Double(p1.getX() + getXOffset(), \n                p1.getY() - getYOffset());\n        Point2D p3 = new Point2D.Double(p0.getX() + getXOffset(), \n                p0.getY() - getYOffset());\n        \n        GeneralPath bottom = new GeneralPath();\n        bottom.moveTo((float) p1.getX(), (float) p1.getY());\n        bottom.lineTo((float) p01.getX(), (float) p01.getY());\n        bottom.lineTo((float) p02.getX(), (float) p02.getY());\n        bottom.lineTo((float) p2.getX(), (float) p2.getY());\n        bottom.closePath();\n        \n        GeneralPath top = new GeneralPath();\n        top.moveTo((float) p0.getX(), (float) p0.getY());\n        top.lineTo((float) p00.getX(), (float) p00.getY());\n        top.lineTo((float) p03.getX(), (float) p03.getY());\n        top.lineTo((float) p3.getX(), (float) p3.getY());\n        top.closePath();\n\n        GeneralPath back = new GeneralPath();\n        back.moveTo((float) p2.getX(), (float) p2.getY());\n        back.lineTo((float) p02.getX(), (float) p02.getY());\n        back.lineTo((float) p03.getX(), (float) p03.getY());\n        back.lineTo((float) p3.getX(), (float) p3.getY());\n        back.closePath();\n        \n        GeneralPath front = new GeneralPath();\n        front.moveTo((float) p0.getX(), (float) p0.getY());\n        front.lineTo((float) p1.getX(), (float) p1.getY());\n        front.lineTo((float) p01.getX(), (float) p01.getY());\n        front.lineTo((float) p00.getX(), (float) p00.getY());\n        front.closePath();\n\n        GeneralPath left = new GeneralPath();\n        left.moveTo((float) p0.getX(), (float) p0.getY());\n        left.lineTo((float) p1.getX(), (float) p1.getY());\n        left.lineTo((float) p2.getX(), (float) p2.getY());\n        left.lineTo((float) p3.getX(), (float) p3.getY());\n        left.closePath();\n        \n        GeneralPath right = new GeneralPath();\n        right.moveTo((float) p00.getX(), (float) p00.getY());\n        right.lineTo((float) p01.getX(), (float) p01.getY());\n        right.lineTo((float) p02.getX(), (float) p02.getY());\n        right.lineTo((float) p03.getX(), (float) p03.getY());\n        right.closePath();\n        result[0] = bottom;\n        result[1] = back;\n        if (inverted) {\n            result[2] = right;\n            result[3] = left;\n        }\n        else {\n            result[2] = left;\n            result[3] = right;\n        }\n        result[4] = top;\n        result[5] = front;\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3023255813953488,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 94.0,
+        "literal_count": 9.0,
+        "source_tokens": 766.0,
+        "l0_tokens": 81.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.7428198433420365,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 2,
+        "call_count": 94,
+        "literal_count": 9
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/needle/LongNeedle.java::LongNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)",
+      "source": "protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle) {\n\n        GeneralPath shape1 = new GeneralPath();\n        GeneralPath shape2 = new GeneralPath();\n        GeneralPath shape3 = new GeneralPath();\n\n        float minX = (float) plotArea.getMinX();\n        float minY = (float) plotArea.getMinY();\n        float maxX = (float) plotArea.getMaxX();\n        float maxY = (float) plotArea.getMaxY();\n        //float midX = (float) (minX + (plotArea.getWidth() * getRotateX()));\n        //float midY = (float) (minY + (plotArea.getHeight() * getRotateY()));\n        float midX = (float) (minX + (plotArea.getWidth() * 0.5));\n        float midY = (float) (minY + (plotArea.getHeight() * 0.8));\n        float y = maxY - (2 * (maxY - midY));\n        if (y < minY) {\n            y = minY;\n        }\n        shape1.moveTo(minX, midY);\n        shape1.lineTo(midX, minY);\n        shape1.lineTo(midX, y);\n        shape1.closePath();\n\n        shape2.moveTo(maxX, midY);\n        shape2.lineTo(midX, minY);\n        shape2.lineTo(midX, y);\n        shape2.closePath();\n\n        shape3.moveTo(minX, midY);\n        shape3.lineTo(midX, maxY);\n        shape3.lineTo(maxX, midY);\n        shape3.lineTo(midX, y);\n        shape3.closePath();\n\n        Shape s1 = shape1;\n        Shape s2 = shape2;\n        Shape s3 = shape3;\n\n        if ((rotate != null) && (angle != 0)) {\n            /// we have rotation huston, please spin me\n            getTransform().setToRotation(angle, rotate.getX(), rotate.getY());\n            s1 = shape1.createTransformedShape(transform);\n            s2 = shape2.createTransformedShape(transform);\n            s3 = shape3.createTransformedShape(transform);\n        }\n\n\n        if (getHighlightPaint() != null) {\n            g2.setPaint(getHighlightPaint());\n            g2.fill(s3);\n        }\n\n        if (getFillPaint() != null) {\n            g2.setPaint(getFillPaint());\n            g2.fill(s1);\n            g2.fill(s2);\n        }\n\n\n        if (getOutlinePaint() != null) {\n            g2.setStroke(getOutlineStroke());\n            g2.setPaint(getOutlinePaint());\n            g2.draw(s1);\n            g2.draw(s2);\n            g2.draw(s3);\n        }\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: source/org/jfree/chart/needle/LongNeedle.java::LongNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)\nSIGNATURE: protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)",
+        "METHOD: source/org/jfree/chart/needle/LongNeedle.java::LongNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)\nSIGNATURE: protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)\nSTRUCTURE (lossy):\nGeneralPath shape1 = new GeneralPath();\nGeneralPath shape2 = new GeneralPath();\nGeneralPath shape3 = new GeneralPath();\nfloat minX = (float) plotArea.getMinX();\nCALL plotArea.getMinX()\nfloat minY = (float) plotArea.getMinY();\nCALL plotArea.getMinY()\nfloat maxX = (float) plotArea.getMaxX();\nCALL plotArea.getMaxX()\nfloat maxY = (float) plotArea.getMaxY();\nCALL plotArea.getMaxY()\nfloat midX = (float) (minX + (plotArea.getWidth() * 0.5));\nCALL plotArea.getWidth()\nfloat midY = (float) (minY + (plotArea.getHeight() * 0.8));\nCALL plotArea.getHeight()\nfloat y = maxY - (2 * (maxY - midY));\nif (y < minY)\ny = minY\nCALL shape1.moveTo(minX, midY)\nCALL shape1.lineTo(midX, minY)\nCALL shape1.lineTo(midX, y)\nCALL shape1.closePath()\nCALL shape2.moveTo(maxX, midY)\nCALL shape2.lineTo(midX, minY)\nCALL shape2.lineTo(midX, y)\nCALL shape2.closePath()\nCALL shape3.moveTo(minX, midY)\nCALL shape3.lineTo(midX, maxY)\nCALL shape3.lineTo(maxX, midY)\nCALL shape3.lineTo(midX, y)\nCALL shape3.closePath()\nShape s1 = shape1;\nShape s2 = shape2;\nShape s3 = shape3;\nif ((rotate != null) && (angle != 0))\nCALL getTransform().setToRotation(angle, rotate.getX(), rotate.getY())\nCALL getTransform()\nCALL rotate.getX()\nCALL rotate.getY()\ns1 = shape1.createTransformedShape(transform)\nCALL shape1.createTransformedShape(transform)\ns2 = shape2.createTransformedShape(transform)\nCALL shape2.createTransformedShape(transform)\ns3 = shape3.createTransformedShape(transform)\nCALL shape3.createTransformedShape(transform)\nif (getHighlightPaint() != null)\nCALL getHighlightPaint()\nCALL g2.setPaint(getHighlightPaint())\nCALL g2.fill(s3)\nif (getFillPaint() != null)\nCALL getFillPaint()\nCALL g2.setPaint(getFillPaint())\nCALL g2.fill(s1)\nCALL g2.fill(s2)\nif (getOutlinePaint() != null)\nCALL getOutlinePaint()\nCALL g2.setStroke(getOutlineStroke())\nCALL getOutlineStroke()\nCALL g2.setPaint(getOutlinePaint())\nCALL g2\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle) {\n\n        GeneralPath shape1 = new GeneralPath();\n        GeneralPath shape2 = new GeneralPath();\n        GeneralPath shape3 = new GeneralPath();\n\n        float minX = (float) plotArea.getMinX();\n        float minY = (float) plotArea.getMinY();\n        float maxX = (float) plotArea.getMaxX();\n        float maxY = (float) plotArea.getMaxY();\n        //float midX = (float) (minX + (plotArea.getWidth() * getRotateX()));\n        //float midY = (float) (minY + (plotArea.getHeight() * getRotateY()));\n        float midX = (float) (minX + (plotArea.getWidth() * 0.5));\n        float midY = (float) (minY + (plotArea.getHeight() * 0.8));\n        float y = maxY - (2 * (maxY - midY));\n        if (y < minY) {\n            y = minY;\n        }\n        shape1.moveTo(minX, midY);\n        shape1.lineTo(midX, minY);\n        shape1.lineTo(midX, y);\n        shape1.closePath();\n\n        shape2.moveTo(maxX, midY);\n        shape2.lineTo(midX, minY);\n        shape2.lineTo(midX, y);\n        shape2.closePath();\n\n        shape3.moveTo(minX, midY);\n        shape3.lineTo(midX, maxY);\n        shape3.lineTo(maxX, midY);\n        shape3.lineTo(midX, y);\n        shape3.closePath();\n\n        Shape s1 = shape1;\n        Shape s2 = shape2;\n        Shape s3 = shape3;\n\n        if ((rotate != null) && (angle != 0)) {\n            /// we have rotation huston, please spin me\n            getTransform().setToRotation(angle, rotate.getX(), rotate.getY());\n            s1 = shape1.createTransformedShape(transform);\n            s2 = shape2.createTransformedShape(transform);\n            s3 = shape3.createTransformedShape(transform);\n        }\n\n\n        if (getHighlightPaint() != null) {\n            g2.setPaint(getHighlightPaint());\n            g2.fill(s3);\n        }\n\n        if (getFillPaint() != null) {\n            g2.setPaint(getFillPaint());\n            g2.fill(s1);\n            g2.fill(s2);\n        }\n\n\n        if (getOutlinePaint() != null) {\n            g2.setStroke(getOutlineStroke());\n            g2.setPaint(getOutlinePaint());\n            g2.draw(s1);\n            g2.draw(s2);\n            g2.draw(s3);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.28,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 43.0,
+        "literal_count": 8.0,
+        "source_tokens": 558.0,
+        "l0_tokens": 78.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 6,
+        "call_count": 43,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getCenterPoint()",
+      "source": "public static Point getCenterPoint ()\n    {\n      GraphicsEnvironment localGraphicsEnvironment \n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\"getCenterPoint\", \n                  (Class[]) null);\n          return (Point) method.invoke(localGraphicsEnvironment, \n                  (Object[]) null);\n      }\n      catch (Exception e) {\n        // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Point (s.width / 2, s.height / 2);\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getCenterPoint()\nSIGNATURE: public static Point getCenterPoint ()",
+        "METHOD: source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getCenterPoint()\nSIGNATURE: public static Point getCenterPoint ()\nSTRUCTURE (lossy):\nGraphicsEnvironment localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();\nCALL GraphicsEnvironment.getLocalGraphicsEnvironment()\nMethod method = GraphicsEnvironment.class.getMethod(\"getCenterPoint\", (Class[]) null);\nCALL GraphicsEnvironment.class.getMethod(\"getCenterPoint\", (Class[]) null)\nreturn (Point) method.invoke(localGraphicsEnvironment, (Object[]) null);\nCALL method.invoke(localGraphicsEnvironment, (Object[]) null)\ncatch (Exception e)\nDimension s = Toolkit.getDefaultToolkit().getScreenSize();\nCALL Toolkit.getDefaultToolkit().getScreenSize()\nCALL Toolkit.getDefaultToolkit()\nreturn new Point (s.width / 2, s.height / 2);",
+        "public static Point getCenterPoint ()\n    {\n      GraphicsEnvironment localGraphicsEnvironment \n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\"getCenterPoint\", \n                  (Class[]) null);\n          return (Point) method.invoke(localGraphicsEnvironment, \n                  (Object[]) null);\n      }\n      catch (Exception e) {\n        // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Point (s.width / 2, s.height / 2);\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.358974358974359,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 5.0,
+        "literal_count": 6.0,
+        "source_tokens": 155.0,
+        "l0_tokens": 36.0,
+        "l1_tokens": 205.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 5,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/renderer/category/LineRenderer3D.java::LineRenderer3D.drawRangeMarker(Graphics2D g2,\n                                CategoryPlot plot,\n                                ValueAxis axis,\n                                Marker marker,\n                                Rectangle2D dataArea)",
+      "source": "public void drawRangeMarker(Graphics2D g2,\n                                CategoryPlot plot,\n                                ValueAxis axis,\n                                Marker marker,\n                                Rectangle2D dataArea) {\n\n        Rectangle2D adjusted = new Rectangle2D.Double(dataArea.getX(), \n                dataArea.getY() + getYOffset(), \n                dataArea.getWidth() - getXOffset(), \n                dataArea.getHeight() - getYOffset());\n\n        if (marker instanceof ValueMarker) {\n            ValueMarker vm = (ValueMarker) marker;\n            double value = vm.getValue();\n            Range range = axis.getRange();\n            if (!range.contains(value)) {\n                return;\n            }\n\n            GeneralPath path = null;\n            PlotOrientation orientation = plot.getOrientation();\n            if (orientation == PlotOrientation.HORIZONTAL) {\n                float x = (float) axis.valueToJava2D(value, adjusted, \n                        plot.getRangeAxisEdge());\n                float y = (float) adjusted.getMaxY();\n                path = new GeneralPath();\n                path.moveTo(x, y);\n                path.lineTo((float) (x + getXOffset()), \n                        y - (float) getYOffset());\n                path.lineTo((float) (x + getXOffset()), \n                        (float) (adjusted.getMinY() - getYOffset()));\n                path.lineTo(x, (float) adjusted.getMinY());\n                path.closePath();\n            }\n            else if (orientation == PlotOrientation.VERTICAL) {\n                float y = (float) axis.valueToJava2D(value, adjusted, \n                        plot.getRangeAxisEdge());\n                float x = (float) dataArea.getX();\n                path = new GeneralPath();\n                path.moveTo(x, y);\n                path.lineTo(x + (float) this.xOffset, y - (float) this.yOffset);\n                path.lineTo((float) (adjusted.getMaxX() + this.xOffset), \n                        y - (float) this.yOffset);\n                path.lineTo((float) (adjusted.getMaxX()), y);\n                path.closePath();\n            }\n            g2.setPaint(marker.getPaint());\n            g2.fill(path);\n            g2.setPaint(marker.getOutlinePaint());\n            g2.draw(path);\n        }\n        else {\n            super.drawRangeMarker(g2, plot, axis, marker, adjusted);\n            // TODO: draw the interval marker with a 3D effect\n        }\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: source/org/jfree/chart/renderer/category/LineRenderer3D.java::LineRenderer3D.drawRangeMarker(Graphics2D g2,\n                                CategoryPlot plot,\n                                ValueAxis axis,\n                                Marker marker,\n                                Rectangle2D dataArea)\nSIGNATURE: public void drawRangeMarker(Graphics2D g2,\n                                CategoryPlot plot,\n                                ValueAxis axis,\n                                Marker marker,\n                                Rectangle2D dataArea)",
+        "METHOD: source/org/jfree/chart/renderer/category/LineRenderer3D.java::LineRenderer3D.drawRangeMarker(Graphics2D g2,\n                                CategoryPlot plot,\n                                ValueAxis axis,\n                                Marker marker,\n                                Rectangle2D dataArea)\nSIGNATURE: public void drawRangeMarker(Graphics2D g2,\n                                CategoryPlot plot,\n                                ValueAxis axis,\n                                Marker marker,\n                                Rectangle2D dataArea)\nSTRUCTURE (lossy):\nRectangle2D adjusted = new Rectangle2D.Double(dataArea.getX(), dataArea.getY() + getYOffset(), dataArea.getWidth() - getXOffset(), dataArea.getHeight() - getYOffset());\nCALL dataArea.getX()\nCALL dataArea.getY()\nCALL getYOffset()\nCALL dataArea.getWidth()\nCALL getXOffset()\nCALL dataArea.getHeight()\nif (marker instanceof ValueMarker)\nValueMarker vm = (ValueMarker) marker;\ndouble value = vm.getValue();\nCALL vm.getValue()\nRange range = axis.getRange();\nCALL axis.getRange()\nif (!range.contains(value))\nCALL range.contains(value)\nreturn;\nGeneralPath path = null;\nPlotOrientation orientation = plot.getOrientation();\nCALL plot.getOrientation()\nif (orientation == PlotOrientation.HORIZONTAL)\nfloat x = (float) axis.valueToJava2D(value, adjusted, plot.getRangeAxisEdge());\nCALL axis.valueToJava2D(value, adjusted, plot.getRangeAxisEdge())\nCALL plot.getRangeAxisEdge()\nfloat y = (float) adjusted.getMaxY();\nCALL adjusted.getMaxY()\npath = new GeneralPath()\nCALL path.moveTo(x, y)\nCALL path.lineTo((float) (x + getXOffset()), y - (float) getYOffset())\nCALL path.lineTo((float) (x + getXOffset()), (float) (adjusted.getMinY() - getYOffset()))\nCALL adjusted.getMinY()\nCALL path.lineTo(x, (float) adjusted.getMinY())\nCALL path.closePath()\nif (orientation == PlotOrientation.VERTICAL)\nfloat y = (float) axis.valueToJava2D(value, adjusted, plot.getRangeAxisEdge());\nfloat x = (float) dataArea.getX();\nCALL path.lineTo(x + (float) this.xOffset, y - (float) this.yOffset)\nCALL path.lineTo((float) (adjusted.getMaxX() + this.xOffset), y - (float) this.yOffset)\nCALL adjusted.getMaxX()\nCALL path.lineTo((float) (adjusted.getMaxX\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public void drawRangeMarker(Graphics2D g2,\n                                CategoryPlot plot,\n                                ValueAxis axis,\n                                Marker marker,\n                                Rectangle2D dataArea) {\n\n        Rectangle2D adjusted = new Rectangle2D.Double(dataArea.getX(), \n                dataArea.getY() + getYOffset(), \n                dataArea.getWidth() - getXOffset(), \n                dataArea.getHeight() - getYOffset());\n\n        if (marker instanceof ValueMarker) {\n            ValueMarker vm = (ValueMarker) marker;\n            double value = vm.getValue();\n            Range range = axis.getRange();\n            if (!range.contains(value)) {\n                return;\n            }\n\n            GeneralPath path = null;\n            PlotOrientation orientation = plot.getOrientation();\n            if (orientation == PlotOrientation.HORIZONTAL) {\n                float x = (float) axis.valueToJava2D(value, adjusted, \n                        plot.getRangeAxisEdge());\n                float y = (float) adjusted.getMaxY();\n                path = new GeneralPath();\n                path.moveTo(x, y);\n                path.lineTo((float) (x + getXOffset()), \n                        y - (float) getYOffset());\n                path.lineTo((float) (x + getXOffset()), \n                        (float) (adjusted.getMinY() - getYOffset()));\n                path.lineTo(x, (float) adjusted.getMinY());\n                path.closePath();\n            }\n            else if (orientation == PlotOrientation.VERTICAL) {\n                float y = (float) axis.valueToJava2D(value, adjusted, \n                        plot.getRangeAxisEdge());\n                float x = (float) dataArea.getX();\n                path = new GeneralPath();\n                path.moveTo(x, y);\n                path.lineTo(x + (float) this.xOffset, y - (float) this.yOffset);\n                path.lineTo((float) (adjusted.getMaxX() + this.xOffset), \n                        y - (float) this.yOffset);\n                path.lineTo((float) (adjusted.getMaxX()), y);\n                path.closePath();\n            }\n            g2.setPaint(marker.getPaint());\n            g2.fill(path);\n            g2.setPaint(marker.getOutlinePaint());\n            g2.draw(path);\n        }\n        else {\n            super.drawRangeMarker(g2, plot, axis, marker, adjusted);\n            // TODO: draw the interval marker with a 3D effect\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.22413793103448276,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 42.0,
+        "literal_count": 1.0,
+        "source_tokens": 612.0,
+        "l0_tokens": 143.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.9297385620915033,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 5,
+        "call_count": 42,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getMaximumWindowBounds()",
+      "source": "public static Rectangle getMaximumWindowBounds() {\n      GraphicsEnvironment localGraphicsEnvironment\n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\n                  \"getMaximumWindowBounds\", (Class[]) null);\n          return (Rectangle) method.invoke(localGraphicsEnvironment, \n                  (Object[]) null);\n      }\n      catch (Exception e) {\n          // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Rectangle (0, 0, s.width, s.height);\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getMaximumWindowBounds()\nSIGNATURE: public static Rectangle getMaximumWindowBounds()",
+        "METHOD: source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getMaximumWindowBounds()\nSIGNATURE: public static Rectangle getMaximumWindowBounds()\nSTRUCTURE (lossy):\nGraphicsEnvironment localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();\nCALL GraphicsEnvironment.getLocalGraphicsEnvironment()\nMethod method = GraphicsEnvironment.class.getMethod( \"getMaximumWindowBounds\", (Class[]) null);\nCALL GraphicsEnvironment.class.getMethod( \"getMaximumWindowBounds\", (Class[]) null)\nreturn (Rectangle) method.invoke(localGraphicsEnvironment, (Object[]) null);\nCALL method.invoke(localGraphicsEnvironment, (Object[]) null)\ncatch (Exception e)\nDimension s = Toolkit.getDefaultToolkit().getScreenSize();\nCALL Toolkit.getDefaultToolkit().getScreenSize()\nCALL Toolkit.getDefaultToolkit()\nreturn new Rectangle (0, 0, s.width, s.height);",
+        "public static Rectangle getMaximumWindowBounds() {\n      GraphicsEnvironment localGraphicsEnvironment\n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\n                  \"getMaximumWindowBounds\", (Class[]) null);\n          return (Rectangle) method.invoke(localGraphicsEnvironment, \n                  (Object[]) null);\n      }\n      catch (Exception e) {\n          // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Rectangle (0, 0, s.width, s.height);\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.34146341463414637,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 5.0,
+        "literal_count": 6.0,
+        "source_tokens": 161.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 216.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 5,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/renderer/xy/XYAreaRenderer2.java::XYAreaRenderer2.XYAreaRenderer2(XYToolTipGenerator labelGenerator, \n                           XYURLGenerator urlGenerator)",
+      "source": "public XYAreaRenderer2(XYToolTipGenerator labelGenerator, \n                           XYURLGenerator urlGenerator) {\n        super();\n        this.showOutline = false;\n        setBaseToolTipGenerator(labelGenerator);\n        setBaseURLGenerator(urlGenerator);\n        GeneralPath area = new GeneralPath();\n        area.moveTo(0.0f, -4.0f);\n        area.lineTo(3.0f, -2.0f);\n        area.lineTo(4.0f, 4.0f);\n        area.lineTo(-4.0f, 4.0f);\n        area.lineTo(-3.0f, -2.0f);\n        area.closePath();\n        this.legendArea = area;\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: source/org/jfree/chart/renderer/xy/XYAreaRenderer2.java::XYAreaRenderer2.XYAreaRenderer2(XYToolTipGenerator labelGenerator, \n                           XYURLGenerator urlGenerator)\nSIGNATURE: public XYAreaRenderer2(XYToolTipGenerator labelGenerator, \n                           XYURLGenerator urlGenerator)",
+        "METHOD: source/org/jfree/chart/renderer/xy/XYAreaRenderer2.java::XYAreaRenderer2.XYAreaRenderer2(XYToolTipGenerator labelGenerator, \n                           XYURLGenerator urlGenerator)\nSIGNATURE: public XYAreaRenderer2(XYToolTipGenerator labelGenerator, \n                           XYURLGenerator urlGenerator)\nSTRUCTURE (lossy):\nthis.showOutline = false\nCALL setBaseToolTipGenerator(labelGenerator)\nCALL setBaseURLGenerator(urlGenerator)\nGeneralPath area = new GeneralPath();\nCALL area.moveTo(0.0f, -4.0f)\nCALL area.lineTo(3.0f, -2.0f)\nCALL area.lineTo(4.0f, 4.0f)\nCALL area.lineTo(-4.0f, 4.0f)\nCALL area.lineTo(-3.0f, -2.0f)\nCALL area.closePath()\nthis.legendArea = area",
+        "public XYAreaRenderer2(XYToolTipGenerator labelGenerator, \n                           XYURLGenerator urlGenerator) {\n        super();\n        this.showOutline = false;\n        setBaseToolTipGenerator(labelGenerator);\n        setBaseURLGenerator(urlGenerator);\n        GeneralPath area = new GeneralPath();\n        area.moveTo(0.0f, -4.0f);\n        area.lineTo(3.0f, -2.0f);\n        area.lineTo(4.0f, 4.0f);\n        area.lineTo(-4.0f, 4.0f);\n        area.lineTo(-3.0f, -2.0f);\n        area.closePath();\n        this.legendArea = area;\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4375,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 8.0,
+        "literal_count": 10.0,
+        "source_tokens": 135.0,
+        "l0_tokens": 79.0,
+        "l1_tokens": 169.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 8,
+        "literal_count": 10
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/gantt/Task.java::Task.equals(Object object)",
+      "source": "public boolean equals(Object object) {\n        if (object == this) {\n            return true;\n        }\n        if (!(object instanceof Task)) {\n            return false;\n        }\n        Task that = (Task) object;\n        if (!ObjectUtilities.equal(this.description, that.description)) {\n            return false;\n        }\n        if (!ObjectUtilities.equal(this.duration, that.duration)) {\n            return false;\n        }\n        if (!ObjectUtilities.equal(this.percentComplete, \n                that.percentComplete)) {\n            return false;\n        }\n        if (!ObjectUtilities.equal(this.subtasks, that.subtasks)) {\n            return false;\n        }\n        return true;\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: source/org/jfree/data/gantt/Task.java::Task.equals(Object object)\nSIGNATURE: public boolean equals(Object object)",
+        "METHOD: source/org/jfree/data/gantt/Task.java::Task.equals(Object object)\nSIGNATURE: public boolean equals(Object object)\nSTRUCTURE (lossy):\nif (object == this)\nreturn true;\nif (!(object instanceof Task))\nreturn false;\nTask that = (Task) object;\nif (!ObjectUtilities.equal(this.description, that.description))\nCALL ObjectUtilities.equal(this.description, that.description)\nif (!ObjectUtilities.equal(this.duration, that.duration))\nCALL ObjectUtilities.equal(this.duration, that.duration)\nif (!ObjectUtilities.equal(this.percentComplete, that.percentComplete))\nCALL ObjectUtilities.equal(this.percentComplete, that.percentComplete)\nif (!ObjectUtilities.equal(this.subtasks, that.subtasks))\nCALL ObjectUtilities.equal(this.subtasks, that.subtasks)",
+        "public boolean equals(Object object) {\n        if (object == this) {\n            return true;\n        }\n        if (!(object instanceof Task)) {\n            return false;\n        }\n        Task that = (Task) object;\n        if (!ObjectUtilities.equal(this.description, that.description)) {\n            return false;\n        }\n        if (!ObjectUtilities.equal(this.duration, that.duration)) {\n            return false;\n        }\n        if (!ObjectUtilities.equal(this.percentComplete, \n                that.percentComplete)) {\n            return false;\n        }\n        if (!ObjectUtilities.equal(this.subtasks, that.subtasks)) {\n            return false;\n        }\n        return true;\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4583333333333333,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 4.0,
+        "literal_count": 0.0,
+        "source_tokens": 174.0,
+        "l0_tokens": 31.0,
+        "l1_tokens": 187.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 4,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.OptionalLibraryHolder.loadLibrary(String classname)",
+      "source": "protected Library loadLibrary(String classname) {\n            if (classname == null) {\n                return null;\n            }\n            try {\n                Class c = ObjectUtilities.getClassLoader(\n                        getClass()).loadClass(classname);\n                try {\n                    Method m = c.getMethod(\"getInstance\", (Class[]) null);\n                    return (Library) m.invoke(null, (Object[]) null);\n                }\n                catch(Exception e) {\n                    // ok, fall back ...\n                }\n                return (Library) c.newInstance();\n            }\n            catch (Exception e) {\n                // ok, this library has no 'getInstance()' method. Check the\n                // default constructor ...\n                return null;\n            }\n        }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.OptionalLibraryHolder.loadLibrary(String classname)\nSIGNATURE: protected Library loadLibrary(String classname)",
+        "METHOD: source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.OptionalLibraryHolder.loadLibrary(String classname)\nSIGNATURE: protected Library loadLibrary(String classname)\nSTRUCTURE (lossy):\nif (classname == null)\nreturn null;\nClass c = ObjectUtilities.getClassLoader( getClass()).loadClass(classname);\nCALL ObjectUtilities.getClassLoader( getClass()).loadClass(classname)\nCALL ObjectUtilities.getClassLoader( getClass())\nCALL getClass()\nMethod m = c.getMethod(\"getInstance\", (Class[]) null);\nCALL c.getMethod(\"getInstance\", (Class[]) null)\nreturn (Library) m.invoke(null, (Object[]) null);\nCALL m.invoke(null, (Object[]) null)\ncatch(Exception e)\nreturn (Library) c.newInstance();\nCALL c.newInstance()\ncatch (Exception e)",
+        "protected Library loadLibrary(String classname) {\n            if (classname == null) {\n                return null;\n            }\n            try {\n                Class c = ObjectUtilities.getClassLoader(\n                        getClass()).loadClass(classname);\n                try {\n                    Method m = c.getMethod(\"getInstance\", (Class[]) null);\n                    return (Library) m.invoke(null, (Object[]) null);\n                }\n                catch(Exception e) {\n                    // ok, fall back ...\n                }\n                return (Library) c.newInstance();\n            }\n            catch (Exception e) {\n                // ok, this library has no 'getInstance()' method. Check the\n                // default constructor ...\n                return null;\n            }\n        }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.35135135135135137,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 6.0,
+        "literal_count": 7.0,
+        "source_tokens": 204.0,
+        "l0_tokens": 46.0,
+        "l1_tokens": 184.0,
+        "compression_ratio": 0.9019607843137255,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 6,
+        "literal_count": 7
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/renderer/xy/XYAreaRenderer.java::XYAreaRenderer.XYAreaRenderer(int type, XYToolTipGenerator toolTipGenerator, \n                          XYURLGenerator urlGenerator)",
+      "source": "public XYAreaRenderer(int type, XYToolTipGenerator toolTipGenerator, \n                          XYURLGenerator urlGenerator) {\n\n        super();\n        setBaseToolTipGenerator(toolTipGenerator);\n        setBaseURLGenerator(urlGenerator);\n\n        if (type == SHAPES) {\n            this.plotShapes = true;\n        }\n        if (type == LINES) {\n            this.plotLines = true;\n        }\n        if (type == SHAPES_AND_LINES) {\n            this.plotShapes = true;\n            this.plotLines = true;\n        }\n        if (type == AREA) {\n            this.plotArea = true;\n        }\n        if (type == AREA_AND_SHAPES) {\n            this.plotArea = true;\n            this.plotShapes = true;\n        }\n        this.showOutline = false;\n        GeneralPath area = new GeneralPath();\n        area.moveTo(0.0f, -4.0f);\n        area.lineTo(3.0f, -2.0f);\n        area.lineTo(4.0f, 4.0f);\n        area.lineTo(-4.0f, 4.0f);\n        area.lineTo(-3.0f, -2.0f);\n        area.closePath();\n        this.legendArea = area;\n\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: source/org/jfree/chart/renderer/xy/XYAreaRenderer.java::XYAreaRenderer.XYAreaRenderer(int type, XYToolTipGenerator toolTipGenerator, \n                          XYURLGenerator urlGenerator)\nSIGNATURE: public XYAreaRenderer(int type, XYToolTipGenerator toolTipGenerator, \n                          XYURLGenerator urlGenerator)",
+        "METHOD: source/org/jfree/chart/renderer/xy/XYAreaRenderer.java::XYAreaRenderer.XYAreaRenderer(int type, XYToolTipGenerator toolTipGenerator, \n                          XYURLGenerator urlGenerator)\nSIGNATURE: public XYAreaRenderer(int type, XYToolTipGenerator toolTipGenerator, \n                          XYURLGenerator urlGenerator)\nSTRUCTURE (lossy):\nCALL setBaseToolTipGenerator(toolTipGenerator)\nCALL setBaseURLGenerator(urlGenerator)\nif (type == SHAPES)\nthis.plotShapes = true\nif (type == LINES)\nthis.plotLines = true\nif (type == SHAPES_AND_LINES)\nif (type == AREA)\nthis.plotArea = true\nif (type == AREA_AND_SHAPES)\nthis.showOutline = false\nGeneralPath area = new GeneralPath();\nCALL area.moveTo(0.0f, -4.0f)\nCALL area.lineTo(3.0f, -2.0f)\nCALL area.lineTo(4.0f, 4.0f)\nCALL area.lineTo(-4.0f, 4.0f)\nCALL area.lineTo(-3.0f, -2.0f)\nCALL area.closePath()\nthis.legendArea = area",
+        "public XYAreaRenderer(int type, XYToolTipGenerator toolTipGenerator, \n                          XYURLGenerator urlGenerator) {\n\n        super();\n        setBaseToolTipGenerator(toolTipGenerator);\n        setBaseURLGenerator(urlGenerator);\n\n        if (type == SHAPES) {\n            this.plotShapes = true;\n        }\n        if (type == LINES) {\n            this.plotLines = true;\n        }\n        if (type == SHAPES_AND_LINES) {\n            this.plotShapes = true;\n            this.plotLines = true;\n        }\n        if (type == AREA) {\n            this.plotArea = true;\n        }\n        if (type == AREA_AND_SHAPES) {\n            this.plotArea = true;\n            this.plotShapes = true;\n        }\n        this.showOutline = false;\n        GeneralPath area = new GeneralPath();\n        area.moveTo(0.0f, -4.0f);\n        area.lineTo(3.0f, -2.0f);\n        area.lineTo(4.0f, 4.0f);\n        area.lineTo(-4.0f, 4.0f);\n        area.lineTo(-3.0f, -2.0f);\n        area.closePath();\n        this.legendArea = area;\n\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.40540540540540543,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 8.0,
+        "literal_count": 10.0,
+        "source_tokens": 254.0,
+        "l0_tokens": 83.0,
+        "l1_tokens": 220.0,
+        "compression_ratio": 0.8661417322834646,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 8,
+        "literal_count": 10
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/renderer/category/BarRenderer3D.java::BarRenderer3D.drawRangeMarker(Graphics2D g2,\n                                CategoryPlot plot,\n                                ValueAxis axis,\n                                Marker marker,\n                                Rectangle2D dataArea)",
+      "source": "public void drawRangeMarker(Graphics2D g2,\n                                CategoryPlot plot,\n                                ValueAxis axis,\n                                Marker marker,\n                                Rectangle2D dataArea) {\n\n\n        Rectangle2D adjusted = new Rectangle2D.Double(dataArea.getX(), \n                dataArea.getY() + getYOffset(), dataArea.getWidth() \n                - getXOffset(), dataArea.getHeight() - getYOffset());\n        if (marker instanceof ValueMarker) {\n            ValueMarker vm = (ValueMarker) marker;\n            double value = vm.getValue();\n            Range range = axis.getRange();\n            if (!range.contains(value)) {\n                return;\n            }\n\n            GeneralPath path = null;\n            PlotOrientation orientation = plot.getOrientation();\n            if (orientation == PlotOrientation.HORIZONTAL) {\n                float x = (float) axis.valueToJava2D(value, adjusted, \n                        plot.getRangeAxisEdge());\n                float y = (float) adjusted.getMaxY();\n                path = new GeneralPath();\n                path.moveTo(x, y);\n                path.lineTo((float) (x + getXOffset()), \n                        y - (float) getYOffset());\n                path.lineTo((float) (x + getXOffset()), \n                        (float) (adjusted.getMinY() - getYOffset()));\n                path.lineTo(x, (float) adjusted.getMinY());\n                path.closePath();\n            }\n            else if (orientation == PlotOrientation.VERTICAL) {\n                float y = (float) axis.valueToJava2D(value, adjusted, \n                        plot.getRangeAxisEdge());\n                float x = (float) dataArea.getX();\n                path = new GeneralPath();\n                path.moveTo(x, y);\n                path.lineTo(x + (float) this.xOffset, y - (float) this.yOffset);\n                path.lineTo((float) (adjusted.getMaxX() + this.xOffset), \n                        y - (float) this.yOffset);\n                path.lineTo((float) (adjusted.getMaxX()), y);\n                path.closePath();\n            }\n            g2.setPaint(marker.getPaint());\n            g2.fill(path);\n            g2.setPaint(marker.getOutlinePaint());\n            g2.draw(path);\n        \n            String label = marker.getLabel();\n            RectangleAnchor anchor = marker.getLabelAnchor();\n            if (label != null) {\n                Font labelFont = marker.getLabelFont();\n                g2.setFont(labelFont);\n                g2.setPaint(marker.getLabelPaint());\n                Point2D coordinates = calculateRangeMarkerTextAnchorPoint(\n                        g2, orientation, dataArea, path.getBounds2D(), \n                        marker.getLabelOffset(), LengthAdjustmentType.EXPAND, \n                        anchor);\n                TextUtilities.drawAlignedString(label, g2, \n                        (float) coordinates.getX(), (float) coordinates.getY(), \n                        marker.getLabelTextAnchor());\n            }\n        \n        }\n        else {\n            super.drawRangeMarker(g2, plot, axis, marker, adjusted);\n            // TODO: draw the interval marker with a 3D effect\n        }\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: source/org/jfree/chart/renderer/category/BarRenderer3D.java::BarRenderer3D.drawRangeMarker(Graphics2D g2,\n                                CategoryPlot plot,\n                                ValueAxis axis,\n                                Marker marker,\n                                Rectangle2D dataArea)\nSIGNATURE: public void drawRangeMarker(Graphics2D g2,\n                                CategoryPlot plot,\n                                ValueAxis axis,\n                                Marker marker,\n                                Rectangle2D dataArea)",
+        "METHOD: source/org/jfree/chart/renderer/category/BarRenderer3D.java::BarRenderer3D.drawRangeMarker(Graphics2D g2,\n                                CategoryPlot plot,\n                                ValueAxis axis,\n                                Marker marker,\n                                Rectangle2D dataArea)\nSIGNATURE: public void drawRangeMarker(Graphics2D g2,\n                                CategoryPlot plot,\n                                ValueAxis axis,\n                                Marker marker,\n                                Rectangle2D dataArea)\nSTRUCTURE (lossy):\nRectangle2D adjusted = new Rectangle2D.Double(dataArea.getX(), dataArea.getY() + getYOffset(), dataArea.getWidth() - getXOffset(), dataArea.getHeight() - getYOffset());\nCALL dataArea.getX()\nCALL dataArea.getY()\nCALL getYOffset()\nCALL dataArea.getWidth()\nCALL getXOffset()\nCALL dataArea.getHeight()\nif (marker instanceof ValueMarker)\nValueMarker vm = (ValueMarker) marker;\ndouble value = vm.getValue();\nCALL vm.getValue()\nRange range = axis.getRange();\nCALL axis.getRange()\nif (!range.contains(value))\nCALL range.contains(value)\nreturn;\nGeneralPath path = null;\nPlotOrientation orientation = plot.getOrientation();\nCALL plot.getOrientation()\nif (orientation == PlotOrientation.HORIZONTAL)\nfloat x = (float) axis.valueToJava2D(value, adjusted, plot.getRangeAxisEdge());\nCALL axis.valueToJava2D(value, adjusted, plot.getRangeAxisEdge())\nCALL plot.getRangeAxisEdge()\nfloat y = (float) adjusted.getMaxY();\nCALL adjusted.getMaxY()\npath = new GeneralPath()\nCALL path.moveTo(x, y)\nCALL path.lineTo((float) (x + getXOffset()), y - (float) getYOffset())\nCALL path.lineTo((float) (x + getXOffset()), (float) (adjusted.getMinY() - getYOffset()))\nCALL adjusted.getMinY()\nCALL path.lineTo(x, (float) adjusted.getMinY())\nCALL path.closePath()\nif (orientation == PlotOrientation.VERTICAL)\nfloat y = (float) axis.valueToJava2D(value, adjusted, plot.getRangeAxisEdge());\nfloat x = (float) dataArea.getX();\nCALL path.lineTo(x + (float) this.xOffset, y - (float) this.yOffset)\nCALL path.lineTo((float) (adjusted.getMaxX() + this.xOffset), y - (float) this.yOffset)\nCALL adjusted.getMaxX()\nCALL path.lineTo((float) (adjusted.getMaxX()\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public void drawRangeMarker(Graphics2D g2,\n                                CategoryPlot plot,\n                                ValueAxis axis,\n                                Marker marker,\n                                Rectangle2D dataArea) {\n\n\n        Rectangle2D adjusted = new Rectangle2D.Double(dataArea.getX(), \n                dataArea.getY() + getYOffset(), dataArea.getWidth() \n                - getXOffset(), dataArea.getHeight() - getYOffset());\n        if (marker instanceof ValueMarker) {\n            ValueMarker vm = (ValueMarker) marker;\n            double value = vm.getValue();\n            Range range = axis.getRange();\n            if (!range.contains(value)) {\n                return;\n            }\n\n            GeneralPath path = null;\n            PlotOrientation orientation = plot.getOrientation();\n            if (orientation == PlotOrientation.HORIZONTAL) {\n                float x = (float) axis.valueToJava2D(value, adjusted, \n                        plot.getRangeAxisEdge());\n                float y = (float) adjusted.getMaxY();\n                path = new GeneralPath();\n                path.moveTo(x, y);\n                path.lineTo((float) (x + getXOffset()), \n                        y - (float) getYOffset());\n                path.lineTo((float) (x + getXOffset()), \n                        (float) (adjusted.getMinY() - getYOffset()));\n                path.lineTo(x, (float) adjusted.getMinY());\n                path.closePath();\n            }\n            else if (orientation == PlotOrientation.VERTICAL) {\n                float y = (float) axis.valueToJava2D(value, adjusted, \n                        plot.getRangeAxisEdge());\n                float x = (float) dataArea.getX();\n                path = new GeneralPath();\n                path.moveTo(x, y);\n                path.lineTo(x + (float) this.xOffset, y - (float) this.yOffset);\n                path.lineTo((float) (adjusted.getMaxX() + this.xOffset), \n                        y - (float) this.yOffset);\n                path.lineTo((float) (adjusted.getMaxX()), y);\n                path.closePath();\n            }\n            g2.setPaint(marker.getPaint());\n            g2.fill(path);\n            g2.setPaint(marker.getOutlinePaint());\n            g2.draw(path);\n        \n            String label = marker.getLabel();\n            RectangleAnchor anchor = marker.getLabelAnchor();\n            if (label != null) {\n                Font labelFont = marker.getLabelFont();\n                g2.setFont(labelFont);\n                g2.setPaint(marker.getLabelPaint());\n                Point2D coordinates = calculateRangeMarkerTextAnchorPoint(\n                        g2, orientation, dataArea, path.getBounds2D(), \n                        marker.getLabelOffset(), LengthAdjustmentType.EXPAND, \n                        anchor);\n                TextUtilities.drawAlignedString(label, g2, \n                        (float) coordinates.getX(), (float) coordinates.getY(), \n                        marker.getLabelTextAnchor());\n            }\n        \n        }\n        else {\n            super.drawRangeMarker(g2, plot, axis, marker, adjusted);\n            // TODO: draw the interval marker with a 3D effect\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.18421052631578946,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 55.0,
+        "literal_count": 2.0,
+        "source_tokens": 801.0,
+        "l0_tokens": 142.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.7103620474406991,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 6,
+        "call_count": 55,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/needle/ShipNeedle.java::ShipNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)",
+      "source": "protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle) {\n\n        GeneralPath shape = new GeneralPath();\n        shape.append(new Arc2D.Double(-9.0, -7.0, 10, 14, 0.0, 25.5, \n                Arc2D.OPEN), true);\n        shape.append(new Arc2D.Double(0.0, -7.0, 10, 14, 154.5, 25.5, \n                Arc2D.OPEN), true);\n        shape.closePath();\n        getTransform().setToTranslation(plotArea.getMinX(), plotArea.getMaxY());\n        getTransform().scale(plotArea.getWidth(), plotArea.getHeight() / 3);\n        shape.transform(getTransform());\n\n        if ((rotate != null) && (angle != 0)) {\n            /// we have rotation\n            getTransform().setToRotation(angle, rotate.getX(), rotate.getY());\n            shape.transform(getTransform());\n        }\n\n        defaultDisplay(g2, shape);\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: source/org/jfree/chart/needle/ShipNeedle.java::ShipNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)\nSIGNATURE: protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)",
+        "METHOD: source/org/jfree/chart/needle/ShipNeedle.java::ShipNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)\nSIGNATURE: protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)\nSTRUCTURE (lossy):\nGeneralPath shape = new GeneralPath();\nCALL shape.append(new Arc2D.Double(-9.0, -7.0, 10, 14, 0.0, 25.5, Arc2D.OPEN), true)\nCALL shape.append(new Arc2D.Double(0.0, -7.0, 10, 14, 154.5, 25.5, Arc2D.OPEN), true)\nCALL shape.closePath()\nCALL getTransform().setToTranslation(plotArea.getMinX(), plotArea.getMaxY())\nCALL getTransform()\nCALL plotArea.getMinX()\nCALL plotArea.getMaxY()\nCALL getTransform().scale(plotArea.getWidth(), plotArea.getHeight() / 3)\nCALL plotArea.getWidth()\nCALL plotArea.getHeight()\nCALL shape.transform(getTransform())\nif ((rotate != null) && (angle != 0))\nCALL getTransform().setToRotation(angle, rotate.getX(), rotate.getY())\nCALL rotate.getX()\nCALL rotate.getY()\nCALL defaultDisplay(g2, shape)",
+        "protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle) {\n\n        GeneralPath shape = new GeneralPath();\n        shape.append(new Arc2D.Double(-9.0, -7.0, 10, 14, 0.0, 25.5, \n                Arc2D.OPEN), true);\n        shape.append(new Arc2D.Double(0.0, -7.0, 10, 14, 154.5, 25.5, \n                Arc2D.OPEN), true);\n        shape.closePath();\n        getTransform().setToTranslation(plotArea.getMinX(), plotArea.getMaxY());\n        getTransform().scale(plotArea.getWidth(), plotArea.getHeight() / 3);\n        shape.transform(getTransform());\n\n        if ((rotate != null) && (angle != 0)) {\n            /// we have rotation\n            getTransform().setToRotation(angle, rotate.getX(), rotate.getY());\n            shape.transform(getTransform());\n        }\n\n        defaultDisplay(g2, shape);\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.34146341463414637,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 20.0,
+        "literal_count": 15.0,
+        "source_tokens": 218.0,
+        "l0_tokens": 78.0,
+        "l1_tokens": 262.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 20,
+        "literal_count": 15
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/needle/PointerNeedle.java::PointerNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)",
+      "source": "protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle) {\n\n        GeneralPath shape1 = new GeneralPath();\n        GeneralPath shape2 = new GeneralPath();\n        float minX = (float) plotArea.getMinX();\n        float minY = (float) plotArea.getMinY();\n        float maxX = (float) plotArea.getMaxX();\n        float maxY = (float) plotArea.getMaxY();\n        float midX = (float) (minX + (plotArea.getWidth() / 2));\n        float midY = (float) (minY + (plotArea.getHeight() / 2));\n\n        shape1.moveTo(minX, midY);\n        shape1.lineTo(midX, minY);\n        shape1.lineTo(maxX, midY);\n        shape1.closePath();\n\n        shape2.moveTo(minX, midY);\n        shape2.lineTo(midX, maxY);\n        shape2.lineTo(maxX, midY);\n        shape2.closePath();\n\n        if ((rotate != null) && (angle != 0)) {\n            /// we have rotation huston, please spin me\n            getTransform().setToRotation(angle, rotate.getX(), rotate.getY());\n            shape1.transform(getTransform());\n            shape2.transform(getTransform());\n        }\n\n        if (getFillPaint() != null) {\n            g2.setPaint(getFillPaint());\n            g2.fill(shape1);\n        }\n\n        if (getHighlightPaint() != null) {\n            g2.setPaint(getHighlightPaint());\n            g2.fill(shape2);\n        }\n\n        if (getOutlinePaint() != null) {\n            g2.setStroke(getOutlineStroke());\n            g2.setPaint(getOutlinePaint());\n            g2.draw(shape1);\n            g2.draw(shape2);\n        }\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: source/org/jfree/chart/needle/PointerNeedle.java::PointerNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)\nSIGNATURE: protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)",
+        "METHOD: source/org/jfree/chart/needle/PointerNeedle.java::PointerNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)\nSIGNATURE: protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)\nSTRUCTURE (lossy):\nGeneralPath shape1 = new GeneralPath();\nGeneralPath shape2 = new GeneralPath();\nfloat minX = (float) plotArea.getMinX();\nCALL plotArea.getMinX()\nfloat minY = (float) plotArea.getMinY();\nCALL plotArea.getMinY()\nfloat maxX = (float) plotArea.getMaxX();\nCALL plotArea.getMaxX()\nfloat maxY = (float) plotArea.getMaxY();\nCALL plotArea.getMaxY()\nfloat midX = (float) (minX + (plotArea.getWidth() / 2));\nCALL plotArea.getWidth()\nfloat midY = (float) (minY + (plotArea.getHeight() / 2));\nCALL plotArea.getHeight()\nCALL shape1.moveTo(minX, midY)\nCALL shape1.lineTo(midX, minY)\nCALL shape1.lineTo(maxX, midY)\nCALL shape1.closePath()\nCALL shape2.moveTo(minX, midY)\nCALL shape2.lineTo(midX, maxY)\nCALL shape2.lineTo(maxX, midY)\nCALL shape2.closePath()\nif ((rotate != null) && (angle != 0))\nCALL getTransform().setToRotation(angle, rotate.getX(), rotate.getY())\nCALL getTransform()\nCALL rotate.getX()\nCALL rotate.getY()\nCALL shape1.transform(getTransform())\nCALL shape2.transform(getTransform())\nif (getFillPaint() != null)\nCALL getFillPaint()\nCALL g2.setPaint(getFillPaint())\nCALL g2.fill(shape1)\nif (getHighlightPaint() != null)\nCALL getHighlightPaint()\nCALL g2.setPaint(getHighlightPaint())\nCALL g2.fill(shape2)\nif (getOutlinePaint() != null)\nCALL getOutlinePaint()\nCALL g2.setStroke(getOutlineStroke())\nCALL getOutlineStroke()\nCALL g2.setPaint(getOutlinePaint())\nCALL g2.draw(shape1)\nCALL g2.draw(shape2)",
+        "protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle) {\n\n        GeneralPath shape1 = new GeneralPath();\n        GeneralPath shape2 = new GeneralPath();\n        float minX = (float) plotArea.getMinX();\n        float minY = (float) plotArea.getMinY();\n        float maxX = (float) plotArea.getMaxX();\n        float maxY = (float) plotArea.getMaxY();\n        float midX = (float) (minX + (plotArea.getWidth() / 2));\n        float midY = (float) (minY + (plotArea.getHeight() / 2));\n\n        shape1.moveTo(minX, midY);\n        shape1.lineTo(midX, minY);\n        shape1.lineTo(maxX, midY);\n        shape1.closePath();\n\n        shape2.moveTo(minX, midY);\n        shape2.lineTo(midX, maxY);\n        shape2.lineTo(maxX, midY);\n        shape2.closePath();\n\n        if ((rotate != null) && (angle != 0)) {\n            /// we have rotation huston, please spin me\n            getTransform().setToRotation(angle, rotate.getX(), rotate.getY());\n            shape1.transform(getTransform());\n            shape2.transform(getTransform());\n        }\n\n        if (getFillPaint() != null) {\n            g2.setPaint(getFillPaint());\n            g2.fill(shape1);\n        }\n\n        if (getHighlightPaint() != null) {\n            g2.setPaint(getHighlightPaint());\n            g2.fill(shape2);\n        }\n\n        if (getOutlinePaint() != null) {\n            g2.setStroke(getOutlineStroke());\n            g2.setPaint(getOutlinePaint());\n            g2.draw(shape1);\n            g2.draw(shape2);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2826086956521739,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 37.0,
+        "literal_count": 7.0,
+        "source_tokens": 390.0,
+        "l0_tokens": 79.0,
+        "l1_tokens": 433.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 37,
+        "literal_count": 7
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)",
+      "source": "public void executeQuery(Connection con, String query) \n        throws SQLException {\n\n        if (con == null) {\n            throw new SQLException(\n                \"There is no database to execute the query.\"\n            );\n        }\n\n        ResultSet resultSet = null;\n        Statement statement = null;\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int numberOfColumns = metaData.getColumnCount();\n            int numberOfValidColumns = 0;\n            int [] columnTypes = new int[numberOfColumns];\n            for (int column = 0; column < numberOfColumns; column++) {\n                try {\n                    int type = metaData.getColumnType(column + 1);\n                    switch (type) {\n\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIT:\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            ++numberOfValidColumns;\n                            columnTypes[column] = type;\n                            break;\n                        default:\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                catch (SQLException e) {\n                    columnTypes[column] = Types.NULL;\n                    throw e;\n                }\n            }\n\n\n            if (numberOfValidColumns <= 1) {\n                throw new SQLException(\n                    \"Not enough valid columns where generated by query.\"\n                );\n            }\n\n            /// First column is X data\n            this.columnNames = new String[numberOfValidColumns - 1];\n            /// Get the column names and cache them.\n            int currentColumn = 0;\n            for (int column = 1; column < numberOfColumns; column++) {\n                if (columnTypes[column] != Types.NULL) {\n                    this.columnNames[currentColumn] \n                        = metaData.getColumnLabel(column + 1);\n                    ++currentColumn;\n                }\n            }\n\n            // Might need to add, to free memory from any previous result sets\n            if (this.rows != null) {\n                for (int column = 0; column < this.rows.size(); column++) {\n                    ArrayList row = (ArrayList) this.rows.get(column);\n                    row.clear();\n                }\n                this.rows.clear();\n            }\n\n            // Are we working with a time series.\n            switch (columnTypes[0]) {\n                case Types.DATE:\n                case Types.TIME:\n                case Types.TIMESTAMP:\n                    this.isTimeSeries = true;\n                    break;\n                default :\n                    this.isTimeSeries = false;\n                    break;\n            }\n\n            // Get all rows.\n            // rows = new ArrayList();\n            while (resultSet.next()) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    Object xObject = resultSet.getObject(column + 1);\n                    switch (columnTypes[column]) {\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            newRow.add(xObject);\n                            break;\n\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                            newRow.add(new Long(((Date) xObject).getTime()));\n                            break;\n                        case Types.NULL:\n                            break;\n                        default:\n                            System.err.println(\"Unknown data\");\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// a kludge to make everything work when no rows returned\n            if (this.rows.size() == 0) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    if (columnTypes[column] != Types.NULL) {\n                        newRow.add(new Integer(0));\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// Determine max and min values.\n            if (this.rows.size() < 1) {\n                this.maxValue = 0.0;\n                this.minValue = 0.0;\n            }\n            else {\n                ArrayList row = (ArrayList) this.rows.get(0);\n                this.maxValue = Double.NEGATIVE_INFINITY;\n                this.minValue = Double.POSITIVE_INFINITY;\n                for (int rowNum = 0; rowNum < this.rows.size(); ++rowNum) {\n                    row = (ArrayList) this.rows.get(rowNum);\n                    for (int column = 1; column < numberOfColumns; column++) {\n                        Object testValue = row.get(column);\n                        if (testValue != null) {\n                            double test = ((Number) testValue).doubleValue();\n                        \n                            if (test < this.minValue) {\n                                this.minValue = test;\n                            }\n                            if (test > this.maxValue) {\n                                this.maxValue = test;\n                            }\n                        }\n                    }\n                }\n            }\n\n            fireDatasetChanged(); // Tell the listeners a new table has arrived.\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n        }\n\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)\nSIGNATURE: public void executeQuery(Connection con, String query) \n        throws SQLException",
+        "METHOD: source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)\nSIGNATURE: public void executeQuery(Connection con, String query) \n        throws SQLException\nSTRUCTURE (lossy):\nif (con == null)\nthrow new SQLException( \"There is no database to execute the query.\" );\nResultSet resultSet = null;\nStatement statement = null;\nstatement = con.createStatement()\nCALL con.createStatement()\nresultSet = statement.executeQuery(query)\nCALL statement.executeQuery(query)\nResultSetMetaData metaData = resultSet.getMetaData();\nCALL resultSet.getMetaData()\nint numberOfColumns = metaData.getColumnCount();\nCALL metaData.getColumnCount()\nint numberOfValidColumns = 0;\nint [] columnTypes = new int[numberOfColumns];\nfor (int column = 0; column < numberOfColumns; column++)\nint column = 0;\ncolumn++\nint type = metaData.getColumnType(column + 1);\nCALL metaData.getColumnType(column + 1)\nswitch (type) { case Types.NUMERIC: case Types.REAL: case Types.INTEGER: case Types.DOUBLE: case Types.FLOAT: case Types.DECIMAL: case Types.BIT: case Types.DATE: case Types.TIME: case Types.TIMESTAMP: case Types.BIGINT: case Types.SMALLINT: ++numberOfValidColumns; columnTypes[column] = type; break; default: columnTypes[column] = Types.NULL; break; }\n++numberOfValidColumns\ncolumnTypes[column] = type\ncolumnTypes[column] = Types.NULL\ncatch (SQLException e)\nthrow e;\nif (numberOfValidColumns <= 1)\nthrow new SQLException( \"Not enough valid columns where generated by query.\" );\nthis.columnNames = new String[numberOfValidColumns - 1]\nint currentColumn = 0;\nfor (int column = 1; column < numberOfColumns; column++)\nint column = 1;\nif (columnTypes[column] != Types.NULL)\nthis.columnNames[currentColumn] = metaData.getColumnLabel(column + 1)\nCALL metaData.getColumnLabel(column + 1)\n++currentColumn\nif (this.rows != null)\nfor (int column = 0; column < this.rows.size(); column++)\nCALL this.rows.size()\nArrayList row = (ArrayList) this.rows.get(column);\nCALL this.rows.get(column)\nCALL row.clear()\nCALL this.rows.clear()\nswitch (columnTypes[0]) { case Types.DATE: case Types.TIME: case Types.TIMESTAMP: this.isTimeSeries = true; break; default : this.isTimeSeries = false; break; }\nthi\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public void executeQuery(Connection con, String query) \n        throws SQLException {\n\n        if (con == null) {\n            throw new SQLException(\n                \"There is no database to execute the query.\"\n            );\n        }\n\n        ResultSet resultSet = null;\n        Statement statement = null;\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int numberOfColumns = metaData.getColumnCount();\n            int numberOfValidColumns = 0;\n            int [] columnTypes = new int[numberOfColumns];\n            for (int column = 0; column < numberOfColumns; column++) {\n                try {\n                    int type = metaData.getColumnType(column + 1);\n                    switch (type) {\n\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIT:\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            ++numberOfValidColumns;\n                            columnTypes[column] = type;\n                            break;\n                        default:\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                catch (SQLException e) {\n                    columnTypes[column] = Types.NULL;\n                    throw e;\n                }\n            }\n\n\n            if (numberOfValidColumns <= 1) {\n                throw new SQLException(\n                    \"Not enough valid columns where generated by query.\"\n                );\n            }\n\n            /// First column is X data\n            this.columnNames = new String[numberOfValidColumns - 1];\n            /// Get the column names and cache them.\n            int currentColumn = 0;\n            for (int column = 1; column < numberOfColumns; column++) {\n                if (columnTypes[column] != Types.NULL) {\n                    this.columnNames[currentColumn] \n                        = metaData.getColumnLabel(column + 1);\n                    ++currentColumn;\n                }\n            }\n\n            // Might need to add, to free memory from any previous result sets\n            if (this.rows != null) {\n                for (int column = 0; column < this.rows.size(); column++) {\n                    ArrayList row = (ArrayList) this.rows.get(column);\n                    row.clear();\n                }\n                this.rows.clear();\n            }\n\n            // Are we working with a time series.\n            switch (columnTypes[0]) {\n                case Types.DATE:\n                case Types.TIME:\n                case Types.TIMESTAMP:\n                    this.isTimeSeries = true;\n                    break;\n                default :\n                    this.isTimeSeries = false;\n                    break;\n            }\n\n            // Get all rows.\n            // rows = new ArrayList();\n            while (resultSet.next()) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    Object xObject = resultSet.getObject(column + 1);\n                    switch (columnTypes[column]) {\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            newRow.add(xObject);\n                            break;\n\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                            newRow.add(new Long(((Date) xObject).getTime()));\n                            break;\n                        case Types.NULL:\n                            break;\n                        default:\n                            System.err.println(\"Unknown data\");\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// a kludge to make everything work when no rows returned\n            if (this.rows.size() == 0) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    if (columnTypes[column] != Types.NULL) {\n                        newRow.add(new Integer(0));\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// Determine max and min values.\n            if (this.rows.size() < 1) {\n                this.maxValue = 0.0;\n                this.minValue = 0.0;\n            }\n            else {\n                ArrayList row = (ArrayList) this.rows.get(0);\n                this.maxValue = Double.NEGATIVE_INFINITY;\n                this.minValue = Double.POSITIVE_INFINITY;\n                for (int rowNum = 0; rowNum < this.rows.size(); ++rowNum) {\n                    row = (ArrayList) this.rows.get(rowNum);\n                    for (int column = 1; column < numberOfColumns; column++) {\n                        Object testValue = row.get(column);\n                        if (testValue != null) {\n                            double test = ((Number) testValue).doubleValue();\n                        \n                            if (test < this.minValue) {\n                                this.minValue = test;\n                            }\n                            if (test > this.maxValue) {\n                                this.maxValue = test;\n                            }\n                        }\n                    }\n                }\n            }\n\n            fireDatasetChanged(); // Tell the listeners a new table has arrived.\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n        }\n\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.1328125,
+        "trace_match": 0.0,
+        "complexity": 27.0,
+        "call_count": 29.0,
+        "literal_count": 31.0,
+        "source_tokens": 1719.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.3310063990692263,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 27,
+        "call_count": 29,
+        "literal_count": 31
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.clone(final Object object)",
+      "source": "public static Object clone(final Object object)\n        throws CloneNotSupportedException {\n        if (object == null) {\n            throw new IllegalArgumentException(\"Null 'object' argument.\");\n        }\n        if (object instanceof PublicCloneable) {\n            final PublicCloneable pc = (PublicCloneable) object;\n            return pc.clone();\n        }\n        else {\n            try {\n                final Method method = object.getClass().getMethod(\"clone\",\n                        (Class[]) null);\n                if (Modifier.isPublic(method.getModifiers())) {\n                    return method.invoke(object, (Object[]) null);\n                }\n            }\n            catch (NoSuchMethodException e) {\n                e.printStackTrace();\n            }\n            catch (IllegalAccessException e) {\n                e.printStackTrace();\n            }\n            catch (InvocationTargetException e) {\n                e.printStackTrace();\n            }\n        }\n        throw new CloneNotSupportedException(\"Failed to clone.\");\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.clone(final Object object)\nSIGNATURE: public static Object clone(final Object object)\n        throws CloneNotSupportedException",
+        "METHOD: source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.clone(final Object object)\nSIGNATURE: public static Object clone(final Object object)\n        throws CloneNotSupportedException\nSTRUCTURE (lossy):\nif (object == null)\nthrow new IllegalArgumentException(\"Null 'object' argument.\");\nif (object instanceof PublicCloneable)\nfinal PublicCloneable pc = (PublicCloneable) object;\nreturn pc.clone();\nCALL pc.clone()\nfinal Method method = object.getClass().getMethod(\"clone\", (Class[]) null);\nCALL object.getClass().getMethod(\"clone\", (Class[]) null)\nCALL object.getClass()\nif (Modifier.isPublic(method.getModifiers()))\nCALL Modifier.isPublic(method.getModifiers())\nCALL method.getModifiers()\nreturn method.invoke(object, (Object[]) null);\nCALL method.invoke(object, (Object[]) null)\ncatch (NoSuchMethodException e)\nCALL e.printStackTrace()\ncatch (IllegalAccessException e)\ncatch (InvocationTargetException e)\nthrow new CloneNotSupportedException(\"Failed to clone.\");",
+        "public static Object clone(final Object object)\n        throws CloneNotSupportedException {\n        if (object == null) {\n            throw new IllegalArgumentException(\"Null 'object' argument.\");\n        }\n        if (object instanceof PublicCloneable) {\n            final PublicCloneable pc = (PublicCloneable) object;\n            return pc.clone();\n        }\n        else {\n            try {\n                final Method method = object.getClass().getMethod(\"clone\",\n                        (Class[]) null);\n                if (Modifier.isPublic(method.getModifiers())) {\n                    return method.invoke(object, (Object[]) null);\n                }\n            }\n            catch (NoSuchMethodException e) {\n                e.printStackTrace();\n            }\n            catch (IllegalAccessException e) {\n                e.printStackTrace();\n            }\n            catch (InvocationTargetException e) {\n                e.printStackTrace();\n            }\n        }\n        throw new CloneNotSupportedException(\"Failed to clone.\");\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3170731707317073,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 9.0,
+        "literal_count": 6.0,
+        "source_tokens": 263.0,
+        "l0_tokens": 51.0,
+        "l1_tokens": 246.0,
+        "compression_ratio": 0.935361216730038,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 9,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/StringUtilities.java::StringUtilities.startsWithIgnoreCase(String base, String start)",
+      "source": "public static boolean startsWithIgnoreCase(String base, String start) {\n        if (base.length() < start.length()) {\n            return false;\n        }\n        return base.regionMatches(true, 0, start, 0, start.length());\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/StringUtilities.java::StringUtilities.startsWithIgnoreCase(String base, String start)\nSIGNATURE: public static boolean startsWithIgnoreCase(String base, String start)",
+        "METHOD: source/org/jfree/chart/util/StringUtilities.java::StringUtilities.startsWithIgnoreCase(String base, String start)\nSIGNATURE: public static boolean startsWithIgnoreCase(String base, String start)\nSTRUCTURE (lossy):\nif (base.length() < start.length())\nCALL base.length()\nCALL start.length()\nreturn false;\nreturn base.regionMatches(true, 0, start, 0, start.length());\nCALL base.regionMatches(true, 0, start, 0, start.length())",
+        "public static boolean startsWithIgnoreCase(String base, String start) {\n        if (base.length() < start.length()) {\n            return false;\n        }\n        return base.regionMatches(true, 0, start, 0, start.length());\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5652173913043478,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 4.0,
+        "literal_count": 2.0,
+        "source_tokens": 58.0,
+        "l0_tokens": 51.0,
+        "l1_tokens": 108.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 4,
+        "literal_count": 2
+      }
+    }
+  ],
+  "rank_metadata": {
+    "source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createDiamond(float s)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createDownTriangle(float s)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createUpTriangle(float s)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createLineRegion(Line2D line, float width)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createRegularCross(float l, float t)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/ShapeUtilities.java::ShapeUtilities.createDiagonalCross(float l, float t)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/SerialUtilities.java::SerialUtilities.readShape(ObjectInputStream stream)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/needle/ArrowNeedle.java::ArrowNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/renderer/category/StackedBarRenderer3D.java::StackedBarRenderer3D.createVerticalBlock(double x0, double width, double y0, \n            double y1, boolean inverted)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/renderer/category/StackedBarRenderer3D.java::StackedBarRenderer3D.createHorizontalBlock(double x0, double width, double y0, \n            double y1, boolean inverted)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/needle/LongNeedle.java::LongNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getCenterPoint()": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/renderer/category/LineRenderer3D.java::LineRenderer3D.drawRangeMarker(Graphics2D g2,\n                                CategoryPlot plot,\n                                ValueAxis axis,\n                                Marker marker,\n                                Rectangle2D dataArea)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getMaximumWindowBounds()": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/renderer/xy/XYAreaRenderer2.java::XYAreaRenderer2.XYAreaRenderer2(XYToolTipGenerator labelGenerator, \n                           XYURLGenerator urlGenerator)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/gantt/Task.java::Task.equals(Object object)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.OptionalLibraryHolder.loadLibrary(String classname)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/renderer/xy/XYAreaRenderer.java::XYAreaRenderer.XYAreaRenderer(int type, XYToolTipGenerator toolTipGenerator, \n                          XYURLGenerator urlGenerator)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/renderer/category/BarRenderer3D.java::BarRenderer3D.drawRangeMarker(Graphics2D g2,\n                                CategoryPlot plot,\n                                ValueAxis axis,\n                                Marker marker,\n                                Rectangle2D dataArea)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/needle/ShipNeedle.java::ShipNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/needle/PointerNeedle.java::PointerNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea, \n                              Point2D rotate, double angle)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.clone(final Object object)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/StringUtilities.java::StringUtilities.startsWithIgnoreCase(String base, String start)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 7746,
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "d88030513f9fd7238fab746dc68e89bb6591ee4dd1d3333b484ce95f55230d6a",
+  "evidence_sha256": "de08fc5d3c37dc4a013cfe2fb3c752248553026b5d420c0cf53ad8be593576b9"
+}
