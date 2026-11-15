@@ -106,7 +106,7 @@ def _branch_score(node, signal, test_text, calls):
     return (score, -len(text), -node.origin.start_line, node.id)
 
 
-def test_aware_select(graph, target, budget, counter=None, missing_evidence=""):
+def test_aware_select(graph, target, budget, counter=None, missing_evidence="", *, failure_digest_mode="full"):
     """Return a bounded, test-conditioned source package, without gold data.
 
     Test signal has priority over unverified L1 missing-evidence suggestions.
@@ -124,15 +124,21 @@ def test_aware_select(graph, target, budget, counter=None, missing_evidence=""):
         key=lambda n: (n.origin.start_line, n.id),
     )
     chosen = set(mandatory_ids(graph, target))
+    if failure_digest_mode not in {"full", "bounded_excerpt"}:
+        raise ValueError("Unknown graph failure excerpt mode")
+    selector = (
+        "test_aware_bounded_failure_v2"
+        if failure_digest_mode == "bounded_excerpt" else SELECTOR
+    )
     def try_add(more):
         proposed = chosen | {n.id for n in more}
-        out = package(graph, target, proposed, budget, counter, selector=SELECTOR)
+        out = package(graph, target, proposed, budget, counter, selector=selector)
         if out.status == "ready":
             chosen.update(n.id for n in more)
             return True
         return False
 
-    minimum = package(graph, target, chosen, budget, counter, selector=SELECTOR)
+    minimum = package(graph, target, chosen, budget, counter, selector=selector)
     if minimum.status != "ready":
         return replace(
             minimum,
@@ -154,7 +160,7 @@ def test_aware_select(graph, target, budget, counter=None, missing_evidence=""):
         if try_add(owners[callee]):
             selected_callees.append(callee)
 
-    result = package(graph, target, chosen, budget, counter, selector=SELECTOR)
+    result = package(graph, target, chosen, budget, counter, selector=selector)
     missing_ids = [n.id for n in nodes if n.id not in chosen]
     diagnostics = {
         "test_signal": signal,
