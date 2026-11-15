@@ -6,8 +6,8 @@ cd "$(dirname "$0")/.."
 
 BRANCH="graft-fl-aiscalar-20261113"
 ROOT="data/graft_100_cohort_20261115"
-MODE="$(printf '%s' "$1")"
-BATCH="$(printf '%s' "$2")"
+MODE="${1:-}"
+BATCH="${2:-}"
 
 if [[ "$(git branch --show-current)" != "$BRANCH" ]]; then
   echo "Wrong research branch, no inference started." >&2
