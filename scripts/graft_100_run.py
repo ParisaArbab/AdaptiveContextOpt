@@ -409,6 +409,47 @@ def aggregate(root: Path, cohort: dict):
                     if usable else None for p in POLICIES
                 },
             })
+    # Prespecified descriptive subgroup rule, based on L1-only output,
+    # never used to pick or replace the original 100 bug IDs. This lets us
+    # check whether graph evidence helps cases where L1 did NOT rank a
+    # changed file first. Subgroups are exploratory and may be empty.
+    difficulty_subgroups = []
+    for split in ("development", "evaluation"):
+        for fusion in FUSIONS:
+            eligible = [
+                r for r in outcomes
+                if r["split"] == split and r["fusion"] == fusion
+                and r["status"] == "complete_with_graph"
+            ]
+            for kind, is_top1 in (("l1_top1_hit", True), ("l1_top1_miss", False)):
+                chosen = [
+                    r for r in eligible
+                    if bool(r["file_top1"]["l1_anchor"]) is is_top1
+                ]
+                means = {
+                    p: (
+                        round(sum(r["file_mrr"][p] for r in chosen) / len(chosen), 5)
+                        if chosen else None
+                    )
+                    for p in POLICIES
+                }
+                difficulty_subgroups.append({
+                    "split": split,
+                    "fusion": fusion,
+                    "subgroup": kind,
+                    "completed_paired_n": len(chosen),
+                    "mean_file_mrr": means,
+                    "mean_mrr_difference_focused_minus_l1": (
+                        round(
+                            sum(
+                                r["file_mrr"]["l1_graph_focused"]
+                                - r["file_mrr"]["l1_anchor"] for r in chosen
+                            ) / len(chosen), 5
+                        ) if chosen else None
+                    ),
+                    "descriptive_not_heldout_subgroup_effect": True,
+                })
+
     result = {
         "schema": "graft-100-aggregate-v1",
         "cohort_selection_sha256": cohort["selection_sha256"],
@@ -425,6 +466,7 @@ def aggregate(root: Path, cohort: dict):
             "mean MRR. Incomplete/unavailable bugs are reported, never replaced."
         ),
         "summary": summaries,
+        "l1_difficulty_subgroups": difficulty_subgroups,
         "instances": outcomes,
     }
     output = root / "aggregate"
@@ -452,6 +494,22 @@ def aggregate(root: Path, cohort: dict):
             f"| {r['split']} | {r['fusion']} | {r['predeclared_n']} | "
             f"{r['fully_paired_graph_n']} | {disp(m['l1_anchor'])} | "
             f"{disp(m['l1_graph_focused'])} | {disp(m['l1_graph_test_aware'])} |"
+        )
+    lines.extend([
+        "",
+        "## Exploratory subgroup by baseline L1 Top-1 (not used for sampling)",
+        "",
+        "| Split | Fusion | L1 baseline result | Fully paired n | Mean L1 MRR | Mean focused MRR |",
+        "|---|---|---|---:|---:|---:|",
+    ])
+    for subgroup in difficulty_subgroups:
+        m = subgroup["mean_file_mrr"]
+        def fmt(x):
+            return "N/A" if x is None else f"{x:.4f}"
+        lines.append(
+            f"| {subgroup['split']} | {subgroup['fusion']} | "
+            f"{subgroup['subgroup']} | {subgroup['completed_paired_n']} | "
+            f"{fmt(m['l1_anchor'])} | {fmt(m['l1_graph_focused'])} |"
         )
     lines.extend([
         "",
