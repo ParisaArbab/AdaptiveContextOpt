@@ -104,9 +104,16 @@ def inspect(root: Path) -> dict:
             "stopped_candidate_ids": with_stop["stop_gate_candidates"],
             "file_gold_in_pool": (base["gold_files_in_candidate_pool"] or 0) > 0,
         })
+    # The expected cohort is derived from the immutable executed manifest,
+    # never from the observed result rows. Missing bugs remain missing and
+    # cannot silently reduce the denominator in a 100-bug experiment.
+    manifest = json.loads((root / "manifest.json").read_text())
+    expected_bugs = [i["instance_id"] for i in manifest["instances"]]
+    if not expected_bugs or len(set(expected_bugs)) != len(expected_bugs):
+        raise ValueError("Missing/duplicate frozen instance IDs in run manifest")
     expected_pairs = {
         (bug, fusion)
-        for bug in ("Time-1", "Lang-1", "Math-1")
+        for bug in expected_bugs
         for fusion in FUSIONS
     }
     seen_pairs = {(r["bug"], r["fusion"]) for r in comparisons}
@@ -121,6 +128,13 @@ def inspect(root: Path) -> dict:
             seen_pairs == expected_pairs
             and len(comparisons) == len(expected_pairs)
             and all(r["status"] == "paired" for r in comparisons)
+            and len(output) == len(expected_bugs) * len(FUSIONS) * len(PAIRS)
+            and {
+                (r["bug"], r["fusion"], r["policy"]) for r in output
+            } == {
+                (bug, fusion, policy)
+                for bug in expected_bugs for fusion in FUSIONS for policy in PAIRS
+            }
         ),
         "any_real_stop_gate_activated": any(
             r.get("stop_gate_activated") for r in comparisons
