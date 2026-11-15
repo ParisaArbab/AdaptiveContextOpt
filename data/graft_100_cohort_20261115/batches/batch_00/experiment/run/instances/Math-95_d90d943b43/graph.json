@@ -1,0 +1,4515 @@
+{
+  "nodes": [
+    {
+      "id": "failure_4999f5c320d57bfdaa19",
+      "kind": "failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Math-95\nEXECUTED BUGGY TEST: org.apache.commons.math.distribution.FDistributionTest::testSmallDegreesOfFreedom\nTEST SOURCE: src/test/org/apache/commons/math/distribution/FDistributionTest.java\nTEST SOURCE SHA256: d946c3006841c9674586349cda113dc30cbb3f6b9e32ae9baf7d921d66bb297f\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testSmallDegreesOfFreedom() throws Exception {\n        org.apache.commons.math.distribution.FDistributionImpl fd =\n            new org.apache.commons.math.distribution.FDistributionImpl(\n                1.0, 1.0);\n        double p = fd.cumulativeProbability(0.975);\n        double x = fd.inverseCumulativeProbability(p);\n        assertEquals(0.975, x, 1.0e-5);\n\n        fd.setDenominatorDegreesOfFreedom(2.0);\n        p = fd.cumulativeProbability(0.975);\n        x = fd.inverseCumulativeProbability(p);\n        assertEquals(0.975, x, 1.0e-5);\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.apache.commons.math.distribution.FDistributionTest::testSmallDegreesOfFreedom\njava.lang.IllegalArgumentException: Invalid endpoint parameters:  lowerBound=0.0 initial=-1.0 upperBound=1.7976931348623157E308\n\tat org.apache.commons.math.analysis.UnivariateRealSolverUtils.bracket(UnivariateRealSolverUtils.java:179)\n\tat org.apache.commons.math.analysis.UnivariateRealSolverUtils.bracket(UnivariateRealSolverUtils.java:128)\n\tat org.apache.commons.math.distribution.AbstractContinuousDistribution.inverseCumulativeProbability(AbstractContinuousDistribution.java:84)\n\tat org.apache.commons.math.distribution.FDistributionImpl.inverseCumulativeProbability(FDistributionImpl.java:106)\n\tat org.apache.commons.math.distribution.FDistributionTest.testSmallDegreesOfFreedom(FDistributionTest.java:114)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 1,
+        "end_line": 58,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "supplied_text:observed_failure"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "method_fe2b6df09ce1a2b87f86",
+      "kind": "method",
+      "text": "public double inverseCumulativeProbability(final double p)\n        throws MathException",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+        "start_line": 59,
+        "end_line": 110,
+        "source_hash": "76f826f776092e215a258b454e6b31faf39a0b31d3268bd1a3d15679111738d9",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java::AbstractContinuousDistribution.inverseCumulativeProbability(final double p)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+      "defines": [
+        "p"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_d107542a56546e814df9",
+      "kind": "code",
+      "text": "if (p < 0.0 || p > 1.0) {\n            throw new IllegalArgumentException(\"p must be between 0.0 and 1.0, inclusive.\");\n        }",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+        "start_line": 61,
+        "end_line": 63,
+        "source_hash": "76f826f776092e215a258b454e6b31faf39a0b31d3268bd1a3d15679111738d9",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java::AbstractContinuousDistribution.inverseCumulativeProbability(final double p)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+      "defines": [],
+      "uses": [
+        "p"
+      ]
+    },
+    {
+      "id": "code_189946acbcc9af8290ac",
+      "kind": "code",
+      "text": "// by default, do simple root finding using bracketing and default solver.",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+        "start_line": 65,
+        "end_line": 65,
+        "source_hash": "76f826f776092e215a258b454e6b31faf39a0b31d3268bd1a3d15679111738d9",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java::AbstractContinuousDistribution.inverseCumulativeProbability(final double p)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_26871936f8b8278e1c51",
+      "kind": "code",
+      "text": "// subclasses can overide if there is a better method.",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+        "start_line": 66,
+        "end_line": 66,
+        "source_hash": "76f826f776092e215a258b454e6b31faf39a0b31d3268bd1a3d15679111738d9",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java::AbstractContinuousDistribution.inverseCumulativeProbability(final double p)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_29886c0aa613fae8e08b",
+      "kind": "code",
+      "text": "UnivariateRealFunction rootFindingFunction =\n            new UnivariateRealFunction() {\n\n            public double value(double x) throws FunctionEvaluationException {\n                try {\n                    return cumulativeProbability(x) - p;\n                } catch (MathException ex) {\n                    throw new FunctionEvaluationException(x, ex.getPattern(), ex.getArguments(), ex);\n                }\n            }\n        };",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+        "start_line": 67,
+        "end_line": 77,
+        "source_hash": "76f826f776092e215a258b454e6b31faf39a0b31d3268bd1a3d15679111738d9",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java::AbstractContinuousDistribution.inverseCumulativeProbability(final double p)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+      "defines": [
+        "rootFindingFunction"
+      ],
+      "uses": [
+        "ex",
+        "p",
+        "value",
+        "x"
+      ]
+    },
+    {
+      "id": "code_40e8f9d7352d7a0dd42a",
+      "kind": "code",
+      "text": "// Try to bracket root, test domain endoints if this fails     ",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+        "start_line": 79,
+        "end_line": 79,
+        "source_hash": "76f826f776092e215a258b454e6b31faf39a0b31d3268bd1a3d15679111738d9",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java::AbstractContinuousDistribution.inverseCumulativeProbability(final double p)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_23419104d58612dace9c",
+      "kind": "code",
+      "text": "double lowerBound = getDomainLowerBound(p);",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+        "start_line": 80,
+        "end_line": 80,
+        "source_hash": "76f826f776092e215a258b454e6b31faf39a0b31d3268bd1a3d15679111738d9",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java::AbstractContinuousDistribution.inverseCumulativeProbability(final double p)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+      "defines": [
+        "lowerBound"
+      ],
+      "uses": [
+        "p"
+      ]
+    },
+    {
+      "id": "code_cab65c8af8c707d9f19d",
+      "kind": "code",
+      "text": "double upperBound = getDomainUpperBound(p);",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+        "start_line": 81,
+        "end_line": 81,
+        "source_hash": "76f826f776092e215a258b454e6b31faf39a0b31d3268bd1a3d15679111738d9",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java::AbstractContinuousDistribution.inverseCumulativeProbability(final double p)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+      "defines": [
+        "upperBound"
+      ],
+      "uses": [
+        "p"
+      ]
+    },
+    {
+      "id": "code_11ff64e90d1897b6a7ed",
+      "kind": "code",
+      "text": "double[] bracket = null;",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+        "start_line": 82,
+        "end_line": 82,
+        "source_hash": "76f826f776092e215a258b454e6b31faf39a0b31d3268bd1a3d15679111738d9",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java::AbstractContinuousDistribution.inverseCumulativeProbability(final double p)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+      "defines": [
+        "bracket"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_6f7f8648627911470277",
+      "kind": "code",
+      "text": "try {\n            bracket = UnivariateRealSolverUtils.bracket(\n                    rootFindingFunction, getInitialDomain(p),\n                    lowerBound, upperBound);\n        }  catch (ConvergenceException ex) {\n            /* \n             * Check domain endpoints to see if one gives value that is within\n             * the default solver's defaultAbsoluteAccuracy of 0 (will be the\n             * case if density has bounded support and p is 0 or 1).\n             * \n             * TODO: expose the default solver, defaultAbsoluteAccuracy as\n             * a constant.\n             */ \n            if (Math.abs(rootFindingFunction.value(lowerBound)) < 1E-6) {\n                return lowerBound;\n            }\n            if (Math.abs(rootFindingFunction.value(upperBound)) < 1E-6) {\n                return upperBound;\n            }     \n            // Failed bracket convergence was not because of corner solution\n            throw new MathException(ex);\n        }",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+        "start_line": 83,
+        "end_line": 104,
+        "source_hash": "76f826f776092e215a258b454e6b31faf39a0b31d3268bd1a3d15679111738d9",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java::AbstractContinuousDistribution.inverseCumulativeProbability(final double p)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+      "defines": [],
+      "uses": [
+        "Math",
+        "UnivariateRealSolverUtils",
+        "bracket",
+        "ex",
+        "lowerBound",
+        "p",
+        "rootFindingFunction",
+        "upperBound"
+      ]
+    },
+    {
+      "id": "code_8886b0b0a4ecab178c0d",
+      "kind": "code",
+      "text": "// find root",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+        "start_line": 106,
+        "end_line": 106,
+        "source_hash": "76f826f776092e215a258b454e6b31faf39a0b31d3268bd1a3d15679111738d9",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java::AbstractContinuousDistribution.inverseCumulativeProbability(final double p)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_db58a4750c2af226b7b6",
+      "kind": "code",
+      "text": "double root = UnivariateRealSolverUtils.solve(rootFindingFunction,\n                bracket[0],bracket[1]);",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+        "start_line": 107,
+        "end_line": 108,
+        "source_hash": "76f826f776092e215a258b454e6b31faf39a0b31d3268bd1a3d15679111738d9",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java::AbstractContinuousDistribution.inverseCumulativeProbability(final double p)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+      "defines": [
+        "root"
+      ],
+      "uses": [
+        "UnivariateRealSolverUtils",
+        "bracket",
+        "rootFindingFunction"
+      ]
+    },
+    {
+      "id": "code_1ce34858eaa2357ecd7c",
+      "kind": "code",
+      "text": "return root;",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+        "start_line": 109,
+        "end_line": 109,
+        "source_hash": "76f826f776092e215a258b454e6b31faf39a0b31d3268bd1a3d15679111738d9",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java::AbstractContinuousDistribution.inverseCumulativeProbability(final double p)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+      "defines": [],
+      "uses": [
+        "root"
+      ]
+    },
+    {
+      "id": "method_bc679e85abfff6657954",
+      "kind": "method",
+      "text": "public static double[] bracket(UnivariateRealFunction function,\n            double initial, double lowerBound, double upperBound, \n            int maximumIterations) throws ConvergenceException, \n            FunctionEvaluationException",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+        "start_line": 166,
+        "end_line": 208,
+        "source_hash": "ee6b3c6f8985780b008e2c07382addae745ca1d34d493332ab30a9f89fc8fb74",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java::UnivariateRealSolverUtils.bracket(UnivariateRealFunction function,\n            double initial, double lowerBound, double upperBound, \n            int maximumIterations)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+      "defines": [
+        "function",
+        "initial",
+        "lowerBound",
+        "upperBound",
+        "maximumIterations"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_0b1e42558579a54e9fe2",
+      "kind": "code",
+      "text": "if (function == null) {\n            throw new IllegalArgumentException (\"function is null.\");\n        }",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+        "start_line": 171,
+        "end_line": 173,
+        "source_hash": "ee6b3c6f8985780b008e2c07382addae745ca1d34d493332ab30a9f89fc8fb74",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java::UnivariateRealSolverUtils.bracket(UnivariateRealFunction function,\n            double initial, double lowerBound, double upperBound, \n            int maximumIterations)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+      "defines": [],
+      "uses": [
+        "function"
+      ]
+    },
+    {
+      "id": "code_fa4b65e05b3bf6c7f872",
+      "kind": "code",
+      "text": "if (maximumIterations <= 0)  {\n            throw new IllegalArgumentException\n            (\"bad value for maximumIterations: \" + maximumIterations);\n        }",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+        "start_line": 174,
+        "end_line": 177,
+        "source_hash": "ee6b3c6f8985780b008e2c07382addae745ca1d34d493332ab30a9f89fc8fb74",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java::UnivariateRealSolverUtils.bracket(UnivariateRealFunction function,\n            double initial, double lowerBound, double upperBound, \n            int maximumIterations)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+      "defines": [],
+      "uses": [
+        "maximumIterations"
+      ]
+    },
+    {
+      "id": "code_4826c1743500072c07ae",
+      "kind": "code",
+      "text": "if (initial < lowerBound || initial > upperBound || lowerBound >= upperBound) {\n            throw new IllegalArgumentException\n            (\"Invalid endpoint parameters:  lowerBound=\" + lowerBound + \n              \" initial=\" + initial + \" upperBound=\" + upperBound);\n        }",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+        "start_line": 178,
+        "end_line": 182,
+        "source_hash": "ee6b3c6f8985780b008e2c07382addae745ca1d34d493332ab30a9f89fc8fb74",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java::UnivariateRealSolverUtils.bracket(UnivariateRealFunction function,\n            double initial, double lowerBound, double upperBound, \n            int maximumIterations)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+      "defines": [],
+      "uses": [
+        "initial",
+        "lowerBound",
+        "upperBound"
+      ]
+    },
+    {
+      "id": "code_4363016bbf6a280667fa",
+      "kind": "code",
+      "text": "double a = initial;",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+        "start_line": 183,
+        "end_line": 183,
+        "source_hash": "ee6b3c6f8985780b008e2c07382addae745ca1d34d493332ab30a9f89fc8fb74",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java::UnivariateRealSolverUtils.bracket(UnivariateRealFunction function,\n            double initial, double lowerBound, double upperBound, \n            int maximumIterations)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+      "defines": [
+        "a"
+      ],
+      "uses": [
+        "initial"
+      ]
+    },
+    {
+      "id": "code_510a6abbd651baefe496",
+      "kind": "code",
+      "text": "double b = initial;",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+        "start_line": 184,
+        "end_line": 184,
+        "source_hash": "ee6b3c6f8985780b008e2c07382addae745ca1d34d493332ab30a9f89fc8fb74",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java::UnivariateRealSolverUtils.bracket(UnivariateRealFunction function,\n            double initial, double lowerBound, double upperBound, \n            int maximumIterations)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+      "defines": [
+        "b"
+      ],
+      "uses": [
+        "initial"
+      ]
+    },
+    {
+      "id": "code_138ee23ba4410445e036",
+      "kind": "code",
+      "text": "double fa;",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+        "start_line": 185,
+        "end_line": 185,
+        "source_hash": "ee6b3c6f8985780b008e2c07382addae745ca1d34d493332ab30a9f89fc8fb74",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java::UnivariateRealSolverUtils.bracket(UnivariateRealFunction function,\n            double initial, double lowerBound, double upperBound, \n            int maximumIterations)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+      "defines": [
+        "fa"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_551cacd48411e662fdc5",
+      "kind": "code",
+      "text": "double fb;",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+        "start_line": 186,
+        "end_line": 186,
+        "source_hash": "ee6b3c6f8985780b008e2c07382addae745ca1d34d493332ab30a9f89fc8fb74",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java::UnivariateRealSolverUtils.bracket(UnivariateRealFunction function,\n            double initial, double lowerBound, double upperBound, \n            int maximumIterations)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+      "defines": [
+        "fb"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_5401c4a3d6a3f77fcff8",
+      "kind": "code",
+      "text": "int numIterations = 0 ;",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+        "start_line": 187,
+        "end_line": 187,
+        "source_hash": "ee6b3c6f8985780b008e2c07382addae745ca1d34d493332ab30a9f89fc8fb74",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java::UnivariateRealSolverUtils.bracket(UnivariateRealFunction function,\n            double initial, double lowerBound, double upperBound, \n            int maximumIterations)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+      "defines": [
+        "numIterations"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_8dd3cbd5cab9d526618d",
+      "kind": "code",
+      "text": "do {\n            a = Math.max(a - 1.0, lowerBound);\n            b = Math.min(b + 1.0, upperBound);\n            fa = function.value(a);\n            \n            fb = function.value(b);\n            numIterations++ ;\n        } while ((fa * fb > 0.0) && (numIterations < maximumIterations) && \n                ((a > lowerBound) || (b < upperBound)));",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+        "start_line": 189,
+        "end_line": 197,
+        "source_hash": "ee6b3c6f8985780b008e2c07382addae745ca1d34d493332ab30a9f89fc8fb74",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java::UnivariateRealSolverUtils.bracket(UnivariateRealFunction function,\n            double initial, double lowerBound, double upperBound, \n            int maximumIterations)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+      "defines": [],
+      "uses": [
+        "Math",
+        "a",
+        "b",
+        "fa",
+        "fb",
+        "function",
+        "lowerBound",
+        "maximumIterations",
+        "numIterations",
+        "upperBound"
+      ]
+    },
+    {
+      "id": "code_5aa84daad6976d4a03d4",
+      "kind": "code",
+      "text": "if (fa * fb >= 0.0 ) {\n            throw new ConvergenceException\n            (\"Number of iterations={0}, maximum iterations={1}, initial={2}, lower bound={3}, upper bound={4}, final a value={5}, final b value={6}, f(a)={7}, f(b)={8}\",\n             new Object[] { Integer.valueOf(numIterations), Integer.valueOf(maximumIterations),\n                            Double.valueOf(initial), Double.valueOf(lowerBound), Double.valueOf(upperBound),\n                            Double.valueOf(a), Double.valueOf(b), Double.valueOf(fa), Double.valueOf(fb) });\n        }",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+        "start_line": 199,
+        "end_line": 205,
+        "source_hash": "ee6b3c6f8985780b008e2c07382addae745ca1d34d493332ab30a9f89fc8fb74",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java::UnivariateRealSolverUtils.bracket(UnivariateRealFunction function,\n            double initial, double lowerBound, double upperBound, \n            int maximumIterations)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+      "defines": [],
+      "uses": [
+        "Double",
+        "Integer",
+        "a",
+        "b",
+        "fa",
+        "fb",
+        "initial",
+        "lowerBound",
+        "maximumIterations",
+        "numIterations",
+        "upperBound"
+      ]
+    },
+    {
+      "id": "code_72646a0ea27394972fa8",
+      "kind": "code",
+      "text": "return new double[]{a, b};",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+        "start_line": 207,
+        "end_line": 207,
+        "source_hash": "ee6b3c6f8985780b008e2c07382addae745ca1d34d493332ab30a9f89fc8fb74",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java::UnivariateRealSolverUtils.bracket(UnivariateRealFunction function,\n            double initial, double lowerBound, double upperBound, \n            int maximumIterations)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+      "defines": [],
+      "uses": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "id": "method_18bafc9fb635573f0acf",
+      "kind": "method",
+      "text": "public static double[] bracket(UnivariateRealFunction function, \n            double initial, double lowerBound, double upperBound) \n    throws ConvergenceException, FunctionEvaluationException",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+        "start_line": 125,
+        "end_line": 130,
+        "source_hash": "ad2f2f3b40f3de2af07f8aab0c33aece5703b1f061ece3d995c025cb145b8d56",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java::UnivariateRealSolverUtils.bracket(UnivariateRealFunction function, \n            double initial, double lowerBound, double upperBound)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+      "defines": [
+        "function",
+        "initial",
+        "lowerBound",
+        "upperBound"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_0185a082c7756d588deb",
+      "kind": "code",
+      "text": "return bracket( function, initial, lowerBound, upperBound,\n            Integer.MAX_VALUE ) ;",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+        "start_line": 128,
+        "end_line": 129,
+        "source_hash": "ad2f2f3b40f3de2af07f8aab0c33aece5703b1f061ece3d995c025cb145b8d56",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java::UnivariateRealSolverUtils.bracket(UnivariateRealFunction function, \n            double initial, double lowerBound, double upperBound)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+      "defines": [],
+      "uses": [
+        "Integer",
+        "MAX_VALUE",
+        "function",
+        "initial",
+        "lowerBound",
+        "upperBound"
+      ]
+    },
+    {
+      "id": "method_0d037a47cc81d628c38c",
+      "kind": "method",
+      "text": "protected void verifySequence(double lower, double initial, double upper)",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java",
+        "start_line": 311,
+        "end_line": 317,
+        "source_hash": "7c457c9927ad4fd99d0171077950cc80c714375c104146d12d7cbcbda815e6cc",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java::UnivariateRealSolverImpl.verifySequence(double lower, double initial, double upper)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java",
+      "defines": [
+        "lower",
+        "initial",
+        "upper"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_0b3fa76a96d0dc36160f",
+      "kind": "code",
+      "text": "if (!isSequence(lower, initial, upper)) {\n            throw new IllegalArgumentException\n                (\"Invalid interval, initial value parameters:  lower=\" + \n                   lower + \" initial=\" + initial + \" upper=\" + upper);\n        }",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java",
+        "start_line": 312,
+        "end_line": 316,
+        "source_hash": "7c457c9927ad4fd99d0171077950cc80c714375c104146d12d7cbcbda815e6cc",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java::UnivariateRealSolverImpl.verifySequence(double lower, double initial, double upper)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java",
+      "defines": [],
+      "uses": [
+        "initial",
+        "lower",
+        "upper"
+      ]
+    },
+    {
+      "id": "method_6e7aec92653653d1d3a3",
+      "kind": "method",
+      "text": "public void setDenominatorDegreesOfFreedom(double degreesOfFreedom)",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 179,
+        "end_line": 185,
+        "source_hash": "59e4ac34a37ce7290e291779cc9890f039d49119c497fa92c65b16560da138a6",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.setDenominatorDegreesOfFreedom(double degreesOfFreedom)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [
+        "degreesOfFreedom"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_d38fdfd2455e6baded53",
+      "kind": "code",
+      "text": "if (degreesOfFreedom <= 0.0) {\n            throw new IllegalArgumentException(\n                \"degrees of freedom must be positive.\");\n        }",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 180,
+        "end_line": 183,
+        "source_hash": "59e4ac34a37ce7290e291779cc9890f039d49119c497fa92c65b16560da138a6",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.setDenominatorDegreesOfFreedom(double degreesOfFreedom)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [],
+      "uses": [
+        "degreesOfFreedom"
+      ]
+    },
+    {
+      "id": "code_36968cdd60f534498b9f",
+      "kind": "code",
+      "text": "this.denominatorDegreesOfFreedom = degreesOfFreedom;",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 184,
+        "end_line": 184,
+        "source_hash": "59e4ac34a37ce7290e291779cc9890f039d49119c497fa92c65b16560da138a6",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.setDenominatorDegreesOfFreedom(double degreesOfFreedom)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [],
+      "uses": [
+        "degreesOfFreedom",
+        "denominatorDegreesOfFreedom"
+      ]
+    },
+    {
+      "id": "method_5b85f6b354f99ab9ffdc",
+      "kind": "method",
+      "text": "public double cumulativeProbability(double x0, double x1)\n        throws MathException",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractDistribution.java",
+        "start_line": 58,
+        "end_line": 65,
+        "source_hash": "d900baee2c9e6b0a3cbfa0f489ac02fa01fc64bd0ec84ee63dc616ffe66bf715",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractDistribution.java::AbstractDistribution.cumulativeProbability(double x0, double x1)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractDistribution.java",
+      "defines": [
+        "x0",
+        "x1"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_339deb33174bb860f5cd",
+      "kind": "code",
+      "text": "if (x0 > x1) {\n            throw new IllegalArgumentException\n            (\"lower endpoint must be less than or equal to upper endpoint\");\n        }",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractDistribution.java",
+        "start_line": 60,
+        "end_line": 63,
+        "source_hash": "d900baee2c9e6b0a3cbfa0f489ac02fa01fc64bd0ec84ee63dc616ffe66bf715",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractDistribution.java::AbstractDistribution.cumulativeProbability(double x0, double x1)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractDistribution.java",
+      "defines": [],
+      "uses": [
+        "x0",
+        "x1"
+      ]
+    },
+    {
+      "id": "code_468ef1e89346c698f80d",
+      "kind": "code",
+      "text": "return cumulativeProbability(x1) - cumulativeProbability(x0);",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractDistribution.java",
+        "start_line": 64,
+        "end_line": 64,
+        "source_hash": "d900baee2c9e6b0a3cbfa0f489ac02fa01fc64bd0ec84ee63dc616ffe66bf715",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractDistribution.java::AbstractDistribution.cumulativeProbability(double x0, double x1)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractDistribution.java",
+      "defines": [],
+      "uses": [
+        "x0",
+        "x1"
+      ]
+    },
+    {
+      "id": "method_ed6713ca5c0d91ce45d9",
+      "kind": "method",
+      "text": "public FDistributionImpl(double numeratorDegreesOfFreedom,\n            double denominatorDegreesOfFreedom)",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 48,
+        "end_line": 53,
+        "source_hash": "1eaff58104f6507d2db8a582f89af00f1961b2eb4eea97dbc90f7f06007a1bf3",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.FDistributionImpl(double numeratorDegreesOfFreedom,\n            double denominatorDegreesOfFreedom)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [
+        "numeratorDegreesOfFreedom",
+        "denominatorDegreesOfFreedom"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_7f70e90fabf142ce09d2",
+      "kind": "code",
+      "text": "super();",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 50,
+        "end_line": 50,
+        "source_hash": "1eaff58104f6507d2db8a582f89af00f1961b2eb4eea97dbc90f7f06007a1bf3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.FDistributionImpl(double numeratorDegreesOfFreedom,\n            double denominatorDegreesOfFreedom)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_80a2410299f77bc585ba",
+      "kind": "code",
+      "text": "setNumeratorDegreesOfFreedom(numeratorDegreesOfFreedom);",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 51,
+        "end_line": 51,
+        "source_hash": "1eaff58104f6507d2db8a582f89af00f1961b2eb4eea97dbc90f7f06007a1bf3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.FDistributionImpl(double numeratorDegreesOfFreedom,\n            double denominatorDegreesOfFreedom)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [],
+      "uses": [
+        "numeratorDegreesOfFreedom"
+      ]
+    },
+    {
+      "id": "code_396a17bac7273ead68a4",
+      "kind": "code",
+      "text": "setDenominatorDegreesOfFreedom(denominatorDegreesOfFreedom);",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 52,
+        "end_line": 52,
+        "source_hash": "1eaff58104f6507d2db8a582f89af00f1961b2eb4eea97dbc90f7f06007a1bf3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.FDistributionImpl(double numeratorDegreesOfFreedom,\n            double denominatorDegreesOfFreedom)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [],
+      "uses": [
+        "denominatorDegreesOfFreedom"
+      ]
+    },
+    {
+      "id": "method_64a0112942517f1d5f3d",
+      "kind": "method",
+      "text": "public double cumulativeProbability(int x0, int x1) throws MathException",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java",
+        "start_line": 134,
+        "end_line": 140,
+        "source_hash": "b6cf667695b27d9efbd5323fd7ca76e00a516023e8f9d6a2c8b4f54f57000c3a",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java::AbstractIntegerDistribution.cumulativeProbability(int x0, int x1)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java",
+      "defines": [
+        "x0",
+        "x1"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_724ac681b715de97a9b0",
+      "kind": "code",
+      "text": "if (x0 > x1) {\n            throw new IllegalArgumentException\n                (\"lower endpoint must be less than or equal to upper endpoint\");\n        }",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java",
+        "start_line": 135,
+        "end_line": 138,
+        "source_hash": "b6cf667695b27d9efbd5323fd7ca76e00a516023e8f9d6a2c8b4f54f57000c3a",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java::AbstractIntegerDistribution.cumulativeProbability(int x0, int x1)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java",
+      "defines": [],
+      "uses": [
+        "x0",
+        "x1"
+      ]
+    },
+    {
+      "id": "code_75ed846ee54d1d4aac34",
+      "kind": "code",
+      "text": "return cumulativeProbability(x1) - cumulativeProbability(x0 - 1);",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java",
+        "start_line": 139,
+        "end_line": 139,
+        "source_hash": "b6cf667695b27d9efbd5323fd7ca76e00a516023e8f9d6a2c8b4f54f57000c3a",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java::AbstractIntegerDistribution.cumulativeProbability(int x0, int x1)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java",
+      "defines": [],
+      "uses": [
+        "x0",
+        "x1"
+      ]
+    },
+    {
+      "id": "method_f0ef20c7b8d998b01949",
+      "kind": "method",
+      "text": "public double cumulativeProbability(double x) throws MathException",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 70,
+        "end_line": 83,
+        "source_hash": "2589c2145742c7369d82703bc8f4805bb97caf1a103fc1bbef3354d13298e9f7",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.cumulativeProbability(double x)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [
+        "x"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_6d14744efce5d130879e",
+      "kind": "code",
+      "text": "double ret;",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 71,
+        "end_line": 71,
+        "source_hash": "2589c2145742c7369d82703bc8f4805bb97caf1a103fc1bbef3354d13298e9f7",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.cumulativeProbability(double x)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [
+        "ret"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_48bfd5d9afc7e9c6a60f",
+      "kind": "code",
+      "text": "if (x <= 0.0) {\n            ret = 0.0;\n        } else {\n            double n = getNumeratorDegreesOfFreedom();\n            double m = getDenominatorDegreesOfFreedom();\n            \n            ret = Beta.regularizedBeta((n * x) / (m + n * x),\n                0.5 * n,\n                0.5 * m);\n        }",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 72,
+        "end_line": 81,
+        "source_hash": "2589c2145742c7369d82703bc8f4805bb97caf1a103fc1bbef3354d13298e9f7",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.cumulativeProbability(double x)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [
+        "m",
+        "n"
+      ],
+      "uses": [
+        "Beta",
+        "ret",
+        "x"
+      ]
+    },
+    {
+      "id": "code_3dc4fec4c79a3ffef870",
+      "kind": "code",
+      "text": "return ret;",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 82,
+        "end_line": 82,
+        "source_hash": "2589c2145742c7369d82703bc8f4805bb97caf1a103fc1bbef3354d13298e9f7",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.cumulativeProbability(double x)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [],
+      "uses": [
+        "ret"
+      ]
+    },
+    {
+      "id": "method_8d07f7b71e3dbbce922e",
+      "kind": "method",
+      "text": "void setDenominatorDegreesOfFreedom(double degreesOfFreedom);",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistribution.java",
+        "start_line": 49,
+        "end_line": 49,
+        "source_hash": "317229e8a67a73e10b06d0b78bc8b070bf3a374489c2cbbab35d33d9b3a4c26f",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistribution.java::FDistribution.setDenominatorDegreesOfFreedom(double degreesOfFreedom)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistribution.java",
+      "defines": [
+        "degreesOfFreedom"
+      ],
+      "uses": []
+    },
+    {
+      "id": "method_c9a7a00dab9295494400",
+      "kind": "method",
+      "text": "public double chiSquareTest(double[] expected, long[] observed)\n        throws IllegalArgumentException, MathException",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+        "start_line": 111,
+        "end_line": 116,
+        "source_hash": "a177f92190264ae3ab34a560379d2e26563d905627725e20df5254219f156d3a",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquareTest(double[] expected, long[] observed)",
+      "document": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "defines": [
+        "expected",
+        "observed"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_fdcb278910b0cbb1a759",
+      "kind": "code",
+      "text": "distribution.setDegreesOfFreedom(expected.length - 1.0);",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+        "start_line": 113,
+        "end_line": 113,
+        "source_hash": "a177f92190264ae3ab34a560379d2e26563d905627725e20df5254219f156d3a",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquareTest(double[] expected, long[] observed)",
+      "document": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "defines": [],
+      "uses": [
+        "distribution",
+        "expected",
+        "length"
+      ]
+    },
+    {
+      "id": "code_65544bf0ce0220ea7a6c",
+      "kind": "code",
+      "text": "return 1.0 - distribution.cumulativeProbability(\n            chiSquare(expected, observed));",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+        "start_line": 114,
+        "end_line": 115,
+        "source_hash": "a177f92190264ae3ab34a560379d2e26563d905627725e20df5254219f156d3a",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquareTest(double[] expected, long[] observed)",
+      "document": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "defines": [],
+      "uses": [
+        "distribution",
+        "expected",
+        "observed"
+      ]
+    },
+    {
+      "id": "method_8fc4eb4b01796e5532c7",
+      "kind": "method",
+      "text": "public void setNumeratorDegreesOfFreedom(double degreesOfFreedom)",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 157,
+        "end_line": 163,
+        "source_hash": "f84509d1fa7f57f148c936b277724354c390482e6e39f562d33a1cbb8bd82eea",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.setNumeratorDegreesOfFreedom(double degreesOfFreedom)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [
+        "degreesOfFreedom"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_2064e95df84024aecd57",
+      "kind": "code",
+      "text": "if (degreesOfFreedom <= 0.0) {\n            throw new IllegalArgumentException(\n                \"degrees of freedom must be positive.\");\n        }",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 158,
+        "end_line": 161,
+        "source_hash": "f84509d1fa7f57f148c936b277724354c390482e6e39f562d33a1cbb8bd82eea",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.setNumeratorDegreesOfFreedom(double degreesOfFreedom)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [],
+      "uses": [
+        "degreesOfFreedom"
+      ]
+    },
+    {
+      "id": "code_d206fd9c3696ee073bf5",
+      "kind": "code",
+      "text": "this.numeratorDegreesOfFreedom = degreesOfFreedom;",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 162,
+        "end_line": 162,
+        "source_hash": "f84509d1fa7f57f148c936b277724354c390482e6e39f562d33a1cbb8bd82eea",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.setNumeratorDegreesOfFreedom(double degreesOfFreedom)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [],
+      "uses": [
+        "degreesOfFreedom",
+        "numeratorDegreesOfFreedom"
+      ]
+    },
+    {
+      "id": "method_59a8297507c875c8a893",
+      "kind": "method",
+      "text": "protected void verifyBracketing(double lower, double upper, \n            UnivariateRealFunction f) throws FunctionEvaluationException",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java",
+        "start_line": 330,
+        "end_line": 340,
+        "source_hash": "db788e9670814c354fdb8b2ebe4f29faf4bdc04f6e59048b36b0658653e3d7e8",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java::UnivariateRealSolverImpl.verifyBracketing(double lower, double upper, \n            UnivariateRealFunction f)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java",
+      "defines": [
+        "lower",
+        "upper",
+        "f"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_fcc9dd8737c8f6dd1b2d",
+      "kind": "code",
+      "text": "verifyInterval(lower, upper);",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java",
+        "start_line": 333,
+        "end_line": 333,
+        "source_hash": "db788e9670814c354fdb8b2ebe4f29faf4bdc04f6e59048b36b0658653e3d7e8",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java::UnivariateRealSolverImpl.verifyBracketing(double lower, double upper, \n            UnivariateRealFunction f)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java",
+      "defines": [],
+      "uses": [
+        "lower",
+        "upper"
+      ]
+    },
+    {
+      "id": "code_0d2ed8c2a9d4f488ae85",
+      "kind": "code",
+      "text": "if (!isBracketing(lower, upper, f)) {\n            throw new IllegalArgumentException\n            (\"Function values at endpoints do not have different signs.\" +\n                    \"  Endpoints: [\" + lower + \",\" + upper + \"]\" + \n                    \"  Values: [\" + f.value(lower) + \",\" + f.value(upper) + \"]\");       \n        }",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java",
+        "start_line": 334,
+        "end_line": 339,
+        "source_hash": "db788e9670814c354fdb8b2ebe4f29faf4bdc04f6e59048b36b0658653e3d7e8",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java::UnivariateRealSolverImpl.verifyBracketing(double lower, double upper, \n            UnivariateRealFunction f)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java",
+      "defines": [],
+      "uses": [
+        "f",
+        "lower",
+        "upper"
+      ]
+    },
+    {
+      "id": "method_b9b4c5552799f51546fa",
+      "kind": "method",
+      "text": "public double getDenominatorDegreesOfFreedom()",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 191,
+        "end_line": 193,
+        "source_hash": "dfaea9abad443aa2d84f098a99f4e47aa1aa73d36c2d43e252f1dd9de92d4e54",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.getDenominatorDegreesOfFreedom()",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_fcd647e1abae6ba1cc29",
+      "kind": "code",
+      "text": "return denominatorDegreesOfFreedom;",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 192,
+        "end_line": 192,
+        "source_hash": "dfaea9abad443aa2d84f098a99f4e47aa1aa73d36c2d43e252f1dd9de92d4e54",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.getDenominatorDegreesOfFreedom()",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [],
+      "uses": [
+        "denominatorDegreesOfFreedom"
+      ]
+    },
+    {
+      "id": "method_ef2086befc125f5797e4",
+      "kind": "method",
+      "text": "protected void verifyInterval(double lower, double upper)",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java",
+        "start_line": 294,
+        "end_line": 300,
+        "source_hash": "e3785b566f9a9cf9b864e0bfbb7be6618b6bbeff8193d1d49ea9df52ed683f7a",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java::UnivariateRealSolverImpl.verifyInterval(double lower, double upper)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java",
+      "defines": [
+        "lower",
+        "upper"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_7f3c43b76be2331f9956",
+      "kind": "code",
+      "text": "if (lower >= upper) {\n            throw new IllegalArgumentException\n                (\"Endpoints do not specify an interval: [\" + lower + \n                        \",\" + upper + \"]\");\n        }",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java",
+        "start_line": 295,
+        "end_line": 299,
+        "source_hash": "e3785b566f9a9cf9b864e0bfbb7be6618b6bbeff8193d1d49ea9df52ed683f7a",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java::UnivariateRealSolverImpl.verifyInterval(double lower, double upper)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java",
+      "defines": [],
+      "uses": [
+        "lower",
+        "upper"
+      ]
+    },
+    {
+      "id": "method_819ffa9bfd37efa307e9",
+      "kind": "method",
+      "text": "protected double getInitialDomain(double p)",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 143,
+        "end_line": 149,
+        "source_hash": "00916b998db70b3fad9ad9c0fb35ba5a5aa8a8becf2ea98b9e7196e1c957c98d",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.getInitialDomain(double p)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [
+        "p"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_7857247e010de71bcf49",
+      "kind": "code",
+      "text": "double ret;",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 144,
+        "end_line": 144,
+        "source_hash": "00916b998db70b3fad9ad9c0fb35ba5a5aa8a8becf2ea98b9e7196e1c957c98d",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.getInitialDomain(double p)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [
+        "ret"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_1c50ba81557e601399e1",
+      "kind": "code",
+      "text": "double d = getDenominatorDegreesOfFreedom();",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 145,
+        "end_line": 145,
+        "source_hash": "00916b998db70b3fad9ad9c0fb35ba5a5aa8a8becf2ea98b9e7196e1c957c98d",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.getInitialDomain(double p)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [
+        "d"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_384d81a05004891810a5",
+      "kind": "code",
+      "text": "// use mean",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 146,
+        "end_line": 146,
+        "source_hash": "00916b998db70b3fad9ad9c0fb35ba5a5aa8a8becf2ea98b9e7196e1c957c98d",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.getInitialDomain(double p)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_96e927a95a89eb9775fc",
+      "kind": "code",
+      "text": "ret = d / (d - 2.0);",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 147,
+        "end_line": 147,
+        "source_hash": "00916b998db70b3fad9ad9c0fb35ba5a5aa8a8becf2ea98b9e7196e1c957c98d",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.getInitialDomain(double p)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [],
+      "uses": [
+        "d",
+        "ret"
+      ]
+    },
+    {
+      "id": "code_bfc862a706fa6441869e",
+      "kind": "code",
+      "text": "return ret;",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 148,
+        "end_line": 148,
+        "source_hash": "00916b998db70b3fad9ad9c0fb35ba5a5aa8a8becf2ea98b9e7196e1c957c98d",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.getInitialDomain(double p)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [],
+      "uses": [
+        "ret"
+      ]
+    },
+    {
+      "id": "method_c7c5fddd21ab4b627a58",
+      "kind": "method",
+      "text": "double getDenominatorDegreesOfFreedom();",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistribution.java",
+        "start_line": 55,
+        "end_line": 55,
+        "source_hash": "ad55200bab4e45b01c6013cfd6f62f59edd4bfaf774bcfa0e3ee8fe76d7dd5d0",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistribution.java::FDistribution.getDenominatorDegreesOfFreedom()",
+      "document": "src/java/org/apache/commons/math/distribution/FDistribution.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "method_d76da6977f528306facf",
+      "kind": "method",
+      "text": "void setNumeratorDegreesOfFreedom(double degreesOfFreedom);",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistribution.java",
+        "start_line": 37,
+        "end_line": 37,
+        "source_hash": "739a06d660d3ed2dbd24ed7af74eeba907a0bc43162f6619a1224a4d7bd1ec75",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistribution.java::FDistribution.setNumeratorDegreesOfFreedom(double degreesOfFreedom)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistribution.java",
+      "defines": [
+        "degreesOfFreedom"
+      ],
+      "uses": []
+    },
+    {
+      "id": "method_1dae407a38ffcdd6035a",
+      "kind": "method",
+      "text": "public double cumulativeProbability(double x0, double x1)\n        throws MathException",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java",
+        "start_line": 76,
+        "end_line": 89,
+        "source_hash": "99f164b1b895a3618df2ad9186dec615610234cfe9c6c5fd653aa6d75f8442e1",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java::AbstractIntegerDistribution.cumulativeProbability(double x0, double x1)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java",
+      "defines": [
+        "x0",
+        "x1"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_29f1e5fb43423312e94d",
+      "kind": "code",
+      "text": "if (x0 > x1) {\n            throw new IllegalArgumentException\n            (\"lower endpoint must be less than or equal to upper endpoint\");\n        }",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java",
+        "start_line": 78,
+        "end_line": 81,
+        "source_hash": "99f164b1b895a3618df2ad9186dec615610234cfe9c6c5fd653aa6d75f8442e1",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java::AbstractIntegerDistribution.cumulativeProbability(double x0, double x1)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java",
+      "defines": [],
+      "uses": [
+        "x0",
+        "x1"
+      ]
+    },
+    {
+      "id": "code_97ed47a2e06b20a6e762",
+      "kind": "code",
+      "text": "if (Math.floor(x0) < x0) {\n            return cumulativeProbability(((int) Math.floor(x0)) + 1,\n               (int) Math.floor(x1)); // don't want to count mass below x0\n        } else { // x0 is mathematical integer, so use as is\n            return cumulativeProbability((int) Math.floor(x0),\n                (int) Math.floor(x1)); \n        }",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java",
+        "start_line": 82,
+        "end_line": 88,
+        "source_hash": "99f164b1b895a3618df2ad9186dec615610234cfe9c6c5fd653aa6d75f8442e1",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java::AbstractIntegerDistribution.cumulativeProbability(double x0, double x1)",
+      "document": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java",
+      "defines": [],
+      "uses": [
+        "Math",
+        "x0",
+        "x1"
+      ]
+    },
+    {
+      "id": "method_62a5029f545f0a2598e1",
+      "kind": "method",
+      "text": "public void setDegreesOfFreedom(double degreesOfFreedom)",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/TDistributionImpl.java",
+        "start_line": 53,
+        "end_line": 58,
+        "source_hash": "d592667f11b6ad20fd9f75c47d85f8bb2d86fb4d7d0ca991c089a16e54f96b01",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/TDistributionImpl.java::TDistributionImpl.setDegreesOfFreedom(double degreesOfFreedom)",
+      "document": "src/java/org/apache/commons/math/distribution/TDistributionImpl.java",
+      "defines": [
+        "degreesOfFreedom"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_7b7415ae4067c02bfec5",
+      "kind": "code",
+      "text": "if (degreesOfFreedom <= 0.0) {\n            throw new IllegalArgumentException(\"degrees of freedom must be positive.\");\n        }",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/TDistributionImpl.java",
+        "start_line": 54,
+        "end_line": 56,
+        "source_hash": "d592667f11b6ad20fd9f75c47d85f8bb2d86fb4d7d0ca991c089a16e54f96b01",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/TDistributionImpl.java::TDistributionImpl.setDegreesOfFreedom(double degreesOfFreedom)",
+      "document": "src/java/org/apache/commons/math/distribution/TDistributionImpl.java",
+      "defines": [],
+      "uses": [
+        "degreesOfFreedom"
+      ]
+    },
+    {
+      "id": "code_75f79e08bd4ba3743f6a",
+      "kind": "code",
+      "text": "this.degreesOfFreedom = degreesOfFreedom;",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/TDistributionImpl.java",
+        "start_line": 57,
+        "end_line": 57,
+        "source_hash": "d592667f11b6ad20fd9f75c47d85f8bb2d86fb4d7d0ca991c089a16e54f96b01",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/TDistributionImpl.java::TDistributionImpl.setDegreesOfFreedom(double degreesOfFreedom)",
+      "document": "src/java/org/apache/commons/math/distribution/TDistributionImpl.java",
+      "defines": [],
+      "uses": [
+        "degreesOfFreedom"
+      ]
+    },
+    {
+      "id": "method_c238fbb96ea63206c8e2",
+      "kind": "method",
+      "text": "protected double tTest(double m1, double m2, double v1, double v2, \n            double n1, double n2)\n    throws MathException",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+        "start_line": 1017,
+        "end_line": 1025,
+        "source_hash": "a889e3957b3ac766cf0154874f3561dd1dd826d65ab12433afc4295799f00804",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java::TTestImpl.tTest(double m1, double m2, double v1, double v2, \n            double n1, double n2)",
+      "document": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+      "defines": [
+        "m1",
+        "m2",
+        "v1",
+        "v2",
+        "n1",
+        "n2"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_be6a7df51a36d3242e54",
+      "kind": "code",
+      "text": "double t = Math.abs(t(m1, m2, v1, v2, n1, n2));",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+        "start_line": 1020,
+        "end_line": 1020,
+        "source_hash": "a889e3957b3ac766cf0154874f3561dd1dd826d65ab12433afc4295799f00804",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java::TTestImpl.tTest(double m1, double m2, double v1, double v2, \n            double n1, double n2)",
+      "document": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+      "defines": [
+        "t"
+      ],
+      "uses": [
+        "Math",
+        "m1",
+        "m2",
+        "n1",
+        "n2",
+        "v1",
+        "v2"
+      ]
+    },
+    {
+      "id": "code_d64eda2c8c7b5237a75f",
+      "kind": "code",
+      "text": "double degreesOfFreedom = 0;",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+        "start_line": 1021,
+        "end_line": 1021,
+        "source_hash": "a889e3957b3ac766cf0154874f3561dd1dd826d65ab12433afc4295799f00804",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java::TTestImpl.tTest(double m1, double m2, double v1, double v2, \n            double n1, double n2)",
+      "document": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+      "defines": [
+        "degreesOfFreedom"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_af50346f5b8d9131519d",
+      "kind": "code",
+      "text": "degreesOfFreedom = df(v1, v2, n1, n2);",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+        "start_line": 1022,
+        "end_line": 1022,
+        "source_hash": "a889e3957b3ac766cf0154874f3561dd1dd826d65ab12433afc4295799f00804",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java::TTestImpl.tTest(double m1, double m2, double v1, double v2, \n            double n1, double n2)",
+      "document": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+      "defines": [],
+      "uses": [
+        "degreesOfFreedom",
+        "n1",
+        "n2",
+        "v1",
+        "v2"
+      ]
+    },
+    {
+      "id": "code_9877276f8ea45da115e0",
+      "kind": "code",
+      "text": "distribution.setDegreesOfFreedom(degreesOfFreedom);",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+        "start_line": 1023,
+        "end_line": 1023,
+        "source_hash": "a889e3957b3ac766cf0154874f3561dd1dd826d65ab12433afc4295799f00804",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java::TTestImpl.tTest(double m1, double m2, double v1, double v2, \n            double n1, double n2)",
+      "document": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+      "defines": [],
+      "uses": [
+        "degreesOfFreedom",
+        "distribution"
+      ]
+    },
+    {
+      "id": "code_85ae1941ed5f5a9a97da",
+      "kind": "code",
+      "text": "return 2.0 * distribution.cumulativeProbability(-t);",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+        "start_line": 1024,
+        "end_line": 1024,
+        "source_hash": "a889e3957b3ac766cf0154874f3561dd1dd826d65ab12433afc4295799f00804",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java::TTestImpl.tTest(double m1, double m2, double v1, double v2, \n            double n1, double n2)",
+      "document": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+      "defines": [],
+      "uses": [
+        "distribution",
+        "t"
+      ]
+    },
+    {
+      "id": "method_2f461bc0d5d27327fddc",
+      "kind": "method",
+      "text": "protected void verifyInterval(double lower, double upper) throws\n        IllegalArgumentException",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealIntegratorImpl.java",
+        "start_line": 235,
+        "end_line": 242,
+        "source_hash": "ef56e9d90c90a858c2ed0e422f28f390c387a8d0f783f2f2f7760a4d467c6ccd",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.verifyInterval(double lower, double upper)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealIntegratorImpl.java",
+      "defines": [
+        "lower",
+        "upper"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_10085252ede0ce3327f4",
+      "kind": "code",
+      "text": "if (lower >= upper) {\n            throw new IllegalArgumentException\n                (\"Endpoints do not specify an interval: [\" + lower +\n                \", \" + upper + \"]\");\n        }",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/analysis/UnivariateRealIntegratorImpl.java",
+        "start_line": 237,
+        "end_line": 241,
+        "source_hash": "ef56e9d90c90a858c2ed0e422f28f390c387a8d0f783f2f2f7760a4d467c6ccd",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/analysis/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.verifyInterval(double lower, double upper)",
+      "document": "src/java/org/apache/commons/math/analysis/UnivariateRealIntegratorImpl.java",
+      "defines": [],
+      "uses": [
+        "lower",
+        "upper"
+      ]
+    },
+    {
+      "id": "method_c766dd58d0cd6fd312c1",
+      "kind": "method",
+      "text": "protected double tTest(double m, double mu, double v, double n)\n    throws MathException",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+        "start_line": 995,
+        "end_line": 1000,
+        "source_hash": "e88cb111a75f46cdd23aa2b4d08f74946bbcdf5dca5e6c221e430ce3ba1c7928",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java::TTestImpl.tTest(double m, double mu, double v, double n)",
+      "document": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+      "defines": [
+        "m",
+        "mu",
+        "v",
+        "n"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_93482dd842f12c5d7b0d",
+      "kind": "code",
+      "text": "double t = Math.abs(t(m, mu, v, n));",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+        "start_line": 997,
+        "end_line": 997,
+        "source_hash": "e88cb111a75f46cdd23aa2b4d08f74946bbcdf5dca5e6c221e430ce3ba1c7928",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java::TTestImpl.tTest(double m, double mu, double v, double n)",
+      "document": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+      "defines": [
+        "t"
+      ],
+      "uses": [
+        "Math",
+        "m",
+        "mu",
+        "n",
+        "v"
+      ]
+    },
+    {
+      "id": "code_d2813a50091e90c76ead",
+      "kind": "code",
+      "text": "distribution.setDegreesOfFreedom(n - 1);",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+        "start_line": 998,
+        "end_line": 998,
+        "source_hash": "e88cb111a75f46cdd23aa2b4d08f74946bbcdf5dca5e6c221e430ce3ba1c7928",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java::TTestImpl.tTest(double m, double mu, double v, double n)",
+      "document": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+      "defines": [],
+      "uses": [
+        "distribution",
+        "n"
+      ]
+    },
+    {
+      "id": "code_fe6ecd8bce17f3dd48a1",
+      "kind": "code",
+      "text": "return 2.0 * distribution.cumulativeProbability(-t);",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+        "start_line": 999,
+        "end_line": 999,
+        "source_hash": "e88cb111a75f46cdd23aa2b4d08f74946bbcdf5dca5e6c221e430ce3ba1c7928",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java::TTestImpl.tTest(double m, double mu, double v, double n)",
+      "document": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+      "defines": [],
+      "uses": [
+        "distribution",
+        "t"
+      ]
+    },
+    {
+      "id": "method_77dd7548c0e2e598cf45",
+      "kind": "method",
+      "text": "public double inverseCumulativeProbability(final double p) \n        throws MathException",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 98,
+        "end_line": 107,
+        "source_hash": "019353e21e702faf475a2bd061d22a2f745ee9b8b70d96470b7f6fe41bead237",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.inverseCumulativeProbability(final double p)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [
+        "p"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_91684370ac76277ceb57",
+      "kind": "code",
+      "text": "if (p == 0) {\n            return 0d;\n        }",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 100,
+        "end_line": 102,
+        "source_hash": "019353e21e702faf475a2bd061d22a2f745ee9b8b70d96470b7f6fe41bead237",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.inverseCumulativeProbability(final double p)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [],
+      "uses": [
+        "p"
+      ]
+    },
+    {
+      "id": "code_f73c14a4f94ba2a2343e",
+      "kind": "code",
+      "text": "if (p == 1) {\n            return Double.POSITIVE_INFINITY;\n        }",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 103,
+        "end_line": 105,
+        "source_hash": "019353e21e702faf475a2bd061d22a2f745ee9b8b70d96470b7f6fe41bead237",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.inverseCumulativeProbability(final double p)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [],
+      "uses": [
+        "Double",
+        "POSITIVE_INFINITY",
+        "p"
+      ]
+    },
+    {
+      "id": "code_7f6e13b81eeb597040eb",
+      "kind": "code",
+      "text": "return super.inverseCumulativeProbability(p);",
+      "origin": {
+        "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+        "start_line": 106,
+        "end_line": 106,
+        "source_hash": "019353e21e702faf475a2bd061d22a2f745ee9b8b70d96470b7f6fe41bead237",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.inverseCumulativeProbability(final double p)",
+      "document": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "defines": [],
+      "uses": [
+        "p"
+      ]
+    },
+    {
+      "id": "frame_d5ee5ef7d250ff25482d",
+      "kind": "frame",
+      "text": "at org.apache.commons.math.analysis.UnivariateRealSolverUtils.bracket(UnivariateRealSolverUtils.java:179)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 22,
+        "end_line": 22,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_22f38b79bcd33c5a1026",
+      "kind": "frame",
+      "text": "at org.apache.commons.math.analysis.UnivariateRealSolverUtils.bracket(UnivariateRealSolverUtils.java:128)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 23,
+        "end_line": 23,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_760289a1c953508d2b1b",
+      "kind": "frame",
+      "text": "at org.apache.commons.math.distribution.AbstractContinuousDistribution.inverseCumulativeProbability(AbstractContinuousDistribution.java:84)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 24,
+        "end_line": 24,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_9cc83d5728559f24082e",
+      "kind": "frame",
+      "text": "at org.apache.commons.math.distribution.FDistributionImpl.inverseCumulativeProbability(FDistributionImpl.java:106)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 25,
+        "end_line": 25,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_97797a3a18e7fbaf8ff2",
+      "kind": "frame",
+      "text": "at org.apache.commons.math.distribution.FDistributionTest.testSmallDegreesOfFreedom(FDistributionTest.java:114)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 26,
+        "end_line": 26,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_18cbe97d47dccb5cd2ac",
+      "kind": "frame",
+      "text": "at junit.framework.TestCase.runTest(TestCase.java:176)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 31,
+        "end_line": 31,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_0e4f1f73bd3d5b455289",
+      "kind": "frame",
+      "text": "at junit.framework.TestCase.runBare(TestCase.java:141)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 32,
+        "end_line": 32,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_87bd2d0a0dce5671ddda",
+      "kind": "frame",
+      "text": "at junit.framework.TestResult$1.protect(TestResult.java:122)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 33,
+        "end_line": 33,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_066758de1bbb792afd69",
+      "kind": "frame",
+      "text": "at junit.framework.TestResult.runProtected(TestResult.java:142)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 34,
+        "end_line": 34,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_7281973d9465b43edd55",
+      "kind": "frame",
+      "text": "at junit.framework.TestResult.run(TestResult.java:125)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 35,
+        "end_line": 35,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_d22d1b0a33f140a752cc",
+      "kind": "frame",
+      "text": "at junit.framework.TestCase.run(TestCase.java:129)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 36,
+        "end_line": 36,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_84f5b9cfa2b584284c2e",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 37,
+        "end_line": 37,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_6b5db432f55691551e5d",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 38,
+        "end_line": 38,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_908778b2e3f035b322af",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 39,
+        "end_line": 39,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_c3ef174bbf19aaba5073",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 40,
+        "end_line": 40,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_f86afcd03a7173680348",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 41,
+        "end_line": 41,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_dd97a727ef9dd4efcdd3",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 42,
+        "end_line": 42,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_13602383a70404c4c83f",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 43,
+        "end_line": 43,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_1a1b41425bccdb521ad1",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 47,
+        "end_line": 47,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_597618401dc6ddde24e7",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.Task.perform(Task.java:348)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 48,
+        "end_line": 48,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_96265e03dc7ce42c9a29",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.Target.execute(Target.java:392)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 49,
+        "end_line": 49,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_f8c908bb6a36f9b64c56",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.Target.performTasks(Target.java:413)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 50,
+        "end_line": 50,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_637fe3387e428f0679f7",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 51,
+        "end_line": 51,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_7dcb8630e58d6ddf9d38",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.Project.executeTarget(Project.java:1368)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 52,
+        "end_line": 52,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_7136dc736ed7ec105f88",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 53,
+        "end_line": 53,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_c951c526a80b48499aae",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.Project.executeTargets(Project.java:1251)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 54,
+        "end_line": 54,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_55738d2aacbde846eb2c",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.Main.runBuild(Main.java:811)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 55,
+        "end_line": 55,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_8724af80f76a8a5aafa3",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.Main.startAnt(Main.java:217)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 56,
+        "end_line": 56,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_b5ffeae489fcce10657b",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 57,
+        "end_line": 57,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "frame_1a03c195a08c26e3aa21",
+      "kind": "frame",
+      "text": "at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_00/prepared/evidence/Math-95.txt",
+        "start_line": 58,
+        "end_line": 58,
+        "source_hash": "8648367913caf5c3b71fd4d686ac8d35faed7df254e2dd1833de4afb6df5a4be",
+        "extractor": "stack_frame"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    }
+  ],
+  "edges": [
+    {
+      "source": "code_d107542a56546e814df9",
+      "target": "method_fe2b6df09ce1a2b87f86",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_189946acbcc9af8290ac",
+      "target": "method_fe2b6df09ce1a2b87f86",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d107542a56546e814df9",
+      "target": "code_189946acbcc9af8290ac",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_189946acbcc9af8290ac",
+      "target": "code_d107542a56546e814df9",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_26871936f8b8278e1c51",
+      "target": "method_fe2b6df09ce1a2b87f86",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_189946acbcc9af8290ac",
+      "target": "code_26871936f8b8278e1c51",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_26871936f8b8278e1c51",
+      "target": "code_189946acbcc9af8290ac",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_29886c0aa613fae8e08b",
+      "target": "method_fe2b6df09ce1a2b87f86",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_26871936f8b8278e1c51",
+      "target": "code_29886c0aa613fae8e08b",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_29886c0aa613fae8e08b",
+      "target": "code_26871936f8b8278e1c51",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_40e8f9d7352d7a0dd42a",
+      "target": "method_fe2b6df09ce1a2b87f86",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_29886c0aa613fae8e08b",
+      "target": "code_40e8f9d7352d7a0dd42a",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_40e8f9d7352d7a0dd42a",
+      "target": "code_29886c0aa613fae8e08b",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_23419104d58612dace9c",
+      "target": "method_fe2b6df09ce1a2b87f86",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_40e8f9d7352d7a0dd42a",
+      "target": "code_23419104d58612dace9c",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_23419104d58612dace9c",
+      "target": "code_40e8f9d7352d7a0dd42a",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_cab65c8af8c707d9f19d",
+      "target": "method_fe2b6df09ce1a2b87f86",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_23419104d58612dace9c",
+      "target": "code_cab65c8af8c707d9f19d",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_cab65c8af8c707d9f19d",
+      "target": "code_23419104d58612dace9c",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_11ff64e90d1897b6a7ed",
+      "target": "method_fe2b6df09ce1a2b87f86",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_cab65c8af8c707d9f19d",
+      "target": "code_11ff64e90d1897b6a7ed",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_11ff64e90d1897b6a7ed",
+      "target": "code_cab65c8af8c707d9f19d",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6f7f8648627911470277",
+      "target": "method_fe2b6df09ce1a2b87f86",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_11ff64e90d1897b6a7ed",
+      "target": "code_6f7f8648627911470277",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6f7f8648627911470277",
+      "target": "code_11ff64e90d1897b6a7ed",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_8886b0b0a4ecab178c0d",
+      "target": "method_fe2b6df09ce1a2b87f86",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6f7f8648627911470277",
+      "target": "code_8886b0b0a4ecab178c0d",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_8886b0b0a4ecab178c0d",
+      "target": "code_6f7f8648627911470277",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_db58a4750c2af226b7b6",
+      "target": "method_fe2b6df09ce1a2b87f86",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_8886b0b0a4ecab178c0d",
+      "target": "code_db58a4750c2af226b7b6",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_db58a4750c2af226b7b6",
+      "target": "code_8886b0b0a4ecab178c0d",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_1ce34858eaa2357ecd7c",
+      "target": "method_fe2b6df09ce1a2b87f86",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_db58a4750c2af226b7b6",
+      "target": "code_1ce34858eaa2357ecd7c",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_1ce34858eaa2357ecd7c",
+      "target": "code_db58a4750c2af226b7b6",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d107542a56546e814df9",
+      "target": "method_fe2b6df09ce1a2b87f86",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_29886c0aa613fae8e08b",
+      "target": "method_fe2b6df09ce1a2b87f86",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_23419104d58612dace9c",
+      "target": "method_fe2b6df09ce1a2b87f86",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_cab65c8af8c707d9f19d",
+      "target": "method_fe2b6df09ce1a2b87f86",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6f7f8648627911470277",
+      "target": "code_11ff64e90d1897b6a7ed",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6f7f8648627911470277",
+      "target": "code_23419104d58612dace9c",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6f7f8648627911470277",
+      "target": "method_fe2b6df09ce1a2b87f86",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6f7f8648627911470277",
+      "target": "code_29886c0aa613fae8e08b",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6f7f8648627911470277",
+      "target": "code_cab65c8af8c707d9f19d",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_db58a4750c2af226b7b6",
+      "target": "code_11ff64e90d1897b6a7ed",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_db58a4750c2af226b7b6",
+      "target": "code_29886c0aa613fae8e08b",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_1ce34858eaa2357ecd7c",
+      "target": "code_db58a4750c2af226b7b6",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0b1e42558579a54e9fe2",
+      "target": "method_bc679e85abfff6657954",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_fa4b65e05b3bf6c7f872",
+      "target": "method_bc679e85abfff6657954",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0b1e42558579a54e9fe2",
+      "target": "code_fa4b65e05b3bf6c7f872",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_fa4b65e05b3bf6c7f872",
+      "target": "code_0b1e42558579a54e9fe2",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_4826c1743500072c07ae",
+      "target": "method_bc679e85abfff6657954",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_fa4b65e05b3bf6c7f872",
+      "target": "code_4826c1743500072c07ae",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_4826c1743500072c07ae",
+      "target": "code_fa4b65e05b3bf6c7f872",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_4363016bbf6a280667fa",
+      "target": "method_bc679e85abfff6657954",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_4826c1743500072c07ae",
+      "target": "code_4363016bbf6a280667fa",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_4363016bbf6a280667fa",
+      "target": "code_4826c1743500072c07ae",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_510a6abbd651baefe496",
+      "target": "method_bc679e85abfff6657954",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_4363016bbf6a280667fa",
+      "target": "code_510a6abbd651baefe496",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_510a6abbd651baefe496",
+      "target": "code_4363016bbf6a280667fa",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_138ee23ba4410445e036",
+      "target": "method_bc679e85abfff6657954",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_510a6abbd651baefe496",
+      "target": "code_138ee23ba4410445e036",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_138ee23ba4410445e036",
+      "target": "code_510a6abbd651baefe496",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_551cacd48411e662fdc5",
+      "target": "method_bc679e85abfff6657954",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_138ee23ba4410445e036",
+      "target": "code_551cacd48411e662fdc5",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_551cacd48411e662fdc5",
+      "target": "code_138ee23ba4410445e036",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5401c4a3d6a3f77fcff8",
+      "target": "method_bc679e85abfff6657954",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_551cacd48411e662fdc5",
+      "target": "code_5401c4a3d6a3f77fcff8",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5401c4a3d6a3f77fcff8",
+      "target": "code_551cacd48411e662fdc5",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_8dd3cbd5cab9d526618d",
+      "target": "method_bc679e85abfff6657954",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5401c4a3d6a3f77fcff8",
+      "target": "code_8dd3cbd5cab9d526618d",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_8dd3cbd5cab9d526618d",
+      "target": "code_5401c4a3d6a3f77fcff8",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5aa84daad6976d4a03d4",
+      "target": "method_bc679e85abfff6657954",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_8dd3cbd5cab9d526618d",
+      "target": "code_5aa84daad6976d4a03d4",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5aa84daad6976d4a03d4",
+      "target": "code_8dd3cbd5cab9d526618d",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_72646a0ea27394972fa8",
+      "target": "method_bc679e85abfff6657954",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5aa84daad6976d4a03d4",
+      "target": "code_72646a0ea27394972fa8",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_72646a0ea27394972fa8",
+      "target": "code_5aa84daad6976d4a03d4",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0b1e42558579a54e9fe2",
+      "target": "method_bc679e85abfff6657954",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_fa4b65e05b3bf6c7f872",
+      "target": "method_bc679e85abfff6657954",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_4826c1743500072c07ae",
+      "target": "method_bc679e85abfff6657954",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_4363016bbf6a280667fa",
+      "target": "method_bc679e85abfff6657954",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_510a6abbd651baefe496",
+      "target": "method_bc679e85abfff6657954",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_8dd3cbd5cab9d526618d",
+      "target": "code_4363016bbf6a280667fa",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_8dd3cbd5cab9d526618d",
+      "target": "code_510a6abbd651baefe496",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_8dd3cbd5cab9d526618d",
+      "target": "code_138ee23ba4410445e036",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_8dd3cbd5cab9d526618d",
+      "target": "code_551cacd48411e662fdc5",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_8dd3cbd5cab9d526618d",
+      "target": "method_bc679e85abfff6657954",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_8dd3cbd5cab9d526618d",
+      "target": "code_5401c4a3d6a3f77fcff8",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5aa84daad6976d4a03d4",
+      "target": "code_4363016bbf6a280667fa",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5aa84daad6976d4a03d4",
+      "target": "code_510a6abbd651baefe496",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5aa84daad6976d4a03d4",
+      "target": "code_138ee23ba4410445e036",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5aa84daad6976d4a03d4",
+      "target": "code_551cacd48411e662fdc5",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5aa84daad6976d4a03d4",
+      "target": "method_bc679e85abfff6657954",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5aa84daad6976d4a03d4",
+      "target": "code_5401c4a3d6a3f77fcff8",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_72646a0ea27394972fa8",
+      "target": "code_4363016bbf6a280667fa",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_72646a0ea27394972fa8",
+      "target": "code_510a6abbd651baefe496",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0185a082c7756d588deb",
+      "target": "method_18bafc9fb635573f0acf",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0185a082c7756d588deb",
+      "target": "method_18bafc9fb635573f0acf",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0b3fa76a96d0dc36160f",
+      "target": "method_0d037a47cc81d628c38c",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0b3fa76a96d0dc36160f",
+      "target": "method_0d037a47cc81d628c38c",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d38fdfd2455e6baded53",
+      "target": "method_6e7aec92653653d1d3a3",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_36968cdd60f534498b9f",
+      "target": "method_6e7aec92653653d1d3a3",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d38fdfd2455e6baded53",
+      "target": "code_36968cdd60f534498b9f",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_36968cdd60f534498b9f",
+      "target": "code_d38fdfd2455e6baded53",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d38fdfd2455e6baded53",
+      "target": "method_6e7aec92653653d1d3a3",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_36968cdd60f534498b9f",
+      "target": "method_6e7aec92653653d1d3a3",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_339deb33174bb860f5cd",
+      "target": "method_5b85f6b354f99ab9ffdc",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_468ef1e89346c698f80d",
+      "target": "method_5b85f6b354f99ab9ffdc",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_339deb33174bb860f5cd",
+      "target": "code_468ef1e89346c698f80d",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_468ef1e89346c698f80d",
+      "target": "code_339deb33174bb860f5cd",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_339deb33174bb860f5cd",
+      "target": "method_5b85f6b354f99ab9ffdc",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_468ef1e89346c698f80d",
+      "target": "method_5b85f6b354f99ab9ffdc",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_7f70e90fabf142ce09d2",
+      "target": "method_ed6713ca5c0d91ce45d9",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_80a2410299f77bc585ba",
+      "target": "method_ed6713ca5c0d91ce45d9",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_7f70e90fabf142ce09d2",
+      "target": "code_80a2410299f77bc585ba",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_80a2410299f77bc585ba",
+      "target": "code_7f70e90fabf142ce09d2",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_396a17bac7273ead68a4",
+      "target": "method_ed6713ca5c0d91ce45d9",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_80a2410299f77bc585ba",
+      "target": "code_396a17bac7273ead68a4",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_396a17bac7273ead68a4",
+      "target": "code_80a2410299f77bc585ba",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_80a2410299f77bc585ba",
+      "target": "method_ed6713ca5c0d91ce45d9",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_396a17bac7273ead68a4",
+      "target": "method_ed6713ca5c0d91ce45d9",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_724ac681b715de97a9b0",
+      "target": "method_64a0112942517f1d5f3d",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_75ed846ee54d1d4aac34",
+      "target": "method_64a0112942517f1d5f3d",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_724ac681b715de97a9b0",
+      "target": "code_75ed846ee54d1d4aac34",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_75ed846ee54d1d4aac34",
+      "target": "code_724ac681b715de97a9b0",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_724ac681b715de97a9b0",
+      "target": "method_64a0112942517f1d5f3d",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_75ed846ee54d1d4aac34",
+      "target": "method_64a0112942517f1d5f3d",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6d14744efce5d130879e",
+      "target": "method_f0ef20c7b8d998b01949",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_48bfd5d9afc7e9c6a60f",
+      "target": "method_f0ef20c7b8d998b01949",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6d14744efce5d130879e",
+      "target": "code_48bfd5d9afc7e9c6a60f",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_48bfd5d9afc7e9c6a60f",
+      "target": "code_6d14744efce5d130879e",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_3dc4fec4c79a3ffef870",
+      "target": "method_f0ef20c7b8d998b01949",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_48bfd5d9afc7e9c6a60f",
+      "target": "code_3dc4fec4c79a3ffef870",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_3dc4fec4c79a3ffef870",
+      "target": "code_48bfd5d9afc7e9c6a60f",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_48bfd5d9afc7e9c6a60f",
+      "target": "code_6d14744efce5d130879e",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_48bfd5d9afc7e9c6a60f",
+      "target": "method_f0ef20c7b8d998b01949",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_3dc4fec4c79a3ffef870",
+      "target": "code_6d14744efce5d130879e",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_fdcb278910b0cbb1a759",
+      "target": "method_c9a7a00dab9295494400",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_65544bf0ce0220ea7a6c",
+      "target": "method_c9a7a00dab9295494400",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_fdcb278910b0cbb1a759",
+      "target": "code_65544bf0ce0220ea7a6c",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_65544bf0ce0220ea7a6c",
+      "target": "code_fdcb278910b0cbb1a759",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_fdcb278910b0cbb1a759",
+      "target": "method_c9a7a00dab9295494400",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_65544bf0ce0220ea7a6c",
+      "target": "method_c9a7a00dab9295494400",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_2064e95df84024aecd57",
+      "target": "method_8fc4eb4b01796e5532c7",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d206fd9c3696ee073bf5",
+      "target": "method_8fc4eb4b01796e5532c7",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_2064e95df84024aecd57",
+      "target": "code_d206fd9c3696ee073bf5",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d206fd9c3696ee073bf5",
+      "target": "code_2064e95df84024aecd57",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_2064e95df84024aecd57",
+      "target": "method_8fc4eb4b01796e5532c7",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d206fd9c3696ee073bf5",
+      "target": "method_8fc4eb4b01796e5532c7",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_fcc9dd8737c8f6dd1b2d",
+      "target": "method_59a8297507c875c8a893",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0d2ed8c2a9d4f488ae85",
+      "target": "method_59a8297507c875c8a893",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_fcc9dd8737c8f6dd1b2d",
+      "target": "code_0d2ed8c2a9d4f488ae85",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0d2ed8c2a9d4f488ae85",
+      "target": "code_fcc9dd8737c8f6dd1b2d",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_fcc9dd8737c8f6dd1b2d",
+      "target": "method_59a8297507c875c8a893",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0d2ed8c2a9d4f488ae85",
+      "target": "method_59a8297507c875c8a893",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_fcd647e1abae6ba1cc29",
+      "target": "method_b9b4c5552799f51546fa",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_7f3c43b76be2331f9956",
+      "target": "method_ef2086befc125f5797e4",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_7f3c43b76be2331f9956",
+      "target": "method_ef2086befc125f5797e4",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_7857247e010de71bcf49",
+      "target": "method_819ffa9bfd37efa307e9",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_1c50ba81557e601399e1",
+      "target": "method_819ffa9bfd37efa307e9",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_7857247e010de71bcf49",
+      "target": "code_1c50ba81557e601399e1",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_1c50ba81557e601399e1",
+      "target": "code_7857247e010de71bcf49",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_384d81a05004891810a5",
+      "target": "method_819ffa9bfd37efa307e9",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_1c50ba81557e601399e1",
+      "target": "code_384d81a05004891810a5",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_384d81a05004891810a5",
+      "target": "code_1c50ba81557e601399e1",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_96e927a95a89eb9775fc",
+      "target": "method_819ffa9bfd37efa307e9",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_384d81a05004891810a5",
+      "target": "code_96e927a95a89eb9775fc",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_96e927a95a89eb9775fc",
+      "target": "code_384d81a05004891810a5",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_bfc862a706fa6441869e",
+      "target": "method_819ffa9bfd37efa307e9",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_96e927a95a89eb9775fc",
+      "target": "code_bfc862a706fa6441869e",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_bfc862a706fa6441869e",
+      "target": "code_96e927a95a89eb9775fc",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_96e927a95a89eb9775fc",
+      "target": "code_1c50ba81557e601399e1",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_96e927a95a89eb9775fc",
+      "target": "code_7857247e010de71bcf49",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_bfc862a706fa6441869e",
+      "target": "code_7857247e010de71bcf49",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_29f1e5fb43423312e94d",
+      "target": "method_1dae407a38ffcdd6035a",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_97ed47a2e06b20a6e762",
+      "target": "method_1dae407a38ffcdd6035a",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_29f1e5fb43423312e94d",
+      "target": "code_97ed47a2e06b20a6e762",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_97ed47a2e06b20a6e762",
+      "target": "code_29f1e5fb43423312e94d",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_29f1e5fb43423312e94d",
+      "target": "method_1dae407a38ffcdd6035a",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_97ed47a2e06b20a6e762",
+      "target": "method_1dae407a38ffcdd6035a",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_7b7415ae4067c02bfec5",
+      "target": "method_62a5029f545f0a2598e1",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_75f79e08bd4ba3743f6a",
+      "target": "method_62a5029f545f0a2598e1",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_7b7415ae4067c02bfec5",
+      "target": "code_75f79e08bd4ba3743f6a",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_75f79e08bd4ba3743f6a",
+      "target": "code_7b7415ae4067c02bfec5",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_7b7415ae4067c02bfec5",
+      "target": "method_62a5029f545f0a2598e1",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_75f79e08bd4ba3743f6a",
+      "target": "method_62a5029f545f0a2598e1",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_be6a7df51a36d3242e54",
+      "target": "method_c238fbb96ea63206c8e2",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d64eda2c8c7b5237a75f",
+      "target": "method_c238fbb96ea63206c8e2",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_be6a7df51a36d3242e54",
+      "target": "code_d64eda2c8c7b5237a75f",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d64eda2c8c7b5237a75f",
+      "target": "code_be6a7df51a36d3242e54",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_af50346f5b8d9131519d",
+      "target": "method_c238fbb96ea63206c8e2",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d64eda2c8c7b5237a75f",
+      "target": "code_af50346f5b8d9131519d",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_af50346f5b8d9131519d",
+      "target": "code_d64eda2c8c7b5237a75f",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_9877276f8ea45da115e0",
+      "target": "method_c238fbb96ea63206c8e2",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_af50346f5b8d9131519d",
+      "target": "code_9877276f8ea45da115e0",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_9877276f8ea45da115e0",
+      "target": "code_af50346f5b8d9131519d",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_85ae1941ed5f5a9a97da",
+      "target": "method_c238fbb96ea63206c8e2",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_9877276f8ea45da115e0",
+      "target": "code_85ae1941ed5f5a9a97da",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_85ae1941ed5f5a9a97da",
+      "target": "code_9877276f8ea45da115e0",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_be6a7df51a36d3242e54",
+      "target": "method_c238fbb96ea63206c8e2",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_af50346f5b8d9131519d",
+      "target": "code_d64eda2c8c7b5237a75f",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_af50346f5b8d9131519d",
+      "target": "method_c238fbb96ea63206c8e2",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_9877276f8ea45da115e0",
+      "target": "code_d64eda2c8c7b5237a75f",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_85ae1941ed5f5a9a97da",
+      "target": "code_be6a7df51a36d3242e54",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_10085252ede0ce3327f4",
+      "target": "method_2f461bc0d5d27327fddc",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_10085252ede0ce3327f4",
+      "target": "method_2f461bc0d5d27327fddc",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_93482dd842f12c5d7b0d",
+      "target": "method_c766dd58d0cd6fd312c1",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d2813a50091e90c76ead",
+      "target": "method_c766dd58d0cd6fd312c1",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_93482dd842f12c5d7b0d",
+      "target": "code_d2813a50091e90c76ead",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d2813a50091e90c76ead",
+      "target": "code_93482dd842f12c5d7b0d",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_fe6ecd8bce17f3dd48a1",
+      "target": "method_c766dd58d0cd6fd312c1",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d2813a50091e90c76ead",
+      "target": "code_fe6ecd8bce17f3dd48a1",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_fe6ecd8bce17f3dd48a1",
+      "target": "code_d2813a50091e90c76ead",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_93482dd842f12c5d7b0d",
+      "target": "method_c766dd58d0cd6fd312c1",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d2813a50091e90c76ead",
+      "target": "method_c766dd58d0cd6fd312c1",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_fe6ecd8bce17f3dd48a1",
+      "target": "code_93482dd842f12c5d7b0d",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_91684370ac76277ceb57",
+      "target": "method_77dd7548c0e2e598cf45",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_f73c14a4f94ba2a2343e",
+      "target": "method_77dd7548c0e2e598cf45",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_91684370ac76277ceb57",
+      "target": "code_f73c14a4f94ba2a2343e",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_f73c14a4f94ba2a2343e",
+      "target": "code_91684370ac76277ceb57",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_7f6e13b81eeb597040eb",
+      "target": "method_77dd7548c0e2e598cf45",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_f73c14a4f94ba2a2343e",
+      "target": "code_7f6e13b81eeb597040eb",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_7f6e13b81eeb597040eb",
+      "target": "code_f73c14a4f94ba2a2343e",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_91684370ac76277ceb57",
+      "target": "method_77dd7548c0e2e598cf45",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_f73c14a4f94ba2a2343e",
+      "target": "method_77dd7548c0e2e598cf45",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_7f6e13b81eeb597040eb",
+      "target": "method_77dd7548c0e2e598cf45",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0185a082c7756d588deb",
+      "target": "method_bc679e85abfff6657954",
+      "relation": "MAY_CALL",
+      "provenance": "unique same-owner static name/arity; dynamic dispatch unresolved",
+      "confidence": 0.7
+    },
+    {
+      "source": "code_80a2410299f77bc585ba",
+      "target": "method_8fc4eb4b01796e5532c7",
+      "relation": "MAY_CALL",
+      "provenance": "unique same-owner static name/arity; dynamic dispatch unresolved",
+      "confidence": 0.7
+    },
+    {
+      "source": "code_396a17bac7273ead68a4",
+      "target": "method_6e7aec92653653d1d3a3",
+      "relation": "MAY_CALL",
+      "provenance": "unique same-owner static name/arity; dynamic dispatch unresolved",
+      "confidence": 0.7
+    },
+    {
+      "source": "code_48bfd5d9afc7e9c6a60f",
+      "target": "method_b9b4c5552799f51546fa",
+      "relation": "MAY_CALL",
+      "provenance": "unique same-owner static name/arity; dynamic dispatch unresolved",
+      "confidence": 0.7
+    },
+    {
+      "source": "code_fcc9dd8737c8f6dd1b2d",
+      "target": "method_ef2086befc125f5797e4",
+      "relation": "MAY_CALL",
+      "provenance": "unique same-owner static name/arity; dynamic dispatch unresolved",
+      "confidence": 0.7
+    },
+    {
+      "source": "code_1c50ba81557e601399e1",
+      "target": "method_b9b4c5552799f51546fa",
+      "relation": "MAY_CALL",
+      "provenance": "unique same-owner static name/arity; dynamic dispatch unresolved",
+      "confidence": 0.7
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_d5ee5ef7d250ff25482d",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_d5ee5ef7d250ff25482d",
+      "target": "method_bc679e85abfff6657954",
+      "relation": "STACK_AT",
+      "provenance": "unique source file/line within supplied candidate span",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_22f38b79bcd33c5a1026",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_d5ee5ef7d250ff25482d",
+      "target": "frame_22f38b79bcd33c5a1026",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_22f38b79bcd33c5a1026",
+      "target": "method_18bafc9fb635573f0acf",
+      "relation": "STACK_AT",
+      "provenance": "unique source file/line within supplied candidate span",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_760289a1c953508d2b1b",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_22f38b79bcd33c5a1026",
+      "target": "frame_760289a1c953508d2b1b",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_760289a1c953508d2b1b",
+      "target": "method_fe2b6df09ce1a2b87f86",
+      "relation": "STACK_AT",
+      "provenance": "unique source file/line within supplied candidate span",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_9cc83d5728559f24082e",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_760289a1c953508d2b1b",
+      "target": "frame_9cc83d5728559f24082e",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_9cc83d5728559f24082e",
+      "target": "method_77dd7548c0e2e598cf45",
+      "relation": "STACK_AT",
+      "provenance": "unique source file/line within supplied candidate span",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_97797a3a18e7fbaf8ff2",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_9cc83d5728559f24082e",
+      "target": "frame_97797a3a18e7fbaf8ff2",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_18cbe97d47dccb5cd2ac",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_97797a3a18e7fbaf8ff2",
+      "target": "frame_18cbe97d47dccb5cd2ac",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_0e4f1f73bd3d5b455289",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_18cbe97d47dccb5cd2ac",
+      "target": "frame_0e4f1f73bd3d5b455289",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_87bd2d0a0dce5671ddda",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_0e4f1f73bd3d5b455289",
+      "target": "frame_87bd2d0a0dce5671ddda",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_066758de1bbb792afd69",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_87bd2d0a0dce5671ddda",
+      "target": "frame_066758de1bbb792afd69",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_7281973d9465b43edd55",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_066758de1bbb792afd69",
+      "target": "frame_7281973d9465b43edd55",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_d22d1b0a33f140a752cc",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_7281973d9465b43edd55",
+      "target": "frame_d22d1b0a33f140a752cc",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_84f5b9cfa2b584284c2e",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_d22d1b0a33f140a752cc",
+      "target": "frame_84f5b9cfa2b584284c2e",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_6b5db432f55691551e5d",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_84f5b9cfa2b584284c2e",
+      "target": "frame_6b5db432f55691551e5d",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_908778b2e3f035b322af",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_6b5db432f55691551e5d",
+      "target": "frame_908778b2e3f035b322af",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_c3ef174bbf19aaba5073",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_908778b2e3f035b322af",
+      "target": "frame_c3ef174bbf19aaba5073",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_f86afcd03a7173680348",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_c3ef174bbf19aaba5073",
+      "target": "frame_f86afcd03a7173680348",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_dd97a727ef9dd4efcdd3",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_f86afcd03a7173680348",
+      "target": "frame_dd97a727ef9dd4efcdd3",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_13602383a70404c4c83f",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_dd97a727ef9dd4efcdd3",
+      "target": "frame_13602383a70404c4c83f",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_1a1b41425bccdb521ad1",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_13602383a70404c4c83f",
+      "target": "frame_1a1b41425bccdb521ad1",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_597618401dc6ddde24e7",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_1a1b41425bccdb521ad1",
+      "target": "frame_597618401dc6ddde24e7",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_96265e03dc7ce42c9a29",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_597618401dc6ddde24e7",
+      "target": "frame_96265e03dc7ce42c9a29",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_f8c908bb6a36f9b64c56",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_96265e03dc7ce42c9a29",
+      "target": "frame_f8c908bb6a36f9b64c56",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_637fe3387e428f0679f7",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_f8c908bb6a36f9b64c56",
+      "target": "frame_637fe3387e428f0679f7",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_7dcb8630e58d6ddf9d38",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_637fe3387e428f0679f7",
+      "target": "frame_7dcb8630e58d6ddf9d38",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_7136dc736ed7ec105f88",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_7dcb8630e58d6ddf9d38",
+      "target": "frame_7136dc736ed7ec105f88",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_c951c526a80b48499aae",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_7136dc736ed7ec105f88",
+      "target": "frame_c951c526a80b48499aae",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_55738d2aacbde846eb2c",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_c951c526a80b48499aae",
+      "target": "frame_55738d2aacbde846eb2c",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_8724af80f76a8a5aafa3",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_55738d2aacbde846eb2c",
+      "target": "frame_8724af80f76a8a5aafa3",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_b5ffeae489fcce10657b",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_8724af80f76a8a5aafa3",
+      "target": "frame_b5ffeae489fcce10657b",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "failure_4999f5c320d57bfdaa19",
+      "target": "frame_1a03c195a08c26e3aa21",
+      "relation": "OBSERVED_FRAME",
+      "provenance": "literal supplied stack frame",
+      "confidence": 1.0
+    },
+    {
+      "source": "frame_b5ffeae489fcce10657b",
+      "target": "frame_1a03c195a08c26e3aa21",
+      "relation": "STACK_NEXT",
+      "provenance": "text stack order; not a direct-call proof",
+      "confidence": 1.0
+    }
+  ],
+  "targets": {
+    "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java::AbstractContinuousDistribution.inverseCumulativeProbability(final double p)": "method_fe2b6df09ce1a2b87f86",
+    "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java::UnivariateRealSolverUtils.bracket(UnivariateRealFunction function,\n            double initial, double lowerBound, double upperBound, \n            int maximumIterations)": "method_bc679e85abfff6657954",
+    "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java::UnivariateRealSolverUtils.bracket(UnivariateRealFunction function, \n            double initial, double lowerBound, double upperBound)": "method_18bafc9fb635573f0acf",
+    "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java::UnivariateRealSolverImpl.verifySequence(double lower, double initial, double upper)": "method_0d037a47cc81d628c38c",
+    "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.setDenominatorDegreesOfFreedom(double degreesOfFreedom)": "method_6e7aec92653653d1d3a3",
+    "src/java/org/apache/commons/math/distribution/AbstractDistribution.java::AbstractDistribution.cumulativeProbability(double x0, double x1)": "method_5b85f6b354f99ab9ffdc",
+    "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.FDistributionImpl(double numeratorDegreesOfFreedom,\n            double denominatorDegreesOfFreedom)": "method_ed6713ca5c0d91ce45d9",
+    "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java::AbstractIntegerDistribution.cumulativeProbability(int x0, int x1)": "method_64a0112942517f1d5f3d",
+    "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.cumulativeProbability(double x)": "method_f0ef20c7b8d998b01949",
+    "src/java/org/apache/commons/math/distribution/FDistribution.java::FDistribution.setDenominatorDegreesOfFreedom(double degreesOfFreedom)": "method_8d07f7b71e3dbbce922e",
+    "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquareTest(double[] expected, long[] observed)": "method_c9a7a00dab9295494400",
+    "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.setNumeratorDegreesOfFreedom(double degreesOfFreedom)": "method_8fc4eb4b01796e5532c7",
+    "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java::UnivariateRealSolverImpl.verifyBracketing(double lower, double upper, \n            UnivariateRealFunction f)": "method_59a8297507c875c8a893",
+    "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.getDenominatorDegreesOfFreedom()": "method_b9b4c5552799f51546fa",
+    "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java::UnivariateRealSolverImpl.verifyInterval(double lower, double upper)": "method_ef2086befc125f5797e4",
+    "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.getInitialDomain(double p)": "method_819ffa9bfd37efa307e9",
+    "src/java/org/apache/commons/math/distribution/FDistribution.java::FDistribution.getDenominatorDegreesOfFreedom()": "method_c7c5fddd21ab4b627a58",
+    "src/java/org/apache/commons/math/distribution/FDistribution.java::FDistribution.setNumeratorDegreesOfFreedom(double degreesOfFreedom)": "method_d76da6977f528306facf",
+    "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java::AbstractIntegerDistribution.cumulativeProbability(double x0, double x1)": "method_1dae407a38ffcdd6035a",
+    "src/java/org/apache/commons/math/distribution/TDistributionImpl.java::TDistributionImpl.setDegreesOfFreedom(double degreesOfFreedom)": "method_62a5029f545f0a2598e1",
+    "src/java/org/apache/commons/math/stat/inference/TTestImpl.java::TTestImpl.tTest(double m1, double m2, double v1, double v2, \n            double n1, double n2)": "method_c238fbb96ea63206c8e2",
+    "src/java/org/apache/commons/math/analysis/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.verifyInterval(double lower, double upper)": "method_2f461bc0d5d27327fddc",
+    "src/java/org/apache/commons/math/stat/inference/TTestImpl.java::TTestImpl.tTest(double m, double mu, double v, double n)": "method_c766dd58d0cd6fd312c1",
+    "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.inverseCumulativeProbability(final double p)": "method_77dd7548c0e2e598cf45"
+  },
+  "sources": {
+    "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java::AbstractContinuousDistribution.inverseCumulativeProbability(final double p)": {
+      "source": "public double inverseCumulativeProbability(final double p)\n        throws MathException {\n        if (p < 0.0 || p > 1.0) {\n            throw new IllegalArgumentException(\"p must be between 0.0 and 1.0, inclusive.\");\n        }\n\n        // by default, do simple root finding using bracketing and default solver.\n        // subclasses can overide if there is a better method.\n        UnivariateRealFunction rootFindingFunction =\n            new UnivariateRealFunction() {\n\n            public double value(double x) throws FunctionEvaluationException {\n                try {\n                    return cumulativeProbability(x) - p;\n                } catch (MathException ex) {\n                    throw new FunctionEvaluationException(x, ex.getPattern(), ex.getArguments(), ex);\n                }\n            }\n        };\n              \n        // Try to bracket root, test domain endoints if this fails     \n        double lowerBound = getDomainLowerBound(p);\n        double upperBound = getDomainUpperBound(p);\n        double[] bracket = null;\n        try {\n            bracket = UnivariateRealSolverUtils.bracket(\n                    rootFindingFunction, getInitialDomain(p),\n                    lowerBound, upperBound);\n        }  catch (ConvergenceException ex) {\n            /* \n             * Check domain endpoints to see if one gives value that is within\n             * the default solver's defaultAbsoluteAccuracy of 0 (will be the\n             * case if density has bounded support and p is 0 or 1).\n             * \n             * TODO: expose the default solver, defaultAbsoluteAccuracy as\n             * a constant.\n             */ \n            if (Math.abs(rootFindingFunction.value(lowerBound)) < 1E-6) {\n                return lowerBound;\n            }\n            if (Math.abs(rootFindingFunction.value(upperBound)) < 1E-6) {\n                return upperBound;\n            }     \n            // Failed bracket convergence was not because of corner solution\n            throw new MathException(ex);\n        }\n\n        // find root\n        double root = UnivariateRealSolverUtils.solve(rootFindingFunction,\n                bracket[0],bracket[1]);\n        return root;\n    }",
+      "path": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+      "sha256": "76f826f776092e215a258b454e6b31faf39a0b31d3268bd1a3d15679111738d9",
+      "start_line": 59,
+      "end_line": 110
+    },
+    "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java::UnivariateRealSolverUtils.bracket(UnivariateRealFunction function,\n            double initial, double lowerBound, double upperBound, \n            int maximumIterations)": {
+      "source": "public static double[] bracket(UnivariateRealFunction function,\n            double initial, double lowerBound, double upperBound, \n            int maximumIterations) throws ConvergenceException, \n            FunctionEvaluationException {\n        \n        if (function == null) {\n            throw new IllegalArgumentException (\"function is null.\");\n        }\n        if (maximumIterations <= 0)  {\n            throw new IllegalArgumentException\n            (\"bad value for maximumIterations: \" + maximumIterations);\n        }\n        if (initial < lowerBound || initial > upperBound || lowerBound >= upperBound) {\n            throw new IllegalArgumentException\n            (\"Invalid endpoint parameters:  lowerBound=\" + lowerBound + \n              \" initial=\" + initial + \" upperBound=\" + upperBound);\n        }\n        double a = initial;\n        double b = initial;\n        double fa;\n        double fb;\n        int numIterations = 0 ;\n    \n        do {\n            a = Math.max(a - 1.0, lowerBound);\n            b = Math.min(b + 1.0, upperBound);\n            fa = function.value(a);\n            \n            fb = function.value(b);\n            numIterations++ ;\n        } while ((fa * fb > 0.0) && (numIterations < maximumIterations) && \n                ((a > lowerBound) || (b < upperBound)));\n   \n        if (fa * fb >= 0.0 ) {\n            throw new ConvergenceException\n            (\"Number of iterations={0}, maximum iterations={1}, initial={2}, lower bound={3}, upper bound={4}, final a value={5}, final b value={6}, f(a)={7}, f(b)={8}\",\n             new Object[] { Integer.valueOf(numIterations), Integer.valueOf(maximumIterations),\n                            Double.valueOf(initial), Double.valueOf(lowerBound), Double.valueOf(upperBound),\n                            Double.valueOf(a), Double.valueOf(b), Double.valueOf(fa), Double.valueOf(fb) });\n        }\n        \n        return new double[]{a, b};\n    }",
+      "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+      "sha256": "ee6b3c6f8985780b008e2c07382addae745ca1d34d493332ab30a9f89fc8fb74",
+      "start_line": 166,
+      "end_line": 208
+    },
+    "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java::UnivariateRealSolverUtils.bracket(UnivariateRealFunction function, \n            double initial, double lowerBound, double upperBound)": {
+      "source": "public static double[] bracket(UnivariateRealFunction function, \n            double initial, double lowerBound, double upperBound) \n    throws ConvergenceException, FunctionEvaluationException {\n        return bracket( function, initial, lowerBound, upperBound,\n            Integer.MAX_VALUE ) ;\n    }",
+      "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverUtils.java",
+      "sha256": "ad2f2f3b40f3de2af07f8aab0c33aece5703b1f061ece3d995c025cb145b8d56",
+      "start_line": 125,
+      "end_line": 130
+    },
+    "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java::UnivariateRealSolverImpl.verifySequence(double lower, double initial, double upper)": {
+      "source": "protected void verifySequence(double lower, double initial, double upper) {\n        if (!isSequence(lower, initial, upper)) {\n            throw new IllegalArgumentException\n                (\"Invalid interval, initial value parameters:  lower=\" + \n                   lower + \" initial=\" + initial + \" upper=\" + upper);\n        }       \n    }",
+      "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java",
+      "sha256": "7c457c9927ad4fd99d0171077950cc80c714375c104146d12d7cbcbda815e6cc",
+      "start_line": 311,
+      "end_line": 317
+    },
+    "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.setDenominatorDegreesOfFreedom(double degreesOfFreedom)": {
+      "source": "public void setDenominatorDegreesOfFreedom(double degreesOfFreedom) {\n        if (degreesOfFreedom <= 0.0) {\n            throw new IllegalArgumentException(\n                \"degrees of freedom must be positive.\");\n        }\n        this.denominatorDegreesOfFreedom = degreesOfFreedom;\n    }",
+      "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "sha256": "59e4ac34a37ce7290e291779cc9890f039d49119c497fa92c65b16560da138a6",
+      "start_line": 179,
+      "end_line": 185
+    },
+    "src/java/org/apache/commons/math/distribution/AbstractDistribution.java::AbstractDistribution.cumulativeProbability(double x0, double x1)": {
+      "source": "public double cumulativeProbability(double x0, double x1)\n        throws MathException {\n        if (x0 > x1) {\n            throw new IllegalArgumentException\n            (\"lower endpoint must be less than or equal to upper endpoint\");\n        }\n        return cumulativeProbability(x1) - cumulativeProbability(x0);\n    }",
+      "path": "src/java/org/apache/commons/math/distribution/AbstractDistribution.java",
+      "sha256": "d900baee2c9e6b0a3cbfa0f489ac02fa01fc64bd0ec84ee63dc616ffe66bf715",
+      "start_line": 58,
+      "end_line": 65
+    },
+    "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.FDistributionImpl(double numeratorDegreesOfFreedom,\n            double denominatorDegreesOfFreedom)": {
+      "source": "public FDistributionImpl(double numeratorDegreesOfFreedom,\n            double denominatorDegreesOfFreedom) {\n        super();\n        setNumeratorDegreesOfFreedom(numeratorDegreesOfFreedom);\n        setDenominatorDegreesOfFreedom(denominatorDegreesOfFreedom);\n    }",
+      "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "sha256": "1eaff58104f6507d2db8a582f89af00f1961b2eb4eea97dbc90f7f06007a1bf3",
+      "start_line": 48,
+      "end_line": 53
+    },
+    "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java::AbstractIntegerDistribution.cumulativeProbability(int x0, int x1)": {
+      "source": "public double cumulativeProbability(int x0, int x1) throws MathException {\n        if (x0 > x1) {\n            throw new IllegalArgumentException\n                (\"lower endpoint must be less than or equal to upper endpoint\");\n        }\n        return cumulativeProbability(x1) - cumulativeProbability(x0 - 1);\n    }",
+      "path": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java",
+      "sha256": "b6cf667695b27d9efbd5323fd7ca76e00a516023e8f9d6a2c8b4f54f57000c3a",
+      "start_line": 134,
+      "end_line": 140
+    },
+    "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.cumulativeProbability(double x)": {
+      "source": "public double cumulativeProbability(double x) throws MathException {\n        double ret;\n        if (x <= 0.0) {\n            ret = 0.0;\n        } else {\n            double n = getNumeratorDegreesOfFreedom();\n            double m = getDenominatorDegreesOfFreedom();\n            \n            ret = Beta.regularizedBeta((n * x) / (m + n * x),\n                0.5 * n,\n                0.5 * m);\n        }\n        return ret;\n    }",
+      "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "sha256": "2589c2145742c7369d82703bc8f4805bb97caf1a103fc1bbef3354d13298e9f7",
+      "start_line": 70,
+      "end_line": 83
+    },
+    "src/java/org/apache/commons/math/distribution/FDistribution.java::FDistribution.setDenominatorDegreesOfFreedom(double degreesOfFreedom)": {
+      "source": "void setDenominatorDegreesOfFreedom(double degreesOfFreedom);",
+      "path": "src/java/org/apache/commons/math/distribution/FDistribution.java",
+      "sha256": "317229e8a67a73e10b06d0b78bc8b070bf3a374489c2cbbab35d33d9b3a4c26f",
+      "start_line": 49,
+      "end_line": 49
+    },
+    "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquareTest(double[] expected, long[] observed)": {
+      "source": "public double chiSquareTest(double[] expected, long[] observed)\n        throws IllegalArgumentException, MathException {\n        distribution.setDegreesOfFreedom(expected.length - 1.0);\n        return 1.0 - distribution.cumulativeProbability(\n            chiSquare(expected, observed));\n    }",
+      "path": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "sha256": "a177f92190264ae3ab34a560379d2e26563d905627725e20df5254219f156d3a",
+      "start_line": 111,
+      "end_line": 116
+    },
+    "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.setNumeratorDegreesOfFreedom(double degreesOfFreedom)": {
+      "source": "public void setNumeratorDegreesOfFreedom(double degreesOfFreedom) {\n        if (degreesOfFreedom <= 0.0) {\n            throw new IllegalArgumentException(\n                \"degrees of freedom must be positive.\");\n        }\n        this.numeratorDegreesOfFreedom = degreesOfFreedom;\n    }",
+      "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "sha256": "f84509d1fa7f57f148c936b277724354c390482e6e39f562d33a1cbb8bd82eea",
+      "start_line": 157,
+      "end_line": 163
+    },
+    "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java::UnivariateRealSolverImpl.verifyBracketing(double lower, double upper, \n            UnivariateRealFunction f)": {
+      "source": "protected void verifyBracketing(double lower, double upper, \n            UnivariateRealFunction f) throws FunctionEvaluationException {\n        \n        verifyInterval(lower, upper);\n        if (!isBracketing(lower, upper, f)) {\n            throw new IllegalArgumentException\n            (\"Function values at endpoints do not have different signs.\" +\n                    \"  Endpoints: [\" + lower + \",\" + upper + \"]\" + \n                    \"  Values: [\" + f.value(lower) + \",\" + f.value(upper) + \"]\");       \n        }\n    }",
+      "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java",
+      "sha256": "db788e9670814c354fdb8b2ebe4f29faf4bdc04f6e59048b36b0658653e3d7e8",
+      "start_line": 330,
+      "end_line": 340
+    },
+    "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.getDenominatorDegreesOfFreedom()": {
+      "source": "public double getDenominatorDegreesOfFreedom() {\n        return denominatorDegreesOfFreedom;\n    }",
+      "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "sha256": "dfaea9abad443aa2d84f098a99f4e47aa1aa73d36c2d43e252f1dd9de92d4e54",
+      "start_line": 191,
+      "end_line": 193
+    },
+    "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java::UnivariateRealSolverImpl.verifyInterval(double lower, double upper)": {
+      "source": "protected void verifyInterval(double lower, double upper) {\n        if (lower >= upper) {\n            throw new IllegalArgumentException\n                (\"Endpoints do not specify an interval: [\" + lower + \n                        \",\" + upper + \"]\");\n        }       \n    }",
+      "path": "src/java/org/apache/commons/math/analysis/UnivariateRealSolverImpl.java",
+      "sha256": "e3785b566f9a9cf9b864e0bfbb7be6618b6bbeff8193d1d49ea9df52ed683f7a",
+      "start_line": 294,
+      "end_line": 300
+    },
+    "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.getInitialDomain(double p)": {
+      "source": "protected double getInitialDomain(double p) {\n        double ret;\n        double d = getDenominatorDegreesOfFreedom();\n            // use mean\n            ret = d / (d - 2.0);\n        return ret;\n    }",
+      "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "sha256": "00916b998db70b3fad9ad9c0fb35ba5a5aa8a8becf2ea98b9e7196e1c957c98d",
+      "start_line": 143,
+      "end_line": 149
+    },
+    "src/java/org/apache/commons/math/distribution/FDistribution.java::FDistribution.getDenominatorDegreesOfFreedom()": {
+      "source": "double getDenominatorDegreesOfFreedom();",
+      "path": "src/java/org/apache/commons/math/distribution/FDistribution.java",
+      "sha256": "ad55200bab4e45b01c6013cfd6f62f59edd4bfaf774bcfa0e3ee8fe76d7dd5d0",
+      "start_line": 55,
+      "end_line": 55
+    },
+    "src/java/org/apache/commons/math/distribution/FDistribution.java::FDistribution.setNumeratorDegreesOfFreedom(double degreesOfFreedom)": {
+      "source": "void setNumeratorDegreesOfFreedom(double degreesOfFreedom);",
+      "path": "src/java/org/apache/commons/math/distribution/FDistribution.java",
+      "sha256": "739a06d660d3ed2dbd24ed7af74eeba907a0bc43162f6619a1224a4d7bd1ec75",
+      "start_line": 37,
+      "end_line": 37
+    },
+    "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java::AbstractIntegerDistribution.cumulativeProbability(double x0, double x1)": {
+      "source": "public double cumulativeProbability(double x0, double x1)\n        throws MathException {\n        if (x0 > x1) {\n            throw new IllegalArgumentException\n            (\"lower endpoint must be less than or equal to upper endpoint\");\n        }\n        if (Math.floor(x0) < x0) {\n            return cumulativeProbability(((int) Math.floor(x0)) + 1,\n               (int) Math.floor(x1)); // don't want to count mass below x0\n        } else { // x0 is mathematical integer, so use as is\n            return cumulativeProbability((int) Math.floor(x0),\n                (int) Math.floor(x1)); \n        }\n    }",
+      "path": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java",
+      "sha256": "99f164b1b895a3618df2ad9186dec615610234cfe9c6c5fd653aa6d75f8442e1",
+      "start_line": 76,
+      "end_line": 89
+    },
+    "src/java/org/apache/commons/math/distribution/TDistributionImpl.java::TDistributionImpl.setDegreesOfFreedom(double degreesOfFreedom)": {
+      "source": "public void setDegreesOfFreedom(double degreesOfFreedom) {\n        if (degreesOfFreedom <= 0.0) {\n            throw new IllegalArgumentException(\"degrees of freedom must be positive.\");\n        }\n        this.degreesOfFreedom = degreesOfFreedom;\n    }",
+      "path": "src/java/org/apache/commons/math/distribution/TDistributionImpl.java",
+      "sha256": "d592667f11b6ad20fd9f75c47d85f8bb2d86fb4d7d0ca991c089a16e54f96b01",
+      "start_line": 53,
+      "end_line": 58
+    },
+    "src/java/org/apache/commons/math/stat/inference/TTestImpl.java::TTestImpl.tTest(double m1, double m2, double v1, double v2, \n            double n1, double n2)": {
+      "source": "protected double tTest(double m1, double m2, double v1, double v2, \n            double n1, double n2)\n    throws MathException {\n        double t = Math.abs(t(m1, m2, v1, v2, n1, n2));\n        double degreesOfFreedom = 0;\n        degreesOfFreedom = df(v1, v2, n1, n2);\n        distribution.setDegreesOfFreedom(degreesOfFreedom);\n        return 2.0 * distribution.cumulativeProbability(-t);\n    }",
+      "path": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+      "sha256": "a889e3957b3ac766cf0154874f3561dd1dd826d65ab12433afc4295799f00804",
+      "start_line": 1017,
+      "end_line": 1025
+    },
+    "src/java/org/apache/commons/math/analysis/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.verifyInterval(double lower, double upper)": {
+      "source": "protected void verifyInterval(double lower, double upper) throws\n        IllegalArgumentException {\n        if (lower >= upper) {\n            throw new IllegalArgumentException\n                (\"Endpoints do not specify an interval: [\" + lower +\n                \", \" + upper + \"]\");\n        }       \n    }",
+      "path": "src/java/org/apache/commons/math/analysis/UnivariateRealIntegratorImpl.java",
+      "sha256": "ef56e9d90c90a858c2ed0e422f28f390c387a8d0f783f2f2f7760a4d467c6ccd",
+      "start_line": 235,
+      "end_line": 242
+    },
+    "src/java/org/apache/commons/math/stat/inference/TTestImpl.java::TTestImpl.tTest(double m, double mu, double v, double n)": {
+      "source": "protected double tTest(double m, double mu, double v, double n)\n    throws MathException {\n        double t = Math.abs(t(m, mu, v, n));\n        distribution.setDegreesOfFreedom(n - 1);\n        return 2.0 * distribution.cumulativeProbability(-t);\n    }",
+      "path": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+      "sha256": "e88cb111a75f46cdd23aa2b4d08f74946bbcdf5dca5e6c221e430ce3ba1c7928",
+      "start_line": 995,
+      "end_line": 1000
+    },
+    "src/java/org/apache/commons/math/distribution/FDistributionImpl.java::FDistributionImpl.inverseCumulativeProbability(final double p)": {
+      "source": "public double inverseCumulativeProbability(final double p) \n        throws MathException {\n        if (p == 0) {\n            return 0d;\n        }\n        if (p == 1) {\n            return Double.POSITIVE_INFINITY;\n        }\n        return super.inverseCumulativeProbability(p);\n    }",
+      "path": "src/java/org/apache/commons/math/distribution/FDistributionImpl.java",
+      "sha256": "019353e21e702faf475a2bd061d22a2f745ee9b8b70d96470b7f6fe41bead237",
+      "start_line": 98,
+      "end_line": 107
+    }
+  },
+  "language": "java",
+  "revision": "f24d7209b664d3385c7beba2be489d8d2bb05df8",
+  "diagnostics": [
+    {
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java::AbstractIntegerDistribution.cumulativeProbability(double x0, double x1)",
+      "kind": "ambiguous_call",
+      "name": "cumulativeProbability",
+      "arity": 2
+    },
+    {
+      "owner": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java::AbstractIntegerDistribution.cumulativeProbability(double x0, double x1)",
+      "kind": "ambiguous_call",
+      "name": "cumulativeProbability",
+      "arity": 2
+    },
+    {
+      "kind": "coverage_status",
+      "detail": "not supplied; ranker scores do not create coverage edges"
+    }
+  ],
+  "schema": "graft-graph-v1"
+}
