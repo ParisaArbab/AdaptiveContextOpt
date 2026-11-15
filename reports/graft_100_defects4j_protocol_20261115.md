@@ -117,6 +117,8 @@ fusion:
 - Number predeclared, number authentically prepared, number fully paired
 - Baseline and graph file-level Top-1, Top-5 and MRR
 - Paired difference in file MRR between L1 and each graph policy
+- Explicit exploratory subgroups based on **baseline L1 Top-1 hit versus
+  L1 Top-1 miss**, without changing the original frozen 100 IDs
 - Graph call count and whether stopping saved real graph calls
 - Provider physical calls and input/output tokens (not additive logical costs)
 - Missing bug IDs, real errors and cohort attrition, including project effects
