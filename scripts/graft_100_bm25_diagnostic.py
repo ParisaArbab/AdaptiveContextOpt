@@ -78,6 +78,7 @@ def main():
               f"indexed={r.get('indexed_entities', 'n/a')}, "
               f"unique={r.get('indexed_unique_ids', 'n/a')}, "
               f"retrieved={r.get('selected_count', 'n/a')}, "
+              f"unique_retrieved={r.get('selected_unique', 'n/a')}, "
               f"diagnosis={r.get('diagnosis', r.get('error'))}")
     print("Wrote", args.out)
 
