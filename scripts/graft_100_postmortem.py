@@ -123,7 +123,7 @@ def report(data: dict) -> str:
     lines = [
         "# GRAFT-FL recovery and graph-effect audit",
         "",
-        f"Frozen selection SHA256: \`{data['selection_sha256']}\`",
+        f"Frozen selection SHA256: `{data['selection_sha256']}`",
         "",
         f"Fully paired unique bugs: **{data['fully_paired_unique_bugs']} / 100**.",
         f"Fully paired held-out evaluation: **{data['fully_paired_evaluation_bugs']} / 80**.",
