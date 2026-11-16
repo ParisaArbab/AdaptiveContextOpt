@@ -1,0 +1,1318 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Lang-64",
+    "repository": "Lang",
+    "language": "java",
+    "revision": "d37582e9798b159d1eccce6cbf79e9a298db2a88",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_13/prepared/checkouts/Lang-64",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Lang-64\nEXECUTED BUGGY TEST: org.apache.commons.lang.enums.ValuedEnumTest::testCompareTo_otherEnumType\nTEST SOURCE: src/test/org/apache/commons/lang/enums/ValuedEnumTest.java\nTEST SOURCE SHA256: a4a7771e786383daa058b4de39ddeaa2f4a50d10046e0bf10b2d42daced7b263\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testCompareTo_otherEnumType() {\n        try {\n            ValuedColorEnum.BLUE.compareTo(ValuedLanguageEnum.ENGLISH);\n            fail();\n        } catch (ClassCastException ex) {\n            // expected\n        }\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.apache.commons.lang.enums.ValuedEnumTest::testCompareTo_otherEnumType\njunit.framework.AssertionFailedError\n\tat junit.framework.Assert.fail(Assert.java:55)\n\tat junit.framework.Assert.fail(Assert.java:64)\n\tat junit.framework.TestCase.fail(TestCase.java:235)\n\tat org.apache.commons.lang.enums.ValuedEnumTest.testCompareTo_otherEnumType(ValuedEnumTest.java:108)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_13/prepared/evidence/Lang-64.txt",
+      "sha256": "619c285dcd57fb4188f76700870a87cfae44b0a59dedc3681a4e5939a0d99389"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src/java",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Lang-64",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/java/org/apache/commons/lang/enums/Enum.java::Enum.getNameInOtherClassLoader(Object other)",
+      "path": "src/java/org/apache/commons/lang/enums/Enum.java",
+      "start_line": 599,
+      "end_line": 612,
+      "source": "private String getNameInOtherClassLoader(Object other) {\n        try {\n            Method mth = other.getClass().getMethod(\"getName\", null);\n            String name = (String) mth.invoke(other, null);\n            return name;\n        } catch (NoSuchMethodException e) {\n            // ignore - should never happen\n        } catch (IllegalAccessException e) {\n            // ignore - should never happen\n        } catch (InvocationTargetException e) {\n            // ignore - should never happen\n        }\n        throw new IllegalStateException(\"This should not happen\");\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.28772621931631
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/exception/ExceptionUtils.java::ExceptionUtils.setCause(Throwable target, Throwable cause)",
+      "path": "src/java/org/apache/commons/lang/exception/ExceptionUtils.java",
+      "start_line": 175,
+      "end_line": 203,
+      "source": "public static boolean setCause(Throwable target, Throwable cause) {\n        if (target == null) {\n            throw new NullArgumentException(\"target\");\n        }\n        Object[] causeArgs = new Object[]{cause};\n        boolean modifiedTarget = false;\n        if (THROWABLE_INITCAUSE_METHOD != null) {\n            try {\n                THROWABLE_INITCAUSE_METHOD.invoke(target, causeArgs);\n                modifiedTarget = true;\n            } catch (IllegalAccessException ignored) {\n                // Exception ignored.\n            } catch (InvocationTargetException ignored) {\n                // Exception ignored.\n            }\n        }\n        try {\n            Method setCauseMethod = target.getClass().getMethod(\"setCause\", new Class[]{Throwable.class});\n            setCauseMethod.invoke(target, causeArgs);\n            modifiedTarget = true;\n        } catch (NoSuchMethodException ignored) {\n            // Exception ignored.\n        } catch (IllegalAccessException ignored) {\n            // Exception ignored.\n        } catch (InvocationTargetException ignored) {\n            // Exception ignored.\n        }\n        return modifiedTarget;\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.77138062742269
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/oldenum/Enum.java::Enum.getNameInOtherClassLoader(Object other)",
+      "path": "src/java/org/apache/commons/lang/oldenum/Enum.java",
+      "start_line": 600,
+      "end_line": 613,
+      "source": "private String getNameInOtherClassLoader(Object other) {\n        try {\n            Method mth = other.getClass().getMethod(\"getName\", null);\n            String name = (String) mth.invoke(other, null);\n            return name;\n        } catch (NoSuchMethodException e) {\n            // ignore - should never happen\n        } catch (IllegalAccessException e) {\n            // ignore - should never happen\n        } catch (InvocationTargetException e) {\n            // ignore - should never happen\n        }\n        throw new IllegalStateException(\"This should not happen\");\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.127437885231075
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/exception/ExceptionUtils.java::ExceptionUtils.getCauseUsingMethodName(Throwable throwable, String methodName)",
+      "path": "src/java/org/apache/commons/lang/exception/ExceptionUtils.java",
+      "start_line": 367,
+      "end_line": 389,
+      "source": "private static Throwable getCauseUsingMethodName(Throwable throwable, String methodName) {\n        Method method = null;\n        try {\n            method = throwable.getClass().getMethod(methodName, null);\n        } catch (NoSuchMethodException ignored) {\n            // exception ignored\n        } catch (SecurityException ignored) {\n            // exception ignored\n        }\n\n        if (method != null && Throwable.class.isAssignableFrom(method.getReturnType())) {\n            try {\n                return (Throwable) method.invoke(throwable, ArrayUtils.EMPTY_OBJECT_ARRAY);\n            } catch (IllegalAccessException ignored) {\n                // exception ignored\n            } catch (IllegalArgumentException ignored) {\n                // exception ignored\n            } catch (InvocationTargetException ignored) {\n                // exception ignored\n            }\n        }\n        return null;\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 37.70235462531918
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/SerializationUtils.java::SerializationUtils.serialize(Serializable obj, OutputStream outputStream)",
+      "path": "src/java/org/apache/commons/lang/SerializationUtils.java",
+      "start_line": 99,
+      "end_line": 120,
+      "source": "public static void serialize(Serializable obj, OutputStream outputStream) {\n        if (outputStream == null) {\n            throw new IllegalArgumentException(\"The OutputStream must not be null\");\n        }\n        ObjectOutputStream out = null;\n        try {\n            // stream closed in the finally\n            out = new ObjectOutputStream(outputStream);\n            out.writeObject(obj);\n            \n        } catch (IOException ex) {\n            throw new SerializationException(ex);\n        } finally {\n            try {\n                if (out != null) {\n                    out.close();\n                }\n            } catch (IOException ex) {\n                // ignore close exception\n            }\n        }\n    }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.07130942132879
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/enums/Enum.java::Enum.compareTo(Object other)",
+      "path": "src/java/org/apache/commons/lang/enums/Enum.java",
+      "start_line": 579,
+      "end_line": 591,
+      "source": "public int compareTo(Object other) {\n        if (other == this) {\n            return 0;\n        }\n        if (other.getClass() != this.getClass()) {\n            if (other.getClass().getName().equals(this.getClass().getName())) {\n                return iName.compareTo( getNameInOtherClassLoader(other) );\n            }\n            throw new ClassCastException(\n                    \"Different enum class '\" + ClassUtils.getShortClassName(other.getClass()) + \"'\");\n        }\n        return iName.compareTo(((Enum) other).iName);\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 30.701856609987736
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/SerializationUtils.java::SerializationUtils.deserialize(InputStream inputStream)",
+      "path": "src/java/org/apache/commons/lang/SerializationUtils.java",
+      "start_line": 153,
+      "end_line": 176,
+      "source": "public static Object deserialize(InputStream inputStream) {\n        if (inputStream == null) {\n            throw new IllegalArgumentException(\"The InputStream must not be null\");\n        }\n        ObjectInputStream in = null;\n        try {\n            // stream closed in the finally\n            in = new ObjectInputStream(inputStream);\n            return in.readObject();\n            \n        } catch (ClassNotFoundException ex) {\n            throw new SerializationException(ex);\n        } catch (IOException ex) {\n            throw new SerializationException(ex);\n        } finally {\n            try {\n                if (in != null) {\n                    in.close();\n                }\n            } catch (IOException ex) {\n                // ignore close exception\n            }\n        }\n    }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 30.00495373213673
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)",
+      "path": "src/java/org/apache/commons/lang/builder/EqualsBuilder.java",
+      "start_line": 253,
+      "end_line": 300,
+      "source": "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf \n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars, \n        // then a subclass can test equals to a superclass.\n        Class lhsClass = lhs.getClass();\n        Class rhsClass = rhs.getClass();\n        Class testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and \n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 29.940489966342955
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/exception/ExceptionUtils.java::ExceptionUtils.isNestedThrowable(Throwable throwable)",
+      "path": "src/java/org/apache/commons/lang/exception/ExceptionUtils.java",
+      "start_line": 442,
+      "end_line": 483,
+      "source": "public static boolean isNestedThrowable(Throwable throwable) {\n        if (throwable == null) {\n            return false;\n        }\n\n        if (throwable instanceof Nestable) {\n            return true;\n        } else if (throwable instanceof SQLException) {\n            return true;\n        } else if (throwable instanceof InvocationTargetException) {\n            return true;\n        } else if (isThrowableNested()) {\n            return true;\n        }\n\n        Class cls = throwable.getClass();\n        for (int i = 0, isize = CAUSE_METHOD_NAMES.length; i < isize; i++) {\n            try {\n                Method method = cls.getMethod(CAUSE_METHOD_NAMES[i], null);\n                if (method != null && Throwable.class.isAssignableFrom(method.getReturnType())) {\n                    return true;\n                }\n            } catch (NoSuchMethodException ignored) {\n                // exception ignored\n            } catch (SecurityException ignored) {\n                // exception ignored\n            }\n        }\n\n        try {\n            Field field = cls.getField(\"detail\");\n            if (field != null) {\n                return true;\n            }\n        } catch (NoSuchFieldException ignored) {\n            // exception ignored\n        } catch (SecurityException ignored) {\n            // exception ignored\n        }\n\n        return false;\n    }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 28.819601584241482
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/enums/ValuedEnum.java::ValuedEnum.compareTo(Object other)",
+      "path": "src/java/org/apache/commons/lang/enums/ValuedEnum.java",
+      "start_line": 182,
+      "end_line": 184,
+      "source": "public int compareTo(Object other) {\n        return iValue - ((ValuedEnum) other).iValue;\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 28.583843591562403
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/enums/EnumUtils.java::EnumUtils.getEnum(Class enumClass, int value)",
+      "path": "src/java/org/apache/commons/lang/enums/EnumUtils.java",
+      "start_line": 62,
+      "end_line": 64,
+      "source": "public static ValuedEnum getEnum(Class enumClass, int value) {\n        return (ValuedEnum) ValuedEnum.getEnum(enumClass, value);\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 27.347876849000404
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/enums/ValuedEnum.java::ValuedEnum.getEnum(Class enumClass, int value)",
+      "path": "src/java/org/apache/commons/lang/enums/ValuedEnum.java",
+      "start_line": 142,
+      "end_line": 154,
+      "source": "protected static Enum getEnum(Class enumClass, int value) {\n        if (enumClass == null) {\n            throw new IllegalArgumentException(\"The Enum Class must not be null\");\n        }\n        List list = Enum.getEnumList(enumClass);\n        for (Iterator it = list.iterator(); it.hasNext();) {\n            ValuedEnum enumeration = (ValuedEnum) it.next();\n            if (enumeration.getValue() == value) {\n                return enumeration;\n            }\n        }\n        return null;\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 26.81985449150826
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/enums/Enum.java::Enum.equals(Object other)",
+      "path": "src/java/org/apache/commons/lang/enums/Enum.java",
+      "start_line": 535,
+      "end_line": 552,
+      "source": "public final boolean equals(Object other) {\n        if (other == this) {\n            return true;\n        } else if (other == null) {\n            return false;\n        } else if (other.getClass() == this.getClass()) {\n            // Ok to do a class cast to Enum here since the test above\n            // guarantee both\n            // classes are in the same class loader.\n            return iName.equals(((Enum) other).iName);\n        } else {\n            // This and other are in different class loaders, we must check indirectly\n            if (other.getClass().getName().equals(this.getClass().getName()) == false) {\n                return false;\n            }\n            return iName.equals( getNameInOtherClassLoader(other) );\n        }\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.283180556526247
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/ClassUtils.java::ClassUtils.getPublicMethod(Class cls, String methodName, Class parameterTypes[])",
+      "path": "src/java/org/apache/commons/lang/ClassUtils.java",
+      "start_line": 618,
+      "end_line": 648,
+      "source": "public static Method getPublicMethod(Class cls, String methodName, Class parameterTypes[]) \n            throws SecurityException, NoSuchMethodException {\n        \n        Method declaredMethod = cls.getMethod(methodName, parameterTypes);\n        if (Modifier.isPublic(declaredMethod.getDeclaringClass().getModifiers())) {\n            return declaredMethod;\n        }\n        \n        List candidateClasses = new ArrayList();\n        candidateClasses.addAll(getAllInterfaces(cls));\n        candidateClasses.addAll(getAllSuperclasses(cls));\n        \n        for (Iterator it = candidateClasses.iterator(); it.hasNext(); ) {\n            Class candidateClass = (Class) it.next();\n            if (!Modifier.isPublic(candidateClass.getModifiers())) {\n                continue;\n            }\n            Method candidateMethod;\n            try {\n                candidateMethod = candidateClass.getMethod(methodName, parameterTypes);\n            } catch (NoSuchMethodException ex) {\n                continue;\n            }\n            if (Modifier.isPublic(candidateMethod.getDeclaringClass().getModifiers())) {\n                return candidateMethod;\n            }\n        }\n        \n        throw new NoSuchMethodException(\"Can't find a public method for \" +\n                methodName + \" \" + ArrayUtils.toString(parameterTypes));\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.03793938617901
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/enums/ValuedEnum.java::ValuedEnum.ValuedEnum(String name, int value)",
+      "path": "src/java/org/apache/commons/lang/enums/ValuedEnum.java",
+      "start_line": 125,
+      "end_line": 128,
+      "source": "protected ValuedEnum(String name, int value) {\n        super(name);\n        iValue = value;\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 24.833684420299413
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/enums/ValuedEnum.java::ValuedEnum.toString()",
+      "path": "src/java/org/apache/commons/lang/enums/ValuedEnum.java",
+      "start_line": 203,
+      "end_line": 209,
+      "source": "public String toString() {\n        if (iToString == null) {\n            String shortName = ClassUtils.getShortClassName(getEnumClass());\n            iToString = shortName + \"[\" + getName() + \"=\" + getValue() + \"]\";\n        }\n        return iToString;\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 24.664184289472622
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/builder/CompareToBuilder.java::CompareToBuilder.reflectionAppend(\n        Object lhs,\n        Object rhs,\n        Class clazz,\n        CompareToBuilder builder,\n        boolean useTransients,\n        String[] excludeFields)",
+      "path": "src/java/org/apache/commons/lang/builder/CompareToBuilder.java",
+      "start_line": 309,
+      "end_line": 335,
+      "source": "private static void reflectionAppend(\n        Object lhs,\n        Object rhs,\n        Class clazz,\n        CompareToBuilder builder,\n        boolean useTransients,\n        String[] excludeFields) {\n        \n        Field[] fields = clazz.getDeclaredFields();\n        List excludedFieldList = excludeFields != null ? Arrays.asList(excludeFields) : Collections.EMPTY_LIST;\n        AccessibleObject.setAccessible(fields, true);\n        for (int i = 0; i < fields.length && builder.comparison == 0; i++) {\n            Field f = fields[i];\n            if (!excludedFieldList.contains(f.getName())\n                && (f.getName().indexOf('$') == -1)\n                && (useTransients || !Modifier.isTransient(f.getModifiers()))\n                && (!Modifier.isStatic(f.getModifiers()))) {\n                try {\n                    builder.append(f.get(lhs), f.get(rhs));\n                } catch (IllegalAccessException e) {\n                    // This can't happen. Would get a Security exception instead.\n                    // Throw a runtime exception in case the impossible happens.\n                    throw new InternalError(\"Unexpected IllegalAccessException\");\n                }\n            }\n        }\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 24.42588194118172
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/builder/CompareToBuilder.java::CompareToBuilder.reflectionCompare(\n        Object lhs, \n        Object rhs, \n        boolean compareTransients, \n        Class reflectUpToClass, \n        String[] excludeFields)",
+      "path": "src/java/org/apache/commons/lang/builder/CompareToBuilder.java",
+      "start_line": 272,
+      "end_line": 296,
+      "source": "public static int reflectionCompare(\n        Object lhs, \n        Object rhs, \n        boolean compareTransients, \n        Class reflectUpToClass, \n        String[] excludeFields) {\n\n        if (lhs == rhs) {\n            return 0;\n        }\n        if (lhs == null || rhs == null) {\n            throw new NullPointerException();\n        }\n        Class lhsClazz = lhs.getClass();\n        if (!lhsClazz.isInstance(rhs)) {\n            throw new ClassCastException();\n        }\n        CompareToBuilder compareToBuilder = new CompareToBuilder();\n        reflectionAppend(lhs, rhs, lhsClazz, compareToBuilder, compareTransients, excludeFields);\n        while (lhsClazz.getSuperclass() != null && lhsClazz != reflectUpToClass) {\n            lhsClazz = lhsClazz.getSuperclass();\n            reflectionAppend(lhs, rhs, lhsClazz, compareToBuilder, compareTransients, excludeFields);\n        }\n        return compareToBuilder.toComparison();\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 23.589014026190934
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/oldenum/ValuedEnum.java::ValuedEnum.getEnum(Class enumClass, int value)",
+      "path": "src/java/org/apache/commons/lang/oldenum/ValuedEnum.java",
+      "start_line": 141,
+      "end_line": 153,
+      "source": "protected static Enum getEnum(Class enumClass, int value) {\n        if (enumClass == null) {\n            throw new IllegalArgumentException(\"The Enum Class must not be null\");\n        }\n        List list = Enum.getEnumList(enumClass);\n        for (Iterator it = list.iterator(); it.hasNext();) {\n            ValuedEnum enumeration = (ValuedEnum) it.next();\n            if (enumeration.getValue() == value) {\n                return enumeration;\n            }\n        }\n        return null;\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 23.54148834631522
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/builder/ReflectionToStringBuilder.java::ReflectionToStringBuilder.toString(Object object, ToStringStyle style, boolean outputTransients, boolean outputStatics,\n            Class reflectUpToClass)",
+      "path": "src/java/org/apache/commons/lang/builder/ReflectionToStringBuilder.java",
+      "start_line": 336,
+      "end_line": 340,
+      "source": "public static String toString(Object object, ToStringStyle style, boolean outputTransients, boolean outputStatics,\n            Class reflectUpToClass) {\n        return new ReflectionToStringBuilder(object, style, null, reflectUpToClass, outputTransients, outputStatics)\n                .toString();\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 23.481145561795714
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/oldenum/ValuedEnum.java::ValuedEnum.compareTo(Object other)",
+      "path": "src/java/org/apache/commons/lang/oldenum/ValuedEnum.java",
+      "start_line": 177,
+      "end_line": 179,
+      "source": "public int compareTo(Object other) {\n        return iValue - ((ValuedEnum) other).iValue;\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 23.41163605476464
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass)",
+      "path": "src/java/org/apache/commons/lang/builder/EqualsBuilder.java",
+      "start_line": 223,
+      "end_line": 225,
+      "source": "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass) {\n        return reflectionEquals(lhs, rhs, testTransients, reflectUpToClass, null);\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 23.232993811244132
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/builder/ReflectionToStringBuilder.java::ReflectionToStringBuilder.appendFieldsIn(Class clazz)",
+      "path": "src/java/org/apache/commons/lang/builder/ReflectionToStringBuilder.java",
+      "start_line": 658,
+      "end_line": 714,
+      "source": "protected void appendFieldsIn(Class clazz) {\n        if (isRegistered(this.getObject())) {\n            // The object has already been appended, therefore we have an\n            // object cycle.\n            // Append a simple Object.toString style string. The field name is\n            // already appended at this point.\n            this.appendAsObjectToString(this.getObject());\n            return;\n        }\n        try {\n            this.registerObject();\n            if (clazz.isArray()) {\n                this.reflectionAppendArray(this.getObject());\n                return;\n            }\n            Field[] fields = clazz.getDeclaredFields();\n            AccessibleObject.setAccessible(fields, true);\n            for (int i = 0; i < fields.length; i++) {\n                Field field = fields[i];\n                String fieldName = field.getName();\n                if (this.accept(field)) {\n                    try {\n                        // Warning: Field.get(Object) creates wrappers objects\n                        // for primitive types.\n                        Object fieldValue = this.getValue(field);\n                        if (isRegistered(fieldValue) && !field.getType().isPrimitive()) {\n                            // A known field value has already been appended,\n                            // therefore we have an object cycle,\n                            // append a simple Object.toString style string.\n                            this.getStyle().appendFieldStart(this.getStringBuffer(), fieldName);\n                            this.appendAsObjectToString(fieldValue);\n                            this.getStyle().appendFieldEnd(this.getStringBuffer(), fieldName);\n                            // The recursion out of\n                            // builder.append(fieldName, fieldValue);\n                            // below will append the field\n                            // end marker.\n                        } else {\n                            try {\n                                this.registerObject();\n                                this.append(fieldName, fieldValue);\n                            } finally {\n                                this.unregisterObject();\n                            }\n                        }\n                    } catch (IllegalAccessException ex) {\n                        // this can't happen. Would get a Security exception\n                        // instead\n                        // throw a runtime exception in case the impossible\n                        // happens.\n                        throw new InternalError(\"Unexpected IllegalAccessException: \" + ex.getMessage());\n                    }\n                }\n            }\n        } finally {\n            this.unregisterObject();\n        }\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 23.20008868847099
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/oldenum/EnumUtils.java::EnumUtils.getEnum(Class enumClass, int value)",
+      "path": "src/java/org/apache/commons/lang/oldenum/EnumUtils.java",
+      "start_line": 66,
+      "end_line": 68,
+      "source": "public static ValuedEnum getEnum(Class enumClass, int value) {\n        return (ValuedEnum) ValuedEnum.getEnum(enumClass, value);\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 22.816704533508478
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/java/org/apache/commons/lang/enums/Enum.java::Enum.getNameInOtherClassLoader(Object other)",
+      "source": "private String getNameInOtherClassLoader(Object other) {\n        try {\n            Method mth = other.getClass().getMethod(\"getName\", null);\n            String name = (String) mth.invoke(other, null);\n            return name;\n        } catch (NoSuchMethodException e) {\n            // ignore - should never happen\n        } catch (IllegalAccessException e) {\n            // ignore - should never happen\n        } catch (InvocationTargetException e) {\n            // ignore - should never happen\n        }\n        throw new IllegalStateException(\"This should not happen\");\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/enums/Enum.java::Enum.getNameInOtherClassLoader(Object other)\nSIGNATURE: private String getNameInOtherClassLoader(Object other)",
+        "METHOD: src/java/org/apache/commons/lang/enums/Enum.java::Enum.getNameInOtherClassLoader(Object other)\nSIGNATURE: private String getNameInOtherClassLoader(Object other)\nSTRUCTURE (lossy):\nMethod mth = other.getClass().getMethod(\"getName\", null);\nCALL other.getClass().getMethod(\"getName\", null)\nCALL other.getClass()\nString name = (String) mth.invoke(other, null);\nCALL mth.invoke(other, null)\nreturn name;\ncatch (NoSuchMethodException e)\ncatch (IllegalAccessException e)\ncatch (InvocationTargetException e)\nthrow new IllegalStateException(\"This should not happen\");",
+        "private String getNameInOtherClassLoader(Object other) {\n        try {\n            Method mth = other.getClass().getMethod(\"getName\", null);\n            String name = (String) mth.invoke(other, null);\n            return name;\n        } catch (NoSuchMethodException e) {\n            // ignore - should never happen\n        } catch (IllegalAccessException e) {\n            // ignore - should never happen\n        } catch (InvocationTargetException e) {\n            // ignore - should never happen\n        }\n        throw new IllegalStateException(\"This should not happen\");\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.42105263157894735,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 3.0,
+        "literal_count": 4.0,
+        "source_tokens": 145.0,
+        "l0_tokens": 42.0,
+        "l1_tokens": 142.0,
+        "compression_ratio": 0.9793103448275862,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 3,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/exception/ExceptionUtils.java::ExceptionUtils.setCause(Throwable target, Throwable cause)",
+      "source": "public static boolean setCause(Throwable target, Throwable cause) {\n        if (target == null) {\n            throw new NullArgumentException(\"target\");\n        }\n        Object[] causeArgs = new Object[]{cause};\n        boolean modifiedTarget = false;\n        if (THROWABLE_INITCAUSE_METHOD != null) {\n            try {\n                THROWABLE_INITCAUSE_METHOD.invoke(target, causeArgs);\n                modifiedTarget = true;\n            } catch (IllegalAccessException ignored) {\n                // Exception ignored.\n            } catch (InvocationTargetException ignored) {\n                // Exception ignored.\n            }\n        }\n        try {\n            Method setCauseMethod = target.getClass().getMethod(\"setCause\", new Class[]{Throwable.class});\n            setCauseMethod.invoke(target, causeArgs);\n            modifiedTarget = true;\n        } catch (NoSuchMethodException ignored) {\n            // Exception ignored.\n        } catch (IllegalAccessException ignored) {\n            // Exception ignored.\n        } catch (InvocationTargetException ignored) {\n            // Exception ignored.\n        }\n        return modifiedTarget;\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/exception/ExceptionUtils.java::ExceptionUtils.setCause(Throwable target, Throwable cause)\nSIGNATURE: public static boolean setCause(Throwable target, Throwable cause)",
+        "METHOD: src/java/org/apache/commons/lang/exception/ExceptionUtils.java::ExceptionUtils.setCause(Throwable target, Throwable cause)\nSIGNATURE: public static boolean setCause(Throwable target, Throwable cause)\nSTRUCTURE (lossy):\nif (target == null)\nthrow new NullArgumentException(\"target\");\nObject[] causeArgs = new Object[]{cause};\nboolean modifiedTarget = false;\nif (THROWABLE_INITCAUSE_METHOD != null)\nCALL THROWABLE_INITCAUSE_METHOD.invoke(target, causeArgs)\nmodifiedTarget = true\ncatch (IllegalAccessException ignored)\ncatch (InvocationTargetException ignored)\nMethod setCauseMethod = target.getClass().getMethod(\"setCause\", new Class[]{Throwable.class});\nCALL target.getClass().getMethod(\"setCause\", new Class[]{Throwable.class})\nCALL target.getClass()\nCALL setCauseMethod.invoke(target, causeArgs)\ncatch (NoSuchMethodException ignored)\nreturn modifiedTarget;",
+        "public static boolean setCause(Throwable target, Throwable cause) {\n        if (target == null) {\n            throw new NullArgumentException(\"target\");\n        }\n        Object[] causeArgs = new Object[]{cause};\n        boolean modifiedTarget = false;\n        if (THROWABLE_INITCAUSE_METHOD != null) {\n            try {\n                THROWABLE_INITCAUSE_METHOD.invoke(target, causeArgs);\n                modifiedTarget = true;\n            } catch (IllegalAccessException ignored) {\n                // Exception ignored.\n            } catch (InvocationTargetException ignored) {\n                // Exception ignored.\n            }\n        }\n        try {\n            Method setCauseMethod = target.getClass().getMethod(\"setCause\", new Class[]{Throwable.class});\n            setCauseMethod.invoke(target, causeArgs);\n            modifiedTarget = true;\n        } catch (NoSuchMethodException ignored) {\n            // Exception ignored.\n        } catch (IllegalAccessException ignored) {\n            // Exception ignored.\n        } catch (InvocationTargetException ignored) {\n            // Exception ignored.\n        }\n        return modifiedTarget;\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.40540540540540543,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 4.0,
+        "literal_count": 5.0,
+        "source_tokens": 289.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 216.0,
+        "compression_ratio": 0.7474048442906575,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 4,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/oldenum/Enum.java::Enum.getNameInOtherClassLoader(Object other)",
+      "source": "private String getNameInOtherClassLoader(Object other) {\n        try {\n            Method mth = other.getClass().getMethod(\"getName\", null);\n            String name = (String) mth.invoke(other, null);\n            return name;\n        } catch (NoSuchMethodException e) {\n            // ignore - should never happen\n        } catch (IllegalAccessException e) {\n            // ignore - should never happen\n        } catch (InvocationTargetException e) {\n            // ignore - should never happen\n        }\n        throw new IllegalStateException(\"This should not happen\");\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/oldenum/Enum.java::Enum.getNameInOtherClassLoader(Object other)\nSIGNATURE: private String getNameInOtherClassLoader(Object other)",
+        "METHOD: src/java/org/apache/commons/lang/oldenum/Enum.java::Enum.getNameInOtherClassLoader(Object other)\nSIGNATURE: private String getNameInOtherClassLoader(Object other)\nSTRUCTURE (lossy):\nMethod mth = other.getClass().getMethod(\"getName\", null);\nCALL other.getClass().getMethod(\"getName\", null)\nCALL other.getClass()\nString name = (String) mth.invoke(other, null);\nCALL mth.invoke(other, null)\nreturn name;\ncatch (NoSuchMethodException e)\ncatch (IllegalAccessException e)\ncatch (InvocationTargetException e)\nthrow new IllegalStateException(\"This should not happen\");",
+        "private String getNameInOtherClassLoader(Object other) {\n        try {\n            Method mth = other.getClass().getMethod(\"getName\", null);\n            String name = (String) mth.invoke(other, null);\n            return name;\n        } catch (NoSuchMethodException e) {\n            // ignore - should never happen\n        } catch (IllegalAccessException e) {\n            // ignore - should never happen\n        } catch (InvocationTargetException e) {\n            // ignore - should never happen\n        }\n        throw new IllegalStateException(\"This should not happen\");\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.39473684210526316,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 3.0,
+        "literal_count": 4.0,
+        "source_tokens": 145.0,
+        "l0_tokens": 43.0,
+        "l1_tokens": 142.0,
+        "compression_ratio": 0.9793103448275862,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 3,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/exception/ExceptionUtils.java::ExceptionUtils.getCauseUsingMethodName(Throwable throwable, String methodName)",
+      "source": "private static Throwable getCauseUsingMethodName(Throwable throwable, String methodName) {\n        Method method = null;\n        try {\n            method = throwable.getClass().getMethod(methodName, null);\n        } catch (NoSuchMethodException ignored) {\n            // exception ignored\n        } catch (SecurityException ignored) {\n            // exception ignored\n        }\n\n        if (method != null && Throwable.class.isAssignableFrom(method.getReturnType())) {\n            try {\n                return (Throwable) method.invoke(throwable, ArrayUtils.EMPTY_OBJECT_ARRAY);\n            } catch (IllegalAccessException ignored) {\n                // exception ignored\n            } catch (IllegalArgumentException ignored) {\n                // exception ignored\n            } catch (InvocationTargetException ignored) {\n                // exception ignored\n            }\n        }\n        return null;\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/exception/ExceptionUtils.java::ExceptionUtils.getCauseUsingMethodName(Throwable throwable, String methodName)\nSIGNATURE: private static Throwable getCauseUsingMethodName(Throwable throwable, String methodName)",
+        "METHOD: src/java/org/apache/commons/lang/exception/ExceptionUtils.java::ExceptionUtils.getCauseUsingMethodName(Throwable throwable, String methodName)\nSIGNATURE: private static Throwable getCauseUsingMethodName(Throwable throwable, String methodName)\nSTRUCTURE (lossy):\nMethod method = null;\nmethod = throwable.getClass().getMethod(methodName, null)\nCALL throwable.getClass().getMethod(methodName, null)\nCALL throwable.getClass()\ncatch (NoSuchMethodException ignored)\ncatch (SecurityException ignored)\nif (method != null && Throwable.class.isAssignableFrom(method.getReturnType()))\nCALL Throwable.class.isAssignableFrom(method.getReturnType())\nCALL method.getReturnType()\nreturn (Throwable) method.invoke(throwable, ArrayUtils.EMPTY_OBJECT_ARRAY);\nCALL method.invoke(throwable, ArrayUtils.EMPTY_OBJECT_ARRAY)\ncatch (IllegalAccessException ignored)\ncatch (IllegalArgumentException ignored)\ncatch (InvocationTargetException ignored)\nreturn null;",
+        "private static Throwable getCauseUsingMethodName(Throwable throwable, String methodName) {\n        Method method = null;\n        try {\n            method = throwable.getClass().getMethod(methodName, null);\n        } catch (NoSuchMethodException ignored) {\n            // exception ignored\n        } catch (SecurityException ignored) {\n            // exception ignored\n        }\n\n        if (method != null && Throwable.class.isAssignableFrom(method.getReturnType())) {\n            try {\n                return (Throwable) method.invoke(throwable, ArrayUtils.EMPTY_OBJECT_ARRAY);\n            } catch (IllegalAccessException ignored) {\n                // exception ignored\n            } catch (IllegalArgumentException ignored) {\n                // exception ignored\n            } catch (InvocationTargetException ignored) {\n                // exception ignored\n            }\n        }\n        return null;\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.40540540540540543,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 5.0,
+        "literal_count": 5.0,
+        "source_tokens": 228.0,
+        "l0_tokens": 63.0,
+        "l1_tokens": 236.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 5,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/SerializationUtils.java::SerializationUtils.serialize(Serializable obj, OutputStream outputStream)",
+      "source": "public static void serialize(Serializable obj, OutputStream outputStream) {\n        if (outputStream == null) {\n            throw new IllegalArgumentException(\"The OutputStream must not be null\");\n        }\n        ObjectOutputStream out = null;\n        try {\n            // stream closed in the finally\n            out = new ObjectOutputStream(outputStream);\n            out.writeObject(obj);\n            \n        } catch (IOException ex) {\n            throw new SerializationException(ex);\n        } finally {\n            try {\n                if (out != null) {\n                    out.close();\n                }\n            } catch (IOException ex) {\n                // ignore close exception\n            }\n        }\n    }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/SerializationUtils.java::SerializationUtils.serialize(Serializable obj, OutputStream outputStream)\nSIGNATURE: public static void serialize(Serializable obj, OutputStream outputStream)",
+        "METHOD: src/java/org/apache/commons/lang/SerializationUtils.java::SerializationUtils.serialize(Serializable obj, OutputStream outputStream)\nSIGNATURE: public static void serialize(Serializable obj, OutputStream outputStream)\nSTRUCTURE (lossy):\nif (outputStream == null)\nthrow new IllegalArgumentException(\"The OutputStream must not be null\");\nObjectOutputStream out = null;\nout = new ObjectOutputStream(outputStream)\nCALL out.writeObject(obj)\ncatch (IOException ex)\nthrow new SerializationException(ex);\nif (out != null)\nCALL out.close()",
+        "public static void serialize(Serializable obj, OutputStream outputStream) {\n        if (outputStream == null) {\n            throw new IllegalArgumentException(\"The OutputStream must not be null\");\n        }\n        ObjectOutputStream out = null;\n        try {\n            // stream closed in the finally\n            out = new ObjectOutputStream(outputStream);\n            out.writeObject(obj);\n            \n        } catch (IOException ex) {\n            throw new SerializationException(ex);\n        } finally {\n            try {\n                if (out != null) {\n                    out.close();\n                }\n            } catch (IOException ex) {\n                // ignore close exception\n            }\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.37142857142857144,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 2.0,
+        "literal_count": 4.0,
+        "source_tokens": 182.0,
+        "l0_tokens": 56.0,
+        "l1_tokens": 135.0,
+        "compression_ratio": 0.7417582417582418,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 2,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/enums/Enum.java::Enum.compareTo(Object other)",
+      "source": "public int compareTo(Object other) {\n        if (other == this) {\n            return 0;\n        }\n        if (other.getClass() != this.getClass()) {\n            if (other.getClass().getName().equals(this.getClass().getName())) {\n                return iName.compareTo( getNameInOtherClassLoader(other) );\n            }\n            throw new ClassCastException(\n                    \"Different enum class '\" + ClassUtils.getShortClassName(other.getClass()) + \"'\");\n        }\n        return iName.compareTo(((Enum) other).iName);\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/enums/Enum.java::Enum.compareTo(Object other)\nSIGNATURE: public int compareTo(Object other)",
+        "METHOD: src/java/org/apache/commons/lang/enums/Enum.java::Enum.compareTo(Object other)\nSIGNATURE: public int compareTo(Object other)\nSTRUCTURE (lossy):\nif (other == this)\nreturn 0;\nif (other.getClass() != this.getClass())\nCALL other.getClass()\nCALL this.getClass()\nif (other.getClass().getName().equals(this.getClass().getName()))\nCALL other.getClass().getName().equals(this.getClass().getName())\nCALL other.getClass().getName()\nCALL this.getClass().getName()\nreturn iName.compareTo( getNameInOtherClassLoader(other) );\nCALL iName.compareTo( getNameInOtherClassLoader(other) )\nCALL getNameInOtherClassLoader(other)\nthrow new ClassCastException( \"Different enum class '\" + ClassUtils.getShortClassName(other.getClass()) + \"'\");\nCALL ClassUtils.getShortClassName(other.getClass())\nreturn iName.compareTo(((Enum) other).iName);\nCALL iName.compareTo(((Enum) other).iName)",
+        "public int compareTo(Object other) {\n        if (other == this) {\n            return 0;\n        }\n        if (other.getClass() != this.getClass()) {\n            if (other.getClass().getName().equals(this.getClass().getName())) {\n                return iName.compareTo( getNameInOtherClassLoader(other) );\n            }\n            throw new ClassCastException(\n                    \"Different enum class '\" + ClassUtils.getShortClassName(other.getClass()) + \"'\");\n        }\n        return iName.compareTo(((Enum) other).iName);\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5555555555555556,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 12.0,
+        "literal_count": 3.0,
+        "source_tokens": 133.0,
+        "l0_tokens": 33.0,
+        "l1_tokens": 217.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 12,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/SerializationUtils.java::SerializationUtils.deserialize(InputStream inputStream)",
+      "source": "public static Object deserialize(InputStream inputStream) {\n        if (inputStream == null) {\n            throw new IllegalArgumentException(\"The InputStream must not be null\");\n        }\n        ObjectInputStream in = null;\n        try {\n            // stream closed in the finally\n            in = new ObjectInputStream(inputStream);\n            return in.readObject();\n            \n        } catch (ClassNotFoundException ex) {\n            throw new SerializationException(ex);\n        } catch (IOException ex) {\n            throw new SerializationException(ex);\n        } finally {\n            try {\n                if (in != null) {\n                    in.close();\n                }\n            } catch (IOException ex) {\n                // ignore close exception\n            }\n        }\n    }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/SerializationUtils.java::SerializationUtils.deserialize(InputStream inputStream)\nSIGNATURE: public static Object deserialize(InputStream inputStream)",
+        "METHOD: src/java/org/apache/commons/lang/SerializationUtils.java::SerializationUtils.deserialize(InputStream inputStream)\nSIGNATURE: public static Object deserialize(InputStream inputStream)\nSTRUCTURE (lossy):\nif (inputStream == null)\nthrow new IllegalArgumentException(\"The InputStream must not be null\");\nObjectInputStream in = null;\nin = new ObjectInputStream(inputStream)\nreturn in.readObject();\nCALL in.readObject()\ncatch (ClassNotFoundException ex)\nthrow new SerializationException(ex);\ncatch (IOException ex)\nif (in != null)\nCALL in.close()",
+        "public static Object deserialize(InputStream inputStream) {\n        if (inputStream == null) {\n            throw new IllegalArgumentException(\"The InputStream must not be null\");\n        }\n        ObjectInputStream in = null;\n        try {\n            // stream closed in the finally\n            in = new ObjectInputStream(inputStream);\n            return in.readObject();\n            \n        } catch (ClassNotFoundException ex) {\n            throw new SerializationException(ex);\n        } catch (IOException ex) {\n            throw new SerializationException(ex);\n        } finally {\n            try {\n                if (in != null) {\n                    in.close();\n                }\n            } catch (IOException ex) {\n                // ignore close exception\n            }\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.35294117647058826,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 2.0,
+        "literal_count": 4.0,
+        "source_tokens": 200.0,
+        "l0_tokens": 48.0,
+        "l1_tokens": 137.0,
+        "compression_ratio": 0.685,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 2,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)",
+      "source": "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf \n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars, \n        // then a subclass can test equals to a superclass.\n        Class lhsClass = lhs.getClass();\n        Class rhsClass = rhs.getClass();\n        Class testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and \n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)\nSIGNATURE: public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)",
+        "METHOD: src/java/org/apache/commons/lang/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)\nSIGNATURE: public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)\nSTRUCTURE (lossy):\nif (lhs == rhs)\nreturn true;\nif (lhs == null || rhs == null)\nreturn false;\nClass lhsClass = lhs.getClass();\nCALL lhs.getClass()\nClass rhsClass = rhs.getClass();\nCALL rhs.getClass()\nClass testClass;\nif (lhsClass.isInstance(rhs))\nCALL lhsClass.isInstance(rhs)\ntestClass = lhsClass\nif (!rhsClass.isInstance(lhs))\nCALL rhsClass.isInstance(lhs)\ntestClass = rhsClass\nif (rhsClass.isInstance(lhs))\nif (!lhsClass.isInstance(rhs))\nEqualsBuilder equalsBuilder = new EqualsBuilder();\nCALL reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields)\nwhile (testClass.getSuperclass() != null && testClass != reflectUpToClass)\nCALL testClass.getSuperclass()\ntestClass = testClass.getSuperclass()\ncatch (IllegalArgumentException e)\nreturn equalsBuilder.isEquals();\nCALL equalsBuilder.isEquals()",
+        "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf \n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars, \n        // then a subclass can test equals to a superclass.\n        Class lhsClass = lhs.getClass();\n        Class rhsClass = rhs.getClass();\n        Class testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and \n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.20588235294117646,
+        "trace_match": 0.0,
+        "complexity": 9.0,
+        "call_count": 11.0,
+        "literal_count": 3.0,
+        "source_tokens": 530.0,
+        "l0_tokens": 92.0,
+        "l1_tokens": 297.0,
+        "compression_ratio": 0.560377358490566,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 9,
+        "call_count": 11,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/exception/ExceptionUtils.java::ExceptionUtils.isNestedThrowable(Throwable throwable)",
+      "source": "public static boolean isNestedThrowable(Throwable throwable) {\n        if (throwable == null) {\n            return false;\n        }\n\n        if (throwable instanceof Nestable) {\n            return true;\n        } else if (throwable instanceof SQLException) {\n            return true;\n        } else if (throwable instanceof InvocationTargetException) {\n            return true;\n        } else if (isThrowableNested()) {\n            return true;\n        }\n\n        Class cls = throwable.getClass();\n        for (int i = 0, isize = CAUSE_METHOD_NAMES.length; i < isize; i++) {\n            try {\n                Method method = cls.getMethod(CAUSE_METHOD_NAMES[i], null);\n                if (method != null && Throwable.class.isAssignableFrom(method.getReturnType())) {\n                    return true;\n                }\n            } catch (NoSuchMethodException ignored) {\n                // exception ignored\n            } catch (SecurityException ignored) {\n                // exception ignored\n            }\n        }\n\n        try {\n            Field field = cls.getField(\"detail\");\n            if (field != null) {\n                return true;\n            }\n        } catch (NoSuchFieldException ignored) {\n            // exception ignored\n        } catch (SecurityException ignored) {\n            // exception ignored\n        }\n\n        return false;\n    }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/exception/ExceptionUtils.java::ExceptionUtils.isNestedThrowable(Throwable throwable)\nSIGNATURE: public static boolean isNestedThrowable(Throwable throwable)",
+        "METHOD: src/java/org/apache/commons/lang/exception/ExceptionUtils.java::ExceptionUtils.isNestedThrowable(Throwable throwable)\nSIGNATURE: public static boolean isNestedThrowable(Throwable throwable)\nSTRUCTURE (lossy):\nif (throwable == null)\nreturn false;\nif (throwable instanceof Nestable)\nreturn true;\nif (throwable instanceof SQLException)\nif (throwable instanceof InvocationTargetException)\nif (isThrowableNested())\nCALL isThrowableNested()\nClass cls = throwable.getClass();\nCALL throwable.getClass()\nfor (int i = 0, isize = CAUSE_METHOD_NAMES.length; i < isize; i++)\nint i = 0, isize = CAUSE_METHOD_NAMES.length;\ni++\nMethod method = cls.getMethod(CAUSE_METHOD_NAMES[i], null);\nCALL cls.getMethod(CAUSE_METHOD_NAMES[i], null)\nif (method != null && Throwable.class.isAssignableFrom(method.getReturnType()))\nCALL Throwable.class.isAssignableFrom(method.getReturnType())\nCALL method.getReturnType()\ncatch (NoSuchMethodException ignored)\ncatch (SecurityException ignored)\nField field = cls.getField(\"detail\");\nCALL cls.getField(\"detail\")\nif (field != null)\ncatch (NoSuchFieldException ignored)",
+        "public static boolean isNestedThrowable(Throwable throwable) {\n        if (throwable == null) {\n            return false;\n        }\n\n        if (throwable instanceof Nestable) {\n            return true;\n        } else if (throwable instanceof SQLException) {\n            return true;\n        } else if (throwable instanceof InvocationTargetException) {\n            return true;\n        } else if (isThrowableNested()) {\n            return true;\n        }\n\n        Class cls = throwable.getClass();\n        for (int i = 0, isize = CAUSE_METHOD_NAMES.length; i < isize; i++) {\n            try {\n                Method method = cls.getMethod(CAUSE_METHOD_NAMES[i], null);\n                if (method != null && Throwable.class.isAssignableFrom(method.getReturnType())) {\n                    return true;\n                }\n            } catch (NoSuchMethodException ignored) {\n                // exception ignored\n            } catch (SecurityException ignored) {\n                // exception ignored\n            }\n        }\n\n        try {\n            Field field = cls.getField(\"detail\");\n            if (field != null) {\n                return true;\n            }\n        } catch (NoSuchFieldException ignored) {\n            // exception ignored\n        } catch (SecurityException ignored) {\n            // exception ignored\n        }\n\n        return false;\n    }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3488372093023256,
+        "trace_match": 0.0,
+        "complexity": 13.0,
+        "call_count": 6.0,
+        "literal_count": 7.0,
+        "source_tokens": 340.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 273.0,
+        "compression_ratio": 0.8029411764705883,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 13,
+        "call_count": 6,
+        "literal_count": 7
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/enums/ValuedEnum.java::ValuedEnum.compareTo(Object other)",
+      "source": "public int compareTo(Object other) {\n        return iValue - ((ValuedEnum) other).iValue;\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/enums/ValuedEnum.java::ValuedEnum.compareTo(Object other)\nSIGNATURE: public int compareTo(Object other)",
+        "METHOD: src/java/org/apache/commons/lang/enums/ValuedEnum.java::ValuedEnum.compareTo(Object other)\nSIGNATURE: public int compareTo(Object other)\nSTRUCTURE (lossy):\nreturn iValue - ((ValuedEnum) other).iValue;",
+        "public int compareTo(Object other) {\n        return iValue - ((ValuedEnum) other).iValue;\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.75,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 24.0,
+        "l0_tokens": 36.0,
+        "l1_tokens": 52.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/enums/EnumUtils.java::EnumUtils.getEnum(Class enumClass, int value)",
+      "source": "public static ValuedEnum getEnum(Class enumClass, int value) {\n        return (ValuedEnum) ValuedEnum.getEnum(enumClass, value);\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/enums/EnumUtils.java::EnumUtils.getEnum(Class enumClass, int value)\nSIGNATURE: public static ValuedEnum getEnum(Class enumClass, int value)",
+        "METHOD: src/java/org/apache/commons/lang/enums/EnumUtils.java::EnumUtils.getEnum(Class enumClass, int value)\nSIGNATURE: public static ValuedEnum getEnum(Class enumClass, int value)\nSTRUCTURE (lossy):\nreturn (ValuedEnum) ValuedEnum.getEnum(enumClass, value);\nCALL ValuedEnum.getEnum(enumClass, value)",
+        "public static ValuedEnum getEnum(Class enumClass, int value) {\n        return (ValuedEnum) ValuedEnum.getEnum(enumClass, value);\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7058823529411765,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 34.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 75.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/enums/ValuedEnum.java::ValuedEnum.getEnum(Class enumClass, int value)",
+      "source": "protected static Enum getEnum(Class enumClass, int value) {\n        if (enumClass == null) {\n            throw new IllegalArgumentException(\"The Enum Class must not be null\");\n        }\n        List list = Enum.getEnumList(enumClass);\n        for (Iterator it = list.iterator(); it.hasNext();) {\n            ValuedEnum enumeration = (ValuedEnum) it.next();\n            if (enumeration.getValue() == value) {\n                return enumeration;\n            }\n        }\n        return null;\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/enums/ValuedEnum.java::ValuedEnum.getEnum(Class enumClass, int value)\nSIGNATURE: protected static Enum getEnum(Class enumClass, int value)",
+        "METHOD: src/java/org/apache/commons/lang/enums/ValuedEnum.java::ValuedEnum.getEnum(Class enumClass, int value)\nSIGNATURE: protected static Enum getEnum(Class enumClass, int value)\nSTRUCTURE (lossy):\nif (enumClass == null)\nthrow new IllegalArgumentException(\"The Enum Class must not be null\");\nList list = Enum.getEnumList(enumClass);\nCALL Enum.getEnumList(enumClass)\nfor (Iterator it = list.iterator(); it.hasNext();)\nIterator it = list.iterator();\nCALL list.iterator()\nCALL it.hasNext()\nValuedEnum enumeration = (ValuedEnum) it.next();\nCALL it.next()\nif (enumeration.getValue() == value)\nCALL enumeration.getValue()\nreturn enumeration;\nreturn null;",
+        "protected static Enum getEnum(Class enumClass, int value) {\n        if (enumClass == null) {\n            throw new IllegalArgumentException(\"The Enum Class must not be null\");\n        }\n        List list = Enum.getEnumList(enumClass);\n        for (Iterator it = list.iterator(); it.hasNext();) {\n            ValuedEnum enumeration = (ValuedEnum) it.next();\n            if (enumeration.getValue() == value) {\n                return enumeration;\n            }\n        }\n        return null;\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3870967741935484,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 5.0,
+        "literal_count": 3.0,
+        "source_tokens": 124.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 163.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 5,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/enums/Enum.java::Enum.equals(Object other)",
+      "source": "public final boolean equals(Object other) {\n        if (other == this) {\n            return true;\n        } else if (other == null) {\n            return false;\n        } else if (other.getClass() == this.getClass()) {\n            // Ok to do a class cast to Enum here since the test above\n            // guarantee both\n            // classes are in the same class loader.\n            return iName.equals(((Enum) other).iName);\n        } else {\n            // This and other are in different class loaders, we must check indirectly\n            if (other.getClass().getName().equals(this.getClass().getName()) == false) {\n                return false;\n            }\n            return iName.equals( getNameInOtherClassLoader(other) );\n        }\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/enums/Enum.java::Enum.equals(Object other)\nSIGNATURE: public final boolean equals(Object other)",
+        "METHOD: src/java/org/apache/commons/lang/enums/Enum.java::Enum.equals(Object other)\nSIGNATURE: public final boolean equals(Object other)\nSTRUCTURE (lossy):\nif (other == this)\nreturn true;\nif (other == null)\nreturn false;\nif (other.getClass() == this.getClass())\nCALL other.getClass()\nCALL this.getClass()\nreturn iName.equals(((Enum) other).iName);\nCALL iName.equals(((Enum) other).iName)\nif (other.getClass().getName().equals(this.getClass().getName()) == false)\nCALL other.getClass().getName().equals(this.getClass().getName())\nCALL other.getClass().getName()\nCALL this.getClass().getName()\nreturn iName.equals( getNameInOtherClassLoader(other) );\nCALL iName.equals( getNameInOtherClassLoader(other) )\nCALL getNameInOtherClassLoader(other)",
+        "public final boolean equals(Object other) {\n        if (other == this) {\n            return true;\n        } else if (other == null) {\n            return false;\n        } else if (other.getClass() == this.getClass()) {\n            // Ok to do a class cast to Enum here since the test above\n            // guarantee both\n            // classes are in the same class loader.\n            return iName.equals(((Enum) other).iName);\n        } else {\n            // This and other are in different class loaders, we must check indirectly\n            if (other.getClass().getName().equals(this.getClass().getName()) == false) {\n                return false;\n            }\n            return iName.equals( getNameInOtherClassLoader(other) );\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3170731707317073,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 10.0,
+        "literal_count": 1.0,
+        "source_tokens": 187.0,
+        "l0_tokens": 34.0,
+        "l1_tokens": 185.0,
+        "compression_ratio": 0.9893048128342246,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 10,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/ClassUtils.java::ClassUtils.getPublicMethod(Class cls, String methodName, Class parameterTypes[])",
+      "source": "public static Method getPublicMethod(Class cls, String methodName, Class parameterTypes[]) \n            throws SecurityException, NoSuchMethodException {\n        \n        Method declaredMethod = cls.getMethod(methodName, parameterTypes);\n        if (Modifier.isPublic(declaredMethod.getDeclaringClass().getModifiers())) {\n            return declaredMethod;\n        }\n        \n        List candidateClasses = new ArrayList();\n        candidateClasses.addAll(getAllInterfaces(cls));\n        candidateClasses.addAll(getAllSuperclasses(cls));\n        \n        for (Iterator it = candidateClasses.iterator(); it.hasNext(); ) {\n            Class candidateClass = (Class) it.next();\n            if (!Modifier.isPublic(candidateClass.getModifiers())) {\n                continue;\n            }\n            Method candidateMethod;\n            try {\n                candidateMethod = candidateClass.getMethod(methodName, parameterTypes);\n            } catch (NoSuchMethodException ex) {\n                continue;\n            }\n            if (Modifier.isPublic(candidateMethod.getDeclaringClass().getModifiers())) {\n                return candidateMethod;\n            }\n        }\n        \n        throw new NoSuchMethodException(\"Can't find a public method for \" +\n                methodName + \" \" + ArrayUtils.toString(parameterTypes));\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/ClassUtils.java::ClassUtils.getPublicMethod(Class cls, String methodName, Class parameterTypes[])\nSIGNATURE: public static Method getPublicMethod(Class cls, String methodName, Class parameterTypes[]) \n            throws SecurityException, NoSuchMethodException",
+        "METHOD: src/java/org/apache/commons/lang/ClassUtils.java::ClassUtils.getPublicMethod(Class cls, String methodName, Class parameterTypes[])\nSIGNATURE: public static Method getPublicMethod(Class cls, String methodName, Class parameterTypes[]) \n            throws SecurityException, NoSuchMethodException\nSTRUCTURE (lossy):\nMethod declaredMethod = cls.getMethod(methodName, parameterTypes);\nCALL cls.getMethod(methodName, parameterTypes)\nif (Modifier.isPublic(declaredMethod.getDeclaringClass().getModifiers()))\nCALL Modifier.isPublic(declaredMethod.getDeclaringClass().getModifiers())\nCALL declaredMethod.getDeclaringClass().getModifiers()\nCALL declaredMethod.getDeclaringClass()\nreturn declaredMethod;\nList candidateClasses = new ArrayList();\nCALL candidateClasses.addAll(getAllInterfaces(cls))\nCALL getAllInterfaces(cls)\nCALL candidateClasses.addAll(getAllSuperclasses(cls))\nCALL getAllSuperclasses(cls)\nfor (Iterator it = candidateClasses.iterator(); it.hasNext(); )\nIterator it = candidateClasses.iterator();\nCALL candidateClasses.iterator()\nCALL it.hasNext()\nClass candidateClass = (Class) it.next();\nCALL it.next()\nif (!Modifier.isPublic(candidateClass.getModifiers()))\nCALL Modifier.isPublic(candidateClass.getModifiers())\nCALL candidateClass.getModifiers()\nMethod candidateMethod;\ncandidateMethod = candidateClass.getMethod(methodName, parameterTypes)\nCALL candidateClass.getMethod(methodName, parameterTypes)\ncatch (NoSuchMethodException ex)\nif (Modifier.isPublic(candidateMethod.getDeclaringClass().getModifiers()))\nCALL Modifier.isPublic(candidateMethod.getDeclaringClass().getModifiers())\nCALL candidateMethod.getDeclaringClass().getModifiers()\nCALL candidateMethod.getDeclaringClass()\nreturn candidateMethod;\nthrow new NoSuchMethodException(\"Can't find a public method for \" + methodName + \" \" + ArrayUtils.toString(parameterTypes));\nCALL ArrayUtils.toString(parameterTypes)",
+        "public static Method getPublicMethod(Class cls, String methodName, Class parameterTypes[]) \n            throws SecurityException, NoSuchMethodException {\n        \n        Method declaredMethod = cls.getMethod(methodName, parameterTypes);\n        if (Modifier.isPublic(declaredMethod.getDeclaringClass().getModifiers())) {\n            return declaredMethod;\n        }\n        \n        List candidateClasses = new ArrayList();\n        candidateClasses.addAll(getAllInterfaces(cls));\n        candidateClasses.addAll(getAllSuperclasses(cls));\n        \n        for (Iterator it = candidateClasses.iterator(); it.hasNext(); ) {\n            Class candidateClass = (Class) it.next();\n            if (!Modifier.isPublic(candidateClass.getModifiers())) {\n                continue;\n            }\n            Method candidateMethod;\n            try {\n                candidateMethod = candidateClass.getMethod(methodName, parameterTypes);\n            } catch (NoSuchMethodException ex) {\n                continue;\n            }\n            if (Modifier.isPublic(candidateMethod.getDeclaringClass().getModifiers())) {\n                return candidateMethod;\n            }\n        }\n        \n        throw new NoSuchMethodException(\"Can't find a public method for \" +\n                methodName + \" \" + ArrayUtils.toString(parameterTypes));\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.28888888888888886,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 18.0,
+        "literal_count": 2.0,
+        "source_tokens": 333.0,
+        "l0_tokens": 76.0,
+        "l1_tokens": 472.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 18,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/enums/ValuedEnum.java::ValuedEnum.ValuedEnum(String name, int value)",
+      "source": "protected ValuedEnum(String name, int value) {\n        super(name);\n        iValue = value;\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/enums/ValuedEnum.java::ValuedEnum.ValuedEnum(String name, int value)\nSIGNATURE: protected ValuedEnum(String name, int value)",
+        "METHOD: src/java/org/apache/commons/lang/enums/ValuedEnum.java::ValuedEnum.ValuedEnum(String name, int value)\nSIGNATURE: protected ValuedEnum(String name, int value)\nSTRUCTURE (lossy):\niValue = value",
+        "protected ValuedEnum(String name, int value) {\n        super(name);\n        iValue = value;\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6666666666666666,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 25.0,
+        "l0_tokens": 42.0,
+        "l1_tokens": 50.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/enums/ValuedEnum.java::ValuedEnum.toString()",
+      "source": "public String toString() {\n        if (iToString == null) {\n            String shortName = ClassUtils.getShortClassName(getEnumClass());\n            iToString = shortName + \"[\" + getName() + \"=\" + getValue() + \"]\";\n        }\n        return iToString;\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/enums/ValuedEnum.java::ValuedEnum.toString()\nSIGNATURE: public String toString()",
+        "METHOD: src/java/org/apache/commons/lang/enums/ValuedEnum.java::ValuedEnum.toString()\nSIGNATURE: public String toString()\nSTRUCTURE (lossy):\nif (iToString == null)\nString shortName = ClassUtils.getShortClassName(getEnumClass());\nCALL ClassUtils.getShortClassName(getEnumClass())\nCALL getEnumClass()\niToString = shortName + \"[\" + getName() + \"=\" + getValue() + \"]\"\nCALL getName()\nCALL getValue()\nreturn iToString;",
+        "public String toString() {\n        if (iToString == null) {\n            String shortName = ClassUtils.getShortClassName(getEnumClass());\n            iToString = shortName + \"[\" + getName() + \"=\" + getValue() + \"]\";\n        }\n        return iToString;\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.631578947368421,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 4.0,
+        "literal_count": 4.0,
+        "source_tokens": 64.0,
+        "l0_tokens": 31.0,
+        "l1_tokens": 103.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 4,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/builder/CompareToBuilder.java::CompareToBuilder.reflectionAppend(\n        Object lhs,\n        Object rhs,\n        Class clazz,\n        CompareToBuilder builder,\n        boolean useTransients,\n        String[] excludeFields)",
+      "source": "private static void reflectionAppend(\n        Object lhs,\n        Object rhs,\n        Class clazz,\n        CompareToBuilder builder,\n        boolean useTransients,\n        String[] excludeFields) {\n        \n        Field[] fields = clazz.getDeclaredFields();\n        List excludedFieldList = excludeFields != null ? Arrays.asList(excludeFields) : Collections.EMPTY_LIST;\n        AccessibleObject.setAccessible(fields, true);\n        for (int i = 0; i < fields.length && builder.comparison == 0; i++) {\n            Field f = fields[i];\n            if (!excludedFieldList.contains(f.getName())\n                && (f.getName().indexOf('$') == -1)\n                && (useTransients || !Modifier.isTransient(f.getModifiers()))\n                && (!Modifier.isStatic(f.getModifiers()))) {\n                try {\n                    builder.append(f.get(lhs), f.get(rhs));\n                } catch (IllegalAccessException e) {\n                    // This can't happen. Would get a Security exception instead.\n                    // Throw a runtime exception in case the impossible happens.\n                    throw new InternalError(\"Unexpected IllegalAccessException\");\n                }\n            }\n        }\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/builder/CompareToBuilder.java::CompareToBuilder.reflectionAppend(\n        Object lhs,\n        Object rhs,\n        Class clazz,\n        CompareToBuilder builder,\n        boolean useTransients,\n        String[] excludeFields)\nSIGNATURE: private static void reflectionAppend(\n        Object lhs,\n        Object rhs,\n        Class clazz,\n        CompareToBuilder builder,\n        boolean useTransients,\n        String[] excludeFields)",
+        "METHOD: src/java/org/apache/commons/lang/builder/CompareToBuilder.java::CompareToBuilder.reflectionAppend(\n        Object lhs,\n        Object rhs,\n        Class clazz,\n        CompareToBuilder builder,\n        boolean useTransients,\n        String[] excludeFields)\nSIGNATURE: private static void reflectionAppend(\n        Object lhs,\n        Object rhs,\n        Class clazz,\n        CompareToBuilder builder,\n        boolean useTransients,\n        String[] excludeFields)\nSTRUCTURE (lossy):\nField[] fields = clazz.getDeclaredFields();\nCALL clazz.getDeclaredFields()\nList excludedFieldList = excludeFields != null ? Arrays.asList(excludeFields) : Collections.EMPTY_LIST;\nCALL Arrays.asList(excludeFields)\nCALL AccessibleObject.setAccessible(fields, true)\nfor (int i = 0; i < fields.length && builder.comparison == 0; i++)\nint i = 0;\ni++\nField f = fields[i];\nif (!excludedFieldList.contains(f.getName()) && (f.getName().indexOf('$') == -1) && (useTransients || !Modifier.isTransient(f.getModifiers())) && (!Modifier.isStatic(f.getModifiers())))\nCALL excludedFieldList.contains(f.getName())\nCALL f.getName()\nCALL f.getName().indexOf('$')\nCALL Modifier.isTransient(f.getModifiers())\nCALL f.getModifiers()\nCALL Modifier.isStatic(f.getModifiers())\nCALL builder.append(f.get(lhs), f.get(rhs))\nCALL f.get(lhs)\nCALL f.get(rhs)\ncatch (IllegalAccessException e)\nthrow new InternalError(\"Unexpected IllegalAccessException\");",
+        "private static void reflectionAppend(\n        Object lhs,\n        Object rhs,\n        Class clazz,\n        CompareToBuilder builder,\n        boolean useTransients,\n        String[] excludeFields) {\n        \n        Field[] fields = clazz.getDeclaredFields();\n        List excludedFieldList = excludeFields != null ? Arrays.asList(excludeFields) : Collections.EMPTY_LIST;\n        AccessibleObject.setAccessible(fields, true);\n        for (int i = 0; i < fields.length && builder.comparison == 0; i++) {\n            Field f = fields[i];\n            if (!excludedFieldList.contains(f.getName())\n                && (f.getName().indexOf('$') == -1)\n                && (useTransients || !Modifier.isTransient(f.getModifiers()))\n                && (!Modifier.isStatic(f.getModifiers()))) {\n                try {\n                    builder.append(f.get(lhs), f.get(rhs));\n                } catch (IllegalAccessException e) {\n                    // This can't happen. Would get a Security exception instead.\n                    // Throw a runtime exception in case the impossible happens.\n                    throw new InternalError(\"Unexpected IllegalAccessException\");\n                }\n            }\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.22388059701492538,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 14.0,
+        "literal_count": 6.0,
+        "source_tokens": 303.0,
+        "l0_tokens": 118.0,
+        "l1_tokens": 353.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 14,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/builder/CompareToBuilder.java::CompareToBuilder.reflectionCompare(\n        Object lhs, \n        Object rhs, \n        boolean compareTransients, \n        Class reflectUpToClass, \n        String[] excludeFields)",
+      "source": "public static int reflectionCompare(\n        Object lhs, \n        Object rhs, \n        boolean compareTransients, \n        Class reflectUpToClass, \n        String[] excludeFields) {\n\n        if (lhs == rhs) {\n            return 0;\n        }\n        if (lhs == null || rhs == null) {\n            throw new NullPointerException();\n        }\n        Class lhsClazz = lhs.getClass();\n        if (!lhsClazz.isInstance(rhs)) {\n            throw new ClassCastException();\n        }\n        CompareToBuilder compareToBuilder = new CompareToBuilder();\n        reflectionAppend(lhs, rhs, lhsClazz, compareToBuilder, compareTransients, excludeFields);\n        while (lhsClazz.getSuperclass() != null && lhsClazz != reflectUpToClass) {\n            lhsClazz = lhsClazz.getSuperclass();\n            reflectionAppend(lhs, rhs, lhsClazz, compareToBuilder, compareTransients, excludeFields);\n        }\n        return compareToBuilder.toComparison();\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/builder/CompareToBuilder.java::CompareToBuilder.reflectionCompare(\n        Object lhs, \n        Object rhs, \n        boolean compareTransients, \n        Class reflectUpToClass, \n        String[] excludeFields)\nSIGNATURE: public static int reflectionCompare(\n        Object lhs, \n        Object rhs, \n        boolean compareTransients, \n        Class reflectUpToClass, \n        String[] excludeFields)",
+        "METHOD: src/java/org/apache/commons/lang/builder/CompareToBuilder.java::CompareToBuilder.reflectionCompare(\n        Object lhs, \n        Object rhs, \n        boolean compareTransients, \n        Class reflectUpToClass, \n        String[] excludeFields)\nSIGNATURE: public static int reflectionCompare(\n        Object lhs, \n        Object rhs, \n        boolean compareTransients, \n        Class reflectUpToClass, \n        String[] excludeFields)\nSTRUCTURE (lossy):\nif (lhs == rhs)\nreturn 0;\nif (lhs == null || rhs == null)\nthrow new NullPointerException();\nClass lhsClazz = lhs.getClass();\nCALL lhs.getClass()\nif (!lhsClazz.isInstance(rhs))\nCALL lhsClazz.isInstance(rhs)\nthrow new ClassCastException();\nCompareToBuilder compareToBuilder = new CompareToBuilder();\nCALL reflectionAppend(lhs, rhs, lhsClazz, compareToBuilder, compareTransients, excludeFields)\nwhile (lhsClazz.getSuperclass() != null && lhsClazz != reflectUpToClass)\nCALL lhsClazz.getSuperclass()\nlhsClazz = lhsClazz.getSuperclass()\nreturn compareToBuilder.toComparison();\nCALL compareToBuilder.toComparison()",
+        "public static int reflectionCompare(\n        Object lhs, \n        Object rhs, \n        boolean compareTransients, \n        Class reflectUpToClass, \n        String[] excludeFields) {\n\n        if (lhs == rhs) {\n            return 0;\n        }\n        if (lhs == null || rhs == null) {\n            throw new NullPointerException();\n        }\n        Class lhsClazz = lhs.getClass();\n        if (!lhsClazz.isInstance(rhs)) {\n            throw new ClassCastException();\n        }\n        CompareToBuilder compareToBuilder = new CompareToBuilder();\n        reflectionAppend(lhs, rhs, lhsClazz, compareToBuilder, compareTransients, excludeFields);\n        while (lhsClazz.getSuperclass() != null && lhsClazz != reflectUpToClass) {\n            lhsClazz = lhsClazz.getSuperclass();\n            reflectionAppend(lhs, rhs, lhsClazz, compareToBuilder, compareTransients, excludeFields);\n        }\n        return compareToBuilder.toComparison();\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3333333333333333,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 7.0,
+        "literal_count": 4.0,
+        "source_tokens": 235.0,
+        "l0_tokens": 111.0,
+        "l1_tokens": 267.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 7,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/oldenum/ValuedEnum.java::ValuedEnum.getEnum(Class enumClass, int value)",
+      "source": "protected static Enum getEnum(Class enumClass, int value) {\n        if (enumClass == null) {\n            throw new IllegalArgumentException(\"The Enum Class must not be null\");\n        }\n        List list = Enum.getEnumList(enumClass);\n        for (Iterator it = list.iterator(); it.hasNext();) {\n            ValuedEnum enumeration = (ValuedEnum) it.next();\n            if (enumeration.getValue() == value) {\n                return enumeration;\n            }\n        }\n        return null;\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/oldenum/ValuedEnum.java::ValuedEnum.getEnum(Class enumClass, int value)\nSIGNATURE: protected static Enum getEnum(Class enumClass, int value)",
+        "METHOD: src/java/org/apache/commons/lang/oldenum/ValuedEnum.java::ValuedEnum.getEnum(Class enumClass, int value)\nSIGNATURE: protected static Enum getEnum(Class enumClass, int value)\nSTRUCTURE (lossy):\nif (enumClass == null)\nthrow new IllegalArgumentException(\"The Enum Class must not be null\");\nList list = Enum.getEnumList(enumClass);\nCALL Enum.getEnumList(enumClass)\nfor (Iterator it = list.iterator(); it.hasNext();)\nIterator it = list.iterator();\nCALL list.iterator()\nCALL it.hasNext()\nValuedEnum enumeration = (ValuedEnum) it.next();\nCALL it.next()\nif (enumeration.getValue() == value)\nCALL enumeration.getValue()\nreturn enumeration;\nreturn null;",
+        "protected static Enum getEnum(Class enumClass, int value) {\n        if (enumClass == null) {\n            throw new IllegalArgumentException(\"The Enum Class must not be null\");\n        }\n        List list = Enum.getEnumList(enumClass);\n        for (Iterator it = list.iterator(); it.hasNext();) {\n            ValuedEnum enumeration = (ValuedEnum) it.next();\n            if (enumeration.getValue() == value) {\n                return enumeration;\n            }\n        }\n        return null;\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3548387096774194,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 5.0,
+        "literal_count": 3.0,
+        "source_tokens": 124.0,
+        "l0_tokens": 46.0,
+        "l1_tokens": 163.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 5,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/builder/ReflectionToStringBuilder.java::ReflectionToStringBuilder.toString(Object object, ToStringStyle style, boolean outputTransients, boolean outputStatics,\n            Class reflectUpToClass)",
+      "source": "public static String toString(Object object, ToStringStyle style, boolean outputTransients, boolean outputStatics,\n            Class reflectUpToClass) {\n        return new ReflectionToStringBuilder(object, style, null, reflectUpToClass, outputTransients, outputStatics)\n                .toString();\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/builder/ReflectionToStringBuilder.java::ReflectionToStringBuilder.toString(Object object, ToStringStyle style, boolean outputTransients, boolean outputStatics,\n            Class reflectUpToClass)\nSIGNATURE: public static String toString(Object object, ToStringStyle style, boolean outputTransients, boolean outputStatics,\n            Class reflectUpToClass)",
+        "METHOD: src/java/org/apache/commons/lang/builder/ReflectionToStringBuilder.java::ReflectionToStringBuilder.toString(Object object, ToStringStyle style, boolean outputTransients, boolean outputStatics,\n            Class reflectUpToClass)\nSIGNATURE: public static String toString(Object object, ToStringStyle style, boolean outputTransients, boolean outputStatics,\n            Class reflectUpToClass)\nSTRUCTURE (lossy):\nreturn new ReflectionToStringBuilder(object, style, null, reflectUpToClass, outputTransients, outputStatics) .toString();\nCALL new ReflectionToStringBuilder(object, style, null, reflectUpToClass, outputTransients, outputStatics) .toString()",
+        "public static String toString(Object object, ToStringStyle style, boolean outputTransients, boolean outputStatics,\n            Class reflectUpToClass) {\n        return new ReflectionToStringBuilder(object, style, null, reflectUpToClass, outputTransients, outputStatics)\n                .toString();\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.45454545454545453,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 76.0,
+        "l0_tokens": 100.0,
+        "l1_tokens": 165.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/oldenum/ValuedEnum.java::ValuedEnum.compareTo(Object other)",
+      "source": "public int compareTo(Object other) {\n        return iValue - ((ValuedEnum) other).iValue;\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/oldenum/ValuedEnum.java::ValuedEnum.compareTo(Object other)\nSIGNATURE: public int compareTo(Object other)",
+        "METHOD: src/java/org/apache/commons/lang/oldenum/ValuedEnum.java::ValuedEnum.compareTo(Object other)\nSIGNATURE: public int compareTo(Object other)\nSTRUCTURE (lossy):\nreturn iValue - ((ValuedEnum) other).iValue;",
+        "public int compareTo(Object other) {\n        return iValue - ((ValuedEnum) other).iValue;\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6875,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 24.0,
+        "l0_tokens": 37.0,
+        "l1_tokens": 53.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass)",
+      "source": "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass) {\n        return reflectionEquals(lhs, rhs, testTransients, reflectUpToClass, null);\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass)\nSIGNATURE: public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass)",
+        "METHOD: src/java/org/apache/commons/lang/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass)\nSIGNATURE: public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass)\nSTRUCTURE (lossy):\nreturn reflectionEquals(lhs, rhs, testTransients, reflectUpToClass, null);\nCALL reflectionEquals(lhs, rhs, testTransients, reflectUpToClass, null)",
+        "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass) {\n        return reflectionEquals(lhs, rhs, testTransients, reflectUpToClass, null);\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.47619047619047616,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 51.0,
+        "l0_tokens": 74.0,
+        "l1_tokens": 115.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/builder/ReflectionToStringBuilder.java::ReflectionToStringBuilder.appendFieldsIn(Class clazz)",
+      "source": "protected void appendFieldsIn(Class clazz) {\n        if (isRegistered(this.getObject())) {\n            // The object has already been appended, therefore we have an\n            // object cycle.\n            // Append a simple Object.toString style string. The field name is\n            // already appended at this point.\n            this.appendAsObjectToString(this.getObject());\n            return;\n        }\n        try {\n            this.registerObject();\n            if (clazz.isArray()) {\n                this.reflectionAppendArray(this.getObject());\n                return;\n            }\n            Field[] fields = clazz.getDeclaredFields();\n            AccessibleObject.setAccessible(fields, true);\n            for (int i = 0; i < fields.length; i++) {\n                Field field = fields[i];\n                String fieldName = field.getName();\n                if (this.accept(field)) {\n                    try {\n                        // Warning: Field.get(Object) creates wrappers objects\n                        // for primitive types.\n                        Object fieldValue = this.getValue(field);\n                        if (isRegistered(fieldValue) && !field.getType().isPrimitive()) {\n                            // A known field value has already been appended,\n                            // therefore we have an object cycle,\n                            // append a simple Object.toString style string.\n                            this.getStyle().appendFieldStart(this.getStringBuffer(), fieldName);\n                            this.appendAsObjectToString(fieldValue);\n                            this.getStyle().appendFieldEnd(this.getStringBuffer(), fieldName);\n                            // The recursion out of\n                            // builder.append(fieldName, fieldValue);\n                            // below will append the field\n                            // end marker.\n                        } else {\n                            try {\n                                this.registerObject();\n                                this.append(fieldName, fieldValue);\n                            } finally {\n                                this.unregisterObject();\n                            }\n                        }\n                    } catch (IllegalAccessException ex) {\n                        // this can't happen. Would get a Security exception\n                        // instead\n                        // throw a runtime exception in case the impossible\n                        // happens.\n                        throw new InternalError(\"Unexpected IllegalAccessException: \" + ex.getMessage());\n                    }\n                }\n            }\n        } finally {\n            this.unregisterObject();\n        }\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/builder/ReflectionToStringBuilder.java::ReflectionToStringBuilder.appendFieldsIn(Class clazz)\nSIGNATURE: protected void appendFieldsIn(Class clazz)",
+        "METHOD: src/java/org/apache/commons/lang/builder/ReflectionToStringBuilder.java::ReflectionToStringBuilder.appendFieldsIn(Class clazz)\nSIGNATURE: protected void appendFieldsIn(Class clazz)\nSTRUCTURE (lossy):\nif (isRegistered(this.getObject()))\nCALL isRegistered(this.getObject())\nCALL this.getObject()\nCALL this.appendAsObjectToString(this.getObject())\nreturn;\nCALL this.registerObject()\nif (clazz.isArray())\nCALL clazz.isArray()\nCALL this.reflectionAppendArray(this.getObject())\nField[] fields = clazz.getDeclaredFields();\nCALL clazz.getDeclaredFields()\nCALL AccessibleObject.setAccessible(fields, true)\nfor (int i = 0; i < fields.length; i++)\nint i = 0;\ni++\nField field = fields[i];\nString fieldName = field.getName();\nCALL field.getName()\nif (this.accept(field))\nCALL this.accept(field)\nObject fieldValue = this.getValue(field);\nCALL this.getValue(field)\nif (isRegistered(fieldValue) && !field.getType().isPrimitive())\nCALL isRegistered(fieldValue)\nCALL field.getType().isPrimitive()\nCALL field.getType()\nCALL this.getStyle().appendFieldStart(this.getStringBuffer(), fieldName)\nCALL this.getStyle()\nCALL this.getStringBuffer()\nCALL this.appendAsObjectToString(fieldValue)\nCALL this.getStyle().appendFieldEnd(this.getStringBuffer(), fieldName)\nCALL this.append(fieldName, fieldValue)\nCALL this.unregisterObject()\ncatch (IllegalAccessException ex)\nthrow new InternalError(\"Unexpected IllegalAccessException: \" + ex.getMessage());\nCALL ex.getMessage()",
+        "protected void appendFieldsIn(Class clazz) {\n        if (isRegistered(this.getObject())) {\n            // The object has already been appended, therefore we have an\n            // object cycle.\n            // Append a simple Object.toString style string. The field name is\n            // already appended at this point.\n            this.appendAsObjectToString(this.getObject());\n            return;\n        }\n        try {\n            this.registerObject();\n            if (clazz.isArray()) {\n                this.reflectionAppendArray(this.getObject());\n                return;\n            }\n            Field[] fields = clazz.getDeclaredFields();\n            AccessibleObject.setAccessible(fields, true);\n            for (int i = 0; i < fields.length; i++) {\n                Field field = fields[i];\n                String fieldName = field.getName();\n                if (this.accept(field)) {\n                    try {\n                        // Warning: Field.get(Object) creates wrappers objects\n                        // for primitive types.\n                        Object fieldValue = this.getValue(field);\n                        if (isRegistered(fieldValue) && !field.getType().isPrimitive()) {\n                            // A known field value has already been appended,\n                            // therefore we have an object cycle,\n                            // append a simple Object.toString style string.\n                            this.getStyle().appendFieldStart(this.getStringBuffer(), fieldName);\n                            this.appendAsObjectToString(fieldValue);\n                            this.getStyle().appendFieldEnd(this.getStringBuffer(), fieldName);\n                            // The recursion out of\n                            // builder.append(fieldName, fieldValue);\n                            // below will append the field\n                            // end marker.\n                        } else {\n                            try {\n                                this.registerObject();\n                                this.append(fieldName, fieldValue);\n                            } finally {\n                                this.unregisterObject();\n                            }\n                        }\n                    } catch (IllegalAccessException ex) {\n                        // this can't happen. Would get a Security exception\n                        // instead\n                        // throw a runtime exception in case the impossible\n                        // happens.\n                        throw new InternalError(\"Unexpected IllegalAccessException: \" + ex.getMessage());\n                    }\n                }\n            }\n        } finally {\n            this.unregisterObject();\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.20481927710843373,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 28.0,
+        "literal_count": 2.0,
+        "source_tokens": 692.0,
+        "l0_tokens": 47.0,
+        "l1_tokens": 363.0,
+        "compression_ratio": 0.5245664739884393,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 28,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/oldenum/EnumUtils.java::EnumUtils.getEnum(Class enumClass, int value)",
+      "source": "public static ValuedEnum getEnum(Class enumClass, int value) {\n        return (ValuedEnum) ValuedEnum.getEnum(enumClass, value);\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/oldenum/EnumUtils.java::EnumUtils.getEnum(Class enumClass, int value)\nSIGNATURE: public static ValuedEnum getEnum(Class enumClass, int value)",
+        "METHOD: src/java/org/apache/commons/lang/oldenum/EnumUtils.java::EnumUtils.getEnum(Class enumClass, int value)\nSIGNATURE: public static ValuedEnum getEnum(Class enumClass, int value)\nSTRUCTURE (lossy):\nreturn (ValuedEnum) ValuedEnum.getEnum(enumClass, value);\nCALL ValuedEnum.getEnum(enumClass, value)",
+        "public static ValuedEnum getEnum(Class enumClass, int value) {\n        return (ValuedEnum) ValuedEnum.getEnum(enumClass, value);\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6470588235294118,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 34.0,
+        "l0_tokens": 46.0,
+        "l1_tokens": 76.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/java/org/apache/commons/lang/enums/Enum.java::Enum.getNameInOtherClassLoader(Object other)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/exception/ExceptionUtils.java::ExceptionUtils.setCause(Throwable target, Throwable cause)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/oldenum/Enum.java::Enum.getNameInOtherClassLoader(Object other)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/exception/ExceptionUtils.java::ExceptionUtils.getCauseUsingMethodName(Throwable throwable, String methodName)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/SerializationUtils.java::SerializationUtils.serialize(Serializable obj, OutputStream outputStream)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/enums/Enum.java::Enum.compareTo(Object other)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/SerializationUtils.java::SerializationUtils.deserialize(InputStream inputStream)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/exception/ExceptionUtils.java::ExceptionUtils.isNestedThrowable(Throwable throwable)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/enums/ValuedEnum.java::ValuedEnum.compareTo(Object other)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/enums/EnumUtils.java::EnumUtils.getEnum(Class enumClass, int value)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/enums/ValuedEnum.java::ValuedEnum.getEnum(Class enumClass, int value)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/enums/Enum.java::Enum.equals(Object other)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/ClassUtils.java::ClassUtils.getPublicMethod(Class cls, String methodName, Class parameterTypes[])": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/enums/ValuedEnum.java::ValuedEnum.ValuedEnum(String name, int value)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/enums/ValuedEnum.java::ValuedEnum.toString()": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/builder/CompareToBuilder.java::CompareToBuilder.reflectionAppend(\n        Object lhs,\n        Object rhs,\n        Class clazz,\n        CompareToBuilder builder,\n        boolean useTransients,\n        String[] excludeFields)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/builder/CompareToBuilder.java::CompareToBuilder.reflectionCompare(\n        Object lhs, \n        Object rhs, \n        boolean compareTransients, \n        Class reflectUpToClass, \n        String[] excludeFields)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/oldenum/ValuedEnum.java::ValuedEnum.getEnum(Class enumClass, int value)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/builder/ReflectionToStringBuilder.java::ReflectionToStringBuilder.toString(Object object, ToStringStyle style, boolean outputTransients, boolean outputStatics,\n            Class reflectUpToClass)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/oldenum/ValuedEnum.java::ValuedEnum.compareTo(Object other)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/builder/ReflectionToStringBuilder.java::ReflectionToStringBuilder.appendFieldsIn(Class clazz)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/oldenum/EnumUtils.java::EnumUtils.getEnum(Class enumClass, int value)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 1990,
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "14e955d951c6723bdce4272f187a90770e1de8061ad2b134692963e36c4f5277",
+  "evidence_sha256": "619c285dcd57fb4188f76700870a87cfae44b0a59dedc3681a4e5939a0d99389"
+}

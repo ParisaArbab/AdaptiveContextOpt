@@ -1,0 +1,1318 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Time-5",
+    "repository": "Time",
+    "language": "java",
+    "revision": "9385bf43ebd5edcf37f3e2d2e7d20ee51b89114d",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_03/prepared/checkouts/Time-5",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Time-5\nEXECUTED BUGGY TEST: org.joda.time.TestPeriod_Basics::testNormalizedStandard_periodType_months1\nTEST SOURCE: src/test/java/org/joda/time/TestPeriod_Basics.java\nTEST SOURCE SHA256: aabc17dfbbb80dc4e64a7b155cd7cb3bd25673715d4d933e93cb86d1eaf5795c\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testNormalizedStandard_periodType_months1() {\n        Period test = new Period(1, 15, 0, 0, 0, 0, 0, 0);\n        Period result = test.normalizedStandard(PeriodType.months());\n        assertEquals(new Period(1, 15, 0, 0, 0, 0, 0, 0), test);\n        assertEquals(new Period(0, 27, 0, 0, 0, 0, 0, 0, PeriodType.months()), result);\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.joda.time.TestPeriod_Basics::testNormalizedStandard_periodType_months1\njava.lang.UnsupportedOperationException: Field is not supported\n\tat org.joda.time.PeriodType.setIndexedField(PeriodType.java:690)\n\tat org.joda.time.Period.withYears(Period.java:896)\n\tat org.joda.time.Period.normalizedStandard(Period.java:1631)\n\tat org.joda.time.TestPeriod_Basics.testNormalizedStandard_periodType_months1(TestPeriod_Basics.java:1522)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_03/prepared/evidence/Time-5.txt",
+      "sha256": "231b9b6c8609c1b2a25236fd5ca187561958074e4452c50556a3ea963e775d36"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src/main/java",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Time-5",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/main/java/org/joda/time/Period.java::Period.normalizedStandard(PeriodType type)",
+      "path": "src/main/java/org/joda/time/Period.java",
+      "start_line": 1616,
+      "end_line": 1638,
+      "source": "public Period normalizedStandard(PeriodType type) {\n        type = DateTimeUtils.getPeriodType(type);\n        long millis = getMillis();  // no overflow can happen, even with Integer.MAX_VALUEs\n        millis += (((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND));\n        millis += (((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE));\n        millis += (((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR));\n        millis += (((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY));\n        millis += (((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK));\n        Period result = new Period(millis, type, ISOChronology.getInstanceUTC());\n        int years = getYears();\n        int months = getMonths();\n        if (years != 0 || months != 0) {\n            years = FieldUtils.safeAdd(years, months / 12);\n            months = months % 12;\n            if (years != 0) {\n                result = result.withYears(years);\n            }\n            if (months != 0) {\n                result = result.withMonths(months);\n            }\n        }\n        return result;\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.21072646292912
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Period.java::Period.checkYearsAndMonths(String destintionType)",
+      "path": "src/main/java/org/joda/time/Period.java",
+      "start_line": 1545,
+      "end_line": 1552,
+      "source": "private void checkYearsAndMonths(String destintionType) {\n        if (getMonths() != 0) {\n            throw new UnsupportedOperationException(\"Cannot convert to \" + destintionType + \" as this period contains months and months vary in length\");\n        }\n        if (getYears() != 0) {\n            throw new UnsupportedOperationException(\"Cannot convert to \" + destintionType + \" as this period contains years and years vary in length\");\n        }\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.816871067168634
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)",
+      "path": "src/main/java/org/joda/time/base/BasePeriod.java",
+      "start_line": 87,
+      "end_line": 94,
+      "source": "protected BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type) {\n        super();\n        type = checkPeriodType(type);\n        iType = type;\n        iValues = setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis); // internal method\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.973020520023766
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/PeriodType.java::PeriodType.setIndexedField(ReadablePeriod period, int index, int[] values, int newValue)",
+      "path": "src/main/java/org/joda/time/PeriodType.java",
+      "start_line": 687,
+      "end_line": 694,
+      "source": "boolean setIndexedField(ReadablePeriod period, int index, int[] values, int newValue) {\n        int realIndex = iIndices[index];\n        if (realIndex == -1) {\n            throw new UnsupportedOperationException(\"Field is not supported\");\n        }\n        values[realIndex] = newValue;\n        return true;\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.3242846514706
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.isSupported(PeriodType type, int field)",
+      "path": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java",
+      "start_line": 1476,
+      "end_line": 1501,
+      "source": "boolean isSupported(PeriodType type, int field) {\n            switch (field) {\n            default:\n                return false;\n            case YEARS:\n                return type.isSupported(DurationFieldType.years());\n            case MONTHS:\n                return type.isSupported(DurationFieldType.months());\n            case WEEKS:\n                return type.isSupported(DurationFieldType.weeks());\n            case DAYS:\n                return type.isSupported(DurationFieldType.days());\n            case HOURS:\n                return type.isSupported(DurationFieldType.hours());\n            case MINUTES:\n                return type.isSupported(DurationFieldType.minutes());\n            case SECONDS:\n                return type.isSupported(DurationFieldType.seconds());\n            case MILLIS:\n                return type.isSupported(DurationFieldType.millis());\n            case SECONDS_MILLIS: // drop through\n            case SECONDS_OPTIONAL_MILLIS:\n                return type.isSupported(DurationFieldType.seconds()) ||\n                       type.isSupported(DurationFieldType.millis());\n            }\n        }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.62787596308758
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)",
+      "path": "src/main/java/org/joda/time/base/BasePeriod.java",
+      "start_line": 442,
+      "end_line": 446,
+      "source": "protected void setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis) {\n        int[] newValues = setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis);\n        setValues(newValues);\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.00833232426776
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.getFieldValue(ReadablePeriod period)",
+      "path": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java",
+      "start_line": 1384,
+      "end_line": 1465,
+      "source": "long getFieldValue(ReadablePeriod period) {\n            PeriodType type;\n            if (iPrintZeroSetting == PRINT_ZERO_ALWAYS) {\n                type = null; // Don't need to check if supported.\n            } else {\n                type = period.getPeriodType();\n            }\n            if (type != null && isSupported(type, iFieldType) == false) {\n                return Long.MAX_VALUE;\n            }\n\n            long value;\n\n            switch (iFieldType) {\n            default:\n                return Long.MAX_VALUE;\n            case YEARS:\n                value = period.get(DurationFieldType.years());\n                break;\n            case MONTHS:\n                value = period.get(DurationFieldType.months());\n                break;\n            case WEEKS:\n                value = period.get(DurationFieldType.weeks());\n                break;\n            case DAYS:\n                value = period.get(DurationFieldType.days());\n                break;\n            case HOURS:\n                value = period.get(DurationFieldType.hours());\n                break;\n            case MINUTES:\n                value = period.get(DurationFieldType.minutes());\n                break;\n            case SECONDS:\n                value = period.get(DurationFieldType.seconds());\n                break;\n            case MILLIS:\n                value = period.get(DurationFieldType.millis());\n                break;\n            case SECONDS_MILLIS: // drop through\n            case SECONDS_OPTIONAL_MILLIS:\n                int seconds = period.get(DurationFieldType.seconds());\n                int millis = period.get(DurationFieldType.millis());\n                value = (seconds * (long) DateTimeConstants.MILLIS_PER_SECOND) + millis;\n                break;\n            }\n\n            // determine if period is zero and this is the last field\n            if (value == 0) {\n                switch (iPrintZeroSetting) {\n                case PRINT_ZERO_NEVER:\n                    return Long.MAX_VALUE;\n                case PRINT_ZERO_RARELY_LAST:\n                    if (isZero(period) && iFieldFormatters[iFieldType] == this) {\n                        for (int i = iFieldType + 1; i <= MAX_FIELD; i++) {\n                            if (isSupported(type, i) && iFieldFormatters[i] != null) {\n                                return Long.MAX_VALUE;\n                            }\n                        }\n                    } else {\n                        return Long.MAX_VALUE;\n                    }\n                    break;\n                case PRINT_ZERO_RARELY_FIRST:\n                    if (isZero(period) && iFieldFormatters[iFieldType] == this) {\n                        int i = Math.min(iFieldType, 8);  // line split out for IBM JDK\n                        i--;                              // see bug 1660490\n                        for (; i >= 0 && i <= MAX_FIELD; i--) {\n                            if (isSupported(type, i) && iFieldFormatters[i] != null) {\n                                return Long.MAX_VALUE;\n                            }\n                        }\n                    } else {\n                        return Long.MAX_VALUE;\n                    }\n                    break;\n                }\n            }\n\n            return value;\n        }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.404144066488907
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/PeriodType.java::PeriodType.addIndexedField(ReadablePeriod period, int index, int[] values, int valueToAdd)",
+      "path": "src/main/java/org/joda/time/PeriodType.java",
+      "start_line": 706,
+      "end_line": 716,
+      "source": "boolean addIndexedField(ReadablePeriod period, int index, int[] values, int valueToAdd) {\n        if (valueToAdd == 0) {\n            return false;\n        }\n        int realIndex = iIndices[index];\n        if (realIndex == -1) {\n            throw new UnsupportedOperationException(\"Field is not supported\");\n        }\n        values[realIndex] = FieldUtils.safeAdd(values[realIndex], valueToAdd);\n        return true;\n    }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.015667007132883
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/DurationFieldType.java::DurationFieldType.StandardDurationFieldType.getField(Chronology chronology)",
+      "path": "src/main/java/org/joda/time/DurationFieldType.java",
+      "start_line": 281,
+      "end_line": 313,
+      "source": "public DurationField getField(Chronology chronology) {\n            chronology = DateTimeUtils.getChronology(chronology);\n            \n            switch (iOrdinal) {\n                case ERAS:\n                    return chronology.eras();\n                case CENTURIES:\n                    return chronology.centuries();\n                case WEEKYEARS:\n                    return chronology.weekyears();\n                case YEARS:\n                    return chronology.years();\n                case MONTHS:\n                    return chronology.months();\n                case WEEKS:\n                    return chronology.weeks();\n                case DAYS:\n                    return chronology.days();\n                case HALFDAYS:\n                    return chronology.halfdays();\n                case HOURS:\n                    return chronology.hours();\n                case MINUTES:\n                    return chronology.minutes();\n                case SECONDS:\n                    return chronology.seconds();\n                case MILLIS:\n                    return chronology.millis();\n                default:\n                    // Shouldn't happen.\n                    throw new InternalError();\n            }\n        }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 30.393803108075375
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/PeriodFormatter.java::PeriodFormatter.checkParser()",
+      "path": "src/main/java/org/joda/time/format/PeriodFormatter.java",
+      "start_line": 334,
+      "end_line": 338,
+      "source": "private void checkParser() {\n        if (iParser == null) {\n            throw new UnsupportedOperationException(\"Parsing not supported\");\n        }\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 29.2171171540237
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/PeriodFormatter.java::PeriodFormatter.checkPrinter()",
+      "path": "src/main/java/org/joda/time/format/PeriodFormatter.java",
+      "start_line": 250,
+      "end_line": 254,
+      "source": "private void checkPrinter() {\n        if (iPrinter == null) {\n            throw new UnsupportedOperationException(\"Printing not supported\");\n        }\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 29.2171171540237
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.setFieldValue(ReadWritablePeriod period, int field, int value)",
+      "path": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java",
+      "start_line": 1503,
+      "end_line": 1532,
+      "source": "void setFieldValue(ReadWritablePeriod period, int field, int value) {\n            switch (field) {\n            default:\n                break;\n            case YEARS:\n                period.setYears(value);\n                break;\n            case MONTHS:\n                period.setMonths(value);\n                break;\n            case WEEKS:\n                period.setWeeks(value);\n                break;\n            case DAYS:\n                period.setDays(value);\n                break;\n            case HOURS:\n                period.setHours(value);\n                break;\n            case MINUTES:\n                period.setMinutes(value);\n                break;\n            case SECONDS:\n                period.setSeconds(value);\n                break;\n            case MILLIS:\n                period.setMillis(value);\n                break;\n            }\n        }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 28.89573437220805
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/field/UnsupportedDurationField.java::UnsupportedDurationField.unsupported()",
+      "path": "src/main/java/org/joda/time/field/UnsupportedDurationField.java",
+      "start_line": 275,
+      "end_line": 277,
+      "source": "private UnsupportedOperationException unsupported() {\n        return new UnsupportedOperationException(iType + \" field is unsupported\");\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 28.51972208690779
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)",
+      "path": "src/main/java/org/joda/time/base/BasePeriod.java",
+      "start_line": 154,
+      "end_line": 184,
+      "source": "protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type) {\n        super();\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start instanceof BaseLocal && end instanceof BaseLocal && start.getClass() == end.getClass()) {\n            // for performance\n            type = checkPeriodType(type);\n            long startMillis = ((BaseLocal) start).getLocalMillis();\n            long endMillis = ((BaseLocal) end).getLocalMillis();\n            Chronology chrono = start.getChronology();\n            chrono = DateTimeUtils.getChronology(chrono);\n            iType = type;\n            iValues = chrono.get(this, startMillis, endMillis);\n        } else {\n            if (start.size() != end.size()) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n            for (int i = 0, isize = start.size(); i < isize; i++) {\n                if (start.getFieldType(i) != end.getFieldType(i)) {\n                    throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n                }\n            }\n            if (DateTimeUtils.isContiguous(start) == false) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n            }\n            iType = checkPeriodType(type);\n            Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n            iValues = chrono.get(this, chrono.set(start, 0L), chrono.set(end, 0L));\n        }\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 28.455148842643347
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)",
+      "path": "src/main/java/org/joda/time/base/BasePeriod.java",
+      "start_line": 451,
+      "end_line": 463,
+      "source": "private int[] setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis) {\n        int[] newValues = new int[size()];\n        checkAndUpdate(DurationFieldType.years(), newValues, years);\n        checkAndUpdate(DurationFieldType.months(), newValues, months);\n        checkAndUpdate(DurationFieldType.weeks(), newValues, weeks);\n        checkAndUpdate(DurationFieldType.days(), newValues, days);\n        checkAndUpdate(DurationFieldType.hours(), newValues, hours);\n        checkAndUpdate(DurationFieldType.minutes(), newValues, minutes);\n        checkAndUpdate(DurationFieldType.seconds(), newValues, seconds);\n        checkAndUpdate(DurationFieldType.millis(), newValues, millis);\n        return newValues;\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 28.123893715775026
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/field/UnsupportedDateTimeField.java::UnsupportedDateTimeField.unsupported()",
+      "path": "src/main/java/org/joda/time/field/UnsupportedDateTimeField.java",
+      "start_line": 543,
+      "end_line": 545,
+      "source": "private UnsupportedOperationException unsupported() {\n        return new UnsupportedOperationException(iType + \" field is unsupported\");\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 28.104257938129496
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Period.java::Period.normalizedStandard()",
+      "path": "src/main/java/org/joda/time/Period.java",
+      "start_line": 1580,
+      "end_line": 1582,
+      "source": "public Period normalizedStandard() {\n        return normalizedStandard(PeriodType.standard());\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 28.004344899732782
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.standardPeriodIn(ReadablePeriod period, long millisPerUnit)",
+      "path": "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java",
+      "start_line": 129,
+      "end_line": 148,
+      "source": "protected static int standardPeriodIn(ReadablePeriod period, long millisPerUnit) {\n        if (period == null) {\n            return 0;\n        }\n        Chronology iso = ISOChronology.getInstanceUTC();\n        long duration = 0L;\n        for (int i = 0; i < period.size(); i++) {\n            int value = period.getValue(i);\n            if (value != 0) {\n                DurationField field = period.getFieldType(i).getField(iso);\n                if (field.isPrecise() == false) {\n                    throw new IllegalArgumentException(\n                            \"Cannot convert period to duration as \" + field.getName() +\n                            \" is not precise in the period \" + period);\n                }\n                duration = FieldUtils.safeAdd(duration, FieldUtils.safeMultiply(field.getUnitMillis(), value));\n            }\n        }\n        return FieldUtils.safeToInt(duration / millisPerUnit);\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 27.48328256648023
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/PeriodType.java::PeriodType.forFields(DurationFieldType[] types)",
+      "path": "src/main/java/org/joda/time/PeriodType.java",
+      "start_line": 501,
+      "end_line": 577,
+      "source": "public static synchronized PeriodType forFields(DurationFieldType[] types) {\n        if (types == null || types.length == 0) {\n            throw new IllegalArgumentException(\"Types array must not be null or empty\");\n        }\n        for (int i = 0; i < types.length; i++) {\n            if (types[i] == null) {\n                throw new IllegalArgumentException(\"Types array must not contain null\");\n            }\n        }\n        Map<PeriodType, Object> cache = cTypes;\n        if (cache.isEmpty()) {\n            cache.put(standard(), standard());\n            cache.put(yearMonthDayTime(), yearMonthDayTime());\n            cache.put(yearMonthDay(), yearMonthDay());\n            cache.put(yearWeekDayTime(), yearWeekDayTime());\n            cache.put(yearWeekDay(), yearWeekDay());\n            cache.put(yearDayTime(), yearDayTime());\n            cache.put(yearDay(), yearDay());\n            cache.put(dayTime(), dayTime());\n            cache.put(time(), time());\n            cache.put(years(), years());\n            cache.put(months(), months());\n            cache.put(weeks(), weeks());\n            cache.put(days(), days());\n            cache.put(hours(), hours());\n            cache.put(minutes(), minutes());\n            cache.put(seconds(), seconds());\n            cache.put(millis(), millis());\n        }\n        PeriodType inPartType = new PeriodType(null, types, null);\n        Object cached = cache.get(inPartType);\n        if (cached instanceof PeriodType) {\n            return (PeriodType) cached;\n        }\n        if (cached != null) {\n            throw new IllegalArgumentException(\"PeriodType does not support fields: \" + cached);\n        }\n        PeriodType type = standard();\n        List<DurationFieldType> list = new ArrayList<DurationFieldType>(Arrays.asList(types));\n        if (list.remove(DurationFieldType.years()) == false) {\n            type = type.withYearsRemoved();\n        }\n        if (list.remove(DurationFieldType.months()) == false) {\n            type = type.withMonthsRemoved();\n        }\n        if (list.remove(DurationFieldType.weeks()) == false) {\n            type = type.withWeeksRemoved();\n        }\n        if (list.remove(DurationFieldType.days()) == false) {\n            type = type.withDaysRemoved();\n        }\n        if (list.remove(DurationFieldType.hours()) == false) {\n            type = type.withHoursRemoved();\n        }\n        if (list.remove(DurationFieldType.minutes()) == false) {\n            type = type.withMinutesRemoved();\n        }\n        if (list.remove(DurationFieldType.seconds()) == false) {\n            type = type.withSecondsRemoved();\n        }\n        if (list.remove(DurationFieldType.millis()) == false) {\n            type = type.withMillisRemoved();\n        }\n        if (list.size() > 0) {\n            cache.put(inPartType, list);\n            throw new IllegalArgumentException(\"PeriodType does not support fields: \" + list);\n        }\n        // recheck cache in case initial array order was wrong\n        PeriodType checkPartType = new PeriodType(null, type.iTypes, null);\n        PeriodType checkedType = (PeriodType) cache.get(checkPartType);\n        if (checkedType != null) {\n            cache.put(checkPartType, checkedType);\n            return checkedType;\n        }\n        cache.put(checkPartType, type);\n        return type;\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 27.37178135885826
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)",
+      "path": "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java",
+      "start_line": 89,
+      "end_line": 107,
+      "source": "protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance) {\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start.size() != end.size()) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n        }\n        for (int i = 0, isize = start.size(); i < isize; i++) {\n            if (start.getFieldType(i) != end.getFieldType(i)) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n        }\n        if (DateTimeUtils.isContiguous(start) == false) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n        }\n        Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n        int[] values = chrono.get(zeroInstance, chrono.set(start, START_1972), chrono.set(end, START_1972));\n        return values[0];\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 27.33038062234838
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriodInternal(ReadablePeriod period)",
+      "path": "src/main/java/org/joda/time/base/BasePeriod.java",
+      "start_line": 419,
+      "end_line": 427,
+      "source": "private void setPeriodInternal(ReadablePeriod period) {\n        int[] newValues = new int[size()];\n        for (int i = 0, isize = period.size(); i < isize; i++) {\n            DurationFieldType type = period.getFieldType(i);\n            int value = period.getValue(i);\n            checkAndUpdate(type, newValues, value);\n        }\n        setValues(newValues);\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 27.096292386135378
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Period.java::Period.withMonths(int months)",
+      "path": "src/main/java/org/joda/time/Period.java",
+      "start_line": 909,
+      "end_line": 913,
+      "source": "public Period withMonths(int months) {\n        int[] values = getValues();  // cloned\n        getPeriodType().setIndexedField(this, PeriodType.MONTH_INDEX, values, months);\n        return new Period(values, getPeriodType());\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 26.84629314606865
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Period.java::Period.withYears(int years)",
+      "path": "src/main/java/org/joda/time/Period.java",
+      "start_line": 894,
+      "end_line": 898,
+      "source": "public Period withYears(int years) {\n        int[] values = getValues();  // cloned\n        getPeriodType().setIndexedField(this, PeriodType.YEAR_INDEX, values, years);\n        return new Period(values, getPeriodType());\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 26.703923024755305
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriod(ReadablePeriod period)",
+      "path": "src/main/java/org/joda/time/base/BasePeriod.java",
+      "start_line": 408,
+      "end_line": 414,
+      "source": "protected void setPeriod(ReadablePeriod period) {\n        if (period == null) {\n            setValues(new int[size()]);\n        } else {\n            setPeriodInternal(period);\n        }\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 26.41886494180473
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/main/java/org/joda/time/Period.java::Period.normalizedStandard(PeriodType type)",
+      "source": "public Period normalizedStandard(PeriodType type) {\n        type = DateTimeUtils.getPeriodType(type);\n        long millis = getMillis();  // no overflow can happen, even with Integer.MAX_VALUEs\n        millis += (((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND));\n        millis += (((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE));\n        millis += (((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR));\n        millis += (((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY));\n        millis += (((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK));\n        Period result = new Period(millis, type, ISOChronology.getInstanceUTC());\n        int years = getYears();\n        int months = getMonths();\n        if (years != 0 || months != 0) {\n            years = FieldUtils.safeAdd(years, months / 12);\n            months = months % 12;\n            if (years != 0) {\n                result = result.withYears(years);\n            }\n            if (months != 0) {\n                result = result.withMonths(months);\n            }\n        }\n        return result;\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.normalizedStandard(PeriodType type)\nSIGNATURE: public Period normalizedStandard(PeriodType type)",
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.normalizedStandard(PeriodType type)\nSIGNATURE: public Period normalizedStandard(PeriodType type)\nSTRUCTURE (lossy):\ntype = DateTimeUtils.getPeriodType(type)\nCALL DateTimeUtils.getPeriodType(type)\nlong millis = getMillis();\nCALL getMillis()\nmillis += (((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND))\nCALL getSeconds()\nmillis += (((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE))\nCALL getMinutes()\nmillis += (((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR))\nCALL getHours()\nmillis += (((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY))\nCALL getDays()\nmillis += (((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK))\nCALL getWeeks()\nPeriod result = new Period(millis, type, ISOChronology.getInstanceUTC());\nCALL ISOChronology.getInstanceUTC()\nint years = getYears();\nCALL getYears()\nint months = getMonths();\nCALL getMonths()\nif (years != 0 || months != 0)\nyears = FieldUtils.safeAdd(years, months / 12)\nCALL FieldUtils.safeAdd(years, months / 12)\nmonths = months % 12\nif (years != 0)\nresult = result.withYears(years)\nCALL result.withYears(years)\nif (months != 0)\nresult = result.withMonths(months)\nCALL result.withMonths(months)\nreturn result;",
+        "public Period normalizedStandard(PeriodType type) {\n        type = DateTimeUtils.getPeriodType(type);\n        long millis = getMillis();  // no overflow can happen, even with Integer.MAX_VALUEs\n        millis += (((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND));\n        millis += (((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE));\n        millis += (((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR));\n        millis += (((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY));\n        millis += (((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK));\n        Period result = new Period(millis, type, ISOChronology.getInstanceUTC());\n        int years = getYears();\n        int months = getMonths();\n        if (years != 0 || months != 0) {\n            years = FieldUtils.safeAdd(years, months / 12);\n            months = months % 12;\n            if (years != 0) {\n                result = result.withYears(years);\n            }\n            if (months != 0) {\n                result = result.withMonths(months);\n            }\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.375,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 13.0,
+        "literal_count": 6.0,
+        "source_tokens": 286.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 321.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 13,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Period.java::Period.checkYearsAndMonths(String destintionType)",
+      "source": "private void checkYearsAndMonths(String destintionType) {\n        if (getMonths() != 0) {\n            throw new UnsupportedOperationException(\"Cannot convert to \" + destintionType + \" as this period contains months and months vary in length\");\n        }\n        if (getYears() != 0) {\n            throw new UnsupportedOperationException(\"Cannot convert to \" + destintionType + \" as this period contains years and years vary in length\");\n        }\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.checkYearsAndMonths(String destintionType)\nSIGNATURE: private void checkYearsAndMonths(String destintionType)",
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.checkYearsAndMonths(String destintionType)\nSIGNATURE: private void checkYearsAndMonths(String destintionType)\nSTRUCTURE (lossy):\nif (getMonths() != 0)\nCALL getMonths()\nthrow new UnsupportedOperationException(\"Cannot convert to \" + destintionType + \" as this period contains months and months vary in length\");\nif (getYears() != 0)\nCALL getYears()\nthrow new UnsupportedOperationException(\"Cannot convert to \" + destintionType + \" as this period contains years and years vary in length\");",
+        "private void checkYearsAndMonths(String destintionType) {\n        if (getMonths() != 0) {\n            throw new UnsupportedOperationException(\"Cannot convert to \" + destintionType + \" as this period contains months and months vary in length\");\n        }\n        if (getYears() != 0) {\n            throw new UnsupportedOperationException(\"Cannot convert to \" + destintionType + \" as this period contains years and years vary in length\");\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5357142857142857,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 2.0,
+        "literal_count": 6.0,
+        "source_tokens": 113.0,
+        "l0_tokens": 42.0,
+        "l1_tokens": 136.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 2,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)",
+      "source": "protected BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type) {\n        super();\n        type = checkPeriodType(type);\n        iType = type;\n        iValues = setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis); // internal method\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)\nSIGNATURE: protected BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)",
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)\nSIGNATURE: protected BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)\nSTRUCTURE (lossy):\ntype = checkPeriodType(type)\nCALL checkPeriodType(type)\niType = type\niValues = setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis)\nCALL setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis)",
+        "protected BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type) {\n        super();\n        type = checkPeriodType(type);\n        iType = type;\n        iValues = setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis); // internal method\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 96.0,
+        "l0_tokens": 108.0,
+        "l1_tokens": 173.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/PeriodType.java::PeriodType.setIndexedField(ReadablePeriod period, int index, int[] values, int newValue)",
+      "source": "boolean setIndexedField(ReadablePeriod period, int index, int[] values, int newValue) {\n        int realIndex = iIndices[index];\n        if (realIndex == -1) {\n            throw new UnsupportedOperationException(\"Field is not supported\");\n        }\n        values[realIndex] = newValue;\n        return true;\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/PeriodType.java::PeriodType.setIndexedField(ReadablePeriod period, int index, int[] values, int newValue)\nSIGNATURE: boolean setIndexedField(ReadablePeriod period, int index, int[] values, int newValue)",
+        "METHOD: src/main/java/org/joda/time/PeriodType.java::PeriodType.setIndexedField(ReadablePeriod period, int index, int[] values, int newValue)\nSIGNATURE: boolean setIndexedField(ReadablePeriod period, int index, int[] values, int newValue)\nSTRUCTURE (lossy):\nint realIndex = iIndices[index];\nif (realIndex == -1)\nthrow new UnsupportedOperationException(\"Field is not supported\");\nvalues[realIndex] = newValue\nreturn true;",
+        "boolean setIndexedField(ReadablePeriod period, int index, int[] values, int newValue) {\n        int realIndex = iIndices[index];\n        if (realIndex == -1) {\n            throw new UnsupportedOperationException(\"Field is not supported\");\n        }\n        values[realIndex] = newValue;\n        return true;\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6071428571428571,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 0.0,
+        "literal_count": 2.0,
+        "source_tokens": 79.0,
+        "l0_tokens": 60.0,
+        "l1_tokens": 105.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 0,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.isSupported(PeriodType type, int field)",
+      "source": "boolean isSupported(PeriodType type, int field) {\n            switch (field) {\n            default:\n                return false;\n            case YEARS:\n                return type.isSupported(DurationFieldType.years());\n            case MONTHS:\n                return type.isSupported(DurationFieldType.months());\n            case WEEKS:\n                return type.isSupported(DurationFieldType.weeks());\n            case DAYS:\n                return type.isSupported(DurationFieldType.days());\n            case HOURS:\n                return type.isSupported(DurationFieldType.hours());\n            case MINUTES:\n                return type.isSupported(DurationFieldType.minutes());\n            case SECONDS:\n                return type.isSupported(DurationFieldType.seconds());\n            case MILLIS:\n                return type.isSupported(DurationFieldType.millis());\n            case SECONDS_MILLIS: // drop through\n            case SECONDS_OPTIONAL_MILLIS:\n                return type.isSupported(DurationFieldType.seconds()) ||\n                       type.isSupported(DurationFieldType.millis());\n            }\n        }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.isSupported(PeriodType type, int field)\nSIGNATURE: boolean isSupported(PeriodType type, int field)",
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.isSupported(PeriodType type, int field)\nSIGNATURE: boolean isSupported(PeriodType type, int field)\nSTRUCTURE (lossy):\nswitch (field) { default: return false; case YEARS: return type.isSupported(DurationFieldType.years()); case MONTHS: return type.isSupported(DurationFieldType.months()); case WEEKS: return type.isSupported(DurationFieldType.weeks()); case DAYS: return type.isSupported(DurationFieldType.days()); case HOURS: return type.isSupported(DurationFieldType.hours()); case MINUTES: return type.isSupported(DurationFieldType.minutes()); case SECONDS: return type.isSupported(DurationFieldType.seconds()); case MILLIS: return type.isSupported(DurationFieldType.millis()); case SECONDS_MILLIS: // drop through case SECONDS_OPTIONAL_MILLIS: return type.isSupported(DurationFieldType.seconds()) || type.isSupported(DurationFieldType.millis()); }\nreturn false;\nreturn type.isSupported(DurationFieldType.years());\nCALL type.isSupported(DurationFieldType.years())\nCALL DurationFieldType.years()\nreturn type.isSupported(DurationFieldType.months());\nCALL type.isSupported(DurationFieldType.months())\nCALL DurationFieldType.months()\nreturn type.isSupported(DurationFieldType.weeks());\nCALL type.isSupported(DurationFieldType.weeks())\nCALL DurationFieldType.weeks()\nreturn type.isSupported(DurationFieldType.days());\nCALL type.isSupported(DurationFieldType.days())\nCALL DurationFieldType.days()\nreturn type.isSupported(DurationFieldType.hours());\nCALL type.isSupported(DurationFieldType.hours())\nCALL DurationFieldType.hours()\nreturn type.isSupported(DurationFieldType.minutes());\nCALL type.isSupported(DurationFieldType.minutes())\nCALL DurationFieldType.minutes()\nreturn type.isSupported(DurationFieldType.seconds());\nCALL type.isSupported(DurationFieldType.seconds())\nCALL DurationFieldType.seconds()\nreturn type.isSupported(DurationFieldType.millis());\nCALL type.isSupported(DurationFieldType.millis())\nCALL DurationFieldType.millis()\nreturn type.isSupported(DurationFieldType.seconds()) || type.isSupported(DurationFieldType.millis());",
+        "boolean isSupported(PeriodType type, int field) {\n            switch (field) {\n            default:\n                return false;\n            case YEARS:\n                return type.isSupported(DurationFieldType.years());\n            case MONTHS:\n                return type.isSupported(DurationFieldType.months());\n            case WEEKS:\n                return type.isSupported(DurationFieldType.weeks());\n            case DAYS:\n                return type.isSupported(DurationFieldType.days());\n            case HOURS:\n                return type.isSupported(DurationFieldType.hours());\n            case MINUTES:\n                return type.isSupported(DurationFieldType.minutes());\n            case SECONDS:\n                return type.isSupported(DurationFieldType.seconds());\n            case MILLIS:\n                return type.isSupported(DurationFieldType.millis());\n            case SECONDS_MILLIS: // drop through\n            case SECONDS_OPTIONAL_MILLIS:\n                return type.isSupported(DurationFieldType.seconds()) ||\n                       type.isSupported(DurationFieldType.millis());\n            }\n        }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.46875,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 20.0,
+        "literal_count": 0.0,
+        "source_tokens": 283.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 537.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 20,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)",
+      "source": "protected void setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis) {\n        int[] newValues = setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis);\n        setValues(newValues);\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)\nSIGNATURE: protected void setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)",
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)\nSIGNATURE: protected void setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)\nSTRUCTURE (lossy):\nint[] newValues = setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis);\nCALL setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis)\nCALL setValues(newValues)",
+        "protected void setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis) {\n        int[] newValues = setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis);\n        setValues(newValues);\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6521739130434783,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 73.0,
+        "l0_tokens": 90.0,
+        "l1_tokens": 147.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.getFieldValue(ReadablePeriod period)",
+      "source": "long getFieldValue(ReadablePeriod period) {\n            PeriodType type;\n            if (iPrintZeroSetting == PRINT_ZERO_ALWAYS) {\n                type = null; // Don't need to check if supported.\n            } else {\n                type = period.getPeriodType();\n            }\n            if (type != null && isSupported(type, iFieldType) == false) {\n                return Long.MAX_VALUE;\n            }\n\n            long value;\n\n            switch (iFieldType) {\n            default:\n                return Long.MAX_VALUE;\n            case YEARS:\n                value = period.get(DurationFieldType.years());\n                break;\n            case MONTHS:\n                value = period.get(DurationFieldType.months());\n                break;\n            case WEEKS:\n                value = period.get(DurationFieldType.weeks());\n                break;\n            case DAYS:\n                value = period.get(DurationFieldType.days());\n                break;\n            case HOURS:\n                value = period.get(DurationFieldType.hours());\n                break;\n            case MINUTES:\n                value = period.get(DurationFieldType.minutes());\n                break;\n            case SECONDS:\n                value = period.get(DurationFieldType.seconds());\n                break;\n            case MILLIS:\n                value = period.get(DurationFieldType.millis());\n                break;\n            case SECONDS_MILLIS: // drop through\n            case SECONDS_OPTIONAL_MILLIS:\n                int seconds = period.get(DurationFieldType.seconds());\n                int millis = period.get(DurationFieldType.millis());\n                value = (seconds * (long) DateTimeConstants.MILLIS_PER_SECOND) + millis;\n                break;\n            }\n\n            // determine if period is zero and this is the last field\n            if (value == 0) {\n                switch (iPrintZeroSetting) {\n                case PRINT_ZERO_NEVER:\n                    return Long.MAX_VALUE;\n                case PRINT_ZERO_RARELY_LAST:\n                    if (isZero(period) && iFieldFormatters[iFieldType] == this) {\n                        for (int i = iFieldType + 1; i <= MAX_FIELD; i++) {\n                            if (isSupported(type, i) && iFieldFormatters[i] != null) {\n                                return Long.MAX_VALUE;\n                            }\n                        }\n                    } else {\n                        return Long.MAX_VALUE;\n                    }\n                    break;\n                case PRINT_ZERO_RARELY_FIRST:\n                    if (isZero(period) && iFieldFormatters[iFieldType] == this) {\n                        int i = Math.min(iFieldType, 8);  // line split out for IBM JDK\n                        i--;                              // see bug 1660490\n                        for (; i >= 0 && i <= MAX_FIELD; i--) {\n                            if (isSupported(type, i) && iFieldFormatters[i] != null) {\n                                return Long.MAX_VALUE;\n                            }\n                        }\n                    } else {\n                        return Long.MAX_VALUE;\n                    }\n                    break;\n                }\n            }\n\n            return value;\n        }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.getFieldValue(ReadablePeriod period)\nSIGNATURE: long getFieldValue(ReadablePeriod period)",
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.getFieldValue(ReadablePeriod period)\nSIGNATURE: long getFieldValue(ReadablePeriod period)\nSTRUCTURE (lossy):\nPeriodType type;\nif (iPrintZeroSetting == PRINT_ZERO_ALWAYS)\ntype = null\ntype = period.getPeriodType()\nCALL period.getPeriodType()\nif (type != null && isSupported(type, iFieldType) == false)\nCALL isSupported(type, iFieldType)\nreturn Long.MAX_VALUE;\nlong value;\nswitch (iFieldType) { default: return Long.MAX_VALUE; case YEARS: value = period.get(DurationFieldType.years()); break; case MONTHS: value = period.get(DurationFieldType.months()); break; case WEEKS: value = period.get(DurationFieldType.weeks()); break; case DAYS: value = period.get(DurationFieldType.days()); break; case HOURS: value = period.get(DurationFieldType.hours()); break; case MINUTES: value = period.get(DurationFieldType.minutes()); break; case SECONDS: value = period.get(DurationFieldType.seconds()); break; case MILLIS: value = period.get(DurationFieldType.millis()); break; case SECONDS_MILLIS: // drop through case SECONDS_OPTIONAL_MILLIS: int seconds = period.get(DurationFieldType.seconds()); int millis = period.get(DurationFieldType.millis()); value = (seconds * (long) DateTimeConstants.MILLIS_PER_SECOND) + millis; break; }\nvalue = period.get(DurationFieldType.years())\nCALL period.get(DurationFieldType.years())\nCALL DurationFieldType.years()\nvalue = period.get(DurationFieldType.months())\nCALL period.get(DurationFieldType.months())\nCALL DurationFieldType.months()\nvalue = period.get(DurationFieldType.weeks())\nCALL period.get(DurationFieldType.weeks())\nCALL DurationFieldType.weeks()\nvalue = period.get(DurationFieldType.days())\nCALL period.get(DurationFieldType.days())\nCALL DurationFieldType.days()\nvalue = period.get(DurationFieldType.hours())\nCALL period.get(DurationFieldType.hours())\nCALL DurationFieldType.hours()\nvalue = period.get(DurationFieldType.minutes())\nCALL period.get(DurationFieldType.minutes())\nCALL DurationFieldType.minutes()\nvalue = period.get(DurationFieldType.seconds())\nCALL period.get(DurationFieldType.seconds())\nCALL DurationFieldType.seconds()\nvalue = period.get(\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "long getFieldValue(ReadablePeriod period) {\n            PeriodType type;\n            if (iPrintZeroSetting == PRINT_ZERO_ALWAYS) {\n                type = null; // Don't need to check if supported.\n            } else {\n                type = period.getPeriodType();\n            }\n            if (type != null && isSupported(type, iFieldType) == false) {\n                return Long.MAX_VALUE;\n            }\n\n            long value;\n\n            switch (iFieldType) {\n            default:\n                return Long.MAX_VALUE;\n            case YEARS:\n                value = period.get(DurationFieldType.years());\n                break;\n            case MONTHS:\n                value = period.get(DurationFieldType.months());\n                break;\n            case WEEKS:\n                value = period.get(DurationFieldType.weeks());\n                break;\n            case DAYS:\n                value = period.get(DurationFieldType.days());\n                break;\n            case HOURS:\n                value = period.get(DurationFieldType.hours());\n                break;\n            case MINUTES:\n                value = period.get(DurationFieldType.minutes());\n                break;\n            case SECONDS:\n                value = period.get(DurationFieldType.seconds());\n                break;\n            case MILLIS:\n                value = period.get(DurationFieldType.millis());\n                break;\n            case SECONDS_MILLIS: // drop through\n            case SECONDS_OPTIONAL_MILLIS:\n                int seconds = period.get(DurationFieldType.seconds());\n                int millis = period.get(DurationFieldType.millis());\n                value = (seconds * (long) DateTimeConstants.MILLIS_PER_SECOND) + millis;\n                break;\n            }\n\n            // determine if period is zero and this is the last field\n            if (value == 0) {\n                switch (iPrintZeroSetting) {\n                case PRINT_ZERO_NEVER:\n                    return Long.MAX_VALUE;\n                case PRINT_ZERO_RARELY_LAST:\n                    if (isZero(period) && iFieldFormatters[iFieldType] == this) {\n                        for (int i = iFieldType + 1; i <= MAX_FIELD; i++) {\n                            if (isSupported(type, i) && iFieldFormatters[i] != null) {\n                                return Long.MAX_VALUE;\n                            }\n                        }\n                    } else {\n                        return Long.MAX_VALUE;\n                    }\n                    break;\n                case PRINT_ZERO_RARELY_FIRST:\n                    if (isZero(period) && iFieldFormatters[iFieldType] == this) {\n                        int i = Math.min(iFieldType, 8);  // line split out for IBM JDK\n                        i--;                              // see bug 1660490\n                        for (; i >= 0 && i <= MAX_FIELD; i--) {\n                            if (isSupported(type, i) && iFieldFormatters[i] != null) {\n                                return Long.MAX_VALUE;\n                            }\n                        }\n                    } else {\n                        return Long.MAX_VALUE;\n                    }\n                    break;\n                }\n            }\n\n            return value;\n        }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2463768115942029,
+        "trace_match": 0.0,
+        "complexity": 12.0,
+        "call_count": 27.0,
+        "literal_count": 8.0,
+        "source_tokens": 819.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.6947496947496947,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 12,
+        "call_count": 27,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/PeriodType.java::PeriodType.addIndexedField(ReadablePeriod period, int index, int[] values, int valueToAdd)",
+      "source": "boolean addIndexedField(ReadablePeriod period, int index, int[] values, int valueToAdd) {\n        if (valueToAdd == 0) {\n            return false;\n        }\n        int realIndex = iIndices[index];\n        if (realIndex == -1) {\n            throw new UnsupportedOperationException(\"Field is not supported\");\n        }\n        values[realIndex] = FieldUtils.safeAdd(values[realIndex], valueToAdd);\n        return true;\n    }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/PeriodType.java::PeriodType.addIndexedField(ReadablePeriod period, int index, int[] values, int valueToAdd)\nSIGNATURE: boolean addIndexedField(ReadablePeriod period, int index, int[] values, int valueToAdd)",
+        "METHOD: src/main/java/org/joda/time/PeriodType.java::PeriodType.addIndexedField(ReadablePeriod period, int index, int[] values, int valueToAdd)\nSIGNATURE: boolean addIndexedField(ReadablePeriod period, int index, int[] values, int valueToAdd)\nSTRUCTURE (lossy):\nif (valueToAdd == 0)\nreturn false;\nint realIndex = iIndices[index];\nif (realIndex == -1)\nthrow new UnsupportedOperationException(\"Field is not supported\");\nvalues[realIndex] = FieldUtils.safeAdd(values[realIndex], valueToAdd)\nCALL FieldUtils.safeAdd(values[realIndex], valueToAdd)\nreturn true;",
+        "boolean addIndexedField(ReadablePeriod period, int index, int[] values, int valueToAdd) {\n        if (valueToAdd == 0) {\n            return false;\n        }\n        int realIndex = iIndices[index];\n        if (realIndex == -1) {\n            throw new UnsupportedOperationException(\"Field is not supported\");\n        }\n        values[realIndex] = FieldUtils.safeAdd(values[realIndex], valueToAdd);\n        return true;\n    }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5483870967741935,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 1.0,
+        "literal_count": 3.0,
+        "source_tokens": 106.0,
+        "l0_tokens": 61.0,
+        "l1_tokens": 139.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 1,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/DurationFieldType.java::DurationFieldType.StandardDurationFieldType.getField(Chronology chronology)",
+      "source": "public DurationField getField(Chronology chronology) {\n            chronology = DateTimeUtils.getChronology(chronology);\n            \n            switch (iOrdinal) {\n                case ERAS:\n                    return chronology.eras();\n                case CENTURIES:\n                    return chronology.centuries();\n                case WEEKYEARS:\n                    return chronology.weekyears();\n                case YEARS:\n                    return chronology.years();\n                case MONTHS:\n                    return chronology.months();\n                case WEEKS:\n                    return chronology.weeks();\n                case DAYS:\n                    return chronology.days();\n                case HALFDAYS:\n                    return chronology.halfdays();\n                case HOURS:\n                    return chronology.hours();\n                case MINUTES:\n                    return chronology.minutes();\n                case SECONDS:\n                    return chronology.seconds();\n                case MILLIS:\n                    return chronology.millis();\n                default:\n                    // Shouldn't happen.\n                    throw new InternalError();\n            }\n        }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/DurationFieldType.java::DurationFieldType.StandardDurationFieldType.getField(Chronology chronology)\nSIGNATURE: public DurationField getField(Chronology chronology)",
+        "METHOD: src/main/java/org/joda/time/DurationFieldType.java::DurationFieldType.StandardDurationFieldType.getField(Chronology chronology)\nSIGNATURE: public DurationField getField(Chronology chronology)\nSTRUCTURE (lossy):\nchronology = DateTimeUtils.getChronology(chronology)\nCALL DateTimeUtils.getChronology(chronology)\nswitch (iOrdinal) { case ERAS: return chronology.eras(); case CENTURIES: return chronology.centuries(); case WEEKYEARS: return chronology.weekyears(); case YEARS: return chronology.years(); case MONTHS: return chronology.months(); case WEEKS: return chronology.weeks(); case DAYS: return chronology.days(); case HALFDAYS: return chronology.halfdays(); case HOURS: return chronology.hours(); case MINUTES: return chronology.minutes(); case SECONDS: return chronology.seconds(); case MILLIS: return chronology.millis(); default: // Shouldn't happen. throw new InternalError(); }\nreturn chronology.eras();\nCALL chronology.eras()\nreturn chronology.centuries();\nCALL chronology.centuries()\nreturn chronology.weekyears();\nCALL chronology.weekyears()\nreturn chronology.years();\nCALL chronology.years()\nreturn chronology.months();\nCALL chronology.months()\nreturn chronology.weeks();\nCALL chronology.weeks()\nreturn chronology.days();\nCALL chronology.days()\nreturn chronology.halfdays();\nCALL chronology.halfdays()\nreturn chronology.hours();\nCALL chronology.hours()\nreturn chronology.minutes();\nCALL chronology.minutes()\nreturn chronology.seconds();\nCALL chronology.seconds()\nreturn chronology.millis();\nCALL chronology.millis()\nthrow new InternalError();",
+        "public DurationField getField(Chronology chronology) {\n            chronology = DateTimeUtils.getChronology(chronology);\n            \n            switch (iOrdinal) {\n                case ERAS:\n                    return chronology.eras();\n                case CENTURIES:\n                    return chronology.centuries();\n                case WEEKYEARS:\n                    return chronology.weekyears();\n                case YEARS:\n                    return chronology.years();\n                case MONTHS:\n                    return chronology.months();\n                case WEEKS:\n                    return chronology.weeks();\n                case DAYS:\n                    return chronology.days();\n                case HALFDAYS:\n                    return chronology.halfdays();\n                case HOURS:\n                    return chronology.hours();\n                case MINUTES:\n                    return chronology.minutes();\n                case SECONDS:\n                    return chronology.seconds();\n                case MILLIS:\n                    return chronology.millis();\n                default:\n                    // Shouldn't happen.\n                    throw new InternalError();\n            }\n        }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4473684210526316,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 13.0,
+        "literal_count": 0.0,
+        "source_tokens": 308.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 391.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 13,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/PeriodFormatter.java::PeriodFormatter.checkParser()",
+      "source": "private void checkParser() {\n        if (iParser == null) {\n            throw new UnsupportedOperationException(\"Parsing not supported\");\n        }\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatter.java::PeriodFormatter.checkParser()\nSIGNATURE: private void checkParser()",
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatter.java::PeriodFormatter.checkParser()\nSIGNATURE: private void checkParser()\nSTRUCTURE (lossy):\nif (iParser == null)\nthrow new UnsupportedOperationException(\"Parsing not supported\");",
+        "private void checkParser() {\n        if (iParser == null) {\n            throw new UnsupportedOperationException(\"Parsing not supported\");\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6363636363636364,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 0.0,
+        "literal_count": 2.0,
+        "source_tokens": 39.0,
+        "l0_tokens": 33.0,
+        "l1_tokens": 60.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 0,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/PeriodFormatter.java::PeriodFormatter.checkPrinter()",
+      "source": "private void checkPrinter() {\n        if (iPrinter == null) {\n            throw new UnsupportedOperationException(\"Printing not supported\");\n        }\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatter.java::PeriodFormatter.checkPrinter()\nSIGNATURE: private void checkPrinter()",
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatter.java::PeriodFormatter.checkPrinter()\nSIGNATURE: private void checkPrinter()\nSTRUCTURE (lossy):\nif (iPrinter == null)\nthrow new UnsupportedOperationException(\"Printing not supported\");",
+        "private void checkPrinter() {\n        if (iPrinter == null) {\n            throw new UnsupportedOperationException(\"Printing not supported\");\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6363636363636364,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 0.0,
+        "literal_count": 2.0,
+        "source_tokens": 39.0,
+        "l0_tokens": 34.0,
+        "l1_tokens": 61.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 0,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.setFieldValue(ReadWritablePeriod period, int field, int value)",
+      "source": "void setFieldValue(ReadWritablePeriod period, int field, int value) {\n            switch (field) {\n            default:\n                break;\n            case YEARS:\n                period.setYears(value);\n                break;\n            case MONTHS:\n                period.setMonths(value);\n                break;\n            case WEEKS:\n                period.setWeeks(value);\n                break;\n            case DAYS:\n                period.setDays(value);\n                break;\n            case HOURS:\n                period.setHours(value);\n                break;\n            case MINUTES:\n                period.setMinutes(value);\n                break;\n            case SECONDS:\n                period.setSeconds(value);\n                break;\n            case MILLIS:\n                period.setMillis(value);\n                break;\n            }\n        }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.setFieldValue(ReadWritablePeriod period, int field, int value)\nSIGNATURE: void setFieldValue(ReadWritablePeriod period, int field, int value)",
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.setFieldValue(ReadWritablePeriod period, int field, int value)\nSIGNATURE: void setFieldValue(ReadWritablePeriod period, int field, int value)\nSTRUCTURE (lossy):\nswitch (field) { default: break; case YEARS: period.setYears(value); break; case MONTHS: period.setMonths(value); break; case WEEKS: period.setWeeks(value); break; case DAYS: period.setDays(value); break; case HOURS: period.setHours(value); break; case MINUTES: period.setMinutes(value); break; case SECONDS: period.setSeconds(value); break; case MILLIS: period.setMillis(value); break; }\nCALL period.setYears(value)\nCALL period.setMonths(value)\nCALL period.setWeeks(value)\nCALL period.setDays(value)\nCALL period.setHours(value)\nCALL period.setMinutes(value)\nCALL period.setSeconds(value)\nCALL period.setMillis(value)",
+        "void setFieldValue(ReadWritablePeriod period, int field, int value) {\n            switch (field) {\n            default:\n                break;\n            case YEARS:\n                period.setYears(value);\n                break;\n            case MONTHS:\n                period.setMonths(value);\n                break;\n            case WEEKS:\n                period.setWeeks(value);\n                break;\n            case DAYS:\n                period.setDays(value);\n                break;\n            case HOURS:\n                period.setHours(value);\n                break;\n            case MINUTES:\n                period.setMinutes(value);\n                break;\n            case SECONDS:\n                period.setSeconds(value);\n                break;\n            case MILLIS:\n                period.setMillis(value);\n                break;\n            }\n        }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4827586206896552,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 8.0,
+        "literal_count": 0.0,
+        "source_tokens": 218.0,
+        "l0_tokens": 63.0,
+        "l1_tokens": 222.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 8,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/field/UnsupportedDurationField.java::UnsupportedDurationField.unsupported()",
+      "source": "private UnsupportedOperationException unsupported() {\n        return new UnsupportedOperationException(iType + \" field is unsupported\");\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/field/UnsupportedDurationField.java::UnsupportedDurationField.unsupported()\nSIGNATURE: private UnsupportedOperationException unsupported()",
+        "METHOD: src/main/java/org/joda/time/field/UnsupportedDurationField.java::UnsupportedDurationField.unsupported()\nSIGNATURE: private UnsupportedOperationException unsupported()\nSTRUCTURE (lossy):\nreturn new UnsupportedOperationException(iType + \" field is unsupported\");",
+        "private UnsupportedOperationException unsupported() {\n        return new UnsupportedOperationException(iType + \" field is unsupported\");\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 1.0,
+        "source_tokens": 36.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 67.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)",
+      "source": "protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type) {\n        super();\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start instanceof BaseLocal && end instanceof BaseLocal && start.getClass() == end.getClass()) {\n            // for performance\n            type = checkPeriodType(type);\n            long startMillis = ((BaseLocal) start).getLocalMillis();\n            long endMillis = ((BaseLocal) end).getLocalMillis();\n            Chronology chrono = start.getChronology();\n            chrono = DateTimeUtils.getChronology(chrono);\n            iType = type;\n            iValues = chrono.get(this, startMillis, endMillis);\n        } else {\n            if (start.size() != end.size()) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n            for (int i = 0, isize = start.size(); i < isize; i++) {\n                if (start.getFieldType(i) != end.getFieldType(i)) {\n                    throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n                }\n            }\n            if (DateTimeUtils.isContiguous(start) == false) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n            }\n            iType = checkPeriodType(type);\n            Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n            iValues = chrono.get(this, chrono.set(start, 0L), chrono.set(end, 0L));\n        }\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)\nSIGNATURE: protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)",
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)\nSIGNATURE: protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)\nSTRUCTURE (lossy):\nif (start == null || end == null)\nthrow new IllegalArgumentException(\"ReadablePartial objects must not be null\");\nif (start instanceof BaseLocal && end instanceof BaseLocal && start.getClass() == end.getClass())\nCALL start.getClass()\nCALL end.getClass()\ntype = checkPeriodType(type)\nCALL checkPeriodType(type)\nlong startMillis = ((BaseLocal) start).getLocalMillis();\nCALL ((BaseLocal) start).getLocalMillis()\nlong endMillis = ((BaseLocal) end).getLocalMillis();\nCALL ((BaseLocal) end).getLocalMillis()\nChronology chrono = start.getChronology();\nCALL start.getChronology()\nchrono = DateTimeUtils.getChronology(chrono)\nCALL DateTimeUtils.getChronology(chrono)\niType = type\niValues = chrono.get(this, startMillis, endMillis)\nCALL chrono.get(this, startMillis, endMillis)\nif (start.size() != end.size())\nCALL start.size()\nCALL end.size()\nthrow new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\nfor (int i = 0, isize = start.size(); i < isize; i++)\nint i = 0, isize = start.size();\ni++\nif (start.getFieldType(i) != end.getFieldType(i))\nCALL start.getFieldType(i)\nCALL end.getFieldType(i)\nif (DateTimeUtils.isContiguous(start) == false)\nCALL DateTimeUtils.isContiguous(start)\nthrow new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\niType = checkPeriodType(type)\nChronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\nCALL DateTimeUtils.getChronology(start.getChronology()).withUTC()\nCALL DateTimeUtils.getChronology(start.getChronology())\niValues = chrono.get(this, chrono.set(start, 0L), chrono.set(end, 0L))\nCALL chrono.get(this, chrono.set(start, 0L), chrono.set(end, 0L))\nCALL chrono.set(start, 0L)\nCALL chrono.set(end, 0L)",
+        "protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type) {\n        super();\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start instanceof BaseLocal && end instanceof BaseLocal && start.getClass() == end.getClass()) {\n            // for performance\n            type = checkPeriodType(type);\n            long startMillis = ((BaseLocal) start).getLocalMillis();\n            long endMillis = ((BaseLocal) end).getLocalMillis();\n            Chronology chrono = start.getChronology();\n            chrono = DateTimeUtils.getChronology(chrono);\n            iType = type;\n            iValues = chrono.get(this, startMillis, endMillis);\n        } else {\n            if (start.size() != end.size()) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n            for (int i = 0, isize = start.size(); i < isize; i++) {\n                if (start.getFieldType(i) != end.getFieldType(i)) {\n                    throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n                }\n            }\n            if (DateTimeUtils.isContiguous(start) == false) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n            }\n            iType = checkPeriodType(type);\n            Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n            iValues = chrono.get(this, chrono.set(start, 0L), chrono.set(end, 0L));\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.33962264150943394,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 21.0,
+        "literal_count": 9.0,
+        "source_tokens": 412.0,
+        "l0_tokens": 59.0,
+        "l1_tokens": 492.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 21,
+        "literal_count": 9
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)",
+      "source": "private int[] setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis) {\n        int[] newValues = new int[size()];\n        checkAndUpdate(DurationFieldType.years(), newValues, years);\n        checkAndUpdate(DurationFieldType.months(), newValues, months);\n        checkAndUpdate(DurationFieldType.weeks(), newValues, weeks);\n        checkAndUpdate(DurationFieldType.days(), newValues, days);\n        checkAndUpdate(DurationFieldType.hours(), newValues, hours);\n        checkAndUpdate(DurationFieldType.minutes(), newValues, minutes);\n        checkAndUpdate(DurationFieldType.seconds(), newValues, seconds);\n        checkAndUpdate(DurationFieldType.millis(), newValues, millis);\n        return newValues;\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)\nSIGNATURE: private int[] setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)",
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)\nSIGNATURE: private int[] setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)\nSTRUCTURE (lossy):\nint[] newValues = new int[size()];\nCALL size()\nCALL checkAndUpdate(DurationFieldType.years(), newValues, years)\nCALL DurationFieldType.years()\nCALL checkAndUpdate(DurationFieldType.months(), newValues, months)\nCALL DurationFieldType.months()\nCALL checkAndUpdate(DurationFieldType.weeks(), newValues, weeks)\nCALL DurationFieldType.weeks()\nCALL checkAndUpdate(DurationFieldType.days(), newValues, days)\nCALL DurationFieldType.days()\nCALL checkAndUpdate(DurationFieldType.hours(), newValues, hours)\nCALL DurationFieldType.hours()\nCALL checkAndUpdate(DurationFieldType.minutes(), newValues, minutes)\nCALL DurationFieldType.minutes()\nCALL checkAndUpdate(DurationFieldType.seconds(), newValues, seconds)\nCALL DurationFieldType.seconds()\nCALL checkAndUpdate(DurationFieldType.millis(), newValues, millis)\nCALL DurationFieldType.millis()\nreturn newValues;",
+        "private int[] setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis) {\n        int[] newValues = new int[size()];\n        checkAndUpdate(DurationFieldType.years(), newValues, years);\n        checkAndUpdate(DurationFieldType.months(), newValues, months);\n        checkAndUpdate(DurationFieldType.weeks(), newValues, weeks);\n        checkAndUpdate(DurationFieldType.days(), newValues, days);\n        checkAndUpdate(DurationFieldType.hours(), newValues, hours);\n        checkAndUpdate(DurationFieldType.minutes(), newValues, minutes);\n        checkAndUpdate(DurationFieldType.seconds(), newValues, seconds);\n        checkAndUpdate(DurationFieldType.millis(), newValues, millis);\n        return newValues;\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 17.0,
+        "literal_count": 0.0,
+        "source_tokens": 200.0,
+        "l0_tokens": 97.0,
+        "l1_tokens": 313.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 17,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/field/UnsupportedDateTimeField.java::UnsupportedDateTimeField.unsupported()",
+      "source": "private UnsupportedOperationException unsupported() {\n        return new UnsupportedOperationException(iType + \" field is unsupported\");\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/field/UnsupportedDateTimeField.java::UnsupportedDateTimeField.unsupported()\nSIGNATURE: private UnsupportedOperationException unsupported()",
+        "METHOD: src/main/java/org/joda/time/field/UnsupportedDateTimeField.java::UnsupportedDateTimeField.unsupported()\nSIGNATURE: private UnsupportedOperationException unsupported()\nSTRUCTURE (lossy):\nreturn new UnsupportedOperationException(iType + \" field is unsupported\");",
+        "private UnsupportedOperationException unsupported() {\n        return new UnsupportedOperationException(iType + \" field is unsupported\");\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 1.0,
+        "source_tokens": 36.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 67.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Period.java::Period.normalizedStandard()",
+      "source": "public Period normalizedStandard() {\n        return normalizedStandard(PeriodType.standard());\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.normalizedStandard()\nSIGNATURE: public Period normalizedStandard()",
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.normalizedStandard()\nSIGNATURE: public Period normalizedStandard()\nSTRUCTURE (lossy):\nreturn normalizedStandard(PeriodType.standard());\nCALL normalizedStandard(PeriodType.standard())\nCALL PeriodType.standard()",
+        "public Period normalizedStandard() {\n        return normalizedStandard(PeriodType.standard());\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.9166666666666666,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 25.0,
+        "l0_tokens": 31.0,
+        "l1_tokens": 67.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.standardPeriodIn(ReadablePeriod period, long millisPerUnit)",
+      "source": "protected static int standardPeriodIn(ReadablePeriod period, long millisPerUnit) {\n        if (period == null) {\n            return 0;\n        }\n        Chronology iso = ISOChronology.getInstanceUTC();\n        long duration = 0L;\n        for (int i = 0; i < period.size(); i++) {\n            int value = period.getValue(i);\n            if (value != 0) {\n                DurationField field = period.getFieldType(i).getField(iso);\n                if (field.isPrecise() == false) {\n                    throw new IllegalArgumentException(\n                            \"Cannot convert period to duration as \" + field.getName() +\n                            \" is not precise in the period \" + period);\n                }\n                duration = FieldUtils.safeAdd(duration, FieldUtils.safeMultiply(field.getUnitMillis(), value));\n            }\n        }\n        return FieldUtils.safeToInt(duration / millisPerUnit);\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.standardPeriodIn(ReadablePeriod period, long millisPerUnit)\nSIGNATURE: protected static int standardPeriodIn(ReadablePeriod period, long millisPerUnit)",
+        "METHOD: src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.standardPeriodIn(ReadablePeriod period, long millisPerUnit)\nSIGNATURE: protected static int standardPeriodIn(ReadablePeriod period, long millisPerUnit)\nSTRUCTURE (lossy):\nif (period == null)\nreturn 0;\nChronology iso = ISOChronology.getInstanceUTC();\nCALL ISOChronology.getInstanceUTC()\nlong duration = 0L;\nfor (int i = 0; i < period.size(); i++)\nint i = 0;\nCALL period.size()\ni++\nint value = period.getValue(i);\nCALL period.getValue(i)\nif (value != 0)\nDurationField field = period.getFieldType(i).getField(iso);\nCALL period.getFieldType(i).getField(iso)\nCALL period.getFieldType(i)\nif (field.isPrecise() == false)\nCALL field.isPrecise()\nthrow new IllegalArgumentException( \"Cannot convert period to duration as \" + field.getName() + \" is not precise in the period \" + period);\nCALL field.getName()\nduration = FieldUtils.safeAdd(duration, FieldUtils.safeMultiply(field.getUnitMillis(), value))\nCALL FieldUtils.safeAdd(duration, FieldUtils.safeMultiply(field.getUnitMillis(), value))\nCALL FieldUtils.safeMultiply(field.getUnitMillis(), value)\nCALL field.getUnitMillis()\nreturn FieldUtils.safeToInt(duration / millisPerUnit);\nCALL FieldUtils.safeToInt(duration / millisPerUnit)",
+        "protected static int standardPeriodIn(ReadablePeriod period, long millisPerUnit) {\n        if (period == null) {\n            return 0;\n        }\n        Chronology iso = ISOChronology.getInstanceUTC();\n        long duration = 0L;\n        for (int i = 0; i < period.size(); i++) {\n            int value = period.getValue(i);\n            if (value != 0) {\n                DurationField field = period.getFieldType(i).getField(iso);\n                if (field.isPrecise() == false) {\n                    throw new IllegalArgumentException(\n                            \"Cannot convert period to duration as \" + field.getName() +\n                            \" is not precise in the period \" + period);\n                }\n                duration = FieldUtils.safeAdd(duration, FieldUtils.safeMultiply(field.getUnitMillis(), value));\n            }\n        }\n        return FieldUtils.safeToInt(duration / millisPerUnit);\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3333333333333333,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 11.0,
+        "literal_count": 7.0,
+        "source_tokens": 230.0,
+        "l0_tokens": 61.0,
+        "l1_tokens": 317.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 11,
+        "literal_count": 7
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/PeriodType.java::PeriodType.forFields(DurationFieldType[] types)",
+      "source": "public static synchronized PeriodType forFields(DurationFieldType[] types) {\n        if (types == null || types.length == 0) {\n            throw new IllegalArgumentException(\"Types array must not be null or empty\");\n        }\n        for (int i = 0; i < types.length; i++) {\n            if (types[i] == null) {\n                throw new IllegalArgumentException(\"Types array must not contain null\");\n            }\n        }\n        Map<PeriodType, Object> cache = cTypes;\n        if (cache.isEmpty()) {\n            cache.put(standard(), standard());\n            cache.put(yearMonthDayTime(), yearMonthDayTime());\n            cache.put(yearMonthDay(), yearMonthDay());\n            cache.put(yearWeekDayTime(), yearWeekDayTime());\n            cache.put(yearWeekDay(), yearWeekDay());\n            cache.put(yearDayTime(), yearDayTime());\n            cache.put(yearDay(), yearDay());\n            cache.put(dayTime(), dayTime());\n            cache.put(time(), time());\n            cache.put(years(), years());\n            cache.put(months(), months());\n            cache.put(weeks(), weeks());\n            cache.put(days(), days());\n            cache.put(hours(), hours());\n            cache.put(minutes(), minutes());\n            cache.put(seconds(), seconds());\n            cache.put(millis(), millis());\n        }\n        PeriodType inPartType = new PeriodType(null, types, null);\n        Object cached = cache.get(inPartType);\n        if (cached instanceof PeriodType) {\n            return (PeriodType) cached;\n        }\n        if (cached != null) {\n            throw new IllegalArgumentException(\"PeriodType does not support fields: \" + cached);\n        }\n        PeriodType type = standard();\n        List<DurationFieldType> list = new ArrayList<DurationFieldType>(Arrays.asList(types));\n        if (list.remove(DurationFieldType.years()) == false) {\n            type = type.withYearsRemoved();\n        }\n        if (list.remove(DurationFieldType.months()) == false) {\n            type = type.withMonthsRemoved();\n        }\n        if (list.remove(DurationFieldType.weeks()) == false) {\n            type = type.withWeeksRemoved();\n        }\n        if (list.remove(DurationFieldType.days()) == false) {\n            type = type.withDaysRemoved();\n        }\n        if (list.remove(DurationFieldType.hours()) == false) {\n            type = type.withHoursRemoved();\n        }\n        if (list.remove(DurationFieldType.minutes()) == false) {\n            type = type.withMinutesRemoved();\n        }\n        if (list.remove(DurationFieldType.seconds()) == false) {\n            type = type.withSecondsRemoved();\n        }\n        if (list.remove(DurationFieldType.millis()) == false) {\n            type = type.withMillisRemoved();\n        }\n        if (list.size() > 0) {\n            cache.put(inPartType, list);\n            throw new IllegalArgumentException(\"PeriodType does not support fields: \" + list);\n        }\n        // recheck cache in case initial array order was wrong\n        PeriodType checkPartType = new PeriodType(null, type.iTypes, null);\n        PeriodType checkedType = (PeriodType) cache.get(checkPartType);\n        if (checkedType != null) {\n            cache.put(checkPartType, checkedType);\n            return checkedType;\n        }\n        cache.put(checkPartType, type);\n        return type;\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/PeriodType.java::PeriodType.forFields(DurationFieldType[] types)\nSIGNATURE: public static synchronized PeriodType forFields(DurationFieldType[] types)",
+        "METHOD: src/main/java/org/joda/time/PeriodType.java::PeriodType.forFields(DurationFieldType[] types)\nSIGNATURE: public static synchronized PeriodType forFields(DurationFieldType[] types)\nSTRUCTURE (lossy):\nif (types == null || types.length == 0)\nthrow new IllegalArgumentException(\"Types array must not be null or empty\");\nfor (int i = 0; i < types.length; i++)\nint i = 0;\ni++\nif (types[i] == null)\nthrow new IllegalArgumentException(\"Types array must not contain null\");\nMap<PeriodType, Object> cache = cTypes;\nif (cache.isEmpty())\nCALL cache.isEmpty()\nCALL cache.put(standard(), standard())\nCALL standard()\nCALL cache.put(yearMonthDayTime(), yearMonthDayTime())\nCALL yearMonthDayTime()\nCALL cache.put(yearMonthDay(), yearMonthDay())\nCALL yearMonthDay()\nCALL cache.put(yearWeekDayTime(), yearWeekDayTime())\nCALL yearWeekDayTime()\nCALL cache.put(yearWeekDay(), yearWeekDay())\nCALL yearWeekDay()\nCALL cache.put(yearDayTime(), yearDayTime())\nCALL yearDayTime()\nCALL cache.put(yearDay(), yearDay())\nCALL yearDay()\nCALL cache.put(dayTime(), dayTime())\nCALL dayTime()\nCALL cache.put(time(), time())\nCALL time()\nCALL cache.put(years(), years())\nCALL years()\nCALL cache.put(months(), months())\nCALL months()\nCALL cache.put(weeks(), weeks())\nCALL weeks()\nCALL cache.put(days(), days())\nCALL days()\nCALL cache.put(hours(), hours())\nCALL hours()\nCALL cache.put(minutes(), minutes())\nCALL minutes()\nCALL cache.put(seconds(), seconds())\nCALL seconds()\nCALL cache.put(millis(), millis())\nCALL millis()\nPeriodType inPartType = new PeriodType(null, types, null);\nObject cached = cache.get(inPartType);\nCALL cache.get(inPartType)\nif (cached instanceof PeriodType)\nreturn (PeriodType) cached;\nif (cached != null)\nthrow new IllegalArgumentException(\"PeriodType does not support fields: \" + cached);\nPeriodType type = standard();\nList<DurationFieldType> list = new ArrayList<DurationFieldType>(Arrays.asList(types));\nCALL Arrays.asList(types)\nif (list.remove(DurationFieldType.years()) == false)\nCALL list.remove(DurationFieldType.years())\nCALL DurationFieldType.years()\ntype = type.withYearsRemoved()\nCALL type.withYearsRemoved()\nif (list.remove(DurationFieldType.months()) == false)\nCALL list.remove(DurationFieldType\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public static synchronized PeriodType forFields(DurationFieldType[] types) {\n        if (types == null || types.length == 0) {\n            throw new IllegalArgumentException(\"Types array must not be null or empty\");\n        }\n        for (int i = 0; i < types.length; i++) {\n            if (types[i] == null) {\n                throw new IllegalArgumentException(\"Types array must not contain null\");\n            }\n        }\n        Map<PeriodType, Object> cache = cTypes;\n        if (cache.isEmpty()) {\n            cache.put(standard(), standard());\n            cache.put(yearMonthDayTime(), yearMonthDayTime());\n            cache.put(yearMonthDay(), yearMonthDay());\n            cache.put(yearWeekDayTime(), yearWeekDayTime());\n            cache.put(yearWeekDay(), yearWeekDay());\n            cache.put(yearDayTime(), yearDayTime());\n            cache.put(yearDay(), yearDay());\n            cache.put(dayTime(), dayTime());\n            cache.put(time(), time());\n            cache.put(years(), years());\n            cache.put(months(), months());\n            cache.put(weeks(), weeks());\n            cache.put(days(), days());\n            cache.put(hours(), hours());\n            cache.put(minutes(), minutes());\n            cache.put(seconds(), seconds());\n            cache.put(millis(), millis());\n        }\n        PeriodType inPartType = new PeriodType(null, types, null);\n        Object cached = cache.get(inPartType);\n        if (cached instanceof PeriodType) {\n            return (PeriodType) cached;\n        }\n        if (cached != null) {\n            throw new IllegalArgumentException(\"PeriodType does not support fields: \" + cached);\n        }\n        PeriodType type = standard();\n        List<DurationFieldType> list = new ArrayList<DurationFieldType>(Arrays.asList(types));\n        if (list.remove(DurationFieldType.years()) == false) {\n            type = type.withYearsRemoved();\n        }\n        if (list.remove(DurationFieldType.months()) == false) {\n            type = type.withMonthsRemoved();\n        }\n        if (list.remove(DurationFieldType.weeks()) == false) {\n            type = type.withWeeksRemoved();\n        }\n        if (list.remove(DurationFieldType.days()) == false) {\n            type = type.withDaysRemoved();\n        }\n        if (list.remove(DurationFieldType.hours()) == false) {\n            type = type.withHoursRemoved();\n        }\n        if (list.remove(DurationFieldType.minutes()) == false) {\n            type = type.withMinutesRemoved();\n        }\n        if (list.remove(DurationFieldType.seconds()) == false) {\n            type = type.withSecondsRemoved();\n        }\n        if (list.remove(DurationFieldType.millis()) == false) {\n            type = type.withMillisRemoved();\n        }\n        if (list.size() > 0) {\n            cache.put(inPartType, list);\n            throw new IllegalArgumentException(\"PeriodType does not support fields: \" + list);\n        }\n        // recheck cache in case initial array order was wrong\n        PeriodType checkPartType = new PeriodType(null, type.iTypes, null);\n        PeriodType checkedType = (PeriodType) cache.get(checkPartType);\n        if (checkedType != null) {\n            cache.put(checkPartType, checkedType);\n            return checkedType;\n        }\n        cache.put(checkPartType, type);\n        return type;\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2647058823529412,
+        "trace_match": 0.0,
+        "complexity": 17.0,
+        "call_count": 84.0,
+        "literal_count": 15.0,
+        "source_tokens": 830.0,
+        "l0_tokens": 47.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.6855421686746987,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 17,
+        "call_count": 84,
+        "literal_count": 15
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)",
+      "source": "protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance) {\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start.size() != end.size()) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n        }\n        for (int i = 0, isize = start.size(); i < isize; i++) {\n            if (start.getFieldType(i) != end.getFieldType(i)) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n        }\n        if (DateTimeUtils.isContiguous(start) == false) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n        }\n        Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n        int[] values = chrono.get(zeroInstance, chrono.set(start, START_1972), chrono.set(end, START_1972));\n        return values[0];\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)\nSIGNATURE: protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)",
+        "METHOD: src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)\nSIGNATURE: protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)\nSTRUCTURE (lossy):\nif (start == null || end == null)\nthrow new IllegalArgumentException(\"ReadablePartial objects must not be null\");\nif (start.size() != end.size())\nCALL start.size()\nCALL end.size()\nthrow new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\nfor (int i = 0, isize = start.size(); i < isize; i++)\nint i = 0, isize = start.size();\ni++\nif (start.getFieldType(i) != end.getFieldType(i))\nCALL start.getFieldType(i)\nCALL end.getFieldType(i)\nif (DateTimeUtils.isContiguous(start) == false)\nCALL DateTimeUtils.isContiguous(start)\nthrow new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\nChronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\nCALL DateTimeUtils.getChronology(start.getChronology()).withUTC()\nCALL DateTimeUtils.getChronology(start.getChronology())\nCALL start.getChronology()\nint[] values = chrono.get(zeroInstance, chrono.set(start, START_1972), chrono.set(end, START_1972));\nCALL chrono.get(zeroInstance, chrono.set(start, START_1972), chrono.set(end, START_1972))\nCALL chrono.set(start, START_1972)\nCALL chrono.set(end, START_1972)\nreturn values[0];",
+        "protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance) {\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start.size() != end.size()) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n        }\n        for (int i = 0, isize = start.size(); i < isize; i++) {\n            if (start.getFieldType(i) != end.getFieldType(i)) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n        }\n        if (DateTimeUtils.isContiguous(start) == false) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n        }\n        Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n        int[] values = chrono.get(zeroInstance, chrono.set(start, START_1972), chrono.set(end, START_1972));\n        return values[0];\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3673469387755102,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 12.0,
+        "literal_count": 8.0,
+        "source_tokens": 267.0,
+        "l0_tokens": 71.0,
+        "l1_tokens": 363.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 12,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriodInternal(ReadablePeriod period)",
+      "source": "private void setPeriodInternal(ReadablePeriod period) {\n        int[] newValues = new int[size()];\n        for (int i = 0, isize = period.size(); i < isize; i++) {\n            DurationFieldType type = period.getFieldType(i);\n            int value = period.getValue(i);\n            checkAndUpdate(type, newValues, value);\n        }\n        setValues(newValues);\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriodInternal(ReadablePeriod period)\nSIGNATURE: private void setPeriodInternal(ReadablePeriod period)",
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriodInternal(ReadablePeriod period)\nSIGNATURE: private void setPeriodInternal(ReadablePeriod period)\nSTRUCTURE (lossy):\nint[] newValues = new int[size()];\nCALL size()\nfor (int i = 0, isize = period.size(); i < isize; i++)\nint i = 0, isize = period.size();\nCALL period.size()\ni++\nDurationFieldType type = period.getFieldType(i);\nCALL period.getFieldType(i)\nint value = period.getValue(i);\nCALL period.getValue(i)\nCALL checkAndUpdate(type, newValues, value)\nCALL setValues(newValues)",
+        "private void setPeriodInternal(ReadablePeriod period) {\n        int[] newValues = new int[size()];\n        for (int i = 0, isize = period.size(); i < isize; i++) {\n            DurationFieldType type = period.getFieldType(i);\n            int value = period.getValue(i);\n            checkAndUpdate(type, newValues, value);\n        }\n        setValues(newValues);\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5185185185185185,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 6.0,
+        "literal_count": 1.0,
+        "source_tokens": 92.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 139.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 6,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Period.java::Period.withMonths(int months)",
+      "source": "public Period withMonths(int months) {\n        int[] values = getValues();  // cloned\n        getPeriodType().setIndexedField(this, PeriodType.MONTH_INDEX, values, months);\n        return new Period(values, getPeriodType());\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.withMonths(int months)\nSIGNATURE: public Period withMonths(int months)",
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.withMonths(int months)\nSIGNATURE: public Period withMonths(int months)\nSTRUCTURE (lossy):\nint[] values = getValues();\nCALL getValues()\nCALL getPeriodType().setIndexedField(this, PeriodType.MONTH_INDEX, values, months)\nCALL getPeriodType()\nreturn new Period(values, getPeriodType());",
+        "public Period withMonths(int months) {\n        int[] values = getValues();  // cloned\n        getPeriodType().setIndexedField(this, PeriodType.MONTH_INDEX, values, months);\n        return new Period(values, getPeriodType());\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6521739130434783,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 4.0,
+        "literal_count": 0.0,
+        "source_tokens": 58.0,
+        "l0_tokens": 32.0,
+        "l1_tokens": 85.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 4,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Period.java::Period.withYears(int years)",
+      "source": "public Period withYears(int years) {\n        int[] values = getValues();  // cloned\n        getPeriodType().setIndexedField(this, PeriodType.YEAR_INDEX, values, years);\n        return new Period(values, getPeriodType());\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.withYears(int years)\nSIGNATURE: public Period withYears(int years)",
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.withYears(int years)\nSIGNATURE: public Period withYears(int years)\nSTRUCTURE (lossy):\nint[] values = getValues();\nCALL getValues()\nCALL getPeriodType().setIndexedField(this, PeriodType.YEAR_INDEX, values, years)\nCALL getPeriodType()\nreturn new Period(values, getPeriodType());",
+        "public Period withYears(int years) {\n        int[] values = getValues();  // cloned\n        getPeriodType().setIndexedField(this, PeriodType.YEAR_INDEX, values, years);\n        return new Period(values, getPeriodType());\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6521739130434783,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 4.0,
+        "literal_count": 0.0,
+        "source_tokens": 57.0,
+        "l0_tokens": 31.0,
+        "l1_tokens": 83.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 4,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriod(ReadablePeriod period)",
+      "source": "protected void setPeriod(ReadablePeriod period) {\n        if (period == null) {\n            setValues(new int[size()]);\n        } else {\n            setPeriodInternal(period);\n        }\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriod(ReadablePeriod period)\nSIGNATURE: protected void setPeriod(ReadablePeriod period)",
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriod(ReadablePeriod period)\nSIGNATURE: protected void setPeriod(ReadablePeriod period)\nSTRUCTURE (lossy):\nif (period == null)\nCALL setValues(new int[size()])\nCALL size()\nCALL setPeriodInternal(period)",
+        "protected void setPeriod(ReadablePeriod period) {\n        if (period == null) {\n            setValues(new int[size()]);\n        } else {\n            setPeriodInternal(period);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6842105263157895,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 3.0,
+        "literal_count": 1.0,
+        "source_tokens": 48.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 69.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 3,
+        "literal_count": 1
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/main/java/org/joda/time/Period.java::Period.normalizedStandard(PeriodType type)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Period.java::Period.checkYearsAndMonths(String destintionType)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/PeriodType.java::PeriodType.setIndexedField(ReadablePeriod period, int index, int[] values, int newValue)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.isSupported(PeriodType type, int field)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.getFieldValue(ReadablePeriod period)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/PeriodType.java::PeriodType.addIndexedField(ReadablePeriod period, int index, int[] values, int valueToAdd)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/DurationFieldType.java::DurationFieldType.StandardDurationFieldType.getField(Chronology chronology)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/PeriodFormatter.java::PeriodFormatter.checkParser()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/PeriodFormatter.java::PeriodFormatter.checkPrinter()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.setFieldValue(ReadWritablePeriod period, int field, int value)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/field/UnsupportedDurationField.java::UnsupportedDurationField.unsupported()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/field/UnsupportedDateTimeField.java::UnsupportedDateTimeField.unsupported()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Period.java::Period.normalizedStandard()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.standardPeriodIn(ReadablePeriod period, long millisPerUnit)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/PeriodType.java::PeriodType.forFields(DurationFieldType[] types)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriodInternal(ReadablePeriod period)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Period.java::Period.withMonths(int months)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Period.java::Period.withYears(int years)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriod(ReadablePeriod period)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 4150,
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "f2c0a04fe89bdb11850733b3c30c130823ba50dc078b4bf04c946b0334582c19",
+  "evidence_sha256": "231b9b6c8609c1b2a25236fd5ca187561958074e4452c50556a3ea963e775d36"
+}

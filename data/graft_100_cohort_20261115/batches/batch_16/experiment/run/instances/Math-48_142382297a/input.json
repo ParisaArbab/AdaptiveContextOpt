@@ -1,0 +1,1318 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Math-48",
+    "repository": "Math",
+    "language": "java",
+    "revision": "c15e07f9ad2cb8035492ce64a49199454c9996b3",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_16/prepared/checkouts/Math-48",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Math-48\nEXECUTED BUGGY TEST: org.apache.commons.math.analysis.solvers.RegulaFalsiSolverTest::testIssue631\nTEST SOURCE: src/test/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolverTest.java\nTEST SOURCE SHA256: aa52a123bd37692fa52eef6196633a529acfa74c557e9709e6011841c8afb390\nCOMPLETE EXECUTED TEST METHOD (verbatim):\n@Test(expected=ConvergenceException.class)\n    public void testIssue631() {\n        final UnivariateRealFunction f = new UnivariateRealFunction() {\n                /** {@inheritDoc} */\n                public double value(double x) {\n                    return Math.exp(x) - Math.pow(Math.PI, 3.0);\n                }\n            };\n\n        final UnivariateRealSolver solver = new RegulaFalsiSolver();\n        final double root = solver.solve(3624, f, 1, 10);\n        Assert.assertEquals(3.4341896575482003, root, 1e-15);\n\t}\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.apache.commons.math.analysis.solvers.RegulaFalsiSolverTest::testIssue631\njava.lang.Exception: Unexpected exception, expected<org.apache.commons.math.exception.ConvergenceException> but was<org.apache.commons.math.exception.TooManyEvaluationsException>\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:28)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnit4TestMethodAdapter.run(JUnit4TestMethodAdapter.java:109)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\nCaused by: org.apache.commons.math.exception.TooManyEvaluationsException: illegal state: maximal count (3,624) exceeded: evaluations\n\tat org.apache.commons.math.analysis.solvers.BaseAbstractUnivariateRealSolver.incrementEvaluationCount(BaseAbstractUnivariateRealSolver.java:296)\n\tat org.apache.commons.math.analysis.solvers.BaseAbstractUnivariateRealSolver.computeObjectiveValue(BaseAbstractUnivariateRealSolver.java:153)\n\tat org.apache.commons.math.analysis.solvers.BaseSecantSolver.doSolve(BaseSecantSolver.java:162)\n\tat org.apache.commons.math.analysis.solvers.BaseAbstractUnivariateRealSolver.solve(BaseAbstractUnivariateRealSolver.java:190)\n\tat org.apache.commons.math.analysis.solvers.BaseSecantSolver.solve(BaseSecantSolver.java:118)\n\tat org.apache.commons.math.analysis.solvers.BaseSecantSolver.solve(BaseSecantSolver.java:125)\n\tat org.apache.commons.math.analysis.solvers.BaseAbstractUnivariateRealSolver.solve(BaseAbstractUnivariateRealSolver.java:195)\n\tat org.apache.commons.math.analysis.solvers.RegulaFalsiSolverTest.testIssue631(RegulaFalsiSolverTest.java:54)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:19)\n\t... 32 more\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_16/prepared/evidence/Math-48.txt",
+      "sha256": "906bb3c2bdb6fe6fd775b682df1d600d910d7ffb9f870cbd43d9e36c8e34feab"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src/main/java",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Math-48",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.computeObjectiveValue(double point)",
+      "path": "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java",
+      "start_line": 151,
+      "end_line": 155,
+      "source": "protected double computeObjectiveValue(double point)\n        throws TooManyEvaluationsException {\n        incrementEvaluationCount();\n        return function.value(point);\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 79.985589047745
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.incrementEvaluationCount()",
+      "path": "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java",
+      "start_line": 292,
+      "end_line": 298,
+      "source": "protected void incrementEvaluationCount() {\n        try {\n            evaluations.incrementCount();\n        } catch (MaxCountExceededException e) {\n            throw new TooManyEvaluationsException(e.getMax());\n        }\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 79.59558987797433
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.computeObjectiveValue(final double point)",
+      "path": "src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegratorImpl.java",
+      "start_line": 201,
+      "end_line": 209,
+      "source": "protected double computeObjectiveValue(final double point)\n        throws TooManyEvaluationsException {\n        try {\n            evaluations.incrementCount();\n        } catch (MaxCountExceededException e) {\n            throw new TooManyEvaluationsException(e.getMax());\n        }\n        return function.value(point);\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 70.75637283640415
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/optimization/univariate/AbstractUnivariateRealOptimizer.java::AbstractUnivariateRealOptimizer.computeObjectiveValue(double point)",
+      "path": "src/main/java/org/apache/commons/math/optimization/univariate/AbstractUnivariateRealOptimizer.java",
+      "start_line": 97,
+      "end_line": 104,
+      "source": "protected double computeObjectiveValue(double point) {\n        try {\n            evaluations.incrementCount();\n        } catch (MaxCountExceededException e) {\n            throw new TooManyEvaluationsException(e.getMax());\n        }\n        return function.value(point);\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 65.17395345339547
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/optimization/direct/BaseAbstractScalarOptimizer.java::BaseAbstractScalarOptimizer.computeObjectiveValue(double[] point)",
+      "path": "src/main/java/org/apache/commons/math/optimization/direct/BaseAbstractScalarOptimizer.java",
+      "start_line": 99,
+      "end_line": 106,
+      "source": "protected double computeObjectiveValue(double[] point) {\n        try {\n            evaluations.incrementCount();\n        } catch (MaxCountExceededException e) {\n            throw new TooManyEvaluationsException(e.getMax());\n        }\n        return function.value(point);\n    }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 63.616920357236424
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/optimization/direct/BaseAbstractVectorialOptimizer.java::BaseAbstractVectorialOptimizer.computeObjectiveValue(double[] point)",
+      "path": "src/main/java/org/apache/commons/math/optimization/direct/BaseAbstractVectorialOptimizer.java",
+      "start_line": 101,
+      "end_line": 108,
+      "source": "protected double[] computeObjectiveValue(double[] point) {\n        try {\n            evaluations.incrementCount();\n        } catch (MaxCountExceededException e) {\n            throw new TooManyEvaluationsException(e.getMax());\n        }\n        return function.value(point);\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 63.616920357236424
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.doSolve()",
+      "path": "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java",
+      "start_line": 213,
+      "end_line": 214,
+      "source": "protected abstract double doSolve()\n        throws TooManyEvaluationsException, NoBracketingException;",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 63.13392564528806
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/analysis/solvers/AbstractDifferentiableUnivariateRealSolver.java::AbstractDifferentiableUnivariateRealSolver.computeDerivativeObjectiveValue(double point)",
+      "path": "src/main/java/org/apache/commons/math/analysis/solvers/AbstractDifferentiableUnivariateRealSolver.java",
+      "start_line": 66,
+      "end_line": 69,
+      "source": "protected double computeDerivativeObjectiveValue(double point) {\n        incrementEvaluationCount();\n        return functionDerivative.value(point);\n    }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 58.16076676613498
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java::RegulaFalsiSolver.RegulaFalsiSolver(final double relativeAccuracy,\n                             final double absoluteAccuracy,\n                             final double functionValueAccuracy)",
+      "path": "src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java",
+      "start_line": 90,
+      "end_line": 94,
+      "source": "public RegulaFalsiSolver(final double relativeAccuracy,\n                             final double absoluteAccuracy,\n                             final double functionValueAccuracy) {\n        super(relativeAccuracy, absoluteAccuracy, functionValueAccuracy, Method.REGULA_FALSI);\n    }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 53.73783539801454
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.setup(int maxEval,\n                         FUNC f,\n                         double min, double max,\n                         double startValue)",
+      "path": "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java",
+      "start_line": 168,
+      "end_line": 182,
+      "source": "protected void setup(int maxEval,\n                         FUNC f,\n                         double min, double max,\n                         double startValue) {\n        // Checks.\n        MathUtils.checkNotNull(f);\n\n        // Reset.\n        searchMin = min;\n        searchMax = max;\n        searchStart = startValue;\n        function = f;\n        evaluations.setMaximalCount(maxEval);\n        evaluations.resetCount();\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 53.6344133946304
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/ode/events/EventState.java::EventState.evaluateStep(final StepInterpolator interpolator)",
+      "path": "src/main/java/org/apache/commons/math/ode/events/EventState.java",
+      "start_line": 198,
+      "end_line": 299,
+      "source": "public boolean evaluateStep(final StepInterpolator interpolator)\n        throws MathUserException, EventException, ConvergenceException {\n\n        try {\n\n            forward = interpolator.isForward();\n            final double t1 = interpolator.getCurrentTime();\n            final double dt = t1 - t0;\n            if (FastMath.abs(dt) < convergence) {\n                // we cannot do anything on such a small step, don't trigger any events\n                return false;\n            }\n            final int    n = FastMath.max(1, (int) FastMath.ceil(FastMath.abs(dt) / maxCheckInterval));\n            final double h = dt / n;\n\n            final UnivariateRealFunction f = new UnivariateRealFunction() {\n                public double value(final double t) {\n                    try {\n                        interpolator.setInterpolatedTime(t);\n                        return handler.g(t, interpolator.getInterpolatedState());\n                    } catch (EventException e) {\n                        throw new ConveyedException(e);\n                    }\n                }\n            };\n\n            double ta = t0;\n            double ga = g0;\n            for (int i = 0; i < n; ++i) {\n\n                // evaluate handler value at the end of the substep\n                final double tb = t0 + (i + 1) * h;\n                interpolator.setInterpolatedTime(tb);\n                final double gb = handler.g(tb, interpolator.getInterpolatedState());\n\n                // check events occurrence\n                if (g0Positive ^ (gb >= 0)) {\n                    // there is a sign change: an event is expected during this step\n\n                    // variation direction, with respect to the integration direction\n                    increasing = gb >= ga;\n\n                    // find the event time making sure we select a solution just at or past the exact root\n                    final double root;\n                    if (solver instanceof BracketedUnivariateRealSolver<?>) {\n                        @SuppressWarnings(\"unchecked\")\n                        BracketedUnivariateRealSolver<UnivariateRealFunction> bracketing =\n                                (BracketedUnivariateRealSolver<UnivariateRealFunction>) solver;\n                        root = forward ?\n                               bracketing.solve(maxIterationCount, f, ta, tb, AllowedSolution.RIGHT_SIDE) :\n                               bracketing.solve(maxIterationCount, f, tb, ta, AllowedSolution.LEFT_SIDE);\n                    } else {\n                        final double baseRoot = forward ?\n                                                solver.solve(maxIterationCount, f, ta, tb) :\n                                                solver.solve(maxIterationCount, f, tb, ta);\n                        final int remainingEval = maxIterationCount - solver.getEvaluations();\n                        BracketedUnivariateRealSolver<UnivariateRealFunction> bracketing =\n                                new PegasusSolver(solver.getRelativeAccuracy(), solver.getAbsoluteAccuracy());\n                        root = forward ?\n                               UnivariateRealSolverUtils.forceSide(remainingEval, f, bracketing,\n                                                                   baseRoot, ta, tb, AllowedSolution.RIGHT_SIDE) :\n                               UnivariateRealSolverUtils.forceSide(remainingEval, f, bracketing,\n                                                                   baseRoot, tb, ta, AllowedSolution.LEFT_SIDE);\n                    }\n\n                    if ((!Double.isNaN(previousEventTime)) &&\n                        (FastMath.abs(root - ta) <= convergence) &&\n                        (FastMath.abs(root - previousEventTime) <= convergence)) {\n                        // we have either found nothing or found (again ?) a past event,\n                        // retry the substep excluding this value\n                        ta = forward ? ta + convergence : ta - convergence;\n                        ga = f.value(ta);\n                        --i;\n                    } else if (Double.isNaN(previousEventTime) ||\n                               (FastMath.abs(previousEventTime - root) > convergence)) {\n                        pendingEventTime = root;\n                        pendingEvent = true;\n                        return true;\n                    } else {\n                        // no sign change: there is no event for now\n                        ta = tb;\n                        ga = gb;\n                    }\n\n                } else {\n                    // no sign change: there is no event for now\n                    ta = tb;\n                    ga = gb;\n                }\n\n            }\n\n            // no event during the whole step\n            pendingEvent     = false;\n            pendingEventTime = Double.NaN;\n            return false;\n\n        } catch (ConveyedException ce) {\n            throw ce.getConveyedException();\n        }\n\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 52.386966592972634
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java::BaseSecantSolver.solve(final int maxEval, final UnivariateRealFunction f,\n                        final double min, final double max, final double startValue)",
+      "path": "src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java",
+      "start_line": 122,
+      "end_line": 126,
+      "source": "@Override\n    public double solve(final int maxEval, final UnivariateRealFunction f,\n                        final double min, final double max, final double startValue) {\n        return solve(maxEval, f, min, max, startValue, AllowedSolution.ANY_SIDE);\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 51.76071843878417
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/optimization/univariate/BracketFinder.java::BracketFinder.eval(UnivariateRealFunction f, double x)",
+      "path": "src/main/java/org/apache/commons/math/optimization/univariate/BracketFinder.java",
+      "start_line": 283,
+      "end_line": 290,
+      "source": "private double eval(UnivariateRealFunction f, double x) throws MathUserException {\n        try {\n            evaluations.incrementCount();\n        } catch (MaxCountExceededException e) {\n            throw new TooManyEvaluationsException(e.getMax());\n        }\n        return f.value(x);\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 51.3576848241837
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.solve(int maxEval, FUNC f, double min, double max, double startValue)",
+      "path": "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java",
+      "start_line": 185,
+      "end_line": 191,
+      "source": "public double solve(int maxEval, FUNC f, double min, double max, double startValue) {\n        // Initialization.\n        setup(maxEval, f, min, max, startValue);\n\n        // Perform computation.\n        return doSolve();\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 50.885217254230355
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java::RegulaFalsiSolver.RegulaFalsiSolver(final double absoluteAccuracy)",
+      "path": "src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java",
+      "start_line": 68,
+      "end_line": 70,
+      "source": "public RegulaFalsiSolver(final double absoluteAccuracy) {\n        super(absoluteAccuracy, Method.REGULA_FALSI);\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 50.73937321747993
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java::AbstractContinuousDistribution.inverseCumulativeProbability(final double p)",
+      "path": "src/main/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+      "start_line": 77,
+      "end_line": 131,
+      "source": "public double inverseCumulativeProbability(final double p)\n        throws MathException {\n        if (p < 0.0 || p > 1.0) {\n            throw new OutOfRangeException(p, 0, 1);\n        }\n\n        // by default, do simple root finding using bracketing and default solver.\n        // subclasses can override if there is a better method.\n        UnivariateRealFunction rootFindingFunction =\n            new UnivariateRealFunction() {\n            public double value(double x) throws MathUserException {\n                double ret = Double.NaN;\n                try {\n                    ret = cumulativeProbability(x) - p;\n                } catch (MathException ex) {\n                    throw new MathUserException(ex);\n                }\n                if (Double.isNaN(ret)) {\n                    throw new MathUserException(LocalizedFormats.CUMULATIVE_PROBABILITY_RETURNED_NAN, x, p);\n                }\n                return ret;\n            }\n        };\n\n        // Try to bracket root, test domain endpoints if this fails\n        double lowerBound = getDomainLowerBound(p);\n        double upperBound = getDomainUpperBound(p);\n        double[] bracket = null;\n        try {\n            bracket = UnivariateRealSolverUtils.bracket(\n                    rootFindingFunction, getInitialDomain(p),\n                    lowerBound, upperBound);\n        } catch (NumberIsTooLargeException ex) {\n            /*\n             * Check domain endpoints to see if one gives value that is within\n             * the default solver's defaultAbsoluteAccuracy of 0 (will be the\n             * case if density has bounded support and p is 0 or 1).\n             */\n            if (FastMath.abs(rootFindingFunction.value(lowerBound)) < getSolverAbsoluteAccuracy()) {\n                return lowerBound;\n            }\n            if (FastMath.abs(rootFindingFunction.value(upperBound)) < getSolverAbsoluteAccuracy()) {\n                return upperBound;\n            }\n            // Failed bracket convergence was not because of corner solution\n            throw new MathException(ex);\n        }\n\n        // find root\n        double root = UnivariateRealSolverUtils.solve(rootFindingFunction,\n                // override getSolverAbsoluteAccuracy() to use a Brent solver with\n                // absolute accuracy different from the default.\n                bracket[0],bracket[1], getSolverAbsoluteAccuracy());\n        return root;\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 50.696582219261984
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java::RegulaFalsiSolver.RegulaFalsiSolver()",
+      "path": "src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java",
+      "start_line": 59,
+      "end_line": 61,
+      "source": "public RegulaFalsiSolver() {\n        super(DEFAULT_ABSOLUTE_ACCURACY, Method.REGULA_FALSI);\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 50.35922183875394
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.getMaxEvaluations()",
+      "path": "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java",
+      "start_line": 99,
+      "end_line": 101,
+      "source": "public int getMaxEvaluations() {\n        return evaluations.getMaximalCount();\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 49.57029726363282
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java::BaseSecantSolver.solve(final int maxEval, final UnivariateRealFunction f,\n                        final double min, final double max, final double startValue,\n                        final AllowedSolution allowedSolution)",
+      "path": "src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java",
+      "start_line": 114,
+      "end_line": 119,
+      "source": "public double solve(final int maxEval, final UnivariateRealFunction f,\n                        final double min, final double max, final double startValue,\n                        final AllowedSolution allowedSolution) {\n        this.allowed = allowedSolution;\n        return super.solve(maxEval, f, min, max, startValue);\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 49.10247635667823
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.doIntegrate()",
+      "path": "src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegratorImpl.java",
+      "start_line": 266,
+      "end_line": 267,
+      "source": "protected abstract double doIntegrate()\n        throws TooManyEvaluationsException, ConvergenceException;",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 48.92551320942088
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java::BaseSecantSolver.BaseSecantSolver(final double relativeAccuracy,\n                               final double absoluteAccuracy,\n                               final double functionValueAccuracy,\n                               final Method method)",
+      "path": "src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java",
+      "start_line": 97,
+      "end_line": 104,
+      "source": "protected BaseSecantSolver(final double relativeAccuracy,\n                               final double absoluteAccuracy,\n                               final double functionValueAccuracy,\n                               final Method method) {\n        super(relativeAccuracy, absoluteAccuracy, functionValueAccuracy);\n        this.allowed = AllowedSolution.ANY_SIDE;\n        this.method = method;\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 48.85992767372021
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java::RegulaFalsiSolver.RegulaFalsiSolver(final double relativeAccuracy,\n                             final double absoluteAccuracy)",
+      "path": "src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java",
+      "start_line": 78,
+      "end_line": 81,
+      "source": "public RegulaFalsiSolver(final double relativeAccuracy,\n                             final double absoluteAccuracy) {\n        super(relativeAccuracy, absoluteAccuracy, Method.REGULA_FALSI);\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 48.73247175744386
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.integrate(final int maxEval, final UnivariateRealFunction f,\n                            final double min, final double max)",
+      "path": "src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegratorImpl.java",
+      "start_line": 243,
+      "end_line": 254,
+      "source": "public double integrate(final int maxEval, final UnivariateRealFunction f,\n                            final double min, final double max)\n        throws TooManyEvaluationsException, ConvergenceException,\n               MathIllegalArgumentException, NullArgumentException {\n\n        // Initialization.\n        setup(maxEval, f, min, max);\n\n        // Perform computation.\n        return doIntegrate();\n\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 47.99544656583718
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java::BisectionSolver.doSolve()",
+      "path": "src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java",
+      "start_line": 61,
+      "end_line": 89,
+      "source": "@Override\n    protected double doSolve() {\n        double min = getMin();\n        double max = getMax();\n        verifyInterval(min, max);\n        final double absoluteAccuracy = getAbsoluteAccuracy();\n        double m;\n        double fm;\n        double fmin;\n\n        while (true) {\n            m = UnivariateRealSolverUtils.midpoint(min, max);\n            fmin = computeObjectiveValue(min);\n            fm = computeObjectiveValue(m);\n\n            if (fm * fmin > 0) {\n                // max and m bracket the root.\n                min = m;\n            } else {\n                // min and m bracket the root.\n                max = m;\n            }\n\n            if (FastMath.abs(max - min) <= absoluteAccuracy) {\n                m = UnivariateRealSolverUtils.midpoint(min, max);\n                return m;\n            }\n        }\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 46.697883033890335
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.computeObjectiveValue(double point)",
+      "source": "protected double computeObjectiveValue(double point)\n        throws TooManyEvaluationsException {\n        incrementEvaluationCount();\n        return function.value(point);\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.computeObjectiveValue(double point)\nSIGNATURE: protected double computeObjectiveValue(double point)\n        throws TooManyEvaluationsException",
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.computeObjectiveValue(double point)\nSIGNATURE: protected double computeObjectiveValue(double point)\n        throws TooManyEvaluationsException\nSTRUCTURE (lossy):\nCALL incrementEvaluationCount()\nreturn function.value(point);\nCALL function.value(point)",
+        "protected double computeObjectiveValue(double point)\n        throws TooManyEvaluationsException {\n        incrementEvaluationCount();\n        return function.value(point);\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.9,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 45.0,
+        "l0_tokens": 70.0,
+        "l1_tokens": 97.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.incrementEvaluationCount()",
+      "source": "protected void incrementEvaluationCount() {\n        try {\n            evaluations.incrementCount();\n        } catch (MaxCountExceededException e) {\n            throw new TooManyEvaluationsException(e.getMax());\n        }\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.incrementEvaluationCount()\nSIGNATURE: protected void incrementEvaluationCount()",
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.incrementEvaluationCount()\nSIGNATURE: protected void incrementEvaluationCount()\nSTRUCTURE (lossy):\nCALL evaluations.incrementCount()\ncatch (MaxCountExceededException e)\nthrow new TooManyEvaluationsException(e.getMax());\nCALL e.getMax()",
+        "protected void incrementEvaluationCount() {\n        try {\n            evaluations.incrementCount();\n        } catch (MaxCountExceededException e) {\n            throw new TooManyEvaluationsException(e.getMax());\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 57.0,
+        "l0_tokens": 54.0,
+        "l1_tokens": 93.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.computeObjectiveValue(final double point)",
+      "source": "protected double computeObjectiveValue(final double point)\n        throws TooManyEvaluationsException {\n        try {\n            evaluations.incrementCount();\n        } catch (MaxCountExceededException e) {\n            throw new TooManyEvaluationsException(e.getMax());\n        }\n        return function.value(point);\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.computeObjectiveValue(final double point)\nSIGNATURE: protected double computeObjectiveValue(final double point)\n        throws TooManyEvaluationsException",
+        "METHOD: src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.computeObjectiveValue(final double point)\nSIGNATURE: protected double computeObjectiveValue(final double point)\n        throws TooManyEvaluationsException\nSTRUCTURE (lossy):\nCALL evaluations.incrementCount()\ncatch (MaxCountExceededException e)\nthrow new TooManyEvaluationsException(e.getMax());\nCALL e.getMax()\nreturn function.value(point);\nCALL function.value(point)",
+        "protected double computeObjectiveValue(final double point)\n        throws TooManyEvaluationsException {\n        try {\n            evaluations.incrementCount();\n        } catch (MaxCountExceededException e) {\n            throw new TooManyEvaluationsException(e.getMax());\n        }\n        return function.value(point);\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7222222222222222,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 3.0,
+        "literal_count": 0.0,
+        "source_tokens": 81.0,
+        "l0_tokens": 72.0,
+        "l1_tokens": 125.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 3,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/optimization/univariate/AbstractUnivariateRealOptimizer.java::AbstractUnivariateRealOptimizer.computeObjectiveValue(double point)",
+      "source": "protected double computeObjectiveValue(double point) {\n        try {\n            evaluations.incrementCount();\n        } catch (MaxCountExceededException e) {\n            throw new TooManyEvaluationsException(e.getMax());\n        }\n        return function.value(point);\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/optimization/univariate/AbstractUnivariateRealOptimizer.java::AbstractUnivariateRealOptimizer.computeObjectiveValue(double point)\nSIGNATURE: protected double computeObjectiveValue(double point)",
+        "METHOD: src/main/java/org/apache/commons/math/optimization/univariate/AbstractUnivariateRealOptimizer.java::AbstractUnivariateRealOptimizer.computeObjectiveValue(double point)\nSIGNATURE: protected double computeObjectiveValue(double point)\nSTRUCTURE (lossy):\nCALL evaluations.incrementCount()\ncatch (MaxCountExceededException e)\nthrow new TooManyEvaluationsException(e.getMax());\nCALL e.getMax()\nreturn function.value(point);\nCALL function.value(point)",
+        "protected double computeObjectiveValue(double point) {\n        try {\n            evaluations.incrementCount();\n        } catch (MaxCountExceededException e) {\n            throw new TooManyEvaluationsException(e.getMax());\n        }\n        return function.value(point);\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7272727272727273,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 3.0,
+        "literal_count": 0.0,
+        "source_tokens": 69.0,
+        "l0_tokens": 60.0,
+        "l1_tokens": 113.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 3,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/optimization/direct/BaseAbstractScalarOptimizer.java::BaseAbstractScalarOptimizer.computeObjectiveValue(double[] point)",
+      "source": "protected double computeObjectiveValue(double[] point) {\n        try {\n            evaluations.incrementCount();\n        } catch (MaxCountExceededException e) {\n            throw new TooManyEvaluationsException(e.getMax());\n        }\n        return function.value(point);\n    }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/optimization/direct/BaseAbstractScalarOptimizer.java::BaseAbstractScalarOptimizer.computeObjectiveValue(double[] point)\nSIGNATURE: protected double computeObjectiveValue(double[] point)",
+        "METHOD: src/main/java/org/apache/commons/math/optimization/direct/BaseAbstractScalarOptimizer.java::BaseAbstractScalarOptimizer.computeObjectiveValue(double[] point)\nSIGNATURE: protected double computeObjectiveValue(double[] point)\nSTRUCTURE (lossy):\nCALL evaluations.incrementCount()\ncatch (MaxCountExceededException e)\nthrow new TooManyEvaluationsException(e.getMax());\nCALL e.getMax()\nreturn function.value(point);\nCALL function.value(point)",
+        "protected double computeObjectiveValue(double[] point) {\n        try {\n            evaluations.incrementCount();\n        } catch (MaxCountExceededException e) {\n            throw new TooManyEvaluationsException(e.getMax());\n        }\n        return function.value(point);\n    }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6764705882352942,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 3.0,
+        "literal_count": 0.0,
+        "source_tokens": 70.0,
+        "l0_tokens": 58.0,
+        "l1_tokens": 111.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 3,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/optimization/direct/BaseAbstractVectorialOptimizer.java::BaseAbstractVectorialOptimizer.computeObjectiveValue(double[] point)",
+      "source": "protected double[] computeObjectiveValue(double[] point) {\n        try {\n            evaluations.incrementCount();\n        } catch (MaxCountExceededException e) {\n            throw new TooManyEvaluationsException(e.getMax());\n        }\n        return function.value(point);\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/optimization/direct/BaseAbstractVectorialOptimizer.java::BaseAbstractVectorialOptimizer.computeObjectiveValue(double[] point)\nSIGNATURE: protected double[] computeObjectiveValue(double[] point)",
+        "METHOD: src/main/java/org/apache/commons/math/optimization/direct/BaseAbstractVectorialOptimizer.java::BaseAbstractVectorialOptimizer.computeObjectiveValue(double[] point)\nSIGNATURE: protected double[] computeObjectiveValue(double[] point)\nSTRUCTURE (lossy):\nCALL evaluations.incrementCount()\ncatch (MaxCountExceededException e)\nthrow new TooManyEvaluationsException(e.getMax());\nCALL e.getMax()\nreturn function.value(point);\nCALL function.value(point)",
+        "protected double[] computeObjectiveValue(double[] point) {\n        try {\n            evaluations.incrementCount();\n        } catch (MaxCountExceededException e) {\n            throw new TooManyEvaluationsException(e.getMax());\n        }\n        return function.value(point);\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6764705882352942,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 3.0,
+        "literal_count": 0.0,
+        "source_tokens": 70.0,
+        "l0_tokens": 60.0,
+        "l1_tokens": 113.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 3,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.doSolve()",
+      "source": "protected abstract double doSolve()\n        throws TooManyEvaluationsException, NoBracketingException;",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.doSolve()\nSIGNATURE: src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.doSolve()",
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.doSolve()\nSIGNATURE: src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.doSolve()\nSTRUCTURE (lossy):\n",
+        "protected abstract double doSolve()\n        throws TooManyEvaluationsException, NoBracketingException;"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8695652173913043,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 26.0,
+        "l0_tokens": 73.0,
+        "l1_tokens": 78.0,
+        "compression_ratio": 1,
+        "parse_error": 1.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": true,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/analysis/solvers/AbstractDifferentiableUnivariateRealSolver.java::AbstractDifferentiableUnivariateRealSolver.computeDerivativeObjectiveValue(double point)",
+      "source": "protected double computeDerivativeObjectiveValue(double point) {\n        incrementEvaluationCount();\n        return functionDerivative.value(point);\n    }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/AbstractDifferentiableUnivariateRealSolver.java::AbstractDifferentiableUnivariateRealSolver.computeDerivativeObjectiveValue(double point)\nSIGNATURE: protected double computeDerivativeObjectiveValue(double point)",
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/AbstractDifferentiableUnivariateRealSolver.java::AbstractDifferentiableUnivariateRealSolver.computeDerivativeObjectiveValue(double point)\nSIGNATURE: protected double computeDerivativeObjectiveValue(double point)\nSTRUCTURE (lossy):\nCALL incrementEvaluationCount()\nreturn functionDerivative.value(point);\nCALL functionDerivative.value(point)",
+        "protected double computeDerivativeObjectiveValue(double point) {\n        incrementEvaluationCount();\n        return functionDerivative.value(point);\n    }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8461538461538461,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 39.0,
+        "l0_tokens": 69.0,
+        "l1_tokens": 101.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java::RegulaFalsiSolver.RegulaFalsiSolver(final double relativeAccuracy,\n                             final double absoluteAccuracy,\n                             final double functionValueAccuracy)",
+      "source": "public RegulaFalsiSolver(final double relativeAccuracy,\n                             final double absoluteAccuracy,\n                             final double functionValueAccuracy) {\n        super(relativeAccuracy, absoluteAccuracy, functionValueAccuracy, Method.REGULA_FALSI);\n    }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java::RegulaFalsiSolver.RegulaFalsiSolver(final double relativeAccuracy,\n                             final double absoluteAccuracy,\n                             final double functionValueAccuracy)\nSIGNATURE: public RegulaFalsiSolver(final double relativeAccuracy,\n                             final double absoluteAccuracy,\n                             final double functionValueAccuracy)",
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java::RegulaFalsiSolver.RegulaFalsiSolver(final double relativeAccuracy,\n                             final double absoluteAccuracy,\n                             final double functionValueAccuracy)\nSIGNATURE: public RegulaFalsiSolver(final double relativeAccuracy,\n                             final double absoluteAccuracy,\n                             final double functionValueAccuracy)\nSTRUCTURE (lossy):\n",
+        "public RegulaFalsiSolver(final double relativeAccuracy,\n                             final double absoluteAccuracy,\n                             final double functionValueAccuracy) {\n        super(relativeAccuracy, absoluteAccuracy, functionValueAccuracy, Method.REGULA_FALSI);\n    }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8181818181818182,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 71.0,
+        "l0_tokens": 118.0,
+        "l1_tokens": 123.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.setup(int maxEval,\n                         FUNC f,\n                         double min, double max,\n                         double startValue)",
+      "source": "protected void setup(int maxEval,\n                         FUNC f,\n                         double min, double max,\n                         double startValue) {\n        // Checks.\n        MathUtils.checkNotNull(f);\n\n        // Reset.\n        searchMin = min;\n        searchMax = max;\n        searchStart = startValue;\n        function = f;\n        evaluations.setMaximalCount(maxEval);\n        evaluations.resetCount();\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.setup(int maxEval,\n                         FUNC f,\n                         double min, double max,\n                         double startValue)\nSIGNATURE: protected void setup(int maxEval,\n                         FUNC f,\n                         double min, double max,\n                         double startValue)",
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.setup(int maxEval,\n                         FUNC f,\n                         double min, double max,\n                         double startValue)\nSIGNATURE: protected void setup(int maxEval,\n                         FUNC f,\n                         double min, double max,\n                         double startValue)\nSTRUCTURE (lossy):\nCALL MathUtils.checkNotNull(f)\nsearchMin = min\nsearchMax = max\nsearchStart = startValue\nfunction = f\nCALL evaluations.setMaximalCount(maxEval)\nCALL evaluations.resetCount()",
+        "protected void setup(int maxEval,\n                         FUNC f,\n                         double min, double max,\n                         double startValue) {\n        // Checks.\n        MathUtils.checkNotNull(f);\n\n        // Reset.\n        searchMin = min;\n        searchMax = max;\n        searchStart = startValue;\n        function = f;\n        evaluations.setMaximalCount(maxEval);\n        evaluations.resetCount();\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6216216216216216,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 3.0,
+        "literal_count": 0.0,
+        "source_tokens": 107.0,
+        "l0_tokens": 113.0,
+        "l1_tokens": 161.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 3,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/ode/events/EventState.java::EventState.evaluateStep(final StepInterpolator interpolator)",
+      "source": "public boolean evaluateStep(final StepInterpolator interpolator)\n        throws MathUserException, EventException, ConvergenceException {\n\n        try {\n\n            forward = interpolator.isForward();\n            final double t1 = interpolator.getCurrentTime();\n            final double dt = t1 - t0;\n            if (FastMath.abs(dt) < convergence) {\n                // we cannot do anything on such a small step, don't trigger any events\n                return false;\n            }\n            final int    n = FastMath.max(1, (int) FastMath.ceil(FastMath.abs(dt) / maxCheckInterval));\n            final double h = dt / n;\n\n            final UnivariateRealFunction f = new UnivariateRealFunction() {\n                public double value(final double t) {\n                    try {\n                        interpolator.setInterpolatedTime(t);\n                        return handler.g(t, interpolator.getInterpolatedState());\n                    } catch (EventException e) {\n                        throw new ConveyedException(e);\n                    }\n                }\n            };\n\n            double ta = t0;\n            double ga = g0;\n            for (int i = 0; i < n; ++i) {\n\n                // evaluate handler value at the end of the substep\n                final double tb = t0 + (i + 1) * h;\n                interpolator.setInterpolatedTime(tb);\n                final double gb = handler.g(tb, interpolator.getInterpolatedState());\n\n                // check events occurrence\n                if (g0Positive ^ (gb >= 0)) {\n                    // there is a sign change: an event is expected during this step\n\n                    // variation direction, with respect to the integration direction\n                    increasing = gb >= ga;\n\n                    // find the event time making sure we select a solution just at or past the exact root\n                    final double root;\n                    if (solver instanceof BracketedUnivariateRealSolver<?>) {\n                        @SuppressWarnings(\"unchecked\")\n                        BracketedUnivariateRealSolver<UnivariateRealFunction> bracketing =\n                                (BracketedUnivariateRealSolver<UnivariateRealFunction>) solver;\n                        root = forward ?\n                               bracketing.solve(maxIterationCount, f, ta, tb, AllowedSolution.RIGHT_SIDE) :\n                               bracketing.solve(maxIterationCount, f, tb, ta, AllowedSolution.LEFT_SIDE);\n                    } else {\n                        final double baseRoot = forward ?\n                                                solver.solve(maxIterationCount, f, ta, tb) :\n                                                solver.solve(maxIterationCount, f, tb, ta);\n                        final int remainingEval = maxIterationCount - solver.getEvaluations();\n                        BracketedUnivariateRealSolver<UnivariateRealFunction> bracketing =\n                                new PegasusSolver(solver.getRelativeAccuracy(), solver.getAbsoluteAccuracy());\n                        root = forward ?\n                               UnivariateRealSolverUtils.forceSide(remainingEval, f, bracketing,\n                                                                   baseRoot, ta, tb, AllowedSolution.RIGHT_SIDE) :\n                               UnivariateRealSolverUtils.forceSide(remainingEval, f, bracketing,\n                                                                   baseRoot, tb, ta, AllowedSolution.LEFT_SIDE);\n                    }\n\n                    if ((!Double.isNaN(previousEventTime)) &&\n                        (FastMath.abs(root - ta) <= convergence) &&\n                        (FastMath.abs(root - previousEventTime) <= convergence)) {\n                        // we have either found nothing or found (again ?) a past event,\n                        // retry the substep excluding this value\n                        ta = forward ? ta + convergence : ta - convergence;\n                        ga = f.value(ta);\n                        --i;\n                    } else if (Double.isNaN(previousEventTime) ||\n                               (FastMath.abs(previousEventTime - root) > convergence)) {\n                        pendingEventTime = root;\n                        pendingEvent = true;\n                        return true;\n                    } else {\n                        // no sign change: there is no event for now\n                        ta = tb;\n                        ga = gb;\n                    }\n\n                } else {\n                    // no sign change: there is no event for now\n                    ta = tb;\n                    ga = gb;\n                }\n\n            }\n\n            // no event during the whole step\n            pendingEvent     = false;\n            pendingEventTime = Double.NaN;\n            return false;\n\n        } catch (ConveyedException ce) {\n            throw ce.getConveyedException();\n        }\n\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/ode/events/EventState.java::EventState.evaluateStep(final StepInterpolator interpolator)\nSIGNATURE: public boolean evaluateStep(final StepInterpolator interpolator)\n        throws MathUserException, EventException, ConvergenceException",
+        "METHOD: src/main/java/org/apache/commons/math/ode/events/EventState.java::EventState.evaluateStep(final StepInterpolator interpolator)\nSIGNATURE: public boolean evaluateStep(final StepInterpolator interpolator)\n        throws MathUserException, EventException, ConvergenceException\nSTRUCTURE (lossy):\nforward = interpolator.isForward()\nCALL interpolator.isForward()\nfinal double t1 = interpolator.getCurrentTime();\nCALL interpolator.getCurrentTime()\nfinal double dt = t1 - t0;\nif (FastMath.abs(dt) < convergence)\nCALL FastMath.abs(dt)\nreturn false;\nfinal int n = FastMath.max(1, (int) FastMath.ceil(FastMath.abs(dt) / maxCheckInterval));\nCALL FastMath.max(1, (int) FastMath.ceil(FastMath.abs(dt) / maxCheckInterval))\nCALL FastMath.ceil(FastMath.abs(dt) / maxCheckInterval)\nfinal double h = dt / n;\nfinal UnivariateRealFunction f = new UnivariateRealFunction() { public double value(final double t) { try { interpolator.setInterpolatedTime(t); return handler.g(t, interpolator.getInterpolatedState()); } catch (EventException e) { throw new ConveyedException(e); } } };\nCALL interpolator.setInterpolatedTime(t)\nreturn handler.g(t, interpolator.getInterpolatedState());\nCALL handler.g(t, interpolator.getInterpolatedState())\nCALL interpolator.getInterpolatedState()\ncatch (EventException e)\nthrow new ConveyedException(e);\ndouble ta = t0;\ndouble ga = g0;\nfor (int i = 0; i < n; ++i)\nint i = 0;\n++i\nfinal double tb = t0 + (i + 1) * h;\nCALL interpolator.setInterpolatedTime(tb)\nfinal double gb = handler.g(tb, interpolator.getInterpolatedState());\nCALL handler.g(tb, interpolator.getInterpolatedState())\nif (g0Positive ^ (gb >= 0))\nincreasing = gb >= ga\nfinal double root;\nif (solver instanceof BracketedUnivariateRealSolver<?>)\n@SuppressWarnings(\"unchecked\") BracketedUnivariateRealSolver<UnivariateRealFunction> bracketing = (BracketedUnivariateRealSolver<UnivariateRealFunction>) solver;\nroot = forward ? bracketing.solve(maxIterationCount, f, ta, tb, AllowedSolution.RIGHT_SIDE) : bracketing.solve(maxIterationCount, f, tb, ta, AllowedSolution.LEFT_SIDE)\nCALL bracketing.solve(maxIterationCount, f, ta, tb, AllowedSolution.RIGHT_SIDE)\nCALL bracketing.solve(maxIterationCount, f, tb, ta, AllowedSoluti\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public boolean evaluateStep(final StepInterpolator interpolator)\n        throws MathUserException, EventException, ConvergenceException {\n\n        try {\n\n            forward = interpolator.isForward();\n            final double t1 = interpolator.getCurrentTime();\n            final double dt = t1 - t0;\n            if (FastMath.abs(dt) < convergence) {\n                // we cannot do anything on such a small step, don't trigger any events\n                return false;\n            }\n            final int    n = FastMath.max(1, (int) FastMath.ceil(FastMath.abs(dt) / maxCheckInterval));\n            final double h = dt / n;\n\n            final UnivariateRealFunction f = new UnivariateRealFunction() {\n                public double value(final double t) {\n                    try {\n                        interpolator.setInterpolatedTime(t);\n                        return handler.g(t, interpolator.getInterpolatedState());\n                    } catch (EventException e) {\n                        throw new ConveyedException(e);\n                    }\n                }\n            };\n\n            double ta = t0;\n            double ga = g0;\n            for (int i = 0; i < n; ++i) {\n\n                // evaluate handler value at the end of the substep\n                final double tb = t0 + (i + 1) * h;\n                interpolator.setInterpolatedTime(tb);\n                final double gb = handler.g(tb, interpolator.getInterpolatedState());\n\n                // check events occurrence\n                if (g0Positive ^ (gb >= 0)) {\n                    // there is a sign change: an event is expected during this step\n\n                    // variation direction, with respect to the integration direction\n                    increasing = gb >= ga;\n\n                    // find the event time making sure we select a solution just at or past the exact root\n                    final double root;\n                    if (solver instanceof BracketedUnivariateRealSolver<?>) {\n                        @SuppressWarnings(\"unchecked\")\n                        BracketedUnivariateRealSolver<UnivariateRealFunction> bracketing =\n                                (BracketedUnivariateRealSolver<UnivariateRealFunction>) solver;\n                        root = forward ?\n                               bracketing.solve(maxIterationCount, f, ta, tb, AllowedSolution.RIGHT_SIDE) :\n                               bracketing.solve(maxIterationCount, f, tb, ta, AllowedSolution.LEFT_SIDE);\n                    } else {\n                        final double baseRoot = forward ?\n                                                solver.solve(maxIterationCount, f, ta, tb) :\n                                                solver.solve(maxIterationCount, f, tb, ta);\n                        final int remainingEval = maxIterationCount - solver.getEvaluations();\n                        BracketedUnivariateRealSolver<UnivariateRealFunction> bracketing =\n                                new PegasusSolver(solver.getRelativeAccuracy(), solver.getAbsoluteAccuracy());\n                        root = forward ?\n                               UnivariateRealSolverUtils.forceSide(remainingEval, f, bracketing,\n                                                                   baseRoot, ta, tb, AllowedSolution.RIGHT_SIDE) :\n                               UnivariateRealSolverUtils.forceSide(remainingEval, f, bracketing,\n                                                                   baseRoot, tb, ta, AllowedSolution.LEFT_SIDE);\n                    }\n\n                    if ((!Double.isNaN(previousEventTime)) &&\n                        (FastMath.abs(root - ta) <= convergence) &&\n                        (FastMath.abs(root - previousEventTime) <= convergence)) {\n                        // we have either found nothing or found (again ?) a past event,\n                        // retry the substep excluding this value\n                        ta = forward ? ta + convergence : ta - convergence;\n                        ga = f.value(ta);\n                        --i;\n                    } else if (Double.isNaN(previousEventTime) ||\n                               (FastMath.abs(previousEventTime - root) > convergence)) {\n                        pendingEventTime = root;\n                        pendingEvent = true;\n                        return true;\n                    } else {\n                        // no sign change: there is no event for now\n                        ta = tb;\n                        ga = gb;\n                    }\n\n                } else {\n                    // no sign change: there is no event for now\n                    ta = tb;\n                    ga = gb;\n                }\n\n            }\n\n            // no event during the whole step\n            pendingEvent     = false;\n            pendingEventTime = Double.NaN;\n            return false;\n\n        } catch (ConveyedException ce) {\n            throw ce.getConveyedException();\n        }\n\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.23728813559322035,
+        "trace_match": 0.0,
+        "complexity": 9.0,
+        "call_count": 28.0,
+        "literal_count": 5.0,
+        "source_tokens": 1239.0,
+        "l0_tokens": 71.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.45924132364810333,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 9,
+        "call_count": 28,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java::BaseSecantSolver.solve(final int maxEval, final UnivariateRealFunction f,\n                        final double min, final double max, final double startValue)",
+      "source": "@Override\n    public double solve(final int maxEval, final UnivariateRealFunction f,\n                        final double min, final double max, final double startValue) {\n        return solve(maxEval, f, min, max, startValue, AllowedSolution.ANY_SIDE);\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java::BaseSecantSolver.solve(final int maxEval, final UnivariateRealFunction f,\n                        final double min, final double max, final double startValue)\nSIGNATURE: @Override\n    public double solve(final int maxEval, final UnivariateRealFunction f,\n                        final double min, final double max, final double startValue)",
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java::BaseSecantSolver.solve(final int maxEval, final UnivariateRealFunction f,\n                        final double min, final double max, final double startValue)\nSIGNATURE: @Override\n    public double solve(final int maxEval, final UnivariateRealFunction f,\n                        final double min, final double max, final double startValue)\nSTRUCTURE (lossy):\nreturn solve(maxEval, f, min, max, startValue, AllowedSolution.ANY_SIDE);\nCALL solve(maxEval, f, min, max, startValue, AllowedSolution.ANY_SIDE)",
+        "@Override\n    public double solve(final int maxEval, final UnivariateRealFunction f,\n                        final double min, final double max, final double startValue) {\n        return solve(maxEval, f, min, max, startValue, AllowedSolution.ANY_SIDE);\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7096774193548387,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 65.0,
+        "l0_tokens": 107.0,
+        "l1_tokens": 148.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/optimization/univariate/BracketFinder.java::BracketFinder.eval(UnivariateRealFunction f, double x)",
+      "source": "private double eval(UnivariateRealFunction f, double x) throws MathUserException {\n        try {\n            evaluations.incrementCount();\n        } catch (MaxCountExceededException e) {\n            throw new TooManyEvaluationsException(e.getMax());\n        }\n        return f.value(x);\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/optimization/univariate/BracketFinder.java::BracketFinder.eval(UnivariateRealFunction f, double x)\nSIGNATURE: private double eval(UnivariateRealFunction f, double x) throws MathUserException",
+        "METHOD: src/main/java/org/apache/commons/math/optimization/univariate/BracketFinder.java::BracketFinder.eval(UnivariateRealFunction f, double x)\nSIGNATURE: private double eval(UnivariateRealFunction f, double x) throws MathUserException\nSTRUCTURE (lossy):\nCALL evaluations.incrementCount()\ncatch (MaxCountExceededException e)\nthrow new TooManyEvaluationsException(e.getMax());\nCALL e.getMax()\nreturn f.value(x);\nCALL f.value(x)",
+        "private double eval(UnivariateRealFunction f, double x) throws MathUserException {\n        try {\n            evaluations.incrementCount();\n        } catch (MaxCountExceededException e) {\n            throw new TooManyEvaluationsException(e.getMax());\n        }\n        return f.value(x);\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6363636363636364,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 3.0,
+        "literal_count": 0.0,
+        "source_tokens": 73.0,
+        "l0_tokens": 59.0,
+        "l1_tokens": 107.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 3,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.solve(int maxEval, FUNC f, double min, double max, double startValue)",
+      "source": "public double solve(int maxEval, FUNC f, double min, double max, double startValue) {\n        // Initialization.\n        setup(maxEval, f, min, max, startValue);\n\n        // Perform computation.\n        return doSolve();\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.solve(int maxEval, FUNC f, double min, double max, double startValue)\nSIGNATURE: public double solve(int maxEval, FUNC f, double min, double max, double startValue)",
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.solve(int maxEval, FUNC f, double min, double max, double startValue)\nSIGNATURE: public double solve(int maxEval, FUNC f, double min, double max, double startValue)\nSTRUCTURE (lossy):\nCALL setup(maxEval, f, min, max, startValue)\nreturn doSolve();\nCALL doSolve()",
+        "public double solve(int maxEval, FUNC f, double min, double max, double startValue) {\n        // Initialization.\n        setup(maxEval, f, min, max, startValue);\n\n        // Perform computation.\n        return doSolve();\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7241379310344828,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 57.0,
+        "l0_tokens": 75.0,
+        "l1_tokens": 99.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java::RegulaFalsiSolver.RegulaFalsiSolver(final double absoluteAccuracy)",
+      "source": "public RegulaFalsiSolver(final double absoluteAccuracy) {\n        super(absoluteAccuracy, Method.REGULA_FALSI);\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java::RegulaFalsiSolver.RegulaFalsiSolver(final double absoluteAccuracy)\nSIGNATURE: public RegulaFalsiSolver(final double absoluteAccuracy)",
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java::RegulaFalsiSolver.RegulaFalsiSolver(final double absoluteAccuracy)\nSIGNATURE: public RegulaFalsiSolver(final double absoluteAccuracy)\nSTRUCTURE (lossy):\n",
+        "public RegulaFalsiSolver(final double absoluteAccuracy) {\n        super(absoluteAccuracy, Method.REGULA_FALSI);\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8421052631578947,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 30.0,
+        "l0_tokens": 55.0,
+        "l1_tokens": 60.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java::AbstractContinuousDistribution.inverseCumulativeProbability(final double p)",
+      "source": "public double inverseCumulativeProbability(final double p)\n        throws MathException {\n        if (p < 0.0 || p > 1.0) {\n            throw new OutOfRangeException(p, 0, 1);\n        }\n\n        // by default, do simple root finding using bracketing and default solver.\n        // subclasses can override if there is a better method.\n        UnivariateRealFunction rootFindingFunction =\n            new UnivariateRealFunction() {\n            public double value(double x) throws MathUserException {\n                double ret = Double.NaN;\n                try {\n                    ret = cumulativeProbability(x) - p;\n                } catch (MathException ex) {\n                    throw new MathUserException(ex);\n                }\n                if (Double.isNaN(ret)) {\n                    throw new MathUserException(LocalizedFormats.CUMULATIVE_PROBABILITY_RETURNED_NAN, x, p);\n                }\n                return ret;\n            }\n        };\n\n        // Try to bracket root, test domain endpoints if this fails\n        double lowerBound = getDomainLowerBound(p);\n        double upperBound = getDomainUpperBound(p);\n        double[] bracket = null;\n        try {\n            bracket = UnivariateRealSolverUtils.bracket(\n                    rootFindingFunction, getInitialDomain(p),\n                    lowerBound, upperBound);\n        } catch (NumberIsTooLargeException ex) {\n            /*\n             * Check domain endpoints to see if one gives value that is within\n             * the default solver's defaultAbsoluteAccuracy of 0 (will be the\n             * case if density has bounded support and p is 0 or 1).\n             */\n            if (FastMath.abs(rootFindingFunction.value(lowerBound)) < getSolverAbsoluteAccuracy()) {\n                return lowerBound;\n            }\n            if (FastMath.abs(rootFindingFunction.value(upperBound)) < getSolverAbsoluteAccuracy()) {\n                return upperBound;\n            }\n            // Failed bracket convergence was not because of corner solution\n            throw new MathException(ex);\n        }\n\n        // find root\n        double root = UnivariateRealSolverUtils.solve(rootFindingFunction,\n                // override getSolverAbsoluteAccuracy() to use a Brent solver with\n                // absolute accuracy different from the default.\n                bracket[0],bracket[1], getSolverAbsoluteAccuracy());\n        return root;\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java::AbstractContinuousDistribution.inverseCumulativeProbability(final double p)\nSIGNATURE: public double inverseCumulativeProbability(final double p)\n        throws MathException",
+        "METHOD: src/main/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java::AbstractContinuousDistribution.inverseCumulativeProbability(final double p)\nSIGNATURE: public double inverseCumulativeProbability(final double p)\n        throws MathException\nSTRUCTURE (lossy):\nif (p < 0.0 || p > 1.0)\nthrow new OutOfRangeException(p, 0, 1);\nUnivariateRealFunction rootFindingFunction = new UnivariateRealFunction() { public double value(double x) throws MathUserException { double ret = Double.NaN; try { ret = cumulativeProbability(x) - p; } catch (MathException ex) { throw new MathUserException(ex); } if (Double.isNaN(ret)) { throw new MathUserException(LocalizedFormats.CUMULATIVE_PROBABILITY_RETURNED_NAN, x, p); } return ret; } };\ndouble ret = Double.NaN;\nret = cumulativeProbability(x) - p\nCALL cumulativeProbability(x)\ncatch (MathException ex)\nthrow new MathUserException(ex);\nif (Double.isNaN(ret))\nCALL Double.isNaN(ret)\nthrow new MathUserException(LocalizedFormats.CUMULATIVE_PROBABILITY_RETURNED_NAN, x, p);\nreturn ret;\ndouble lowerBound = getDomainLowerBound(p);\nCALL getDomainLowerBound(p)\ndouble upperBound = getDomainUpperBound(p);\nCALL getDomainUpperBound(p)\ndouble[] bracket = null;\nbracket = UnivariateRealSolverUtils.bracket( rootFindingFunction, getInitialDomain(p), lowerBound, upperBound)\nCALL UnivariateRealSolverUtils.bracket( rootFindingFunction, getInitialDomain(p), lowerBound, upperBound)\nCALL getInitialDomain(p)\ncatch (NumberIsTooLargeException ex)\nif (FastMath.abs(rootFindingFunction.value(lowerBound)) < getSolverAbsoluteAccuracy())\nCALL FastMath.abs(rootFindingFunction.value(lowerBound))\nCALL rootFindingFunction.value(lowerBound)\nCALL getSolverAbsoluteAccuracy()\nreturn lowerBound;\nif (FastMath.abs(rootFindingFunction.value(upperBound)) < getSolverAbsoluteAccuracy())\nCALL FastMath.abs(rootFindingFunction.value(upperBound))\nCALL rootFindingFunction.value(upperBound)\nreturn upperBound;\nthrow new MathException(ex);\ndouble root = UnivariateRealSolverUtils.solve(rootFindingFunction, // override getSolverAbsoluteAccuracy() to use a Brent solver with // absolute accuracy different from the default. bracket[0],bracket[1], getSolverAbsoluteAccuracy(\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public double inverseCumulativeProbability(final double p)\n        throws MathException {\n        if (p < 0.0 || p > 1.0) {\n            throw new OutOfRangeException(p, 0, 1);\n        }\n\n        // by default, do simple root finding using bracketing and default solver.\n        // subclasses can override if there is a better method.\n        UnivariateRealFunction rootFindingFunction =\n            new UnivariateRealFunction() {\n            public double value(double x) throws MathUserException {\n                double ret = Double.NaN;\n                try {\n                    ret = cumulativeProbability(x) - p;\n                } catch (MathException ex) {\n                    throw new MathUserException(ex);\n                }\n                if (Double.isNaN(ret)) {\n                    throw new MathUserException(LocalizedFormats.CUMULATIVE_PROBABILITY_RETURNED_NAN, x, p);\n                }\n                return ret;\n            }\n        };\n\n        // Try to bracket root, test domain endpoints if this fails\n        double lowerBound = getDomainLowerBound(p);\n        double upperBound = getDomainUpperBound(p);\n        double[] bracket = null;\n        try {\n            bracket = UnivariateRealSolverUtils.bracket(\n                    rootFindingFunction, getInitialDomain(p),\n                    lowerBound, upperBound);\n        } catch (NumberIsTooLargeException ex) {\n            /*\n             * Check domain endpoints to see if one gives value that is within\n             * the default solver's defaultAbsoluteAccuracy of 0 (will be the\n             * case if density has bounded support and p is 0 or 1).\n             */\n            if (FastMath.abs(rootFindingFunction.value(lowerBound)) < getSolverAbsoluteAccuracy()) {\n                return lowerBound;\n            }\n            if (FastMath.abs(rootFindingFunction.value(upperBound)) < getSolverAbsoluteAccuracy()) {\n                return upperBound;\n            }\n            // Failed bracket convergence was not because of corner solution\n            throw new MathException(ex);\n        }\n\n        // find root\n        double root = UnivariateRealSolverUtils.solve(rootFindingFunction,\n                // override getSolverAbsoluteAccuracy() to use a Brent solver with\n                // absolute accuracy different from the default.\n                bracket[0],bracket[1], getSolverAbsoluteAccuracy());\n        return root;\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2916666666666667,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 14.0,
+        "literal_count": 7.0,
+        "source_tokens": 604.0,
+        "l0_tokens": 68.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.9420529801324503,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 7,
+        "call_count": 14,
+        "literal_count": 7
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java::RegulaFalsiSolver.RegulaFalsiSolver()",
+      "source": "public RegulaFalsiSolver() {\n        super(DEFAULT_ABSOLUTE_ACCURACY, Method.REGULA_FALSI);\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java::RegulaFalsiSolver.RegulaFalsiSolver()\nSIGNATURE: public RegulaFalsiSolver()",
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java::RegulaFalsiSolver.RegulaFalsiSolver()\nSIGNATURE: public RegulaFalsiSolver()\nSTRUCTURE (lossy):\n",
+        "public RegulaFalsiSolver() {\n        super(DEFAULT_ABSOLUTE_ACCURACY, Method.REGULA_FALSI);\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8333333333333334,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 25.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 46.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.getMaxEvaluations()",
+      "source": "public int getMaxEvaluations() {\n        return evaluations.getMaximalCount();\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.getMaxEvaluations()\nSIGNATURE: public int getMaxEvaluations()",
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.getMaxEvaluations()\nSIGNATURE: public int getMaxEvaluations()\nSTRUCTURE (lossy):\nreturn evaluations.getMaximalCount();\nCALL evaluations.getMaximalCount()",
+        "public int getMaxEvaluations() {\n        return evaluations.getMaximalCount();\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8636363636363636,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 21.0,
+        "l0_tokens": 49.0,
+        "l1_tokens": 72.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java::BaseSecantSolver.solve(final int maxEval, final UnivariateRealFunction f,\n                        final double min, final double max, final double startValue,\n                        final AllowedSolution allowedSolution)",
+      "source": "public double solve(final int maxEval, final UnivariateRealFunction f,\n                        final double min, final double max, final double startValue,\n                        final AllowedSolution allowedSolution) {\n        this.allowed = allowedSolution;\n        return super.solve(maxEval, f, min, max, startValue);\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java::BaseSecantSolver.solve(final int maxEval, final UnivariateRealFunction f,\n                        final double min, final double max, final double startValue,\n                        final AllowedSolution allowedSolution)\nSIGNATURE: public double solve(final int maxEval, final UnivariateRealFunction f,\n                        final double min, final double max, final double startValue,\n                        final AllowedSolution allowedSolution)",
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java::BaseSecantSolver.solve(final int maxEval, final UnivariateRealFunction f,\n                        final double min, final double max, final double startValue,\n                        final AllowedSolution allowedSolution)\nSIGNATURE: public double solve(final int maxEval, final UnivariateRealFunction f,\n                        final double min, final double max, final double startValue,\n                        final AllowedSolution allowedSolution)\nSTRUCTURE (lossy):\nthis.allowed = allowedSolution\nreturn super.solve(maxEval, f, min, max, startValue);\nCALL super.solve(maxEval, f, min, max, startValue)",
+        "public double solve(final int maxEval, final UnivariateRealFunction f,\n                        final double min, final double max, final double startValue,\n                        final AllowedSolution allowedSolution) {\n        this.allowed = allowedSolution;\n        return super.solve(maxEval, f, min, max, startValue);\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7333333333333333,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 82.0,
+        "l0_tokens": 135.0,
+        "l1_tokens": 173.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.doIntegrate()",
+      "source": "protected abstract double doIntegrate()\n        throws TooManyEvaluationsException, ConvergenceException;",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.doIntegrate()\nSIGNATURE: src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.doIntegrate()",
+        "METHOD: src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.doIntegrate()\nSIGNATURE: src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.doIntegrate()\nSTRUCTURE (lossy):\n",
+        "protected abstract double doIntegrate()\n        throws TooManyEvaluationsException, ConvergenceException;"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.782608695652174,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 27.0,
+        "l0_tokens": 73.0,
+        "l1_tokens": 78.0,
+        "compression_ratio": 1,
+        "parse_error": 1.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": true,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java::BaseSecantSolver.BaseSecantSolver(final double relativeAccuracy,\n                               final double absoluteAccuracy,\n                               final double functionValueAccuracy,\n                               final Method method)",
+      "source": "protected BaseSecantSolver(final double relativeAccuracy,\n                               final double absoluteAccuracy,\n                               final double functionValueAccuracy,\n                               final Method method) {\n        super(relativeAccuracy, absoluteAccuracy, functionValueAccuracy);\n        this.allowed = AllowedSolution.ANY_SIDE;\n        this.method = method;\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java::BaseSecantSolver.BaseSecantSolver(final double relativeAccuracy,\n                               final double absoluteAccuracy,\n                               final double functionValueAccuracy,\n                               final Method method)\nSIGNATURE: protected BaseSecantSolver(final double relativeAccuracy,\n                               final double absoluteAccuracy,\n                               final double functionValueAccuracy,\n                               final Method method)",
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java::BaseSecantSolver.BaseSecantSolver(final double relativeAccuracy,\n                               final double absoluteAccuracy,\n                               final double functionValueAccuracy,\n                               final Method method)\nSIGNATURE: protected BaseSecantSolver(final double relativeAccuracy,\n                               final double absoluteAccuracy,\n                               final double functionValueAccuracy,\n                               final Method method)\nSTRUCTURE (lossy):\nthis.allowed = AllowedSolution.ANY_SIDE\nthis.method = method",
+        "protected BaseSecantSolver(final double relativeAccuracy,\n                               final double absoluteAccuracy,\n                               final double functionValueAccuracy,\n                               final Method method) {\n        super(relativeAccuracy, absoluteAccuracy, functionValueAccuracy);\n        this.allowed = AllowedSolution.ANY_SIDE;\n        this.method = method;\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6296296296296297,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 100.0,
+        "l0_tokens": 146.0,
+        "l1_tokens": 166.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java::RegulaFalsiSolver.RegulaFalsiSolver(final double relativeAccuracy,\n                             final double absoluteAccuracy)",
+      "source": "public RegulaFalsiSolver(final double relativeAccuracy,\n                             final double absoluteAccuracy) {\n        super(relativeAccuracy, absoluteAccuracy, Method.REGULA_FALSI);\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java::RegulaFalsiSolver.RegulaFalsiSolver(final double relativeAccuracy,\n                             final double absoluteAccuracy)\nSIGNATURE: public RegulaFalsiSolver(final double relativeAccuracy,\n                             final double absoluteAccuracy)",
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java::RegulaFalsiSolver.RegulaFalsiSolver(final double relativeAccuracy,\n                             final double absoluteAccuracy)\nSIGNATURE: public RegulaFalsiSolver(final double relativeAccuracy,\n                             final double absoluteAccuracy)\nSTRUCTURE (lossy):\n",
+        "public RegulaFalsiSolver(final double relativeAccuracy,\n                             final double absoluteAccuracy) {\n        super(relativeAccuracy, absoluteAccuracy, Method.REGULA_FALSI);\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 49.0,
+        "l0_tokens": 85.0,
+        "l1_tokens": 90.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.integrate(final int maxEval, final UnivariateRealFunction f,\n                            final double min, final double max)",
+      "source": "public double integrate(final int maxEval, final UnivariateRealFunction f,\n                            final double min, final double max)\n        throws TooManyEvaluationsException, ConvergenceException,\n               MathIllegalArgumentException, NullArgumentException {\n\n        // Initialization.\n        setup(maxEval, f, min, max);\n\n        // Perform computation.\n        return doIntegrate();\n\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.integrate(final int maxEval, final UnivariateRealFunction f,\n                            final double min, final double max)\nSIGNATURE: public double integrate(final int maxEval, final UnivariateRealFunction f,\n                            final double min, final double max)\n        throws TooManyEvaluationsException, ConvergenceException,\n               MathIllegalArgumentException, NullArgumentException",
+        "METHOD: src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.integrate(final int maxEval, final UnivariateRealFunction f,\n                            final double min, final double max)\nSIGNATURE: public double integrate(final int maxEval, final UnivariateRealFunction f,\n                            final double min, final double max)\n        throws TooManyEvaluationsException, ConvergenceException,\n               MathIllegalArgumentException, NullArgumentException\nSTRUCTURE (lossy):\nCALL setup(maxEval, f, min, max)\nreturn doIntegrate();\nCALL doIntegrate()",
+        "public double integrate(final int maxEval, final UnivariateRealFunction f,\n                            final double min, final double max)\n        throws TooManyEvaluationsException, ConvergenceException,\n               MathIllegalArgumentException, NullArgumentException {\n\n        // Initialization.\n        setup(maxEval, f, min, max);\n\n        // Perform computation.\n        return doIntegrate();\n\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6388888888888888,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 102.0,
+        "l0_tokens": 135.0,
+        "l1_tokens": 158.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java::BisectionSolver.doSolve()",
+      "source": "@Override\n    protected double doSolve() {\n        double min = getMin();\n        double max = getMax();\n        verifyInterval(min, max);\n        final double absoluteAccuracy = getAbsoluteAccuracy();\n        double m;\n        double fm;\n        double fmin;\n\n        while (true) {\n            m = UnivariateRealSolverUtils.midpoint(min, max);\n            fmin = computeObjectiveValue(min);\n            fm = computeObjectiveValue(m);\n\n            if (fm * fmin > 0) {\n                // max and m bracket the root.\n                min = m;\n            } else {\n                // min and m bracket the root.\n                max = m;\n            }\n\n            if (FastMath.abs(max - min) <= absoluteAccuracy) {\n                m = UnivariateRealSolverUtils.midpoint(min, max);\n                return m;\n            }\n        }\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java::BisectionSolver.doSolve()\nSIGNATURE: @Override\n    protected double doSolve()",
+        "METHOD: src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java::BisectionSolver.doSolve()\nSIGNATURE: @Override\n    protected double doSolve()\nSTRUCTURE (lossy):\ndouble min = getMin();\nCALL getMin()\ndouble max = getMax();\nCALL getMax()\nCALL verifyInterval(min, max)\nfinal double absoluteAccuracy = getAbsoluteAccuracy();\nCALL getAbsoluteAccuracy()\ndouble m;\ndouble fm;\ndouble fmin;\nwhile (true)\nm = UnivariateRealSolverUtils.midpoint(min, max)\nCALL UnivariateRealSolverUtils.midpoint(min, max)\nfmin = computeObjectiveValue(min)\nCALL computeObjectiveValue(min)\nfm = computeObjectiveValue(m)\nCALL computeObjectiveValue(m)\nif (fm * fmin > 0)\nmin = m\nmax = m\nif (FastMath.abs(max - min) <= absoluteAccuracy)\nCALL FastMath.abs(max - min)\nreturn m;",
+        "@Override\n    protected double doSolve() {\n        double min = getMin();\n        double max = getMax();\n        verifyInterval(min, max);\n        final double absoluteAccuracy = getAbsoluteAccuracy();\n        double m;\n        double fm;\n        double fmin;\n\n        while (true) {\n            m = UnivariateRealSolverUtils.midpoint(min, max);\n            fmin = computeObjectiveValue(min);\n            fm = computeObjectiveValue(m);\n\n            if (fm * fmin > 0) {\n                // max and m bracket the root.\n                min = m;\n            } else {\n                // min and m bracket the root.\n                max = m;\n            }\n\n            if (FastMath.abs(max - min) <= absoluteAccuracy) {\n                m = UnivariateRealSolverUtils.midpoint(min, max);\n                return m;\n            }\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5121951219512195,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 9.0,
+        "literal_count": 1.0,
+        "source_tokens": 209.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 191.0,
+        "compression_ratio": 0.9138755980861244,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 9,
+        "literal_count": 1
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.computeObjectiveValue(double point)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.incrementEvaluationCount()": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.computeObjectiveValue(final double point)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/optimization/univariate/AbstractUnivariateRealOptimizer.java::AbstractUnivariateRealOptimizer.computeObjectiveValue(double point)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/optimization/direct/BaseAbstractScalarOptimizer.java::BaseAbstractScalarOptimizer.computeObjectiveValue(double[] point)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/optimization/direct/BaseAbstractVectorialOptimizer.java::BaseAbstractVectorialOptimizer.computeObjectiveValue(double[] point)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.doSolve()": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/analysis/solvers/AbstractDifferentiableUnivariateRealSolver.java::AbstractDifferentiableUnivariateRealSolver.computeDerivativeObjectiveValue(double point)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java::RegulaFalsiSolver.RegulaFalsiSolver(final double relativeAccuracy,\n                             final double absoluteAccuracy,\n                             final double functionValueAccuracy)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.setup(int maxEval,\n                         FUNC f,\n                         double min, double max,\n                         double startValue)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/ode/events/EventState.java::EventState.evaluateStep(final StepInterpolator interpolator)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java::BaseSecantSolver.solve(final int maxEval, final UnivariateRealFunction f,\n                        final double min, final double max, final double startValue)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/optimization/univariate/BracketFinder.java::BracketFinder.eval(UnivariateRealFunction f, double x)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.solve(int maxEval, FUNC f, double min, double max, double startValue)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java::RegulaFalsiSolver.RegulaFalsiSolver(final double absoluteAccuracy)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java::AbstractContinuousDistribution.inverseCumulativeProbability(final double p)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java::RegulaFalsiSolver.RegulaFalsiSolver()": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java::BaseAbstractUnivariateRealSolver.getMaxEvaluations()": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java::BaseSecantSolver.solve(final int maxEval, final UnivariateRealFunction f,\n                        final double min, final double max, final double startValue,\n                        final AllowedSolution allowedSolution)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.doIntegrate()": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java::BaseSecantSolver.BaseSecantSolver(final double relativeAccuracy,\n                               final double absoluteAccuracy,\n                               final double functionValueAccuracy,\n                               final Method method)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java::RegulaFalsiSolver.RegulaFalsiSolver(final double relativeAccuracy,\n                             final double absoluteAccuracy)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegratorImpl.java::UnivariateRealIntegratorImpl.integrate(final int maxEval, final UnivariateRealFunction f,\n                            final double min, final double max)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java::BisectionSolver.doSolve()": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 5439,
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "b2262884abf776ac29e6b6b4702a3dc90bc9aec1a6c05de16c16494b248a9a36",
+  "evidence_sha256": "906bb3c2bdb6fe6fd775b682df1d600d910d7ffb9f870cbd43d9e36c8e34feab"
+}

@@ -1,0 +1,1318 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Lang-43",
+    "repository": "Lang",
+    "language": "java",
+    "revision": "3fd6dd0e141d8c3e5693e3ade8b392abc65dd02a",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_18/prepared/checkouts/Lang-43",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Lang-43\nEXECUTED BUGGY TEST: org.apache.commons.lang.text.ExtendedMessageFormatTest::testEscapedQuote_LANG_477\nTEST SOURCE: src/test/org/apache/commons/lang/text/ExtendedMessageFormatTest.java\nTEST SOURCE SHA256: 4abec3e41f2d40ead1f72083d1193983714a8e69e054e8f684f8779dcc858b98\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testEscapedQuote_LANG_477() {\n        String pattern = \"it''s a {0,lower} 'test'!\";\n        ExtendedMessageFormat emf = new ExtendedMessageFormat(pattern, registry);\n        assertEquals(\"it's a dummy test!\", emf.format(new Object[] {\"DUMMY\"}));\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.apache.commons.lang.text.ExtendedMessageFormatTest::testEscapedQuote_LANG_477\njava.lang.OutOfMemoryError: Requested array size exceeds VM limit\n\tat java.base/java.util.Arrays.copyOf(Arrays.java:3745)\n\tat java.base/java.lang.AbstractStringBuilder.ensureCapacityInternal(AbstractStringBuilder.java:172)\n\tat java.base/java.lang.AbstractStringBuilder.append(AbstractStringBuilder.java:748)\n\tat java.base/java.lang.StringBuffer.append(StringBuffer.java:429)\n\tat org.apache.commons.lang.text.ExtendedMessageFormat.appendQuotedString(ExtendedMessageFormat.java:422)\n\tat org.apache.commons.lang.text.ExtendedMessageFormat.applyPattern(ExtendedMessageFormat.java:158)\n\tat org.apache.commons.lang.text.ExtendedMessageFormat.<init>(ExtendedMessageFormat.java:127)\n\tat org.apache.commons.lang.text.ExtendedMessageFormat.<init>(ExtendedMessageFormat.java:112)\n\tat org.apache.commons.lang.text.ExtendedMessageFormatTest.testEscapedQuote_LANG_477(ExtendedMessageFormatTest.java:100)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_18/prepared/evidence/Lang-43.txt",
+      "sha256": "b3ebda262663dbcfbcd692920e6674bd58eabe4926b71d2e2b6704235d00041a"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src/java",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Lang-43",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.ExtendedMessageFormat(String pattern, Locale locale, Map registry)",
+      "path": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java",
+      "start_line": 123,
+      "end_line": 128,
+      "source": "public ExtendedMessageFormat(String pattern, Locale locale, Map registry) {\n        super(DUMMY_PATTERN);\n        setLocale(locale);\n        this.registry = registry;\n        applyPattern(pattern);\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 46.27461419554291
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.applyPattern(String pattern)",
+      "path": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java",
+      "start_line": 142,
+      "end_line": 206,
+      "source": "public final void applyPattern(String pattern) {\n        if (registry == null) {\n            super.applyPattern(pattern);\n            toPattern = super.toPattern();\n            return;\n        }\n        ArrayList foundFormats = new ArrayList();\n        ArrayList foundDescriptions = new ArrayList();\n        StringBuffer stripCustom = new StringBuffer(pattern.length());\n\n        ParsePosition pos = new ParsePosition(0);\n        char[] c = pattern.toCharArray();\n        int fmtCount = 0;\n        while (pos.getIndex() < pattern.length()) {\n            switch (c[pos.getIndex()]) {\n            case QUOTE:\n                appendQuotedString(pattern, pos, stripCustom, true);\n                break;\n            case START_FE:\n                fmtCount++;\n                seekNonWs(pattern, pos);\n                int start = pos.getIndex();\n                int index = readArgumentIndex(pattern, next(pos));\n                stripCustom.append(START_FE).append(index);\n                seekNonWs(pattern, pos);\n                Format format = null;\n                String formatDescription = null;\n                if (c[pos.getIndex()] == START_FMT) {\n                    formatDescription = parseFormatDescription(pattern,\n                            next(pos));\n                    format = getFormat(formatDescription);\n                    if (format == null) {\n                        stripCustom.append(START_FMT).append(formatDescription);\n                    }\n                }\n                foundFormats.add(format);\n                foundDescriptions.add(format == null ? null : formatDescription);\n                Validate.isTrue(foundFormats.size() == fmtCount);\n                Validate.isTrue(foundDescriptions.size() == fmtCount);\n                if (c[pos.getIndex()] != END_FE) {\n                    throw new IllegalArgumentException(\n                            \"Unreadable format element at position \" + start);\n                }\n                // fall through\n            default:\n                stripCustom.append(c[pos.getIndex()]);\n                next(pos);\n            }\n        }\n        super.applyPattern(stripCustom.toString());\n        toPattern = insertFormats(super.toPattern(), foundDescriptions);\n        if (containsElements(foundFormats)) {\n            Format[] origFormats = getFormats();\n            // only loop over what we know we have, as MessageFormat on Java 1.3 \n            // seems to provide an extra format element:\n            int i = 0;\n            for (Iterator it = foundFormats.iterator(); it.hasNext(); i++) {\n                Format f = (Format) it.next();\n                if (f != null) {\n                    origFormats[i] = f;\n                }\n            }\n            super.setFormats(origFormats);\n        }\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 43.889834221342284
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.ExtendedMessageFormat(String pattern, Map registry)",
+      "path": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java",
+      "start_line": 111,
+      "end_line": 113,
+      "source": "public ExtendedMessageFormat(String pattern, Map registry) {\n        this(pattern, Locale.getDefault(), registry);\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.90909910203454
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.readArgumentIndex(String pattern, ParsePosition pos)",
+      "path": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java",
+      "start_line": 270,
+      "end_line": 303,
+      "source": "private int readArgumentIndex(String pattern, ParsePosition pos) {\n        int start = pos.getIndex();\n        seekNonWs(pattern, pos);\n        StringBuffer result = new StringBuffer();\n        boolean error = false;\n        for (; !error && pos.getIndex() < pattern.length(); next(pos)) {\n            char c = pattern.charAt(pos.getIndex());\n            if (Character.isWhitespace(c)) {\n                seekNonWs(pattern, pos);\n                c = pattern.charAt(pos.getIndex());\n                if (c != START_FMT && c != END_FE) {\n                    error = true;\n                    continue;\n                }\n            }\n            if ((c == START_FMT || c == END_FE) && result.length() > 0) {\n                try {\n                    return Integer.parseInt(result.toString());\n                } catch (NumberFormatException e) {\n                    // we've already ensured only digits, so unless something\n                    // outlandishly large was specified we should be okay.\n                }\n            }\n            error = !Character.isDigit(c);\n            result.append(c);\n        }\n        if (error) {\n            throw new IllegalArgumentException(\n                    \"Invalid format argument index at position \" + start + \": \"\n                            + pattern.substring(start, pos.getIndex()));\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated format element at position \" + start);\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.981186969286945
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.getQuotedString(String pattern, ParsePosition pos,\n            boolean escapingOn)",
+      "path": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java",
+      "start_line": 453,
+      "end_line": 456,
+      "source": "private void getQuotedString(String pattern, ParsePosition pos,\n            boolean escapingOn) {\n        appendQuotedString(pattern, pos, null, escapingOn);\n    }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.57127272198469
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.parseFormatDescription(String pattern, ParsePosition pos)",
+      "path": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java",
+      "start_line": 312,
+      "end_line": 335,
+      "source": "private String parseFormatDescription(String pattern, ParsePosition pos) {\n        int start = pos.getIndex();\n        seekNonWs(pattern, pos);\n        int text = pos.getIndex();\n        int depth = 1;\n        for (; pos.getIndex() < pattern.length(); next(pos)) {\n            switch (pattern.charAt(pos.getIndex())) {\n            case START_FE:\n                depth++;\n                break;\n            case END_FE:\n                depth--;\n                if (depth == 0) {\n                    return pattern.substring(text, pos.getIndex());\n                }\n                break;\n            case QUOTE:\n                getQuotedString(pattern, pos, false);\n                break;\n            }\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated format element at position \" + start);\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.10727169392095
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/time/FastDateFormat.java::FastDateFormat.parseToken(String pattern, int[] indexRef)",
+      "path": "src/java/org/apache/commons/lang/time/FastDateFormat.java",
+      "start_line": 706,
+      "end_line": 756,
+      "source": "protected String parseToken(String pattern, int[] indexRef) {\n        StringBuffer buf = new StringBuffer();\n\n        int i = indexRef[0];\n        int length = pattern.length();\n\n        char c = pattern.charAt(i);\n        if (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z') {\n            // Scan a run of the same character, which indicates a time\n            // pattern.\n            buf.append(c);\n\n            while (i + 1 < length) {\n                char peek = pattern.charAt(i + 1);\n                if (peek == c) {\n                    buf.append(c);\n                    i++;\n                } else {\n                    break;\n                }\n            }\n        } else {\n            // This will identify token as text.\n            buf.append('\\'');\n\n            boolean inLiteral = false;\n\n            for (; i < length; i++) {\n                c = pattern.charAt(i);\n\n                if (c == '\\'') {\n                    if (i + 1 < length && pattern.charAt(i + 1) == '\\'') {\n                        // '' is treated as escaped '\n                        i++;\n                        buf.append(c);\n                    } else {\n                        inLiteral = !inLiteral;\n                    }\n                } else if (!inLiteral &&\n                         (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z')) {\n                    i--;\n                    break;\n                } else {\n                    buf.append(c);\n                }\n            }\n        }\n\n        indexRef[0] = i;\n        return buf.toString();\n    }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 37.28400164833124
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.insertFormats(String pattern, ArrayList customPatterns)",
+      "path": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java",
+      "start_line": 344,
+      "end_line": 379,
+      "source": "private String insertFormats(String pattern, ArrayList customPatterns) {\n        if (!containsElements(customPatterns)) {\n            return pattern;\n        }\n        StringBuffer sb = new StringBuffer(pattern.length() * 2);\n        ParsePosition pos = new ParsePosition(0);\n        int fe = -1;\n        int depth = 0;\n        while (pos.getIndex() < pattern.length()) {\n            char c = pattern.charAt(pos.getIndex());\n            switch (c) {\n            case QUOTE:\n                appendQuotedString(pattern, pos, sb, false);\n                break;\n            case START_FE:\n                depth++;\n                if (depth == 1) {\n                    fe++;\n                    sb.append(START_FE).append(\n                            readArgumentIndex(pattern, next(pos)));\n                    String customPattern = (String) customPatterns.get(fe);\n                    if (customPattern != null) {\n                        sb.append(START_FMT).append(customPattern);\n                    }\n                }\n                break;\n            case END_FE:\n                depth--;\n                //fall through:\n            default:\n                sb.append(c);\n                next(pos);\n            }\n        }\n        return sb.toString();\n    }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 37.21635219929195
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.appendQuotedString(String pattern, ParsePosition pos,\n            StringBuffer appendTo, boolean escapingOn)",
+      "path": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java",
+      "start_line": 417,
+      "end_line": 444,
+      "source": "private StringBuffer appendQuotedString(String pattern, ParsePosition pos,\n            StringBuffer appendTo, boolean escapingOn) {\n        int start = pos.getIndex();\n        char[] c = pattern.toCharArray();\n        if (escapingOn && c[start] == QUOTE) {\n            return appendTo == null ? null : appendTo.append(QUOTE);\n        }\n        int lastHold = start;\n        for (int i = pos.getIndex(); i < pattern.length(); i++) {\n            if (escapingOn && pattern.substring(i).startsWith(ESCAPED_QUOTE)) {\n                appendTo.append(c, lastHold, pos.getIndex() - lastHold).append(\n                        QUOTE);\n                pos.setIndex(i + ESCAPED_QUOTE.length());\n                lastHold = pos.getIndex();\n                continue;\n            }\n            switch (c[pos.getIndex()]) {\n            case QUOTE:\n                next(pos);\n                return appendTo == null ? null : appendTo.append(c, lastHold,\n                        pos.getIndex() - lastHold);\n            default:\n                next(pos);\n            }\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated quoted string at position \" + start);\n    }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.42393770275255
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/StringEscapeUtils.java::StringEscapeUtils.unescapeJava(Writer out, String str)",
+      "path": "src/java/org/apache/commons/lang/StringEscapeUtils.java",
+      "start_line": 307,
+      "end_line": 389,
+      "source": "public static void unescapeJava(Writer out, String str) throws IOException {\n        if (out == null) {\n            throw new IllegalArgumentException(\"The Writer must not be null\");\n        }\n        if (str == null) {\n            return;\n        }\n        int sz = str.length();\n        StringBuffer unicode = new StringBuffer(4);\n        boolean hadSlash = false;\n        boolean inUnicode = false;\n        for (int i = 0; i < sz; i++) {\n            char ch = str.charAt(i);\n            if (inUnicode) {\n                // if in unicode, then we're reading unicode\n                // values in somehow\n                unicode.append(ch);\n                if (unicode.length() == 4) {\n                    // unicode now contains the four hex digits\n                    // which represents our unicode character\n                    try {\n                        int value = Integer.parseInt(unicode.toString(), 16);\n                        out.write((char) value);\n                        unicode.setLength(0);\n                        inUnicode = false;\n                        hadSlash = false;\n                    } catch (NumberFormatException nfe) {\n                        throw new NestableRuntimeException(\"Unable to parse unicode value: \" + unicode, nfe);\n                    }\n                }\n                continue;\n            }\n            if (hadSlash) {\n                // handle an escaped value\n                hadSlash = false;\n                switch (ch) {\n                    case '\\\\':\n                        out.write('\\\\');\n                        break;\n                    case '\\'':\n                        out.write('\\'');\n                        break;\n                    case '\\\"':\n                        out.write('\"');\n                        break;\n                    case 'r':\n                        out.write('\\r');\n                        break;\n                    case 'f':\n                        out.write('\\f');\n                        break;\n                    case 't':\n                        out.write('\\t');\n                        break;\n                    case 'n':\n                        out.write('\\n');\n                        break;\n                    case 'b':\n                        out.write('\\b');\n                        break;\n                    case 'u':\n                        {\n                            // uh-oh, we're in unicode country....\n                            inUnicode = true;\n                            break;\n                        }\n                    default :\n                        out.write(ch);\n                        break;\n                }\n                continue;\n            } else if (ch == '\\\\') {\n                hadSlash = true;\n                continue;\n            }\n            out.write(ch);\n        }\n        if (hadSlash) {\n            // then we're in the weird case of a \\ at the end of the\n            // string, let's output it anyway.\n            out.write('\\\\');\n        }\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.86406145815637
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.ExtendedMessageFormat(String pattern)",
+      "path": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java",
+      "start_line": 89,
+      "end_line": 91,
+      "source": "public ExtendedMessageFormat(String pattern) {\n        this(pattern, Locale.getDefault());\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.52009252027873
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/WordUtils.java::WordUtils.abbreviate(String str, int lower, int upper, String appendToEnd)",
+      "path": "src/java/org/apache/commons/lang/WordUtils.java",
+      "start_line": 605,
+      "end_line": 645,
+      "source": "public static String abbreviate(String str, int lower, int upper, String appendToEnd) {\n        // initial parameter checks\n        if (str == null) {\n            return null;\n        }\n        if (str.length() == 0) {\n            return StringUtils.EMPTY;\n        }\n\n        // if the lower value is greater than the length of the string,\n        // set to the length of the string\n        if (lower > str.length()) {\n            lower = str.length();    \n        }\n        // if the upper value is -1 (i.e. no limit) or is greater\n        // than the length of the string, set to the length of the string\n        if (upper == -1 || upper > str.length()) {\n            upper = str.length();\n        }\n        // if upper is less than lower, raise it to lower\n        if (upper < lower) {\n            upper = lower;\n        }\n\n        StringBuffer result = new StringBuffer();\n        int index = StringUtils.indexOf(str, \" \", lower);\n        if (index == -1) {\n            result.append(str.substring(0, upper));\n            // only if abbreviation has occured do we append the appendToEnd value\n            if (upper != str.length()) {\n                result.append(StringUtils.defaultString(appendToEnd));\n            }\n        } else if (index > upper) {\n            result.append(str.substring(0, upper));\n            result.append(StringUtils.defaultString(appendToEnd));\n        } else {\n            result.append(str.substring(0, index));\n            result.append(StringUtils.defaultString(appendToEnd));\n        }\n        return result.toString();\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.139750160604805
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.ExtendedMessageFormat(String pattern, Locale locale)",
+      "path": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java",
+      "start_line": 100,
+      "end_line": 102,
+      "source": "public ExtendedMessageFormat(String pattern, Locale locale) {\n        this(pattern, locale, null);\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.996643412932663
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.setFormat(int formatElementIndex, Format newFormat)",
+      "path": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java",
+      "start_line": 212,
+      "end_line": 214,
+      "source": "public void setFormat(int formatElementIndex, Format newFormat) {\n        throw new UnsupportedOperationException();\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.24014493109422
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object arg)",
+      "path": "src/java/org/apache/commons/lang/reflect/MethodUtils.java",
+      "start_line": 92,
+      "end_line": 96,
+      "source": "public static Object invokeMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeMethod(object, methodName, new Object[] { arg });\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 30.360353961178866
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)",
+      "path": "src/java/org/apache/commons/lang/builder/EqualsBuilder.java",
+      "start_line": 253,
+      "end_line": 300,
+      "source": "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf \n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars, \n        // then a subclass can test equals to a superclass.\n        Class lhsClass = lhs.getClass();\n        Class rhsClass = rhs.getClass();\n        Class testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and \n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 30.284809366617303
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.toPattern()",
+      "path": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java",
+      "start_line": 133,
+      "end_line": 135,
+      "source": "public String toPattern() {\n        return toPattern;\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 29.96064421511283
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object arg)",
+      "path": "src/java/org/apache/commons/lang/reflect/MethodUtils.java",
+      "start_line": 192,
+      "end_line": 196,
+      "source": "public static Object invokeExactMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeExactMethod(object, methodName, new Object[] { arg });\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 29.901733576153063
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(boolean value)",
+      "path": "src/java/org/apache/commons/lang/text/StrBuilder.java",
+      "start_line": 667,
+      "end_line": 683,
+      "source": "public StrBuilder append(boolean value) {\n        if (value) {\n            ensureCapacity(size + 4);\n            buffer[size++] = 't';\n            buffer[size++] = 'r';\n            buffer[size++] = 'u';\n            buffer[size++] = 'e';\n        } else {\n            ensureCapacity(size + 5);\n            buffer[size++] = 'f';\n            buffer[size++] = 'a';\n            buffer[size++] = 'l';\n            buffer[size++] = 's';\n            buffer[size++] = 'e';\n        }\n        return this;\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 29.5455329975585
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/time/DurationFormatUtils.java::DurationFormatUtils.lexx(String format)",
+      "path": "src/java/org/apache/commons/lang/time/DurationFormatUtils.java",
+      "start_line": 490,
+      "end_line": 544,
+      "source": "static Token[] lexx(String format) {\n        char[] array = format.toCharArray();\n        ArrayList list = new ArrayList(array.length);\n\n        boolean inLiteral = false;\n        StringBuffer buffer = null;\n        Token previous = null;\n        int sz = array.length;\n        for(int i=0; i<sz; i++) {\n            char ch = array[i];\n            if(inLiteral && ch != '\\'') {\n                buffer.append(ch);\n                continue;\n            }\n            Object value = null;\n            switch(ch) {\n                // TODO: Need to handle escaping of '\n                case '\\'' : \n                  if(inLiteral) {\n                      buffer = null;\n                      inLiteral = false;\n                  } else {\n                      buffer = new StringBuffer();\n                      list.add(new Token(buffer));\n                      inLiteral = true;\n                  }\n                  break;\n                case 'y'  : value = y; break;\n                case 'M'  : value = M; break;\n                case 'd'  : value = d; break;\n                case 'H'  : value = H; break;\n                case 'm'  : value = m; break;\n                case 's'  : value = s; break;\n                case 'S'  : value = S; break;\n                default   : \n                  if(buffer == null) {\n                      buffer = new StringBuffer();\n                      list.add(new Token(buffer));\n                  }\n                  buffer.append(ch);\n            }\n\n            if(value != null) {\n                if(previous != null && previous.getValue() == value) {\n                    previous.increment();\n                } else {\n                    Token token = new Token(value);\n                    list.add(token); \n                    previous = token;\n                }\n                buffer = null; \n            }\n        }\n        return (Token[]) list.toArray( new Token[list.size()] );\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 29.518718106025624
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class cls, String methodName,\n            Object arg)",
+      "path": "src/java/org/apache/commons/lang/reflect/MethodUtils.java",
+      "start_line": 330,
+      "end_line": 334,
+      "source": "public static Object invokeStaticMethod(Class cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeStaticMethod(cls, methodName, new Object[] { arg });\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 29.291482017350226
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.seekNonWs(String pattern, ParsePosition pos)",
+      "path": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java",
+      "start_line": 387,
+      "end_line": 394,
+      "source": "private void seekNonWs(String pattern, ParsePosition pos) {\n        int len = 0;\n        char[] buffer = pattern.toCharArray();\n        do {\n            len = StrMatcher.splitMatcher().isMatch(buffer, pos.getIndex());\n            pos.setIndex(pos.getIndex() + len);\n        } while (len > 0 && pos.getIndex() < pattern.length());\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 28.893875988653054
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class cls, String methodName,\n            Object arg)",
+      "path": "src/java/org/apache/commons/lang/reflect/MethodUtils.java",
+      "start_line": 434,
+      "end_line": 438,
+      "source": "public static Object invokeExactStaticMethod(Class cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeExactStaticMethod(cls, methodName, new Object[] { arg });\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 28.8366944040675
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object[] args)",
+      "path": "src/java/org/apache/commons/lang/reflect/MethodUtils.java",
+      "start_line": 120,
+      "end_line": 132,
+      "source": "public static Object invokeMethod(Object object, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeMethod(object, methodName, args, parameterTypes);\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 28.488483654013095
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.ExtendedMessageFormat(String pattern, Locale locale, Map registry)",
+      "source": "public ExtendedMessageFormat(String pattern, Locale locale, Map registry) {\n        super(DUMMY_PATTERN);\n        setLocale(locale);\n        this.registry = registry;\n        applyPattern(pattern);\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.ExtendedMessageFormat(String pattern, Locale locale, Map registry)\nSIGNATURE: public ExtendedMessageFormat(String pattern, Locale locale, Map registry)",
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.ExtendedMessageFormat(String pattern, Locale locale, Map registry)\nSIGNATURE: public ExtendedMessageFormat(String pattern, Locale locale, Map registry)\nSTRUCTURE (lossy):\nCALL setLocale(locale)\nthis.registry = registry\nCALL applyPattern(pattern)",
+        "public ExtendedMessageFormat(String pattern, Locale locale, Map registry) {\n        super(DUMMY_PATTERN);\n        setLocale(locale);\n        this.registry = registry;\n        applyPattern(pattern);\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7619047619047619,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 51.0,
+        "l0_tokens": 62.0,
+        "l1_tokens": 86.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.applyPattern(String pattern)",
+      "source": "public final void applyPattern(String pattern) {\n        if (registry == null) {\n            super.applyPattern(pattern);\n            toPattern = super.toPattern();\n            return;\n        }\n        ArrayList foundFormats = new ArrayList();\n        ArrayList foundDescriptions = new ArrayList();\n        StringBuffer stripCustom = new StringBuffer(pattern.length());\n\n        ParsePosition pos = new ParsePosition(0);\n        char[] c = pattern.toCharArray();\n        int fmtCount = 0;\n        while (pos.getIndex() < pattern.length()) {\n            switch (c[pos.getIndex()]) {\n            case QUOTE:\n                appendQuotedString(pattern, pos, stripCustom, true);\n                break;\n            case START_FE:\n                fmtCount++;\n                seekNonWs(pattern, pos);\n                int start = pos.getIndex();\n                int index = readArgumentIndex(pattern, next(pos));\n                stripCustom.append(START_FE).append(index);\n                seekNonWs(pattern, pos);\n                Format format = null;\n                String formatDescription = null;\n                if (c[pos.getIndex()] == START_FMT) {\n                    formatDescription = parseFormatDescription(pattern,\n                            next(pos));\n                    format = getFormat(formatDescription);\n                    if (format == null) {\n                        stripCustom.append(START_FMT).append(formatDescription);\n                    }\n                }\n                foundFormats.add(format);\n                foundDescriptions.add(format == null ? null : formatDescription);\n                Validate.isTrue(foundFormats.size() == fmtCount);\n                Validate.isTrue(foundDescriptions.size() == fmtCount);\n                if (c[pos.getIndex()] != END_FE) {\n                    throw new IllegalArgumentException(\n                            \"Unreadable format element at position \" + start);\n                }\n                // fall through\n            default:\n                stripCustom.append(c[pos.getIndex()]);\n                next(pos);\n            }\n        }\n        super.applyPattern(stripCustom.toString());\n        toPattern = insertFormats(super.toPattern(), foundDescriptions);\n        if (containsElements(foundFormats)) {\n            Format[] origFormats = getFormats();\n            // only loop over what we know we have, as MessageFormat on Java 1.3 \n            // seems to provide an extra format element:\n            int i = 0;\n            for (Iterator it = foundFormats.iterator(); it.hasNext(); i++) {\n                Format f = (Format) it.next();\n                if (f != null) {\n                    origFormats[i] = f;\n                }\n            }\n            super.setFormats(origFormats);\n        }\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.applyPattern(String pattern)\nSIGNATURE: public final void applyPattern(String pattern)",
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.applyPattern(String pattern)\nSIGNATURE: public final void applyPattern(String pattern)\nSTRUCTURE (lossy):\nif (registry == null)\nCALL super.applyPattern(pattern)\ntoPattern = super.toPattern()\nCALL super.toPattern()\nreturn;\nArrayList foundFormats = new ArrayList();\nArrayList foundDescriptions = new ArrayList();\nStringBuffer stripCustom = new StringBuffer(pattern.length());\nCALL pattern.length()\nParsePosition pos = new ParsePosition(0);\nchar[] c = pattern.toCharArray();\nCALL pattern.toCharArray()\nint fmtCount = 0;\nwhile (pos.getIndex() < pattern.length())\nCALL pos.getIndex()\nswitch (c[pos.getIndex()]) { case QUOTE: appendQuotedString(pattern, pos, stripCustom, true); break; case START_FE: fmtCount++; seekNonWs(pattern, pos); int start = pos.getIndex(); int index = readArgumentIndex(pattern, next(pos)); stripCustom.append(START_FE).append(index); seekNonWs(pattern, pos); Format format = null; String formatDescription = null; if (c[pos.getIndex()] == START_FMT) { formatDescription = parseFormatDescription(pattern, next(pos)); format = getFormat(formatDescription); if (format == null) { stripCustom.append(START_FMT).append(formatDescription); } } foundFormats.add(format); foundDescriptions.add(format == null ? null : formatDescription); Validate.isTrue(foundFormats.size() == fmtCount); Validate.isTrue(foundDescriptions.size() == fmtCount); if (c[pos.getIndex()] != END_FE) { throw new IllegalArgumentException( \"Unreadable format element at position \" + start); } // fall through default: stripCustom.append(c[pos.getIndex()]); next(pos); }\nCALL appendQuotedString(pattern, pos, stripCustom, true)\nfmtCount++\nCALL seekNonWs(pattern, pos)\nint start = pos.getIndex();\nint index = readArgumentIndex(pattern, next(pos));\nCALL readArgumentIndex(pattern, next(pos))\nCALL next(pos)\nCALL stripCustom.append(START_FE).append(index)\nCALL stripCustom.append(START_FE)\nFormat format = null;\nString formatDescription = null;\nif (c[pos.getIndex()] == START_FMT)\nformatDescription = parseFormatDescription(pattern, next(pos))\nCALL parseFormatDescription(pattern, next(pos))\nformat = getFormat(formatDesc\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public final void applyPattern(String pattern) {\n        if (registry == null) {\n            super.applyPattern(pattern);\n            toPattern = super.toPattern();\n            return;\n        }\n        ArrayList foundFormats = new ArrayList();\n        ArrayList foundDescriptions = new ArrayList();\n        StringBuffer stripCustom = new StringBuffer(pattern.length());\n\n        ParsePosition pos = new ParsePosition(0);\n        char[] c = pattern.toCharArray();\n        int fmtCount = 0;\n        while (pos.getIndex() < pattern.length()) {\n            switch (c[pos.getIndex()]) {\n            case QUOTE:\n                appendQuotedString(pattern, pos, stripCustom, true);\n                break;\n            case START_FE:\n                fmtCount++;\n                seekNonWs(pattern, pos);\n                int start = pos.getIndex();\n                int index = readArgumentIndex(pattern, next(pos));\n                stripCustom.append(START_FE).append(index);\n                seekNonWs(pattern, pos);\n                Format format = null;\n                String formatDescription = null;\n                if (c[pos.getIndex()] == START_FMT) {\n                    formatDescription = parseFormatDescription(pattern,\n                            next(pos));\n                    format = getFormat(formatDescription);\n                    if (format == null) {\n                        stripCustom.append(START_FMT).append(formatDescription);\n                    }\n                }\n                foundFormats.add(format);\n                foundDescriptions.add(format == null ? null : formatDescription);\n                Validate.isTrue(foundFormats.size() == fmtCount);\n                Validate.isTrue(foundDescriptions.size() == fmtCount);\n                if (c[pos.getIndex()] != END_FE) {\n                    throw new IllegalArgumentException(\n                            \"Unreadable format element at position \" + start);\n                }\n                // fall through\n            default:\n                stripCustom.append(c[pos.getIndex()]);\n                next(pos);\n            }\n        }\n        super.applyPattern(stripCustom.toString());\n        toPattern = insertFormats(super.toPattern(), foundDescriptions);\n        if (containsElements(foundFormats)) {\n            Format[] origFormats = getFormats();\n            // only loop over what we know we have, as MessageFormat on Java 1.3 \n            // seems to provide an extra format element:\n            int i = 0;\n            for (Iterator it = foundFormats.iterator(); it.hasNext(); i++) {\n                Format f = (Format) it.next();\n                if (f != null) {\n                    origFormats[i] = f;\n                }\n            }\n            super.setFormats(origFormats);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.30120481927710846,
+        "trace_match": 0.0,
+        "complexity": 10.0,
+        "call_count": 41.0,
+        "literal_count": 11.0,
+        "source_tokens": 694.0,
+        "l0_tokens": 46.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.8198847262247838,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 10,
+        "call_count": 41,
+        "literal_count": 11
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.ExtendedMessageFormat(String pattern, Map registry)",
+      "source": "public ExtendedMessageFormat(String pattern, Map registry) {\n        this(pattern, Locale.getDefault(), registry);\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.ExtendedMessageFormat(String pattern, Map registry)\nSIGNATURE: public ExtendedMessageFormat(String pattern, Map registry)",
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.ExtendedMessageFormat(String pattern, Map registry)\nSIGNATURE: public ExtendedMessageFormat(String pattern, Map registry)\nSTRUCTURE (lossy):\nCALL Locale.getDefault()",
+        "public ExtendedMessageFormat(String pattern, Map registry) {\n        this(pattern, Locale.getDefault(), registry);\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7368421052631579,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 30.0,
+        "l0_tokens": 55.0,
+        "l1_tokens": 66.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.readArgumentIndex(String pattern, ParsePosition pos)",
+      "source": "private int readArgumentIndex(String pattern, ParsePosition pos) {\n        int start = pos.getIndex();\n        seekNonWs(pattern, pos);\n        StringBuffer result = new StringBuffer();\n        boolean error = false;\n        for (; !error && pos.getIndex() < pattern.length(); next(pos)) {\n            char c = pattern.charAt(pos.getIndex());\n            if (Character.isWhitespace(c)) {\n                seekNonWs(pattern, pos);\n                c = pattern.charAt(pos.getIndex());\n                if (c != START_FMT && c != END_FE) {\n                    error = true;\n                    continue;\n                }\n            }\n            if ((c == START_FMT || c == END_FE) && result.length() > 0) {\n                try {\n                    return Integer.parseInt(result.toString());\n                } catch (NumberFormatException e) {\n                    // we've already ensured only digits, so unless something\n                    // outlandishly large was specified we should be okay.\n                }\n            }\n            error = !Character.isDigit(c);\n            result.append(c);\n        }\n        if (error) {\n            throw new IllegalArgumentException(\n                    \"Invalid format argument index at position \" + start + \": \"\n                            + pattern.substring(start, pos.getIndex()));\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated format element at position \" + start);\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.readArgumentIndex(String pattern, ParsePosition pos)\nSIGNATURE: private int readArgumentIndex(String pattern, ParsePosition pos)",
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.readArgumentIndex(String pattern, ParsePosition pos)\nSIGNATURE: private int readArgumentIndex(String pattern, ParsePosition pos)\nSTRUCTURE (lossy):\nint start = pos.getIndex();\nCALL pos.getIndex()\nCALL seekNonWs(pattern, pos)\nStringBuffer result = new StringBuffer();\nboolean error = false;\nfor (; !error && pos.getIndex() < pattern.length(); next(pos))\nCALL pattern.length()\nCALL next(pos)\nchar c = pattern.charAt(pos.getIndex());\nCALL pattern.charAt(pos.getIndex())\nif (Character.isWhitespace(c))\nCALL Character.isWhitespace(c)\nc = pattern.charAt(pos.getIndex())\nif (c != START_FMT && c != END_FE)\nerror = true\nif ((c == START_FMT || c == END_FE) && result.length() > 0)\nCALL result.length()\nreturn Integer.parseInt(result.toString());\nCALL Integer.parseInt(result.toString())\nCALL result.toString()\ncatch (NumberFormatException e)\nerror = !Character.isDigit(c)\nCALL Character.isDigit(c)\nCALL result.append(c)\nif (error)\nthrow new IllegalArgumentException( \"Invalid format argument index at position \" + start + \": \" + pattern.substring(start, pos.getIndex()));\nCALL pattern.substring(start, pos.getIndex())\nthrow new IllegalArgumentException( \"Unterminated format element at position \" + start);",
+        "private int readArgumentIndex(String pattern, ParsePosition pos) {\n        int start = pos.getIndex();\n        seekNonWs(pattern, pos);\n        StringBuffer result = new StringBuffer();\n        boolean error = false;\n        for (; !error && pos.getIndex() < pattern.length(); next(pos)) {\n            char c = pattern.charAt(pos.getIndex());\n            if (Character.isWhitespace(c)) {\n                seekNonWs(pattern, pos);\n                c = pattern.charAt(pos.getIndex());\n                if (c != START_FMT && c != END_FE) {\n                    error = true;\n                    continue;\n                }\n            }\n            if ((c == START_FMT || c == END_FE) && result.length() > 0) {\n                try {\n                    return Integer.parseInt(result.toString());\n                } catch (NumberFormatException e) {\n                    // we've already ensured only digits, so unless something\n                    // outlandishly large was specified we should be okay.\n                }\n            }\n            error = !Character.isDigit(c);\n            result.append(c);\n        }\n        if (error) {\n            throw new IllegalArgumentException(\n                    \"Invalid format argument index at position \" + start + \": \"\n                            + pattern.substring(start, pos.getIndex()));\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated format element at position \" + start);\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2727272727272727,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 18.0,
+        "literal_count": 4.0,
+        "source_tokens": 365.0,
+        "l0_tokens": 56.0,
+        "l1_tokens": 324.0,
+        "compression_ratio": 0.8876712328767123,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 18,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.getQuotedString(String pattern, ParsePosition pos,\n            boolean escapingOn)",
+      "source": "private void getQuotedString(String pattern, ParsePosition pos,\n            boolean escapingOn) {\n        appendQuotedString(pattern, pos, null, escapingOn);\n    }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.getQuotedString(String pattern, ParsePosition pos,\n            boolean escapingOn)\nSIGNATURE: private void getQuotedString(String pattern, ParsePosition pos,\n            boolean escapingOn)",
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.getQuotedString(String pattern, ParsePosition pos,\n            boolean escapingOn)\nSIGNATURE: private void getQuotedString(String pattern, ParsePosition pos,\n            boolean escapingOn)\nSTRUCTURE (lossy):\nCALL appendQuotedString(pattern, pos, null, escapingOn)",
+        "private void getQuotedString(String pattern, ParsePosition pos,\n            boolean escapingOn) {\n        appendQuotedString(pattern, pos, null, escapingOn);\n    }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6521739130434783,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 41.0,
+        "l0_tokens": 72.0,
+        "l1_tokens": 90.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.parseFormatDescription(String pattern, ParsePosition pos)",
+      "source": "private String parseFormatDescription(String pattern, ParsePosition pos) {\n        int start = pos.getIndex();\n        seekNonWs(pattern, pos);\n        int text = pos.getIndex();\n        int depth = 1;\n        for (; pos.getIndex() < pattern.length(); next(pos)) {\n            switch (pattern.charAt(pos.getIndex())) {\n            case START_FE:\n                depth++;\n                break;\n            case END_FE:\n                depth--;\n                if (depth == 0) {\n                    return pattern.substring(text, pos.getIndex());\n                }\n                break;\n            case QUOTE:\n                getQuotedString(pattern, pos, false);\n                break;\n            }\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated format element at position \" + start);\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.parseFormatDescription(String pattern, ParsePosition pos)\nSIGNATURE: private String parseFormatDescription(String pattern, ParsePosition pos)",
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.parseFormatDescription(String pattern, ParsePosition pos)\nSIGNATURE: private String parseFormatDescription(String pattern, ParsePosition pos)\nSTRUCTURE (lossy):\nint start = pos.getIndex();\nCALL pos.getIndex()\nCALL seekNonWs(pattern, pos)\nint text = pos.getIndex();\nint depth = 1;\nfor (; pos.getIndex() < pattern.length(); next(pos))\nCALL pattern.length()\nCALL next(pos)\nswitch (pattern.charAt(pos.getIndex())) { case START_FE: depth++; break; case END_FE: depth--; if (depth == 0) { return pattern.substring(text, pos.getIndex()); } break; case QUOTE: getQuotedString(pattern, pos, false); break; }\nCALL pattern.charAt(pos.getIndex())\ndepth++\ndepth--\nif (depth == 0)\nreturn pattern.substring(text, pos.getIndex());\nCALL pattern.substring(text, pos.getIndex())\nCALL getQuotedString(pattern, pos, false)\nthrow new IllegalArgumentException( \"Unterminated format element at position \" + start);",
+        "private String parseFormatDescription(String pattern, ParsePosition pos) {\n        int start = pos.getIndex();\n        seekNonWs(pattern, pos);\n        int text = pos.getIndex();\n        int depth = 1;\n        for (; pos.getIndex() < pattern.length(); next(pos)) {\n            switch (pattern.charAt(pos.getIndex())) {\n            case START_FE:\n                depth++;\n                break;\n            case END_FE:\n                depth--;\n                if (depth == 0) {\n                    return pattern.substring(text, pos.getIndex());\n                }\n                break;\n            case QUOTE:\n                getQuotedString(pattern, pos, false);\n                break;\n            }\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated format element at position \" + start);\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.38636363636363635,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 11.0,
+        "literal_count": 3.0,
+        "source_tokens": 208.0,
+        "l0_tokens": 60.0,
+        "l1_tokens": 247.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 11,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/time/FastDateFormat.java::FastDateFormat.parseToken(String pattern, int[] indexRef)",
+      "source": "protected String parseToken(String pattern, int[] indexRef) {\n        StringBuffer buf = new StringBuffer();\n\n        int i = indexRef[0];\n        int length = pattern.length();\n\n        char c = pattern.charAt(i);\n        if (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z') {\n            // Scan a run of the same character, which indicates a time\n            // pattern.\n            buf.append(c);\n\n            while (i + 1 < length) {\n                char peek = pattern.charAt(i + 1);\n                if (peek == c) {\n                    buf.append(c);\n                    i++;\n                } else {\n                    break;\n                }\n            }\n        } else {\n            // This will identify token as text.\n            buf.append('\\'');\n\n            boolean inLiteral = false;\n\n            for (; i < length; i++) {\n                c = pattern.charAt(i);\n\n                if (c == '\\'') {\n                    if (i + 1 < length && pattern.charAt(i + 1) == '\\'') {\n                        // '' is treated as escaped '\n                        i++;\n                        buf.append(c);\n                    } else {\n                        inLiteral = !inLiteral;\n                    }\n                } else if (!inLiteral &&\n                         (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z')) {\n                    i--;\n                    break;\n                } else {\n                    buf.append(c);\n                }\n            }\n        }\n\n        indexRef[0] = i;\n        return buf.toString();\n    }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/time/FastDateFormat.java::FastDateFormat.parseToken(String pattern, int[] indexRef)\nSIGNATURE: protected String parseToken(String pattern, int[] indexRef)",
+        "METHOD: src/java/org/apache/commons/lang/time/FastDateFormat.java::FastDateFormat.parseToken(String pattern, int[] indexRef)\nSIGNATURE: protected String parseToken(String pattern, int[] indexRef)\nSTRUCTURE (lossy):\nStringBuffer buf = new StringBuffer();\nint i = indexRef[0];\nint length = pattern.length();\nCALL pattern.length()\nchar c = pattern.charAt(i);\nCALL pattern.charAt(i)\nif (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z')\nCALL buf.append(c)\nwhile (i + 1 < length)\nchar peek = pattern.charAt(i + 1);\nCALL pattern.charAt(i + 1)\nif (peek == c)\ni++\nCALL buf.append('\\'')\nboolean inLiteral = false;\nfor (; i < length; i++)\nc = pattern.charAt(i)\nif (c == '\\'')\nif (i + 1 < length && pattern.charAt(i + 1) == '\\'')\ninLiteral = !inLiteral\nif (!inLiteral && (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z'))\ni--\nindexRef[0] = i\nreturn buf.toString();\nCALL buf.toString()",
+        "protected String parseToken(String pattern, int[] indexRef) {\n        StringBuffer buf = new StringBuffer();\n\n        int i = indexRef[0];\n        int length = pattern.length();\n\n        char c = pattern.charAt(i);\n        if (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z') {\n            // Scan a run of the same character, which indicates a time\n            // pattern.\n            buf.append(c);\n\n            while (i + 1 < length) {\n                char peek = pattern.charAt(i + 1);\n                if (peek == c) {\n                    buf.append(c);\n                    i++;\n                } else {\n                    break;\n                }\n            }\n        } else {\n            // This will identify token as text.\n            buf.append('\\'');\n\n            boolean inLiteral = false;\n\n            for (; i < length; i++) {\n                c = pattern.charAt(i);\n\n                if (c == '\\'') {\n                    if (i + 1 < length && pattern.charAt(i + 1) == '\\'') {\n                        // '' is treated as escaped '\n                        i++;\n                        buf.append(c);\n                    } else {\n                        inLiteral = !inLiteral;\n                    }\n                } else if (!inLiteral &&\n                         (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z')) {\n                    i--;\n                    break;\n                } else {\n                    buf.append(c);\n                }\n            }\n        }\n\n        indexRef[0] = i;\n        return buf.toString();\n    }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.34782608695652173,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 11.0,
+        "literal_count": 17.0,
+        "source_tokens": 385.0,
+        "l0_tokens": 49.0,
+        "l1_tokens": 217.0,
+        "compression_ratio": 0.5636363636363636,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 11,
+        "literal_count": 17
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.insertFormats(String pattern, ArrayList customPatterns)",
+      "source": "private String insertFormats(String pattern, ArrayList customPatterns) {\n        if (!containsElements(customPatterns)) {\n            return pattern;\n        }\n        StringBuffer sb = new StringBuffer(pattern.length() * 2);\n        ParsePosition pos = new ParsePosition(0);\n        int fe = -1;\n        int depth = 0;\n        while (pos.getIndex() < pattern.length()) {\n            char c = pattern.charAt(pos.getIndex());\n            switch (c) {\n            case QUOTE:\n                appendQuotedString(pattern, pos, sb, false);\n                break;\n            case START_FE:\n                depth++;\n                if (depth == 1) {\n                    fe++;\n                    sb.append(START_FE).append(\n                            readArgumentIndex(pattern, next(pos)));\n                    String customPattern = (String) customPatterns.get(fe);\n                    if (customPattern != null) {\n                        sb.append(START_FMT).append(customPattern);\n                    }\n                }\n                break;\n            case END_FE:\n                depth--;\n                //fall through:\n            default:\n                sb.append(c);\n                next(pos);\n            }\n        }\n        return sb.toString();\n    }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.insertFormats(String pattern, ArrayList customPatterns)\nSIGNATURE: private String insertFormats(String pattern, ArrayList customPatterns)",
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.insertFormats(String pattern, ArrayList customPatterns)\nSIGNATURE: private String insertFormats(String pattern, ArrayList customPatterns)\nSTRUCTURE (lossy):\nif (!containsElements(customPatterns))\nCALL containsElements(customPatterns)\nreturn pattern;\nStringBuffer sb = new StringBuffer(pattern.length() * 2);\nCALL pattern.length()\nParsePosition pos = new ParsePosition(0);\nint fe = -1;\nint depth = 0;\nwhile (pos.getIndex() < pattern.length())\nCALL pos.getIndex()\nchar c = pattern.charAt(pos.getIndex());\nCALL pattern.charAt(pos.getIndex())\nswitch (c) { case QUOTE: appendQuotedString(pattern, pos, sb, false); break; case START_FE: depth++; if (depth == 1) { fe++; sb.append(START_FE).append( readArgumentIndex(pattern, next(pos))); String customPattern = (String) customPatterns.get(fe); if (customPattern != null) { sb.append(START_FMT).append(customPattern); } } break; case END_FE: depth--; //fall through: default: sb.append(c); next(pos); }\nCALL appendQuotedString(pattern, pos, sb, false)\ndepth++\nif (depth == 1)\nfe++\nCALL sb.append(START_FE).append( readArgumentIndex(pattern, next(pos)))\nCALL sb.append(START_FE)\nCALL readArgumentIndex(pattern, next(pos))\nCALL next(pos)\nString customPattern = (String) customPatterns.get(fe);\nCALL customPatterns.get(fe)\nif (customPattern != null)\nCALL sb.append(START_FMT).append(customPattern)\nCALL sb.append(START_FMT)\ndepth--\nCALL sb.append(c)\nreturn sb.toString();\nCALL sb.toString()",
+        "private String insertFormats(String pattern, ArrayList customPatterns) {\n        if (!containsElements(customPatterns)) {\n            return pattern;\n        }\n        StringBuffer sb = new StringBuffer(pattern.length() * 2);\n        ParsePosition pos = new ParsePosition(0);\n        int fe = -1;\n        int depth = 0;\n        while (pos.getIndex() < pattern.length()) {\n            char c = pattern.charAt(pos.getIndex());\n            switch (c) {\n            case QUOTE:\n                appendQuotedString(pattern, pos, sb, false);\n                break;\n            case START_FE:\n                depth++;\n                if (depth == 1) {\n                    fe++;\n                    sb.append(START_FE).append(\n                            readArgumentIndex(pattern, next(pos)));\n                    String customPattern = (String) customPatterns.get(fe);\n                    if (customPattern != null) {\n                        sb.append(START_FMT).append(customPattern);\n                    }\n                }\n                break;\n            case END_FE:\n                depth--;\n                //fall through:\n            default:\n                sb.append(c);\n                next(pos);\n            }\n        }\n        return sb.toString();\n    }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.37254901960784315,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 17.0,
+        "literal_count": 6.0,
+        "source_tokens": 316.0,
+        "l0_tokens": 59.0,
+        "l1_tokens": 382.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 17,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.appendQuotedString(String pattern, ParsePosition pos,\n            StringBuffer appendTo, boolean escapingOn)",
+      "source": "private StringBuffer appendQuotedString(String pattern, ParsePosition pos,\n            StringBuffer appendTo, boolean escapingOn) {\n        int start = pos.getIndex();\n        char[] c = pattern.toCharArray();\n        if (escapingOn && c[start] == QUOTE) {\n            return appendTo == null ? null : appendTo.append(QUOTE);\n        }\n        int lastHold = start;\n        for (int i = pos.getIndex(); i < pattern.length(); i++) {\n            if (escapingOn && pattern.substring(i).startsWith(ESCAPED_QUOTE)) {\n                appendTo.append(c, lastHold, pos.getIndex() - lastHold).append(\n                        QUOTE);\n                pos.setIndex(i + ESCAPED_QUOTE.length());\n                lastHold = pos.getIndex();\n                continue;\n            }\n            switch (c[pos.getIndex()]) {\n            case QUOTE:\n                next(pos);\n                return appendTo == null ? null : appendTo.append(c, lastHold,\n                        pos.getIndex() - lastHold);\n            default:\n                next(pos);\n            }\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated quoted string at position \" + start);\n    }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.appendQuotedString(String pattern, ParsePosition pos,\n            StringBuffer appendTo, boolean escapingOn)\nSIGNATURE: private StringBuffer appendQuotedString(String pattern, ParsePosition pos,\n            StringBuffer appendTo, boolean escapingOn)",
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.appendQuotedString(String pattern, ParsePosition pos,\n            StringBuffer appendTo, boolean escapingOn)\nSIGNATURE: private StringBuffer appendQuotedString(String pattern, ParsePosition pos,\n            StringBuffer appendTo, boolean escapingOn)\nSTRUCTURE (lossy):\nint start = pos.getIndex();\nCALL pos.getIndex()\nchar[] c = pattern.toCharArray();\nCALL pattern.toCharArray()\nif (escapingOn && c[start] == QUOTE)\nreturn appendTo == null ? null : appendTo.append(QUOTE);\nCALL appendTo.append(QUOTE)\nint lastHold = start;\nfor (int i = pos.getIndex(); i < pattern.length(); i++)\nint i = pos.getIndex();\nCALL pattern.length()\ni++\nif (escapingOn && pattern.substring(i).startsWith(ESCAPED_QUOTE))\nCALL pattern.substring(i).startsWith(ESCAPED_QUOTE)\nCALL pattern.substring(i)\nCALL appendTo.append(c, lastHold, pos.getIndex() - lastHold).append( QUOTE)\nCALL appendTo.append(c, lastHold, pos.getIndex() - lastHold)\nCALL pos.setIndex(i + ESCAPED_QUOTE.length())\nCALL ESCAPED_QUOTE.length()\nlastHold = pos.getIndex()\nswitch (c[pos.getIndex()]) { case QUOTE: next(pos); return appendTo == null ? null : appendTo.append(c, lastHold, pos.getIndex() - lastHold); default: next(pos); }\nCALL next(pos)\nreturn appendTo == null ? null : appendTo.append(c, lastHold, pos.getIndex() - lastHold);\nthrow new IllegalArgumentException( \"Unterminated quoted string at position \" + start);",
+        "private StringBuffer appendQuotedString(String pattern, ParsePosition pos,\n            StringBuffer appendTo, boolean escapingOn) {\n        int start = pos.getIndex();\n        char[] c = pattern.toCharArray();\n        if (escapingOn && c[start] == QUOTE) {\n            return appendTo == null ? null : appendTo.append(QUOTE);\n        }\n        int lastHold = start;\n        for (int i = pos.getIndex(); i < pattern.length(); i++) {\n            if (escapingOn && pattern.substring(i).startsWith(ESCAPED_QUOTE)) {\n                appendTo.append(c, lastHold, pos.getIndex() - lastHold).append(\n                        QUOTE);\n                pos.setIndex(i + ESCAPED_QUOTE.length());\n                lastHold = pos.getIndex();\n                continue;\n            }\n            switch (c[pos.getIndex()]) {\n            case QUOTE:\n                next(pos);\n                return appendTo == null ? null : appendTo.append(c, lastHold,\n                        pos.getIndex() - lastHold);\n            default:\n                next(pos);\n            }\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated quoted string at position \" + start);\n    }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 18.0,
+        "literal_count": 5.0,
+        "source_tokens": 294.0,
+        "l0_tokens": 87.0,
+        "l1_tokens": 366.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 18,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/StringEscapeUtils.java::StringEscapeUtils.unescapeJava(Writer out, String str)",
+      "source": "public static void unescapeJava(Writer out, String str) throws IOException {\n        if (out == null) {\n            throw new IllegalArgumentException(\"The Writer must not be null\");\n        }\n        if (str == null) {\n            return;\n        }\n        int sz = str.length();\n        StringBuffer unicode = new StringBuffer(4);\n        boolean hadSlash = false;\n        boolean inUnicode = false;\n        for (int i = 0; i < sz; i++) {\n            char ch = str.charAt(i);\n            if (inUnicode) {\n                // if in unicode, then we're reading unicode\n                // values in somehow\n                unicode.append(ch);\n                if (unicode.length() == 4) {\n                    // unicode now contains the four hex digits\n                    // which represents our unicode character\n                    try {\n                        int value = Integer.parseInt(unicode.toString(), 16);\n                        out.write((char) value);\n                        unicode.setLength(0);\n                        inUnicode = false;\n                        hadSlash = false;\n                    } catch (NumberFormatException nfe) {\n                        throw new NestableRuntimeException(\"Unable to parse unicode value: \" + unicode, nfe);\n                    }\n                }\n                continue;\n            }\n            if (hadSlash) {\n                // handle an escaped value\n                hadSlash = false;\n                switch (ch) {\n                    case '\\\\':\n                        out.write('\\\\');\n                        break;\n                    case '\\'':\n                        out.write('\\'');\n                        break;\n                    case '\\\"':\n                        out.write('\"');\n                        break;\n                    case 'r':\n                        out.write('\\r');\n                        break;\n                    case 'f':\n                        out.write('\\f');\n                        break;\n                    case 't':\n                        out.write('\\t');\n                        break;\n                    case 'n':\n                        out.write('\\n');\n                        break;\n                    case 'b':\n                        out.write('\\b');\n                        break;\n                    case 'u':\n                        {\n                            // uh-oh, we're in unicode country....\n                            inUnicode = true;\n                            break;\n                        }\n                    default :\n                        out.write(ch);\n                        break;\n                }\n                continue;\n            } else if (ch == '\\\\') {\n                hadSlash = true;\n                continue;\n            }\n            out.write(ch);\n        }\n        if (hadSlash) {\n            // then we're in the weird case of a \\ at the end of the\n            // string, let's output it anyway.\n            out.write('\\\\');\n        }\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/StringEscapeUtils.java::StringEscapeUtils.unescapeJava(Writer out, String str)\nSIGNATURE: public static void unescapeJava(Writer out, String str) throws IOException",
+        "METHOD: src/java/org/apache/commons/lang/StringEscapeUtils.java::StringEscapeUtils.unescapeJava(Writer out, String str)\nSIGNATURE: public static void unescapeJava(Writer out, String str) throws IOException\nSTRUCTURE (lossy):\nif (out == null)\nthrow new IllegalArgumentException(\"The Writer must not be null\");\nif (str == null)\nreturn;\nint sz = str.length();\nCALL str.length()\nStringBuffer unicode = new StringBuffer(4);\nboolean hadSlash = false;\nboolean inUnicode = false;\nfor (int i = 0; i < sz; i++)\nint i = 0;\ni++\nchar ch = str.charAt(i);\nCALL str.charAt(i)\nif (inUnicode)\nCALL unicode.append(ch)\nif (unicode.length() == 4)\nCALL unicode.length()\nint value = Integer.parseInt(unicode.toString(), 16);\nCALL Integer.parseInt(unicode.toString(), 16)\nCALL unicode.toString()\nCALL out.write((char) value)\nCALL unicode.setLength(0)\ninUnicode = false\nhadSlash = false\ncatch (NumberFormatException nfe)\nthrow new NestableRuntimeException(\"Unable to parse unicode value: \" + unicode, nfe);\nif (hadSlash)\nswitch (ch) { case '\\\\': out.write('\\\\'); break; case '\\'': out.write('\\''); break; case '\\\"': out.write('\"'); break; case 'r': out.write('\\r'); break; case 'f': out.write('\\f'); break; case 't': out.write('\\t'); break; case 'n': out.write('\\n'); break; case 'b': out.write('\\b'); break; case 'u': { // uh-oh, we're in unicode country.... inUnicode = true; break; } default : out.write(ch); break; }\nCALL out.write('\\\\')\nCALL out.write('\\'')\nCALL out.write('\"')\nCALL out.write('\\r')\nCALL out.write('\\f')\nCALL out.write('\\t')\nCALL out.write('\\n')\nCALL out.write('\\b')\ninUnicode = true\nCALL out.write(ch)\nif (ch == '\\\\')\nhadSlash = true",
+        "public static void unescapeJava(Writer out, String str) throws IOException {\n        if (out == null) {\n            throw new IllegalArgumentException(\"The Writer must not be null\");\n        }\n        if (str == null) {\n            return;\n        }\n        int sz = str.length();\n        StringBuffer unicode = new StringBuffer(4);\n        boolean hadSlash = false;\n        boolean inUnicode = false;\n        for (int i = 0; i < sz; i++) {\n            char ch = str.charAt(i);\n            if (inUnicode) {\n                // if in unicode, then we're reading unicode\n                // values in somehow\n                unicode.append(ch);\n                if (unicode.length() == 4) {\n                    // unicode now contains the four hex digits\n                    // which represents our unicode character\n                    try {\n                        int value = Integer.parseInt(unicode.toString(), 16);\n                        out.write((char) value);\n                        unicode.setLength(0);\n                        inUnicode = false;\n                        hadSlash = false;\n                    } catch (NumberFormatException nfe) {\n                        throw new NestableRuntimeException(\"Unable to parse unicode value: \" + unicode, nfe);\n                    }\n                }\n                continue;\n            }\n            if (hadSlash) {\n                // handle an escaped value\n                hadSlash = false;\n                switch (ch) {\n                    case '\\\\':\n                        out.write('\\\\');\n                        break;\n                    case '\\'':\n                        out.write('\\'');\n                        break;\n                    case '\\\"':\n                        out.write('\"');\n                        break;\n                    case 'r':\n                        out.write('\\r');\n                        break;\n                    case 'f':\n                        out.write('\\f');\n                        break;\n                    case 't':\n                        out.write('\\t');\n                        break;\n                    case 'n':\n                        out.write('\\n');\n                        break;\n                    case 'b':\n                        out.write('\\b');\n                        break;\n                    case 'u':\n                        {\n                            // uh-oh, we're in unicode country....\n                            inUnicode = true;\n                            break;\n                        }\n                    default :\n                        out.write(ch);\n                        break;\n                }\n                continue;\n            } else if (ch == '\\\\') {\n                hadSlash = true;\n                continue;\n            }\n            out.write(ch);\n        }\n        if (hadSlash) {\n            // then we're in the weird case of a \\ at the end of the\n            // string, let's output it anyway.\n            out.write('\\\\');\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.225,
+        "trace_match": 0.0,
+        "complexity": 11.0,
+        "call_count": 19.0,
+        "literal_count": 28.0,
+        "source_tokens": 751.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 408.0,
+        "compression_ratio": 0.5432756324900133,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 11,
+        "call_count": 19,
+        "literal_count": 28
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.ExtendedMessageFormat(String pattern)",
+      "source": "public ExtendedMessageFormat(String pattern) {\n        this(pattern, Locale.getDefault());\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.ExtendedMessageFormat(String pattern)\nSIGNATURE: public ExtendedMessageFormat(String pattern)",
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.ExtendedMessageFormat(String pattern)\nSIGNATURE: public ExtendedMessageFormat(String pattern)\nSTRUCTURE (lossy):\nCALL Locale.getDefault()",
+        "public ExtendedMessageFormat(String pattern) {\n        this(pattern, Locale.getDefault());\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7647058823529411,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 24.0,
+        "l0_tokens": 48.0,
+        "l1_tokens": 59.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/WordUtils.java::WordUtils.abbreviate(String str, int lower, int upper, String appendToEnd)",
+      "source": "public static String abbreviate(String str, int lower, int upper, String appendToEnd) {\n        // initial parameter checks\n        if (str == null) {\n            return null;\n        }\n        if (str.length() == 0) {\n            return StringUtils.EMPTY;\n        }\n\n        // if the lower value is greater than the length of the string,\n        // set to the length of the string\n        if (lower > str.length()) {\n            lower = str.length();    \n        }\n        // if the upper value is -1 (i.e. no limit) or is greater\n        // than the length of the string, set to the length of the string\n        if (upper == -1 || upper > str.length()) {\n            upper = str.length();\n        }\n        // if upper is less than lower, raise it to lower\n        if (upper < lower) {\n            upper = lower;\n        }\n\n        StringBuffer result = new StringBuffer();\n        int index = StringUtils.indexOf(str, \" \", lower);\n        if (index == -1) {\n            result.append(str.substring(0, upper));\n            // only if abbreviation has occured do we append the appendToEnd value\n            if (upper != str.length()) {\n                result.append(StringUtils.defaultString(appendToEnd));\n            }\n        } else if (index > upper) {\n            result.append(str.substring(0, upper));\n            result.append(StringUtils.defaultString(appendToEnd));\n        } else {\n            result.append(str.substring(0, index));\n            result.append(StringUtils.defaultString(appendToEnd));\n        }\n        return result.toString();\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/WordUtils.java::WordUtils.abbreviate(String str, int lower, int upper, String appendToEnd)\nSIGNATURE: public static String abbreviate(String str, int lower, int upper, String appendToEnd)",
+        "METHOD: src/java/org/apache/commons/lang/WordUtils.java::WordUtils.abbreviate(String str, int lower, int upper, String appendToEnd)\nSIGNATURE: public static String abbreviate(String str, int lower, int upper, String appendToEnd)\nSTRUCTURE (lossy):\nif (str == null)\nreturn null;\nif (str.length() == 0)\nCALL str.length()\nreturn StringUtils.EMPTY;\nif (lower > str.length())\nlower = str.length()\nif (upper == -1 || upper > str.length())\nupper = str.length()\nif (upper < lower)\nupper = lower\nStringBuffer result = new StringBuffer();\nint index = StringUtils.indexOf(str, \" \", lower);\nCALL StringUtils.indexOf(str, \" \", lower)\nif (index == -1)\nCALL result.append(str.substring(0, upper))\nCALL str.substring(0, upper)\nif (upper != str.length())\nCALL result.append(StringUtils.defaultString(appendToEnd))\nCALL StringUtils.defaultString(appendToEnd)\nif (index > upper)\nCALL result.append(str.substring(0, index))\nCALL str.substring(0, index)\nreturn result.toString();\nCALL result.toString()",
+        "public static String abbreviate(String str, int lower, int upper, String appendToEnd) {\n        // initial parameter checks\n        if (str == null) {\n            return null;\n        }\n        if (str.length() == 0) {\n            return StringUtils.EMPTY;\n        }\n\n        // if the lower value is greater than the length of the string,\n        // set to the length of the string\n        if (lower > str.length()) {\n            lower = str.length();    \n        }\n        // if the upper value is -1 (i.e. no limit) or is greater\n        // than the length of the string, set to the length of the string\n        if (upper == -1 || upper > str.length()) {\n            upper = str.length();\n        }\n        // if upper is less than lower, raise it to lower\n        if (upper < lower) {\n            upper = lower;\n        }\n\n        StringBuffer result = new StringBuffer();\n        int index = StringUtils.indexOf(str, \" \", lower);\n        if (index == -1) {\n            result.append(str.substring(0, upper));\n            // only if abbreviation has occured do we append the appendToEnd value\n            if (upper != str.length()) {\n                result.append(StringUtils.defaultString(appendToEnd));\n            }\n        } else if (index > upper) {\n            result.append(str.substring(0, upper));\n            result.append(StringUtils.defaultString(appendToEnd));\n        } else {\n            result.append(str.substring(0, index));\n            result.append(StringUtils.defaultString(appendToEnd));\n        }\n        return result.toString();\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3409090909090909,
+        "trace_match": 0.0,
+        "complexity": 9.0,
+        "call_count": 20.0,
+        "literal_count": 9.0,
+        "source_tokens": 391.0,
+        "l0_tokens": 57.0,
+        "l1_tokens": 246.0,
+        "compression_ratio": 0.629156010230179,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 9,
+        "call_count": 20,
+        "literal_count": 9
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.ExtendedMessageFormat(String pattern, Locale locale)",
+      "source": "public ExtendedMessageFormat(String pattern, Locale locale) {\n        this(pattern, locale, null);\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.ExtendedMessageFormat(String pattern, Locale locale)\nSIGNATURE: public ExtendedMessageFormat(String pattern, Locale locale)",
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.ExtendedMessageFormat(String pattern, Locale locale)\nSIGNATURE: public ExtendedMessageFormat(String pattern, Locale locale)\nSTRUCTURE (lossy):\n",
+        "public ExtendedMessageFormat(String pattern, Locale locale) {\n        this(pattern, locale, null);\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8125,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 1.0,
+        "source_tokens": 26.0,
+        "l0_tokens": 55.0,
+        "l1_tokens": 60.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.setFormat(int formatElementIndex, Format newFormat)",
+      "source": "public void setFormat(int formatElementIndex, Format newFormat) {\n        throw new UnsupportedOperationException();\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.setFormat(int formatElementIndex, Format newFormat)\nSIGNATURE: public void setFormat(int formatElementIndex, Format newFormat)",
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.setFormat(int formatElementIndex, Format newFormat)\nSIGNATURE: public void setFormat(int formatElementIndex, Format newFormat)\nSTRUCTURE (lossy):\nthrow new UnsupportedOperationException();",
+        "public void setFormat(int formatElementIndex, Format newFormat) {\n        throw new UnsupportedOperationException();\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6666666666666666,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 31.0,
+        "l0_tokens": 56.0,
+        "l1_tokens": 71.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object arg)",
+      "source": "public static Object invokeMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeMethod(object, methodName, new Object[] { arg });\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException",
+        "METHOD: src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException\nSTRUCTURE (lossy):\nreturn invokeMethod(object, methodName, new Object[] { arg });\nCALL invokeMethod(object, methodName, new Object[] { arg })",
+        "public static Object invokeMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeMethod(object, methodName, new Object[] { arg });\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 66.0,
+        "l0_tokens": 86.0,
+        "l1_tokens": 122.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)",
+      "source": "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf \n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars, \n        // then a subclass can test equals to a superclass.\n        Class lhsClass = lhs.getClass();\n        Class rhsClass = rhs.getClass();\n        Class testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and \n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)\nSIGNATURE: public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)",
+        "METHOD: src/java/org/apache/commons/lang/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)\nSIGNATURE: public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)\nSTRUCTURE (lossy):\nif (lhs == rhs)\nreturn true;\nif (lhs == null || rhs == null)\nreturn false;\nClass lhsClass = lhs.getClass();\nCALL lhs.getClass()\nClass rhsClass = rhs.getClass();\nCALL rhs.getClass()\nClass testClass;\nif (lhsClass.isInstance(rhs))\nCALL lhsClass.isInstance(rhs)\ntestClass = lhsClass\nif (!rhsClass.isInstance(lhs))\nCALL rhsClass.isInstance(lhs)\ntestClass = rhsClass\nif (rhsClass.isInstance(lhs))\nif (!lhsClass.isInstance(rhs))\nEqualsBuilder equalsBuilder = new EqualsBuilder();\nCALL reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields)\nwhile (testClass.getSuperclass() != null && testClass != reflectUpToClass)\nCALL testClass.getSuperclass()\ntestClass = testClass.getSuperclass()\ncatch (IllegalArgumentException e)\nreturn equalsBuilder.isEquals();\nCALL equalsBuilder.isEquals()",
+        "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf \n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars, \n        // then a subclass can test equals to a superclass.\n        Class lhsClass = lhs.getClass();\n        Class rhsClass = rhs.getClass();\n        Class testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and \n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.23529411764705882,
+        "trace_match": 0.0,
+        "complexity": 9.0,
+        "call_count": 11.0,
+        "literal_count": 3.0,
+        "source_tokens": 530.0,
+        "l0_tokens": 92.0,
+        "l1_tokens": 297.0,
+        "compression_ratio": 0.560377358490566,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 9,
+        "call_count": 11,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.toPattern()",
+      "source": "public String toPattern() {\n        return toPattern;\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.toPattern()\nSIGNATURE: public String toPattern()",
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.toPattern()\nSIGNATURE: public String toPattern()\nSTRUCTURE (lossy):\nreturn toPattern;",
+        "public String toPattern() {\n        return toPattern;\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.9285714285714286,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 15.0,
+        "l0_tokens": 36.0,
+        "l1_tokens": 46.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object arg)",
+      "source": "public static Object invokeExactMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeExactMethod(object, methodName, new Object[] { arg });\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeExactMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException",
+        "METHOD: src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeExactMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException\nSTRUCTURE (lossy):\nreturn invokeExactMethod(object, methodName, new Object[] { arg });\nCALL invokeExactMethod(object, methodName, new Object[] { arg })",
+        "public static Object invokeExactMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeExactMethod(object, methodName, new Object[] { arg });\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5769230769230769,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 68.0,
+        "l0_tokens": 89.0,
+        "l1_tokens": 127.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(boolean value)",
+      "source": "public StrBuilder append(boolean value) {\n        if (value) {\n            ensureCapacity(size + 4);\n            buffer[size++] = 't';\n            buffer[size++] = 'r';\n            buffer[size++] = 'u';\n            buffer[size++] = 'e';\n        } else {\n            ensureCapacity(size + 5);\n            buffer[size++] = 'f';\n            buffer[size++] = 'a';\n            buffer[size++] = 'l';\n            buffer[size++] = 's';\n            buffer[size++] = 'e';\n        }\n        return this;\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(boolean value)\nSIGNATURE: public StrBuilder append(boolean value)",
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(boolean value)\nSIGNATURE: public StrBuilder append(boolean value)\nSTRUCTURE (lossy):\nif (value)\nCALL ensureCapacity(size + 4)\nbuffer[size++] = 't'\nsize++\nbuffer[size++] = 'r'\nbuffer[size++] = 'u'\nbuffer[size++] = 'e'\nCALL ensureCapacity(size + 5)\nbuffer[size++] = 'f'\nbuffer[size++] = 'a'\nbuffer[size++] = 'l'\nbuffer[size++] = 's'\nreturn this;",
+        "public StrBuilder append(boolean value) {\n        if (value) {\n            ensureCapacity(size + 4);\n            buffer[size++] = 't';\n            buffer[size++] = 'r';\n            buffer[size++] = 'u';\n            buffer[size++] = 'e';\n        } else {\n            ensureCapacity(size + 5);\n            buffer[size++] = 'f';\n            buffer[size++] = 'a';\n            buffer[size++] = 'l';\n            buffer[size++] = 's';\n            buffer[size++] = 'e';\n        }\n        return this;\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 11.0,
+        "source_tokens": 125.0,
+        "l0_tokens": 37.0,
+        "l1_tokens": 106.0,
+        "compression_ratio": 0.848,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 11
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/time/DurationFormatUtils.java::DurationFormatUtils.lexx(String format)",
+      "source": "static Token[] lexx(String format) {\n        char[] array = format.toCharArray();\n        ArrayList list = new ArrayList(array.length);\n\n        boolean inLiteral = false;\n        StringBuffer buffer = null;\n        Token previous = null;\n        int sz = array.length;\n        for(int i=0; i<sz; i++) {\n            char ch = array[i];\n            if(inLiteral && ch != '\\'') {\n                buffer.append(ch);\n                continue;\n            }\n            Object value = null;\n            switch(ch) {\n                // TODO: Need to handle escaping of '\n                case '\\'' : \n                  if(inLiteral) {\n                      buffer = null;\n                      inLiteral = false;\n                  } else {\n                      buffer = new StringBuffer();\n                      list.add(new Token(buffer));\n                      inLiteral = true;\n                  }\n                  break;\n                case 'y'  : value = y; break;\n                case 'M'  : value = M; break;\n                case 'd'  : value = d; break;\n                case 'H'  : value = H; break;\n                case 'm'  : value = m; break;\n                case 's'  : value = s; break;\n                case 'S'  : value = S; break;\n                default   : \n                  if(buffer == null) {\n                      buffer = new StringBuffer();\n                      list.add(new Token(buffer));\n                  }\n                  buffer.append(ch);\n            }\n\n            if(value != null) {\n                if(previous != null && previous.getValue() == value) {\n                    previous.increment();\n                } else {\n                    Token token = new Token(value);\n                    list.add(token); \n                    previous = token;\n                }\n                buffer = null; \n            }\n        }\n        return (Token[]) list.toArray( new Token[list.size()] );\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/time/DurationFormatUtils.java::DurationFormatUtils.lexx(String format)\nSIGNATURE: static Token[] lexx(String format)",
+        "METHOD: src/java/org/apache/commons/lang/time/DurationFormatUtils.java::DurationFormatUtils.lexx(String format)\nSIGNATURE: static Token[] lexx(String format)\nSTRUCTURE (lossy):\nchar[] array = format.toCharArray();\nCALL format.toCharArray()\nArrayList list = new ArrayList(array.length);\nboolean inLiteral = false;\nStringBuffer buffer = null;\nToken previous = null;\nint sz = array.length;\nfor(int i=0; i<sz; i++)\nint i=0;\ni++\nchar ch = array[i];\nif(inLiteral && ch != '\\'')\nCALL buffer.append(ch)\nObject value = null;\nswitch(ch) { // TODO: Need to handle escaping of ' case '\\'' : if(inLiteral) { buffer = null; inLiteral = false; } else { buffer = new StringBuffer(); list.add(new Token(buffer)); inLiteral = true; } break; case 'y' : value = y; break; case 'M' : value = M; break; case 'd' : value = d; break; case 'H' : value = H; break; case 'm' : value = m; break; case 's' : value = s; break; case 'S' : value = S; break; default : if(buffer == null) { buffer = new StringBuffer(); list.add(new Token(buffer)); } buffer.append(ch); }\nif(inLiteral)\nbuffer = null\ninLiteral = false\nbuffer = new StringBuffer()\nCALL list.add(new Token(buffer))\ninLiteral = true\nvalue = y\nvalue = M\nvalue = d\nvalue = H\nvalue = m\nvalue = s\nvalue = S\nif(buffer == null)\nif(value != null)\nif(previous != null && previous.getValue() == value)\nCALL previous.getValue()\nCALL previous.increment()\nToken token = new Token(value);\nCALL list.add(token)\nprevious = token\nreturn (Token[]) list.toArray( new Token[list.size()] );\nCALL list.toArray( new Token[list.size()] )\nCALL list.size()",
+        "static Token[] lexx(String format) {\n        char[] array = format.toCharArray();\n        ArrayList list = new ArrayList(array.length);\n\n        boolean inLiteral = false;\n        StringBuffer buffer = null;\n        Token previous = null;\n        int sz = array.length;\n        for(int i=0; i<sz; i++) {\n            char ch = array[i];\n            if(inLiteral && ch != '\\'') {\n                buffer.append(ch);\n                continue;\n            }\n            Object value = null;\n            switch(ch) {\n                // TODO: Need to handle escaping of '\n                case '\\'' : \n                  if(inLiteral) {\n                      buffer = null;\n                      inLiteral = false;\n                  } else {\n                      buffer = new StringBuffer();\n                      list.add(new Token(buffer));\n                      inLiteral = true;\n                  }\n                  break;\n                case 'y'  : value = y; break;\n                case 'M'  : value = M; break;\n                case 'd'  : value = d; break;\n                case 'H'  : value = H; break;\n                case 'm'  : value = m; break;\n                case 's'  : value = s; break;\n                case 'S'  : value = S; break;\n                default   : \n                  if(buffer == null) {\n                      buffer = new StringBuffer();\n                      list.add(new Token(buffer));\n                  }\n                  buffer.append(ch);\n            }\n\n            if(value != null) {\n                if(previous != null && previous.getValue() == value) {\n                    previous.increment();\n                } else {\n                    Token token = new Token(value);\n                    list.add(token); \n                    previous = token;\n                }\n                buffer = null; \n            }\n        }\n        return (Token[]) list.toArray( new Token[list.size()] );\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.34782608695652173,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 10.0,
+        "literal_count": 18.0,
+        "source_tokens": 482.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 390.0,
+        "compression_ratio": 0.8091286307053942,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 10,
+        "literal_count": 18
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class cls, String methodName,\n            Object arg)",
+      "source": "public static Object invokeStaticMethod(Class cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeStaticMethod(cls, methodName, new Object[] { arg });\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class cls, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeStaticMethod(Class cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException",
+        "METHOD: src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class cls, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeStaticMethod(Class cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException\nSTRUCTURE (lossy):\nreturn invokeStaticMethod(cls, methodName, new Object[] { arg });\nCALL invokeStaticMethod(cls, methodName, new Object[] { arg })",
+        "public static Object invokeStaticMethod(Class cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeStaticMethod(cls, methodName, new Object[] { arg });\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5555555555555556,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 67.0,
+        "l0_tokens": 87.0,
+        "l1_tokens": 124.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.seekNonWs(String pattern, ParsePosition pos)",
+      "source": "private void seekNonWs(String pattern, ParsePosition pos) {\n        int len = 0;\n        char[] buffer = pattern.toCharArray();\n        do {\n            len = StrMatcher.splitMatcher().isMatch(buffer, pos.getIndex());\n            pos.setIndex(pos.getIndex() + len);\n        } while (len > 0 && pos.getIndex() < pattern.length());\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.seekNonWs(String pattern, ParsePosition pos)\nSIGNATURE: private void seekNonWs(String pattern, ParsePosition pos)",
+        "METHOD: src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.seekNonWs(String pattern, ParsePosition pos)\nSIGNATURE: private void seekNonWs(String pattern, ParsePosition pos)\nSTRUCTURE (lossy):\nint len = 0;\nchar[] buffer = pattern.toCharArray();\nCALL pattern.toCharArray()\ndo\nlen = StrMatcher.splitMatcher().isMatch(buffer, pos.getIndex())\nCALL StrMatcher.splitMatcher().isMatch(buffer, pos.getIndex())\nCALL StrMatcher.splitMatcher()\nCALL pos.getIndex()\nCALL pos.setIndex(pos.getIndex() + len)\nCALL pattern.length()",
+        "private void seekNonWs(String pattern, ParsePosition pos) {\n        int len = 0;\n        char[] buffer = pattern.toCharArray();\n        do {\n            len = StrMatcher.splitMatcher().isMatch(buffer, pos.getIndex());\n            pos.setIndex(pos.getIndex() + len);\n        } while (len > 0 && pos.getIndex() < pattern.length());\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.45454545454545453,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 8.0,
+        "literal_count": 2.0,
+        "source_tokens": 84.0,
+        "l0_tokens": 53.0,
+        "l1_tokens": 138.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 8,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class cls, String methodName,\n            Object arg)",
+      "source": "public static Object invokeExactStaticMethod(Class cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeExactStaticMethod(cls, methodName, new Object[] { arg });\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class cls, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeExactStaticMethod(Class cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException",
+        "METHOD: src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class cls, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeExactStaticMethod(Class cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException\nSTRUCTURE (lossy):\nreturn invokeExactStaticMethod(cls, methodName, new Object[] { arg });\nCALL invokeExactStaticMethod(cls, methodName, new Object[] { arg })",
+        "public static Object invokeExactStaticMethod(Class cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeExactStaticMethod(cls, methodName, new Object[] { arg });\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5357142857142857,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 70.0,
+        "l0_tokens": 90.0,
+        "l1_tokens": 129.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object[] args)",
+      "source": "public static Object invokeMethod(Object object, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeMethod(object, methodName, args, parameterTypes);\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object[] args)\nSIGNATURE: public static Object invokeMethod(Object object, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException",
+        "METHOD: src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object[] args)\nSIGNATURE: public static Object invokeMethod(Object object, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException\nSTRUCTURE (lossy):\nif (args == null)\nargs = ArrayUtils.EMPTY_OBJECT_ARRAY\nint arguments = args.length;\nClass[] parameterTypes = new Class[arguments];\nfor (int i = 0; i < arguments; i++)\nint i = 0;\ni++\nparameterTypes[i] = args[i].getClass()\nCALL args[i].getClass()\nreturn invokeMethod(object, methodName, args, parameterTypes);\nCALL invokeMethod(object, methodName, args, parameterTypes)",
+        "public static Object invokeMethod(Object object, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeMethod(object, methodName, args, parameterTypes);\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4444444444444444,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 139.0,
+        "l0_tokens": 88.0,
+        "l1_tokens": 185.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.ExtendedMessageFormat(String pattern, Locale locale, Map registry)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.applyPattern(String pattern)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.ExtendedMessageFormat(String pattern, Map registry)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.readArgumentIndex(String pattern, ParsePosition pos)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.getQuotedString(String pattern, ParsePosition pos,\n            boolean escapingOn)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.parseFormatDescription(String pattern, ParsePosition pos)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/time/FastDateFormat.java::FastDateFormat.parseToken(String pattern, int[] indexRef)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.insertFormats(String pattern, ArrayList customPatterns)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.appendQuotedString(String pattern, ParsePosition pos,\n            StringBuffer appendTo, boolean escapingOn)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/StringEscapeUtils.java::StringEscapeUtils.unescapeJava(Writer out, String str)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.ExtendedMessageFormat(String pattern)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/WordUtils.java::WordUtils.abbreviate(String str, int lower, int upper, String appendToEnd)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.ExtendedMessageFormat(String pattern, Locale locale)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.setFormat(int formatElementIndex, Format newFormat)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object arg)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.toPattern()": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object arg)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(boolean value)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/time/DurationFormatUtils.java::DurationFormatUtils.lexx(String format)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class cls, String methodName,\n            Object arg)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java::ExtendedMessageFormat.seekNonWs(String pattern, ParsePosition pos)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class cls, String methodName,\n            Object arg)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object[] args)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 2208,
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "7f324a3d977983379263f28e9170a8cec01d24c037254dc4fdb07aa0bcd67775",
+  "evidence_sha256": "b3ebda262663dbcfbcd692920e6674bd58eabe4926b71d2e2b6704235d00041a"
+}

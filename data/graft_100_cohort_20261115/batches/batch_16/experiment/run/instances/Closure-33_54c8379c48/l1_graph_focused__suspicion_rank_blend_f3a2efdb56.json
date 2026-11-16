@@ -1,0 +1,3820 @@
+{
+  "instance_id": "Closure-33",
+  "dataset": "defects4j",
+  "policy": "l1_graph_focused",
+  "fusion": "suspicion_rank_blend",
+  "budget": 90000,
+  "input_hash": "73544989d145ff7a11a27d10d5b5131eee134184df5407f9b13ba090066be88e",
+  "graph_hash": "e0c5e3c95dd634818d473049e701b2b2229730188a2086bf18f5473bd21be3e8",
+  "synthetic": false,
+  "execution_kind": "fresh_or_exact_cache",
+  "cost_scope": "Verification provider input+output; excludes retrieval, embedding and benchmark tests",
+  "arm": {
+    "schema": "graft-router-v1",
+    "policy": "l1_graph_focused",
+    "graft_config": {
+      "selector": "bm25",
+      "input_budget": 4096,
+      "paths": false,
+      "repair": true,
+      "max_graph": 2,
+      "max_full": 1,
+      "uncertainty_threshold": 0.45,
+      "top_k": 5,
+      "typed_topology": false,
+      "propagation": true,
+      "guard_unsupported_graph_downgrade": true,
+      "failure_name_anchor": false,
+      "failure_digest_mode": "bounded_excerpt"
+    },
+    "ranker": {
+      "name": "suspicion_rank_blend",
+      "tie": "original",
+      "rounding": null,
+      "rrf_k": 60,
+      "calibrated": false,
+      "blend_weights": {
+        "rank": 0.3,
+        "suspicion": 0.7
+      }
+    },
+    "ranked_functions": [
+      "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)",
+      "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)",
+      "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)",
+      "src/com/google/javascript/rhino/jstype/ArrowType.java::ArrowType.isSubtype(JSType other)",
+      "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)",
+      "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)",
+      "src/com/google/javascript/jscomp/TypedCodeGenerator.java::TypedCodeGenerator.getParameterNodeJSDocType(Node parameterNode)",
+      "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()",
+      "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()",
+      "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addRequiredParams(JSType ...types)",
+      "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)",
+      "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)",
+      "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)",
+      "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addVarArgs(JSType type)",
+      "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)",
+      "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()",
+      "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()",
+      "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.RunTimeStats.outputBestPhaseOrdering()",
+      "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)",
+      "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addOptionalParams(JSType ...types)",
+      "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.Flags.BooleanOptionHandler.parseArguments(Parameters params)",
+      "src/com/google/javascript/rhino/jstype/JSType.java::JSType.testForEqualityHelper(JSType aType, JSType bType)",
+      "src/com/google/javascript/jscomp/WarningLevel.java::WarningLevel.addVerboseWarnings(CompilerOptions options)",
+      "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)"
+    ],
+    "ranking_scores": {
+      "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)": 0.72,
+      "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()": 0.35695652173913045,
+      "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()": 0.3439130434782609,
+      "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addRequiredParams(JSType ...types)": 0.3308695652173913,
+      "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)": 0.6678260869565217,
+      "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)": 0.6547826086956522,
+      "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)": 0.29173913043478256,
+      "src/com/google/javascript/rhino/jstype/ArrowType.java::ArrowType.isSubtype(JSType other)": 0.628695652173913,
+      "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)": 0.26565217391304347,
+      "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)": 0.39260869565217393,
+      "src/com/google/javascript/jscomp/TypedCodeGenerator.java::TypedCodeGenerator.getParameterNodeJSDocType(Node parameterNode)": 0.37956521739130433,
+      "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)": 0.5765217391304347,
+      "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addVarArgs(JSType type)": 0.21347826086956523,
+      "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)": 0.20043478260869563,
+      "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()": 0.18739130434782608,
+      "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()": 0.1743478260869565,
+      "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.RunTimeStats.outputBestPhaseOrdering()": 0.16130434782608694,
+      "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)": 0.2882608695652174,
+      "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)": 0.1352173913043478,
+      "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addOptionalParams(JSType ...types)": 0.12217391304347824,
+      "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.Flags.BooleanOptionHandler.parseArguments(Parameters params)": 0.1091304347826087,
+      "src/com/google/javascript/rhino/jstype/JSType.java::JSType.testForEqualityHelper(JSType aType, JSType bType)": 0.09608695652173914,
+      "src/com/google/javascript/jscomp/WarningLevel.java::WarningLevel.addVerboseWarnings(CompilerOptions options)": 0.08304347826086955,
+      "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)": 0.06999999999999999
+    },
+    "failure_name_anchors": {
+      "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)": false,
+      "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()": false,
+      "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()": false,
+      "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addRequiredParams(JSType ...types)": false,
+      "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)": false,
+      "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)": false,
+      "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)": false,
+      "src/com/google/javascript/rhino/jstype/ArrowType.java::ArrowType.isSubtype(JSType other)": false,
+      "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)": false,
+      "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)": false,
+      "src/com/google/javascript/jscomp/TypedCodeGenerator.java::TypedCodeGenerator.getParameterNodeJSDocType(Node parameterNode)": false,
+      "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)": false,
+      "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addVarArgs(JSType type)": false,
+      "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)": false,
+      "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()": false,
+      "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()": false,
+      "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.RunTimeStats.outputBestPhaseOrdering()": false,
+      "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)": false,
+      "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)": false,
+      "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addOptionalParams(JSType ...types)": false,
+      "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.Flags.BooleanOptionHandler.parseArguments(Parameters params)": false,
+      "src/com/google/javascript/rhino/jstype/JSType.java::JSType.testForEqualityHelper(JSType aType, JSType bType)": false,
+      "src/com/google/javascript/jscomp/WarningLevel.java::WarningLevel.addVerboseWarnings(CompilerOptions options)": false,
+      "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)": false
+    },
+    "failure_anchor_is_calibrated": false,
+    "actual_tokens": 46875,
+    "tokens_remaining": 43125,
+    "budget_exceeded": false,
+    "strict_admission": true,
+    "calls": [
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)",
+            "suspicion": 0.6,
+            "uncertainty": 0.4,
+            "reason": "Registers type mismatches for function parameters and return types.",
+            "valid": true,
+            "missing_evidence": "No specific evidence of fault in this method."
+          }
+        ],
+        "input_tokens": 1970,
+        "output_tokens": 53,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.6,\"uncertainty\":0.4,\"explanation\":\"Registers type mismatches for function parameters and return types.\",\"missing_evidence\":\"No specific evidence of fault in this method.\"}] }",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Test code does not directly call this method.",
+            "valid": true,
+            "missing_evidence": "No evidence linking test to this method."
+          }
+        ],
+        "input_tokens": 1801,
+        "output_tokens": 50,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.1,\"uncertainty\":0.9,\"explanation\":\"Test code does not directly call this method.\",\"missing_evidence\":\"No evidence linking test to this method.\"}] }",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "No direct impact on testIssue700.",
+            "valid": true,
+            "missing_evidence": "none"
+          }
+        ],
+        "input_tokens": 1904,
+        "output_tokens": 44,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.1,\"uncertainty\":0.9,\"explanation\":\"No direct impact on testIssue700.\",\"missing_evidence\":\"none\"}]}",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addRequiredParams(JSType ...types)"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addRequiredParams(JSType ...types)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Test does not directly call this method.",
+            "valid": true,
+            "missing_evidence": "No evidence of impact on test outcome."
+          }
+        ],
+        "input_tokens": 1635,
+        "output_tokens": 49,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.1,\"uncertainty\":0.9,\"explanation\":\"Test does not directly call this method.\",\"missing_evidence\":\"No evidence of impact on test outcome.\"}] }",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)",
+            "suspicion": 0.6,
+            "uncertainty": 0.4,
+            "reason": "Handles template types and function parameters, relevant to testIssue700.",
+            "valid": true,
+            "missing_evidence": "Exact impact on testIssue700 not clear without full code."
+          }
+        ],
+        "input_tokens": 2155,
+        "output_tokens": 85,
+        "duration_seconds": 0.0,
+        "raw_response": "{\n  \"results\": [\n    {\n      \"id\": \"c0\",\n      \"suspicion\": 0.6,\n      \"uncertainty\": 0.4,\n      \"explanation\": \"Handles template types and function parameters, relevant to testIssue700.\",\n      \"missing_evidence\": \"Exact impact on testIssue700 not clear without full code.\"\n    }\n  ]\n}",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)",
+            "suspicion": 0.6,
+            "uncertainty": 0.4,
+            "reason": "Handles parameter types and could miss type mismatches",
+            "valid": true,
+            "missing_evidence": "Code for handling parameter types and their restrictions"
+          }
+        ],
+        "input_tokens": 2098,
+        "output_tokens": 51,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.6,\"uncertainty\":0.4,\"explanation\":\"Handles parameter types and could miss type mismatches\",\"missing_evidence\":\"Code for handling parameter types and their restrictions\"}]}",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Test method does not directly call c0.",
+            "valid": true,
+            "missing_evidence": "No evidence of c0's impact on test outcome."
+          }
+        ],
+        "input_tokens": 2091,
+        "output_tokens": 53,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.1,\"uncertainty\":0.9,\"explanation\":\"Test method does not directly call c0.\",\"missing_evidence\":\"No evidence of c0's impact on test outcome.\"}] }",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/ArrowType.java::ArrowType.isSubtype(JSType other)"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/rhino/jstype/ArrowType.java::ArrowType.isSubtype(JSType other)",
+            "suspicion": 0.6,
+            "uncertainty": 0.4,
+            "reason": "Compares function parameters but does not handle nested objects correctly.",
+            "valid": true,
+            "missing_evidence": "Code for handling nested object types."
+          }
+        ],
+        "input_tokens": 2045,
+        "output_tokens": 52,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.6,\"uncertainty\":0.4,\"explanation\":\"Compares function parameters but does not handle nested objects correctly.\",\"missing_evidence\":\"Code for handling nested object types.\"}] }",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Not directly related to testIssue700.",
+            "valid": true,
+            "missing_evidence": "None provided for c0"
+          }
+        ],
+        "input_tokens": 1700,
+        "output_tokens": 48,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.1,\"uncertainty\":0.9,\"explanation\":\"Not directly related to testIssue700.\",\"missing_evidence\":\"None provided for c0\"}]}",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)",
+            "suspicion": 0.3,
+            "uncertainty": 0.7,
+            "reason": "Method handles parameter addition and warnings, relevant to type checking.",
+            "valid": true,
+            "missing_evidence": "No specific evidence linking this method directly to the defect."
+          }
+        ],
+        "input_tokens": 1807,
+        "output_tokens": 56,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.3,\"uncertainty\":0.7,\"explanation\":\"Method handles parameter addition and warnings, relevant to type checking.\",\"missing_evidence\":\"No specific evidence linking this method directly to the defect.\"}] }",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/TypedCodeGenerator.java::TypedCodeGenerator.getParameterNodeJSDocType(Node parameterNode)"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/jscomp/TypedCodeGenerator.java::TypedCodeGenerator.getParameterNodeJSDocType(Node parameterNode)",
+            "suspicion": 0.3,
+            "uncertainty": 0.7,
+            "reason": "Method processes JSDoc types, relevant to testIssue700.",
+            "valid": true,
+            "missing_evidence": "No specific evidence of failure in this method."
+          }
+        ],
+        "input_tokens": 1772,
+        "output_tokens": 57,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.3,\"uncertainty\":0.7,\"explanation\":\"Method processes JSDoc types, relevant to testIssue700.\",\"missing_evidence\":\"No specific evidence of failure in this method.\"}] }",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)",
+            "suspicion": 0.6,
+            "uncertainty": 0.4,
+            "reason": "Tests temp1 and temp2 do not trigger the defect.",
+            "valid": true,
+            "missing_evidence": "temp3 method details needed"
+          }
+        ],
+        "input_tokens": 1781,
+        "output_tokens": 50,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.6,\"uncertainty\":0.4,\"explanation\":\"Tests temp1 and temp2 do not trigger the defect.\",\"missing_evidence\":\"temp3 method details needed\"}]}",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addVarArgs(JSType type)"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addVarArgs(JSType type)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Test does not directly call this method.",
+            "valid": true,
+            "missing_evidence": "No evidence of impact on test outcome."
+          }
+        ],
+        "input_tokens": 1660,
+        "output_tokens": 49,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.1,\"uncertainty\":0.9,\"explanation\":\"Test does not directly call this method.\",\"missing_evidence\":\"No evidence of impact on test outcome.\"}] }",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Not directly related to testIssue700",
+            "valid": true,
+            "missing_evidence": "none"
+          }
+        ],
+        "input_tokens": 1689,
+        "output_tokens": 44,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.1,\"uncertainty\":0.9,\"explanation\":\"Not directly related to testIssue700\",\"missing_evidence\":\"none\"}]}",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "No direct relation to test code.",
+            "valid": true,
+            "missing_evidence": "none"
+          }
+        ],
+        "input_tokens": 1606,
+        "output_tokens": 41,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.1,\"uncertainty\":0.9,\"explanation\":\"No direct relation to test code.\",\"missing_evidence\":\"none\"}]}",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Test method does not directly interact with candidate method.",
+            "valid": true,
+            "missing_evidence": "No evidence linking test to candidate method."
+          }
+        ],
+        "input_tokens": 1794,
+        "output_tokens": 51,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.1,\"uncertainty\":0.9,\"explanation\":\"Test method does not directly interact with candidate method.\",\"missing_evidence\":\"No evidence linking test to candidate method.\"}] }",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.RunTimeStats.outputBestPhaseOrdering()"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.RunTimeStats.outputBestPhaseOrdering()",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Not directly related to testIssue700.",
+            "valid": true,
+            "missing_evidence": "none"
+          }
+        ],
+        "input_tokens": 1726,
+        "output_tokens": 44,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.1,\"uncertainty\":0.9,\"explanation\":\"Not directly related to testIssue700.\",\"missing_evidence\":\"none\"}]}",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)",
+            "suspicion": 0.3,
+            "uncertainty": 0.7,
+            "reason": "Test case involves dynamic property access, which might not be fully handled.",
+            "valid": true,
+            "missing_evidence": "dynamic property handling in TypeValidator.expectInterfaceProperty"
+          }
+        ],
+        "input_tokens": 2033,
+        "output_tokens": 56,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.3,\"uncertainty\":0.7,\"explanation\":\"Test case involves dynamic property access, which might not be fully handled.\",\"missing_evidence\":\"dynamic property handling in TypeValidator.expectInterfaceProperty\"}]}",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Test does not call this method.",
+            "valid": true,
+            "missing_evidence": "No evidence of method invocation in test"
+          }
+        ],
+        "input_tokens": 1797,
+        "output_tokens": 47,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.1,\"uncertainty\":0.9,\"explanation\":\"Test does not call this method.\",\"missing_evidence\":\"No evidence of method invocation in test\"}]}",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addOptionalParams(JSType ...types)"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addOptionalParams(JSType ...types)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Test does not directly call this method.",
+            "valid": true,
+            "missing_evidence": "No evidence of impact on test outcome."
+          }
+        ],
+        "input_tokens": 1661,
+        "output_tokens": 49,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.1,\"uncertainty\":0.9,\"explanation\":\"Test does not directly call this method.\",\"missing_evidence\":\"No evidence of impact on test outcome.\"}] }",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.Flags.BooleanOptionHandler.parseArguments(Parameters params)"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.Flags.BooleanOptionHandler.parseArguments(Parameters params)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Not directly related to testIssue700.",
+            "valid": true,
+            "missing_evidence": "No evidence linking c0 to the bug."
+          }
+        ],
+        "input_tokens": 1698,
+        "output_tokens": 52,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.1,\"uncertainty\":0.9,\"explanation\":\"Not directly related to testIssue700.\",\"missing_evidence\":\"No evidence linking c0 to the bug.\"}] }",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/JSType.java::JSType.testForEqualityHelper(JSType aType, JSType bType)"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/rhino/jstype/JSType.java::JSType.testForEqualityHelper(JSType aType, JSType bType)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Test does not directly interact with JSType methods.",
+            "valid": true,
+            "missing_evidence": "No evidence of direct impact on testIssue700."
+          }
+        ],
+        "input_tokens": 1993,
+        "output_tokens": 56,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.1,\"uncertainty\":0.9,\"explanation\":\"Test does not directly interact with JSType methods.\",\"missing_evidence\":\"No evidence of direct impact on testIssue700.\"}] }",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/WarningLevel.java::WarningLevel.addVerboseWarnings(CompilerOptions options)"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/jscomp/WarningLevel.java::WarningLevel.addVerboseWarnings(CompilerOptions options)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Does not directly affect the test case.",
+            "valid": true,
+            "missing_evidence": "none"
+          }
+        ],
+        "input_tokens": 1683,
+        "output_tokens": 42,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.1,\"uncertainty\":0.9,\"explanation\":\"Does not directly affect the test case.\",\"missing_evidence\":\"none\"}]}",
+        "error": null
+      },
+      {
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)"
+        ],
+        "selection": null,
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Not directly related to test logic.",
+            "valid": true,
+            "missing_evidence": "No evidence of impact on test."
+          }
+        ],
+        "input_tokens": 1702,
+        "output_tokens": 47,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"results\":[{\"id\":\"c0\",\"suspicion\":0.1,\"uncertainty\":0.9,\"explanation\":\"Not directly related to test logic.\",\"missing_evidence\":\"No evidence of impact on test.\"}] }",
+        "error": null
+      },
+      {
+        "stage": "graph",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)"
+        ],
+        "selection": {
+          "target": "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)",
+          "ids": [
+            "code_29abdc3f2d06cd6d0c90",
+            "code_5c7e2d905cd56da040c7",
+            "code_79c440d2e80b2b0eb193",
+            "code_948d575be9a5684ca962",
+            "code_cdbe0ce9fa356a95eb37",
+            "failure_822bd8248d100a6021c7",
+            "method_c1a78f60f3299fb23e9e"
+          ],
+          "text": "{\"failure_excerpt\":{\"excerpt_is_incomplete\":true,\"note\":\"Exact lines only. Unlisted original source lines were omitted, not checked or found irrelevant.\",\"original_line_count\":91,\"original_utf8_bytes\":4825,\"schema\":\"graft-failure-line-excerpt-v1\",\"selected_original_lines\":[[1,\"OFFICIAL DEFECTS4J BUG: Closure-33\"],[2,\"EXECUTED BUGGY TEST: com.google.javascript.jscomp.TypeCheckTest::testIssue700\"],[3,\"TEST SOURCE: test/com/google/javascript/jscomp/TypeCheckTest.java\"],[4,\"TEST SOURCE SHA256: c5e48b12ce04f599f6e5370f17d204f4af1c09323319a3e223d38cf9d03197c8\"],[5,\"COMPLETE EXECUTED TEST METHOD (verbatim):\"],[6,\"public void testIssue700() throws Exception {\"],[7,\"    testTypes(\"],[8,\"        \\\"/**\\\\n\\\" +\"],[43,\"        \\\"}\\\\n\\\" +\"],[44,\"        \\\"\\\\n\\\" +\"],[45,\"        \\\"callee();\\\");\"],[46,\"  }\"],[47,\"OBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\"],[48,\"--- com.google.javascript.jscomp.TypeCheckTest::testIssue700\"],[49,\"junit.framework.AssertionFailedError: unexpected warnings(s):\"],[55,\"\\tat com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:9908)\"],[56,\"\\tat com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:9882)\"]],\"selection_rule\":\"identity_test_head_tail_assertions_first_two_observed_failures_and_project_frames\",\"source_line_bytes_limit\":1650,\"source_sha256\":\"b9c2229ee53134f512750c92de3d046cbf1d8b53d0f4cca72fb309e9b97bcc8a\"},\"schema\":\"graft-focused-bounded-failure-v2\",\"sources\":[{\"fn\":\"src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)\",\"path\":\"src/com/google/javascript/jscomp/TypeInference.java\",\"units\":[[945,1032,\"private void updateTypeOfThisOnClosure(Node n, FunctionType fnType)\"],[946,946,\"// TODO(user): Make the template logic more general.\"],[948,950,\"if (fnType.getTemplateTypeName() == null) {\\n      return;\\n    }\"],[952,952,\"int i = 0;\"],[953,953,\"int childCount = n.getChildCount();\"],[954,954,\"// Find the parameter whose type is the template type.\"]]}],\"target\":\"src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)\"}",
+          "input_units": 3069,
+          "budget": 4096,
+          "counter": "utf8_content_bytes_plus_256_template_proxy",
+          "exact_template_tokens": false,
+          "status": "ready",
+          "reason": "",
+          "graph_hash": "e0c5e3c95dd634818d473049e701b2b2229730188a2086bf18f5473bd21be3e8",
+          "selector": "focused_bounded_failure_v2",
+          "scores": {},
+          "diagnostics": {
+            "requested_calls": [],
+            "resolved_callees": [],
+            "selected_callees": [],
+            "unresolved_callees": [],
+            "assigned_variables": [],
+            "required_missing": [],
+            "omitted_target_code_ids": [
+              "code_6122958a063c3770854b"
+            ],
+            "semantic_completeness_guaranteed": false,
+            "gold_used": false,
+            "heuristic_not_calibrated": true,
+            "relations_are_lexical_not_proven_execution": true
+          },
+          "schema": "graft-selection-v1"
+        },
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)",
+            "suspicion": 0.0,
+            "uncertainty": 1.0,
+            "reason": "No direct evidence in excerpt.",
+            "valid": true,
+            "missing_evidence": "Fragments incomplete"
+          }
+        ],
+        "input_tokens": 875,
+        "output_tokens": 34,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"suspicion\":0.0,\"uncertainty\":1.0,\"explanation\":\"No direct evidence in excerpt.\",\"missing_evidence\":\"Fragments incomplete\"}",
+        "error": null
+      },
+      {
+        "stage": "graph",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)"
+        ],
+        "selection": {
+          "target": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)",
+          "ids": [
+            "code_d8effb8ab93f4c0ca596",
+            "failure_822bd8248d100a6021c7",
+            "method_7fff0117bb6feb78493f"
+          ],
+          "text": "{\"failure_excerpt\":{\"excerpt_is_incomplete\":true,\"note\":\"Exact lines only. Unlisted original source lines were omitted, not checked or found irrelevant.\",\"original_line_count\":91,\"original_utf8_bytes\":4825,\"schema\":\"graft-failure-line-excerpt-v1\",\"selected_original_lines\":[[1,\"OFFICIAL DEFECTS4J BUG: Closure-33\"],[2,\"EXECUTED BUGGY TEST: com.google.javascript.jscomp.TypeCheckTest::testIssue700\"],[3,\"TEST SOURCE: test/com/google/javascript/jscomp/TypeCheckTest.java\"],[4,\"TEST SOURCE SHA256: c5e48b12ce04f599f6e5370f17d204f4af1c09323319a3e223d38cf9d03197c8\"],[5,\"COMPLETE EXECUTED TEST METHOD (verbatim):\"],[6,\"public void testIssue700() throws Exception {\"],[7,\"    testTypes(\"],[8,\"        \\\"/**\\\\n\\\" +\"],[43,\"        \\\"}\\\\n\\\" +\"],[44,\"        \\\"\\\\n\\\" +\"],[45,\"        \\\"callee();\\\");\"],[46,\"  }\"],[47,\"OBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\"],[48,\"--- com.google.javascript.jscomp.TypeCheckTest::testIssue700\"],[49,\"junit.framework.AssertionFailedError: unexpected warnings(s):\"],[55,\"\\tat com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:9908)\"],[56,\"\\tat com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:9882)\"]],\"selection_rule\":\"identity_test_head_tail_assertions_first_two_observed_failures_and_project_frames\",\"source_line_bytes_limit\":1650,\"source_sha256\":\"b9c2229ee53134f512750c92de3d046cbf1d8b53d0f4cca72fb309e9b97bcc8a\"},\"schema\":\"graft-focused-bounded-failure-v2\",\"sources\":[{\"fn\":\"src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\\n      JSType paramType, Node callNode, int ordinal)\",\"path\":\"src/com/google/javascript/jscomp/TypeValidator.java\",\"units\":[[417,426,\"void expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\\n      JSType paramType, Node callNode, int ordinal)\"],[419,425,\"if (!argType.canAssignTo(paramType)) {\\n      mismatch(t, n,\\n          String.format(\\\"actual parameter %d of %s does not match \\\" +\\n              \\\"formal parameter\\\", ordinal,\\n              getReadableJSTypeName(callNode.getFirstChild(), false)),\\n          argType, paramType);\\n    }\"]]}],\"target\":\"src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\\n      JSType paramType, Node callNode, int ordinal)\"}",
+          "input_units": 3292,
+          "budget": 4096,
+          "counter": "utf8_content_bytes_plus_256_template_proxy",
+          "exact_template_tokens": false,
+          "status": "ready",
+          "reason": "",
+          "graph_hash": "e0c5e3c95dd634818d473049e701b2b2229730188a2086bf18f5473bd21be3e8",
+          "selector": "focused_bounded_failure_v2",
+          "scores": {},
+          "diagnostics": {
+            "requested_calls": [],
+            "resolved_callees": [],
+            "selected_callees": [],
+            "unresolved_callees": [],
+            "assigned_variables": [],
+            "required_missing": [],
+            "omitted_target_code_ids": [],
+            "semantic_completeness_guaranteed": true,
+            "gold_used": false,
+            "heuristic_not_calibrated": true,
+            "relations_are_lexical_not_proven_execution": true
+          },
+          "schema": "graft-selection-v1"
+        },
+        "observations": [
+          {
+            "function_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)",
+            "suspicion": 0.0,
+            "uncertainty": 1.0,
+            "reason": "No direct evidence links method to failure.",
+            "valid": true,
+            "missing_evidence": "Excerpt does not cover method"
+          }
+        ],
+        "input_tokens": 900,
+        "output_tokens": 39,
+        "duration_seconds": 0.0,
+        "raw_response": "{\"suspicion\":0.0,\"uncertainty\":1.0,\"explanation\":\"No direct evidence links method to failure.\",\"missing_evidence\":\"Excerpt does not cover method\"}",
+        "error": null
+      }
+    ],
+    "accounting_events": [
+      {
+        "fingerprint": "44f5bda8123d4dad7baedb59b4c89e332d6c47442d1db046840f9a2958f839df",
+        "predicted_tokens": 3858,
+        "reserved_tokens": 8352,
+        "actual_tokens": 2023,
+        "input_tokens": 1970,
+        "output_tokens": 53,
+        "reuse": "journal",
+        "remaining": 87977,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "848714f2d026183ad5f2c8b4086269e30341550f4fb7b8d3079ee28fdcebee82",
+        "predicted_tokens": 3546,
+        "reserved_tokens": 8352,
+        "actual_tokens": 1851,
+        "input_tokens": 1801,
+        "output_tokens": 50,
+        "reuse": "journal",
+        "remaining": 86126,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "84f2e8e10026a86abb6c03c20bb3f32e1528000afff4f89642011f5ff3acd0ad",
+        "predicted_tokens": 3872,
+        "reserved_tokens": 8352,
+        "actual_tokens": 1948,
+        "input_tokens": 1904,
+        "output_tokens": 44,
+        "reuse": "journal",
+        "remaining": 84178,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "a83a54e31e25973e35b09a009cdd47828904fd4dd8bd63d00f058eab8d4581ed",
+        "predicted_tokens": 3204,
+        "reserved_tokens": 8352,
+        "actual_tokens": 1684,
+        "input_tokens": 1635,
+        "output_tokens": 49,
+        "reuse": "journal",
+        "remaining": 82494,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addRequiredParams(JSType ...types)"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "1e871ba8fe1e737ce200ad84ce2b2ab2303595692d100d5c6f1471db94322084",
+        "predicted_tokens": 4190,
+        "reserved_tokens": 8352,
+        "actual_tokens": 2240,
+        "input_tokens": 2155,
+        "output_tokens": 85,
+        "reuse": "journal",
+        "remaining": 80254,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "30066d97ade23d641d9536213557bd17714d7e8d6d58b582e26d62f6275f60a8",
+        "predicted_tokens": 4210,
+        "reserved_tokens": 8352,
+        "actual_tokens": 2149,
+        "input_tokens": 2098,
+        "output_tokens": 51,
+        "reuse": "journal",
+        "remaining": 78105,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "abe860bfbb8caa09f14ef95e4ce4e8e94539cda9867923d8799e875cf4710797",
+        "predicted_tokens": 4194,
+        "reserved_tokens": 8352,
+        "actual_tokens": 2144,
+        "input_tokens": 2091,
+        "output_tokens": 53,
+        "reuse": "journal",
+        "remaining": 75961,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "2c18328a2bbb0759d5d80eddc51d3d80aeef373533bc708214edf4c2353e58f2",
+        "predicted_tokens": 3932,
+        "reserved_tokens": 8352,
+        "actual_tokens": 2097,
+        "input_tokens": 2045,
+        "output_tokens": 52,
+        "reuse": "journal",
+        "remaining": 73864,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/ArrowType.java::ArrowType.isSubtype(JSType other)"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "b1ef7f8ad0fffac0b7aaa6680915de8aae7d22f7adf99a65953ff292b1432356",
+        "predicted_tokens": 3400,
+        "reserved_tokens": 8352,
+        "actual_tokens": 1748,
+        "input_tokens": 1700,
+        "output_tokens": 48,
+        "reuse": "journal",
+        "remaining": 72116,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "c884ae4d6b0c98f3e044146c4a6da6abeca75094c6defbc20351e4fbd1607166",
+        "predicted_tokens": 3572,
+        "reserved_tokens": 8352,
+        "actual_tokens": 1863,
+        "input_tokens": 1807,
+        "output_tokens": 56,
+        "reuse": "journal",
+        "remaining": 70253,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "29eb734af681187903957135dd554ec8fe73a02278fd0a036ae312f21a849741",
+        "predicted_tokens": 3512,
+        "reserved_tokens": 8352,
+        "actual_tokens": 1829,
+        "input_tokens": 1772,
+        "output_tokens": 57,
+        "reuse": "journal",
+        "remaining": 68424,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/TypedCodeGenerator.java::TypedCodeGenerator.getParameterNodeJSDocType(Node parameterNode)"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "a1c53315721cc9806b7bb4110a09672e43a5b290b9521059bf30e3f84cd9f0cd",
+        "predicted_tokens": 3502,
+        "reserved_tokens": 8352,
+        "actual_tokens": 1831,
+        "input_tokens": 1781,
+        "output_tokens": 50,
+        "reuse": "journal",
+        "remaining": 66593,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "423937736b84e2caf98b0fea776da3a2ed70629303c67d5cc81fbf65f5a915d3",
+        "predicted_tokens": 3252,
+        "reserved_tokens": 8352,
+        "actual_tokens": 1709,
+        "input_tokens": 1660,
+        "output_tokens": 49,
+        "reuse": "journal",
+        "remaining": 64884,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addVarArgs(JSType type)"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "1cebae0aa474031667cecb06968afe1dfefedbe7847818616d3fd8e9d6c2c989",
+        "predicted_tokens": 3332,
+        "reserved_tokens": 8352,
+        "actual_tokens": 1733,
+        "input_tokens": 1689,
+        "output_tokens": 44,
+        "reuse": "journal",
+        "remaining": 63151,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "e383b55c5c6a3e9d188e3cefc3db3d42834c527d00582e228a136698068dde90",
+        "predicted_tokens": 3170,
+        "reserved_tokens": 8352,
+        "actual_tokens": 1647,
+        "input_tokens": 1606,
+        "output_tokens": 41,
+        "reuse": "journal",
+        "remaining": 61504,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "f32bc0fc6aba0c05cc67af47f47a6ae015b2e4b647ed41ae81d87d0e604d3c7d",
+        "predicted_tokens": 3494,
+        "reserved_tokens": 8352,
+        "actual_tokens": 1845,
+        "input_tokens": 1794,
+        "output_tokens": 51,
+        "reuse": "journal",
+        "remaining": 59659,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "374f6e04a33ce83ff4569f344386de8206afea1916f5e514ae01da6fbae707c5",
+        "predicted_tokens": 3352,
+        "reserved_tokens": 8352,
+        "actual_tokens": 1770,
+        "input_tokens": 1726,
+        "output_tokens": 44,
+        "reuse": "journal",
+        "remaining": 57889,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.RunTimeStats.outputBestPhaseOrdering()"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "c0275ff7aefca8b38a8558b844632f767eaa7e5b8e6c22efe187c34e93af0f9b",
+        "predicted_tokens": 4220,
+        "reserved_tokens": 8352,
+        "actual_tokens": 2089,
+        "input_tokens": 2033,
+        "output_tokens": 56,
+        "reuse": "journal",
+        "remaining": 55800,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "793ffb1f7767b7e82834a3d6cfbd9dd3999504153fdb30b783f56afc5ed8c31d",
+        "predicted_tokens": 3558,
+        "reserved_tokens": 8352,
+        "actual_tokens": 1844,
+        "input_tokens": 1797,
+        "output_tokens": 47,
+        "reuse": "journal",
+        "remaining": 53956,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "a415adbdc2f6a2e68dc736762b712193bce67c3f20dab33e399177406591f66c",
+        "predicted_tokens": 3266,
+        "reserved_tokens": 8352,
+        "actual_tokens": 1710,
+        "input_tokens": 1661,
+        "output_tokens": 49,
+        "reuse": "journal",
+        "remaining": 52246,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addOptionalParams(JSType ...types)"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "33768f983d4e39e3954d5b098bf6b83f35a2c62814e46a889bfb3c309e8c798c",
+        "predicted_tokens": 3372,
+        "reserved_tokens": 8352,
+        "actual_tokens": 1750,
+        "input_tokens": 1698,
+        "output_tokens": 52,
+        "reuse": "journal",
+        "remaining": 50496,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.Flags.BooleanOptionHandler.parseArguments(Parameters params)"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "3965b708c2c171cf8f3888bf9c0b120e5c8f537ab92302307e5f7c8129cf0d34",
+        "predicted_tokens": 3772,
+        "reserved_tokens": 8352,
+        "actual_tokens": 2049,
+        "input_tokens": 1993,
+        "output_tokens": 56,
+        "reuse": "journal",
+        "remaining": 48447,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/JSType.java::JSType.testForEqualityHelper(JSType aType, JSType bType)"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "3ab17ffe0580a68911a4daac1e123b95504f85a960cd0ca3e37af58e54d1c9b3",
+        "predicted_tokens": 3376,
+        "reserved_tokens": 8352,
+        "actual_tokens": 1725,
+        "input_tokens": 1683,
+        "output_tokens": 42,
+        "reuse": "journal",
+        "remaining": 46722,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/WarningLevel.java::WarningLevel.addVerboseWarnings(CompilerOptions options)"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "e6619ee9b9ece282afcf6a9d3ea3d53e1237989ad5aa29acd4e92baad216bf33",
+        "predicted_tokens": 3386,
+        "reserved_tokens": 8352,
+        "actual_tokens": 1749,
+        "input_tokens": 1702,
+        "output_tokens": 47,
+        "reuse": "journal",
+        "remaining": 44973,
+        "error": null,
+        "stage": "sketch",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)"
+        ],
+        "selection_hash": null
+      },
+      {
+        "fingerprint": "34baa54989ddc7446fb6680b777f04e7692c288375663f196cb47f137759f13e",
+        "predicted_tokens": 1664,
+        "reserved_tokens": 8352,
+        "actual_tokens": 909,
+        "input_tokens": 875,
+        "output_tokens": 34,
+        "reuse": "journal",
+        "remaining": 44064,
+        "error": null,
+        "stage": "graph",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)"
+        ],
+        "selection_hash": "f96a3a29ee42ffc63f2f66d85f9acf0cdd565348a3cf1e4d222a6858a7eee67d"
+      },
+      {
+        "fingerprint": "f4842565b316b340ecde9a72bcffbb5027eeb03a2573dc286aeae05b688c034f",
+        "predicted_tokens": 1774,
+        "reserved_tokens": 8352,
+        "actual_tokens": 939,
+        "input_tokens": 900,
+        "output_tokens": 39,
+        "reuse": "journal",
+        "remaining": 43125,
+        "error": null,
+        "stage": "graph",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)"
+        ],
+        "selection_hash": "eac5fc1989a32e8c0722469ea428fe41fe0059f8f2dd964ba5c387a15cf5e855"
+      }
+    ],
+    "states": {
+      "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)",
+          "suspicion": 0.6,
+          "uncertainty": 0.4,
+          "reason": "Registers type mismatches for function parameters and return types.",
+          "valid": true,
+          "missing_evidence": "No specific evidence of fault in this method."
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)",
+            "suspicion": 0.6,
+            "uncertainty": 0.4,
+            "reason": "Registers type mismatches for function parameters and return types.",
+            "valid": true,
+            "missing_evidence": "No specific evidence of fault in this method.",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Test code does not directly call this method.",
+          "valid": true,
+          "missing_evidence": "No evidence linking test to this method."
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Test code does not directly call this method.",
+            "valid": true,
+            "missing_evidence": "No evidence linking test to this method.",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "No direct impact on testIssue700.",
+          "valid": true,
+          "missing_evidence": "none"
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "No direct impact on testIssue700.",
+            "valid": true,
+            "missing_evidence": "none",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addRequiredParams(JSType ...types)": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addRequiredParams(JSType ...types)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Test does not directly call this method.",
+          "valid": true,
+          "missing_evidence": "No evidence of impact on test outcome."
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addRequiredParams(JSType ...types)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Test does not directly call this method.",
+            "valid": true,
+            "missing_evidence": "No evidence of impact on test outcome.",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)",
+          "suspicion": 0.6,
+          "uncertainty": 0.4,
+          "reason": "Handles template types and function parameters, relevant to testIssue700.",
+          "valid": true,
+          "missing_evidence": "Exact impact on testIssue700 not clear without full code."
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)",
+            "suspicion": 0.6,
+            "uncertainty": 0.4,
+            "reason": "Handles template types and function parameters, relevant to testIssue700.",
+            "valid": true,
+            "missing_evidence": "Exact impact on testIssue700 not clear without full code.",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          },
+          {
+            "stage": "graph",
+            "evidence_ids": [
+              "code_29abdc3f2d06cd6d0c90",
+              "code_5c7e2d905cd56da040c7",
+              "code_79c440d2e80b2b0eb193",
+              "code_948d575be9a5684ca962",
+              "code_cdbe0ce9fa356a95eb37",
+              "failure_822bd8248d100a6021c7",
+              "method_c1a78f60f3299fb23e9e"
+            ],
+            "function_id": "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)",
+            "suspicion": 0.0,
+            "uncertainty": 1.0,
+            "reason": "No direct evidence in excerpt.",
+            "valid": true,
+            "missing_evidence": "Fragments incomplete",
+            "applied_to_ranking": false,
+            "guard_reason": "unsupported_graph_downgrade"
+          }
+        ]
+      },
+      "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)",
+          "suspicion": 0.6,
+          "uncertainty": 0.4,
+          "reason": "Handles parameter types and could miss type mismatches",
+          "valid": true,
+          "missing_evidence": "Code for handling parameter types and their restrictions"
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)",
+            "suspicion": 0.6,
+            "uncertainty": 0.4,
+            "reason": "Handles parameter types and could miss type mismatches",
+            "valid": true,
+            "missing_evidence": "Code for handling parameter types and their restrictions",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Test method does not directly call c0.",
+          "valid": true,
+          "missing_evidence": "No evidence of c0's impact on test outcome."
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Test method does not directly call c0.",
+            "valid": true,
+            "missing_evidence": "No evidence of c0's impact on test outcome.",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/rhino/jstype/ArrowType.java::ArrowType.isSubtype(JSType other)": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/rhino/jstype/ArrowType.java::ArrowType.isSubtype(JSType other)",
+          "suspicion": 0.6,
+          "uncertainty": 0.4,
+          "reason": "Compares function parameters but does not handle nested objects correctly.",
+          "valid": true,
+          "missing_evidence": "Code for handling nested object types."
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/rhino/jstype/ArrowType.java::ArrowType.isSubtype(JSType other)",
+            "suspicion": 0.6,
+            "uncertainty": 0.4,
+            "reason": "Compares function parameters but does not handle nested objects correctly.",
+            "valid": true,
+            "missing_evidence": "Code for handling nested object types.",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Not directly related to testIssue700.",
+          "valid": true,
+          "missing_evidence": "None provided for c0"
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Not directly related to testIssue700.",
+            "valid": true,
+            "missing_evidence": "None provided for c0",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)",
+          "suspicion": 0.3,
+          "uncertainty": 0.7,
+          "reason": "Method handles parameter addition and warnings, relevant to type checking.",
+          "valid": true,
+          "missing_evidence": "No specific evidence linking this method directly to the defect."
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)",
+            "suspicion": 0.3,
+            "uncertainty": 0.7,
+            "reason": "Method handles parameter addition and warnings, relevant to type checking.",
+            "valid": true,
+            "missing_evidence": "No specific evidence linking this method directly to the defect.",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/jscomp/TypedCodeGenerator.java::TypedCodeGenerator.getParameterNodeJSDocType(Node parameterNode)": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/jscomp/TypedCodeGenerator.java::TypedCodeGenerator.getParameterNodeJSDocType(Node parameterNode)",
+          "suspicion": 0.3,
+          "uncertainty": 0.7,
+          "reason": "Method processes JSDoc types, relevant to testIssue700.",
+          "valid": true,
+          "missing_evidence": "No specific evidence of failure in this method."
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/jscomp/TypedCodeGenerator.java::TypedCodeGenerator.getParameterNodeJSDocType(Node parameterNode)",
+            "suspicion": 0.3,
+            "uncertainty": 0.7,
+            "reason": "Method processes JSDoc types, relevant to testIssue700.",
+            "valid": true,
+            "missing_evidence": "No specific evidence of failure in this method.",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)",
+          "suspicion": 0.6,
+          "uncertainty": 0.4,
+          "reason": "Tests temp1 and temp2 do not trigger the defect.",
+          "valid": true,
+          "missing_evidence": "temp3 method details needed"
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)",
+            "suspicion": 0.6,
+            "uncertainty": 0.4,
+            "reason": "Tests temp1 and temp2 do not trigger the defect.",
+            "valid": true,
+            "missing_evidence": "temp3 method details needed",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          },
+          {
+            "stage": "graph",
+            "evidence_ids": [
+              "code_d8effb8ab93f4c0ca596",
+              "failure_822bd8248d100a6021c7",
+              "method_7fff0117bb6feb78493f"
+            ],
+            "function_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)",
+            "suspicion": 0.0,
+            "uncertainty": 1.0,
+            "reason": "No direct evidence links method to failure.",
+            "valid": true,
+            "missing_evidence": "Excerpt does not cover method",
+            "applied_to_ranking": false,
+            "guard_reason": "unsupported_graph_downgrade"
+          }
+        ]
+      },
+      "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addVarArgs(JSType type)": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addVarArgs(JSType type)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Test does not directly call this method.",
+          "valid": true,
+          "missing_evidence": "No evidence of impact on test outcome."
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addVarArgs(JSType type)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Test does not directly call this method.",
+            "valid": true,
+            "missing_evidence": "No evidence of impact on test outcome.",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Not directly related to testIssue700",
+          "valid": true,
+          "missing_evidence": "none"
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Not directly related to testIssue700",
+            "valid": true,
+            "missing_evidence": "none",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "No direct relation to test code.",
+          "valid": true,
+          "missing_evidence": "none"
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "No direct relation to test code.",
+            "valid": true,
+            "missing_evidence": "none",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Test method does not directly interact with candidate method.",
+          "valid": true,
+          "missing_evidence": "No evidence linking test to candidate method."
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Test method does not directly interact with candidate method.",
+            "valid": true,
+            "missing_evidence": "No evidence linking test to candidate method.",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.RunTimeStats.outputBestPhaseOrdering()": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.RunTimeStats.outputBestPhaseOrdering()",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Not directly related to testIssue700.",
+          "valid": true,
+          "missing_evidence": "none"
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.RunTimeStats.outputBestPhaseOrdering()",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Not directly related to testIssue700.",
+            "valid": true,
+            "missing_evidence": "none",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)",
+          "suspicion": 0.3,
+          "uncertainty": 0.7,
+          "reason": "Test case involves dynamic property access, which might not be fully handled.",
+          "valid": true,
+          "missing_evidence": "dynamic property handling in TypeValidator.expectInterfaceProperty"
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)",
+            "suspicion": 0.3,
+            "uncertainty": 0.7,
+            "reason": "Test case involves dynamic property access, which might not be fully handled.",
+            "valid": true,
+            "missing_evidence": "dynamic property handling in TypeValidator.expectInterfaceProperty",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Test does not call this method.",
+          "valid": true,
+          "missing_evidence": "No evidence of method invocation in test"
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Test does not call this method.",
+            "valid": true,
+            "missing_evidence": "No evidence of method invocation in test",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addOptionalParams(JSType ...types)": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addOptionalParams(JSType ...types)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Test does not directly call this method.",
+          "valid": true,
+          "missing_evidence": "No evidence of impact on test outcome."
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addOptionalParams(JSType ...types)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Test does not directly call this method.",
+            "valid": true,
+            "missing_evidence": "No evidence of impact on test outcome.",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.Flags.BooleanOptionHandler.parseArguments(Parameters params)": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.Flags.BooleanOptionHandler.parseArguments(Parameters params)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Not directly related to testIssue700.",
+          "valid": true,
+          "missing_evidence": "No evidence linking c0 to the bug."
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.Flags.BooleanOptionHandler.parseArguments(Parameters params)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Not directly related to testIssue700.",
+            "valid": true,
+            "missing_evidence": "No evidence linking c0 to the bug.",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/rhino/jstype/JSType.java::JSType.testForEqualityHelper(JSType aType, JSType bType)": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/rhino/jstype/JSType.java::JSType.testForEqualityHelper(JSType aType, JSType bType)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Test does not directly interact with JSType methods.",
+          "valid": true,
+          "missing_evidence": "No evidence of direct impact on testIssue700."
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/rhino/jstype/JSType.java::JSType.testForEqualityHelper(JSType aType, JSType bType)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Test does not directly interact with JSType methods.",
+            "valid": true,
+            "missing_evidence": "No evidence of direct impact on testIssue700.",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/jscomp/WarningLevel.java::WarningLevel.addVerboseWarnings(CompilerOptions options)": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/jscomp/WarningLevel.java::WarningLevel.addVerboseWarnings(CompilerOptions options)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Does not directly affect the test case.",
+          "valid": true,
+          "missing_evidence": "none"
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/jscomp/WarningLevel.java::WarningLevel.addVerboseWarnings(CompilerOptions options)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Does not directly affect the test case.",
+            "valid": true,
+            "missing_evidence": "none",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      },
+      "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)": {
+        "level": 1,
+        "observation": {
+          "function_id": "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Not directly related to test logic.",
+          "valid": true,
+          "missing_evidence": "No evidence of impact on test."
+        },
+        "history": [
+          {
+            "stage": "sketch",
+            "evidence_ids": [],
+            "function_id": "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)",
+            "suspicion": 0.1,
+            "uncertainty": 0.9,
+            "reason": "Not directly related to test logic.",
+            "valid": true,
+            "missing_evidence": "No evidence of impact on test.",
+            "applied_to_ranking": true,
+            "guard_reason": null
+          }
+        ]
+      }
+    },
+    "stage_histories": {
+      "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)",
+          "suspicion": 0.6,
+          "uncertainty": 0.4,
+          "reason": "Registers type mismatches for function parameters and return types.",
+          "valid": true,
+          "missing_evidence": "No specific evidence of fault in this method.",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Test code does not directly call this method.",
+          "valid": true,
+          "missing_evidence": "No evidence linking test to this method.",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "No direct impact on testIssue700.",
+          "valid": true,
+          "missing_evidence": "none",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addRequiredParams(JSType ...types)": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addRequiredParams(JSType ...types)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Test does not directly call this method.",
+          "valid": true,
+          "missing_evidence": "No evidence of impact on test outcome.",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)",
+          "suspicion": 0.6,
+          "uncertainty": 0.4,
+          "reason": "Handles template types and function parameters, relevant to testIssue700.",
+          "valid": true,
+          "missing_evidence": "Exact impact on testIssue700 not clear without full code.",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        },
+        {
+          "stage": "graph",
+          "evidence_ids": [
+            "code_29abdc3f2d06cd6d0c90",
+            "code_5c7e2d905cd56da040c7",
+            "code_79c440d2e80b2b0eb193",
+            "code_948d575be9a5684ca962",
+            "code_cdbe0ce9fa356a95eb37",
+            "failure_822bd8248d100a6021c7",
+            "method_c1a78f60f3299fb23e9e"
+          ],
+          "function_id": "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)",
+          "suspicion": 0.0,
+          "uncertainty": 1.0,
+          "reason": "No direct evidence in excerpt.",
+          "valid": true,
+          "missing_evidence": "Fragments incomplete",
+          "applied_to_ranking": false,
+          "guard_reason": "unsupported_graph_downgrade"
+        }
+      ],
+      "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)",
+          "suspicion": 0.6,
+          "uncertainty": 0.4,
+          "reason": "Handles parameter types and could miss type mismatches",
+          "valid": true,
+          "missing_evidence": "Code for handling parameter types and their restrictions",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Test method does not directly call c0.",
+          "valid": true,
+          "missing_evidence": "No evidence of c0's impact on test outcome.",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/rhino/jstype/ArrowType.java::ArrowType.isSubtype(JSType other)": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/rhino/jstype/ArrowType.java::ArrowType.isSubtype(JSType other)",
+          "suspicion": 0.6,
+          "uncertainty": 0.4,
+          "reason": "Compares function parameters but does not handle nested objects correctly.",
+          "valid": true,
+          "missing_evidence": "Code for handling nested object types.",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Not directly related to testIssue700.",
+          "valid": true,
+          "missing_evidence": "None provided for c0",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)",
+          "suspicion": 0.3,
+          "uncertainty": 0.7,
+          "reason": "Method handles parameter addition and warnings, relevant to type checking.",
+          "valid": true,
+          "missing_evidence": "No specific evidence linking this method directly to the defect.",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/jscomp/TypedCodeGenerator.java::TypedCodeGenerator.getParameterNodeJSDocType(Node parameterNode)": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/jscomp/TypedCodeGenerator.java::TypedCodeGenerator.getParameterNodeJSDocType(Node parameterNode)",
+          "suspicion": 0.3,
+          "uncertainty": 0.7,
+          "reason": "Method processes JSDoc types, relevant to testIssue700.",
+          "valid": true,
+          "missing_evidence": "No specific evidence of failure in this method.",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)",
+          "suspicion": 0.6,
+          "uncertainty": 0.4,
+          "reason": "Tests temp1 and temp2 do not trigger the defect.",
+          "valid": true,
+          "missing_evidence": "temp3 method details needed",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        },
+        {
+          "stage": "graph",
+          "evidence_ids": [
+            "code_d8effb8ab93f4c0ca596",
+            "failure_822bd8248d100a6021c7",
+            "method_7fff0117bb6feb78493f"
+          ],
+          "function_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)",
+          "suspicion": 0.0,
+          "uncertainty": 1.0,
+          "reason": "No direct evidence links method to failure.",
+          "valid": true,
+          "missing_evidence": "Excerpt does not cover method",
+          "applied_to_ranking": false,
+          "guard_reason": "unsupported_graph_downgrade"
+        }
+      ],
+      "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addVarArgs(JSType type)": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addVarArgs(JSType type)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Test does not directly call this method.",
+          "valid": true,
+          "missing_evidence": "No evidence of impact on test outcome.",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Not directly related to testIssue700",
+          "valid": true,
+          "missing_evidence": "none",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "No direct relation to test code.",
+          "valid": true,
+          "missing_evidence": "none",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Test method does not directly interact with candidate method.",
+          "valid": true,
+          "missing_evidence": "No evidence linking test to candidate method.",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.RunTimeStats.outputBestPhaseOrdering()": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.RunTimeStats.outputBestPhaseOrdering()",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Not directly related to testIssue700.",
+          "valid": true,
+          "missing_evidence": "none",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)",
+          "suspicion": 0.3,
+          "uncertainty": 0.7,
+          "reason": "Test case involves dynamic property access, which might not be fully handled.",
+          "valid": true,
+          "missing_evidence": "dynamic property handling in TypeValidator.expectInterfaceProperty",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Test does not call this method.",
+          "valid": true,
+          "missing_evidence": "No evidence of method invocation in test",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addOptionalParams(JSType ...types)": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addOptionalParams(JSType ...types)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Test does not directly call this method.",
+          "valid": true,
+          "missing_evidence": "No evidence of impact on test outcome.",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.Flags.BooleanOptionHandler.parseArguments(Parameters params)": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.Flags.BooleanOptionHandler.parseArguments(Parameters params)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Not directly related to testIssue700.",
+          "valid": true,
+          "missing_evidence": "No evidence linking c0 to the bug.",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/rhino/jstype/JSType.java::JSType.testForEqualityHelper(JSType aType, JSType bType)": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/rhino/jstype/JSType.java::JSType.testForEqualityHelper(JSType aType, JSType bType)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Test does not directly interact with JSType methods.",
+          "valid": true,
+          "missing_evidence": "No evidence of direct impact on testIssue700.",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/jscomp/WarningLevel.java::WarningLevel.addVerboseWarnings(CompilerOptions options)": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/jscomp/WarningLevel.java::WarningLevel.addVerboseWarnings(CompilerOptions options)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Does not directly affect the test case.",
+          "valid": true,
+          "missing_evidence": "none",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ],
+      "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)": [
+        {
+          "stage": "sketch",
+          "evidence_ids": [],
+          "function_id": "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)",
+          "suspicion": 0.1,
+          "uncertainty": 0.9,
+          "reason": "Not directly related to test logic.",
+          "valid": true,
+          "missing_evidence": "No evidence of impact on test.",
+          "applied_to_ranking": true,
+          "guard_reason": null
+        }
+      ]
+    },
+    "trace": [
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)"
+        ],
+        "predicted_tokens": 3858,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()"
+        ],
+        "predicted_tokens": 3546,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()"
+        ],
+        "predicted_tokens": 3872,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addRequiredParams(JSType ...types)"
+        ],
+        "predicted_tokens": 3204,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)"
+        ],
+        "predicted_tokens": 4190,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)"
+        ],
+        "predicted_tokens": 4210,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)"
+        ],
+        "predicted_tokens": 4194,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/ArrowType.java::ArrowType.isSubtype(JSType other)"
+        ],
+        "predicted_tokens": 3932,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)"
+        ],
+        "predicted_tokens": 3400,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)"
+        ],
+        "predicted_tokens": 3572,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/TypedCodeGenerator.java::TypedCodeGenerator.getParameterNodeJSDocType(Node parameterNode)"
+        ],
+        "predicted_tokens": 3512,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)"
+        ],
+        "predicted_tokens": 3502,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addVarArgs(JSType type)"
+        ],
+        "predicted_tokens": 3252,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)"
+        ],
+        "predicted_tokens": 3332,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()"
+        ],
+        "predicted_tokens": 3170,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()"
+        ],
+        "predicted_tokens": 3494,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.RunTimeStats.outputBestPhaseOrdering()"
+        ],
+        "predicted_tokens": 3352,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)"
+        ],
+        "predicted_tokens": 4220,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)"
+        ],
+        "predicted_tokens": 3558,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addOptionalParams(JSType ...types)"
+        ],
+        "predicted_tokens": 3266,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.Flags.BooleanOptionHandler.parseArguments(Parameters params)"
+        ],
+        "predicted_tokens": 3372,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/JSType.java::JSType.testForEqualityHelper(JSType aType, JSType bType)"
+        ],
+        "predicted_tokens": 3772,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/jscomp/WarningLevel.java::WarningLevel.addVerboseWarnings(CompilerOptions options)"
+        ],
+        "predicted_tokens": 3376,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "initial_l1",
+        "candidate_ids": [
+          "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)"
+        ],
+        "predicted_tokens": 3386,
+        "reserved_tokens": 8352,
+        "selected": true
+      },
+      {
+        "phase": "route",
+        "step": 0,
+        "spent_before": 45027,
+        "remaining_before": 44973,
+        "stage_counts": {
+          "sketch": 24,
+          "graph": 0,
+          "method_full": 0
+        },
+        "options": [
+          {
+            "candidate": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 2050,
+            "reserved_tokens": 8352,
+            "current_score": 0.72,
+            "failure_name_anchor": false,
+            "current_rank": 1,
+            "reported_uncertainty": 0.4,
+            "suspicion": 0.6,
+            "adjacent_closeness": 0.7790055248618782,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.00023256363832367604,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1664,
+            "reserved_tokens": 8352,
+            "current_score": 0.6678260869565217,
+            "failure_name_anchor": false,
+            "current_rank": 2,
+            "reported_uncertainty": 0.4,
+            "suspicion": 0.6,
+            "adjacent_closeness": 0.9337748344370864,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0003004604638945492,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 2172,
+            "reserved_tokens": 8352,
+            "current_score": 0.6547826086956522,
+            "failure_name_anchor": false,
+            "current_rank": 3,
+            "reported_uncertainty": 0.4,
+            "suspicion": 0.6,
+            "adjacent_closeness": 0.9337748344370864,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.00023018702206285905,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/rhino/jstype/ArrowType.java::ArrowType.isSubtype(JSType other)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 2176,
+            "reserved_tokens": 8352,
+            "current_score": 0.628695652173913,
+            "failure_name_anchor": false,
+            "current_rank": 4,
+            "reported_uncertainty": 0.4,
+            "suspicion": 0.6,
+            "adjacent_closeness": 0.8757763975155276,
+            "novelty": 1.0,
+            "missing_support": 2,
+            "priority": 0.00022576662974972594,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1774,
+            "reserved_tokens": 8352,
+            "current_score": 0.5765217391304347,
+            "failure_name_anchor": false,
+            "current_rank": 5,
+            "reported_uncertainty": 0.4,
+            "suspicion": 0.6,
+            "adjacent_closeness": 0.7790055248618782,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.00026874603075734827,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 2176,
+            "reserved_tokens": 8352,
+            "current_score": 0.39260869565217393,
+            "failure_name_anchor": false,
+            "current_rank": 6,
+            "reported_uncertainty": 0.7,
+            "suspicion": 0.3,
+            "adjacent_closeness": 0.9337748344370858,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0002245948813973023,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/TypedCodeGenerator.java::TypedCodeGenerator.getParameterNodeJSDocType(Node parameterNode)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1934,
+            "reserved_tokens": 8352,
+            "current_score": 0.37956521739130433,
+            "failure_name_anchor": false,
+            "current_rank": 7,
+            "reported_uncertainty": 0.7,
+            "suspicion": 0.3,
+            "adjacent_closeness": 0.9337748344370858,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0002526982740023422,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1894,
+            "reserved_tokens": 8352,
+            "current_score": 0.35695652173913045,
+            "failure_name_anchor": false,
+            "current_rank": 8,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.9337748344370862,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.000254076009461737,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1976,
+            "reserved_tokens": 8352,
+            "current_score": 0.3439130434782609,
+            "failure_name_anchor": false,
+            "current_rank": 9,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.9337748344370862,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0002435323693929807,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addRequiredParams(JSType ...types)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1600,
+            "reserved_tokens": 8352,
+            "current_score": 0.3308695652173913,
+            "failure_name_anchor": false,
+            "current_rank": 10,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.9337748344370858,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0003007624762003311,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1644,
+            "reserved_tokens": 8352,
+            "current_score": 0.29173913043478256,
+            "failure_name_anchor": false,
+            "current_rank": 11,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.9814385150812069,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.00029706087841041887,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1658,
+            "reserved_tokens": 8352,
+            "current_score": 0.2882608695652174,
+            "failure_name_anchor": false,
+            "current_rank": 12,
+            "reported_uncertainty": 0.7,
+            "suspicion": 0.3,
+            "adjacent_closeness": 0.9814385150812069,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0002990751411982682,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1772,
+            "reserved_tokens": 8352,
+            "current_score": 0.26565217391304347,
+            "failure_name_anchor": false,
+            "current_rank": 13,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.8905263157894735,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0002679085674824759,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addVarArgs(JSType type)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1784,
+            "reserved_tokens": 8352,
+            "current_score": 0.21347826086956523,
+            "failure_name_anchor": false,
+            "current_rank": 14,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.9337748344370858,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0002697421311213732,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1648,
+            "reserved_tokens": 8352,
+            "current_score": 0.20043478260869563,
+            "failure_name_anchor": false,
+            "current_rank": 15,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.9337748344370862,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0002920024040779914,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1550,
+            "reserved_tokens": 8352,
+            "current_score": 0.18739130434782608,
+            "failure_name_anchor": false,
+            "current_rank": 16,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.9337748344370862,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.00031046449156163215,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1988,
+            "reserved_tokens": 8352,
+            "current_score": 0.1743478260869565,
+            "failure_name_anchor": false,
+            "current_rank": 17,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.933774834437086,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.00024206235509080976,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.RunTimeStats.outputBestPhaseOrdering()",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1766,
+            "reserved_tokens": 8352,
+            "current_score": 0.16130434782608694,
+            "failure_name_anchor": false,
+            "current_rank": 18,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.933774834437086,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.00027249148466621165,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 2138,
+            "reserved_tokens": 8352,
+            "current_score": 0.1352173913043478,
+            "failure_name_anchor": false,
+            "current_rank": 19,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.9337748344370862,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.00022507949575328805,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addOptionalParams(JSType ...types)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1620,
+            "reserved_tokens": 8352,
+            "current_score": 0.12217391304347824,
+            "failure_name_anchor": false,
+            "current_rank": 20,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.9337748344370862,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0002970493592102036,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.Flags.BooleanOptionHandler.parseArguments(Parameters params)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1842,
+            "reserved_tokens": 8352,
+            "current_score": 0.1091304347826087,
+            "failure_name_anchor": false,
+            "current_rank": 21,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.9337748344370862,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.00026124862210669375,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/rhino/jstype/JSType.java::JSType.testForEqualityHelper(JSType aType, JSType bType)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 2166,
+            "reserved_tokens": 8352,
+            "current_score": 0.09608695652173914,
+            "failure_name_anchor": false,
+            "current_rank": 22,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.933774834437086,
+            "novelty": 1.0,
+            "missing_support": 1,
+            "priority": 0.00022216988084973674,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/WarningLevel.java::WarningLevel.addVerboseWarnings(CompilerOptions options)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 2026,
+            "reserved_tokens": 8352,
+            "current_score": 0.08304347826086955,
+            "failure_name_anchor": false,
+            "current_rank": 23,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.933774834437086,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0002375221924583069,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 2072,
+            "reserved_tokens": 8352,
+            "current_score": 0.06999999999999999,
+            "failure_name_anchor": false,
+            "current_rank": 24,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.933774834437086,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.00023224901637091205,
+            "calibrated": false
+          }
+        ],
+        "selected": {
+          "candidate": "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)",
+          "stage": "graph",
+          "eligible": true,
+          "reason": "eligible",
+          "predicted_tokens": 1664,
+          "reserved_tokens": 8352,
+          "current_score": 0.6678260869565217,
+          "failure_name_anchor": false,
+          "current_rank": 2,
+          "reported_uncertainty": 0.4,
+          "suspicion": 0.6,
+          "adjacent_closeness": 0.9337748344370864,
+          "novelty": 1.0,
+          "missing_support": 0,
+          "priority": 0.0003004604638945492,
+          "calibrated": false
+        }
+      },
+      {
+        "phase": "route",
+        "step": 1,
+        "spent_before": 45936,
+        "remaining_before": 44064,
+        "stage_counts": {
+          "sketch": 24,
+          "graph": 1,
+          "method_full": 0
+        },
+        "options": [
+          {
+            "candidate": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 2050,
+            "reserved_tokens": 8352,
+            "current_score": 0.72,
+            "failure_name_anchor": false,
+            "current_rank": 1,
+            "reported_uncertainty": 0.4,
+            "suspicion": 0.6,
+            "adjacent_closeness": 0.7790055248618782,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.00023099739657728068,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 2172,
+            "reserved_tokens": 8352,
+            "current_score": 0.6547826086956522,
+            "failure_name_anchor": false,
+            "current_rank": 3,
+            "reported_uncertainty": 0.4,
+            "suspicion": 0.6,
+            "adjacent_closeness": 0.9337748344370864,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.00022863678606710333,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/rhino/jstype/ArrowType.java::ArrowType.isSubtype(JSType other)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 2176,
+            "reserved_tokens": 8352,
+            "current_score": 0.628695652173913,
+            "failure_name_anchor": false,
+            "current_rank": 4,
+            "reported_uncertainty": 0.4,
+            "suspicion": 0.6,
+            "adjacent_closeness": 0.8757763975155276,
+            "novelty": 1.0,
+            "missing_support": 2,
+            "priority": 0.0002242461636828644,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1774,
+            "reserved_tokens": 8352,
+            "current_score": 0.5765217391304347,
+            "failure_name_anchor": false,
+            "current_rank": 5,
+            "reported_uncertainty": 0.4,
+            "suspicion": 0.6,
+            "adjacent_closeness": 0.7790055248618782,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0002669361121665307,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 2176,
+            "reserved_tokens": 8352,
+            "current_score": 0.39260869565217393,
+            "failure_name_anchor": false,
+            "current_rank": 6,
+            "reported_uncertainty": 0.7,
+            "suspicion": 0.3,
+            "adjacent_closeness": 0.9337748344370858,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.00022308230668095054,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/TypedCodeGenerator.java::TypedCodeGenerator.getParameterNodeJSDocType(Node parameterNode)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1934,
+            "reserved_tokens": 8352,
+            "current_score": 0.37956521739130433,
+            "failure_name_anchor": false,
+            "current_rank": 7,
+            "reported_uncertainty": 0.7,
+            "suspicion": 0.3,
+            "adjacent_closeness": 0.9337748344370858,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.00025099643192231044,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1894,
+            "reserved_tokens": 8352,
+            "current_score": 0.35695652173913045,
+            "failure_name_anchor": false,
+            "current_rank": 8,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.9337748344370862,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0002523648887738904,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1976,
+            "reserved_tokens": 8352,
+            "current_score": 0.3439130434782609,
+            "failure_name_anchor": false,
+            "current_rank": 9,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.9337748344370862,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.00024189225674987267,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addRequiredParams(JSType ...types)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1600,
+            "reserved_tokens": 8352,
+            "current_score": 0.3308695652173913,
+            "failure_name_anchor": false,
+            "current_rank": 10,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.9337748344370858,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0002987369370860927,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1644,
+            "reserved_tokens": 8352,
+            "current_score": 0.29173913043478256,
+            "failure_name_anchor": false,
+            "current_rank": 11,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.9814385150812069,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0002950602683737814,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1658,
+            "reserved_tokens": 8352,
+            "current_score": 0.2882608695652174,
+            "failure_name_anchor": false,
+            "current_rank": 12,
+            "reported_uncertainty": 0.7,
+            "suspicion": 0.3,
+            "adjacent_closeness": 0.9814385150812069,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.000297060965745776,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1772,
+            "reserved_tokens": 8352,
+            "current_score": 0.26565217391304347,
+            "failure_name_anchor": false,
+            "current_rank": 13,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.8905263157894735,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0002661042889390519,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addVarArgs(JSType type)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1784,
+            "reserved_tokens": 8352,
+            "current_score": 0.21347826086956523,
+            "failure_name_anchor": false,
+            "current_rank": 14,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.9337748344370858,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0002679255041130876,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1648,
+            "reserved_tokens": 8352,
+            "current_score": 0.20043478260869563,
+            "failure_name_anchor": false,
+            "current_rank": 15,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.9337748344370862,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.00029003586124863373,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1550,
+            "reserved_tokens": 8352,
+            "current_score": 0.18739130434782608,
+            "failure_name_anchor": false,
+            "current_rank": 16,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.9337748344370862,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0003083736124759667,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1988,
+            "reserved_tokens": 8352,
+            "current_score": 0.1743478260869565,
+            "failure_name_anchor": false,
+            "current_rank": 17,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.933774834437086,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.00024043214252401828,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.RunTimeStats.outputBestPhaseOrdering()",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1766,
+            "reserved_tokens": 8352,
+            "current_score": 0.16130434782608694,
+            "failure_name_anchor": false,
+            "current_rank": 18,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.933774834437086,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0002706563416408541,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 2138,
+            "reserved_tokens": 8352,
+            "current_score": 0.1352173913043478,
+            "failure_name_anchor": false,
+            "current_rank": 19,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.9337748344370862,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.00022356365731419477,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addOptionalParams(JSType ...types)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1620,
+            "reserved_tokens": 8352,
+            "current_score": 0.12217391304347824,
+            "failure_name_anchor": false,
+            "current_rank": 20,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.9337748344370862,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0002950488267516965,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.Flags.BooleanOptionHandler.parseArguments(Parameters params)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 1842,
+            "reserved_tokens": 8352,
+            "current_score": 0.1091304347826087,
+            "failure_name_anchor": false,
+            "current_rank": 21,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.9337748344370862,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.00025948919616598716,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/rhino/jstype/JSType.java::JSType.testForEqualityHelper(JSType aType, JSType bType)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 2166,
+            "reserved_tokens": 8352,
+            "current_score": 0.09608695652173914,
+            "failure_name_anchor": false,
+            "current_rank": 22,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.933774834437086,
+            "novelty": 1.0,
+            "missing_support": 1,
+            "priority": 0.00022067363773672593,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/jscomp/WarningLevel.java::WarningLevel.addVerboseWarnings(CompilerOptions options)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 2026,
+            "reserved_tokens": 8352,
+            "current_score": 0.08304347826086955,
+            "failure_name_anchor": false,
+            "current_rank": 23,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.933774834437086,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.00023592255643521635,
+            "calibrated": false
+          },
+          {
+            "candidate": "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)",
+            "stage": "graph",
+            "eligible": true,
+            "reason": "eligible",
+            "predicted_tokens": 2072,
+            "reserved_tokens": 8352,
+            "current_score": 0.06999999999999999,
+            "failure_name_anchor": false,
+            "current_rank": 24,
+            "reported_uncertainty": 0.9,
+            "suspicion": 0.1,
+            "adjacent_closeness": 0.933774834437086,
+            "novelty": 1.0,
+            "missing_support": 0,
+            "priority": 0.0002306848935027743,
+            "calibrated": false
+          }
+        ],
+        "selected": {
+          "candidate": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)",
+          "stage": "graph",
+          "eligible": true,
+          "reason": "eligible",
+          "predicted_tokens": 1774,
+          "reserved_tokens": 8352,
+          "current_score": 0.5765217391304347,
+          "failure_name_anchor": false,
+          "current_rank": 5,
+          "reported_uncertainty": 0.4,
+          "suspicion": 0.6,
+          "adjacent_closeness": 0.7790055248618782,
+          "novelty": 1.0,
+          "missing_support": 0,
+          "priority": 0.0002669361121665307,
+          "calibrated": false
+        }
+      },
+      {
+        "phase": "route",
+        "step": 2,
+        "spent_before": 46875,
+        "remaining_before": 43125,
+        "stage_counts": {
+          "sketch": 24,
+          "graph": 2,
+          "method_full": 0
+        },
+        "options": [],
+        "selected": null
+      }
+    ],
+    "stop_reason": "action_caps_or_no_eligible_action",
+    "utility_is_calibrated": false,
+    "quality_is_validated": false,
+    "graph_is_method_full_superset": false
+  },
+  "status": "completed",
+  "accounted_tokens": 46875,
+  "action_accounting": [
+    {
+      "fingerprint": "44f5bda8123d4dad7baedb59b4c89e332d6c47442d1db046840f9a2958f839df",
+      "predicted_tokens": 3858,
+      "reserved_tokens": 8352,
+      "actual_tokens": 2023,
+      "input_tokens": 1970,
+      "output_tokens": 53,
+      "reuse": "journal",
+      "remaining": 87977,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "848714f2d026183ad5f2c8b4086269e30341550f4fb7b8d3079ee28fdcebee82",
+      "predicted_tokens": 3546,
+      "reserved_tokens": 8352,
+      "actual_tokens": 1851,
+      "input_tokens": 1801,
+      "output_tokens": 50,
+      "reuse": "journal",
+      "remaining": 86126,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "84f2e8e10026a86abb6c03c20bb3f32e1528000afff4f89642011f5ff3acd0ad",
+      "predicted_tokens": 3872,
+      "reserved_tokens": 8352,
+      "actual_tokens": 1948,
+      "input_tokens": 1904,
+      "output_tokens": 44,
+      "reuse": "journal",
+      "remaining": 84178,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "a83a54e31e25973e35b09a009cdd47828904fd4dd8bd63d00f058eab8d4581ed",
+      "predicted_tokens": 3204,
+      "reserved_tokens": 8352,
+      "actual_tokens": 1684,
+      "input_tokens": 1635,
+      "output_tokens": 49,
+      "reuse": "journal",
+      "remaining": 82494,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addRequiredParams(JSType ...types)"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "1e871ba8fe1e737ce200ad84ce2b2ab2303595692d100d5c6f1471db94322084",
+      "predicted_tokens": 4190,
+      "reserved_tokens": 8352,
+      "actual_tokens": 2240,
+      "input_tokens": 2155,
+      "output_tokens": 85,
+      "reuse": "journal",
+      "remaining": 80254,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "30066d97ade23d641d9536213557bd17714d7e8d6d58b582e26d62f6275f60a8",
+      "predicted_tokens": 4210,
+      "reserved_tokens": 8352,
+      "actual_tokens": 2149,
+      "input_tokens": 2098,
+      "output_tokens": 51,
+      "reuse": "journal",
+      "remaining": 78105,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "abe860bfbb8caa09f14ef95e4ce4e8e94539cda9867923d8799e875cf4710797",
+      "predicted_tokens": 4194,
+      "reserved_tokens": 8352,
+      "actual_tokens": 2144,
+      "input_tokens": 2091,
+      "output_tokens": 53,
+      "reuse": "journal",
+      "remaining": 75961,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "2c18328a2bbb0759d5d80eddc51d3d80aeef373533bc708214edf4c2353e58f2",
+      "predicted_tokens": 3932,
+      "reserved_tokens": 8352,
+      "actual_tokens": 2097,
+      "input_tokens": 2045,
+      "output_tokens": 52,
+      "reuse": "journal",
+      "remaining": 73864,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/rhino/jstype/ArrowType.java::ArrowType.isSubtype(JSType other)"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "b1ef7f8ad0fffac0b7aaa6680915de8aae7d22f7adf99a65953ff292b1432356",
+      "predicted_tokens": 3400,
+      "reserved_tokens": 8352,
+      "actual_tokens": 1748,
+      "input_tokens": 1700,
+      "output_tokens": 48,
+      "reuse": "journal",
+      "remaining": 72116,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "c884ae4d6b0c98f3e044146c4a6da6abeca75094c6defbc20351e4fbd1607166",
+      "predicted_tokens": 3572,
+      "reserved_tokens": 8352,
+      "actual_tokens": 1863,
+      "input_tokens": 1807,
+      "output_tokens": 56,
+      "reuse": "journal",
+      "remaining": 70253,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "29eb734af681187903957135dd554ec8fe73a02278fd0a036ae312f21a849741",
+      "predicted_tokens": 3512,
+      "reserved_tokens": 8352,
+      "actual_tokens": 1829,
+      "input_tokens": 1772,
+      "output_tokens": 57,
+      "reuse": "journal",
+      "remaining": 68424,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/jscomp/TypedCodeGenerator.java::TypedCodeGenerator.getParameterNodeJSDocType(Node parameterNode)"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "a1c53315721cc9806b7bb4110a09672e43a5b290b9521059bf30e3f84cd9f0cd",
+      "predicted_tokens": 3502,
+      "reserved_tokens": 8352,
+      "actual_tokens": 1831,
+      "input_tokens": 1781,
+      "output_tokens": 50,
+      "reuse": "journal",
+      "remaining": 66593,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "423937736b84e2caf98b0fea776da3a2ed70629303c67d5cc81fbf65f5a915d3",
+      "predicted_tokens": 3252,
+      "reserved_tokens": 8352,
+      "actual_tokens": 1709,
+      "input_tokens": 1660,
+      "output_tokens": 49,
+      "reuse": "journal",
+      "remaining": 64884,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addVarArgs(JSType type)"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "1cebae0aa474031667cecb06968afe1dfefedbe7847818616d3fd8e9d6c2c989",
+      "predicted_tokens": 3332,
+      "reserved_tokens": 8352,
+      "actual_tokens": 1733,
+      "input_tokens": 1689,
+      "output_tokens": 44,
+      "reuse": "journal",
+      "remaining": 63151,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "e383b55c5c6a3e9d188e3cefc3db3d42834c527d00582e228a136698068dde90",
+      "predicted_tokens": 3170,
+      "reserved_tokens": 8352,
+      "actual_tokens": 1647,
+      "input_tokens": 1606,
+      "output_tokens": 41,
+      "reuse": "journal",
+      "remaining": 61504,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "f32bc0fc6aba0c05cc67af47f47a6ae015b2e4b647ed41ae81d87d0e604d3c7d",
+      "predicted_tokens": 3494,
+      "reserved_tokens": 8352,
+      "actual_tokens": 1845,
+      "input_tokens": 1794,
+      "output_tokens": 51,
+      "reuse": "journal",
+      "remaining": 59659,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "374f6e04a33ce83ff4569f344386de8206afea1916f5e514ae01da6fbae707c5",
+      "predicted_tokens": 3352,
+      "reserved_tokens": 8352,
+      "actual_tokens": 1770,
+      "input_tokens": 1726,
+      "output_tokens": 44,
+      "reuse": "journal",
+      "remaining": 57889,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.RunTimeStats.outputBestPhaseOrdering()"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "c0275ff7aefca8b38a8558b844632f767eaa7e5b8e6c22efe187c34e93af0f9b",
+      "predicted_tokens": 4220,
+      "reserved_tokens": 8352,
+      "actual_tokens": 2089,
+      "input_tokens": 2033,
+      "output_tokens": 56,
+      "reuse": "journal",
+      "remaining": 55800,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "793ffb1f7767b7e82834a3d6cfbd9dd3999504153fdb30b783f56afc5ed8c31d",
+      "predicted_tokens": 3558,
+      "reserved_tokens": 8352,
+      "actual_tokens": 1844,
+      "input_tokens": 1797,
+      "output_tokens": 47,
+      "reuse": "journal",
+      "remaining": 53956,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "a415adbdc2f6a2e68dc736762b712193bce67c3f20dab33e399177406591f66c",
+      "predicted_tokens": 3266,
+      "reserved_tokens": 8352,
+      "actual_tokens": 1710,
+      "input_tokens": 1661,
+      "output_tokens": 49,
+      "reuse": "journal",
+      "remaining": 52246,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addOptionalParams(JSType ...types)"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "33768f983d4e39e3954d5b098bf6b83f35a2c62814e46a889bfb3c309e8c798c",
+      "predicted_tokens": 3372,
+      "reserved_tokens": 8352,
+      "actual_tokens": 1750,
+      "input_tokens": 1698,
+      "output_tokens": 52,
+      "reuse": "journal",
+      "remaining": 50496,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.Flags.BooleanOptionHandler.parseArguments(Parameters params)"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "3965b708c2c171cf8f3888bf9c0b120e5c8f537ab92302307e5f7c8129cf0d34",
+      "predicted_tokens": 3772,
+      "reserved_tokens": 8352,
+      "actual_tokens": 2049,
+      "input_tokens": 1993,
+      "output_tokens": 56,
+      "reuse": "journal",
+      "remaining": 48447,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/rhino/jstype/JSType.java::JSType.testForEqualityHelper(JSType aType, JSType bType)"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "3ab17ffe0580a68911a4daac1e123b95504f85a960cd0ca3e37af58e54d1c9b3",
+      "predicted_tokens": 3376,
+      "reserved_tokens": 8352,
+      "actual_tokens": 1725,
+      "input_tokens": 1683,
+      "output_tokens": 42,
+      "reuse": "journal",
+      "remaining": 46722,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/jscomp/WarningLevel.java::WarningLevel.addVerboseWarnings(CompilerOptions options)"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "e6619ee9b9ece282afcf6a9d3ea3d53e1237989ad5aa29acd4e92baad216bf33",
+      "predicted_tokens": 3386,
+      "reserved_tokens": 8352,
+      "actual_tokens": 1749,
+      "input_tokens": 1702,
+      "output_tokens": 47,
+      "reuse": "journal",
+      "remaining": 44973,
+      "error": null,
+      "stage": "sketch",
+      "candidate_ids": [
+        "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)"
+      ],
+      "selection_hash": null
+    },
+    {
+      "fingerprint": "34baa54989ddc7446fb6680b777f04e7692c288375663f196cb47f137759f13e",
+      "predicted_tokens": 1664,
+      "reserved_tokens": 8352,
+      "actual_tokens": 909,
+      "input_tokens": 875,
+      "output_tokens": 34,
+      "reuse": "journal",
+      "remaining": 44064,
+      "error": null,
+      "stage": "graph",
+      "candidate_ids": [
+        "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)"
+      ],
+      "selection_hash": "f96a3a29ee42ffc63f2f66d85f9acf0cdd565348a3cf1e4d222a6858a7eee67d"
+    },
+    {
+      "fingerprint": "f4842565b316b340ecde9a72bcffbb5027eeb03a2573dc286aeae05b688c034f",
+      "predicted_tokens": 1774,
+      "reserved_tokens": 8352,
+      "actual_tokens": 939,
+      "input_tokens": 900,
+      "output_tokens": 39,
+      "reuse": "journal",
+      "remaining": 43125,
+      "error": null,
+      "stage": "graph",
+      "candidate_ids": [
+        "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)"
+      ],
+      "selection_hash": "eac5fc1989a32e8c0722469ea428fe41fe0059f8f2dd964ba5c387a15cf5e855"
+    }
+  ],
+  "metrics": {
+    "legacy_v1": {
+      "file": {
+        "first_relevant_rank": null,
+        "MRR": 0.0,
+        "gold_locations": 1,
+        "pool_gold_count": 0,
+        "candidate_pool_coverage": 0.0,
+        "candidate_pool_any_gold": false,
+        "all_gold_recovered": false,
+        "all_gold_rank": null,
+        "Hit@1": 0,
+        "Top-1": 0,
+        "Recall@1": 0.0,
+        "Hit@3": 0,
+        "Top-3": 0,
+        "Recall@3": 0.0,
+        "Hit@5": 0,
+        "Top-5": 0,
+        "Recall@5": 0.0,
+        "Hit@10": 0,
+        "Top-10": 0,
+        "Recall@10": 0.0
+      },
+      "method": null,
+      "gold_semantics": "official_d4j_modified_classes_file_proxy",
+      "gold_unavailable_reason": "",
+      "excluded_reference_changes": []
+    },
+    "java_strict_v2": {
+      "file": {
+        "first_relevant_rank": null,
+        "MRR": 0.0,
+        "gold_locations": 1,
+        "pool_gold_count": 0,
+        "candidate_pool_coverage": 0.0,
+        "candidate_pool_any_gold": false,
+        "all_gold_recovered": false,
+        "all_gold_rank": null,
+        "Hit@1": 0,
+        "Top-1": 0,
+        "Recall@1": 0.0,
+        "Hit@3": 0,
+        "Top-3": 0,
+        "Recall@3": 0.0,
+        "Hit@5": 0,
+        "Top-5": 0,
+        "Recall@5": 0.0,
+        "Hit@10": 0,
+        "Top-10": 0,
+        "Recall@10": 0.0
+      },
+      "method": null,
+      "gold_semantics": "official_d4j_modified_classes_file_proxy",
+      "gold_unavailable_reason": "No method labels supplied; not zero accuracy",
+      "excluded_reference_changes": [],
+      "evaluation_profile": "java_strict_v2"
+    }
+  },
+  "gold_unavailable_reason": ""
+}

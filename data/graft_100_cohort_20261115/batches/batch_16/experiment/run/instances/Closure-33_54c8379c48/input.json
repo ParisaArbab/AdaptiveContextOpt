@@ -1,0 +1,1318 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Closure-33",
+    "repository": "Closure",
+    "language": "java",
+    "revision": "f3abc6013f32cf70a7614cabd53f13874b1f15de",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_16/prepared/checkouts/Closure-33",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Closure-33\nEXECUTED BUGGY TEST: com.google.javascript.jscomp.TypeCheckTest::testIssue700\nTEST SOURCE: test/com/google/javascript/jscomp/TypeCheckTest.java\nTEST SOURCE SHA256: c5e48b12ce04f599f6e5370f17d204f4af1c09323319a3e223d38cf9d03197c8\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testIssue700() throws Exception {\n    testTypes(\n        \"/**\\n\" +\n        \" * @param {{text: string}} opt_data\\n\" +\n        \" * @return {string}\\n\" +\n        \" */\\n\" +\n        \"function temp1(opt_data) {\\n\" +\n        \"  return opt_data.text;\\n\" +\n        \"}\\n\" +\n        \"\\n\" +\n        \"/**\\n\" +\n        \" * @param {{activity: (boolean|number|string|null|Object)}} opt_data\\n\" +\n        \" * @return {string}\\n\" +\n        \" */\\n\" +\n        \"function temp2(opt_data) {\\n\" +\n        \"  /** @notypecheck */\\n\" +\n        \"  function __inner() {\\n\" +\n        \"    return temp1(opt_data.activity);\\n\" +\n        \"  }\\n\" +\n        \"  return __inner();\\n\" +\n        \"}\\n\" +\n        \"\\n\" +\n        \"/**\\n\" +\n        \" * @param {{n: number, text: string, b: boolean}} opt_data\\n\" +\n        \" * @return {string}\\n\" +\n        \" */\\n\" +\n        \"function temp3(opt_data) {\\n\" +\n        \"  return 'n: ' + opt_data.n + ', t: ' + opt_data.text + '.';\\n\" +\n        \"}\\n\" +\n        \"\\n\" +\n        \"function callee() {\\n\" +\n        \"  var output = temp3({\\n\" +\n        \"    n: 0,\\n\" +\n        \"    text: 'a string',\\n\" +\n        \"    b: true\\n\" +\n        \"  })\\n\" +\n        \"  alert(output);\\n\" +\n        \"}\\n\" +\n        \"\\n\" +\n        \"callee();\");\n  }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- com.google.javascript.jscomp.TypeCheckTest::testIssue700\njunit.framework.AssertionFailedError: unexpected warnings(s):\nJSC_TYPE_MISMATCH. actual parameter 1 of temp3 does not match formal parameter\nfound   : {b: boolean, n: number, text: (string|undefined)}\nrequired: (undefined|{b: boolean, n: number, text: string}) at [testcode] line 30 : 21\n\tat junit.framework.Assert.fail(Assert.java:57)\n\tat junit.framework.TestCase.fail(TestCase.java:227)\n\tat com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:9908)\n\tat com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:9882)\n\tat com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:9820)\n\tat com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:9816)\n\tat com.google.javascript.jscomp.TypeCheckTest.testIssue700(TypeCheckTest.java:5777)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_16/prepared/evidence/Closure-33.txt",
+      "sha256": "b9c2229ee53134f512750c92de3d046cbf1d8b53d0f4cca72fb309e9b97bcc8a"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Closure-33",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)",
+      "path": "src/com/google/javascript/jscomp/TypeValidator.java",
+      "start_line": 653,
+      "end_line": 677,
+      "source": "private void registerMismatch(JSType found, JSType required, JSError error) {\n    // Don't register a mismatch for differences in null or undefined or if the\n    // code didn't downcast.\n    found = found.restrictByNotNullOrUndefined();\n    required = required.restrictByNotNullOrUndefined();\n    if (found.canAssignTo(required) || required.canAssignTo(found)) {\n      return;\n    }\n\n    mismatches.add(new TypeMismatch(found, required, error));\n    if (found.isFunctionType() &&\n        required.isFunctionType()) {\n      FunctionType fnTypeA = found.toMaybeFunctionType();\n      FunctionType fnTypeB = required.toMaybeFunctionType();\n      Iterator<Node> paramItA = fnTypeA.getParameters().iterator();\n      Iterator<Node> paramItB = fnTypeB.getParameters().iterator();\n      while (paramItA.hasNext() && paramItB.hasNext()) {\n        registerIfMismatch(paramItA.next().getJSType(),\n            paramItB.next().getJSType(), error);\n      }\n\n      registerIfMismatch(\n        fnTypeA.getReturnType(), fnTypeB.getReturnType(), error);\n    }\n  }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 51.56287043149938
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()",
+      "path": "src/com/google/javascript/jscomp/ant/CompileTask.java",
+      "start_line": 248,
+      "end_line": 274,
+      "source": "public void execute() {\n    if (this.outputFile == null) {\n      throw new BuildException(\"outputFile attribute must be set\");\n    }\n\n    Compiler.setLoggingLevel(Level.OFF);\n\n    CompilerOptions options = createCompilerOptions();\n    Compiler compiler = createCompiler(options);\n\n    List<SourceFile> externs = findExternFiles();\n    List<SourceFile> sources = findSourceFiles();\n\n    if (isStale() || forceRecompile) {\n      log(\"Compiling \" + sources.size() + \" file(s) with \" +\n          externs.size() + \" extern(s)\");\n\n      Result result = compiler.compile(externs, sources, options);\n      if (result.success) {\n        writeResult(compiler.toSource());\n      } else {\n        throw new BuildException(\"Compilation failed.\");\n      }\n    } else {\n      log(\"None of the files changed. Compilation skipped.\");\n    }\n  }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 50.23790703749886
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()",
+      "path": "src/com/google/javascript/jscomp/ClosureCodingConvention.java",
+      "start_line": 339,
+      "end_line": 358,
+      "source": "@Override\n  public Collection<AssertionFunctionSpec> getAssertionFunctions() {\n    return ImmutableList.<AssertionFunctionSpec>of(\n        new AssertionFunctionSpec(\"goog.asserts.assert\"),\n        new AssertionFunctionSpec(\"goog.asserts.assertNumber\",\n            JSTypeNative.NUMBER_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertString\",\n            JSTypeNative.STRING_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertFunction\",\n            JSTypeNative.FUNCTION_INSTANCE_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertObject\",\n            JSTypeNative.OBJECT_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertArray\",\n            JSTypeNative.ARRAY_TYPE),\n        // TODO(agrieve): It would be better if this could make the first\n        // parameter the type of the second parameter.\n        new AssertionFunctionSpec(\"goog.asserts.assertInstanceof\",\n            JSTypeNative.OBJECT_TYPE)\n    );\n  }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 48.41642376790495
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addRequiredParams(JSType ...types)",
+      "path": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java",
+      "start_line": 62,
+      "end_line": 71,
+      "source": "public boolean addRequiredParams(JSType ...types) {\n    if (hasOptionalOrVarArgs()) {\n      return false;\n    }\n\n    for (JSType type : types) {\n      newParameter(type);\n    }\n    return true;\n  }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 48.179978661480654
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)",
+      "path": "src/com/google/javascript/jscomp/TypeInference.java",
+      "start_line": 945,
+      "end_line": 1032,
+      "source": "private void updateTypeOfThisOnClosure(Node n, FunctionType fnType) {\n    // TODO(user): Make the template logic more general.\n\n    if (fnType.getTemplateTypeName() == null) {\n      return;\n    }\n\n    int i = 0;\n    int childCount = n.getChildCount();\n    // Find the parameter whose type is the template type.\n    for (Node iParameter : fnType.getParameters()) {\n      JSType iParameterType =\n          getJSType(iParameter).restrictByNotNullOrUndefined();\n      if (iParameterType.isTemplateType()) {\n        // Find the actual type of this argument.\n        ObjectType iArgumentType = null;\n        if (i + 1 < childCount) {\n          Node iArgument = n.getChildAtIndex(i + 1);\n          iArgumentType = getJSType(iArgument)\n              .restrictByNotNullOrUndefined()\n              .collapseUnion()\n              .toObjectType();\n          if (iArgumentType == null) {\n            compiler.report(\n                JSError.make(NodeUtil.getSourceName(iArgument), iArgument,\n                    TEMPLATE_TYPE_NOT_OBJECT_TYPE,\n                    getJSType(iArgument).toString()));\n            return;\n          }\n        }\n\n        // Find the parameter whose type is function(this: T, ...)\n        boolean foundTemplateTypeOfThisParameter = false;\n        int j = 0;\n        for (Node jParameter : fnType.getParameters()) {\n          JSType jParameterType =\n              getJSType(jParameter).restrictByNotNullOrUndefined();\n          if (jParameterType.isFunctionType()) {\n            FunctionType jParameterFnType = jParameterType.toMaybeFunctionType();\n            if (jParameterFnType.getTypeOfThis().equals(iParameterType)) {\n              foundTemplateTypeOfThisParameter = true;\n              // Find the actual type of the this argument.\n              if (j + 1 >= childCount) {\n                // TypeCheck#visitParameterList will warn so we bail.\n                return;\n              }\n              Node jArgument = n.getChildAtIndex(j + 1);\n              JSType jArgumentType = getJSType(jArgument);\n              if (jArgument.isFunction() &&\n                  jArgumentType.isFunctionType()) {\n                if (iArgumentType != null &&\n                    // null and undefined get filtered out above.\n                    !iArgumentType.isNoType()) {\n                  // If it's an function expression, update the type of this\n                  // using the actual type of T.\n                  FunctionType jArgumentFnType = jArgumentType.toMaybeFunctionType();\n                  if (jArgumentFnType.getTypeOfThis().isUnknownType()) {\n                    // The new type will be picked up when we traverse the inner\n                    // function.\n                    jArgument.setJSType(\n                        registry.createFunctionTypeWithNewThisType(\n                            jArgumentFnType, iArgumentType));\n                  }\n                } else {\n                  // Warn if the anonymous function literal references this.\n                  if (NodeUtil.referencesThis(\n                          NodeUtil.getFunctionBody(jArgument))) {\n                    compiler.report(JSError.make(NodeUtil.getSourceName(n), n,\n                        FUNCTION_LITERAL_UNDEFINED_THIS));\n                  }\n                }\n              }\n              // TODO(user): Add code to TypeCheck to check that the\n              // types of the arguments match.\n            }\n          }\n          j++;\n        }\n\n        if (!foundTemplateTypeOfThisParameter) {\n          compiler.report(JSError.make(NodeUtil.getSourceName(n), n,\n              TEMPLATE_TYPE_OF_THIS_EXPECTED));\n          return;\n        }\n      }\n      i++;\n    }\n  }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 46.94581952383535
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)",
+      "path": "src/com/google/javascript/jscomp/FunctionTypeBuilder.java",
+      "start_line": 426,
+      "end_line": 505,
+      "source": "FunctionTypeBuilder inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info) {\n    if (argsParent == null) {\n      if (info == null) {\n        return this;\n      } else {\n        return inferParameterTypes(info);\n      }\n    }\n\n    // arguments\n    Node oldParameterType = null;\n    if (parametersNode != null) {\n      oldParameterType = parametersNode.getFirstChild();\n    }\n\n    FunctionParamBuilder builder = new FunctionParamBuilder(typeRegistry);\n    boolean warnedAboutArgList = false;\n    Set<String> allJsDocParams = (info == null) ?\n        Sets.<String>newHashSet() :\n        Sets.newHashSet(info.getParameterNames());\n    boolean foundTemplateType = false;\n    boolean isVarArgs = false;\n    for (Node arg : argsParent.children()) {\n      String argumentName = arg.getString();\n      allJsDocParams.remove(argumentName);\n\n      // type from JSDocInfo\n      JSType parameterType = null;\n      boolean isOptionalParam = isOptionalParameter(arg, info);\n      isVarArgs = isVarArgsParameter(arg, info);\n\n      if (info != null && info.hasParameterType(argumentName)) {\n        parameterType =\n            info.getParameterType(argumentName).evaluate(scope, typeRegistry);\n      } else if (oldParameterType != null &&\n          oldParameterType.getJSType() != null) {\n        parameterType = oldParameterType.getJSType();\n        isOptionalParam = oldParameterType.isOptionalArg();\n        isVarArgs = oldParameterType.isVarArgs();\n      } else {\n        parameterType = typeRegistry.getNativeType(UNKNOWN_TYPE);\n      }\n\n      if (templateTypeName != null &&\n          parameterType.restrictByNotNullOrUndefined().isTemplateType()) {\n        if (foundTemplateType) {\n          reportError(TEMPLATE_TYPE_DUPLICATED, fnName);\n        }\n        foundTemplateType = true;\n      }\n      warnedAboutArgList |= addParameter(\n          builder, parameterType, warnedAboutArgList,\n          isOptionalParam,\n          isVarArgs);\n\n      if (oldParameterType != null) {\n        oldParameterType = oldParameterType.getNext();\n      }\n    }\n\n    // Copy over any old parameters that aren't in the param list.\n    if (!isVarArgs) {\n      while (oldParameterType != null && !isVarArgs) {\n        builder.newParameterFromNode(oldParameterType);\n        oldParameterType = oldParameterType.getNext();\n      }\n    }\n\n    if (templateTypeName != null && !foundTemplateType) {\n      reportError(TEMPLATE_TYPE_EXPECTED, fnName);\n    }\n\n    for (String inexistentName : allJsDocParams) {\n      reportWarning(INEXISTANT_PARAM, inexistentName, fnName);\n    }\n\n    parametersNode = builder.build();\n    return this;\n  }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 45.94810197903962
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)",
+      "path": "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java",
+      "start_line": 1452,
+      "end_line": 1606,
+      "source": "private JSType createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope) {\n    switch (n.getType()) {\n      case Token.LC: // Record type.\n        return createRecordTypeFromNodes(\n            n.getFirstChild(), sourceName, scope);\n\n      case Token.BANG: // Not nullable\n        return createFromTypeNodesInternal(\n            n.getFirstChild(), sourceName, scope)\n            .restrictByNotNullOrUndefined();\n\n      case Token.QMARK: // Nullable or unknown\n        Node firstChild = n.getFirstChild();\n        if (firstChild == null) {\n          return getNativeType(UNKNOWN_TYPE);\n        }\n        return createDefaultObjectUnion(\n            createFromTypeNodesInternal(\n                firstChild, sourceName, scope));\n\n      case Token.EQUALS: // Optional\n        return createOptionalType(\n            createFromTypeNodesInternal(\n                n.getFirstChild(), sourceName, scope));\n\n      case Token.ELLIPSIS: // Var args\n        return createOptionalType(\n            createFromTypeNodesInternal(\n                n.getFirstChild(), sourceName, scope));\n\n      case Token.STAR: // The AllType\n        return getNativeType(ALL_TYPE);\n\n      case Token.LB: // Array type\n        // TODO(nicksantos): Enforce membership restrictions on the Array.\n        return getNativeType(ARRAY_TYPE);\n\n      case Token.PIPE: // Union type\n        UnionTypeBuilder builder = new UnionTypeBuilder(this);\n        for (Node child = n.getFirstChild(); child != null;\n             child = child.getNext()) {\n          builder.addAlternate(\n              createFromTypeNodesInternal(child, sourceName, scope));\n        }\n        return builder.build();\n\n      case Token.EMPTY: // When the return value of a function is not specified\n        return getNativeType(UNKNOWN_TYPE);\n\n      case Token.VOID: // Only allowed in the return value of a function.\n        return getNativeType(VOID_TYPE);\n\n      case Token.STRING:\n        JSType namedType = getType(scope, n.getString(), sourceName,\n            n.getLineno(), n.getCharno());\n        if (resolveMode != ResolveMode.LAZY_NAMES) {\n          namedType = namedType.resolveInternal(reporter, scope);\n        }\n        if ((namedType instanceof ObjectType) &&\n            !(nonNullableTypeNames.contains(n.getString()))) {\n          Node typeList = n.getFirstChild();\n          if (typeList != null &&\n              (\"Array\".equals(n.getString()) ||\n               \"Object\".equals(n.getString()))) {\n            JSType parameterType =\n                createFromTypeNodesInternal(\n                    typeList.getLastChild(), sourceName, scope);\n            namedType = new ParameterizedType(\n                this, (ObjectType) namedType, parameterType);\n            if (typeList.hasMoreThanOneChild()) {\n              JSType indexType =\n                  createFromTypeNodesInternal(\n                      typeList.getFirstChild(), sourceName, scope);\n              namedType = new IndexedType(\n                  this, (ObjectType) namedType, indexType);\n            }\n          }\n          return createDefaultObjectUnion(namedType);\n        } else {\n          return namedType;\n        }\n\n      case Token.FUNCTION:\n        ObjectType thisType = null;\n        boolean isConstructor = false;\n        Node current = n.getFirstChild();\n        if (current.getType() == Token.THIS ||\n            current.getType() == Token.NEW) {\n          Node contextNode = current.getFirstChild();\n          thisType =\n              ObjectType.cast(\n                  createFromTypeNodesInternal(\n                      contextNode, sourceName, scope)\n                  .restrictByNotNullOrUndefined());\n          if (thisType == null) {\n            reporter.warning(\n                ScriptRuntime.getMessage0(\n                    current.getType() == Token.THIS ?\n                    \"msg.jsdoc.function.thisnotobject\" :\n                    \"msg.jsdoc.function.newnotobject\"),\n                sourceName,\n                contextNode.getLineno(), contextNode.getCharno());\n          }\n\n          isConstructor = current.getType() == Token.NEW;\n          current = current.getNext();\n        }\n\n        FunctionParamBuilder paramBuilder = new FunctionParamBuilder(this);\n\n        if (current.getType() == Token.PARAM_LIST) {\n          Node args = current.getFirstChild();\n          for (Node arg = current.getFirstChild(); arg != null;\n               arg = arg.getNext()) {\n            if (arg.getType() == Token.ELLIPSIS) {\n              if (arg.getChildCount() == 0) {\n                paramBuilder.addVarArgs(getNativeType(UNKNOWN_TYPE));\n              } else {\n                paramBuilder.addVarArgs(\n                    createFromTypeNodesInternal(\n                        arg.getFirstChild(), sourceName, scope));\n              }\n            } else {\n              JSType type = createFromTypeNodesInternal(\n                  arg, sourceName, scope);\n              if (arg.getType() == Token.EQUALS) {\n                boolean addSuccess = paramBuilder.addOptionalParams(type);\n                if (!addSuccess) {\n                  reporter.warning(\n                      ScriptRuntime.getMessage0(\"msg.jsdoc.function.varargs\"),\n                      sourceName, arg.getLineno(), arg.getCharno());\n                }\n              } else {\n                paramBuilder.addRequiredParams(type);\n              }\n            }\n          }\n          current = current.getNext();\n        }\n\n        JSType returnType =\n            createFromTypeNodesInternal(current, sourceName, scope);\n\n        return new FunctionBuilder(this)\n            .withParams(paramBuilder)\n            .withReturnType(returnType)\n            .withTypeOfThis(thisType)\n            .setIsConstructor(isConstructor)\n            .build();\n    }\n\n    throw new IllegalStateException(\n        \"Unexpected node in type expression: \" + n.toString());\n  }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 45.922356986277386
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/rhino/jstype/ArrowType.java::ArrowType.isSubtype(JSType other)",
+      "path": "src/com/google/javascript/rhino/jstype/ArrowType.java",
+      "start_line": 79,
+      "end_line": 171,
+      "source": "@Override\n  public boolean isSubtype(JSType other) {\n    if (!(other instanceof ArrowType)) {\n      return false;\n    }\n\n    ArrowType that = (ArrowType) other;\n\n    // This is described in Draft 2 of the ES4 spec,\n    // Section 3.4.7: Subtyping Function Types.\n\n    // this.returnType <: that.returnType (covariant)\n    if (!this.returnType.isSubtype(that.returnType)) {\n      return false;\n    }\n\n    // that.paramType[i] <: this.paramType[i] (contravariant)\n    //\n    // If this.paramType[i] is required,\n    // then that.paramType[i] is required.\n    //\n    // In theory, the \"required-ness\" should work in the other direction as\n    // well. In other words, if we have\n    //\n    // function f(number, number) {}\n    // function g(number) {}\n    //\n    // Then f *should* not be a subtype of g, and g *should* not be\n    // a subtype of f. But in practice, we do not implement it this way.\n    // We want to support the use case where you can pass g where f is\n    // expected, and pretend that g ignores the second argument.\n    // That way, you can have a single \"no-op\" function, and you don't have\n    // to create a new no-op function for every possible type signature.\n    //\n    // So, in this case, g < f, but f !< g\n    Node thisParam = parameters.getFirstChild();\n    Node thatParam = that.parameters.getFirstChild();\n    while (thisParam != null && thatParam != null) {\n      JSType thisParamType = thisParam.getJSType();\n      JSType thatParamType = thatParam.getJSType();\n      if (thisParamType != null) {\n        if (thatParamType == null ||\n            !thatParamType.isSubtype(thisParamType)) {\n          return false;\n        }\n      }\n\n      boolean thisIsVarArgs = thisParam.isVarArgs();\n      boolean thatIsVarArgs = thatParam.isVarArgs();\n      boolean thisIsOptional = thisIsVarArgs || thisParam.isOptionalArg();\n      boolean thatIsOptional = thatIsVarArgs || thatParam.isOptionalArg();\n\n      // \"that\" can't be a supertype, because it's missing a required argument.\n      if (!thisIsOptional && thatIsOptional) {\n        // NOTE(nicksantos): In our type system, we use {function(...?)} and\n        // {function(...NoType)} to to indicate that arity should not be\n        // checked. Strictly speaking, this is not a correct formulation,\n        // because now a sub-function can required arguments that are var_args\n        // in the super-function. So we special-case this.\n        boolean isTopFunction =\n            thatIsVarArgs &&\n            (thatParamType == null ||\n             thatParamType.isUnknownType() ||\n             thatParamType.isNoType());\n        if (!isTopFunction) {\n          return false;\n        }\n      }\n\n      // don't advance if we have variable arguments\n      if (!thisIsVarArgs) {\n        thisParam = thisParam.getNext();\n      }\n      if (!thatIsVarArgs) {\n        thatParam = thatParam.getNext();\n      }\n\n      // both var_args indicates the end\n      if (thisIsVarArgs && thatIsVarArgs) {\n        thisParam = null;\n        thatParam = null;\n      }\n    }\n\n    // \"that\" can't be a supertype, because it's missing a required arguement.\n    if (thisParam != null\n        && !thisParam.isOptionalArg() && !thisParam.isVarArgs()\n        && thatParam == null) {\n      return false;\n    }\n\n    return true;\n  }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 44.5641926028994
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)",
+      "path": "src/com/google/javascript/jscomp/ant/CompileTask.java",
+      "start_line": 481,
+      "end_line": 499,
+      "source": "private void writeResult(String source) {\n    if (this.outputFile.getParentFile().mkdirs()) {\n      log(\"Created missing parent directory \" +\n          this.outputFile.getParentFile(), Project.MSG_DEBUG);\n    }\n\n    try {\n      OutputStreamWriter out = new OutputStreamWriter(\n          new FileOutputStream(this.outputFile), outputEncoding);\n      out.append(source);\n      out.flush();\n      out.close();\n    } catch (IOException e) {\n      throw new BuildException(e);\n    }\n\n    log(\"Compiled javascript written to \" + this.outputFile.getAbsolutePath(),\n        Project.MSG_DEBUG);\n  }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 44.30033979349733
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)",
+      "path": "src/com/google/javascript/jscomp/FunctionTypeBuilder.java",
+      "start_line": 557,
+      "end_line": 587,
+      "source": "private boolean addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs) {\n    boolean emittedWarning = false;\n    if (isOptional) {\n      // Remembering that an optional parameter has been encountered\n      // so that if a non optional param is encountered later, an\n      // error can be reported.\n      if (!builder.addOptionalParams(paramType) && !warnedAboutArgList) {\n        reportWarning(VAR_ARGS_MUST_BE_LAST);\n        emittedWarning = true;\n      }\n    } else if (isVarArgs) {\n      if (!builder.addVarArgs(paramType) && !warnedAboutArgList) {\n        reportWarning(VAR_ARGS_MUST_BE_LAST);\n        emittedWarning = true;\n      }\n    } else {\n      if (!builder.addRequiredParams(paramType) && !warnedAboutArgList) {\n        // An optional parameter was seen and this argument is not an optional\n        // or var arg so it is an error.\n        if (builder.hasVarArgs()) {\n          reportWarning(VAR_ARGS_MUST_BE_LAST);\n        } else {\n          reportWarning(OPTIONAL_ARG_AT_END);\n        }\n        emittedWarning = true;\n      }\n    }\n    return emittedWarning;\n  }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 43.21689110326448
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/TypedCodeGenerator.java::TypedCodeGenerator.getParameterNodeJSDocType(Node parameterNode)",
+      "path": "src/com/google/javascript/jscomp/TypedCodeGenerator.java",
+      "start_line": 192,
+      "end_line": 215,
+      "source": "private String getParameterNodeJSDocType(Node parameterNode) {\n    JSType parameterType = parameterNode.getJSType();\n    String typeString;\n\n    // Emit unknown types as '*' (AllType) since '?' (UnknownType) is not\n    // a valid JSDoc type.\n    if (parameterType.isUnknownType()) {\n      typeString = \"*\";\n    } else {\n      // Fix-up optional and vararg parameters to match JSDoc type language\n      if (parameterNode.isOptionalArg()) {\n        typeString =\n            parameterType.restrictByNotNullOrUndefined().toAnnotationString() +\n            \"=\";\n      } else if (parameterNode.isVarArgs()) {\n        typeString = \"...\" +\n            parameterType.restrictByNotNullOrUndefined().toAnnotationString();\n      } else {\n        typeString = parameterType.toAnnotationString();\n      }\n    }\n\n    return typeString;\n  }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.93182391435352
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)",
+      "path": "src/com/google/javascript/jscomp/TypeValidator.java",
+      "start_line": 417,
+      "end_line": 426,
+      "source": "void expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal) {\n    if (!argType.canAssignTo(paramType)) {\n      mismatch(t, n,\n          String.format(\"actual parameter %d of %s does not match \" +\n              \"formal parameter\", ordinal,\n              getReadableJSTypeName(callNode.getFirstChild(), false)),\n          argType, paramType);\n    }\n  }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.0188367633256
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addVarArgs(JSType type)",
+      "path": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java",
+      "start_line": 94,
+      "end_line": 109,
+      "source": "public boolean addVarArgs(JSType type) {\n    if (hasVarArgs()) {\n      return false;\n    }\n\n    // There are two types of variable argument functions:\n    // 1) Programmer-defined var args\n    // 2) Native bottom types that can accept any argument.\n    // For the first one, \"undefined\" is a valid value for all arguments.\n    // For the second, we do not want to cast it up to undefined.\n    if (!type.isEmptyType()) {\n      type = registry.createOptionalType(type);\n    }\n    newParameter(type).setVarArgs(true);\n    return true;\n  }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.8261158103096
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)",
+      "path": "src/com/google/javascript/jscomp/ant/AntErrorManager.java",
+      "start_line": 41,
+      "end_line": 51,
+      "source": "@Override\n  public void println(CheckLevel level, JSError error) {\n    switch (level) {\n      case ERROR:\n        this.task.log(error.format(level, this.formatter), Project.MSG_ERR);\n        break;\n      case WARNING:\n        this.task.log(error.format(level, this.formatter), Project.MSG_WARN);\n        break;\n    }\n  }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.667671480815784
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()",
+      "path": "src/com/google/javascript/jscomp/ant/CompileTask.java",
+      "start_line": 473,
+      "end_line": 479,
+      "source": "private List<SourceFile> getDefaultExterns() {\n    try {\n      return CommandLineRunner.getDefaultExterns();\n    } catch (IOException e) {\n      throw new BuildException(e);\n    }\n  }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.50223089743659
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()",
+      "path": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java",
+      "start_line": 341,
+      "end_line": 379,
+      "source": "final public void run() {\n    int result = 0;\n    int runs = 1;\n    if (config.computePhaseOrdering) {\n      runs = NUM_RUNS_TO_DETERMINE_OPTIMAL_ORDER;\n      PhaseOptimizer.randomizeLoops();\n    }\n    try {\n      for (int i = 0; i < runs && result == 0; i++) {\n        runTimeStats.recordStartRun();\n        result = doRun();\n        runTimeStats.recordEndRun();\n      }\n    } catch (AbstractCommandLineRunner.FlagUsageException e) {\n      System.err.println(e.getMessage());\n      result = -1;\n    } catch (Throwable t) {\n      t.printStackTrace();\n      result = -2;\n    }\n\n    if (config.computePhaseOrdering) {\n      runTimeStats.outputBestPhaseOrdering();\n    }\n\n    try {\n      if (jsOutput instanceof Closeable) {\n        ((Closeable) jsOutput).close();\n      }\n    } catch (IOException e) {\n      throw Throwables.propagate(e);\n    }\n\n    if (testMode) {\n      exitCodeReceiverForTesting.apply(result);\n    } else {\n      System.exit(result);\n    }\n  }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.287359187039314
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.RunTimeStats.outputBestPhaseOrdering()",
+      "path": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java",
+      "start_line": 1544,
+      "end_line": 1558,
+      "source": "private void outputBestPhaseOrdering() {\n      try {\n        jsOutput.append(\"Best time: \" + bestRunTime + \"\\n\");\n        jsOutput.append(\"Worst time: \" + worstRunTime + \"\\n\");\n\n        int i = 1;\n        for (List<String> loop : loopedPassesInBestRun) {\n          jsOutput.append(\n              \"\\nLoop \" + i + \":\\n\" + Joiner.on(\"\\n\").join(loop)+ \"\\n\");\n          i++;\n        }\n      } catch (IOException e) {\n        throw new RuntimeException(\"unexpected exception\", e);\n      }\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.036017048155614
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)",
+      "path": "src/com/google/javascript/jscomp/TypeValidator.java",
+      "start_line": 597,
+      "end_line": 631,
+      "source": "private void expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop) {\n    StaticSlot<JSType> propSlot = instance.getSlot(prop);\n    if (propSlot == null) {\n      // Not implemented\n      String sourceName = n.getSourceFileName();\n      sourceName = sourceName == null ? \"\" : sourceName;\n      registerMismatch(instance, implementedInterface,\n          report(JSError.make(sourceName, n,\n          INTERFACE_METHOD_NOT_IMPLEMENTED,\n          prop, implementedInterface.toString(), instance.toString())));\n    } else {\n      Node propNode = propSlot.getDeclaration() == null ?\n          null : propSlot.getDeclaration().getNode();\n\n      // Fall back on the constructor node if we can't find a node for the\n      // property.\n      propNode = propNode == null ? n : propNode;\n\n      JSType found = propSlot.getType();\n      JSType required\n          = implementedInterface.getImplicitPrototype().getPropertyType(prop);\n      found = found.restrictByNotNullOrUndefined();\n      required = required.restrictByNotNullOrUndefined();\n      if (!found.canAssignTo(required)) {\n        // Implemented, but not correctly typed\n        FunctionType constructor =\n            implementedInterface.toObjectType().getConstructor();\n        registerMismatch(found, required, report(t.makeError(propNode,\n            HIDDEN_INTERFACE_PROPERTY_MISMATCH, prop,\n            constructor.getTopMostDefiningType(prop).toString(),\n            required.toString(), found.toString())));\n      }\n    }\n  }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.90284566048468
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)",
+      "path": "src/com/google/javascript/jscomp/SourceMap.java",
+      "start_line": 117,
+      "end_line": 148,
+      "source": "public void addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition) {\n    String sourceFile = node.getSourceFileName();\n\n    // If the node does not have an associated source file or\n    // its line number is -1, then the node does not have sufficient\n    // information for a mapping to be useful.\n    if (sourceFile == null || node.getLineno() < 0) {\n      return;\n    }\n\n    sourceFile = fixupSourceLocation(sourceFile);\n\n    String originalName = (String) node.getProp(Node.ORIGINALNAME_PROP);\n\n    // Strangely, Rhino source lines are one based but columns are\n    // zero based.\n    // We don't change this for the v1 or v2 source maps but for\n    // v3 we make them both 0 based.\n    int lineBaseOffset = 1;\n    if (generator instanceof SourceMapGeneratorV1\n        || generator instanceof SourceMapGeneratorV2) {\n      lineBaseOffset = 0;\n    }\n\n    generator.addMapping(\n        sourceFile, originalName,\n        new FilePosition(node.getLineno() - lineBaseOffset, node.getCharno()),\n        outputStartPosition, outputEndPosition);\n  }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.74269472646905
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addOptionalParams(JSType ...types)",
+      "path": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java",
+      "start_line": 79,
+      "end_line": 88,
+      "source": "public boolean addOptionalParams(JSType ...types) {\n    if (hasVarArgs()) {\n      return false;\n    }\n\n    for (JSType type : types) {\n      newParameter(registry.createOptionalType(type)).setOptionalArg(true);\n    }\n    return true;\n  }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.64736606827706
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.Flags.BooleanOptionHandler.parseArguments(Parameters params)",
+      "path": "src/com/google/javascript/jscomp/CommandLineRunner.java",
+      "start_line": 443,
+      "end_line": 465,
+      "source": "@Override\n      public int parseArguments(Parameters params) throws CmdLineException {\n        String param = null;\n        try {\n          param = params.getParameter(0);\n        } catch (CmdLineException e) {}\n\n        if (param == null) {\n          setter.addValue(true);\n          return 0;\n        } else {\n          String lowerParam = param.toLowerCase();\n          if (TRUES.contains(lowerParam)) {\n            setter.addValue(true);\n          } else if (FALSES.contains(lowerParam)) {\n            setter.addValue(false);\n          } else {\n            setter.addValue(true);\n            return 0;\n          }\n          return 1;\n        }\n      }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.38207455032142
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/rhino/jstype/JSType.java::JSType.testForEqualityHelper(JSType aType, JSType bType)",
+      "path": "src/com/google/javascript/rhino/jstype/JSType.java",
+      "start_line": 606,
+      "end_line": 644,
+      "source": "TernaryValue testForEqualityHelper(JSType aType, JSType bType) {\n    if (bType.isAllType() || bType.isUnknownType() ||\n        bType.isNoResolvedType() ||\n        aType.isAllType() || aType.isUnknownType() ||\n        aType.isNoResolvedType()) {\n      return UNKNOWN;\n    }\n\n    boolean aIsEmpty = aType.isEmptyType();\n    boolean bIsEmpty = bType.isEmptyType();\n    if (aIsEmpty || bIsEmpty) {\n      if (aIsEmpty && bIsEmpty) {\n        return TernaryValue.TRUE;\n      } else {\n        return UNKNOWN;\n      }\n    }\n\n    if (aType.isFunctionType() || bType.isFunctionType()) {\n      JSType otherType = aType.isFunctionType() ? bType : aType;\n      // In theory, functions are comparable to anything except\n      // null/undefined. For example, on FF3:\n      // function() {} == 'function () {\\n}'\n      // In practice, how a function serializes to a string is\n      // implementation-dependent, so it does not really make sense to test\n      // for equality with a string.\n      JSType meet = otherType.getGreatestSubtype(\n          getNativeType(JSTypeNative.OBJECT_TYPE));\n      if (meet.isNoType() || meet.isNoObjectType()) {\n        return TernaryValue.FALSE;\n      } else {\n        return TernaryValue.UNKNOWN;\n      }\n    }\n    if (bType.isEnumElementType() || bType.isUnionType()) {\n      return bType.testForEquality(aType);\n    }\n    return null;\n  }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.33609554643908
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/WarningLevel.java::WarningLevel.addVerboseWarnings(CompilerOptions options)",
+      "path": "src/com/google/javascript/jscomp/WarningLevel.java",
+      "start_line": 93,
+      "end_line": 114,
+      "source": "private static void addVerboseWarnings(CompilerOptions options) {\n    addDefaultWarnings(options);\n\n    // checkSuspiciousCode needs to be enabled for CheckGlobalThis to get run.\n    options.checkSuspiciousCode = true;\n    options.checkGlobalThisLevel = CheckLevel.WARNING;\n    options.checkSymbols = true;\n    options.checkMissingReturn = CheckLevel.WARNING;\n\n    // checkTypes has the side-effect of asserting that the\n    // correct number of arguments are passed to a function.\n    // Because the CodingConvention used with the web service does not provide a\n    // way for optional arguments to be specified, these warnings may result in\n    // false positives.\n    options.checkTypes = true;\n    options.checkGlobalNamesLevel = CheckLevel.WARNING;\n    options.aggressiveVarCheck = CheckLevel.WARNING;\n    options.setWarningLevel(\n        DiagnosticGroups.MISSING_PROPERTIES, CheckLevel.WARNING);\n    options.setWarningLevel(\n        DiagnosticGroups.DEPRECATED, CheckLevel.WARNING);\n  }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.19195942977699
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)",
+      "path": "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java",
+      "start_line": 50,
+      "end_line": 74,
+      "source": "ErrorFunctionType(JSTypeRegistry registry, String name) {\n    super(\n        registry, name, null,\n        registry.createArrowType(\n            registry.createOptionalParameters(\n                registry.getNativeType(ALL_TYPE),\n                registry.getNativeType(ALL_TYPE),\n                registry.getNativeType(ALL_TYPE)),\n            null),\n        null, null, true, true);\n\n    // NOTE(nicksantos): Errors have the weird behavior in that they can\n    // be called as functions, and they will return instances of themselves.\n    // Error('x') instanceof Error => true\n    //\n    // In user-defined types, we would deal with this case by creating\n    // a NamedType with the name \"Error\" and then resolve it later.\n    //\n    // For native types, we don't really want the native types to\n    // depend on type-resolution. So we just set the return type manually\n    // at the end of construction.\n    //\n    // There's similar logic in JSTypeRegistry for Array and RegExp.\n    getInternalArrowType().returnType = getInstanceType();\n  }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.0272127040957
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)",
+      "source": "private void registerMismatch(JSType found, JSType required, JSError error) {\n    // Don't register a mismatch for differences in null or undefined or if the\n    // code didn't downcast.\n    found = found.restrictByNotNullOrUndefined();\n    required = required.restrictByNotNullOrUndefined();\n    if (found.canAssignTo(required) || required.canAssignTo(found)) {\n      return;\n    }\n\n    mismatches.add(new TypeMismatch(found, required, error));\n    if (found.isFunctionType() &&\n        required.isFunctionType()) {\n      FunctionType fnTypeA = found.toMaybeFunctionType();\n      FunctionType fnTypeB = required.toMaybeFunctionType();\n      Iterator<Node> paramItA = fnTypeA.getParameters().iterator();\n      Iterator<Node> paramItB = fnTypeB.getParameters().iterator();\n      while (paramItA.hasNext() && paramItB.hasNext()) {\n        registerIfMismatch(paramItA.next().getJSType(),\n            paramItB.next().getJSType(), error);\n      }\n\n      registerIfMismatch(\n        fnTypeA.getReturnType(), fnTypeB.getReturnType(), error);\n    }\n  }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)\nSIGNATURE: private void registerMismatch(JSType found, JSType required, JSError error)",
+        "METHOD: src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)\nSIGNATURE: private void registerMismatch(JSType found, JSType required, JSError error)\nSTRUCTURE (lossy):\nfound = found.restrictByNotNullOrUndefined()\nCALL found.restrictByNotNullOrUndefined()\nrequired = required.restrictByNotNullOrUndefined()\nCALL required.restrictByNotNullOrUndefined()\nif (found.canAssignTo(required) || required.canAssignTo(found))\nCALL found.canAssignTo(required)\nCALL required.canAssignTo(found)\nreturn;\nCALL mismatches.add(new TypeMismatch(found, required, error))\nif (found.isFunctionType() && required.isFunctionType())\nCALL found.isFunctionType()\nCALL required.isFunctionType()\nFunctionType fnTypeA = found.toMaybeFunctionType();\nCALL found.toMaybeFunctionType()\nFunctionType fnTypeB = required.toMaybeFunctionType();\nCALL required.toMaybeFunctionType()\nIterator<Node> paramItA = fnTypeA.getParameters().iterator();\nCALL fnTypeA.getParameters().iterator()\nCALL fnTypeA.getParameters()\nIterator<Node> paramItB = fnTypeB.getParameters().iterator();\nCALL fnTypeB.getParameters().iterator()\nCALL fnTypeB.getParameters()\nwhile (paramItA.hasNext() && paramItB.hasNext())\nCALL paramItA.hasNext()\nCALL paramItB.hasNext()\nCALL registerIfMismatch(paramItA.next().getJSType(), paramItB.next().getJSType(), error)\nCALL paramItA.next().getJSType()\nCALL paramItA.next()\nCALL paramItB.next().getJSType()\nCALL paramItB.next()\nCALL registerIfMismatch( fnTypeA.getReturnType(), fnTypeB.getReturnType(), error)\nCALL fnTypeA.getReturnType()\nCALL fnTypeB.getReturnType()",
+        "private void registerMismatch(JSType found, JSType required, JSError error) {\n    // Don't register a mismatch for differences in null or undefined or if the\n    // code didn't downcast.\n    found = found.restrictByNotNullOrUndefined();\n    required = required.restrictByNotNullOrUndefined();\n    if (found.canAssignTo(required) || required.canAssignTo(found)) {\n      return;\n    }\n\n    mismatches.add(new TypeMismatch(found, required, error));\n    if (found.isFunctionType() &&\n        required.isFunctionType()) {\n      FunctionType fnTypeA = found.toMaybeFunctionType();\n      FunctionType fnTypeB = required.toMaybeFunctionType();\n      Iterator<Node> paramItA = fnTypeA.getParameters().iterator();\n      Iterator<Node> paramItB = fnTypeB.getParameters().iterator();\n      while (paramItA.hasNext() && paramItB.hasNext()) {\n        registerIfMismatch(paramItA.next().getJSType(),\n            paramItB.next().getJSType(), error);\n      }\n\n      registerIfMismatch(\n        fnTypeA.getReturnType(), fnTypeB.getReturnType(), error);\n    }\n  }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.38636363636363635,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 23.0,
+        "literal_count": 0.0,
+        "source_tokens": 261.0,
+        "l0_tokens": 56.0,
+        "l1_tokens": 404.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 23,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()",
+      "source": "public void execute() {\n    if (this.outputFile == null) {\n      throw new BuildException(\"outputFile attribute must be set\");\n    }\n\n    Compiler.setLoggingLevel(Level.OFF);\n\n    CompilerOptions options = createCompilerOptions();\n    Compiler compiler = createCompiler(options);\n\n    List<SourceFile> externs = findExternFiles();\n    List<SourceFile> sources = findSourceFiles();\n\n    if (isStale() || forceRecompile) {\n      log(\"Compiling \" + sources.size() + \" file(s) with \" +\n          externs.size() + \" extern(s)\");\n\n      Result result = compiler.compile(externs, sources, options);\n      if (result.success) {\n        writeResult(compiler.toSource());\n      } else {\n        throw new BuildException(\"Compilation failed.\");\n      }\n    } else {\n      log(\"None of the files changed. Compilation skipped.\");\n    }\n  }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()\nSIGNATURE: public void execute()",
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()\nSIGNATURE: public void execute()\nSTRUCTURE (lossy):\nif (this.outputFile == null)\nthrow new BuildException(\"outputFile attribute must be set\");\nCALL Compiler.setLoggingLevel(Level.OFF)\nCompilerOptions options = createCompilerOptions();\nCALL createCompilerOptions()\nCompiler compiler = createCompiler(options);\nCALL createCompiler(options)\nList<SourceFile> externs = findExternFiles();\nCALL findExternFiles()\nList<SourceFile> sources = findSourceFiles();\nCALL findSourceFiles()\nif (isStale() || forceRecompile)\nCALL isStale()\nCALL log(\"Compiling \" + sources.size() + \" file(s) with \" + externs.size() + \" extern(s)\")\nCALL sources.size()\nCALL externs.size()\nResult result = compiler.compile(externs, sources, options);\nCALL compiler.compile(externs, sources, options)\nif (result.success)\nCALL writeResult(compiler.toSource())\nCALL compiler.toSource()\nthrow new BuildException(\"Compilation failed.\");\nCALL log(\"None of the files changed. Compilation skipped.\")",
+        "public void execute() {\n    if (this.outputFile == null) {\n      throw new BuildException(\"outputFile attribute must be set\");\n    }\n\n    Compiler.setLoggingLevel(Level.OFF);\n\n    CompilerOptions options = createCompilerOptions();\n    Compiler compiler = createCompiler(options);\n\n    List<SourceFile> externs = findExternFiles();\n    List<SourceFile> sources = findSourceFiles();\n\n    if (isStale() || forceRecompile) {\n      log(\"Compiling \" + sources.size() + \" file(s) with \" +\n          externs.size() + \" extern(s)\");\n\n      Result result = compiler.compile(externs, sources, options);\n      if (result.success) {\n        writeResult(compiler.toSource());\n      } else {\n        throw new BuildException(\"Compilation failed.\");\n      }\n    } else {\n      log(\"None of the files changed. Compilation skipped.\");\n    }\n  }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.32075471698113206,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 13.0,
+        "literal_count": 7.0,
+        "source_tokens": 207.0,
+        "l0_tokens": 30.0,
+        "l1_tokens": 261.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 13,
+        "literal_count": 7
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()",
+      "source": "@Override\n  public Collection<AssertionFunctionSpec> getAssertionFunctions() {\n    return ImmutableList.<AssertionFunctionSpec>of(\n        new AssertionFunctionSpec(\"goog.asserts.assert\"),\n        new AssertionFunctionSpec(\"goog.asserts.assertNumber\",\n            JSTypeNative.NUMBER_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertString\",\n            JSTypeNative.STRING_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertFunction\",\n            JSTypeNative.FUNCTION_INSTANCE_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertObject\",\n            JSTypeNative.OBJECT_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertArray\",\n            JSTypeNative.ARRAY_TYPE),\n        // TODO(agrieve): It would be better if this could make the first\n        // parameter the type of the second parameter.\n        new AssertionFunctionSpec(\"goog.asserts.assertInstanceof\",\n            JSTypeNative.OBJECT_TYPE)\n    );\n  }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()\nSIGNATURE: @Override\n  public Collection<AssertionFunctionSpec> getAssertionFunctions()",
+        "METHOD: src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()\nSIGNATURE: @Override\n  public Collection<AssertionFunctionSpec> getAssertionFunctions()\nSTRUCTURE (lossy):\nreturn ImmutableList.<AssertionFunctionSpec>of( new AssertionFunctionSpec(\"goog.asserts.assert\"), new AssertionFunctionSpec(\"goog.asserts.assertNumber\", JSTypeNative.NUMBER_TYPE), new AssertionFunctionSpec(\"goog.asserts.assertString\", JSTypeNative.STRING_TYPE), new AssertionFunctionSpec(\"goog.asserts.assertFunction\", JSTypeNative.FUNCTION_INSTANCE_TYPE), new AssertionFunctionSpec(\"goog.asserts.assertObject\", JSTypeNative.OBJECT_TYPE), new AssertionFunctionSpec(\"goog.asserts.assertArray\", JSTypeNative.ARRAY_TYPE), // TODO(agrieve): It would be better if this could make the first // parameter the type of the second parameter. new AssertionFunctionSpec(\"goog.asserts.assertInstanceof\", JSTypeNative.OBJECT_TYPE) );\nCALL ImmutableList.<AssertionFunctionSpec>of( new AssertionFunctionSpec(\"goog.asserts.assert\"), new AssertionFunctionSpec(\"goog.asserts.assertNumber\", JSTypeNative.NUMBER_TYPE), new AssertionFunctionSpec(\"goog.asserts.assertString\", JSTypeNative.STRING_TYPE), new AssertionFunctionSpec(\"goog.asserts.assertFunction\", JSTypeNative.FUNCTION_INSTANCE_TYPE), new AssertionFunctionSpec(\"goog.asserts.assertObject\", JSTypeNative.OBJECT_TYPE), new AssertionFunctionSpec(\"goog.asserts.assertArray\", JSTypeNative.ARRAY_TYPE), // TODO(agrieve): It would be better if this could make the first // parameter the type of the second parameter. new AssertionFunctionSpec(\"goog.asserts.assertInstanceof\", JSTypeNative.OBJECT_TYPE) )",
+        "@Override\n  public Collection<AssertionFunctionSpec> getAssertionFunctions() {\n    return ImmutableList.<AssertionFunctionSpec>of(\n        new AssertionFunctionSpec(\"goog.asserts.assert\"),\n        new AssertionFunctionSpec(\"goog.asserts.assertNumber\",\n            JSTypeNative.NUMBER_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertString\",\n            JSTypeNative.STRING_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertFunction\",\n            JSTypeNative.FUNCTION_INSTANCE_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertObject\",\n            JSTypeNative.OBJECT_TYPE),\n        new AssertionFunctionSpec(\"goog.asserts.assertArray\",\n            JSTypeNative.ARRAY_TYPE),\n        // TODO(agrieve): It would be better if this could make the first\n        // parameter the type of the second parameter.\n        new AssertionFunctionSpec(\"goog.asserts.assertInstanceof\",\n            JSTypeNative.OBJECT_TYPE)\n    );\n  }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.38636363636363635,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 7.0,
+        "source_tokens": 239.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 416.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 7
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addRequiredParams(JSType ...types)",
+      "source": "public boolean addRequiredParams(JSType ...types) {\n    if (hasOptionalOrVarArgs()) {\n      return false;\n    }\n\n    for (JSType type : types) {\n      newParameter(type);\n    }\n    return true;\n  }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addRequiredParams(JSType ...types)\nSIGNATURE: public boolean addRequiredParams(JSType ...types)",
+        "METHOD: src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addRequiredParams(JSType ...types)\nSIGNATURE: public boolean addRequiredParams(JSType ...types)\nSTRUCTURE (lossy):\nif (hasOptionalOrVarArgs())\nCALL hasOptionalOrVarArgs()\nreturn false;\nfor (JSType type : types)\nCALL newParameter(type)\nreturn true;",
+        "public boolean addRequiredParams(JSType ...types) {\n    if (hasOptionalOrVarArgs()) {\n      return false;\n    }\n\n    for (JSType type : types) {\n      newParameter(type);\n    }\n    return true;\n  }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5925925925925926,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 50.0,
+        "l0_tokens": 48.0,
+        "l1_tokens": 86.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)",
+      "source": "private void updateTypeOfThisOnClosure(Node n, FunctionType fnType) {\n    // TODO(user): Make the template logic more general.\n\n    if (fnType.getTemplateTypeName() == null) {\n      return;\n    }\n\n    int i = 0;\n    int childCount = n.getChildCount();\n    // Find the parameter whose type is the template type.\n    for (Node iParameter : fnType.getParameters()) {\n      JSType iParameterType =\n          getJSType(iParameter).restrictByNotNullOrUndefined();\n      if (iParameterType.isTemplateType()) {\n        // Find the actual type of this argument.\n        ObjectType iArgumentType = null;\n        if (i + 1 < childCount) {\n          Node iArgument = n.getChildAtIndex(i + 1);\n          iArgumentType = getJSType(iArgument)\n              .restrictByNotNullOrUndefined()\n              .collapseUnion()\n              .toObjectType();\n          if (iArgumentType == null) {\n            compiler.report(\n                JSError.make(NodeUtil.getSourceName(iArgument), iArgument,\n                    TEMPLATE_TYPE_NOT_OBJECT_TYPE,\n                    getJSType(iArgument).toString()));\n            return;\n          }\n        }\n\n        // Find the parameter whose type is function(this: T, ...)\n        boolean foundTemplateTypeOfThisParameter = false;\n        int j = 0;\n        for (Node jParameter : fnType.getParameters()) {\n          JSType jParameterType =\n              getJSType(jParameter).restrictByNotNullOrUndefined();\n          if (jParameterType.isFunctionType()) {\n            FunctionType jParameterFnType = jParameterType.toMaybeFunctionType();\n            if (jParameterFnType.getTypeOfThis().equals(iParameterType)) {\n              foundTemplateTypeOfThisParameter = true;\n              // Find the actual type of the this argument.\n              if (j + 1 >= childCount) {\n                // TypeCheck#visitParameterList will warn so we bail.\n                return;\n              }\n              Node jArgument = n.getChildAtIndex(j + 1);\n              JSType jArgumentType = getJSType(jArgument);\n              if (jArgument.isFunction() &&\n                  jArgumentType.isFunctionType()) {\n                if (iArgumentType != null &&\n                    // null and undefined get filtered out above.\n                    !iArgumentType.isNoType()) {\n                  // If it's an function expression, update the type of this\n                  // using the actual type of T.\n                  FunctionType jArgumentFnType = jArgumentType.toMaybeFunctionType();\n                  if (jArgumentFnType.getTypeOfThis().isUnknownType()) {\n                    // The new type will be picked up when we traverse the inner\n                    // function.\n                    jArgument.setJSType(\n                        registry.createFunctionTypeWithNewThisType(\n                            jArgumentFnType, iArgumentType));\n                  }\n                } else {\n                  // Warn if the anonymous function literal references this.\n                  if (NodeUtil.referencesThis(\n                          NodeUtil.getFunctionBody(jArgument))) {\n                    compiler.report(JSError.make(NodeUtil.getSourceName(n), n,\n                        FUNCTION_LITERAL_UNDEFINED_THIS));\n                  }\n                }\n              }\n              // TODO(user): Add code to TypeCheck to check that the\n              // types of the arguments match.\n            }\n          }\n          j++;\n        }\n\n        if (!foundTemplateTypeOfThisParameter) {\n          compiler.report(JSError.make(NodeUtil.getSourceName(n), n,\n              TEMPLATE_TYPE_OF_THIS_EXPECTED));\n          return;\n        }\n      }\n      i++;\n    }\n  }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)\nSIGNATURE: private void updateTypeOfThisOnClosure(Node n, FunctionType fnType)",
+        "METHOD: src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)\nSIGNATURE: private void updateTypeOfThisOnClosure(Node n, FunctionType fnType)\nSTRUCTURE (lossy):\nif (fnType.getTemplateTypeName() == null)\nCALL fnType.getTemplateTypeName()\nreturn;\nint i = 0;\nint childCount = n.getChildCount();\nCALL n.getChildCount()\nfor (Node iParameter : fnType.getParameters())\nCALL fnType.getParameters()\nJSType iParameterType = getJSType(iParameter).restrictByNotNullOrUndefined();\nCALL getJSType(iParameter).restrictByNotNullOrUndefined()\nCALL getJSType(iParameter)\nif (iParameterType.isTemplateType())\nCALL iParameterType.isTemplateType()\nObjectType iArgumentType = null;\nif (i + 1 < childCount)\nNode iArgument = n.getChildAtIndex(i + 1);\nCALL n.getChildAtIndex(i + 1)\niArgumentType = getJSType(iArgument) .restrictByNotNullOrUndefined() .collapseUnion() .toObjectType()\nCALL getJSType(iArgument) .restrictByNotNullOrUndefined() .collapseUnion() .toObjectType()\nCALL getJSType(iArgument) .restrictByNotNullOrUndefined() .collapseUnion()\nCALL getJSType(iArgument) .restrictByNotNullOrUndefined()\nCALL getJSType(iArgument)\nif (iArgumentType == null)\nCALL compiler.report( JSError.make(NodeUtil.getSourceName(iArgument), iArgument, TEMPLATE_TYPE_NOT_OBJECT_TYPE, getJSType(iArgument).toString()))\nCALL JSError.make(NodeUtil.getSourceName(iArgument), iArgument, TEMPLATE_TYPE_NOT_OBJECT_TYPE, getJSType(iArgument).toString())\nCALL NodeUtil.getSourceName(iArgument)\nCALL getJSType(iArgument).toString()\nboolean foundTemplateTypeOfThisParameter = false;\nint j = 0;\nfor (Node jParameter : fnType.getParameters())\nJSType jParameterType = getJSType(jParameter).restrictByNotNullOrUndefined();\nCALL getJSType(jParameter).restrictByNotNullOrUndefined()\nCALL getJSType(jParameter)\nif (jParameterType.isFunctionType())\nCALL jParameterType.isFunctionType()\nFunctionType jParameterFnType = jParameterType.toMaybeFunctionType();\nCALL jParameterType.toMaybeFunctionType()\nif (jParameterFnType.getTypeOfThis().equals(iParameterType))\nCALL jParameterFnType.getTypeOfThis().equals(iParameterType)\nCALL jParameterFnType.getTypeOfThis()\nfoundTemplateTypeOfThisParamet\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "private void updateTypeOfThisOnClosure(Node n, FunctionType fnType) {\n    // TODO(user): Make the template logic more general.\n\n    if (fnType.getTemplateTypeName() == null) {\n      return;\n    }\n\n    int i = 0;\n    int childCount = n.getChildCount();\n    // Find the parameter whose type is the template type.\n    for (Node iParameter : fnType.getParameters()) {\n      JSType iParameterType =\n          getJSType(iParameter).restrictByNotNullOrUndefined();\n      if (iParameterType.isTemplateType()) {\n        // Find the actual type of this argument.\n        ObjectType iArgumentType = null;\n        if (i + 1 < childCount) {\n          Node iArgument = n.getChildAtIndex(i + 1);\n          iArgumentType = getJSType(iArgument)\n              .restrictByNotNullOrUndefined()\n              .collapseUnion()\n              .toObjectType();\n          if (iArgumentType == null) {\n            compiler.report(\n                JSError.make(NodeUtil.getSourceName(iArgument), iArgument,\n                    TEMPLATE_TYPE_NOT_OBJECT_TYPE,\n                    getJSType(iArgument).toString()));\n            return;\n          }\n        }\n\n        // Find the parameter whose type is function(this: T, ...)\n        boolean foundTemplateTypeOfThisParameter = false;\n        int j = 0;\n        for (Node jParameter : fnType.getParameters()) {\n          JSType jParameterType =\n              getJSType(jParameter).restrictByNotNullOrUndefined();\n          if (jParameterType.isFunctionType()) {\n            FunctionType jParameterFnType = jParameterType.toMaybeFunctionType();\n            if (jParameterFnType.getTypeOfThis().equals(iParameterType)) {\n              foundTemplateTypeOfThisParameter = true;\n              // Find the actual type of the this argument.\n              if (j + 1 >= childCount) {\n                // TypeCheck#visitParameterList will warn so we bail.\n                return;\n              }\n              Node jArgument = n.getChildAtIndex(j + 1);\n              JSType jArgumentType = getJSType(jArgument);\n              if (jArgument.isFunction() &&\n                  jArgumentType.isFunctionType()) {\n                if (iArgumentType != null &&\n                    // null and undefined get filtered out above.\n                    !iArgumentType.isNoType()) {\n                  // If it's an function expression, update the type of this\n                  // using the actual type of T.\n                  FunctionType jArgumentFnType = jArgumentType.toMaybeFunctionType();\n                  if (jArgumentFnType.getTypeOfThis().isUnknownType()) {\n                    // The new type will be picked up when we traverse the inner\n                    // function.\n                    jArgument.setJSType(\n                        registry.createFunctionTypeWithNewThisType(\n                            jArgumentFnType, iArgumentType));\n                  }\n                } else {\n                  // Warn if the anonymous function literal references this.\n                  if (NodeUtil.referencesThis(\n                          NodeUtil.getFunctionBody(jArgument))) {\n                    compiler.report(JSError.make(NodeUtil.getSourceName(n), n,\n                        FUNCTION_LITERAL_UNDEFINED_THIS));\n                  }\n                }\n              }\n              // TODO(user): Add code to TypeCheck to check that the\n              // types of the arguments match.\n            }\n          }\n          j++;\n        }\n\n        if (!foundTemplateTypeOfThisParameter) {\n          compiler.report(JSError.make(NodeUtil.getSourceName(n), n,\n              TEMPLATE_TYPE_OF_THIS_EXPECTED));\n          return;\n        }\n      }\n      i++;\n    }\n  }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2857142857142857,
+        "trace_match": 0.0,
+        "complexity": 15.0,
+        "call_count": 41.0,
+        "literal_count": 10.0,
+        "source_tokens": 916.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.62117903930131,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 15,
+        "call_count": 41,
+        "literal_count": 10
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)",
+      "source": "FunctionTypeBuilder inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info) {\n    if (argsParent == null) {\n      if (info == null) {\n        return this;\n      } else {\n        return inferParameterTypes(info);\n      }\n    }\n\n    // arguments\n    Node oldParameterType = null;\n    if (parametersNode != null) {\n      oldParameterType = parametersNode.getFirstChild();\n    }\n\n    FunctionParamBuilder builder = new FunctionParamBuilder(typeRegistry);\n    boolean warnedAboutArgList = false;\n    Set<String> allJsDocParams = (info == null) ?\n        Sets.<String>newHashSet() :\n        Sets.newHashSet(info.getParameterNames());\n    boolean foundTemplateType = false;\n    boolean isVarArgs = false;\n    for (Node arg : argsParent.children()) {\n      String argumentName = arg.getString();\n      allJsDocParams.remove(argumentName);\n\n      // type from JSDocInfo\n      JSType parameterType = null;\n      boolean isOptionalParam = isOptionalParameter(arg, info);\n      isVarArgs = isVarArgsParameter(arg, info);\n\n      if (info != null && info.hasParameterType(argumentName)) {\n        parameterType =\n            info.getParameterType(argumentName).evaluate(scope, typeRegistry);\n      } else if (oldParameterType != null &&\n          oldParameterType.getJSType() != null) {\n        parameterType = oldParameterType.getJSType();\n        isOptionalParam = oldParameterType.isOptionalArg();\n        isVarArgs = oldParameterType.isVarArgs();\n      } else {\n        parameterType = typeRegistry.getNativeType(UNKNOWN_TYPE);\n      }\n\n      if (templateTypeName != null &&\n          parameterType.restrictByNotNullOrUndefined().isTemplateType()) {\n        if (foundTemplateType) {\n          reportError(TEMPLATE_TYPE_DUPLICATED, fnName);\n        }\n        foundTemplateType = true;\n      }\n      warnedAboutArgList |= addParameter(\n          builder, parameterType, warnedAboutArgList,\n          isOptionalParam,\n          isVarArgs);\n\n      if (oldParameterType != null) {\n        oldParameterType = oldParameterType.getNext();\n      }\n    }\n\n    // Copy over any old parameters that aren't in the param list.\n    if (!isVarArgs) {\n      while (oldParameterType != null && !isVarArgs) {\n        builder.newParameterFromNode(oldParameterType);\n        oldParameterType = oldParameterType.getNext();\n      }\n    }\n\n    if (templateTypeName != null && !foundTemplateType) {\n      reportError(TEMPLATE_TYPE_EXPECTED, fnName);\n    }\n\n    for (String inexistentName : allJsDocParams) {\n      reportWarning(INEXISTANT_PARAM, inexistentName, fnName);\n    }\n\n    parametersNode = builder.build();\n    return this;\n  }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)\nSIGNATURE: FunctionTypeBuilder inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)",
+        "METHOD: src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)\nSIGNATURE: FunctionTypeBuilder inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)\nSTRUCTURE (lossy):\nif (argsParent == null)\nif (info == null)\nreturn this;\nreturn inferParameterTypes(info);\nCALL inferParameterTypes(info)\nNode oldParameterType = null;\nif (parametersNode != null)\noldParameterType = parametersNode.getFirstChild()\nCALL parametersNode.getFirstChild()\nFunctionParamBuilder builder = new FunctionParamBuilder(typeRegistry);\nboolean warnedAboutArgList = false;\nSet<String> allJsDocParams = (info == null) ? Sets.<String>newHashSet() : Sets.newHashSet(info.getParameterNames());\nCALL Sets.<String>newHashSet()\nCALL Sets.newHashSet(info.getParameterNames())\nCALL info.getParameterNames()\nboolean foundTemplateType = false;\nboolean isVarArgs = false;\nfor (Node arg : argsParent.children())\nCALL argsParent.children()\nString argumentName = arg.getString();\nCALL arg.getString()\nCALL allJsDocParams.remove(argumentName)\nJSType parameterType = null;\nboolean isOptionalParam = isOptionalParameter(arg, info);\nCALL isOptionalParameter(arg, info)\nisVarArgs = isVarArgsParameter(arg, info)\nCALL isVarArgsParameter(arg, info)\nif (info != null && info.hasParameterType(argumentName))\nCALL info.hasParameterType(argumentName)\nparameterType = info.getParameterType(argumentName).evaluate(scope, typeRegistry)\nCALL info.getParameterType(argumentName).evaluate(scope, typeRegistry)\nCALL info.getParameterType(argumentName)\nif (oldParameterType != null && oldParameterType.getJSType() != null)\nCALL oldParameterType.getJSType()\nparameterType = oldParameterType.getJSType()\nisOptionalParam = oldParameterType.isOptionalArg()\nCALL oldParameterType.isOptionalArg()\nisVarArgs = oldParameterType.isVarArgs()\nCALL oldParameterType.isVarArgs()\nparameterType = typeRegistry.getNativeType(UNKNOWN_TYPE)\nCALL typeRegistry.getNativeType(UNKNOWN_TYPE)\nif (templateTypeName != null && parameterType.restrictByNotNullOrUndefined().isTemplateType())\nCALL parameterType.restrictByNotNullOrUndefined().isTemplateType()\nCALL param\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "FunctionTypeBuilder inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info) {\n    if (argsParent == null) {\n      if (info == null) {\n        return this;\n      } else {\n        return inferParameterTypes(info);\n      }\n    }\n\n    // arguments\n    Node oldParameterType = null;\n    if (parametersNode != null) {\n      oldParameterType = parametersNode.getFirstChild();\n    }\n\n    FunctionParamBuilder builder = new FunctionParamBuilder(typeRegistry);\n    boolean warnedAboutArgList = false;\n    Set<String> allJsDocParams = (info == null) ?\n        Sets.<String>newHashSet() :\n        Sets.newHashSet(info.getParameterNames());\n    boolean foundTemplateType = false;\n    boolean isVarArgs = false;\n    for (Node arg : argsParent.children()) {\n      String argumentName = arg.getString();\n      allJsDocParams.remove(argumentName);\n\n      // type from JSDocInfo\n      JSType parameterType = null;\n      boolean isOptionalParam = isOptionalParameter(arg, info);\n      isVarArgs = isVarArgsParameter(arg, info);\n\n      if (info != null && info.hasParameterType(argumentName)) {\n        parameterType =\n            info.getParameterType(argumentName).evaluate(scope, typeRegistry);\n      } else if (oldParameterType != null &&\n          oldParameterType.getJSType() != null) {\n        parameterType = oldParameterType.getJSType();\n        isOptionalParam = oldParameterType.isOptionalArg();\n        isVarArgs = oldParameterType.isVarArgs();\n      } else {\n        parameterType = typeRegistry.getNativeType(UNKNOWN_TYPE);\n      }\n\n      if (templateTypeName != null &&\n          parameterType.restrictByNotNullOrUndefined().isTemplateType()) {\n        if (foundTemplateType) {\n          reportError(TEMPLATE_TYPE_DUPLICATED, fnName);\n        }\n        foundTemplateType = true;\n      }\n      warnedAboutArgList |= addParameter(\n          builder, parameterType, warnedAboutArgList,\n          isOptionalParam,\n          isVarArgs);\n\n      if (oldParameterType != null) {\n        oldParameterType = oldParameterType.getNext();\n      }\n    }\n\n    // Copy over any old parameters that aren't in the param list.\n    if (!isVarArgs) {\n      while (oldParameterType != null && !isVarArgs) {\n        builder.newParameterFromNode(oldParameterType);\n        oldParameterType = oldParameterType.getNext();\n      }\n    }\n\n    if (templateTypeName != null && !foundTemplateType) {\n      reportError(TEMPLATE_TYPE_EXPECTED, fnName);\n    }\n\n    for (String inexistentName : allJsDocParams) {\n      reportWarning(INEXISTANT_PARAM, inexistentName, fnName);\n    }\n\n    parametersNode = builder.build();\n    return this;\n  }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2926829268292683,
+        "trace_match": 0.0,
+        "complexity": 14.0,
+        "call_count": 28.0,
+        "literal_count": 13.0,
+        "source_tokens": 656.0,
+        "l0_tokens": 69.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.8673780487804879,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 14,
+        "call_count": 28,
+        "literal_count": 13
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)",
+      "source": "private JSType createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope) {\n    switch (n.getType()) {\n      case Token.LC: // Record type.\n        return createRecordTypeFromNodes(\n            n.getFirstChild(), sourceName, scope);\n\n      case Token.BANG: // Not nullable\n        return createFromTypeNodesInternal(\n            n.getFirstChild(), sourceName, scope)\n            .restrictByNotNullOrUndefined();\n\n      case Token.QMARK: // Nullable or unknown\n        Node firstChild = n.getFirstChild();\n        if (firstChild == null) {\n          return getNativeType(UNKNOWN_TYPE);\n        }\n        return createDefaultObjectUnion(\n            createFromTypeNodesInternal(\n                firstChild, sourceName, scope));\n\n      case Token.EQUALS: // Optional\n        return createOptionalType(\n            createFromTypeNodesInternal(\n                n.getFirstChild(), sourceName, scope));\n\n      case Token.ELLIPSIS: // Var args\n        return createOptionalType(\n            createFromTypeNodesInternal(\n                n.getFirstChild(), sourceName, scope));\n\n      case Token.STAR: // The AllType\n        return getNativeType(ALL_TYPE);\n\n      case Token.LB: // Array type\n        // TODO(nicksantos): Enforce membership restrictions on the Array.\n        return getNativeType(ARRAY_TYPE);\n\n      case Token.PIPE: // Union type\n        UnionTypeBuilder builder = new UnionTypeBuilder(this);\n        for (Node child = n.getFirstChild(); child != null;\n             child = child.getNext()) {\n          builder.addAlternate(\n              createFromTypeNodesInternal(child, sourceName, scope));\n        }\n        return builder.build();\n\n      case Token.EMPTY: // When the return value of a function is not specified\n        return getNativeType(UNKNOWN_TYPE);\n\n      case Token.VOID: // Only allowed in the return value of a function.\n        return getNativeType(VOID_TYPE);\n\n      case Token.STRING:\n        JSType namedType = getType(scope, n.getString(), sourceName,\n            n.getLineno(), n.getCharno());\n        if (resolveMode != ResolveMode.LAZY_NAMES) {\n          namedType = namedType.resolveInternal(reporter, scope);\n        }\n        if ((namedType instanceof ObjectType) &&\n            !(nonNullableTypeNames.contains(n.getString()))) {\n          Node typeList = n.getFirstChild();\n          if (typeList != null &&\n              (\"Array\".equals(n.getString()) ||\n               \"Object\".equals(n.getString()))) {\n            JSType parameterType =\n                createFromTypeNodesInternal(\n                    typeList.getLastChild(), sourceName, scope);\n            namedType = new ParameterizedType(\n                this, (ObjectType) namedType, parameterType);\n            if (typeList.hasMoreThanOneChild()) {\n              JSType indexType =\n                  createFromTypeNodesInternal(\n                      typeList.getFirstChild(), sourceName, scope);\n              namedType = new IndexedType(\n                  this, (ObjectType) namedType, indexType);\n            }\n          }\n          return createDefaultObjectUnion(namedType);\n        } else {\n          return namedType;\n        }\n\n      case Token.FUNCTION:\n        ObjectType thisType = null;\n        boolean isConstructor = false;\n        Node current = n.getFirstChild();\n        if (current.getType() == Token.THIS ||\n            current.getType() == Token.NEW) {\n          Node contextNode = current.getFirstChild();\n          thisType =\n              ObjectType.cast(\n                  createFromTypeNodesInternal(\n                      contextNode, sourceName, scope)\n                  .restrictByNotNullOrUndefined());\n          if (thisType == null) {\n            reporter.warning(\n                ScriptRuntime.getMessage0(\n                    current.getType() == Token.THIS ?\n                    \"msg.jsdoc.function.thisnotobject\" :\n                    \"msg.jsdoc.function.newnotobject\"),\n                sourceName,\n                contextNode.getLineno(), contextNode.getCharno());\n          }\n\n          isConstructor = current.getType() == Token.NEW;\n          current = current.getNext();\n        }\n\n        FunctionParamBuilder paramBuilder = new FunctionParamBuilder(this);\n\n        if (current.getType() == Token.PARAM_LIST) {\n          Node args = current.getFirstChild();\n          for (Node arg = current.getFirstChild(); arg != null;\n               arg = arg.getNext()) {\n            if (arg.getType() == Token.ELLIPSIS) {\n              if (arg.getChildCount() == 0) {\n                paramBuilder.addVarArgs(getNativeType(UNKNOWN_TYPE));\n              } else {\n                paramBuilder.addVarArgs(\n                    createFromTypeNodesInternal(\n                        arg.getFirstChild(), sourceName, scope));\n              }\n            } else {\n              JSType type = createFromTypeNodesInternal(\n                  arg, sourceName, scope);\n              if (arg.getType() == Token.EQUALS) {\n                boolean addSuccess = paramBuilder.addOptionalParams(type);\n                if (!addSuccess) {\n                  reporter.warning(\n                      ScriptRuntime.getMessage0(\"msg.jsdoc.function.varargs\"),\n                      sourceName, arg.getLineno(), arg.getCharno());\n                }\n              } else {\n                paramBuilder.addRequiredParams(type);\n              }\n            }\n          }\n          current = current.getNext();\n        }\n\n        JSType returnType =\n            createFromTypeNodesInternal(current, sourceName, scope);\n\n        return new FunctionBuilder(this)\n            .withParams(paramBuilder)\n            .withReturnType(returnType)\n            .withTypeOfThis(thisType)\n            .setIsConstructor(isConstructor)\n            .build();\n    }\n\n    throw new IllegalStateException(\n        \"Unexpected node in type expression: \" + n.toString());\n  }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)\nSIGNATURE: private JSType createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)",
+        "METHOD: src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)\nSIGNATURE: private JSType createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)\nSTRUCTURE (lossy):\nswitch (n.getType()) { case Token.LC: // Record type. return createRecordTypeFromNodes( n.getFirstChild(), sourceName, scope); case Token.BANG: // Not nullable return createFromTypeNodesInternal( n.getFirstChild(), sourceName, scope) .restrictByNotNullOrUndefined(); case Token.QMARK: // Nullable or unknown Node firstChild = n.getFirstChild(); if (firstChild == null) { return getNativeType(UNKNOWN_TYPE); } return createDefaultObjectUnion( createFromTypeNodesInternal( firstChild, sourceName, scope)); case Token.EQUALS: // Optional return createOptionalType( createFromTypeNodesInternal( n.getFirstChild(), sourceName, scope)); case Token.ELLIPSIS: // Var args return createOptionalType( createFromTypeNodesInternal( n.getFirstChild(), sourceName, scope)); case Token.STAR: // The AllType return getNativeType(ALL_TYPE); case Token.LB: // Array type // TODO(nicksantos): Enforce membership restrictions on the Array. return getNativeType(ARRAY_TYPE); case Token.PIPE: // Union type UnionTypeBuilder builder = new UnionTypeBuilder(this); for (Node child = n.getFirstChild(); child != null; child = child.getNext()) { builder.addAlternate( createFromTypeNodesInternal(child, sourceName, scope)); } return builder.build(); case Token.EMPTY: // When the return value of a function is not specified return getNativeType(UNKNOWN_TYPE); case Token.VOID: // Only allowed in the return value of a function. return getNativeType(VOID_TYPE); case Token.STRING: JSType namedType = getType(scope, n.getString(), sourceName, n.getLineno(), n.getCharno()); if (resolveMode != ResolveMode.LAZY_NAMES) { namedType = namedType.resolveInternal(reporter, scope); } if ((namedType instanceof ObjectType) && !(nonNullableTypeNames.contains(n.getString()))) { Node typeList = n.getFirstChild(); if (typeList != null && (\"Array\".equals(n.getString()) || \"Object\".equals(n.getString()))) { JSType parameterType = creat\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "private JSType createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope) {\n    switch (n.getType()) {\n      case Token.LC: // Record type.\n        return createRecordTypeFromNodes(\n            n.getFirstChild(), sourceName, scope);\n\n      case Token.BANG: // Not nullable\n        return createFromTypeNodesInternal(\n            n.getFirstChild(), sourceName, scope)\n            .restrictByNotNullOrUndefined();\n\n      case Token.QMARK: // Nullable or unknown\n        Node firstChild = n.getFirstChild();\n        if (firstChild == null) {\n          return getNativeType(UNKNOWN_TYPE);\n        }\n        return createDefaultObjectUnion(\n            createFromTypeNodesInternal(\n                firstChild, sourceName, scope));\n\n      case Token.EQUALS: // Optional\n        return createOptionalType(\n            createFromTypeNodesInternal(\n                n.getFirstChild(), sourceName, scope));\n\n      case Token.ELLIPSIS: // Var args\n        return createOptionalType(\n            createFromTypeNodesInternal(\n                n.getFirstChild(), sourceName, scope));\n\n      case Token.STAR: // The AllType\n        return getNativeType(ALL_TYPE);\n\n      case Token.LB: // Array type\n        // TODO(nicksantos): Enforce membership restrictions on the Array.\n        return getNativeType(ARRAY_TYPE);\n\n      case Token.PIPE: // Union type\n        UnionTypeBuilder builder = new UnionTypeBuilder(this);\n        for (Node child = n.getFirstChild(); child != null;\n             child = child.getNext()) {\n          builder.addAlternate(\n              createFromTypeNodesInternal(child, sourceName, scope));\n        }\n        return builder.build();\n\n      case Token.EMPTY: // When the return value of a function is not specified\n        return getNativeType(UNKNOWN_TYPE);\n\n      case Token.VOID: // Only allowed in the return value of a function.\n        return getNativeType(VOID_TYPE);\n\n      case Token.STRING:\n        JSType namedType = getType(scope, n.getString(), sourceName,\n            n.getLineno(), n.getCharno());\n        if (resolveMode != ResolveMode.LAZY_NAMES) {\n          namedType = namedType.resolveInternal(reporter, scope);\n        }\n        if ((namedType instanceof ObjectType) &&\n            !(nonNullableTypeNames.contains(n.getString()))) {\n          Node typeList = n.getFirstChild();\n          if (typeList != null &&\n              (\"Array\".equals(n.getString()) ||\n               \"Object\".equals(n.getString()))) {\n            JSType parameterType =\n                createFromTypeNodesInternal(\n                    typeList.getLastChild(), sourceName, scope);\n            namedType = new ParameterizedType(\n                this, (ObjectType) namedType, parameterType);\n            if (typeList.hasMoreThanOneChild()) {\n              JSType indexType =\n                  createFromTypeNodesInternal(\n                      typeList.getFirstChild(), sourceName, scope);\n              namedType = new IndexedType(\n                  this, (ObjectType) namedType, indexType);\n            }\n          }\n          return createDefaultObjectUnion(namedType);\n        } else {\n          return namedType;\n        }\n\n      case Token.FUNCTION:\n        ObjectType thisType = null;\n        boolean isConstructor = false;\n        Node current = n.getFirstChild();\n        if (current.getType() == Token.THIS ||\n            current.getType() == Token.NEW) {\n          Node contextNode = current.getFirstChild();\n          thisType =\n              ObjectType.cast(\n                  createFromTypeNodesInternal(\n                      contextNode, sourceName, scope)\n                  .restrictByNotNullOrUndefined());\n          if (thisType == null) {\n            reporter.warning(\n                ScriptRuntime.getMessage0(\n                    current.getType() == Token.THIS ?\n                    \"msg.jsdoc.function.thisnotobject\" :\n                    \"msg.jsdoc.function.newnotobject\"),\n                sourceName,\n                contextNode.getLineno(), contextNode.getCharno());\n          }\n\n          isConstructor = current.getType() == Token.NEW;\n          current = current.getNext();\n        }\n\n        FunctionParamBuilder paramBuilder = new FunctionParamBuilder(this);\n\n        if (current.getType() == Token.PARAM_LIST) {\n          Node args = current.getFirstChild();\n          for (Node arg = current.getFirstChild(); arg != null;\n               arg = arg.getNext()) {\n            if (arg.getType() == Token.ELLIPSIS) {\n              if (arg.getChildCount() == 0) {\n                paramBuilder.addVarArgs(getNativeType(UNKNOWN_TYPE));\n              } else {\n                paramBuilder.addVarArgs(\n                    createFromTypeNodesInternal(\n                        arg.getFirstChild(), sourceName, scope));\n              }\n            } else {\n              JSType type = createFromTypeNodesInternal(\n                  arg, sourceName, scope);\n              if (arg.getType() == Token.EQUALS) {\n                boolean addSuccess = paramBuilder.addOptionalParams(type);\n                if (!addSuccess) {\n                  reporter.warning(\n                      ScriptRuntime.getMessage0(\"msg.jsdoc.function.varargs\"),\n                      sourceName, arg.getLineno(), arg.getCharno());\n                }\n              } else {\n                paramBuilder.addRequiredParams(type);\n              }\n            }\n          }\n          current = current.getNext();\n        }\n\n        JSType returnType =\n            createFromTypeNodesInternal(current, sourceName, scope);\n\n        return new FunctionBuilder(this)\n            .withParams(paramBuilder)\n            .withReturnType(returnType)\n            .withTypeOfThis(thisType)\n            .setIsConstructor(isConstructor)\n            .build();\n    }\n\n    throw new IllegalStateException(\n        \"Unexpected node in type expression: \" + n.toString());\n  }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.22950819672131148,
+        "trace_match": 0.0,
+        "complexity": 16.0,
+        "call_count": 84.0,
+        "literal_count": 13.0,
+        "source_tokens": 1469.0,
+        "l0_tokens": 71.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.3873383253914227,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 16,
+        "call_count": 84,
+        "literal_count": 13
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/rhino/jstype/ArrowType.java::ArrowType.isSubtype(JSType other)",
+      "source": "@Override\n  public boolean isSubtype(JSType other) {\n    if (!(other instanceof ArrowType)) {\n      return false;\n    }\n\n    ArrowType that = (ArrowType) other;\n\n    // This is described in Draft 2 of the ES4 spec,\n    // Section 3.4.7: Subtyping Function Types.\n\n    // this.returnType <: that.returnType (covariant)\n    if (!this.returnType.isSubtype(that.returnType)) {\n      return false;\n    }\n\n    // that.paramType[i] <: this.paramType[i] (contravariant)\n    //\n    // If this.paramType[i] is required,\n    // then that.paramType[i] is required.\n    //\n    // In theory, the \"required-ness\" should work in the other direction as\n    // well. In other words, if we have\n    //\n    // function f(number, number) {}\n    // function g(number) {}\n    //\n    // Then f *should* not be a subtype of g, and g *should* not be\n    // a subtype of f. But in practice, we do not implement it this way.\n    // We want to support the use case where you can pass g where f is\n    // expected, and pretend that g ignores the second argument.\n    // That way, you can have a single \"no-op\" function, and you don't have\n    // to create a new no-op function for every possible type signature.\n    //\n    // So, in this case, g < f, but f !< g\n    Node thisParam = parameters.getFirstChild();\n    Node thatParam = that.parameters.getFirstChild();\n    while (thisParam != null && thatParam != null) {\n      JSType thisParamType = thisParam.getJSType();\n      JSType thatParamType = thatParam.getJSType();\n      if (thisParamType != null) {\n        if (thatParamType == null ||\n            !thatParamType.isSubtype(thisParamType)) {\n          return false;\n        }\n      }\n\n      boolean thisIsVarArgs = thisParam.isVarArgs();\n      boolean thatIsVarArgs = thatParam.isVarArgs();\n      boolean thisIsOptional = thisIsVarArgs || thisParam.isOptionalArg();\n      boolean thatIsOptional = thatIsVarArgs || thatParam.isOptionalArg();\n\n      // \"that\" can't be a supertype, because it's missing a required argument.\n      if (!thisIsOptional && thatIsOptional) {\n        // NOTE(nicksantos): In our type system, we use {function(...?)} and\n        // {function(...NoType)} to to indicate that arity should not be\n        // checked. Strictly speaking, this is not a correct formulation,\n        // because now a sub-function can required arguments that are var_args\n        // in the super-function. So we special-case this.\n        boolean isTopFunction =\n            thatIsVarArgs &&\n            (thatParamType == null ||\n             thatParamType.isUnknownType() ||\n             thatParamType.isNoType());\n        if (!isTopFunction) {\n          return false;\n        }\n      }\n\n      // don't advance if we have variable arguments\n      if (!thisIsVarArgs) {\n        thisParam = thisParam.getNext();\n      }\n      if (!thatIsVarArgs) {\n        thatParam = thatParam.getNext();\n      }\n\n      // both var_args indicates the end\n      if (thisIsVarArgs && thatIsVarArgs) {\n        thisParam = null;\n        thatParam = null;\n      }\n    }\n\n    // \"that\" can't be a supertype, because it's missing a required arguement.\n    if (thisParam != null\n        && !thisParam.isOptionalArg() && !thisParam.isVarArgs()\n        && thatParam == null) {\n      return false;\n    }\n\n    return true;\n  }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/com/google/javascript/rhino/jstype/ArrowType.java::ArrowType.isSubtype(JSType other)\nSIGNATURE: @Override\n  public boolean isSubtype(JSType other)",
+        "METHOD: src/com/google/javascript/rhino/jstype/ArrowType.java::ArrowType.isSubtype(JSType other)\nSIGNATURE: @Override\n  public boolean isSubtype(JSType other)\nSTRUCTURE (lossy):\nif (!(other instanceof ArrowType))\nreturn false;\nArrowType that = (ArrowType) other;\nif (!this.returnType.isSubtype(that.returnType))\nCALL this.returnType.isSubtype(that.returnType)\nNode thisParam = parameters.getFirstChild();\nCALL parameters.getFirstChild()\nNode thatParam = that.parameters.getFirstChild();\nCALL that.parameters.getFirstChild()\nwhile (thisParam != null && thatParam != null)\nJSType thisParamType = thisParam.getJSType();\nCALL thisParam.getJSType()\nJSType thatParamType = thatParam.getJSType();\nCALL thatParam.getJSType()\nif (thisParamType != null)\nif (thatParamType == null || !thatParamType.isSubtype(thisParamType))\nCALL thatParamType.isSubtype(thisParamType)\nboolean thisIsVarArgs = thisParam.isVarArgs();\nCALL thisParam.isVarArgs()\nboolean thatIsVarArgs = thatParam.isVarArgs();\nCALL thatParam.isVarArgs()\nboolean thisIsOptional = thisIsVarArgs || thisParam.isOptionalArg();\nCALL thisParam.isOptionalArg()\nboolean thatIsOptional = thatIsVarArgs || thatParam.isOptionalArg();\nCALL thatParam.isOptionalArg()\nif (!thisIsOptional && thatIsOptional)\nboolean isTopFunction = thatIsVarArgs && (thatParamType == null || thatParamType.isUnknownType() || thatParamType.isNoType());\nCALL thatParamType.isUnknownType()\nCALL thatParamType.isNoType()\nif (!isTopFunction)\nif (!thisIsVarArgs)\nthisParam = thisParam.getNext()\nCALL thisParam.getNext()\nif (!thatIsVarArgs)\nthatParam = thatParam.getNext()\nCALL thatParam.getNext()\nif (thisIsVarArgs && thatIsVarArgs)\nthisParam = null\nthatParam = null\nif (thisParam != null && !thisParam.isOptionalArg() && !thisParam.isVarArgs() && thatParam == null)\nreturn true;",
+        "@Override\n  public boolean isSubtype(JSType other) {\n    if (!(other instanceof ArrowType)) {\n      return false;\n    }\n\n    ArrowType that = (ArrowType) other;\n\n    // This is described in Draft 2 of the ES4 spec,\n    // Section 3.4.7: Subtyping Function Types.\n\n    // this.returnType <: that.returnType (covariant)\n    if (!this.returnType.isSubtype(that.returnType)) {\n      return false;\n    }\n\n    // that.paramType[i] <: this.paramType[i] (contravariant)\n    //\n    // If this.paramType[i] is required,\n    // then that.paramType[i] is required.\n    //\n    // In theory, the \"required-ness\" should work in the other direction as\n    // well. In other words, if we have\n    //\n    // function f(number, number) {}\n    // function g(number) {}\n    //\n    // Then f *should* not be a subtype of g, and g *should* not be\n    // a subtype of f. But in practice, we do not implement it this way.\n    // We want to support the use case where you can pass g where f is\n    // expected, and pretend that g ignores the second argument.\n    // That way, you can have a single \"no-op\" function, and you don't have\n    // to create a new no-op function for every possible type signature.\n    //\n    // So, in this case, g < f, but f !< g\n    Node thisParam = parameters.getFirstChild();\n    Node thatParam = that.parameters.getFirstChild();\n    while (thisParam != null && thatParam != null) {\n      JSType thisParamType = thisParam.getJSType();\n      JSType thatParamType = thatParam.getJSType();\n      if (thisParamType != null) {\n        if (thatParamType == null ||\n            !thatParamType.isSubtype(thisParamType)) {\n          return false;\n        }\n      }\n\n      boolean thisIsVarArgs = thisParam.isVarArgs();\n      boolean thatIsVarArgs = thatParam.isVarArgs();\n      boolean thisIsOptional = thisIsVarArgs || thisParam.isOptionalArg();\n      boolean thatIsOptional = thatIsVarArgs || thatParam.isOptionalArg();\n\n      // \"that\" can't be a supertype, because it's missing a required argument.\n      if (!thisIsOptional && thatIsOptional) {\n        // NOTE(nicksantos): In our type system, we use {function(...?)} and\n        // {function(...NoType)} to to indicate that arity should not be\n        // checked. Strictly speaking, this is not a correct formulation,\n        // because now a sub-function can required arguments that are var_args\n        // in the super-function. So we special-case this.\n        boolean isTopFunction =\n            thatIsVarArgs &&\n            (thatParamType == null ||\n             thatParamType.isUnknownType() ||\n             thatParamType.isNoType());\n        if (!isTopFunction) {\n          return false;\n        }\n      }\n\n      // don't advance if we have variable arguments\n      if (!thisIsVarArgs) {\n        thisParam = thisParam.getNext();\n      }\n      if (!thatIsVarArgs) {\n        thatParam = thatParam.getNext();\n      }\n\n      // both var_args indicates the end\n      if (thisIsVarArgs && thatIsVarArgs) {\n        thisParam = null;\n        thatParam = null;\n      }\n    }\n\n    // \"that\" can't be a supertype, because it's missing a required arguement.\n    if (thisParam != null\n        && !thisParam.isOptionalArg() && !thisParam.isVarArgs()\n        && thatParam == null) {\n      return false;\n    }\n\n    return true;\n  }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.18181818181818182,
+        "trace_match": 0.0,
+        "complexity": 12.0,
+        "call_count": 16.0,
+        "literal_count": 9.0,
+        "source_tokens": 819.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 449.0,
+        "compression_ratio": 0.5482295482295483,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 12,
+        "call_count": 16,
+        "literal_count": 9
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)",
+      "source": "private void writeResult(String source) {\n    if (this.outputFile.getParentFile().mkdirs()) {\n      log(\"Created missing parent directory \" +\n          this.outputFile.getParentFile(), Project.MSG_DEBUG);\n    }\n\n    try {\n      OutputStreamWriter out = new OutputStreamWriter(\n          new FileOutputStream(this.outputFile), outputEncoding);\n      out.append(source);\n      out.flush();\n      out.close();\n    } catch (IOException e) {\n      throw new BuildException(e);\n    }\n\n    log(\"Compiled javascript written to \" + this.outputFile.getAbsolutePath(),\n        Project.MSG_DEBUG);\n  }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)\nSIGNATURE: private void writeResult(String source)",
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)\nSIGNATURE: private void writeResult(String source)\nSTRUCTURE (lossy):\nif (this.outputFile.getParentFile().mkdirs())\nCALL this.outputFile.getParentFile().mkdirs()\nCALL this.outputFile.getParentFile()\nCALL log(\"Created missing parent directory \" + this.outputFile.getParentFile(), Project.MSG_DEBUG)\nOutputStreamWriter out = new OutputStreamWriter( new FileOutputStream(this.outputFile), outputEncoding);\nCALL out.append(source)\nCALL out.flush()\nCALL out.close()\ncatch (IOException e)\nthrow new BuildException(e);\nCALL log(\"Compiled javascript written to \" + this.outputFile.getAbsolutePath(), Project.MSG_DEBUG)\nCALL this.outputFile.getAbsolutePath()",
+        "private void writeResult(String source) {\n    if (this.outputFile.getParentFile().mkdirs()) {\n      log(\"Created missing parent directory \" +\n          this.outputFile.getParentFile(), Project.MSG_DEBUG);\n    }\n\n    try {\n      OutputStreamWriter out = new OutputStreamWriter(\n          new FileOutputStream(this.outputFile), outputEncoding);\n      out.append(source);\n      out.flush();\n      out.close();\n    } catch (IOException e) {\n      throw new BuildException(e);\n    }\n\n    log(\"Compiled javascript written to \" + this.outputFile.getAbsolutePath(),\n        Project.MSG_DEBUG);\n  }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.32608695652173914,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 9.0,
+        "literal_count": 2.0,
+        "source_tokens": 148.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 188.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 9,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)",
+      "source": "private boolean addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs) {\n    boolean emittedWarning = false;\n    if (isOptional) {\n      // Remembering that an optional parameter has been encountered\n      // so that if a non optional param is encountered later, an\n      // error can be reported.\n      if (!builder.addOptionalParams(paramType) && !warnedAboutArgList) {\n        reportWarning(VAR_ARGS_MUST_BE_LAST);\n        emittedWarning = true;\n      }\n    } else if (isVarArgs) {\n      if (!builder.addVarArgs(paramType) && !warnedAboutArgList) {\n        reportWarning(VAR_ARGS_MUST_BE_LAST);\n        emittedWarning = true;\n      }\n    } else {\n      if (!builder.addRequiredParams(paramType) && !warnedAboutArgList) {\n        // An optional parameter was seen and this argument is not an optional\n        // or var arg so it is an error.\n        if (builder.hasVarArgs()) {\n          reportWarning(VAR_ARGS_MUST_BE_LAST);\n        } else {\n          reportWarning(OPTIONAL_ARG_AT_END);\n        }\n        emittedWarning = true;\n      }\n    }\n    return emittedWarning;\n  }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)\nSIGNATURE: private boolean addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)",
+        "METHOD: src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)\nSIGNATURE: private boolean addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)\nSTRUCTURE (lossy):\nboolean emittedWarning = false;\nif (isOptional)\nif (!builder.addOptionalParams(paramType) && !warnedAboutArgList)\nCALL builder.addOptionalParams(paramType)\nCALL reportWarning(VAR_ARGS_MUST_BE_LAST)\nemittedWarning = true\nif (isVarArgs)\nif (!builder.addVarArgs(paramType) && !warnedAboutArgList)\nCALL builder.addVarArgs(paramType)\nif (!builder.addRequiredParams(paramType) && !warnedAboutArgList)\nCALL builder.addRequiredParams(paramType)\nif (builder.hasVarArgs())\nCALL builder.hasVarArgs()\nCALL reportWarning(OPTIONAL_ARG_AT_END)\nreturn emittedWarning;",
+        "private boolean addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs) {\n    boolean emittedWarning = false;\n    if (isOptional) {\n      // Remembering that an optional parameter has been encountered\n      // so that if a non optional param is encountered later, an\n      // error can be reported.\n      if (!builder.addOptionalParams(paramType) && !warnedAboutArgList) {\n        reportWarning(VAR_ARGS_MUST_BE_LAST);\n        emittedWarning = true;\n      }\n    } else if (isVarArgs) {\n      if (!builder.addVarArgs(paramType) && !warnedAboutArgList) {\n        reportWarning(VAR_ARGS_MUST_BE_LAST);\n        emittedWarning = true;\n      }\n    } else {\n      if (!builder.addRequiredParams(paramType) && !warnedAboutArgList) {\n        // An optional parameter was seen and this argument is not an optional\n        // or var arg so it is an error.\n        if (builder.hasVarArgs()) {\n          reportWarning(VAR_ARGS_MUST_BE_LAST);\n        } else {\n          reportWarning(OPTIONAL_ARG_AT_END);\n        }\n        emittedWarning = true;\n      }\n    }\n    return emittedWarning;\n  }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.34,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 8.0,
+        "literal_count": 0.0,
+        "source_tokens": 291.0,
+        "l0_tokens": 99.0,
+        "l1_tokens": 241.0,
+        "compression_ratio": 0.8281786941580757,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 8,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/TypedCodeGenerator.java::TypedCodeGenerator.getParameterNodeJSDocType(Node parameterNode)",
+      "source": "private String getParameterNodeJSDocType(Node parameterNode) {\n    JSType parameterType = parameterNode.getJSType();\n    String typeString;\n\n    // Emit unknown types as '*' (AllType) since '?' (UnknownType) is not\n    // a valid JSDoc type.\n    if (parameterType.isUnknownType()) {\n      typeString = \"*\";\n    } else {\n      // Fix-up optional and vararg parameters to match JSDoc type language\n      if (parameterNode.isOptionalArg()) {\n        typeString =\n            parameterType.restrictByNotNullOrUndefined().toAnnotationString() +\n            \"=\";\n      } else if (parameterNode.isVarArgs()) {\n        typeString = \"...\" +\n            parameterType.restrictByNotNullOrUndefined().toAnnotationString();\n      } else {\n        typeString = parameterType.toAnnotationString();\n      }\n    }\n\n    return typeString;\n  }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/TypedCodeGenerator.java::TypedCodeGenerator.getParameterNodeJSDocType(Node parameterNode)\nSIGNATURE: private String getParameterNodeJSDocType(Node parameterNode)",
+        "METHOD: src/com/google/javascript/jscomp/TypedCodeGenerator.java::TypedCodeGenerator.getParameterNodeJSDocType(Node parameterNode)\nSIGNATURE: private String getParameterNodeJSDocType(Node parameterNode)\nSTRUCTURE (lossy):\nJSType parameterType = parameterNode.getJSType();\nCALL parameterNode.getJSType()\nString typeString;\nif (parameterType.isUnknownType())\nCALL parameterType.isUnknownType()\ntypeString = \"*\"\nif (parameterNode.isOptionalArg())\nCALL parameterNode.isOptionalArg()\ntypeString = parameterType.restrictByNotNullOrUndefined().toAnnotationString() + \"=\"\nCALL parameterType.restrictByNotNullOrUndefined().toAnnotationString()\nCALL parameterType.restrictByNotNullOrUndefined()\nif (parameterNode.isVarArgs())\nCALL parameterNode.isVarArgs()\ntypeString = \"...\" + parameterType.restrictByNotNullOrUndefined().toAnnotationString()\ntypeString = parameterType.toAnnotationString()\nCALL parameterType.toAnnotationString()\nreturn typeString;",
+        "private String getParameterNodeJSDocType(Node parameterNode) {\n    JSType parameterType = parameterNode.getJSType();\n    String typeString;\n\n    // Emit unknown types as '*' (AllType) since '?' (UnknownType) is not\n    // a valid JSDoc type.\n    if (parameterType.isUnknownType()) {\n      typeString = \"*\";\n    } else {\n      // Fix-up optional and vararg parameters to match JSDoc type language\n      if (parameterNode.isOptionalArg()) {\n        typeString =\n            parameterType.restrictByNotNullOrUndefined().toAnnotationString() +\n            \"=\";\n      } else if (parameterNode.isVarArgs()) {\n        typeString = \"...\" +\n            parameterType.restrictByNotNullOrUndefined().toAnnotationString();\n      } else {\n        typeString = parameterType.toAnnotationString();\n      }\n    }\n\n    return typeString;\n  }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.425,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 9.0,
+        "literal_count": 3.0,
+        "source_tokens": 206.0,
+        "l0_tokens": 51.0,
+        "l1_tokens": 235.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 9,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)",
+      "source": "void expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal) {\n    if (!argType.canAssignTo(paramType)) {\n      mismatch(t, n,\n          String.format(\"actual parameter %d of %s does not match \" +\n              \"formal parameter\", ordinal,\n              getReadableJSTypeName(callNode.getFirstChild(), false)),\n          argType, paramType);\n    }\n  }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)\nSIGNATURE: void expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)",
+        "METHOD: src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)\nSIGNATURE: void expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)\nSTRUCTURE (lossy):\nif (!argType.canAssignTo(paramType))\nCALL argType.canAssignTo(paramType)\nCALL mismatch(t, n, String.format(\"actual parameter %d of %s does not match \" + \"formal parameter\", ordinal, getReadableJSTypeName(callNode.getFirstChild(), false)), argType, paramType)\nCALL String.format(\"actual parameter %d of %s does not match \" + \"formal parameter\", ordinal, getReadableJSTypeName(callNode.getFirstChild(), false))\nCALL getReadableJSTypeName(callNode.getFirstChild(), false)\nCALL callNode.getFirstChild()",
+        "void expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal) {\n    if (!argType.canAssignTo(paramType)) {\n      mismatch(t, n,\n          String.format(\"actual parameter %d of %s does not match \" +\n              \"formal parameter\", ordinal,\n              getReadableJSTypeName(callNode.getFirstChild(), false)),\n          argType, paramType);\n    }\n  }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.43243243243243246,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 5.0,
+        "literal_count": 2.0,
+        "source_tokens": 105.0,
+        "l0_tokens": 85.0,
+        "l1_tokens": 214.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 5,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addVarArgs(JSType type)",
+      "source": "public boolean addVarArgs(JSType type) {\n    if (hasVarArgs()) {\n      return false;\n    }\n\n    // There are two types of variable argument functions:\n    // 1) Programmer-defined var args\n    // 2) Native bottom types that can accept any argument.\n    // For the first one, \"undefined\" is a valid value for all arguments.\n    // For the second, we do not want to cast it up to undefined.\n    if (!type.isEmptyType()) {\n      type = registry.createOptionalType(type);\n    }\n    newParameter(type).setVarArgs(true);\n    return true;\n  }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addVarArgs(JSType type)\nSIGNATURE: public boolean addVarArgs(JSType type)",
+        "METHOD: src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addVarArgs(JSType type)\nSIGNATURE: public boolean addVarArgs(JSType type)\nSTRUCTURE (lossy):\nif (hasVarArgs())\nCALL hasVarArgs()\nreturn false;\nif (!type.isEmptyType())\nCALL type.isEmptyType()\ntype = registry.createOptionalType(type)\nCALL registry.createOptionalType(type)\nCALL newParameter(type).setVarArgs(true)\nCALL newParameter(type)\nreturn true;",
+        "public boolean addVarArgs(JSType type) {\n    if (hasVarArgs()) {\n      return false;\n    }\n\n    // There are two types of variable argument functions:\n    // 1) Programmer-defined var args\n    // 2) Native bottom types that can accept any argument.\n    // For the first one, \"undefined\" is a valid value for all arguments.\n    // For the second, we do not want to cast it up to undefined.\n    if (!type.isEmptyType()) {\n      type = registry.createOptionalType(type);\n    }\n    newParameter(type).setVarArgs(true);\n    return true;\n  }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.32727272727272727,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 5.0,
+        "literal_count": 0.0,
+        "source_tokens": 134.0,
+        "l0_tokens": 42.0,
+        "l1_tokens": 111.0,
+        "compression_ratio": 0.8283582089552238,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 5,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)",
+      "source": "@Override\n  public void println(CheckLevel level, JSError error) {\n    switch (level) {\n      case ERROR:\n        this.task.log(error.format(level, this.formatter), Project.MSG_ERR);\n        break;\n      case WARNING:\n        this.task.log(error.format(level, this.formatter), Project.MSG_WARN);\n        break;\n    }\n  }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)\nSIGNATURE: @Override\n  public void println(CheckLevel level, JSError error)",
+        "METHOD: src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)\nSIGNATURE: @Override\n  public void println(CheckLevel level, JSError error)\nSTRUCTURE (lossy):\nswitch (level) { case ERROR: this.task.log(error.format(level, this.formatter), Project.MSG_ERR); break; case WARNING: this.task.log(error.format(level, this.formatter), Project.MSG_WARN); break; }\nCALL this.task.log(error.format(level, this.formatter), Project.MSG_ERR)\nCALL error.format(level, this.formatter)\nCALL this.task.log(error.format(level, this.formatter), Project.MSG_WARN)",
+        "@Override\n  public void println(CheckLevel level, JSError error) {\n    switch (level) {\n      case ERROR:\n        this.task.log(error.format(level, this.formatter), Project.MSG_ERR);\n        break;\n      case WARNING:\n        this.task.log(error.format(level, this.formatter), Project.MSG_WARN);\n        break;\n    }\n  }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4482758620689655,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 4.0,
+        "literal_count": 0.0,
+        "source_tokens": 80.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 151.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 4,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()",
+      "source": "private List<SourceFile> getDefaultExterns() {\n    try {\n      return CommandLineRunner.getDefaultExterns();\n    } catch (IOException e) {\n      throw new BuildException(e);\n    }\n  }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()\nSIGNATURE: private List<SourceFile> getDefaultExterns()",
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()\nSIGNATURE: private List<SourceFile> getDefaultExterns()\nSTRUCTURE (lossy):\nreturn CommandLineRunner.getDefaultExterns();\nCALL CommandLineRunner.getDefaultExterns()\ncatch (IOException e)\nthrow new BuildException(e);",
+        "private List<SourceFile> getDefaultExterns() {\n    try {\n      return CommandLineRunner.getDefaultExterns();\n    } catch (IOException e) {\n      throw new BuildException(e);\n    }\n  }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5185185185185185,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 46.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 78.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()",
+      "source": "final public void run() {\n    int result = 0;\n    int runs = 1;\n    if (config.computePhaseOrdering) {\n      runs = NUM_RUNS_TO_DETERMINE_OPTIMAL_ORDER;\n      PhaseOptimizer.randomizeLoops();\n    }\n    try {\n      for (int i = 0; i < runs && result == 0; i++) {\n        runTimeStats.recordStartRun();\n        result = doRun();\n        runTimeStats.recordEndRun();\n      }\n    } catch (AbstractCommandLineRunner.FlagUsageException e) {\n      System.err.println(e.getMessage());\n      result = -1;\n    } catch (Throwable t) {\n      t.printStackTrace();\n      result = -2;\n    }\n\n    if (config.computePhaseOrdering) {\n      runTimeStats.outputBestPhaseOrdering();\n    }\n\n    try {\n      if (jsOutput instanceof Closeable) {\n        ((Closeable) jsOutput).close();\n      }\n    } catch (IOException e) {\n      throw Throwables.propagate(e);\n    }\n\n    if (testMode) {\n      exitCodeReceiverForTesting.apply(result);\n    } else {\n      System.exit(result);\n    }\n  }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()\nSIGNATURE: final public void run()",
+        "METHOD: src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()\nSIGNATURE: final public void run()\nSTRUCTURE (lossy):\nint result = 0;\nint runs = 1;\nif (config.computePhaseOrdering)\nruns = NUM_RUNS_TO_DETERMINE_OPTIMAL_ORDER\nCALL PhaseOptimizer.randomizeLoops()\nfor (int i = 0; i < runs && result == 0; i++)\nint i = 0;\ni++\nCALL runTimeStats.recordStartRun()\nresult = doRun()\nCALL doRun()\nCALL runTimeStats.recordEndRun()\ncatch (AbstractCommandLineRunner.FlagUsageException e)\nCALL System.err.println(e.getMessage())\nCALL e.getMessage()\nresult = -1\ncatch (Throwable t)\nCALL t.printStackTrace()\nresult = -2\nCALL runTimeStats.outputBestPhaseOrdering()\nif (jsOutput instanceof Closeable)\nCALL ((Closeable) jsOutput).close()\ncatch (IOException e)\nthrow Throwables.propagate(e);\nCALL Throwables.propagate(e)\nif (testMode)\nCALL exitCodeReceiverForTesting.apply(result)\nCALL System.exit(result)",
+        "final public void run() {\n    int result = 0;\n    int runs = 1;\n    if (config.computePhaseOrdering) {\n      runs = NUM_RUNS_TO_DETERMINE_OPTIMAL_ORDER;\n      PhaseOptimizer.randomizeLoops();\n    }\n    try {\n      for (int i = 0; i < runs && result == 0; i++) {\n        runTimeStats.recordStartRun();\n        result = doRun();\n        runTimeStats.recordEndRun();\n      }\n    } catch (AbstractCommandLineRunner.FlagUsageException e) {\n      System.err.println(e.getMessage());\n      result = -1;\n    } catch (Throwable t) {\n      t.printStackTrace();\n      result = -2;\n    }\n\n    if (config.computePhaseOrdering) {\n      runTimeStats.outputBestPhaseOrdering();\n    }\n\n    try {\n      if (jsOutput instanceof Closeable) {\n        ((Closeable) jsOutput).close();\n      }\n    } catch (IOException e) {\n      throw Throwables.propagate(e);\n    }\n\n    if (testMode) {\n      exitCodeReceiverForTesting.apply(result);\n    } else {\n      System.exit(result);\n    }\n  }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.23076923076923078,
+        "trace_match": 0.0,
+        "complexity": 9.0,
+        "call_count": 12.0,
+        "literal_count": 6.0,
+        "source_tokens": 241.0,
+        "l0_tokens": 35.0,
+        "l1_tokens": 232.0,
+        "compression_ratio": 0.9626556016597511,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 9,
+        "call_count": 12,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.RunTimeStats.outputBestPhaseOrdering()",
+      "source": "private void outputBestPhaseOrdering() {\n      try {\n        jsOutput.append(\"Best time: \" + bestRunTime + \"\\n\");\n        jsOutput.append(\"Worst time: \" + worstRunTime + \"\\n\");\n\n        int i = 1;\n        for (List<String> loop : loopedPassesInBestRun) {\n          jsOutput.append(\n              \"\\nLoop \" + i + \":\\n\" + Joiner.on(\"\\n\").join(loop)+ \"\\n\");\n          i++;\n        }\n      } catch (IOException e) {\n        throw new RuntimeException(\"unexpected exception\", e);\n      }\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.RunTimeStats.outputBestPhaseOrdering()\nSIGNATURE: private void outputBestPhaseOrdering()",
+        "METHOD: src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.RunTimeStats.outputBestPhaseOrdering()\nSIGNATURE: private void outputBestPhaseOrdering()\nSTRUCTURE (lossy):\nCALL jsOutput.append(\"Best time: \" + bestRunTime + \"\\n\")\nCALL jsOutput.append(\"Worst time: \" + worstRunTime + \"\\n\")\nint i = 1;\nfor (List<String> loop : loopedPassesInBestRun)\nCALL jsOutput.append( \"\\nLoop \" + i + \":\\n\" + Joiner.on(\"\\n\").join(loop)+ \"\\n\")\nCALL Joiner.on(\"\\n\").join(loop)\nCALL Joiner.on(\"\\n\")\ni++\ncatch (IOException e)\nthrow new RuntimeException(\"unexpected exception\", e);",
+        "private void outputBestPhaseOrdering() {\n      try {\n        jsOutput.append(\"Best time: \" + bestRunTime + \"\\n\");\n        jsOutput.append(\"Worst time: \" + worstRunTime + \"\\n\");\n\n        int i = 1;\n        for (List<String> loop : loopedPassesInBestRun) {\n          jsOutput.append(\n              \"\\nLoop \" + i + \":\\n\" + Joiner.on(\"\\n\").join(loop)+ \"\\n\");\n          i++;\n        }\n      } catch (IOException e) {\n        throw new RuntimeException(\"unexpected exception\", e);\n      }\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.34210526315789475,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 5.0,
+        "literal_count": 10.0,
+        "source_tokens": 122.0,
+        "l0_tokens": 47.0,
+        "l1_tokens": 149.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 5,
+        "literal_count": 10
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)",
+      "source": "private void expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop) {\n    StaticSlot<JSType> propSlot = instance.getSlot(prop);\n    if (propSlot == null) {\n      // Not implemented\n      String sourceName = n.getSourceFileName();\n      sourceName = sourceName == null ? \"\" : sourceName;\n      registerMismatch(instance, implementedInterface,\n          report(JSError.make(sourceName, n,\n          INTERFACE_METHOD_NOT_IMPLEMENTED,\n          prop, implementedInterface.toString(), instance.toString())));\n    } else {\n      Node propNode = propSlot.getDeclaration() == null ?\n          null : propSlot.getDeclaration().getNode();\n\n      // Fall back on the constructor node if we can't find a node for the\n      // property.\n      propNode = propNode == null ? n : propNode;\n\n      JSType found = propSlot.getType();\n      JSType required\n          = implementedInterface.getImplicitPrototype().getPropertyType(prop);\n      found = found.restrictByNotNullOrUndefined();\n      required = required.restrictByNotNullOrUndefined();\n      if (!found.canAssignTo(required)) {\n        // Implemented, but not correctly typed\n        FunctionType constructor =\n            implementedInterface.toObjectType().getConstructor();\n        registerMismatch(found, required, report(t.makeError(propNode,\n            HIDDEN_INTERFACE_PROPERTY_MISMATCH, prop,\n            constructor.getTopMostDefiningType(prop).toString(),\n            required.toString(), found.toString())));\n      }\n    }\n  }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)\nSIGNATURE: private void expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)",
+        "METHOD: src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)\nSIGNATURE: private void expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)\nSTRUCTURE (lossy):\nStaticSlot<JSType> propSlot = instance.getSlot(prop);\nCALL instance.getSlot(prop)\nif (propSlot == null)\nString sourceName = n.getSourceFileName();\nCALL n.getSourceFileName()\nsourceName = sourceName == null ? \"\" : sourceName\nCALL registerMismatch(instance, implementedInterface, report(JSError.make(sourceName, n, INTERFACE_METHOD_NOT_IMPLEMENTED, prop, implementedInterface.toString(), instance.toString())))\nCALL report(JSError.make(sourceName, n, INTERFACE_METHOD_NOT_IMPLEMENTED, prop, implementedInterface.toString(), instance.toString()))\nCALL JSError.make(sourceName, n, INTERFACE_METHOD_NOT_IMPLEMENTED, prop, implementedInterface.toString(), instance.toString())\nCALL implementedInterface.toString()\nCALL instance.toString()\nNode propNode = propSlot.getDeclaration() == null ? null : propSlot.getDeclaration().getNode();\nCALL propSlot.getDeclaration()\nCALL propSlot.getDeclaration().getNode()\npropNode = propNode == null ? n : propNode\nJSType found = propSlot.getType();\nCALL propSlot.getType()\nJSType required = implementedInterface.getImplicitPrototype().getPropertyType(prop);\nCALL implementedInterface.getImplicitPrototype().getPropertyType(prop)\nCALL implementedInterface.getImplicitPrototype()\nfound = found.restrictByNotNullOrUndefined()\nCALL found.restrictByNotNullOrUndefined()\nrequired = required.restrictByNotNullOrUndefined()\nCALL required.restrictByNotNullOrUndefined()\nif (!found.canAssignTo(required))\nCALL found.canAssignTo(required)\nFunctionType constructor = implementedInterface.toObjectType().getConstructor();\nCALL implementedInterface.toObjectType().getConstructor()\nCALL implementedInterface.toObjectType()\nCALL registerMismatch(found, required, report(t.makeError(propNode, HIDDEN_INTERFACE_PROPERTY_MISMATCH, prop, constructor.getTopMostDefiningType(prop).toString(), required.toString(), found.toString()\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "private void expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop) {\n    StaticSlot<JSType> propSlot = instance.getSlot(prop);\n    if (propSlot == null) {\n      // Not implemented\n      String sourceName = n.getSourceFileName();\n      sourceName = sourceName == null ? \"\" : sourceName;\n      registerMismatch(instance, implementedInterface,\n          report(JSError.make(sourceName, n,\n          INTERFACE_METHOD_NOT_IMPLEMENTED,\n          prop, implementedInterface.toString(), instance.toString())));\n    } else {\n      Node propNode = propSlot.getDeclaration() == null ?\n          null : propSlot.getDeclaration().getNode();\n\n      // Fall back on the constructor node if we can't find a node for the\n      // property.\n      propNode = propNode == null ? n : propNode;\n\n      JSType found = propSlot.getType();\n      JSType required\n          = implementedInterface.getImplicitPrototype().getPropertyType(prop);\n      found = found.restrictByNotNullOrUndefined();\n      required = required.restrictByNotNullOrUndefined();\n      if (!found.canAssignTo(required)) {\n        // Implemented, but not correctly typed\n        FunctionType constructor =\n            implementedInterface.toObjectType().getConstructor();\n        registerMismatch(found, required, report(t.makeError(propNode,\n            HIDDEN_INTERFACE_PROPERTY_MISMATCH, prop,\n            constructor.getTopMostDefiningType(prop).toString(),\n            required.toString(), found.toString())));\n      }\n    }\n  }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.31666666666666665,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 25.0,
+        "literal_count": 6.0,
+        "source_tokens": 387.0,
+        "l0_tokens": 86.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 3,
+        "call_count": 25,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)",
+      "source": "public void addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition) {\n    String sourceFile = node.getSourceFileName();\n\n    // If the node does not have an associated source file or\n    // its line number is -1, then the node does not have sufficient\n    // information for a mapping to be useful.\n    if (sourceFile == null || node.getLineno() < 0) {\n      return;\n    }\n\n    sourceFile = fixupSourceLocation(sourceFile);\n\n    String originalName = (String) node.getProp(Node.ORIGINALNAME_PROP);\n\n    // Strangely, Rhino source lines are one based but columns are\n    // zero based.\n    // We don't change this for the v1 or v2 source maps but for\n    // v3 we make them both 0 based.\n    int lineBaseOffset = 1;\n    if (generator instanceof SourceMapGeneratorV1\n        || generator instanceof SourceMapGeneratorV2) {\n      lineBaseOffset = 0;\n    }\n\n    generator.addMapping(\n        sourceFile, originalName,\n        new FilePosition(node.getLineno() - lineBaseOffset, node.getCharno()),\n        outputStartPosition, outputEndPosition);\n  }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)\nSIGNATURE: public void addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)",
+        "METHOD: src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)\nSIGNATURE: public void addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)\nSTRUCTURE (lossy):\nString sourceFile = node.getSourceFileName();\nCALL node.getSourceFileName()\nif (sourceFile == null || node.getLineno() < 0)\nCALL node.getLineno()\nreturn;\nsourceFile = fixupSourceLocation(sourceFile)\nCALL fixupSourceLocation(sourceFile)\nString originalName = (String) node.getProp(Node.ORIGINALNAME_PROP);\nCALL node.getProp(Node.ORIGINALNAME_PROP)\nint lineBaseOffset = 1;\nif (generator instanceof SourceMapGeneratorV1 || generator instanceof SourceMapGeneratorV2)\nlineBaseOffset = 0\nCALL generator.addMapping( sourceFile, originalName, new FilePosition(node.getLineno() - lineBaseOffset, node.getCharno()), outputStartPosition, outputEndPosition)\nCALL node.getCharno()",
+        "public void addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition) {\n    String sourceFile = node.getSourceFileName();\n\n    // If the node does not have an associated source file or\n    // its line number is -1, then the node does not have sufficient\n    // information for a mapping to be useful.\n    if (sourceFile == null || node.getLineno() < 0) {\n      return;\n    }\n\n    sourceFile = fixupSourceLocation(sourceFile);\n\n    String originalName = (String) node.getProp(Node.ORIGINALNAME_PROP);\n\n    // Strangely, Rhino source lines are one based but columns are\n    // zero based.\n    // We don't change this for the v1 or v2 source maps but for\n    // v3 we make them both 0 based.\n    int lineBaseOffset = 1;\n    if (generator instanceof SourceMapGeneratorV1\n        || generator instanceof SourceMapGeneratorV2) {\n      lineBaseOffset = 0;\n    }\n\n    generator.addMapping(\n        sourceFile, originalName,\n        new FilePosition(node.getLineno() - lineBaseOffset, node.getCharno()),\n        outputStartPosition, outputEndPosition);\n  }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.27692307692307694,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 7.0,
+        "literal_count": 4.0,
+        "source_tokens": 274.0,
+        "l0_tokens": 76.0,
+        "l1_tokens": 248.0,
+        "compression_ratio": 0.9051094890510949,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 7,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addOptionalParams(JSType ...types)",
+      "source": "public boolean addOptionalParams(JSType ...types) {\n    if (hasVarArgs()) {\n      return false;\n    }\n\n    for (JSType type : types) {\n      newParameter(registry.createOptionalType(type)).setOptionalArg(true);\n    }\n    return true;\n  }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addOptionalParams(JSType ...types)\nSIGNATURE: public boolean addOptionalParams(JSType ...types)",
+        "METHOD: src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addOptionalParams(JSType ...types)\nSIGNATURE: public boolean addOptionalParams(JSType ...types)\nSTRUCTURE (lossy):\nif (hasVarArgs())\nCALL hasVarArgs()\nreturn false;\nfor (JSType type : types)\nCALL newParameter(registry.createOptionalType(type)).setOptionalArg(true)\nCALL newParameter(registry.createOptionalType(type))\nCALL registry.createOptionalType(type)\nreturn true;",
+        "public boolean addOptionalParams(JSType ...types) {\n    if (hasVarArgs()) {\n      return false;\n    }\n\n    for (JSType type : types) {\n      newParameter(registry.createOptionalType(type)).setOptionalArg(true);\n    }\n    return true;\n  }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 4.0,
+        "literal_count": 0.0,
+        "source_tokens": 60.0,
+        "l0_tokens": 48.0,
+        "l1_tokens": 116.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 4,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.Flags.BooleanOptionHandler.parseArguments(Parameters params)",
+      "source": "@Override\n      public int parseArguments(Parameters params) throws CmdLineException {\n        String param = null;\n        try {\n          param = params.getParameter(0);\n        } catch (CmdLineException e) {}\n\n        if (param == null) {\n          setter.addValue(true);\n          return 0;\n        } else {\n          String lowerParam = param.toLowerCase();\n          if (TRUES.contains(lowerParam)) {\n            setter.addValue(true);\n          } else if (FALSES.contains(lowerParam)) {\n            setter.addValue(false);\n          } else {\n            setter.addValue(true);\n            return 0;\n          }\n          return 1;\n        }\n      }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.Flags.BooleanOptionHandler.parseArguments(Parameters params)\nSIGNATURE: @Override\n      public int parseArguments(Parameters params) throws CmdLineException",
+        "METHOD: src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.Flags.BooleanOptionHandler.parseArguments(Parameters params)\nSIGNATURE: @Override\n      public int parseArguments(Parameters params) throws CmdLineException\nSTRUCTURE (lossy):\nString param = null;\nparam = params.getParameter(0)\nCALL params.getParameter(0)\ncatch (CmdLineException e)\nif (param == null)\nCALL setter.addValue(true)\nreturn 0;\nString lowerParam = param.toLowerCase();\nCALL param.toLowerCase()\nif (TRUES.contains(lowerParam))\nCALL TRUES.contains(lowerParam)\nif (FALSES.contains(lowerParam))\nCALL FALSES.contains(lowerParam)\nCALL setter.addValue(false)\nreturn 1;",
+        "@Override\n      public int parseArguments(Parameters params) throws CmdLineException {\n        String param = null;\n        try {\n          param = params.getParameter(0);\n        } catch (CmdLineException e) {}\n\n        if (param == null) {\n          setter.addValue(true);\n          return 0;\n        } else {\n          String lowerParam = param.toLowerCase();\n          if (TRUES.contains(lowerParam)) {\n            setter.addValue(true);\n          } else if (FALSES.contains(lowerParam)) {\n            setter.addValue(false);\n          } else {\n            setter.addValue(true);\n            return 0;\n          }\n          return 1;\n        }\n      }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.42857142857142855,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 8.0,
+        "literal_count": 6.0,
+        "source_tokens": 164.0,
+        "l0_tokens": 60.0,
+        "l1_tokens": 164.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 8,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/rhino/jstype/JSType.java::JSType.testForEqualityHelper(JSType aType, JSType bType)",
+      "source": "TernaryValue testForEqualityHelper(JSType aType, JSType bType) {\n    if (bType.isAllType() || bType.isUnknownType() ||\n        bType.isNoResolvedType() ||\n        aType.isAllType() || aType.isUnknownType() ||\n        aType.isNoResolvedType()) {\n      return UNKNOWN;\n    }\n\n    boolean aIsEmpty = aType.isEmptyType();\n    boolean bIsEmpty = bType.isEmptyType();\n    if (aIsEmpty || bIsEmpty) {\n      if (aIsEmpty && bIsEmpty) {\n        return TernaryValue.TRUE;\n      } else {\n        return UNKNOWN;\n      }\n    }\n\n    if (aType.isFunctionType() || bType.isFunctionType()) {\n      JSType otherType = aType.isFunctionType() ? bType : aType;\n      // In theory, functions are comparable to anything except\n      // null/undefined. For example, on FF3:\n      // function() {} == 'function () {\\n}'\n      // In practice, how a function serializes to a string is\n      // implementation-dependent, so it does not really make sense to test\n      // for equality with a string.\n      JSType meet = otherType.getGreatestSubtype(\n          getNativeType(JSTypeNative.OBJECT_TYPE));\n      if (meet.isNoType() || meet.isNoObjectType()) {\n        return TernaryValue.FALSE;\n      } else {\n        return TernaryValue.UNKNOWN;\n      }\n    }\n    if (bType.isEnumElementType() || bType.isUnionType()) {\n      return bType.testForEquality(aType);\n    }\n    return null;\n  }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/com/google/javascript/rhino/jstype/JSType.java::JSType.testForEqualityHelper(JSType aType, JSType bType)\nSIGNATURE: TernaryValue testForEqualityHelper(JSType aType, JSType bType)",
+        "METHOD: src/com/google/javascript/rhino/jstype/JSType.java::JSType.testForEqualityHelper(JSType aType, JSType bType)\nSIGNATURE: TernaryValue testForEqualityHelper(JSType aType, JSType bType)\nSTRUCTURE (lossy):\nif (bType.isAllType() || bType.isUnknownType() || bType.isNoResolvedType() || aType.isAllType() || aType.isUnknownType() || aType.isNoResolvedType())\nCALL bType.isAllType()\nCALL bType.isUnknownType()\nCALL bType.isNoResolvedType()\nCALL aType.isAllType()\nCALL aType.isUnknownType()\nCALL aType.isNoResolvedType()\nreturn UNKNOWN;\nboolean aIsEmpty = aType.isEmptyType();\nCALL aType.isEmptyType()\nboolean bIsEmpty = bType.isEmptyType();\nCALL bType.isEmptyType()\nif (aIsEmpty || bIsEmpty)\nif (aIsEmpty && bIsEmpty)\nreturn TernaryValue.TRUE;\nif (aType.isFunctionType() || bType.isFunctionType())\nCALL aType.isFunctionType()\nCALL bType.isFunctionType()\nJSType otherType = aType.isFunctionType() ? bType : aType;\nJSType meet = otherType.getGreatestSubtype( getNativeType(JSTypeNative.OBJECT_TYPE));\nCALL otherType.getGreatestSubtype( getNativeType(JSTypeNative.OBJECT_TYPE))\nCALL getNativeType(JSTypeNative.OBJECT_TYPE)\nif (meet.isNoType() || meet.isNoObjectType())\nCALL meet.isNoType()\nCALL meet.isNoObjectType()\nreturn TernaryValue.FALSE;\nreturn TernaryValue.UNKNOWN;\nif (bType.isEnumElementType() || bType.isUnionType())\nCALL bType.isEnumElementType()\nCALL bType.isUnionType()\nreturn bType.testForEquality(aType);\nCALL bType.testForEquality(aType)\nreturn null;",
+        "TernaryValue testForEqualityHelper(JSType aType, JSType bType) {\n    if (bType.isAllType() || bType.isUnknownType() ||\n        bType.isNoResolvedType() ||\n        aType.isAllType() || aType.isUnknownType() ||\n        aType.isNoResolvedType()) {\n      return UNKNOWN;\n    }\n\n    boolean aIsEmpty = aType.isEmptyType();\n    boolean bIsEmpty = bType.isEmptyType();\n    if (aIsEmpty || bIsEmpty) {\n      if (aIsEmpty && bIsEmpty) {\n        return TernaryValue.TRUE;\n      } else {\n        return UNKNOWN;\n      }\n    }\n\n    if (aType.isFunctionType() || bType.isFunctionType()) {\n      JSType otherType = aType.isFunctionType() ? bType : aType;\n      // In theory, functions are comparable to anything except\n      // null/undefined. For example, on FF3:\n      // function() {} == 'function () {\\n}'\n      // In practice, how a function serializes to a string is\n      // implementation-dependent, so it does not really make sense to test\n      // for equality with a string.\n      JSType meet = otherType.getGreatestSubtype(\n          getNativeType(JSTypeNative.OBJECT_TYPE));\n      if (meet.isNoType() || meet.isNoObjectType()) {\n        return TernaryValue.FALSE;\n      } else {\n        return TernaryValue.UNKNOWN;\n      }\n    }\n    if (bType.isEnumElementType() || bType.isUnionType()) {\n      return bType.testForEquality(aType);\n    }\n    return null;\n  }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.35714285714285715,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 18.0,
+        "literal_count": 1.0,
+        "source_tokens": 340.0,
+        "l0_tokens": 48.0,
+        "l1_tokens": 366.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 18,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/WarningLevel.java::WarningLevel.addVerboseWarnings(CompilerOptions options)",
+      "source": "private static void addVerboseWarnings(CompilerOptions options) {\n    addDefaultWarnings(options);\n\n    // checkSuspiciousCode needs to be enabled for CheckGlobalThis to get run.\n    options.checkSuspiciousCode = true;\n    options.checkGlobalThisLevel = CheckLevel.WARNING;\n    options.checkSymbols = true;\n    options.checkMissingReturn = CheckLevel.WARNING;\n\n    // checkTypes has the side-effect of asserting that the\n    // correct number of arguments are passed to a function.\n    // Because the CodingConvention used with the web service does not provide a\n    // way for optional arguments to be specified, these warnings may result in\n    // false positives.\n    options.checkTypes = true;\n    options.checkGlobalNamesLevel = CheckLevel.WARNING;\n    options.aggressiveVarCheck = CheckLevel.WARNING;\n    options.setWarningLevel(\n        DiagnosticGroups.MISSING_PROPERTIES, CheckLevel.WARNING);\n    options.setWarningLevel(\n        DiagnosticGroups.DEPRECATED, CheckLevel.WARNING);\n  }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/WarningLevel.java::WarningLevel.addVerboseWarnings(CompilerOptions options)\nSIGNATURE: private static void addVerboseWarnings(CompilerOptions options)",
+        "METHOD: src/com/google/javascript/jscomp/WarningLevel.java::WarningLevel.addVerboseWarnings(CompilerOptions options)\nSIGNATURE: private static void addVerboseWarnings(CompilerOptions options)\nSTRUCTURE (lossy):\nCALL addDefaultWarnings(options)\noptions.checkSuspiciousCode = true\noptions.checkGlobalThisLevel = CheckLevel.WARNING\noptions.checkSymbols = true\noptions.checkMissingReturn = CheckLevel.WARNING\noptions.checkTypes = true\noptions.checkGlobalNamesLevel = CheckLevel.WARNING\noptions.aggressiveVarCheck = CheckLevel.WARNING\nCALL options.setWarningLevel( DiagnosticGroups.MISSING_PROPERTIES, CheckLevel.WARNING)\nCALL options.setWarningLevel( DiagnosticGroups.DEPRECATED, CheckLevel.WARNING)",
+        "private static void addVerboseWarnings(CompilerOptions options) {\n    addDefaultWarnings(options);\n\n    // checkSuspiciousCode needs to be enabled for CheckGlobalThis to get run.\n    options.checkSuspiciousCode = true;\n    options.checkGlobalThisLevel = CheckLevel.WARNING;\n    options.checkSymbols = true;\n    options.checkMissingReturn = CheckLevel.WARNING;\n\n    // checkTypes has the side-effect of asserting that the\n    // correct number of arguments are passed to a function.\n    // Because the CodingConvention used with the web service does not provide a\n    // way for optional arguments to be specified, these warnings may result in\n    // false positives.\n    options.checkTypes = true;\n    options.checkGlobalNamesLevel = CheckLevel.WARNING;\n    options.aggressiveVarCheck = CheckLevel.WARNING;\n    options.setWarningLevel(\n        DiagnosticGroups.MISSING_PROPERTIES, CheckLevel.WARNING);\n    options.setWarningLevel(\n        DiagnosticGroups.DEPRECATED, CheckLevel.WARNING);\n  }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2857142857142857,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 3.0,
+        "literal_count": 0.0,
+        "source_tokens": 248.0,
+        "l0_tokens": 48.0,
+        "l1_tokens": 174.0,
+        "compression_ratio": 0.7016129032258065,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 3,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)",
+      "source": "ErrorFunctionType(JSTypeRegistry registry, String name) {\n    super(\n        registry, name, null,\n        registry.createArrowType(\n            registry.createOptionalParameters(\n                registry.getNativeType(ALL_TYPE),\n                registry.getNativeType(ALL_TYPE),\n                registry.getNativeType(ALL_TYPE)),\n            null),\n        null, null, true, true);\n\n    // NOTE(nicksantos): Errors have the weird behavior in that they can\n    // be called as functions, and they will return instances of themselves.\n    // Error('x') instanceof Error => true\n    //\n    // In user-defined types, we would deal with this case by creating\n    // a NamedType with the name \"Error\" and then resolve it later.\n    //\n    // For native types, we don't really want the native types to\n    // depend on type-resolution. So we just set the return type manually\n    // at the end of construction.\n    //\n    // There's similar logic in JSTypeRegistry for Array and RegExp.\n    getInternalArrowType().returnType = getInstanceType();\n  }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)\nSIGNATURE: ErrorFunctionType(JSTypeRegistry registry, String name)",
+        "METHOD: src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)\nSIGNATURE: ErrorFunctionType(JSTypeRegistry registry, String name)\nSTRUCTURE (lossy):\nCALL registry.createArrowType( registry.createOptionalParameters( registry.getNativeType(ALL_TYPE), registry.getNativeType(ALL_TYPE), registry.getNativeType(ALL_TYPE)), null)\nCALL registry.createOptionalParameters( registry.getNativeType(ALL_TYPE), registry.getNativeType(ALL_TYPE), registry.getNativeType(ALL_TYPE))\nCALL registry.getNativeType(ALL_TYPE)\ngetInternalArrowType().returnType = getInstanceType()\nCALL getInternalArrowType()\nCALL getInstanceType()",
+        "ErrorFunctionType(JSTypeRegistry registry, String name) {\n    super(\n        registry, name, null,\n        registry.createArrowType(\n            registry.createOptionalParameters(\n                registry.getNativeType(ALL_TYPE),\n                registry.getNativeType(ALL_TYPE),\n                registry.getNativeType(ALL_TYPE)),\n            null),\n        null, null, true, true);\n\n    // NOTE(nicksantos): Errors have the weird behavior in that they can\n    // be called as functions, and they will return instances of themselves.\n    // Error('x') instanceof Error => true\n    //\n    // In user-defined types, we would deal with this case by creating\n    // a NamedType with the name \"Error\" and then resolve it later.\n    //\n    // For native types, we don't really want the native types to\n    // depend on type-resolution. So we just set the return type manually\n    // at the end of construction.\n    //\n    // There's similar logic in JSTypeRegistry for Array and RegExp.\n    getInternalArrowType().returnType = getInstanceType();\n  }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2191780821917808,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 7.0,
+        "literal_count": 4.0,
+        "source_tokens": 261.0,
+        "l0_tokens": 53.0,
+        "l1_tokens": 173.0,
+        "compression_ratio": 0.6628352490421456,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 7,
+        "literal_count": 4
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.registerMismatch(JSType found, JSType required, JSError error)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ClosureCodingConvention.java::ClosureCodingConvention.getAssertionFunctions()": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addRequiredParams(JSType ...types)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/TypeInference.java::TypeInference.updateTypeOfThisOnClosure(Node n, FunctionType fnType)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.inferParameterTypes(@Nullable Node argsParent,\n      @Nullable JSDocInfo info)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/rhino/jstype/ArrowType.java::ArrowType.isSubtype(JSType other)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/FunctionTypeBuilder.java::FunctionTypeBuilder.addParameter(FunctionParamBuilder builder,\n      JSType paramType, boolean warnedAboutArgList,\n      boolean isOptional, boolean isVarArgs)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/TypedCodeGenerator.java::TypedCodeGenerator.getParameterNodeJSDocType(Node parameterNode)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,\n      JSType paramType, Node callNode, int ordinal)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addVarArgs(JSType type)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.RunTimeStats.outputBestPhaseOrdering()": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/TypeValidator.java::TypeValidator.expectInterfaceProperty(NodeTraversal t, Node n,\n      ObjectType instance, ObjectType implementedInterface, String prop)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/rhino/jstype/FunctionParamBuilder.java::FunctionParamBuilder.addOptionalParams(JSType ...types)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.Flags.BooleanOptionHandler.parseArguments(Parameters params)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/rhino/jstype/JSType.java::JSType.testForEqualityHelper(JSType aType, JSType bType)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/WarningLevel.java::WarningLevel.addVerboseWarnings(CompilerOptions options)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/rhino/jstype/ErrorFunctionType.java::ErrorFunctionType.ErrorFunctionType(JSTypeRegistry registry, String name)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 7820,
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "3d829c02c17f9912fec200940ad45df5b1768e5bdc0ef31c43b4d02d67184bda",
+  "evidence_sha256": "b9c2229ee53134f512750c92de3d046cbf1d8b53d0f4cca72fb309e9b97bcc8a"
+}

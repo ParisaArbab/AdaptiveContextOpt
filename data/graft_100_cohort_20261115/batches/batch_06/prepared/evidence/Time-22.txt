@@ -1,0 +1,70 @@
+OFFICIAL DEFECTS4J BUG: Time-22
+EXECUTED BUGGY TEST: org.joda.time.TestDuration_Basics::testToPeriod_fixedZone
+TEST SOURCE: src/test/java/org/joda/time/TestDuration_Basics.java
+TEST SOURCE SHA256: 674b1ad085e63869de537b333033a12dd4cc1ba05a0bee534fa2e305e25b6f0a
+COMPLETE EXECUTED TEST METHOD (verbatim):
+public void testToPeriod_fixedZone() throws Throwable {
+        DateTimeZone zone = DateTimeZone.getDefault();
+        try {
+            DateTimeZone.setDefault(DateTimeZone.forOffsetHours(2));
+            long length =
+                (4L + (3L * 7L) + (2L * 30L) + 365L) * DateTimeConstants.MILLIS_PER_DAY +
+                5L * DateTimeConstants.MILLIS_PER_HOUR +
+                6L * DateTimeConstants.MILLIS_PER_MINUTE +
+                7L * DateTimeConstants.MILLIS_PER_SECOND + 8L;
+            Duration dur = new Duration(length);
+            Period test = dur.toPeriod();
+            assertEquals(0, test.getYears());  // (4 + (3 * 7) + (2 * 30) + 365) == 450
+            assertEquals(0, test.getMonths());
+            assertEquals(0, test.getWeeks());
+            assertEquals(0, test.getDays());
+            assertEquals((450 * 24) + 5, test.getHours());
+            assertEquals(6, test.getMinutes());
+            assertEquals(7, test.getSeconds());
+            assertEquals(8, test.getMillis());
+        } finally {
+            DateTimeZone.setDefault(zone);
+        }
+    }
+OBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):
+--- org.joda.time.TestDuration_Basics::testToPeriod_fixedZone
+junit.framework.AssertionFailedError: expected:<0> but was:<64>
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.failNotEquals(Assert.java:329)
+	at junit.framework.Assert.assertEquals(Assert.java:78)
+	at junit.framework.Assert.assertEquals(Assert.java:234)
+	at junit.framework.Assert.assertEquals(Assert.java:241)
+	at junit.framework.TestCase.assertEquals(TestCase.java:409)
+	at org.joda.time.TestDuration_Basics.testToPeriod_fixedZone(TestDuration_Basics.java:483)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)

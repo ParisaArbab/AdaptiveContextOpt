@@ -1,0 +1,71 @@
+OFFICIAL DEFECTS4J BUG: Chart-21
+EXECUTED BUGGY TEST: org.jfree.data.statistics.junit.DefaultBoxAndWhiskerCategoryDatasetTests::testGetRangeBounds
+TEST SOURCE: tests/org/jfree/data/statistics/junit/DefaultBoxAndWhiskerCategoryDatasetTests.java
+TEST SOURCE SHA256: 57d2afcc584d0338533a26466218d587195e7b8c688ada2d00041d9bcc2999a8
+COMPLETE EXECUTED TEST METHOD (verbatim):
+public void testGetRangeBounds() {
+        DefaultBoxAndWhiskerCategoryDataset d1 
+                = new DefaultBoxAndWhiskerCategoryDataset();
+        d1.add(new BoxAndWhiskerItem(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 
+                new ArrayList()), "R1", "C1");
+        assertEquals(new Range(7.0, 8.0), d1.getRangeBounds(false));
+        assertEquals(new Range(7.0, 8.0), d1.getRangeBounds(true));
+        
+        d1.add(new BoxAndWhiskerItem(1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 
+                new ArrayList()), "R1", "C1");
+        assertEquals(new Range(7.5, 8.5), d1.getRangeBounds(false));
+        assertEquals(new Range(7.5, 8.5), d1.getRangeBounds(true));
+        
+        d1.add(new BoxAndWhiskerItem(2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 
+                new ArrayList()), "R2", "C1");
+        assertEquals(new Range(7.5, 9.5), d1.getRangeBounds(false));
+        assertEquals(new Range(7.5, 9.5), d1.getRangeBounds(true));
+        
+        // this replaces the entry with the current minimum value, but the new
+        // minimum value is now in a different item
+        d1.add(new BoxAndWhiskerItem(1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 8.6, 9.6, 
+                new ArrayList()), "R1", "C1");
+        assertEquals(new Range(8.5, 9.6), d1.getRangeBounds(false));
+        assertEquals(new Range(8.5, 9.6), d1.getRangeBounds(true));
+    }
+OBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):
+--- org.jfree.data.statistics.junit.DefaultBoxAndWhiskerCategoryDatasetTests::testGetRangeBounds
+junit.framework.AssertionFailedError: expected:<Range[8.5,9.6]> but was:<Range[8.6,9.6]>
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.failNotEquals(Assert.java:329)
+	at junit.framework.Assert.assertEquals(Assert.java:78)
+	at junit.framework.Assert.assertEquals(Assert.java:86)
+	at junit.framework.TestCase.assertEquals(TestCase.java:253)
+	at org.jfree.data.statistics.junit.DefaultBoxAndWhiskerCategoryDatasetTests.testGetRangeBounds(DefaultBoxAndWhiskerCategoryDatasetTests.java:292)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)

@@ -49,10 +49,46 @@ def extract_method(checkout: Path, function_id: str, info: dict) -> tuple[str, s
     body = "\n".join(lines[start - 1:end])
     method_name = function_id.split("(", 1)[0].rsplit(".", 1)[-1]
     if method_name not in body:
-        raise ValueError(
-            f"{function_id}: method name absent at CSV lines {start}-{end} in {path}; "
-            "possible version or source-line mismatch"
-        )
+        # The official buggy SHA can be correct while a third-party CSV span
+        # has a small line offset. A correction is safe only when a single
+        # nearby declaration matches the method signature, never a mere call.
+        import re
+
+        expected_params = function_id.partition("(")[2].rsplit(")", 1)[0]
+        expected_arity = 0 if not expected_params.strip() else len(expected_params.split(","))
+
+        def candidate_declaration(line):
+            match = re.search(
+                r"\b" + re.escape(method_name) + r"\s*\(([^()]*)\)\s*(?:throws\s+[\w.,\s]+)?\s*\{",
+                line,
+            )
+            if not match or line.lstrip().startswith(("//", "*", "@")):
+                return False
+            prefix = line[:match.start()].strip()
+            if not prefix or prefix.endswith((".", "return", "new", "=")):
+                return False
+            params = match.group(1).strip()
+            return (0 if not params else len(params.split(","))) == expected_arity
+
+        nearby = [
+            i for i in range(max(0, start - 12), min(len(lines), end + 10))
+            if candidate_declaration(lines[i])
+        ]
+        if len(nearby) != 1:
+            raise ValueError(
+                f"{function_id}: method name absent at CSV lines {start}-{end} in {path}; "
+                f"nearby matching declarations: {len(nearby)}; possible version or source-line mismatch"
+            )
+        declaration = nearby[0] + 1  # one-based
+        # Preserve the CSV's span length. Move only as far as needed to include
+        # the verified declaration, never expand far across other methods.
+        shift = declaration - end if declaration > end else declaration - start
+        if abs(shift) > 10:
+            raise ValueError(f"{function_id}: unsafe CSV span correction")
+        corrected_start, corrected_end = start + shift, end + shift
+        body = "\n".join(lines[corrected_start - 1:corrected_end])
+        if method_name not in body:
+            raise ValueError(f"{function_id}: method absent after span correction")
     return str(path.relative_to(Path(checkout).resolve())), body
 
 

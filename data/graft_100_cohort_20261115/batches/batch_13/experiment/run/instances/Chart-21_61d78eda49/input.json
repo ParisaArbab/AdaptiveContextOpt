@@ -1,0 +1,1318 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Chart-21",
+    "repository": "Chart",
+    "language": "java",
+    "revision": "2c840e68658980c7f3c9fbf1c3e1f4de3acab16e",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_13/prepared/checkouts/Chart-21",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Chart-21\nEXECUTED BUGGY TEST: org.jfree.data.statistics.junit.DefaultBoxAndWhiskerCategoryDatasetTests::testGetRangeBounds\nTEST SOURCE: tests/org/jfree/data/statistics/junit/DefaultBoxAndWhiskerCategoryDatasetTests.java\nTEST SOURCE SHA256: 57d2afcc584d0338533a26466218d587195e7b8c688ada2d00041d9bcc2999a8\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testGetRangeBounds() {\n        DefaultBoxAndWhiskerCategoryDataset d1 \n                = new DefaultBoxAndWhiskerCategoryDataset();\n        d1.add(new BoxAndWhiskerItem(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, \n                new ArrayList()), \"R1\", \"C1\");\n        assertEquals(new Range(7.0, 8.0), d1.getRangeBounds(false));\n        assertEquals(new Range(7.0, 8.0), d1.getRangeBounds(true));\n        \n        d1.add(new BoxAndWhiskerItem(1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, \n                new ArrayList()), \"R1\", \"C1\");\n        assertEquals(new Range(7.5, 8.5), d1.getRangeBounds(false));\n        assertEquals(new Range(7.5, 8.5), d1.getRangeBounds(true));\n        \n        d1.add(new BoxAndWhiskerItem(2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, \n                new ArrayList()), \"R2\", \"C1\");\n        assertEquals(new Range(7.5, 9.5), d1.getRangeBounds(false));\n        assertEquals(new Range(7.5, 9.5), d1.getRangeBounds(true));\n        \n        // this replaces the entry with the current minimum value, but the new\n        // minimum value is now in a different item\n        d1.add(new BoxAndWhiskerItem(1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 8.6, 9.6, \n                new ArrayList()), \"R1\", \"C1\");\n        assertEquals(new Range(8.5, 9.6), d1.getRangeBounds(false));\n        assertEquals(new Range(8.5, 9.6), d1.getRangeBounds(true));\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.jfree.data.statistics.junit.DefaultBoxAndWhiskerCategoryDatasetTests::testGetRangeBounds\njunit.framework.AssertionFailedError: expected:<Range[8.5,9.6]> but was:<Range[8.6,9.6]>\n\tat junit.framework.Assert.fail(Assert.java:57)\n\tat junit.framework.Assert.failNotEquals(Assert.java:329)\n\tat junit.framework.Assert.assertEquals(Assert.java:78)\n\tat junit.framework.Assert.assertEquals(Assert.java:86)\n\tat junit.framework.TestCase.assertEquals(TestCase.java:253)\n\tat org.jfree.data.statistics.junit.DefaultBoxAndWhiskerCategoryDatasetTests.testGetRangeBounds(DefaultBoxAndWhiskerCategoryDatasetTests.java:292)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_13/prepared/evidence/Chart-21.txt",
+      "sha256": "fec3aac91bf6dd6e75e7e41825bb64e72f58fef653aef28724abb208f6ec2ede"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "source",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Chart-21",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.DefaultBoxAndWhiskerCategoryDataset()",
+      "path": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java",
+      "start_line": 106,
+      "end_line": 115,
+      "source": "public DefaultBoxAndWhiskerCategoryDataset() {\n        this.data = new KeyedObjects2D();\n        this.minimumRangeValue = Double.NaN;\n        this.minimumRangeValueRow = -1;\n        this.minimumRangeValueColumn = -1;\n        this.maximumRangeValue = Double.NaN;\n        this.maximumRangeValueRow = -1;\n        this.maximumRangeValueColumn = -1;\n        this.rangeBounds = new Range(0.0, 0.0);\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 53.717014799319635
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)",
+      "path": "source/org/jfree/data/jdbc/JDBCXYDataset.java",
+      "start_line": 231,
+      "end_line": 414,
+      "source": "public void executeQuery(Connection con, String query) \n        throws SQLException {\n\n        if (con == null) {\n            throw new SQLException(\n                \"There is no database to execute the query.\"\n            );\n        }\n\n        ResultSet resultSet = null;\n        Statement statement = null;\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int numberOfColumns = metaData.getColumnCount();\n            int numberOfValidColumns = 0;\n            int [] columnTypes = new int[numberOfColumns];\n            for (int column = 0; column < numberOfColumns; column++) {\n                try {\n                    int type = metaData.getColumnType(column + 1);\n                    switch (type) {\n\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIT:\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            ++numberOfValidColumns;\n                            columnTypes[column] = type;\n                            break;\n                        default:\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                catch (SQLException e) {\n                    columnTypes[column] = Types.NULL;\n                    throw e;\n                }\n            }\n\n\n            if (numberOfValidColumns <= 1) {\n                throw new SQLException(\n                    \"Not enough valid columns where generated by query.\"\n                );\n            }\n\n            /// First column is X data\n            this.columnNames = new String[numberOfValidColumns - 1];\n            /// Get the column names and cache them.\n            int currentColumn = 0;\n            for (int column = 1; column < numberOfColumns; column++) {\n                if (columnTypes[column] != Types.NULL) {\n                    this.columnNames[currentColumn] \n                        = metaData.getColumnLabel(column + 1);\n                    ++currentColumn;\n                }\n            }\n\n            // Might need to add, to free memory from any previous result sets\n            if (this.rows != null) {\n                for (int column = 0; column < this.rows.size(); column++) {\n                    ArrayList row = (ArrayList) this.rows.get(column);\n                    row.clear();\n                }\n                this.rows.clear();\n            }\n\n            // Are we working with a time series.\n            switch (columnTypes[0]) {\n                case Types.DATE:\n                case Types.TIME:\n                case Types.TIMESTAMP:\n                    this.isTimeSeries = true;\n                    break;\n                default :\n                    this.isTimeSeries = false;\n                    break;\n            }\n\n            // Get all rows.\n            // rows = new ArrayList();\n            while (resultSet.next()) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    Object xObject = resultSet.getObject(column + 1);\n                    switch (columnTypes[column]) {\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            newRow.add(xObject);\n                            break;\n\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                            newRow.add(new Long(((Date) xObject).getTime()));\n                            break;\n                        case Types.NULL:\n                            break;\n                        default:\n                            System.err.println(\"Unknown data\");\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// a kludge to make everything work when no rows returned\n            if (this.rows.size() == 0) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    if (columnTypes[column] != Types.NULL) {\n                        newRow.add(new Integer(0));\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// Determine max and min values.\n            if (this.rows.size() < 1) {\n                this.maxValue = 0.0;\n                this.minValue = 0.0;\n            }\n            else {\n                ArrayList row = (ArrayList) this.rows.get(0);\n                this.maxValue = Double.NEGATIVE_INFINITY;\n                this.minValue = Double.POSITIVE_INFINITY;\n                for (int rowNum = 0; rowNum < this.rows.size(); ++rowNum) {\n                    row = (ArrayList) this.rows.get(rowNum);\n                    for (int column = 1; column < numberOfColumns; column++) {\n                        Object testValue = row.get(column);\n                        if (testValue != null) {\n                            double test = ((Number) testValue).doubleValue();\n                        \n                            if (test < this.minValue) {\n                                this.minValue = test;\n                            }\n                            if (test > this.maxValue) {\n                                this.maxValue = test;\n                            }\n                        }\n                    }\n                }\n            }\n\n            fireDatasetChanged(); // Tell the listeners a new table has arrived.\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n        }\n\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 53.219546370195125
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerXYDataset.java::DefaultBoxAndWhiskerXYDataset.DefaultBoxAndWhiskerXYDataset(Comparable seriesKey)",
+      "path": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerXYDataset.java",
+      "start_line": 122,
+      "end_line": 129,
+      "source": "public DefaultBoxAndWhiskerXYDataset(Comparable seriesKey) {\n        this.seriesKey = seriesKey;\n        this.dates = new ArrayList();\n        this.items = new ArrayList();\n        this.minimumRangeValue = null;\n        this.maximumRangeValue = null;\n        this.rangeBounds = null; \n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 52.24901124878404
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.updateBounds()",
+      "path": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java",
+      "start_line": 739,
+      "end_line": 742,
+      "source": "private void updateBounds() {\n        this.minimumRangeValue = Double.NaN;\n        this.maximumRangeValue = Double.NaN;\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 52.05136589104201
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerXYDataset.java::DefaultBoxAndWhiskerXYDataset.add(Date date, BoxAndWhiskerItem item)",
+      "path": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerXYDataset.java",
+      "start_line": 137,
+      "end_line": 162,
+      "source": "public void add(Date date, BoxAndWhiskerItem item) {\n        this.dates.add(date);\n        this.items.add(item);\n        if (this.minimumRangeValue == null) {\n            this.minimumRangeValue = item.getMinRegularValue();\n        }\n        else {\n            if (item.getMinRegularValue().doubleValue() \n                    < this.minimumRangeValue.doubleValue()) {\n                this.minimumRangeValue = item.getMinRegularValue();\n            }\n        }\n        if (this.maximumRangeValue == null) {\n            this.maximumRangeValue = item.getMaxRegularValue();\n        }\n        else {\n            if (item.getMaxRegularValue().doubleValue() \n                    > this.maximumRangeValue.doubleValue()) {\n                this.maximumRangeValue = item.getMaxRegularValue();\n            }\n        }\n        this.rangeBounds = new Range(\n            this.minimumRangeValue.doubleValue(), \n            this.maximumRangeValue.doubleValue()\n        );\n    }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 48.04317936896636
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.add(BoxAndWhiskerItem item, Comparable rowKey, \n            Comparable columnKey)",
+      "path": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java",
+      "start_line": 144,
+      "end_line": 193,
+      "source": "public void add(BoxAndWhiskerItem item, Comparable rowKey, \n            Comparable columnKey) {\n\n        this.data.addObject(item, rowKey, columnKey);\n        \n        // update cached min and max values\n        int r = this.data.getRowIndex(rowKey);\n        int c = this.data.getColumnIndex(columnKey);\n        if ((this.maximumRangeValueRow == r && this.maximumRangeValueColumn \n                == c) || (this.minimumRangeValueRow == r \n                && this.minimumRangeValueColumn == c))  {\n            updateBounds();\n        }\n        \n            double minval = Double.NaN;\n            if (item.getMinOutlier() != null) {\n                minval = item.getMinOutlier().doubleValue();\n            }\n            double maxval = Double.NaN;\n            if (item.getMaxOutlier() != null) {\n                maxval = item.getMaxOutlier().doubleValue();\n            }\n        \n            if (Double.isNaN(this.maximumRangeValue)) {\n                this.maximumRangeValue = maxval;\n                this.maximumRangeValueRow = r;\n                this.maximumRangeValueColumn = c;\n            }\n            else if (maxval > this.maximumRangeValue) {\n                this.maximumRangeValue = maxval;\n                this.maximumRangeValueRow = r;\n                this.maximumRangeValueColumn = c;\n            }\n        \n            if (Double.isNaN(this.minimumRangeValue)) {\n                this.minimumRangeValue = minval;\n                this.minimumRangeValueRow = r;\n                this.minimumRangeValueColumn = c;\n            }\n            else if (minval < this.minimumRangeValue) {\n                this.minimumRangeValue = minval;\n                this.minimumRangeValueRow = r;\n                this.minimumRangeValueColumn = c;\n            }\n        \n        this.rangeBounds = new Range(this.minimumRangeValue,\n              this.maximumRangeValue);\n        fireDatasetChanged();\n\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 47.96176015043688
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.add(List list, Comparable rowKey, Comparable columnKey)",
+      "path": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java",
+      "start_line": 128,
+      "end_line": 132,
+      "source": "public void add(List list, Comparable rowKey, Comparable columnKey) {\n        BoxAndWhiskerItem item = BoxAndWhiskerCalculator\n                .calculateBoxAndWhiskerStatistics(list);\n        add(item, rowKey, columnKey);\n    }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 47.80027454953944
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.equals(Object obj)",
+      "path": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java",
+      "start_line": 751,
+      "end_line": 761,
+      "source": "public boolean equals(Object obj) {\n        if (obj == this) {\n            return true;   \n        }\n        if (obj instanceof DefaultBoxAndWhiskerCategoryDataset) {\n            DefaultBoxAndWhiskerCategoryDataset dataset \n                    = (DefaultBoxAndWhiskerCategoryDataset) obj;\n            return ObjectUtilities.equal(this.data, dataset.data);\n        }\n        return false;\n    }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 45.57629995001395
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getOutliers(int row, int column)",
+      "path": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java",
+      "start_line": 705,
+      "end_line": 713,
+      "source": "public List getOutliers(int row, int column) {\n        List result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                row, column);\n        if (item != null) {\n            result = item.getOutliers();\n        }\n        return result;\n    }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 44.99828385169978
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getRangeBounds(boolean includeInterval)",
+      "path": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java",
+      "start_line": 531,
+      "end_line": 533,
+      "source": "public Range getRangeBounds(boolean includeInterval) {\n        return this.rangeBounds;\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 44.82802809081186
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.isJDK14()",
+      "path": "source/org/jfree/chart/util/ObjectUtilities.java",
+      "start_line": 440,
+      "end_line": 471,
+      "source": "public static boolean isJDK14() {\n        ClassLoader loader = getClassLoader(ObjectUtilities.class);\n        if (loader != null) {\n            try {\n              loader.loadClass(\"java.util.RandomAccess\");\n              return true;\n            }\n            catch (ClassNotFoundException e) {\n              return false;\n            }\n            catch(Exception e) {\n              // do nothing, but do not crash ...\n            }\n        }\n        // OK, the quick and dirty, but secure way failed. Lets try it\n        // using the standard way.\n        try {\n            String version = System.getProperty(\n                    \"java.vm.specification.version\");\n            // parse the beast...\n            if (version == null) {\n                return false;\n            }\n\n            String[] versions = parseVersions(version);\n            String[] target = new String[]{ \"1\", \"4\" };\n            return (ArrayUtilities.compareVersionArrays(versions, target) >= 0);\n        }\n        catch(Exception e) {\n            return false;\n        }\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 44.700121094317346
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getRangeLowerBound(boolean includeInterval)",
+      "path": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java",
+      "start_line": 505,
+      "end_line": 507,
+      "source": "public double getRangeLowerBound(boolean includeInterval) {\n        return this.minimumRangeValue;\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 44.61608084832436
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getOutliers(Comparable rowKey, Comparable columnKey)",
+      "path": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java",
+      "start_line": 725,
+      "end_line": 733,
+      "source": "public List getOutliers(Comparable rowKey, Comparable columnKey) {\n        List result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                rowKey, columnKey);\n        if (item != null) {\n            result = item.getOutliers();\n        }\n        return result;\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 43.8166235883976
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMeanValue(int row, int column)",
+      "path": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java",
+      "start_line": 247,
+      "end_line": 257,
+      "source": "public Number getMeanValue(int row, int column) {\n\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(row, \n                column);\n        if (item != null) {\n            result = item.getMean();\n        }\n        return result;\n\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 43.62367465856515
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMedianValue(int row, int column)",
+      "path": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java",
+      "start_line": 289,
+      "end_line": 297,
+      "source": "public Number getMedianValue(int row, int column) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(row, \n                column);\n        if (item != null) {\n            result = item.getMedian();\n        }\n        return result;\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 43.62367465856515
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerXYDataset.java::DefaultBoxAndWhiskerXYDataset.getRangeLowerBound(boolean includeInterval)",
+      "path": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerXYDataset.java",
+      "start_line": 469,
+      "end_line": 475,
+      "source": "public double getRangeLowerBound(boolean includeInterval) {\n        double result = Double.NaN;\n        if (this.minimumRangeValue != null) {\n            result = this.minimumRangeValue.doubleValue();\n        }\n        return result;        \n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 43.52799435962106
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMaxRegularValue(int row, int column)",
+      "path": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java",
+      "start_line": 585,
+      "end_line": 593,
+      "source": "public Number getMaxRegularValue(int row, int column) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                row, column);\n        if (item != null) {\n            result = item.getMaxRegularValue();\n        }\n        return result;\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 43.3277239900797
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMinRegularValue(int row, int column)",
+      "path": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java",
+      "start_line": 545,
+      "end_line": 553,
+      "source": "public Number getMinRegularValue(int row, int column) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                row, column);\n        if (item != null) {\n            result = item.getMinRegularValue();\n        }\n        return result;\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 43.3277239900797
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getMaximumWindowBounds()",
+      "path": "source/org/jfree/chart/util/RefineryUtilities.java",
+      "start_line": 135,
+      "end_line": 150,
+      "source": "public static Rectangle getMaximumWindowBounds() {\n      GraphicsEnvironment localGraphicsEnvironment\n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\n                  \"getMaximumWindowBounds\", (Class[]) null);\n          return (Rectangle) method.invoke(localGraphicsEnvironment, \n                  (Object[]) null);\n      }\n      catch (Exception e) {\n          // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Rectangle (0, 0, s.width, s.height);\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 43.119872113477165
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMeanValue(Comparable rowKey, Comparable columnKey)",
+      "path": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java",
+      "start_line": 269,
+      "end_line": 277,
+      "source": "public Number getMeanValue(Comparable rowKey, Comparable columnKey) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                rowKey, columnKey);\n        if (item != null) {\n            result = item.getMean();\n        }\n        return result;\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.49508901576032
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMedianValue(Comparable rowKey, Comparable columnKey)",
+      "path": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java",
+      "start_line": 309,
+      "end_line": 317,
+      "source": "public Number getMedianValue(Comparable rowKey, Comparable columnKey) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                rowKey, columnKey);\n        if (item != null) {\n            result = item.getMedian();\n        }\n        return result;\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.49508901576032
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMaxRegularValue(Comparable rowKey, Comparable columnKey)",
+      "path": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java",
+      "start_line": 605,
+      "end_line": 613,
+      "source": "public Number getMaxRegularValue(Comparable rowKey, Comparable columnKey) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                rowKey, columnKey);\n        if (item != null) {\n            result = item.getMaxRegularValue();\n        }\n        return result;\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.24652416358191
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMinRegularValue(Comparable rowKey, Comparable columnKey)",
+      "path": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java",
+      "start_line": 565,
+      "end_line": 573,
+      "source": "public Number getMinRegularValue(Comparable rowKey, Comparable columnKey) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                rowKey, columnKey);\n        if (item != null) {\n            result = item.getMinRegularValue();\n        }\n        return result;\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.24652416358191
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/DynamicTimeSeriesCollection.java::DynamicTimeSeriesCollection.advanceTime()",
+      "path": "source/org/jfree/data/time/DynamicTimeSeriesCollection.java",
+      "start_line": 564,
+      "end_line": 609,
+      "source": "public synchronized RegularTimePeriod advanceTime() {\n        RegularTimePeriod nextInstant = this.pointsInTime[this.newestAt].next();\n        this.newestAt = this.oldestAt;  // newestAt takes value previously held \n                                        // by oldestAT\n        /*** \n         * The next 10 lines or so should be expanded if data can be negative \n         ***/\n        // if the oldest data contained a maximum Y-value, invalidate the stored\n        //   Y-max and Y-range data:\n        boolean extremaChanged = false;\n        float oldMax = 0.0f;\n        if (this.maxValue != null) {\n            oldMax = this.maxValue.floatValue();\n        }\n        for (int s = 0; s < getSeriesCount(); s++) {\n            if (this.valueHistory[s].getData(this.oldestAt) == oldMax) {\n                extremaChanged = true;\n            }\n            if (extremaChanged) {\n                break;\n            }\n        }  /*** If data can be < 0, add code here to check the minimum    **/\n        if (extremaChanged) {\n            invalidateRangeInfo();\n        }\n        //  wipe the next (about to be used) set of data slots\n        float wiper = (float) 0.0;\n        for (int s = 0; s < getSeriesCount(); s++) {\n            this.valueHistory[s].enterData(this.newestAt, wiper);\n        }\n        // Update the array of TimePeriods:\n        this.pointsInTime[this.newestAt] = nextInstant;\n        // Now advance \"oldestAt\", wrapping at end of the array\n        this.oldestAt++;\n        if (this.oldestAt >= this.historyCount) {\n            this.oldestAt = 0;\n        }\n        // Update the domain limits:\n        long startL = this.domainStart.longValue();  //(time is kept in msec)\n        this.domainStart = new Long(startL + this.deltaTime);\n        long endL = this.domainEnd.longValue();\n        this.domainEnd = new Long(endL + this.deltaTime);\n        this.domainRange = new Range(startL, endL);\n        fireSeriesChanged();\n        return nextInstant;\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.84962757934321
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.DefaultBoxAndWhiskerCategoryDataset()",
+      "source": "public DefaultBoxAndWhiskerCategoryDataset() {\n        this.data = new KeyedObjects2D();\n        this.minimumRangeValue = Double.NaN;\n        this.minimumRangeValueRow = -1;\n        this.minimumRangeValueColumn = -1;\n        this.maximumRangeValue = Double.NaN;\n        this.maximumRangeValueRow = -1;\n        this.maximumRangeValueColumn = -1;\n        this.rangeBounds = new Range(0.0, 0.0);\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.DefaultBoxAndWhiskerCategoryDataset()\nSIGNATURE: public DefaultBoxAndWhiskerCategoryDataset()",
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.DefaultBoxAndWhiskerCategoryDataset()\nSIGNATURE: public DefaultBoxAndWhiskerCategoryDataset()\nSTRUCTURE (lossy):\nthis.data = new KeyedObjects2D()\nthis.minimumRangeValue = Double.NaN\nthis.minimumRangeValueRow = -1\nthis.minimumRangeValueColumn = -1\nthis.maximumRangeValue = Double.NaN\nthis.maximumRangeValueRow = -1\nthis.maximumRangeValueColumn = -1\nthis.rangeBounds = new Range(0.0, 0.0)",
+        "public DefaultBoxAndWhiskerCategoryDataset() {\n        this.data = new KeyedObjects2D();\n        this.minimumRangeValue = Double.NaN;\n        this.minimumRangeValueRow = -1;\n        this.minimumRangeValueColumn = -1;\n        this.maximumRangeValue = Double.NaN;\n        this.maximumRangeValueRow = -1;\n        this.maximumRangeValueColumn = -1;\n        this.rangeBounds = new Range(0.0, 0.0);\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.76,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 6.0,
+        "source_tokens": 100.0,
+        "l0_tokens": 53.0,
+        "l1_tokens": 127.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)",
+      "source": "public void executeQuery(Connection con, String query) \n        throws SQLException {\n\n        if (con == null) {\n            throw new SQLException(\n                \"There is no database to execute the query.\"\n            );\n        }\n\n        ResultSet resultSet = null;\n        Statement statement = null;\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int numberOfColumns = metaData.getColumnCount();\n            int numberOfValidColumns = 0;\n            int [] columnTypes = new int[numberOfColumns];\n            for (int column = 0; column < numberOfColumns; column++) {\n                try {\n                    int type = metaData.getColumnType(column + 1);\n                    switch (type) {\n\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIT:\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            ++numberOfValidColumns;\n                            columnTypes[column] = type;\n                            break;\n                        default:\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                catch (SQLException e) {\n                    columnTypes[column] = Types.NULL;\n                    throw e;\n                }\n            }\n\n\n            if (numberOfValidColumns <= 1) {\n                throw new SQLException(\n                    \"Not enough valid columns where generated by query.\"\n                );\n            }\n\n            /// First column is X data\n            this.columnNames = new String[numberOfValidColumns - 1];\n            /// Get the column names and cache them.\n            int currentColumn = 0;\n            for (int column = 1; column < numberOfColumns; column++) {\n                if (columnTypes[column] != Types.NULL) {\n                    this.columnNames[currentColumn] \n                        = metaData.getColumnLabel(column + 1);\n                    ++currentColumn;\n                }\n            }\n\n            // Might need to add, to free memory from any previous result sets\n            if (this.rows != null) {\n                for (int column = 0; column < this.rows.size(); column++) {\n                    ArrayList row = (ArrayList) this.rows.get(column);\n                    row.clear();\n                }\n                this.rows.clear();\n            }\n\n            // Are we working with a time series.\n            switch (columnTypes[0]) {\n                case Types.DATE:\n                case Types.TIME:\n                case Types.TIMESTAMP:\n                    this.isTimeSeries = true;\n                    break;\n                default :\n                    this.isTimeSeries = false;\n                    break;\n            }\n\n            // Get all rows.\n            // rows = new ArrayList();\n            while (resultSet.next()) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    Object xObject = resultSet.getObject(column + 1);\n                    switch (columnTypes[column]) {\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            newRow.add(xObject);\n                            break;\n\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                            newRow.add(new Long(((Date) xObject).getTime()));\n                            break;\n                        case Types.NULL:\n                            break;\n                        default:\n                            System.err.println(\"Unknown data\");\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// a kludge to make everything work when no rows returned\n            if (this.rows.size() == 0) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    if (columnTypes[column] != Types.NULL) {\n                        newRow.add(new Integer(0));\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// Determine max and min values.\n            if (this.rows.size() < 1) {\n                this.maxValue = 0.0;\n                this.minValue = 0.0;\n            }\n            else {\n                ArrayList row = (ArrayList) this.rows.get(0);\n                this.maxValue = Double.NEGATIVE_INFINITY;\n                this.minValue = Double.POSITIVE_INFINITY;\n                for (int rowNum = 0; rowNum < this.rows.size(); ++rowNum) {\n                    row = (ArrayList) this.rows.get(rowNum);\n                    for (int column = 1; column < numberOfColumns; column++) {\n                        Object testValue = row.get(column);\n                        if (testValue != null) {\n                            double test = ((Number) testValue).doubleValue();\n                        \n                            if (test < this.minValue) {\n                                this.minValue = test;\n                            }\n                            if (test > this.maxValue) {\n                                this.maxValue = test;\n                            }\n                        }\n                    }\n                }\n            }\n\n            fireDatasetChanged(); // Tell the listeners a new table has arrived.\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n        }\n\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)\nSIGNATURE: public void executeQuery(Connection con, String query) \n        throws SQLException",
+        "METHOD: source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)\nSIGNATURE: public void executeQuery(Connection con, String query) \n        throws SQLException\nSTRUCTURE (lossy):\nif (con == null)\nthrow new SQLException( \"There is no database to execute the query.\" );\nResultSet resultSet = null;\nStatement statement = null;\nstatement = con.createStatement()\nCALL con.createStatement()\nresultSet = statement.executeQuery(query)\nCALL statement.executeQuery(query)\nResultSetMetaData metaData = resultSet.getMetaData();\nCALL resultSet.getMetaData()\nint numberOfColumns = metaData.getColumnCount();\nCALL metaData.getColumnCount()\nint numberOfValidColumns = 0;\nint [] columnTypes = new int[numberOfColumns];\nfor (int column = 0; column < numberOfColumns; column++)\nint column = 0;\ncolumn++\nint type = metaData.getColumnType(column + 1);\nCALL metaData.getColumnType(column + 1)\nswitch (type) { case Types.NUMERIC: case Types.REAL: case Types.INTEGER: case Types.DOUBLE: case Types.FLOAT: case Types.DECIMAL: case Types.BIT: case Types.DATE: case Types.TIME: case Types.TIMESTAMP: case Types.BIGINT: case Types.SMALLINT: ++numberOfValidColumns; columnTypes[column] = type; break; default: columnTypes[column] = Types.NULL; break; }\n++numberOfValidColumns\ncolumnTypes[column] = type\ncolumnTypes[column] = Types.NULL\ncatch (SQLException e)\nthrow e;\nif (numberOfValidColumns <= 1)\nthrow new SQLException( \"Not enough valid columns where generated by query.\" );\nthis.columnNames = new String[numberOfValidColumns - 1]\nint currentColumn = 0;\nfor (int column = 1; column < numberOfColumns; column++)\nint column = 1;\nif (columnTypes[column] != Types.NULL)\nthis.columnNames[currentColumn] = metaData.getColumnLabel(column + 1)\nCALL metaData.getColumnLabel(column + 1)\n++currentColumn\nif (this.rows != null)\nfor (int column = 0; column < this.rows.size(); column++)\nCALL this.rows.size()\nArrayList row = (ArrayList) this.rows.get(column);\nCALL this.rows.get(column)\nCALL row.clear()\nCALL this.rows.clear()\nswitch (columnTypes[0]) { case Types.DATE: case Types.TIME: case Types.TIMESTAMP: this.isTimeSeries = true; break; default : this.isTimeSeries = false; break; }\nthi\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public void executeQuery(Connection con, String query) \n        throws SQLException {\n\n        if (con == null) {\n            throw new SQLException(\n                \"There is no database to execute the query.\"\n            );\n        }\n\n        ResultSet resultSet = null;\n        Statement statement = null;\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int numberOfColumns = metaData.getColumnCount();\n            int numberOfValidColumns = 0;\n            int [] columnTypes = new int[numberOfColumns];\n            for (int column = 0; column < numberOfColumns; column++) {\n                try {\n                    int type = metaData.getColumnType(column + 1);\n                    switch (type) {\n\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIT:\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            ++numberOfValidColumns;\n                            columnTypes[column] = type;\n                            break;\n                        default:\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                catch (SQLException e) {\n                    columnTypes[column] = Types.NULL;\n                    throw e;\n                }\n            }\n\n\n            if (numberOfValidColumns <= 1) {\n                throw new SQLException(\n                    \"Not enough valid columns where generated by query.\"\n                );\n            }\n\n            /// First column is X data\n            this.columnNames = new String[numberOfValidColumns - 1];\n            /// Get the column names and cache them.\n            int currentColumn = 0;\n            for (int column = 1; column < numberOfColumns; column++) {\n                if (columnTypes[column] != Types.NULL) {\n                    this.columnNames[currentColumn] \n                        = metaData.getColumnLabel(column + 1);\n                    ++currentColumn;\n                }\n            }\n\n            // Might need to add, to free memory from any previous result sets\n            if (this.rows != null) {\n                for (int column = 0; column < this.rows.size(); column++) {\n                    ArrayList row = (ArrayList) this.rows.get(column);\n                    row.clear();\n                }\n                this.rows.clear();\n            }\n\n            // Are we working with a time series.\n            switch (columnTypes[0]) {\n                case Types.DATE:\n                case Types.TIME:\n                case Types.TIMESTAMP:\n                    this.isTimeSeries = true;\n                    break;\n                default :\n                    this.isTimeSeries = false;\n                    break;\n            }\n\n            // Get all rows.\n            // rows = new ArrayList();\n            while (resultSet.next()) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    Object xObject = resultSet.getObject(column + 1);\n                    switch (columnTypes[column]) {\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            newRow.add(xObject);\n                            break;\n\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                            newRow.add(new Long(((Date) xObject).getTime()));\n                            break;\n                        case Types.NULL:\n                            break;\n                        default:\n                            System.err.println(\"Unknown data\");\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// a kludge to make everything work when no rows returned\n            if (this.rows.size() == 0) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    if (columnTypes[column] != Types.NULL) {\n                        newRow.add(new Integer(0));\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// Determine max and min values.\n            if (this.rows.size() < 1) {\n                this.maxValue = 0.0;\n                this.minValue = 0.0;\n            }\n            else {\n                ArrayList row = (ArrayList) this.rows.get(0);\n                this.maxValue = Double.NEGATIVE_INFINITY;\n                this.minValue = Double.POSITIVE_INFINITY;\n                for (int rowNum = 0; rowNum < this.rows.size(); ++rowNum) {\n                    row = (ArrayList) this.rows.get(rowNum);\n                    for (int column = 1; column < numberOfColumns; column++) {\n                        Object testValue = row.get(column);\n                        if (testValue != null) {\n                            double test = ((Number) testValue).doubleValue();\n                        \n                            if (test < this.minValue) {\n                                this.minValue = test;\n                            }\n                            if (test > this.maxValue) {\n                                this.maxValue = test;\n                            }\n                        }\n                    }\n                }\n            }\n\n            fireDatasetChanged(); // Tell the listeners a new table has arrived.\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n        }\n\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2265625,
+        "trace_match": 0.0,
+        "complexity": 27.0,
+        "call_count": 29.0,
+        "literal_count": 31.0,
+        "source_tokens": 1719.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.3310063990692263,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 27,
+        "call_count": 29,
+        "literal_count": 31
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerXYDataset.java::DefaultBoxAndWhiskerXYDataset.DefaultBoxAndWhiskerXYDataset(Comparable seriesKey)",
+      "source": "public DefaultBoxAndWhiskerXYDataset(Comparable seriesKey) {\n        this.seriesKey = seriesKey;\n        this.dates = new ArrayList();\n        this.items = new ArrayList();\n        this.minimumRangeValue = null;\n        this.maximumRangeValue = null;\n        this.rangeBounds = null; \n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerXYDataset.java::DefaultBoxAndWhiskerXYDataset.DefaultBoxAndWhiskerXYDataset(Comparable seriesKey)\nSIGNATURE: public DefaultBoxAndWhiskerXYDataset(Comparable seriesKey)",
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerXYDataset.java::DefaultBoxAndWhiskerXYDataset.DefaultBoxAndWhiskerXYDataset(Comparable seriesKey)\nSIGNATURE: public DefaultBoxAndWhiskerXYDataset(Comparable seriesKey)\nSTRUCTURE (lossy):\nthis.seriesKey = seriesKey\nthis.dates = new ArrayList()\nthis.items = new ArrayList()\nthis.minimumRangeValue = null\nthis.maximumRangeValue = null\nthis.rangeBounds = null",
+        "public DefaultBoxAndWhiskerXYDataset(Comparable seriesKey) {\n        this.seriesKey = seriesKey;\n        this.dates = new ArrayList();\n        this.items = new ArrayList();\n        this.minimumRangeValue = null;\n        this.maximumRangeValue = null;\n        this.rangeBounds = null; \n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7037037037037037,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 3.0,
+        "source_tokens": 73.0,
+        "l0_tokens": 57.0,
+        "l1_tokens": 104.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.updateBounds()",
+      "source": "private void updateBounds() {\n        this.minimumRangeValue = Double.NaN;\n        this.maximumRangeValue = Double.NaN;\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.updateBounds()\nSIGNATURE: private void updateBounds()",
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.updateBounds()\nSIGNATURE: private void updateBounds()\nSTRUCTURE (lossy):\nthis.minimumRangeValue = Double.NaN\nthis.maximumRangeValue = Double.NaN",
+        "private void updateBounds() {\n        this.minimumRangeValue = Double.NaN;\n        this.maximumRangeValue = Double.NaN;\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8181818181818182,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 32.0,
+        "l0_tokens": 43.0,
+        "l1_tokens": 66.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerXYDataset.java::DefaultBoxAndWhiskerXYDataset.add(Date date, BoxAndWhiskerItem item)",
+      "source": "public void add(Date date, BoxAndWhiskerItem item) {\n        this.dates.add(date);\n        this.items.add(item);\n        if (this.minimumRangeValue == null) {\n            this.minimumRangeValue = item.getMinRegularValue();\n        }\n        else {\n            if (item.getMinRegularValue().doubleValue() \n                    < this.minimumRangeValue.doubleValue()) {\n                this.minimumRangeValue = item.getMinRegularValue();\n            }\n        }\n        if (this.maximumRangeValue == null) {\n            this.maximumRangeValue = item.getMaxRegularValue();\n        }\n        else {\n            if (item.getMaxRegularValue().doubleValue() \n                    > this.maximumRangeValue.doubleValue()) {\n                this.maximumRangeValue = item.getMaxRegularValue();\n            }\n        }\n        this.rangeBounds = new Range(\n            this.minimumRangeValue.doubleValue(), \n            this.maximumRangeValue.doubleValue()\n        );\n    }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerXYDataset.java::DefaultBoxAndWhiskerXYDataset.add(Date date, BoxAndWhiskerItem item)\nSIGNATURE: public void add(Date date, BoxAndWhiskerItem item)",
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerXYDataset.java::DefaultBoxAndWhiskerXYDataset.add(Date date, BoxAndWhiskerItem item)\nSIGNATURE: public void add(Date date, BoxAndWhiskerItem item)\nSTRUCTURE (lossy):\nCALL this.dates.add(date)\nCALL this.items.add(item)\nif (this.minimumRangeValue == null)\nthis.minimumRangeValue = item.getMinRegularValue()\nCALL item.getMinRegularValue()\nif (item.getMinRegularValue().doubleValue() < this.minimumRangeValue.doubleValue())\nCALL item.getMinRegularValue().doubleValue()\nCALL this.minimumRangeValue.doubleValue()\nif (this.maximumRangeValue == null)\nthis.maximumRangeValue = item.getMaxRegularValue()\nCALL item.getMaxRegularValue()\nif (item.getMaxRegularValue().doubleValue() > this.maximumRangeValue.doubleValue())\nCALL item.getMaxRegularValue().doubleValue()\nCALL this.maximumRangeValue.doubleValue()\nthis.rangeBounds = new Range( this.minimumRangeValue.doubleValue(), this.maximumRangeValue.doubleValue() )",
+        "public void add(Date date, BoxAndWhiskerItem item) {\n        this.dates.add(date);\n        this.items.add(item);\n        if (this.minimumRangeValue == null) {\n            this.minimumRangeValue = item.getMinRegularValue();\n        }\n        else {\n            if (item.getMinRegularValue().doubleValue() \n                    < this.minimumRangeValue.doubleValue()) {\n                this.minimumRangeValue = item.getMinRegularValue();\n            }\n        }\n        if (this.maximumRangeValue == null) {\n            this.maximumRangeValue = item.getMaxRegularValue();\n        }\n        else {\n            if (item.getMaxRegularValue().doubleValue() \n                    > this.maximumRangeValue.doubleValue()) {\n                this.maximumRangeValue = item.getMaxRegularValue();\n            }\n        }\n        this.rangeBounds = new Range(\n            this.minimumRangeValue.doubleValue(), \n            this.maximumRangeValue.doubleValue()\n        );\n    }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.65625,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 14.0,
+        "literal_count": 2.0,
+        "source_tokens": 240.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 241.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 14,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.add(BoxAndWhiskerItem item, Comparable rowKey, \n            Comparable columnKey)",
+      "source": "public void add(BoxAndWhiskerItem item, Comparable rowKey, \n            Comparable columnKey) {\n\n        this.data.addObject(item, rowKey, columnKey);\n        \n        // update cached min and max values\n        int r = this.data.getRowIndex(rowKey);\n        int c = this.data.getColumnIndex(columnKey);\n        if ((this.maximumRangeValueRow == r && this.maximumRangeValueColumn \n                == c) || (this.minimumRangeValueRow == r \n                && this.minimumRangeValueColumn == c))  {\n            updateBounds();\n        }\n        \n            double minval = Double.NaN;\n            if (item.getMinOutlier() != null) {\n                minval = item.getMinOutlier().doubleValue();\n            }\n            double maxval = Double.NaN;\n            if (item.getMaxOutlier() != null) {\n                maxval = item.getMaxOutlier().doubleValue();\n            }\n        \n            if (Double.isNaN(this.maximumRangeValue)) {\n                this.maximumRangeValue = maxval;\n                this.maximumRangeValueRow = r;\n                this.maximumRangeValueColumn = c;\n            }\n            else if (maxval > this.maximumRangeValue) {\n                this.maximumRangeValue = maxval;\n                this.maximumRangeValueRow = r;\n                this.maximumRangeValueColumn = c;\n            }\n        \n            if (Double.isNaN(this.minimumRangeValue)) {\n                this.minimumRangeValue = minval;\n                this.minimumRangeValueRow = r;\n                this.minimumRangeValueColumn = c;\n            }\n            else if (minval < this.minimumRangeValue) {\n                this.minimumRangeValue = minval;\n                this.minimumRangeValueRow = r;\n                this.minimumRangeValueColumn = c;\n            }\n        \n        this.rangeBounds = new Range(this.minimumRangeValue,\n              this.maximumRangeValue);\n        fireDatasetChanged();\n\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.add(BoxAndWhiskerItem item, Comparable rowKey, \n            Comparable columnKey)\nSIGNATURE: public void add(BoxAndWhiskerItem item, Comparable rowKey, \n            Comparable columnKey)",
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.add(BoxAndWhiskerItem item, Comparable rowKey, \n            Comparable columnKey)\nSIGNATURE: public void add(BoxAndWhiskerItem item, Comparable rowKey, \n            Comparable columnKey)\nSTRUCTURE (lossy):\nCALL this.data.addObject(item, rowKey, columnKey)\nint r = this.data.getRowIndex(rowKey);\nCALL this.data.getRowIndex(rowKey)\nint c = this.data.getColumnIndex(columnKey);\nCALL this.data.getColumnIndex(columnKey)\nif ((this.maximumRangeValueRow == r && this.maximumRangeValueColumn == c) || (this.minimumRangeValueRow == r && this.minimumRangeValueColumn == c))\nCALL updateBounds()\ndouble minval = Double.NaN;\nif (item.getMinOutlier() != null)\nCALL item.getMinOutlier()\nminval = item.getMinOutlier().doubleValue()\nCALL item.getMinOutlier().doubleValue()\ndouble maxval = Double.NaN;\nif (item.getMaxOutlier() != null)\nCALL item.getMaxOutlier()\nmaxval = item.getMaxOutlier().doubleValue()\nCALL item.getMaxOutlier().doubleValue()\nif (Double.isNaN(this.maximumRangeValue))\nCALL Double.isNaN(this.maximumRangeValue)\nthis.maximumRangeValue = maxval\nthis.maximumRangeValueRow = r\nthis.maximumRangeValueColumn = c\nif (maxval > this.maximumRangeValue)\nif (Double.isNaN(this.minimumRangeValue))\nCALL Double.isNaN(this.minimumRangeValue)\nthis.minimumRangeValue = minval\nthis.minimumRangeValueRow = r\nthis.minimumRangeValueColumn = c\nif (minval < this.minimumRangeValue)\nthis.rangeBounds = new Range(this.minimumRangeValue, this.maximumRangeValue)\nCALL fireDatasetChanged()",
+        "public void add(BoxAndWhiskerItem item, Comparable rowKey, \n            Comparable columnKey) {\n\n        this.data.addObject(item, rowKey, columnKey);\n        \n        // update cached min and max values\n        int r = this.data.getRowIndex(rowKey);\n        int c = this.data.getColumnIndex(columnKey);\n        if ((this.maximumRangeValueRow == r && this.maximumRangeValueColumn \n                == c) || (this.minimumRangeValueRow == r \n                && this.minimumRangeValueColumn == c))  {\n            updateBounds();\n        }\n        \n            double minval = Double.NaN;\n            if (item.getMinOutlier() != null) {\n                minval = item.getMinOutlier().doubleValue();\n            }\n            double maxval = Double.NaN;\n            if (item.getMaxOutlier() != null) {\n                maxval = item.getMaxOutlier().doubleValue();\n            }\n        \n            if (Double.isNaN(this.maximumRangeValue)) {\n                this.maximumRangeValue = maxval;\n                this.maximumRangeValueRow = r;\n                this.maximumRangeValueColumn = c;\n            }\n            else if (maxval > this.maximumRangeValue) {\n                this.maximumRangeValue = maxval;\n                this.maximumRangeValueRow = r;\n                this.maximumRangeValueColumn = c;\n            }\n        \n            if (Double.isNaN(this.minimumRangeValue)) {\n                this.minimumRangeValue = minval;\n                this.minimumRangeValueRow = r;\n                this.minimumRangeValueColumn = c;\n            }\n            else if (minval < this.minimumRangeValue) {\n                this.minimumRangeValue = minval;\n                this.minimumRangeValueRow = r;\n                this.minimumRangeValueColumn = c;\n            }\n        \n        this.rangeBounds = new Range(this.minimumRangeValue,\n              this.maximumRangeValue);\n        fireDatasetChanged();\n\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5227272727272727,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 13.0,
+        "literal_count": 2.0,
+        "source_tokens": 475.0,
+        "l0_tokens": 77.0,
+        "l1_tokens": 396.0,
+        "compression_ratio": 0.8336842105263158,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 13,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.add(List list, Comparable rowKey, Comparable columnKey)",
+      "source": "public void add(List list, Comparable rowKey, Comparable columnKey) {\n        BoxAndWhiskerItem item = BoxAndWhiskerCalculator\n                .calculateBoxAndWhiskerStatistics(list);\n        add(item, rowKey, columnKey);\n    }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.add(List list, Comparable rowKey, Comparable columnKey)\nSIGNATURE: public void add(List list, Comparable rowKey, Comparable columnKey)",
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.add(List list, Comparable rowKey, Comparable columnKey)\nSIGNATURE: public void add(List list, Comparable rowKey, Comparable columnKey)\nSTRUCTURE (lossy):\nBoxAndWhiskerItem item = BoxAndWhiskerCalculator .calculateBoxAndWhiskerStatistics(list);\nCALL BoxAndWhiskerCalculator .calculateBoxAndWhiskerStatistics(list)\nCALL add(item, rowKey, columnKey)",
+        "public void add(List list, Comparable rowKey, Comparable columnKey) {\n        BoxAndWhiskerItem item = BoxAndWhiskerCalculator\n                .calculateBoxAndWhiskerStatistics(list);\n        add(item, rowKey, columnKey);\n    }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7391304347826086,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 57.0,
+        "l0_tokens": 64.0,
+        "l1_tokens": 117.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.equals(Object obj)",
+      "source": "public boolean equals(Object obj) {\n        if (obj == this) {\n            return true;   \n        }\n        if (obj instanceof DefaultBoxAndWhiskerCategoryDataset) {\n            DefaultBoxAndWhiskerCategoryDataset dataset \n                    = (DefaultBoxAndWhiskerCategoryDataset) obj;\n            return ObjectUtilities.equal(this.data, dataset.data);\n        }\n        return false;\n    }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.equals(Object obj)\nSIGNATURE: public boolean equals(Object obj)",
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.equals(Object obj)\nSIGNATURE: public boolean equals(Object obj)\nSTRUCTURE (lossy):\nif (obj == this)\nreturn true;\nif (obj instanceof DefaultBoxAndWhiskerCategoryDataset)\nDefaultBoxAndWhiskerCategoryDataset dataset = (DefaultBoxAndWhiskerCategoryDataset) obj;\nreturn ObjectUtilities.equal(this.data, dataset.data);\nCALL ObjectUtilities.equal(this.data, dataset.data)\nreturn false;",
+        "public boolean equals(Object obj) {\n        if (obj == this) {\n            return true;   \n        }\n        if (obj instanceof DefaultBoxAndWhiskerCategoryDataset) {\n            DefaultBoxAndWhiskerCategoryDataset dataset \n                    = (DefaultBoxAndWhiskerCategoryDataset) obj;\n            return ObjectUtilities.equal(this.data, dataset.data);\n        }\n        return false;\n    }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7083333333333334,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 99.0,
+        "l0_tokens": 46.0,
+        "l1_tokens": 125.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getOutliers(int row, int column)",
+      "source": "public List getOutliers(int row, int column) {\n        List result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                row, column);\n        if (item != null) {\n            result = item.getOutliers();\n        }\n        return result;\n    }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getOutliers(int row, int column)\nSIGNATURE: public List getOutliers(int row, int column)",
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getOutliers(int row, int column)\nSIGNATURE: public List getOutliers(int row, int column)\nSTRUCTURE (lossy):\nList result = null;\nBoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject( row, column);\nCALL this.data.getObject( row, column)\nif (item != null)\nresult = item.getOutliers()\nCALL item.getOutliers()\nreturn result;",
+        "public List getOutliers(int row, int column) {\n        List result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                row, column);\n        if (item != null) {\n            result = item.getOutliers();\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.72,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 72.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 113.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getRangeBounds(boolean includeInterval)",
+      "source": "public Range getRangeBounds(boolean includeInterval) {\n        return this.rangeBounds;\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getRangeBounds(boolean includeInterval)\nSIGNATURE: public Range getRangeBounds(boolean includeInterval)",
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getRangeBounds(boolean includeInterval)\nSIGNATURE: public Range getRangeBounds(boolean includeInterval)\nSTRUCTURE (lossy):\nreturn this.rangeBounds;",
+        "public Range getRangeBounds(boolean includeInterval) {\n        return this.rangeBounds;\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8095238095238095,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 24.0,
+        "l0_tokens": 56.0,
+        "l1_tokens": 67.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.isJDK14()",
+      "source": "public static boolean isJDK14() {\n        ClassLoader loader = getClassLoader(ObjectUtilities.class);\n        if (loader != null) {\n            try {\n              loader.loadClass(\"java.util.RandomAccess\");\n              return true;\n            }\n            catch (ClassNotFoundException e) {\n              return false;\n            }\n            catch(Exception e) {\n              // do nothing, but do not crash ...\n            }\n        }\n        // OK, the quick and dirty, but secure way failed. Lets try it\n        // using the standard way.\n        try {\n            String version = System.getProperty(\n                    \"java.vm.specification.version\");\n            // parse the beast...\n            if (version == null) {\n                return false;\n            }\n\n            String[] versions = parseVersions(version);\n            String[] target = new String[]{ \"1\", \"4\" };\n            return (ArrayUtilities.compareVersionArrays(versions, target) >= 0);\n        }\n        catch(Exception e) {\n            return false;\n        }\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.isJDK14()\nSIGNATURE: public static boolean isJDK14()",
+        "METHOD: source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.isJDK14()\nSIGNATURE: public static boolean isJDK14()\nSTRUCTURE (lossy):\nClassLoader loader = getClassLoader(ObjectUtilities.class);\nCALL getClassLoader(ObjectUtilities.class)\nif (loader != null)\nCALL loader.loadClass(\"java.util.RandomAccess\")\nreturn true;\ncatch (ClassNotFoundException e)\nreturn false;\ncatch(Exception e)\nString version = System.getProperty( \"java.vm.specification.version\");\nCALL System.getProperty( \"java.vm.specification.version\")\nif (version == null)\nString[] versions = parseVersions(version);\nCALL parseVersions(version)\nString[] target = new String[]{ \"1\", \"4\" };\nreturn (ArrayUtilities.compareVersionArrays(versions, target) >= 0);\nCALL ArrayUtilities.compareVersionArrays(versions, target)",
+        "public static boolean isJDK14() {\n        ClassLoader loader = getClassLoader(ObjectUtilities.class);\n        if (loader != null) {\n            try {\n              loader.loadClass(\"java.util.RandomAccess\");\n              return true;\n            }\n            catch (ClassNotFoundException e) {\n              return false;\n            }\n            catch(Exception e) {\n              // do nothing, but do not crash ...\n            }\n        }\n        // OK, the quick and dirty, but secure way failed. Lets try it\n        // using the standard way.\n        try {\n            String version = System.getProperty(\n                    \"java.vm.specification.version\");\n            // parse the beast...\n            if (version == null) {\n                return false;\n            }\n\n            String[] versions = parseVersions(version);\n            String[] target = new String[]{ \"1\", \"4\" };\n            return (ArrayUtilities.compareVersionArrays(versions, target) >= 0);\n        }\n        catch(Exception e) {\n            return false;\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.32075471698113206,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 5.0,
+        "literal_count": 8.0,
+        "source_tokens": 264.0,
+        "l0_tokens": 32.0,
+        "l1_tokens": 198.0,
+        "compression_ratio": 0.75,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 5,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getRangeLowerBound(boolean includeInterval)",
+      "source": "public double getRangeLowerBound(boolean includeInterval) {\n        return this.minimumRangeValue;\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getRangeLowerBound(boolean includeInterval)\nSIGNATURE: public double getRangeLowerBound(boolean includeInterval)",
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getRangeLowerBound(boolean includeInterval)\nSIGNATURE: public double getRangeLowerBound(boolean includeInterval)\nSTRUCTURE (lossy):\nreturn this.minimumRangeValue;",
+        "public double getRangeLowerBound(boolean includeInterval) {\n        return this.minimumRangeValue;\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.72,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 26.0,
+        "l0_tokens": 58.0,
+        "l1_tokens": 71.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getOutliers(Comparable rowKey, Comparable columnKey)",
+      "source": "public List getOutliers(Comparable rowKey, Comparable columnKey) {\n        List result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                rowKey, columnKey);\n        if (item != null) {\n            result = item.getOutliers();\n        }\n        return result;\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getOutliers(Comparable rowKey, Comparable columnKey)\nSIGNATURE: public List getOutliers(Comparable rowKey, Comparable columnKey)",
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getOutliers(Comparable rowKey, Comparable columnKey)\nSIGNATURE: public List getOutliers(Comparable rowKey, Comparable columnKey)\nSTRUCTURE (lossy):\nList result = null;\nBoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject( rowKey, columnKey);\nCALL this.data.getObject( rowKey, columnKey)\nif (item != null)\nresult = item.getOutliers()\nCALL item.getOutliers()\nreturn result;",
+        "public List getOutliers(Comparable rowKey, Comparable columnKey) {\n        List result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                rowKey, columnKey);\n        if (item != null) {\n            result = item.getOutliers();\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6923076923076923,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 78.0,
+        "l0_tokens": 62.0,
+        "l1_tokens": 126.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMeanValue(int row, int column)",
+      "source": "public Number getMeanValue(int row, int column) {\n\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(row, \n                column);\n        if (item != null) {\n            result = item.getMean();\n        }\n        return result;\n\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMeanValue(int row, int column)\nSIGNATURE: public Number getMeanValue(int row, int column)",
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMeanValue(int row, int column)\nSIGNATURE: public Number getMeanValue(int row, int column)\nSTRUCTURE (lossy):\nNumber result = null;\nBoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(row, column);\nCALL this.data.getObject(row, column)\nif (item != null)\nresult = item.getMean()\nCALL item.getMean()\nreturn result;",
+        "public Number getMeanValue(int row, int column) {\n\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(row, \n                column);\n        if (item != null) {\n            result = item.getMean();\n        }\n        return result;\n\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6923076923076923,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 73.0,
+        "l0_tokens": 53.0,
+        "l1_tokens": 112.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMedianValue(int row, int column)",
+      "source": "public Number getMedianValue(int row, int column) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(row, \n                column);\n        if (item != null) {\n            result = item.getMedian();\n        }\n        return result;\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMedianValue(int row, int column)\nSIGNATURE: public Number getMedianValue(int row, int column)",
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMedianValue(int row, int column)\nSIGNATURE: public Number getMedianValue(int row, int column)\nSTRUCTURE (lossy):\nNumber result = null;\nBoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(row, column);\nCALL this.data.getObject(row, column)\nif (item != null)\nresult = item.getMedian()\nCALL item.getMedian()\nreturn result;",
+        "public Number getMedianValue(int row, int column) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(row, \n                column);\n        if (item != null) {\n            result = item.getMedian();\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6923076923076923,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 73.0,
+        "l0_tokens": 54.0,
+        "l1_tokens": 114.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerXYDataset.java::DefaultBoxAndWhiskerXYDataset.getRangeLowerBound(boolean includeInterval)",
+      "source": "public double getRangeLowerBound(boolean includeInterval) {\n        double result = Double.NaN;\n        if (this.minimumRangeValue != null) {\n            result = this.minimumRangeValue.doubleValue();\n        }\n        return result;        \n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerXYDataset.java::DefaultBoxAndWhiskerXYDataset.getRangeLowerBound(boolean includeInterval)\nSIGNATURE: public double getRangeLowerBound(boolean includeInterval)",
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerXYDataset.java::DefaultBoxAndWhiskerXYDataset.getRangeLowerBound(boolean includeInterval)\nSIGNATURE: public double getRangeLowerBound(boolean includeInterval)\nSTRUCTURE (lossy):\ndouble result = Double.NaN;\nif (this.minimumRangeValue != null)\nresult = this.minimumRangeValue.doubleValue()\nCALL this.minimumRangeValue.doubleValue()\nreturn result;",
+        "public double getRangeLowerBound(boolean includeInterval) {\n        double result = Double.NaN;\n        if (this.minimumRangeValue != null) {\n            result = this.minimumRangeValue.doubleValue();\n        }\n        return result;        \n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6538461538461539,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 62.0,
+        "l0_tokens": 55.0,
+        "l1_tokens": 102.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMaxRegularValue(int row, int column)",
+      "source": "public Number getMaxRegularValue(int row, int column) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                row, column);\n        if (item != null) {\n            result = item.getMaxRegularValue();\n        }\n        return result;\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMaxRegularValue(int row, int column)\nSIGNATURE: public Number getMaxRegularValue(int row, int column)",
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMaxRegularValue(int row, int column)\nSIGNATURE: public Number getMaxRegularValue(int row, int column)\nSTRUCTURE (lossy):\nNumber result = null;\nBoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject( row, column);\nCALL this.data.getObject( row, column)\nif (item != null)\nresult = item.getMaxRegularValue()\nCALL item.getMaxRegularValue()\nreturn result;",
+        "public Number getMaxRegularValue(int row, int column) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                row, column);\n        if (item != null) {\n            result = item.getMaxRegularValue();\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6666666666666666,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 76.0,
+        "l0_tokens": 56.0,
+        "l1_tokens": 121.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMinRegularValue(int row, int column)",
+      "source": "public Number getMinRegularValue(int row, int column) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                row, column);\n        if (item != null) {\n            result = item.getMinRegularValue();\n        }\n        return result;\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMinRegularValue(int row, int column)\nSIGNATURE: public Number getMinRegularValue(int row, int column)",
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMinRegularValue(int row, int column)\nSIGNATURE: public Number getMinRegularValue(int row, int column)\nSTRUCTURE (lossy):\nNumber result = null;\nBoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject( row, column);\nCALL this.data.getObject( row, column)\nif (item != null)\nresult = item.getMinRegularValue()\nCALL item.getMinRegularValue()\nreturn result;",
+        "public Number getMinRegularValue(int row, int column) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                row, column);\n        if (item != null) {\n            result = item.getMinRegularValue();\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6666666666666666,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 76.0,
+        "l0_tokens": 56.0,
+        "l1_tokens": 121.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getMaximumWindowBounds()",
+      "source": "public static Rectangle getMaximumWindowBounds() {\n      GraphicsEnvironment localGraphicsEnvironment\n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\n                  \"getMaximumWindowBounds\", (Class[]) null);\n          return (Rectangle) method.invoke(localGraphicsEnvironment, \n                  (Object[]) null);\n      }\n      catch (Exception e) {\n          // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Rectangle (0, 0, s.width, s.height);\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getMaximumWindowBounds()\nSIGNATURE: public static Rectangle getMaximumWindowBounds()",
+        "METHOD: source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getMaximumWindowBounds()\nSIGNATURE: public static Rectangle getMaximumWindowBounds()\nSTRUCTURE (lossy):\nGraphicsEnvironment localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();\nCALL GraphicsEnvironment.getLocalGraphicsEnvironment()\nMethod method = GraphicsEnvironment.class.getMethod( \"getMaximumWindowBounds\", (Class[]) null);\nCALL GraphicsEnvironment.class.getMethod( \"getMaximumWindowBounds\", (Class[]) null)\nreturn (Rectangle) method.invoke(localGraphicsEnvironment, (Object[]) null);\nCALL method.invoke(localGraphicsEnvironment, (Object[]) null)\ncatch (Exception e)\nDimension s = Toolkit.getDefaultToolkit().getScreenSize();\nCALL Toolkit.getDefaultToolkit().getScreenSize()\nCALL Toolkit.getDefaultToolkit()\nreturn new Rectangle (0, 0, s.width, s.height);",
+        "public static Rectangle getMaximumWindowBounds() {\n      GraphicsEnvironment localGraphicsEnvironment\n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\n                  \"getMaximumWindowBounds\", (Class[]) null);\n          return (Rectangle) method.invoke(localGraphicsEnvironment, \n                  (Object[]) null);\n      }\n      catch (Exception e) {\n          // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Rectangle (0, 0, s.width, s.height);\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3902439024390244,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 5.0,
+        "literal_count": 6.0,
+        "source_tokens": 161.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 216.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 5,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMeanValue(Comparable rowKey, Comparable columnKey)",
+      "source": "public Number getMeanValue(Comparable rowKey, Comparable columnKey) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                rowKey, columnKey);\n        if (item != null) {\n            result = item.getMean();\n        }\n        return result;\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMeanValue(Comparable rowKey, Comparable columnKey)\nSIGNATURE: public Number getMeanValue(Comparable rowKey, Comparable columnKey)",
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMeanValue(Comparable rowKey, Comparable columnKey)\nSIGNATURE: public Number getMeanValue(Comparable rowKey, Comparable columnKey)\nSTRUCTURE (lossy):\nNumber result = null;\nBoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject( rowKey, columnKey);\nCALL this.data.getObject( rowKey, columnKey)\nif (item != null)\nresult = item.getMean()\nCALL item.getMean()\nreturn result;",
+        "public Number getMeanValue(Comparable rowKey, Comparable columnKey) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                rowKey, columnKey);\n        if (item != null) {\n            result = item.getMean();\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6666666666666666,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 79.0,
+        "l0_tokens": 63.0,
+        "l1_tokens": 125.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMedianValue(Comparable rowKey, Comparable columnKey)",
+      "source": "public Number getMedianValue(Comparable rowKey, Comparable columnKey) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                rowKey, columnKey);\n        if (item != null) {\n            result = item.getMedian();\n        }\n        return result;\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMedianValue(Comparable rowKey, Comparable columnKey)\nSIGNATURE: public Number getMedianValue(Comparable rowKey, Comparable columnKey)",
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMedianValue(Comparable rowKey, Comparable columnKey)\nSIGNATURE: public Number getMedianValue(Comparable rowKey, Comparable columnKey)\nSTRUCTURE (lossy):\nNumber result = null;\nBoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject( rowKey, columnKey);\nCALL this.data.getObject( rowKey, columnKey)\nif (item != null)\nresult = item.getMedian()\nCALL item.getMedian()\nreturn result;",
+        "public Number getMedianValue(Comparable rowKey, Comparable columnKey) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                rowKey, columnKey);\n        if (item != null) {\n            result = item.getMedian();\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6666666666666666,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 80.0,
+        "l0_tokens": 64.0,
+        "l1_tokens": 127.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMaxRegularValue(Comparable rowKey, Comparable columnKey)",
+      "source": "public Number getMaxRegularValue(Comparable rowKey, Comparable columnKey) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                rowKey, columnKey);\n        if (item != null) {\n            result = item.getMaxRegularValue();\n        }\n        return result;\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMaxRegularValue(Comparable rowKey, Comparable columnKey)\nSIGNATURE: public Number getMaxRegularValue(Comparable rowKey, Comparable columnKey)",
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMaxRegularValue(Comparable rowKey, Comparable columnKey)\nSIGNATURE: public Number getMaxRegularValue(Comparable rowKey, Comparable columnKey)\nSTRUCTURE (lossy):\nNumber result = null;\nBoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject( rowKey, columnKey);\nCALL this.data.getObject( rowKey, columnKey)\nif (item != null)\nresult = item.getMaxRegularValue()\nCALL item.getMaxRegularValue()\nreturn result;",
+        "public Number getMaxRegularValue(Comparable rowKey, Comparable columnKey) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                rowKey, columnKey);\n        if (item != null) {\n            result = item.getMaxRegularValue();\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6428571428571429,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 83.0,
+        "l0_tokens": 66.0,
+        "l1_tokens": 134.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMinRegularValue(Comparable rowKey, Comparable columnKey)",
+      "source": "public Number getMinRegularValue(Comparable rowKey, Comparable columnKey) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                rowKey, columnKey);\n        if (item != null) {\n            result = item.getMinRegularValue();\n        }\n        return result;\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMinRegularValue(Comparable rowKey, Comparable columnKey)\nSIGNATURE: public Number getMinRegularValue(Comparable rowKey, Comparable columnKey)",
+        "METHOD: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMinRegularValue(Comparable rowKey, Comparable columnKey)\nSIGNATURE: public Number getMinRegularValue(Comparable rowKey, Comparable columnKey)\nSTRUCTURE (lossy):\nNumber result = null;\nBoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject( rowKey, columnKey);\nCALL this.data.getObject( rowKey, columnKey)\nif (item != null)\nresult = item.getMinRegularValue()\nCALL item.getMinRegularValue()\nreturn result;",
+        "public Number getMinRegularValue(Comparable rowKey, Comparable columnKey) {\n        Number result = null;\n        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(\n                rowKey, columnKey);\n        if (item != null) {\n            result = item.getMinRegularValue();\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6428571428571429,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 83.0,
+        "l0_tokens": 66.0,
+        "l1_tokens": 134.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/DynamicTimeSeriesCollection.java::DynamicTimeSeriesCollection.advanceTime()",
+      "source": "public synchronized RegularTimePeriod advanceTime() {\n        RegularTimePeriod nextInstant = this.pointsInTime[this.newestAt].next();\n        this.newestAt = this.oldestAt;  // newestAt takes value previously held \n                                        // by oldestAT\n        /*** \n         * The next 10 lines or so should be expanded if data can be negative \n         ***/\n        // if the oldest data contained a maximum Y-value, invalidate the stored\n        //   Y-max and Y-range data:\n        boolean extremaChanged = false;\n        float oldMax = 0.0f;\n        if (this.maxValue != null) {\n            oldMax = this.maxValue.floatValue();\n        }\n        for (int s = 0; s < getSeriesCount(); s++) {\n            if (this.valueHistory[s].getData(this.oldestAt) == oldMax) {\n                extremaChanged = true;\n            }\n            if (extremaChanged) {\n                break;\n            }\n        }  /*** If data can be < 0, add code here to check the minimum    **/\n        if (extremaChanged) {\n            invalidateRangeInfo();\n        }\n        //  wipe the next (about to be used) set of data slots\n        float wiper = (float) 0.0;\n        for (int s = 0; s < getSeriesCount(); s++) {\n            this.valueHistory[s].enterData(this.newestAt, wiper);\n        }\n        // Update the array of TimePeriods:\n        this.pointsInTime[this.newestAt] = nextInstant;\n        // Now advance \"oldestAt\", wrapping at end of the array\n        this.oldestAt++;\n        if (this.oldestAt >= this.historyCount) {\n            this.oldestAt = 0;\n        }\n        // Update the domain limits:\n        long startL = this.domainStart.longValue();  //(time is kept in msec)\n        this.domainStart = new Long(startL + this.deltaTime);\n        long endL = this.domainEnd.longValue();\n        this.domainEnd = new Long(endL + this.deltaTime);\n        this.domainRange = new Range(startL, endL);\n        fireSeriesChanged();\n        return nextInstant;\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/DynamicTimeSeriesCollection.java::DynamicTimeSeriesCollection.advanceTime()\nSIGNATURE: public synchronized RegularTimePeriod advanceTime()",
+        "METHOD: source/org/jfree/data/time/DynamicTimeSeriesCollection.java::DynamicTimeSeriesCollection.advanceTime()\nSIGNATURE: public synchronized RegularTimePeriod advanceTime()\nSTRUCTURE (lossy):\nRegularTimePeriod nextInstant = this.pointsInTime[this.newestAt].next();\nCALL this.pointsInTime[this.newestAt].next()\nthis.newestAt = this.oldestAt\nboolean extremaChanged = false;\nfloat oldMax = 0.0f;\nif (this.maxValue != null)\noldMax = this.maxValue.floatValue()\nCALL this.maxValue.floatValue()\nfor (int s = 0; s < getSeriesCount(); s++)\nint s = 0;\nCALL getSeriesCount()\ns++\nif (this.valueHistory[s].getData(this.oldestAt) == oldMax)\nCALL this.valueHistory[s].getData(this.oldestAt)\nextremaChanged = true\nif (extremaChanged)\nCALL invalidateRangeInfo()\nfloat wiper = (float) 0.0;\nCALL this.valueHistory[s].enterData(this.newestAt, wiper)\nthis.pointsInTime[this.newestAt] = nextInstant\nthis.oldestAt++\nif (this.oldestAt >= this.historyCount)\nthis.oldestAt = 0\nlong startL = this.domainStart.longValue();\nCALL this.domainStart.longValue()\nthis.domainStart = new Long(startL + this.deltaTime)\nlong endL = this.domainEnd.longValue();\nCALL this.domainEnd.longValue()\nthis.domainEnd = new Long(endL + this.deltaTime)\nthis.domainRange = new Range(startL, endL)\nCALL fireSeriesChanged()\nreturn nextInstant;",
+        "public synchronized RegularTimePeriod advanceTime() {\n        RegularTimePeriod nextInstant = this.pointsInTime[this.newestAt].next();\n        this.newestAt = this.oldestAt;  // newestAt takes value previously held \n                                        // by oldestAT\n        /*** \n         * The next 10 lines or so should be expanded if data can be negative \n         ***/\n        // if the oldest data contained a maximum Y-value, invalidate the stored\n        //   Y-max and Y-range data:\n        boolean extremaChanged = false;\n        float oldMax = 0.0f;\n        if (this.maxValue != null) {\n            oldMax = this.maxValue.floatValue();\n        }\n        for (int s = 0; s < getSeriesCount(); s++) {\n            if (this.valueHistory[s].getData(this.oldestAt) == oldMax) {\n                extremaChanged = true;\n            }\n            if (extremaChanged) {\n                break;\n            }\n        }  /*** If data can be < 0, add code here to check the minimum    **/\n        if (extremaChanged) {\n            invalidateRangeInfo();\n        }\n        //  wipe the next (about to be used) set of data slots\n        float wiper = (float) 0.0;\n        for (int s = 0; s < getSeriesCount(); s++) {\n            this.valueHistory[s].enterData(this.newestAt, wiper);\n        }\n        // Update the array of TimePeriods:\n        this.pointsInTime[this.newestAt] = nextInstant;\n        // Now advance \"oldestAt\", wrapping at end of the array\n        this.oldestAt++;\n        if (this.oldestAt >= this.historyCount) {\n            this.oldestAt = 0;\n        }\n        // Update the domain limits:\n        long startL = this.domainStart.longValue();  //(time is kept in msec)\n        this.domainStart = new Long(startL + this.deltaTime);\n        long endL = this.domainEnd.longValue();\n        this.domainEnd = new Long(endL + this.deltaTime);\n        this.domainRange = new Range(startL, endL);\n        fireSeriesChanged();\n        return nextInstant;\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.25,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 10.0,
+        "literal_count": 6.0,
+        "source_tokens": 492.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 323.0,
+        "compression_ratio": 0.6565040650406504,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 10,
+        "literal_count": 6
+      }
+    }
+  ],
+  "rank_metadata": {
+    "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.DefaultBoxAndWhiskerCategoryDataset()": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/statistics/DefaultBoxAndWhiskerXYDataset.java::DefaultBoxAndWhiskerXYDataset.DefaultBoxAndWhiskerXYDataset(Comparable seriesKey)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.updateBounds()": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/statistics/DefaultBoxAndWhiskerXYDataset.java::DefaultBoxAndWhiskerXYDataset.add(Date date, BoxAndWhiskerItem item)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.add(BoxAndWhiskerItem item, Comparable rowKey, \n            Comparable columnKey)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.add(List list, Comparable rowKey, Comparable columnKey)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.equals(Object obj)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getOutliers(int row, int column)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getRangeBounds(boolean includeInterval)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.isJDK14()": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getRangeLowerBound(boolean includeInterval)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getOutliers(Comparable rowKey, Comparable columnKey)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMeanValue(int row, int column)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMedianValue(int row, int column)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/statistics/DefaultBoxAndWhiskerXYDataset.java::DefaultBoxAndWhiskerXYDataset.getRangeLowerBound(boolean includeInterval)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMaxRegularValue(int row, int column)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMinRegularValue(int row, int column)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getMaximumWindowBounds()": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMeanValue(Comparable rowKey, Comparable columnKey)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMedianValue(Comparable rowKey, Comparable columnKey)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMaxRegularValue(Comparable rowKey, Comparable columnKey)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java::DefaultBoxAndWhiskerCategoryDataset.getMinRegularValue(Comparable rowKey, Comparable columnKey)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/DynamicTimeSeriesCollection.java::DynamicTimeSeriesCollection.advanceTime()": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 7274,
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "51fcd5b68009e352d91b7de6ca3f689d2ea549cd26997165fc4fe6f3f464e998",
+  "evidence_sha256": "fec3aac91bf6dd6e75e7e41825bb64e72f58fef653aef28724abb208f6ec2ede"
+}

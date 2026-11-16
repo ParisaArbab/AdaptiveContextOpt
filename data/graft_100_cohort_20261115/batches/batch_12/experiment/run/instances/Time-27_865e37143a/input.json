@@ -1,0 +1,1318 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Time-27",
+    "repository": "Time",
+    "language": "java",
+    "revision": "fc3910b944bb7f26ce3e2402e114e4947b506ea4",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_12/prepared/checkouts/Time-27",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Time-27\nEXECUTED BUGGY TEST: org.joda.time.format.TestPeriodFormatterBuilder::testBug2495455\nTEST SOURCE: src/test/java/org/joda/time/format/TestPeriodFormatterBuilder.java\nTEST SOURCE SHA256: 44f584c41daf79f0b7ec31c82fb6b340ca1a42fa0331f1cb850ed59fc803c9b4\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testBug2495455() {\n        PeriodFormatter pfmt1 = new PeriodFormatterBuilder()\n            .appendLiteral(\"P\")\n            .appendYears()\n            .appendSuffix(\"Y\")\n            .appendMonths()\n            .appendSuffix(\"M\")\n            .appendWeeks()\n            .appendSuffix(\"W\")\n            .appendDays()\n            .appendSuffix(\"D\")\n            .appendSeparatorIfFieldsAfter(\"T\")\n            .appendHours()\n            .appendSuffix(\"H\")\n            .appendMinutes()\n            .appendSuffix(\"M\")\n            .appendSecondsWithOptionalMillis()\n            .appendSuffix(\"S\")\n            .toFormatter();\n        PeriodFormatter pfmt2 = new PeriodFormatterBuilder()\n            .append(ISOPeriodFormat.standard())\n            .toFormatter();\n        pfmt1.parsePeriod(\"PT1003199059S\");\n        pfmt2.parsePeriod(\"PT1003199059S\");\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.joda.time.format.TestPeriodFormatterBuilder::testBug2495455\njava.lang.IllegalArgumentException: Invalid format: \"PT1003199059S\" is malformed at \"1003199059S\"\n\tat org.joda.time.format.PeriodFormatter.parseMutablePeriod(PeriodFormatter.java:326)\n\tat org.joda.time.format.PeriodFormatter.parsePeriod(PeriodFormatter.java:304)\n\tat org.joda.time.format.TestPeriodFormatterBuilder.testBug2495455(TestPeriodFormatterBuilder.java:869)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_12/prepared/evidence/Time-27.txt",
+      "sha256": "8906a3d51590319215d5cbf4e4aad0166029d04175f76aed1876e365fa428653"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src/main/java",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Time-27",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.standard()",
+      "path": "src/main/java/org/joda/time/format/ISOPeriodFormat.java",
+      "start_line": 64,
+      "end_line": 86,
+      "source": "public static PeriodFormatter standard() {\n        if (cStandard == null) {\n            cStandard = new PeriodFormatterBuilder()\n                .appendLiteral(\"P\")\n                .appendYears()\n                .appendSuffix(\"Y\")\n                .appendMonths()\n                .appendSuffix(\"M\")\n                .appendWeeks()\n                .appendSuffix(\"W\")\n                .appendDays()\n                .appendSuffix(\"D\")\n                .appendSeparatorIfFieldsAfter(\"T\")\n                .appendHours()\n                .appendSuffix(\"H\")\n                .appendMinutes()\n                .appendSuffix(\"M\")\n                .appendSecondsWithOptionalMillis()\n                .appendSuffix(\"S\")\n                .toFormatter();\n        }\n        return cStandard;\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 87.62514355917605
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.alternateWithWeeks()",
+      "path": "src/main/java/org/joda/time/format/ISOPeriodFormat.java",
+      "start_line": 154,
+      "end_line": 172,
+      "source": "public static PeriodFormatter alternateWithWeeks() {\n        if (cAlternateWithWeeks == null) {\n            cAlternateWithWeeks = new PeriodFormatterBuilder()\n                .appendLiteral(\"P\")\n                .printZeroAlways()\n                .minimumPrintedDigits(4)\n                .appendYears()\n                .minimumPrintedDigits(2)\n                .appendPrefix(\"W\")\n                .appendWeeks()\n                .appendDays()\n                .appendSeparatorIfFieldsAfter(\"T\")\n                .appendHours()\n                .appendMinutes()\n                .appendSecondsWithOptionalMillis()\n                .toFormatter();\n        }\n        return cAlternateWithWeeks;\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 70.6904667235884
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.alternate()",
+      "path": "src/main/java/org/joda/time/format/ISOPeriodFormat.java",
+      "start_line": 96,
+      "end_line": 113,
+      "source": "public static PeriodFormatter alternate() {\n        if (cAlternate == null) {\n            cAlternate = new PeriodFormatterBuilder()\n                .appendLiteral(\"P\")\n                .printZeroAlways()\n                .minimumPrintedDigits(4)\n                .appendYears()\n                .minimumPrintedDigits(2)\n                .appendMonths()\n                .appendDays()\n                .appendSeparatorIfFieldsAfter(\"T\")\n                .appendHours()\n                .appendMinutes()\n                .appendSecondsWithOptionalMillis()\n                .toFormatter();\n        }\n        return cAlternate;\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 70.12242857221472
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.alternateExtendedWithWeeks()",
+      "path": "src/main/java/org/joda/time/format/ISOPeriodFormat.java",
+      "start_line": 182,
+      "end_line": 204,
+      "source": "public static PeriodFormatter alternateExtendedWithWeeks() {\n        if (cAlternateExtendedWihWeeks == null) {\n            cAlternateExtendedWihWeeks = new PeriodFormatterBuilder()\n                .appendLiteral(\"P\")\n                .printZeroAlways()\n                .minimumPrintedDigits(4)\n                .appendYears()\n                .appendSeparator(\"-\")\n                .minimumPrintedDigits(2)\n                .appendPrefix(\"W\")\n                .appendWeeks()\n                .appendSeparator(\"-\")\n                .appendDays()\n                .appendSeparatorIfFieldsAfter(\"T\")\n                .appendHours()\n                .appendSeparator(\":\")\n                .appendMinutes()\n                .appendSeparator(\":\")\n                .appendSecondsWithOptionalMillis()\n                .toFormatter();\n        }\n        return cAlternateExtendedWihWeeks;\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 70.00347751498795
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.alternateExtended()",
+      "path": "src/main/java/org/joda/time/format/ISOPeriodFormat.java",
+      "start_line": 123,
+      "end_line": 144,
+      "source": "public static PeriodFormatter alternateExtended() {\n        if (cAlternateExtended == null) {\n            cAlternateExtended = new PeriodFormatterBuilder()\n                .appendLiteral(\"P\")\n                .printZeroAlways()\n                .minimumPrintedDigits(4)\n                .appendYears()\n                .appendSeparator(\"-\")\n                .minimumPrintedDigits(2)\n                .appendMonths()\n                .appendSeparator(\"-\")\n                .appendDays()\n                .appendSeparatorIfFieldsAfter(\"T\")\n                .appendHours()\n                .appendSeparator(\":\")\n                .appendMinutes()\n                .appendSeparator(\":\")\n                .appendSecondsWithOptionalMillis()\n                .toFormatter();\n        }\n        return cAlternateExtended;\n    }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 69.35065026848837
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)",
+      "path": "src/main/java/org/joda/time/base/BasePeriod.java",
+      "start_line": 77,
+      "end_line": 84,
+      "source": "protected BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type) {\n        super();\n        type = checkPeriodType(type);\n        iType = type;\n        setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis); // internal method\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 58.49683693936354
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)",
+      "path": "src/main/java/org/joda/time/base/BasePeriod.java",
+      "start_line": 434,
+      "end_line": 437,
+      "source": "protected void setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis) {\n        setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis);\n    }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 56.247387368225866
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.MutablePeriod(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)",
+      "path": "src/main/java/org/joda/time/MutablePeriod.java",
+      "start_line": 101,
+      "end_line": 104,
+      "source": "public MutablePeriod(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, PeriodType.standard());\n    }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 51.510061036654875
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.setPeriod(int years, int months, int weeks, int days,\n                          int hours, int minutes, int seconds, int millis)",
+      "path": "src/main/java/org/joda/time/MutablePeriod.java",
+      "start_line": 456,
+      "end_line": 459,
+      "source": "public void setPeriod(int years, int months, int weeks, int days,\n                          int hours, int minutes, int seconds, int millis) {\n        super.setPeriod(years, months, weeks, days, hours, minutes, seconds, millis);\n    }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 49.308055762431984
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.setFieldValue(ReadWritablePeriod period, int field, int value)",
+      "path": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java",
+      "start_line": 1497,
+      "end_line": 1526,
+      "source": "void setFieldValue(ReadWritablePeriod period, int field, int value) {\n            switch (field) {\n            default:\n                break;\n            case YEARS:\n                period.setYears(value);\n                break;\n            case MONTHS:\n                period.setMonths(value);\n                break;\n            case WEEKS:\n                period.setWeeks(value);\n                break;\n            case DAYS:\n                period.setDays(value);\n                break;\n            case HOURS:\n                period.setHours(value);\n                break;\n            case MINUTES:\n                period.setMinutes(value);\n                break;\n            case SECONDS:\n                period.setSeconds(value);\n                break;\n            case MILLIS:\n                period.setMillis(value);\n                break;\n            }\n        }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 49.09966510722735
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.add(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)",
+      "path": "src/main/java/org/joda/time/MutablePeriod.java",
+      "start_line": 627,
+      "end_line": 639,
+      "source": "public void add(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis) {\n        setPeriod(\n            FieldUtils.safeAdd(getYears(), years),\n            FieldUtils.safeAdd(getMonths(), months),\n            FieldUtils.safeAdd(getWeeks(), weeks),\n            FieldUtils.safeAdd(getDays(), days),\n            FieldUtils.safeAdd(getHours(), hours),\n            FieldUtils.safeAdd(getMinutes(), minutes),\n            FieldUtils.safeAdd(getSeconds(), seconds),\n            FieldUtils.safeAdd(getMillis(), millis)\n        );\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 48.28018115723072
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.MutablePeriod(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)",
+      "path": "src/main/java/org/joda/time/MutablePeriod.java",
+      "start_line": 120,
+      "end_line": 123,
+      "source": "public MutablePeriod(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, type);\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 47.741655876271075
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Period.java::Period.Period(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)",
+      "path": "src/main/java/org/joda/time/Period.java",
+      "start_line": 300,
+      "end_line": 303,
+      "source": "public Period(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, PeriodType.standard());\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 47.49833126753871
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)",
+      "path": "src/main/java/org/joda/time/base/BasePeriod.java",
+      "start_line": 442,
+      "end_line": 454,
+      "source": "private void setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis) {\n        int[] newValues = new int[size()];\n        checkAndUpdate(DurationFieldType.years(), newValues, years);\n        checkAndUpdate(DurationFieldType.months(), newValues, months);\n        checkAndUpdate(DurationFieldType.weeks(), newValues, weeks);\n        checkAndUpdate(DurationFieldType.days(), newValues, days);\n        checkAndUpdate(DurationFieldType.hours(), newValues, hours);\n        checkAndUpdate(DurationFieldType.minutes(), newValues, minutes);\n        checkAndUpdate(DurationFieldType.seconds(), newValues, seconds);\n        checkAndUpdate(DurationFieldType.millis(), newValues, millis);\n        iValues = newValues;\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 46.787400394237224
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.isSupported(PeriodType type, int field)",
+      "path": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java",
+      "start_line": 1470,
+      "end_line": 1495,
+      "source": "boolean isSupported(PeriodType type, int field) {\n            switch (field) {\n            default:\n                return false;\n            case YEARS:\n                return type.isSupported(DurationFieldType.years());\n            case MONTHS:\n                return type.isSupported(DurationFieldType.months());\n            case WEEKS:\n                return type.isSupported(DurationFieldType.weeks());\n            case DAYS:\n                return type.isSupported(DurationFieldType.days());\n            case HOURS:\n                return type.isSupported(DurationFieldType.hours());\n            case MINUTES:\n                return type.isSupported(DurationFieldType.minutes());\n            case SECONDS:\n                return type.isSupported(DurationFieldType.seconds());\n            case MILLIS:\n                return type.isSupported(DurationFieldType.millis());\n            case SECONDS_MILLIS: // drop through\n            case SECONDS_OPTIONAL_MILLIS:\n                return type.isSupported(DurationFieldType.seconds()) ||\n                       type.isSupported(DurationFieldType.millis());\n            }\n        }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 46.0609682756949
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/PeriodFormat.java::PeriodFormat.wordBased(Locale locale)",
+      "path": "src/main/java/org/joda/time/format/PeriodFormat.java",
+      "start_line": 94,
+      "end_line": 129,
+      "source": "public static PeriodFormatter wordBased(Locale locale) {\n        PeriodFormatter pf = FORMATTERS.get(locale);\n        if (pf == null) {\n            ResourceBundle b = ResourceBundle.getBundle(BUNDLE_NAME, locale);\n            String[] variants = {\n                    b.getString(\"PeriodFormat.space\"), b.getString(\"PeriodFormat.comma\"),\n                    b.getString(\"PeriodFormat.commandand\"), b.getString(\"PeriodFormat.commaspaceand\")};\n            pf = new PeriodFormatterBuilder()\n                .appendYears()\n                .appendSuffix(b.getString(\"PeriodFormat.year\"), b.getString(\"PeriodFormat.years\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendMonths()\n                .appendSuffix(b.getString(\"PeriodFormat.month\"), b.getString(\"PeriodFormat.months\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendWeeks()\n                .appendSuffix(b.getString(\"PeriodFormat.week\"), b.getString(\"PeriodFormat.weeks\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendDays()\n                .appendSuffix(b.getString(\"PeriodFormat.day\"), b.getString(\"PeriodFormat.days\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendHours()\n                .appendSuffix(b.getString(\"PeriodFormat.hour\"), b.getString(\"PeriodFormat.hours\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendMinutes()\n                .appendSuffix(b.getString(\"PeriodFormat.minute\"), b.getString(\"PeriodFormat.minutes\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendSeconds()\n                .appendSuffix(b.getString(\"PeriodFormat.second\"), b.getString(\"PeriodFormat.seconds\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendMillis()\n                .appendSuffix(b.getString(\"PeriodFormat.millisecond\"), b.getString(\"PeriodFormat.milliseconds\"))\n                .toFormatter();\n            FORMATTERS.putIfAbsent(locale, pf);\n        }\n        return pf;\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 45.6623130229471
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Period.java::Period.normalizedStandard(PeriodType type)",
+      "path": "src/main/java/org/joda/time/Period.java",
+      "start_line": 1524,
+      "end_line": 1545,
+      "source": "public Period normalizedStandard(PeriodType type) {\n        long millis = getMillis();  // no overflow can happen, even with Integer.MAX_VALUEs\n        millis += (((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND));\n        millis += (((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE));\n        millis += (((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR));\n        millis += (((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY));\n        millis += (((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK));\n        Period result = new Period(millis, DateTimeUtils.getPeriodType(type), ISOChronology.getInstanceUTC());\n        int years = getYears();\n        int months = getMonths();\n        if (years != 0 || months != 0) {\n            years = FieldUtils.safeAdd(years, months / 12);\n            months = months % 12;\n            if (years != 0) {\n                result = result.withYears(years);\n            }\n            if (months != 0) {\n                result = result.withMonths(months);\n            }\n        }\n        return result;\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 45.6365030568293
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/DurationFieldType.java::DurationFieldType.StandardDurationFieldType.getField(Chronology chronology)",
+      "path": "src/main/java/org/joda/time/DurationFieldType.java",
+      "start_line": 263,
+      "end_line": 295,
+      "source": "public DurationField getField(Chronology chronology) {\n            chronology = DateTimeUtils.getChronology(chronology);\n            \n            switch (iOrdinal) {\n                case ERAS:\n                    return chronology.eras();\n                case CENTURIES:\n                    return chronology.centuries();\n                case WEEKYEARS:\n                    return chronology.weekyears();\n                case YEARS:\n                    return chronology.years();\n                case MONTHS:\n                    return chronology.months();\n                case WEEKS:\n                    return chronology.weeks();\n                case DAYS:\n                    return chronology.days();\n                case HALFDAYS:\n                    return chronology.halfdays();\n                case HOURS:\n                    return chronology.hours();\n                case MINUTES:\n                    return chronology.minutes();\n                case SECONDS:\n                    return chronology.seconds();\n                case MILLIS:\n                    return chronology.millis();\n                default:\n                    // Shouldn't happen.\n                    throw new InternalError();\n            }\n        }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 45.62839639577743
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Period.java::Period.Period(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)",
+      "path": "src/main/java/org/joda/time/Period.java",
+      "start_line": 323,
+      "end_line": 326,
+      "source": "public Period(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, type);\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 43.666047304488
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/ISODateTimeFormat.java::ISODateTimeFormat.dateOptionalTimeParser()",
+      "path": "src/main/java/org/joda/time/format/ISODateTimeFormat.java",
+      "start_line": 798,
+      "end_line": 811,
+      "source": "public static DateTimeFormatter dateOptionalTimeParser() {\n        if (dotp == null) {\n            DateTimeParser timeOrOffset = new DateTimeFormatterBuilder()\n                .appendLiteral('T')\n                .appendOptional(timeElementParser().getParser())\n                .appendOptional(offsetElement().getParser())\n                .toParser();\n            dotp = new DateTimeFormatterBuilder()\n                .append(dateElementParser())\n                .appendOptional(timeOrOffset)\n                .toFormatter();\n        }\n        return dotp;\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 43.324365031629775
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/convert/StringConverter.java::StringConverter.setInto(ReadWritableInterval writableInterval, Object object, Chronology chrono)",
+      "path": "src/main/java/org/joda/time/convert/StringConverter.java",
+      "start_line": 177,
+      "end_line": 232,
+      "source": "public void setInto(ReadWritableInterval writableInterval, Object object, Chronology chrono) {\n        String str = (String) object;\n\n        int separator = str.indexOf('/');\n        if (separator < 0) {\n            throw new IllegalArgumentException(\"Format requires a '/' separator: \" + str);\n        }\n\n        String leftStr = str.substring(0, separator);\n        if (leftStr.length() <= 0) {\n            throw new IllegalArgumentException(\"Format invalid: \" + str);\n        }\n        String rightStr = str.substring(separator + 1);\n        if (rightStr.length() <= 0) {\n            throw new IllegalArgumentException(\"Format invalid: \" + str);\n        }\n\n        DateTimeFormatter dateTimeParser = ISODateTimeFormat.dateTimeParser();\n        dateTimeParser = dateTimeParser.withChronology(chrono);\n        PeriodFormatter periodParser = ISOPeriodFormat.standard();\n        long startInstant = 0, endInstant = 0;\n        Period period = null;\n        Chronology parsedChrono = null;\n        \n        // before slash\n        char c = leftStr.charAt(0);\n        if (c == 'P' || c == 'p') {\n            period = periodParser.withParseType(getPeriodType(leftStr)).parsePeriod(leftStr);\n        } else {\n            DateTime start = dateTimeParser.parseDateTime(leftStr);\n            startInstant = start.getMillis();\n            parsedChrono = start.getChronology();\n        }\n        \n        // after slash\n        c = rightStr.charAt(0);\n        if (c == 'P' || c == 'p') {\n            if (period != null) {\n                throw new IllegalArgumentException(\"Interval composed of two durations: \" + str);\n            }\n            period = periodParser.withParseType(getPeriodType(rightStr)).parsePeriod(rightStr);\n            chrono = (chrono != null ? chrono : parsedChrono);\n            endInstant = chrono.add(period, startInstant, 1);\n        } else {\n            DateTime end = dateTimeParser.parseDateTime(rightStr);\n            endInstant = end.getMillis();\n            parsedChrono = (parsedChrono != null ? parsedChrono : end.getChronology());\n            chrono = (chrono != null ? chrono : parsedChrono);\n            if (period != null) {\n                startInstant = chrono.add(period, endInstant, -1);\n            }\n        }\n        \n        writableInterval.setInterval(startInstant, endInstant);\n        writableInterval.setChronology(chrono);\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.81548872020598
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/PeriodType.java::PeriodType.forFields(DurationFieldType[] types)",
+      "path": "src/main/java/org/joda/time/PeriodType.java",
+      "start_line": 501,
+      "end_line": 577,
+      "source": "public static synchronized PeriodType forFields(DurationFieldType[] types) {\n        if (types == null || types.length == 0) {\n            throw new IllegalArgumentException(\"Types array must not be null or empty\");\n        }\n        for (int i = 0; i < types.length; i++) {\n            if (types[i] == null) {\n                throw new IllegalArgumentException(\"Types array must not contain null\");\n            }\n        }\n        Map<PeriodType, Object> cache = cTypes;\n        if (cache.isEmpty()) {\n            cache.put(standard(), standard());\n            cache.put(yearMonthDayTime(), yearMonthDayTime());\n            cache.put(yearMonthDay(), yearMonthDay());\n            cache.put(yearWeekDayTime(), yearWeekDayTime());\n            cache.put(yearWeekDay(), yearWeekDay());\n            cache.put(yearDayTime(), yearDayTime());\n            cache.put(yearDay(), yearDay());\n            cache.put(dayTime(), dayTime());\n            cache.put(time(), time());\n            cache.put(years(), years());\n            cache.put(months(), months());\n            cache.put(weeks(), weeks());\n            cache.put(days(), days());\n            cache.put(hours(), hours());\n            cache.put(minutes(), minutes());\n            cache.put(seconds(), seconds());\n            cache.put(millis(), millis());\n        }\n        PeriodType inPartType = new PeriodType(null, types, null);\n        Object cached = cache.get(inPartType);\n        if (cached instanceof PeriodType) {\n            return (PeriodType) cached;\n        }\n        if (cached != null) {\n            throw new IllegalArgumentException(\"PeriodType does not support fields: \" + cached);\n        }\n        PeriodType type = standard();\n        List<DurationFieldType> list = new ArrayList<DurationFieldType>(Arrays.asList(types));\n        if (list.remove(DurationFieldType.years()) == false) {\n            type = type.withYearsRemoved();\n        }\n        if (list.remove(DurationFieldType.months()) == false) {\n            type = type.withMonthsRemoved();\n        }\n        if (list.remove(DurationFieldType.weeks()) == false) {\n            type = type.withWeeksRemoved();\n        }\n        if (list.remove(DurationFieldType.days()) == false) {\n            type = type.withDaysRemoved();\n        }\n        if (list.remove(DurationFieldType.hours()) == false) {\n            type = type.withHoursRemoved();\n        }\n        if (list.remove(DurationFieldType.minutes()) == false) {\n            type = type.withMinutesRemoved();\n        }\n        if (list.remove(DurationFieldType.seconds()) == false) {\n            type = type.withSecondsRemoved();\n        }\n        if (list.remove(DurationFieldType.millis()) == false) {\n            type = type.withMillisRemoved();\n        }\n        if (list.size() > 0) {\n            cache.put(inPartType, list);\n            throw new IllegalArgumentException(\"PeriodType does not support fields: \" + list);\n        }\n        // recheck cache in case initial array order was wrong\n        PeriodType checkPartType = new PeriodType(null, type.iTypes, null);\n        PeriodType checkedType = (PeriodType) cache.get(checkPartType);\n        if (checkedType != null) {\n            cache.put(inPartType, checkedType);\n            return checkedType;\n        }\n        cache.put(inPartType, type);\n        return type;\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.532673573887365
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.appendSeparator(String text, String finalText,\n                                                   String[] variants,\n                                                   boolean useBefore, boolean useAfter)",
+      "path": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java",
+      "start_line": 727,
+      "end_line": 775,
+      "source": "private PeriodFormatterBuilder appendSeparator(String text, String finalText,\n                                                   String[] variants,\n                                                   boolean useBefore, boolean useAfter) {\n        if (text == null || finalText == null) {\n            throw new IllegalArgumentException();\n        }\n\n        clearPrefix();\n        \n        // optimise zero formatter case\n        List<Object> pairs = iElementPairs;\n        if (pairs.size() == 0) {\n            if (useAfter && useBefore == false) {\n                Separator separator = new Separator(\n                        text, finalText, variants,\n                        Literal.EMPTY, Literal.EMPTY, useBefore, useAfter);\n                append0(separator, separator);\n            }\n            return this;\n        }\n        \n        // find the last separator added\n        int i;\n        Separator lastSeparator = null;\n        for (i=pairs.size(); --i>=0; ) {\n            if (pairs.get(i) instanceof Separator) {\n                lastSeparator = (Separator) pairs.get(i);\n                pairs = pairs.subList(i + 1, pairs.size());\n                break;\n            }\n            i--;  // element pairs\n        }\n        \n        // merge formatters\n        if (lastSeparator != null && pairs.size() == 0) {\n            throw new IllegalStateException(\"Cannot have two adjacent separators\");\n        } else {\n            Object[] comp = createComposite(pairs);\n            pairs.clear();\n            Separator separator = new Separator(\n                    text, finalText, variants,\n                    (PeriodPrinter) comp[0], (PeriodParser) comp[1],\n                    useBefore, useAfter);\n            pairs.add(separator);\n            pairs.add(separator);\n        }\n        \n        return this;\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.44596462290632
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java::DateTimeFormatterBuilder.appendLiteral(String text)",
+      "path": "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java",
+      "start_line": 369,
+      "end_line": 381,
+      "source": "public DateTimeFormatterBuilder appendLiteral(String text) {\n        if (text == null) {\n            throw new IllegalArgumentException(\"Literal must not be null\");\n        }\n        switch (text.length()) {\n            case 0:\n                return this;\n            case 1:\n                return append0(new CharacterLiteral(text.charAt(0)));\n            default:\n                return append0(new StringLiteral(text));\n        }\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.31255964386346
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.standard()",
+      "source": "public static PeriodFormatter standard() {\n        if (cStandard == null) {\n            cStandard = new PeriodFormatterBuilder()\n                .appendLiteral(\"P\")\n                .appendYears()\n                .appendSuffix(\"Y\")\n                .appendMonths()\n                .appendSuffix(\"M\")\n                .appendWeeks()\n                .appendSuffix(\"W\")\n                .appendDays()\n                .appendSuffix(\"D\")\n                .appendSeparatorIfFieldsAfter(\"T\")\n                .appendHours()\n                .appendSuffix(\"H\")\n                .appendMinutes()\n                .appendSuffix(\"M\")\n                .appendSecondsWithOptionalMillis()\n                .appendSuffix(\"S\")\n                .toFormatter();\n        }\n        return cStandard;\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.standard()\nSIGNATURE: public static PeriodFormatter standard()",
+        "METHOD: src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.standard()\nSIGNATURE: public static PeriodFormatter standard()\nSTRUCTURE (lossy):\nif (cStandard == null)\ncStandard = new PeriodFormatterBuilder() .appendLiteral(\"P\") .appendYears() .appendSuffix(\"Y\") .appendMonths() .appendSuffix(\"M\") .appendWeeks() .appendSuffix(\"W\") .appendDays() .appendSuffix(\"D\") .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendSuffix(\"H\") .appendMinutes() .appendSuffix(\"M\") .appendSecondsWithOptionalMillis() .appendSuffix(\"S\") .toFormatter()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .appendYears() .appendSuffix(\"Y\") .appendMonths() .appendSuffix(\"M\") .appendWeeks() .appendSuffix(\"W\") .appendDays() .appendSuffix(\"D\") .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendSuffix(\"H\") .appendMinutes() .appendSuffix(\"M\") .appendSecondsWithOptionalMillis() .appendSuffix(\"S\") .toFormatter()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .appendYears() .appendSuffix(\"Y\") .appendMonths() .appendSuffix(\"M\") .appendWeeks() .appendSuffix(\"W\") .appendDays() .appendSuffix(\"D\") .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendSuffix(\"H\") .appendMinutes() .appendSuffix(\"M\") .appendSecondsWithOptionalMillis() .appendSuffix(\"S\")\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .appendYears() .appendSuffix(\"Y\") .appendMonths() .appendSuffix(\"M\") .appendWeeks() .appendSuffix(\"W\") .appendDays() .appendSuffix(\"D\") .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendSuffix(\"H\") .appendMinutes() .appendSuffix(\"M\") .appendSecondsWithOptionalMillis()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .appendYears() .appendSuffix(\"Y\") .appendMonths() .appendSuffix(\"M\") .appendWeeks() .appendSuffix(\"W\") .appendDays() .appendSuffix(\"D\") .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendSuffix(\"H\") .appendMinutes() .appendSuffix(\"M\")\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .appendYears() .appendSuffix(\"Y\") .appendMonths() .appendSuffix(\"M\") .appendWeeks() .appendSuffix(\"W\") .appendDays() .appendSuffix(\"D\") .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendSuffix(\"H\") .appendMinutes()\nCALL new PeriodFormatterBuild\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public static PeriodFormatter standard() {\n        if (cStandard == null) {\n            cStandard = new PeriodFormatterBuilder()\n                .appendLiteral(\"P\")\n                .appendYears()\n                .appendSuffix(\"Y\")\n                .appendMonths()\n                .appendSuffix(\"M\")\n                .appendWeeks()\n                .appendSuffix(\"W\")\n                .appendDays()\n                .appendSuffix(\"D\")\n                .appendSeparatorIfFieldsAfter(\"T\")\n                .appendHours()\n                .appendSuffix(\"H\")\n                .appendMinutes()\n                .appendSuffix(\"M\")\n                .appendSecondsWithOptionalMillis()\n                .appendSuffix(\"S\")\n                .toFormatter();\n        }\n        return cStandard;\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.9090909090909091,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 17.0,
+        "literal_count": 10.0,
+        "source_tokens": 194.0,
+        "l0_tokens": 36.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 2,
+        "call_count": 17,
+        "literal_count": 10
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.alternateWithWeeks()",
+      "source": "public static PeriodFormatter alternateWithWeeks() {\n        if (cAlternateWithWeeks == null) {\n            cAlternateWithWeeks = new PeriodFormatterBuilder()\n                .appendLiteral(\"P\")\n                .printZeroAlways()\n                .minimumPrintedDigits(4)\n                .appendYears()\n                .minimumPrintedDigits(2)\n                .appendPrefix(\"W\")\n                .appendWeeks()\n                .appendDays()\n                .appendSeparatorIfFieldsAfter(\"T\")\n                .appendHours()\n                .appendMinutes()\n                .appendSecondsWithOptionalMillis()\n                .toFormatter();\n        }\n        return cAlternateWithWeeks;\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.alternateWithWeeks()\nSIGNATURE: public static PeriodFormatter alternateWithWeeks()",
+        "METHOD: src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.alternateWithWeeks()\nSIGNATURE: public static PeriodFormatter alternateWithWeeks()\nSTRUCTURE (lossy):\nif (cAlternateWithWeeks == null)\ncAlternateWithWeeks = new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .minimumPrintedDigits(2) .appendPrefix(\"W\") .appendWeeks() .appendDays() .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendMinutes() .appendSecondsWithOptionalMillis() .toFormatter()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .minimumPrintedDigits(2) .appendPrefix(\"W\") .appendWeeks() .appendDays() .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendMinutes() .appendSecondsWithOptionalMillis() .toFormatter()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .minimumPrintedDigits(2) .appendPrefix(\"W\") .appendWeeks() .appendDays() .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendMinutes() .appendSecondsWithOptionalMillis()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .minimumPrintedDigits(2) .appendPrefix(\"W\") .appendWeeks() .appendDays() .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendMinutes()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .minimumPrintedDigits(2) .appendPrefix(\"W\") .appendWeeks() .appendDays() .appendSeparatorIfFieldsAfter(\"T\") .appendHours()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .minimumPrintedDigits(2) .appendPrefix(\"W\") .appendWeeks() .appendDays() .appendSeparatorIfFieldsAfter(\"T\")\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .minimumPrintedDigits(2) .appendPrefix(\"W\") .appendWeeks() .appendDays()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .minimumPrintedDigits(2) .appendPrefix(\"W\") .appendWeeks()\nCALL \n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public static PeriodFormatter alternateWithWeeks() {\n        if (cAlternateWithWeeks == null) {\n            cAlternateWithWeeks = new PeriodFormatterBuilder()\n                .appendLiteral(\"P\")\n                .printZeroAlways()\n                .minimumPrintedDigits(4)\n                .appendYears()\n                .minimumPrintedDigits(2)\n                .appendPrefix(\"W\")\n                .appendWeeks()\n                .appendDays()\n                .appendSeparatorIfFieldsAfter(\"T\")\n                .appendHours()\n                .appendMinutes()\n                .appendSecondsWithOptionalMillis()\n                .toFormatter();\n        }\n        return cAlternateWithWeeks;\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7105263157894737,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 13.0,
+        "literal_count": 6.0,
+        "source_tokens": 172.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 2,
+        "call_count": 13,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.alternate()",
+      "source": "public static PeriodFormatter alternate() {\n        if (cAlternate == null) {\n            cAlternate = new PeriodFormatterBuilder()\n                .appendLiteral(\"P\")\n                .printZeroAlways()\n                .minimumPrintedDigits(4)\n                .appendYears()\n                .minimumPrintedDigits(2)\n                .appendMonths()\n                .appendDays()\n                .appendSeparatorIfFieldsAfter(\"T\")\n                .appendHours()\n                .appendMinutes()\n                .appendSecondsWithOptionalMillis()\n                .toFormatter();\n        }\n        return cAlternate;\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.alternate()\nSIGNATURE: public static PeriodFormatter alternate()",
+        "METHOD: src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.alternate()\nSIGNATURE: public static PeriodFormatter alternate()\nSTRUCTURE (lossy):\nif (cAlternate == null)\ncAlternate = new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .minimumPrintedDigits(2) .appendMonths() .appendDays() .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendMinutes() .appendSecondsWithOptionalMillis() .toFormatter()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .minimumPrintedDigits(2) .appendMonths() .appendDays() .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendMinutes() .appendSecondsWithOptionalMillis() .toFormatter()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .minimumPrintedDigits(2) .appendMonths() .appendDays() .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendMinutes() .appendSecondsWithOptionalMillis()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .minimumPrintedDigits(2) .appendMonths() .appendDays() .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendMinutes()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .minimumPrintedDigits(2) .appendMonths() .appendDays() .appendSeparatorIfFieldsAfter(\"T\") .appendHours()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .minimumPrintedDigits(2) .appendMonths() .appendDays() .appendSeparatorIfFieldsAfter(\"T\")\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .minimumPrintedDigits(2) .appendMonths() .appendDays()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .minimumPrintedDigits(2) .appendMonths()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .minimumPrintedDigits(2)\nCALL new PeriodFormatterBuilder() .appendLitera\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public static PeriodFormatter alternate() {\n        if (cAlternate == null) {\n            cAlternate = new PeriodFormatterBuilder()\n                .appendLiteral(\"P\")\n                .printZeroAlways()\n                .minimumPrintedDigits(4)\n                .appendYears()\n                .minimumPrintedDigits(2)\n                .appendMonths()\n                .appendDays()\n                .appendSeparatorIfFieldsAfter(\"T\")\n                .appendHours()\n                .appendMinutes()\n                .appendSecondsWithOptionalMillis()\n                .toFormatter();\n        }\n        return cAlternate;\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7297297297297297,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 12.0,
+        "literal_count": 5.0,
+        "source_tokens": 155.0,
+        "l0_tokens": 37.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 2,
+        "call_count": 12,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.alternateExtendedWithWeeks()",
+      "source": "public static PeriodFormatter alternateExtendedWithWeeks() {\n        if (cAlternateExtendedWihWeeks == null) {\n            cAlternateExtendedWihWeeks = new PeriodFormatterBuilder()\n                .appendLiteral(\"P\")\n                .printZeroAlways()\n                .minimumPrintedDigits(4)\n                .appendYears()\n                .appendSeparator(\"-\")\n                .minimumPrintedDigits(2)\n                .appendPrefix(\"W\")\n                .appendWeeks()\n                .appendSeparator(\"-\")\n                .appendDays()\n                .appendSeparatorIfFieldsAfter(\"T\")\n                .appendHours()\n                .appendSeparator(\":\")\n                .appendMinutes()\n                .appendSeparator(\":\")\n                .appendSecondsWithOptionalMillis()\n                .toFormatter();\n        }\n        return cAlternateExtendedWihWeeks;\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.alternateExtendedWithWeeks()\nSIGNATURE: public static PeriodFormatter alternateExtendedWithWeeks()",
+        "METHOD: src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.alternateExtendedWithWeeks()\nSIGNATURE: public static PeriodFormatter alternateExtendedWithWeeks()\nSTRUCTURE (lossy):\nif (cAlternateExtendedWihWeeks == null)\ncAlternateExtendedWihWeeks = new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .appendSeparator(\"-\") .minimumPrintedDigits(2) .appendPrefix(\"W\") .appendWeeks() .appendSeparator(\"-\") .appendDays() .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendSeparator(\":\") .appendMinutes() .appendSeparator(\":\") .appendSecondsWithOptionalMillis() .toFormatter()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .appendSeparator(\"-\") .minimumPrintedDigits(2) .appendPrefix(\"W\") .appendWeeks() .appendSeparator(\"-\") .appendDays() .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendSeparator(\":\") .appendMinutes() .appendSeparator(\":\") .appendSecondsWithOptionalMillis() .toFormatter()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .appendSeparator(\"-\") .minimumPrintedDigits(2) .appendPrefix(\"W\") .appendWeeks() .appendSeparator(\"-\") .appendDays() .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendSeparator(\":\") .appendMinutes() .appendSeparator(\":\") .appendSecondsWithOptionalMillis()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .appendSeparator(\"-\") .minimumPrintedDigits(2) .appendPrefix(\"W\") .appendWeeks() .appendSeparator(\"-\") .appendDays() .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendSeparator(\":\") .appendMinutes() .appendSeparator(\":\")\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .appendSeparator(\"-\") .minimumPrintedDigits(2) .appendPrefix(\"W\") .appendWeeks() .appendSeparator(\"-\") .appendDays() .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendSeparator(\":\") .appendMinutes()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .appen\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public static PeriodFormatter alternateExtendedWithWeeks() {\n        if (cAlternateExtendedWihWeeks == null) {\n            cAlternateExtendedWihWeeks = new PeriodFormatterBuilder()\n                .appendLiteral(\"P\")\n                .printZeroAlways()\n                .minimumPrintedDigits(4)\n                .appendYears()\n                .appendSeparator(\"-\")\n                .minimumPrintedDigits(2)\n                .appendPrefix(\"W\")\n                .appendWeeks()\n                .appendSeparator(\"-\")\n                .appendDays()\n                .appendSeparatorIfFieldsAfter(\"T\")\n                .appendHours()\n                .appendSeparator(\":\")\n                .appendMinutes()\n                .appendSeparator(\":\")\n                .appendSecondsWithOptionalMillis()\n                .toFormatter();\n        }\n        return cAlternateExtendedWihWeeks;\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.675,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 17.0,
+        "literal_count": 10.0,
+        "source_tokens": 218.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 2,
+        "call_count": 17,
+        "literal_count": 10
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.alternateExtended()",
+      "source": "public static PeriodFormatter alternateExtended() {\n        if (cAlternateExtended == null) {\n            cAlternateExtended = new PeriodFormatterBuilder()\n                .appendLiteral(\"P\")\n                .printZeroAlways()\n                .minimumPrintedDigits(4)\n                .appendYears()\n                .appendSeparator(\"-\")\n                .minimumPrintedDigits(2)\n                .appendMonths()\n                .appendSeparator(\"-\")\n                .appendDays()\n                .appendSeparatorIfFieldsAfter(\"T\")\n                .appendHours()\n                .appendSeparator(\":\")\n                .appendMinutes()\n                .appendSeparator(\":\")\n                .appendSecondsWithOptionalMillis()\n                .toFormatter();\n        }\n        return cAlternateExtended;\n    }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.alternateExtended()\nSIGNATURE: public static PeriodFormatter alternateExtended()",
+        "METHOD: src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.alternateExtended()\nSIGNATURE: public static PeriodFormatter alternateExtended()\nSTRUCTURE (lossy):\nif (cAlternateExtended == null)\ncAlternateExtended = new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .appendSeparator(\"-\") .minimumPrintedDigits(2) .appendMonths() .appendSeparator(\"-\") .appendDays() .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendSeparator(\":\") .appendMinutes() .appendSeparator(\":\") .appendSecondsWithOptionalMillis() .toFormatter()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .appendSeparator(\"-\") .minimumPrintedDigits(2) .appendMonths() .appendSeparator(\"-\") .appendDays() .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendSeparator(\":\") .appendMinutes() .appendSeparator(\":\") .appendSecondsWithOptionalMillis() .toFormatter()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .appendSeparator(\"-\") .minimumPrintedDigits(2) .appendMonths() .appendSeparator(\"-\") .appendDays() .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendSeparator(\":\") .appendMinutes() .appendSeparator(\":\") .appendSecondsWithOptionalMillis()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .appendSeparator(\"-\") .minimumPrintedDigits(2) .appendMonths() .appendSeparator(\"-\") .appendDays() .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendSeparator(\":\") .appendMinutes() .appendSeparator(\":\")\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .appendSeparator(\"-\") .minimumPrintedDigits(2) .appendMonths() .appendSeparator(\"-\") .appendDays() .appendSeparatorIfFieldsAfter(\"T\") .appendHours() .appendSeparator(\":\") .appendMinutes()\nCALL new PeriodFormatterBuilder() .appendLiteral(\"P\") .printZeroAlways() .minimumPrintedDigits(4) .appendYears() .appendSeparator(\"-\") .minimumPrintedDigits(2) .appendMonths() .appendSeparator(\"-\") .appendDays() .appendSeparatorIfFieldsAfter(\"\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public static PeriodFormatter alternateExtended() {\n        if (cAlternateExtended == null) {\n            cAlternateExtended = new PeriodFormatterBuilder()\n                .appendLiteral(\"P\")\n                .printZeroAlways()\n                .minimumPrintedDigits(4)\n                .appendYears()\n                .appendSeparator(\"-\")\n                .minimumPrintedDigits(2)\n                .appendMonths()\n                .appendSeparator(\"-\")\n                .appendDays()\n                .appendSeparatorIfFieldsAfter(\"T\")\n                .appendHours()\n                .appendSeparator(\":\")\n                .appendMinutes()\n                .appendSeparator(\":\")\n                .appendSecondsWithOptionalMillis()\n                .toFormatter();\n        }\n        return cAlternateExtended;\n    }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7105263157894737,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 16.0,
+        "literal_count": 9.0,
+        "source_tokens": 201.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 2,
+        "call_count": 16,
+        "literal_count": 9
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)",
+      "source": "protected BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type) {\n        super();\n        type = checkPeriodType(type);\n        iType = type;\n        setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis); // internal method\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)\nSIGNATURE: protected BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)",
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)\nSIGNATURE: protected BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)\nSTRUCTURE (lossy):\ntype = checkPeriodType(type)\nCALL checkPeriodType(type)\niType = type\nCALL setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis)",
+        "protected BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type) {\n        super();\n        type = checkPeriodType(type);\n        iType = type;\n        setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis); // internal method\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7916666666666666,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 93.0,
+        "l0_tokens": 108.0,
+        "l1_tokens": 151.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)",
+      "source": "protected void setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis) {\n        setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis);\n    }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)\nSIGNATURE: protected void setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)",
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)\nSIGNATURE: protected void setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)\nSTRUCTURE (lossy):\nCALL setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis)",
+        "protected void setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis) {\n        setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis);\n    }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.9047619047619048,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 61.0,
+        "l0_tokens": 90.0,
+        "l1_tokens": 116.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.MutablePeriod(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)",
+      "source": "public MutablePeriod(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, PeriodType.standard());\n    }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.MutablePeriod(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)\nSIGNATURE: public MutablePeriod(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)",
+        "METHOD: src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.MutablePeriod(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)\nSIGNATURE: public MutablePeriod(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)\nSTRUCTURE (lossy):\nCALL PeriodType.standard()",
+        "public MutablePeriod(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, PeriodType.standard());\n    }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8571428571428571,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 60.0,
+        "l0_tokens": 85.0,
+        "l1_tokens": 96.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.setPeriod(int years, int months, int weeks, int days,\n                          int hours, int minutes, int seconds, int millis)",
+      "source": "public void setPeriod(int years, int months, int weeks, int days,\n                          int hours, int minutes, int seconds, int millis) {\n        super.setPeriod(years, months, weeks, days, hours, minutes, seconds, millis);\n    }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.setPeriod(int years, int months, int weeks, int days,\n                          int hours, int minutes, int seconds, int millis)\nSIGNATURE: public void setPeriod(int years, int months, int weeks, int days,\n                          int hours, int minutes, int seconds, int millis)",
+        "METHOD: src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.setPeriod(int years, int months, int weeks, int days,\n                          int hours, int minutes, int seconds, int millis)\nSIGNATURE: public void setPeriod(int years, int months, int weeks, int days,\n                          int hours, int minutes, int seconds, int millis)\nSTRUCTURE (lossy):\nCALL super.setPeriod(years, months, weeks, days, hours, minutes, seconds, millis)",
+        "public void setPeriod(int years, int months, int weeks, int days,\n                          int hours, int minutes, int seconds, int millis) {\n        super.setPeriod(years, months, weeks, days, hours, minutes, seconds, millis);\n    }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8571428571428571,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 59.0,
+        "l0_tokens": 88.0,
+        "l1_tokens": 113.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.setFieldValue(ReadWritablePeriod period, int field, int value)",
+      "source": "void setFieldValue(ReadWritablePeriod period, int field, int value) {\n            switch (field) {\n            default:\n                break;\n            case YEARS:\n                period.setYears(value);\n                break;\n            case MONTHS:\n                period.setMonths(value);\n                break;\n            case WEEKS:\n                period.setWeeks(value);\n                break;\n            case DAYS:\n                period.setDays(value);\n                break;\n            case HOURS:\n                period.setHours(value);\n                break;\n            case MINUTES:\n                period.setMinutes(value);\n                break;\n            case SECONDS:\n                period.setSeconds(value);\n                break;\n            case MILLIS:\n                period.setMillis(value);\n                break;\n            }\n        }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.setFieldValue(ReadWritablePeriod period, int field, int value)\nSIGNATURE: void setFieldValue(ReadWritablePeriod period, int field, int value)",
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.setFieldValue(ReadWritablePeriod period, int field, int value)\nSIGNATURE: void setFieldValue(ReadWritablePeriod period, int field, int value)\nSTRUCTURE (lossy):\nswitch (field) { default: break; case YEARS: period.setYears(value); break; case MONTHS: period.setMonths(value); break; case WEEKS: period.setWeeks(value); break; case DAYS: period.setDays(value); break; case HOURS: period.setHours(value); break; case MINUTES: period.setMinutes(value); break; case SECONDS: period.setSeconds(value); break; case MILLIS: period.setMillis(value); break; }\nCALL period.setYears(value)\nCALL period.setMonths(value)\nCALL period.setWeeks(value)\nCALL period.setDays(value)\nCALL period.setHours(value)\nCALL period.setMinutes(value)\nCALL period.setSeconds(value)\nCALL period.setMillis(value)",
+        "void setFieldValue(ReadWritablePeriod period, int field, int value) {\n            switch (field) {\n            default:\n                break;\n            case YEARS:\n                period.setYears(value);\n                break;\n            case MONTHS:\n                period.setMonths(value);\n                break;\n            case WEEKS:\n                period.setWeeks(value);\n                break;\n            case DAYS:\n                period.setDays(value);\n                break;\n            case HOURS:\n                period.setHours(value);\n                break;\n            case MINUTES:\n                period.setMinutes(value);\n                break;\n            case SECONDS:\n                period.setSeconds(value);\n                break;\n            case MILLIS:\n                period.setMillis(value);\n                break;\n            }\n        }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7241379310344828,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 8.0,
+        "literal_count": 0.0,
+        "source_tokens": 218.0,
+        "l0_tokens": 63.0,
+        "l1_tokens": 222.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 8,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.add(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)",
+      "source": "public void add(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis) {\n        setPeriod(\n            FieldUtils.safeAdd(getYears(), years),\n            FieldUtils.safeAdd(getMonths(), months),\n            FieldUtils.safeAdd(getWeeks(), weeks),\n            FieldUtils.safeAdd(getDays(), days),\n            FieldUtils.safeAdd(getHours(), hours),\n            FieldUtils.safeAdd(getMinutes(), minutes),\n            FieldUtils.safeAdd(getSeconds(), seconds),\n            FieldUtils.safeAdd(getMillis(), millis)\n        );\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.add(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)\nSIGNATURE: public void add(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)",
+        "METHOD: src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.add(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)\nSIGNATURE: public void add(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)\nSTRUCTURE (lossy):\nCALL setPeriod( FieldUtils.safeAdd(getYears(), years), FieldUtils.safeAdd(getMonths(), months), FieldUtils.safeAdd(getWeeks(), weeks), FieldUtils.safeAdd(getDays(), days), FieldUtils.safeAdd(getHours(), hours), FieldUtils.safeAdd(getMinutes(), minutes), FieldUtils.safeAdd(getSeconds(), seconds), FieldUtils.safeAdd(getMillis(), millis) )\nCALL FieldUtils.safeAdd(getYears(), years)\nCALL getYears()\nCALL FieldUtils.safeAdd(getMonths(), months)\nCALL getMonths()\nCALL FieldUtils.safeAdd(getWeeks(), weeks)\nCALL getWeeks()\nCALL FieldUtils.safeAdd(getDays(), days)\nCALL getDays()\nCALL FieldUtils.safeAdd(getHours(), hours)\nCALL getHours()\nCALL FieldUtils.safeAdd(getMinutes(), minutes)\nCALL getMinutes()\nCALL FieldUtils.safeAdd(getSeconds(), seconds)\nCALL getSeconds()\nCALL FieldUtils.safeAdd(getMillis(), millis)\nCALL getMillis()",
+        "public void add(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis) {\n        setPeriod(\n            FieldUtils.safeAdd(getYears(), years),\n            FieldUtils.safeAdd(getMonths(), months),\n            FieldUtils.safeAdd(getWeeks(), weeks),\n            FieldUtils.safeAdd(getDays(), days),\n            FieldUtils.safeAdd(getHours(), hours),\n            FieldUtils.safeAdd(getMinutes(), minutes),\n            FieldUtils.safeAdd(getSeconds(), seconds),\n            FieldUtils.safeAdd(getMillis(), millis)\n        );\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.76,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 17.0,
+        "literal_count": 0.0,
+        "source_tokens": 147.0,
+        "l0_tokens": 83.0,
+        "l1_tokens": 295.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 17,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.MutablePeriod(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)",
+      "source": "public MutablePeriod(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, type);\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.MutablePeriod(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)\nSIGNATURE: public MutablePeriod(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)",
+        "METHOD: src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.MutablePeriod(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)\nSIGNATURE: public MutablePeriod(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)\nSTRUCTURE (lossy):\n",
+        "public MutablePeriod(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, type);\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.85,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 60.0,
+        "l0_tokens": 94.0,
+        "l1_tokens": 99.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Period.java::Period.Period(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)",
+      "source": "public Period(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, PeriodType.standard());\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.Period(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)\nSIGNATURE: public Period(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)",
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.Period(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)\nSIGNATURE: public Period(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)\nSTRUCTURE (lossy):\nCALL PeriodType.standard()",
+        "public Period(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, PeriodType.standard());\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.85,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 58.0,
+        "l0_tokens": 78.0,
+        "l1_tokens": 89.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)",
+      "source": "private void setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis) {\n        int[] newValues = new int[size()];\n        checkAndUpdate(DurationFieldType.years(), newValues, years);\n        checkAndUpdate(DurationFieldType.months(), newValues, months);\n        checkAndUpdate(DurationFieldType.weeks(), newValues, weeks);\n        checkAndUpdate(DurationFieldType.days(), newValues, days);\n        checkAndUpdate(DurationFieldType.hours(), newValues, hours);\n        checkAndUpdate(DurationFieldType.minutes(), newValues, minutes);\n        checkAndUpdate(DurationFieldType.seconds(), newValues, seconds);\n        checkAndUpdate(DurationFieldType.millis(), newValues, millis);\n        iValues = newValues;\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)\nSIGNATURE: private void setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)",
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)\nSIGNATURE: private void setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)\nSTRUCTURE (lossy):\nint[] newValues = new int[size()];\nCALL size()\nCALL checkAndUpdate(DurationFieldType.years(), newValues, years)\nCALL DurationFieldType.years()\nCALL checkAndUpdate(DurationFieldType.months(), newValues, months)\nCALL DurationFieldType.months()\nCALL checkAndUpdate(DurationFieldType.weeks(), newValues, weeks)\nCALL DurationFieldType.weeks()\nCALL checkAndUpdate(DurationFieldType.days(), newValues, days)\nCALL DurationFieldType.days()\nCALL checkAndUpdate(DurationFieldType.hours(), newValues, hours)\nCALL DurationFieldType.hours()\nCALL checkAndUpdate(DurationFieldType.minutes(), newValues, minutes)\nCALL DurationFieldType.minutes()\nCALL checkAndUpdate(DurationFieldType.seconds(), newValues, seconds)\nCALL DurationFieldType.seconds()\nCALL checkAndUpdate(DurationFieldType.millis(), newValues, millis)\nCALL DurationFieldType.millis()\niValues = newValues",
+        "private void setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis) {\n        int[] newValues = new int[size()];\n        checkAndUpdate(DurationFieldType.years(), newValues, years);\n        checkAndUpdate(DurationFieldType.months(), newValues, months);\n        checkAndUpdate(DurationFieldType.weeks(), newValues, weeks);\n        checkAndUpdate(DurationFieldType.days(), newValues, days);\n        checkAndUpdate(DurationFieldType.hours(), newValues, hours);\n        checkAndUpdate(DurationFieldType.minutes(), newValues, minutes);\n        checkAndUpdate(DurationFieldType.seconds(), newValues, seconds);\n        checkAndUpdate(DurationFieldType.millis(), newValues, millis);\n        iValues = newValues;\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6333333333333333,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 17.0,
+        "literal_count": 0.0,
+        "source_tokens": 200.0,
+        "l0_tokens": 96.0,
+        "l1_tokens": 314.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 17,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.isSupported(PeriodType type, int field)",
+      "source": "boolean isSupported(PeriodType type, int field) {\n            switch (field) {\n            default:\n                return false;\n            case YEARS:\n                return type.isSupported(DurationFieldType.years());\n            case MONTHS:\n                return type.isSupported(DurationFieldType.months());\n            case WEEKS:\n                return type.isSupported(DurationFieldType.weeks());\n            case DAYS:\n                return type.isSupported(DurationFieldType.days());\n            case HOURS:\n                return type.isSupported(DurationFieldType.hours());\n            case MINUTES:\n                return type.isSupported(DurationFieldType.minutes());\n            case SECONDS:\n                return type.isSupported(DurationFieldType.seconds());\n            case MILLIS:\n                return type.isSupported(DurationFieldType.millis());\n            case SECONDS_MILLIS: // drop through\n            case SECONDS_OPTIONAL_MILLIS:\n                return type.isSupported(DurationFieldType.seconds()) ||\n                       type.isSupported(DurationFieldType.millis());\n            }\n        }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.isSupported(PeriodType type, int field)\nSIGNATURE: boolean isSupported(PeriodType type, int field)",
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.isSupported(PeriodType type, int field)\nSIGNATURE: boolean isSupported(PeriodType type, int field)\nSTRUCTURE (lossy):\nswitch (field) { default: return false; case YEARS: return type.isSupported(DurationFieldType.years()); case MONTHS: return type.isSupported(DurationFieldType.months()); case WEEKS: return type.isSupported(DurationFieldType.weeks()); case DAYS: return type.isSupported(DurationFieldType.days()); case HOURS: return type.isSupported(DurationFieldType.hours()); case MINUTES: return type.isSupported(DurationFieldType.minutes()); case SECONDS: return type.isSupported(DurationFieldType.seconds()); case MILLIS: return type.isSupported(DurationFieldType.millis()); case SECONDS_MILLIS: // drop through case SECONDS_OPTIONAL_MILLIS: return type.isSupported(DurationFieldType.seconds()) || type.isSupported(DurationFieldType.millis()); }\nreturn false;\nreturn type.isSupported(DurationFieldType.years());\nCALL type.isSupported(DurationFieldType.years())\nCALL DurationFieldType.years()\nreturn type.isSupported(DurationFieldType.months());\nCALL type.isSupported(DurationFieldType.months())\nCALL DurationFieldType.months()\nreturn type.isSupported(DurationFieldType.weeks());\nCALL type.isSupported(DurationFieldType.weeks())\nCALL DurationFieldType.weeks()\nreturn type.isSupported(DurationFieldType.days());\nCALL type.isSupported(DurationFieldType.days())\nCALL DurationFieldType.days()\nreturn type.isSupported(DurationFieldType.hours());\nCALL type.isSupported(DurationFieldType.hours())\nCALL DurationFieldType.hours()\nreturn type.isSupported(DurationFieldType.minutes());\nCALL type.isSupported(DurationFieldType.minutes())\nCALL DurationFieldType.minutes()\nreturn type.isSupported(DurationFieldType.seconds());\nCALL type.isSupported(DurationFieldType.seconds())\nCALL DurationFieldType.seconds()\nreturn type.isSupported(DurationFieldType.millis());\nCALL type.isSupported(DurationFieldType.millis())\nCALL DurationFieldType.millis()\nreturn type.isSupported(DurationFieldType.seconds()) || type.isSupported(DurationFieldType.millis());",
+        "boolean isSupported(PeriodType type, int field) {\n            switch (field) {\n            default:\n                return false;\n            case YEARS:\n                return type.isSupported(DurationFieldType.years());\n            case MONTHS:\n                return type.isSupported(DurationFieldType.months());\n            case WEEKS:\n                return type.isSupported(DurationFieldType.weeks());\n            case DAYS:\n                return type.isSupported(DurationFieldType.days());\n            case HOURS:\n                return type.isSupported(DurationFieldType.hours());\n            case MINUTES:\n                return type.isSupported(DurationFieldType.minutes());\n            case SECONDS:\n                return type.isSupported(DurationFieldType.seconds());\n            case MILLIS:\n                return type.isSupported(DurationFieldType.millis());\n            case SECONDS_MILLIS: // drop through\n            case SECONDS_OPTIONAL_MILLIS:\n                return type.isSupported(DurationFieldType.seconds()) ||\n                       type.isSupported(DurationFieldType.millis());\n            }\n        }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.65625,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 20.0,
+        "literal_count": 0.0,
+        "source_tokens": 283.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 537.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 20,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/PeriodFormat.java::PeriodFormat.wordBased(Locale locale)",
+      "source": "public static PeriodFormatter wordBased(Locale locale) {\n        PeriodFormatter pf = FORMATTERS.get(locale);\n        if (pf == null) {\n            ResourceBundle b = ResourceBundle.getBundle(BUNDLE_NAME, locale);\n            String[] variants = {\n                    b.getString(\"PeriodFormat.space\"), b.getString(\"PeriodFormat.comma\"),\n                    b.getString(\"PeriodFormat.commandand\"), b.getString(\"PeriodFormat.commaspaceand\")};\n            pf = new PeriodFormatterBuilder()\n                .appendYears()\n                .appendSuffix(b.getString(\"PeriodFormat.year\"), b.getString(\"PeriodFormat.years\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendMonths()\n                .appendSuffix(b.getString(\"PeriodFormat.month\"), b.getString(\"PeriodFormat.months\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendWeeks()\n                .appendSuffix(b.getString(\"PeriodFormat.week\"), b.getString(\"PeriodFormat.weeks\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendDays()\n                .appendSuffix(b.getString(\"PeriodFormat.day\"), b.getString(\"PeriodFormat.days\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendHours()\n                .appendSuffix(b.getString(\"PeriodFormat.hour\"), b.getString(\"PeriodFormat.hours\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendMinutes()\n                .appendSuffix(b.getString(\"PeriodFormat.minute\"), b.getString(\"PeriodFormat.minutes\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendSeconds()\n                .appendSuffix(b.getString(\"PeriodFormat.second\"), b.getString(\"PeriodFormat.seconds\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendMillis()\n                .appendSuffix(b.getString(\"PeriodFormat.millisecond\"), b.getString(\"PeriodFormat.milliseconds\"))\n                .toFormatter();\n            FORMATTERS.putIfAbsent(locale, pf);\n        }\n        return pf;\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormat.java::PeriodFormat.wordBased(Locale locale)\nSIGNATURE: public static PeriodFormatter wordBased(Locale locale)",
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormat.java::PeriodFormat.wordBased(Locale locale)\nSIGNATURE: public static PeriodFormatter wordBased(Locale locale)\nSTRUCTURE (lossy):\nPeriodFormatter pf = FORMATTERS.get(locale);\nCALL FORMATTERS.get(locale)\nif (pf == null)\nResourceBundle b = ResourceBundle.getBundle(BUNDLE_NAME, locale);\nCALL ResourceBundle.getBundle(BUNDLE_NAME, locale)\nString[] variants = { b.getString(\"PeriodFormat.space\"), b.getString(\"PeriodFormat.comma\"), b.getString(\"PeriodFormat.commandand\"), b.getString(\"PeriodFormat.commaspaceand\")};\nCALL b.getString(\"PeriodFormat.space\")\nCALL b.getString(\"PeriodFormat.comma\")\nCALL b.getString(\"PeriodFormat.commandand\")\nCALL b.getString(\"PeriodFormat.commaspaceand\")\npf = new PeriodFormatterBuilder() .appendYears() .appendSuffix(b.getString(\"PeriodFormat.year\"), b.getString(\"PeriodFormat.years\")) .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants) .appendMonths() .appendSuffix(b.getString(\"PeriodFormat.month\"), b.getString(\"PeriodFormat.months\")) .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants) .appendWeeks() .appendSuffix(b.getString(\"PeriodFormat.week\"), b.getString(\"PeriodFormat.weeks\")) .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants) .appendDays() .appendSuffix(b.getString(\"PeriodFormat.day\"), b.getString(\"PeriodFormat.days\")) .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants) .appendHours() .appendSuffix(b.getString(\"PeriodFormat.hour\"), b.getString(\"PeriodFormat.hours\")) .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants) .appendMinutes() .appendSuffix(b.getString(\"PeriodFormat.minute\"), b.getString(\"PeriodFormat.minutes\")) .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants) .appendSeconds() .appendSuffix(b.getString(\"PeriodFormat.second\"), b.getString(\"PeriodFormat.seconds\")) .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"Pe\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public static PeriodFormatter wordBased(Locale locale) {\n        PeriodFormatter pf = FORMATTERS.get(locale);\n        if (pf == null) {\n            ResourceBundle b = ResourceBundle.getBundle(BUNDLE_NAME, locale);\n            String[] variants = {\n                    b.getString(\"PeriodFormat.space\"), b.getString(\"PeriodFormat.comma\"),\n                    b.getString(\"PeriodFormat.commandand\"), b.getString(\"PeriodFormat.commaspaceand\")};\n            pf = new PeriodFormatterBuilder()\n                .appendYears()\n                .appendSuffix(b.getString(\"PeriodFormat.year\"), b.getString(\"PeriodFormat.years\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendMonths()\n                .appendSuffix(b.getString(\"PeriodFormat.month\"), b.getString(\"PeriodFormat.months\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendWeeks()\n                .appendSuffix(b.getString(\"PeriodFormat.week\"), b.getString(\"PeriodFormat.weeks\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendDays()\n                .appendSuffix(b.getString(\"PeriodFormat.day\"), b.getString(\"PeriodFormat.days\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendHours()\n                .appendSuffix(b.getString(\"PeriodFormat.hour\"), b.getString(\"PeriodFormat.hours\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendMinutes()\n                .appendSuffix(b.getString(\"PeriodFormat.minute\"), b.getString(\"PeriodFormat.minutes\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendSeconds()\n                .appendSuffix(b.getString(\"PeriodFormat.second\"), b.getString(\"PeriodFormat.seconds\"))\n                .appendSeparator(b.getString(\"PeriodFormat.commaspace\"), b.getString(\"PeriodFormat.spaceandspace\"), variants)\n                .appendMillis()\n                .appendSuffix(b.getString(\"PeriodFormat.millisecond\"), b.getString(\"PeriodFormat.milliseconds\"))\n                .toFormatter();\n            FORMATTERS.putIfAbsent(locale, pf);\n        }\n        return pf;\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4339622641509434,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 61.0,
+        "literal_count": 35.0,
+        "source_tokens": 638.0,
+        "l0_tokens": 42.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.8918495297805643,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 2,
+        "call_count": 61,
+        "literal_count": 35
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Period.java::Period.normalizedStandard(PeriodType type)",
+      "source": "public Period normalizedStandard(PeriodType type) {\n        long millis = getMillis();  // no overflow can happen, even with Integer.MAX_VALUEs\n        millis += (((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND));\n        millis += (((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE));\n        millis += (((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR));\n        millis += (((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY));\n        millis += (((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK));\n        Period result = new Period(millis, DateTimeUtils.getPeriodType(type), ISOChronology.getInstanceUTC());\n        int years = getYears();\n        int months = getMonths();\n        if (years != 0 || months != 0) {\n            years = FieldUtils.safeAdd(years, months / 12);\n            months = months % 12;\n            if (years != 0) {\n                result = result.withYears(years);\n            }\n            if (months != 0) {\n                result = result.withMonths(months);\n            }\n        }\n        return result;\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.normalizedStandard(PeriodType type)\nSIGNATURE: public Period normalizedStandard(PeriodType type)",
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.normalizedStandard(PeriodType type)\nSIGNATURE: public Period normalizedStandard(PeriodType type)\nSTRUCTURE (lossy):\nlong millis = getMillis();\nCALL getMillis()\nmillis += (((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND))\nCALL getSeconds()\nmillis += (((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE))\nCALL getMinutes()\nmillis += (((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR))\nCALL getHours()\nmillis += (((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY))\nCALL getDays()\nmillis += (((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK))\nCALL getWeeks()\nPeriod result = new Period(millis, DateTimeUtils.getPeriodType(type), ISOChronology.getInstanceUTC());\nCALL DateTimeUtils.getPeriodType(type)\nCALL ISOChronology.getInstanceUTC()\nint years = getYears();\nCALL getYears()\nint months = getMonths();\nCALL getMonths()\nif (years != 0 || months != 0)\nyears = FieldUtils.safeAdd(years, months / 12)\nCALL FieldUtils.safeAdd(years, months / 12)\nmonths = months % 12\nif (years != 0)\nresult = result.withYears(years)\nCALL result.withYears(years)\nif (months != 0)\nresult = result.withMonths(months)\nCALL result.withMonths(months)\nreturn result;",
+        "public Period normalizedStandard(PeriodType type) {\n        long millis = getMillis();  // no overflow can happen, even with Integer.MAX_VALUEs\n        millis += (((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND));\n        millis += (((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE));\n        millis += (((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR));\n        millis += (((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY));\n        millis += (((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK));\n        Period result = new Period(millis, DateTimeUtils.getPeriodType(type), ISOChronology.getInstanceUTC());\n        int years = getYears();\n        int months = getMonths();\n        if (years != 0 || months != 0) {\n            years = FieldUtils.safeAdd(years, months / 12);\n            months = months % 12;\n            if (years != 0) {\n                result = result.withYears(years);\n            }\n            if (months != 0) {\n                result = result.withMonths(months);\n            }\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4375,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 13.0,
+        "literal_count": 6.0,
+        "source_tokens": 281.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 318.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 13,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/DurationFieldType.java::DurationFieldType.StandardDurationFieldType.getField(Chronology chronology)",
+      "source": "public DurationField getField(Chronology chronology) {\n            chronology = DateTimeUtils.getChronology(chronology);\n            \n            switch (iOrdinal) {\n                case ERAS:\n                    return chronology.eras();\n                case CENTURIES:\n                    return chronology.centuries();\n                case WEEKYEARS:\n                    return chronology.weekyears();\n                case YEARS:\n                    return chronology.years();\n                case MONTHS:\n                    return chronology.months();\n                case WEEKS:\n                    return chronology.weeks();\n                case DAYS:\n                    return chronology.days();\n                case HALFDAYS:\n                    return chronology.halfdays();\n                case HOURS:\n                    return chronology.hours();\n                case MINUTES:\n                    return chronology.minutes();\n                case SECONDS:\n                    return chronology.seconds();\n                case MILLIS:\n                    return chronology.millis();\n                default:\n                    // Shouldn't happen.\n                    throw new InternalError();\n            }\n        }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/DurationFieldType.java::DurationFieldType.StandardDurationFieldType.getField(Chronology chronology)\nSIGNATURE: public DurationField getField(Chronology chronology)",
+        "METHOD: src/main/java/org/joda/time/DurationFieldType.java::DurationFieldType.StandardDurationFieldType.getField(Chronology chronology)\nSIGNATURE: public DurationField getField(Chronology chronology)\nSTRUCTURE (lossy):\nchronology = DateTimeUtils.getChronology(chronology)\nCALL DateTimeUtils.getChronology(chronology)\nswitch (iOrdinal) { case ERAS: return chronology.eras(); case CENTURIES: return chronology.centuries(); case WEEKYEARS: return chronology.weekyears(); case YEARS: return chronology.years(); case MONTHS: return chronology.months(); case WEEKS: return chronology.weeks(); case DAYS: return chronology.days(); case HALFDAYS: return chronology.halfdays(); case HOURS: return chronology.hours(); case MINUTES: return chronology.minutes(); case SECONDS: return chronology.seconds(); case MILLIS: return chronology.millis(); default: // Shouldn't happen. throw new InternalError(); }\nreturn chronology.eras();\nCALL chronology.eras()\nreturn chronology.centuries();\nCALL chronology.centuries()\nreturn chronology.weekyears();\nCALL chronology.weekyears()\nreturn chronology.years();\nCALL chronology.years()\nreturn chronology.months();\nCALL chronology.months()\nreturn chronology.weeks();\nCALL chronology.weeks()\nreturn chronology.days();\nCALL chronology.days()\nreturn chronology.halfdays();\nCALL chronology.halfdays()\nreturn chronology.hours();\nCALL chronology.hours()\nreturn chronology.minutes();\nCALL chronology.minutes()\nreturn chronology.seconds();\nCALL chronology.seconds()\nreturn chronology.millis();\nCALL chronology.millis()\nthrow new InternalError();",
+        "public DurationField getField(Chronology chronology) {\n            chronology = DateTimeUtils.getChronology(chronology);\n            \n            switch (iOrdinal) {\n                case ERAS:\n                    return chronology.eras();\n                case CENTURIES:\n                    return chronology.centuries();\n                case WEEKYEARS:\n                    return chronology.weekyears();\n                case YEARS:\n                    return chronology.years();\n                case MONTHS:\n                    return chronology.months();\n                case WEEKS:\n                    return chronology.weeks();\n                case DAYS:\n                    return chronology.days();\n                case HALFDAYS:\n                    return chronology.halfdays();\n                case HOURS:\n                    return chronology.hours();\n                case MINUTES:\n                    return chronology.minutes();\n                case SECONDS:\n                    return chronology.seconds();\n                case MILLIS:\n                    return chronology.millis();\n                default:\n                    // Shouldn't happen.\n                    throw new InternalError();\n            }\n        }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5526315789473685,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 13.0,
+        "literal_count": 0.0,
+        "source_tokens": 308.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 391.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 13,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Period.java::Period.Period(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)",
+      "source": "public Period(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, type);\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.Period(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)\nSIGNATURE: public Period(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)",
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.Period(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)\nSIGNATURE: public Period(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)\nSTRUCTURE (lossy):\n",
+        "public Period(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, type);\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8421052631578947,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 59.0,
+        "l0_tokens": 87.0,
+        "l1_tokens": 92.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/ISODateTimeFormat.java::ISODateTimeFormat.dateOptionalTimeParser()",
+      "source": "public static DateTimeFormatter dateOptionalTimeParser() {\n        if (dotp == null) {\n            DateTimeParser timeOrOffset = new DateTimeFormatterBuilder()\n                .appendLiteral('T')\n                .appendOptional(timeElementParser().getParser())\n                .appendOptional(offsetElement().getParser())\n                .toParser();\n            dotp = new DateTimeFormatterBuilder()\n                .append(dateElementParser())\n                .appendOptional(timeOrOffset)\n                .toFormatter();\n        }\n        return dotp;\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/ISODateTimeFormat.java::ISODateTimeFormat.dateOptionalTimeParser()\nSIGNATURE: public static DateTimeFormatter dateOptionalTimeParser()",
+        "METHOD: src/main/java/org/joda/time/format/ISODateTimeFormat.java::ISODateTimeFormat.dateOptionalTimeParser()\nSIGNATURE: public static DateTimeFormatter dateOptionalTimeParser()\nSTRUCTURE (lossy):\nif (dotp == null)\nDateTimeParser timeOrOffset = new DateTimeFormatterBuilder() .appendLiteral('T') .appendOptional(timeElementParser().getParser()) .appendOptional(offsetElement().getParser()) .toParser();\nCALL new DateTimeFormatterBuilder() .appendLiteral('T') .appendOptional(timeElementParser().getParser()) .appendOptional(offsetElement().getParser()) .toParser()\nCALL new DateTimeFormatterBuilder() .appendLiteral('T') .appendOptional(timeElementParser().getParser()) .appendOptional(offsetElement().getParser())\nCALL new DateTimeFormatterBuilder() .appendLiteral('T') .appendOptional(timeElementParser().getParser())\nCALL new DateTimeFormatterBuilder() .appendLiteral('T')\nCALL timeElementParser().getParser()\nCALL timeElementParser()\nCALL offsetElement().getParser()\nCALL offsetElement()\ndotp = new DateTimeFormatterBuilder() .append(dateElementParser()) .appendOptional(timeOrOffset) .toFormatter()\nCALL new DateTimeFormatterBuilder() .append(dateElementParser()) .appendOptional(timeOrOffset) .toFormatter()\nCALL new DateTimeFormatterBuilder() .append(dateElementParser()) .appendOptional(timeOrOffset)\nCALL new DateTimeFormatterBuilder() .append(dateElementParser())\nCALL dateElementParser()\nreturn dotp;",
+        "public static DateTimeFormatter dateOptionalTimeParser() {\n        if (dotp == null) {\n            DateTimeParser timeOrOffset = new DateTimeFormatterBuilder()\n                .appendLiteral('T')\n                .appendOptional(timeElementParser().getParser())\n                .appendOptional(offsetElement().getParser())\n                .toParser();\n            dotp = new DateTimeFormatterBuilder()\n                .append(dateElementParser())\n                .appendOptional(timeOrOffset)\n                .toFormatter();\n        }\n        return dotp;\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.625,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 12.0,
+        "literal_count": 2.0,
+        "source_tokens": 140.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 353.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 12,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/convert/StringConverter.java::StringConverter.setInto(ReadWritableInterval writableInterval, Object object, Chronology chrono)",
+      "source": "public void setInto(ReadWritableInterval writableInterval, Object object, Chronology chrono) {\n        String str = (String) object;\n\n        int separator = str.indexOf('/');\n        if (separator < 0) {\n            throw new IllegalArgumentException(\"Format requires a '/' separator: \" + str);\n        }\n\n        String leftStr = str.substring(0, separator);\n        if (leftStr.length() <= 0) {\n            throw new IllegalArgumentException(\"Format invalid: \" + str);\n        }\n        String rightStr = str.substring(separator + 1);\n        if (rightStr.length() <= 0) {\n            throw new IllegalArgumentException(\"Format invalid: \" + str);\n        }\n\n        DateTimeFormatter dateTimeParser = ISODateTimeFormat.dateTimeParser();\n        dateTimeParser = dateTimeParser.withChronology(chrono);\n        PeriodFormatter periodParser = ISOPeriodFormat.standard();\n        long startInstant = 0, endInstant = 0;\n        Period period = null;\n        Chronology parsedChrono = null;\n        \n        // before slash\n        char c = leftStr.charAt(0);\n        if (c == 'P' || c == 'p') {\n            period = periodParser.withParseType(getPeriodType(leftStr)).parsePeriod(leftStr);\n        } else {\n            DateTime start = dateTimeParser.parseDateTime(leftStr);\n            startInstant = start.getMillis();\n            parsedChrono = start.getChronology();\n        }\n        \n        // after slash\n        c = rightStr.charAt(0);\n        if (c == 'P' || c == 'p') {\n            if (period != null) {\n                throw new IllegalArgumentException(\"Interval composed of two durations: \" + str);\n            }\n            period = periodParser.withParseType(getPeriodType(rightStr)).parsePeriod(rightStr);\n            chrono = (chrono != null ? chrono : parsedChrono);\n            endInstant = chrono.add(period, startInstant, 1);\n        } else {\n            DateTime end = dateTimeParser.parseDateTime(rightStr);\n            endInstant = end.getMillis();\n            parsedChrono = (parsedChrono != null ? parsedChrono : end.getChronology());\n            chrono = (chrono != null ? chrono : parsedChrono);\n            if (period != null) {\n                startInstant = chrono.add(period, endInstant, -1);\n            }\n        }\n        \n        writableInterval.setInterval(startInstant, endInstant);\n        writableInterval.setChronology(chrono);\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/convert/StringConverter.java::StringConverter.setInto(ReadWritableInterval writableInterval, Object object, Chronology chrono)\nSIGNATURE: public void setInto(ReadWritableInterval writableInterval, Object object, Chronology chrono)",
+        "METHOD: src/main/java/org/joda/time/convert/StringConverter.java::StringConverter.setInto(ReadWritableInterval writableInterval, Object object, Chronology chrono)\nSIGNATURE: public void setInto(ReadWritableInterval writableInterval, Object object, Chronology chrono)\nSTRUCTURE (lossy):\nString str = (String) object;\nint separator = str.indexOf('/');\nCALL str.indexOf('/')\nif (separator < 0)\nthrow new IllegalArgumentException(\"Format requires a '/' separator: \" + str);\nString leftStr = str.substring(0, separator);\nCALL str.substring(0, separator)\nif (leftStr.length() <= 0)\nCALL leftStr.length()\nthrow new IllegalArgumentException(\"Format invalid: \" + str);\nString rightStr = str.substring(separator + 1);\nCALL str.substring(separator + 1)\nif (rightStr.length() <= 0)\nCALL rightStr.length()\nDateTimeFormatter dateTimeParser = ISODateTimeFormat.dateTimeParser();\nCALL ISODateTimeFormat.dateTimeParser()\ndateTimeParser = dateTimeParser.withChronology(chrono)\nCALL dateTimeParser.withChronology(chrono)\nPeriodFormatter periodParser = ISOPeriodFormat.standard();\nCALL ISOPeriodFormat.standard()\nlong startInstant = 0, endInstant = 0;\nPeriod period = null;\nChronology parsedChrono = null;\nchar c = leftStr.charAt(0);\nCALL leftStr.charAt(0)\nif (c == 'P' || c == 'p')\nperiod = periodParser.withParseType(getPeriodType(leftStr)).parsePeriod(leftStr)\nCALL periodParser.withParseType(getPeriodType(leftStr)).parsePeriod(leftStr)\nCALL periodParser.withParseType(getPeriodType(leftStr))\nCALL getPeriodType(leftStr)\nDateTime start = dateTimeParser.parseDateTime(leftStr);\nCALL dateTimeParser.parseDateTime(leftStr)\nstartInstant = start.getMillis()\nCALL start.getMillis()\nparsedChrono = start.getChronology()\nCALL start.getChronology()\nc = rightStr.charAt(0)\nCALL rightStr.charAt(0)\nif (period != null)\nthrow new IllegalArgumentException(\"Interval composed of two durations: \" + str);\nperiod = periodParser.withParseType(getPeriodType(rightStr)).parsePeriod(rightStr)\nCALL periodParser.withParseType(getPeriodType(rightStr)).parsePeriod(rightStr)\nCALL periodParser.withParseType(getPeriodType(rightStr))\nCALL getPeriodType(rightStr)\nchrono = (chrono != null ? chrono : parsedChrono)\nendInstant = chrono.add(perio\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public void setInto(ReadWritableInterval writableInterval, Object object, Chronology chrono) {\n        String str = (String) object;\n\n        int separator = str.indexOf('/');\n        if (separator < 0) {\n            throw new IllegalArgumentException(\"Format requires a '/' separator: \" + str);\n        }\n\n        String leftStr = str.substring(0, separator);\n        if (leftStr.length() <= 0) {\n            throw new IllegalArgumentException(\"Format invalid: \" + str);\n        }\n        String rightStr = str.substring(separator + 1);\n        if (rightStr.length() <= 0) {\n            throw new IllegalArgumentException(\"Format invalid: \" + str);\n        }\n\n        DateTimeFormatter dateTimeParser = ISODateTimeFormat.dateTimeParser();\n        dateTimeParser = dateTimeParser.withChronology(chrono);\n        PeriodFormatter periodParser = ISOPeriodFormat.standard();\n        long startInstant = 0, endInstant = 0;\n        Period period = null;\n        Chronology parsedChrono = null;\n        \n        // before slash\n        char c = leftStr.charAt(0);\n        if (c == 'P' || c == 'p') {\n            period = periodParser.withParseType(getPeriodType(leftStr)).parsePeriod(leftStr);\n        } else {\n            DateTime start = dateTimeParser.parseDateTime(leftStr);\n            startInstant = start.getMillis();\n            parsedChrono = start.getChronology();\n        }\n        \n        // after slash\n        c = rightStr.charAt(0);\n        if (c == 'P' || c == 'p') {\n            if (period != null) {\n                throw new IllegalArgumentException(\"Interval composed of two durations: \" + str);\n            }\n            period = periodParser.withParseType(getPeriodType(rightStr)).parsePeriod(rightStr);\n            chrono = (chrono != null ? chrono : parsedChrono);\n            endInstant = chrono.add(period, startInstant, 1);\n        } else {\n            DateTime end = dateTimeParser.parseDateTime(rightStr);\n            endInstant = end.getMillis();\n            parsedChrono = (parsedChrono != null ? parsedChrono : end.getChronology());\n            chrono = (chrono != null ? chrono : parsedChrono);\n            if (period != null) {\n                startInstant = chrono.add(period, endInstant, -1);\n            }\n        }\n        \n        writableInterval.setInterval(startInstant, endInstant);\n        writableInterval.setChronology(chrono);\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3870967741935484,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 26.0,
+        "literal_count": 27.0,
+        "source_tokens": 594.0,
+        "l0_tokens": 67.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.9579124579124579,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 8,
+        "call_count": 26,
+        "literal_count": 27
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/PeriodType.java::PeriodType.forFields(DurationFieldType[] types)",
+      "source": "public static synchronized PeriodType forFields(DurationFieldType[] types) {\n        if (types == null || types.length == 0) {\n            throw new IllegalArgumentException(\"Types array must not be null or empty\");\n        }\n        for (int i = 0; i < types.length; i++) {\n            if (types[i] == null) {\n                throw new IllegalArgumentException(\"Types array must not contain null\");\n            }\n        }\n        Map<PeriodType, Object> cache = cTypes;\n        if (cache.isEmpty()) {\n            cache.put(standard(), standard());\n            cache.put(yearMonthDayTime(), yearMonthDayTime());\n            cache.put(yearMonthDay(), yearMonthDay());\n            cache.put(yearWeekDayTime(), yearWeekDayTime());\n            cache.put(yearWeekDay(), yearWeekDay());\n            cache.put(yearDayTime(), yearDayTime());\n            cache.put(yearDay(), yearDay());\n            cache.put(dayTime(), dayTime());\n            cache.put(time(), time());\n            cache.put(years(), years());\n            cache.put(months(), months());\n            cache.put(weeks(), weeks());\n            cache.put(days(), days());\n            cache.put(hours(), hours());\n            cache.put(minutes(), minutes());\n            cache.put(seconds(), seconds());\n            cache.put(millis(), millis());\n        }\n        PeriodType inPartType = new PeriodType(null, types, null);\n        Object cached = cache.get(inPartType);\n        if (cached instanceof PeriodType) {\n            return (PeriodType) cached;\n        }\n        if (cached != null) {\n            throw new IllegalArgumentException(\"PeriodType does not support fields: \" + cached);\n        }\n        PeriodType type = standard();\n        List<DurationFieldType> list = new ArrayList<DurationFieldType>(Arrays.asList(types));\n        if (list.remove(DurationFieldType.years()) == false) {\n            type = type.withYearsRemoved();\n        }\n        if (list.remove(DurationFieldType.months()) == false) {\n            type = type.withMonthsRemoved();\n        }\n        if (list.remove(DurationFieldType.weeks()) == false) {\n            type = type.withWeeksRemoved();\n        }\n        if (list.remove(DurationFieldType.days()) == false) {\n            type = type.withDaysRemoved();\n        }\n        if (list.remove(DurationFieldType.hours()) == false) {\n            type = type.withHoursRemoved();\n        }\n        if (list.remove(DurationFieldType.minutes()) == false) {\n            type = type.withMinutesRemoved();\n        }\n        if (list.remove(DurationFieldType.seconds()) == false) {\n            type = type.withSecondsRemoved();\n        }\n        if (list.remove(DurationFieldType.millis()) == false) {\n            type = type.withMillisRemoved();\n        }\n        if (list.size() > 0) {\n            cache.put(inPartType, list);\n            throw new IllegalArgumentException(\"PeriodType does not support fields: \" + list);\n        }\n        // recheck cache in case initial array order was wrong\n        PeriodType checkPartType = new PeriodType(null, type.iTypes, null);\n        PeriodType checkedType = (PeriodType) cache.get(checkPartType);\n        if (checkedType != null) {\n            cache.put(inPartType, checkedType);\n            return checkedType;\n        }\n        cache.put(inPartType, type);\n        return type;\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/PeriodType.java::PeriodType.forFields(DurationFieldType[] types)\nSIGNATURE: public static synchronized PeriodType forFields(DurationFieldType[] types)",
+        "METHOD: src/main/java/org/joda/time/PeriodType.java::PeriodType.forFields(DurationFieldType[] types)\nSIGNATURE: public static synchronized PeriodType forFields(DurationFieldType[] types)\nSTRUCTURE (lossy):\nif (types == null || types.length == 0)\nthrow new IllegalArgumentException(\"Types array must not be null or empty\");\nfor (int i = 0; i < types.length; i++)\nint i = 0;\ni++\nif (types[i] == null)\nthrow new IllegalArgumentException(\"Types array must not contain null\");\nMap<PeriodType, Object> cache = cTypes;\nif (cache.isEmpty())\nCALL cache.isEmpty()\nCALL cache.put(standard(), standard())\nCALL standard()\nCALL cache.put(yearMonthDayTime(), yearMonthDayTime())\nCALL yearMonthDayTime()\nCALL cache.put(yearMonthDay(), yearMonthDay())\nCALL yearMonthDay()\nCALL cache.put(yearWeekDayTime(), yearWeekDayTime())\nCALL yearWeekDayTime()\nCALL cache.put(yearWeekDay(), yearWeekDay())\nCALL yearWeekDay()\nCALL cache.put(yearDayTime(), yearDayTime())\nCALL yearDayTime()\nCALL cache.put(yearDay(), yearDay())\nCALL yearDay()\nCALL cache.put(dayTime(), dayTime())\nCALL dayTime()\nCALL cache.put(time(), time())\nCALL time()\nCALL cache.put(years(), years())\nCALL years()\nCALL cache.put(months(), months())\nCALL months()\nCALL cache.put(weeks(), weeks())\nCALL weeks()\nCALL cache.put(days(), days())\nCALL days()\nCALL cache.put(hours(), hours())\nCALL hours()\nCALL cache.put(minutes(), minutes())\nCALL minutes()\nCALL cache.put(seconds(), seconds())\nCALL seconds()\nCALL cache.put(millis(), millis())\nCALL millis()\nPeriodType inPartType = new PeriodType(null, types, null);\nObject cached = cache.get(inPartType);\nCALL cache.get(inPartType)\nif (cached instanceof PeriodType)\nreturn (PeriodType) cached;\nif (cached != null)\nthrow new IllegalArgumentException(\"PeriodType does not support fields: \" + cached);\nPeriodType type = standard();\nList<DurationFieldType> list = new ArrayList<DurationFieldType>(Arrays.asList(types));\nCALL Arrays.asList(types)\nif (list.remove(DurationFieldType.years()) == false)\nCALL list.remove(DurationFieldType.years())\nCALL DurationFieldType.years()\ntype = type.withYearsRemoved()\nCALL type.withYearsRemoved()\nif (list.remove(DurationFieldType.months()) == false)\nCALL list.remove(DurationFieldType\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public static synchronized PeriodType forFields(DurationFieldType[] types) {\n        if (types == null || types.length == 0) {\n            throw new IllegalArgumentException(\"Types array must not be null or empty\");\n        }\n        for (int i = 0; i < types.length; i++) {\n            if (types[i] == null) {\n                throw new IllegalArgumentException(\"Types array must not contain null\");\n            }\n        }\n        Map<PeriodType, Object> cache = cTypes;\n        if (cache.isEmpty()) {\n            cache.put(standard(), standard());\n            cache.put(yearMonthDayTime(), yearMonthDayTime());\n            cache.put(yearMonthDay(), yearMonthDay());\n            cache.put(yearWeekDayTime(), yearWeekDayTime());\n            cache.put(yearWeekDay(), yearWeekDay());\n            cache.put(yearDayTime(), yearDayTime());\n            cache.put(yearDay(), yearDay());\n            cache.put(dayTime(), dayTime());\n            cache.put(time(), time());\n            cache.put(years(), years());\n            cache.put(months(), months());\n            cache.put(weeks(), weeks());\n            cache.put(days(), days());\n            cache.put(hours(), hours());\n            cache.put(minutes(), minutes());\n            cache.put(seconds(), seconds());\n            cache.put(millis(), millis());\n        }\n        PeriodType inPartType = new PeriodType(null, types, null);\n        Object cached = cache.get(inPartType);\n        if (cached instanceof PeriodType) {\n            return (PeriodType) cached;\n        }\n        if (cached != null) {\n            throw new IllegalArgumentException(\"PeriodType does not support fields: \" + cached);\n        }\n        PeriodType type = standard();\n        List<DurationFieldType> list = new ArrayList<DurationFieldType>(Arrays.asList(types));\n        if (list.remove(DurationFieldType.years()) == false) {\n            type = type.withYearsRemoved();\n        }\n        if (list.remove(DurationFieldType.months()) == false) {\n            type = type.withMonthsRemoved();\n        }\n        if (list.remove(DurationFieldType.weeks()) == false) {\n            type = type.withWeeksRemoved();\n        }\n        if (list.remove(DurationFieldType.days()) == false) {\n            type = type.withDaysRemoved();\n        }\n        if (list.remove(DurationFieldType.hours()) == false) {\n            type = type.withHoursRemoved();\n        }\n        if (list.remove(DurationFieldType.minutes()) == false) {\n            type = type.withMinutesRemoved();\n        }\n        if (list.remove(DurationFieldType.seconds()) == false) {\n            type = type.withSecondsRemoved();\n        }\n        if (list.remove(DurationFieldType.millis()) == false) {\n            type = type.withMillisRemoved();\n        }\n        if (list.size() > 0) {\n            cache.put(inPartType, list);\n            throw new IllegalArgumentException(\"PeriodType does not support fields: \" + list);\n        }\n        // recheck cache in case initial array order was wrong\n        PeriodType checkPartType = new PeriodType(null, type.iTypes, null);\n        PeriodType checkedType = (PeriodType) cache.get(checkPartType);\n        if (checkedType != null) {\n            cache.put(inPartType, checkedType);\n            return checkedType;\n        }\n        cache.put(inPartType, type);\n        return type;\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.35294117647058826,
+        "trace_match": 0.0,
+        "complexity": 17.0,
+        "call_count": 84.0,
+        "literal_count": 15.0,
+        "source_tokens": 828.0,
+        "l0_tokens": 47.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.6871980676328503,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 17,
+        "call_count": 84,
+        "literal_count": 15
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.appendSeparator(String text, String finalText,\n                                                   String[] variants,\n                                                   boolean useBefore, boolean useAfter)",
+      "source": "private PeriodFormatterBuilder appendSeparator(String text, String finalText,\n                                                   String[] variants,\n                                                   boolean useBefore, boolean useAfter) {\n        if (text == null || finalText == null) {\n            throw new IllegalArgumentException();\n        }\n\n        clearPrefix();\n        \n        // optimise zero formatter case\n        List<Object> pairs = iElementPairs;\n        if (pairs.size() == 0) {\n            if (useAfter && useBefore == false) {\n                Separator separator = new Separator(\n                        text, finalText, variants,\n                        Literal.EMPTY, Literal.EMPTY, useBefore, useAfter);\n                append0(separator, separator);\n            }\n            return this;\n        }\n        \n        // find the last separator added\n        int i;\n        Separator lastSeparator = null;\n        for (i=pairs.size(); --i>=0; ) {\n            if (pairs.get(i) instanceof Separator) {\n                lastSeparator = (Separator) pairs.get(i);\n                pairs = pairs.subList(i + 1, pairs.size());\n                break;\n            }\n            i--;  // element pairs\n        }\n        \n        // merge formatters\n        if (lastSeparator != null && pairs.size() == 0) {\n            throw new IllegalStateException(\"Cannot have two adjacent separators\");\n        } else {\n            Object[] comp = createComposite(pairs);\n            pairs.clear();\n            Separator separator = new Separator(\n                    text, finalText, variants,\n                    (PeriodPrinter) comp[0], (PeriodParser) comp[1],\n                    useBefore, useAfter);\n            pairs.add(separator);\n            pairs.add(separator);\n        }\n        \n        return this;\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.appendSeparator(String text, String finalText,\n                                                   String[] variants,\n                                                   boolean useBefore, boolean useAfter)\nSIGNATURE: private PeriodFormatterBuilder appendSeparator(String text, String finalText,\n                                                   String[] variants,\n                                                   boolean useBefore, boolean useAfter)",
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.appendSeparator(String text, String finalText,\n                                                   String[] variants,\n                                                   boolean useBefore, boolean useAfter)\nSIGNATURE: private PeriodFormatterBuilder appendSeparator(String text, String finalText,\n                                                   String[] variants,\n                                                   boolean useBefore, boolean useAfter)\nSTRUCTURE (lossy):\nif (text == null || finalText == null)\nthrow new IllegalArgumentException();\nCALL clearPrefix()\nList<Object> pairs = iElementPairs;\nif (pairs.size() == 0)\nCALL pairs.size()\nif (useAfter && useBefore == false)\nSeparator separator = new Separator( text, finalText, variants, Literal.EMPTY, Literal.EMPTY, useBefore, useAfter);\nCALL append0(separator, separator)\nreturn this;\nint i;\nSeparator lastSeparator = null;\nfor (i=pairs.size(); --i>=0; )\ni=pairs.size()\n--i\nif (pairs.get(i) instanceof Separator)\nCALL pairs.get(i)\nlastSeparator = (Separator) pairs.get(i)\npairs = pairs.subList(i + 1, pairs.size())\nCALL pairs.subList(i + 1, pairs.size())\ni--\nif (lastSeparator != null && pairs.size() == 0)\nthrow new IllegalStateException(\"Cannot have two adjacent separators\");\nObject[] comp = createComposite(pairs);\nCALL createComposite(pairs)\nCALL pairs.clear()\nSeparator separator = new Separator( text, finalText, variants, (PeriodPrinter) comp[0], (PeriodParser) comp[1], useBefore, useAfter);\nCALL pairs.add(separator)",
+        "private PeriodFormatterBuilder appendSeparator(String text, String finalText,\n                                                   String[] variants,\n                                                   boolean useBefore, boolean useAfter) {\n        if (text == null || finalText == null) {\n            throw new IllegalArgumentException();\n        }\n\n        clearPrefix();\n        \n        // optimise zero formatter case\n        List<Object> pairs = iElementPairs;\n        if (pairs.size() == 0) {\n            if (useAfter && useBefore == false) {\n                Separator separator = new Separator(\n                        text, finalText, variants,\n                        Literal.EMPTY, Literal.EMPTY, useBefore, useAfter);\n                append0(separator, separator);\n            }\n            return this;\n        }\n        \n        // find the last separator added\n        int i;\n        Separator lastSeparator = null;\n        for (i=pairs.size(); --i>=0; ) {\n            if (pairs.get(i) instanceof Separator) {\n                lastSeparator = (Separator) pairs.get(i);\n                pairs = pairs.subList(i + 1, pairs.size());\n                break;\n            }\n            i--;  // element pairs\n        }\n        \n        // merge formatters\n        if (lastSeparator != null && pairs.size() == 0) {\n            throw new IllegalStateException(\"Cannot have two adjacent separators\");\n        } else {\n            Object[] comp = createComposite(pairs);\n            pairs.clear();\n            Separator separator = new Separator(\n                    text, finalText, variants,\n                    (PeriodPrinter) comp[0], (PeriodParser) comp[1],\n                    useBefore, useAfter);\n            pairs.add(separator);\n            pairs.add(separator);\n        }\n        \n        return this;\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.29411764705882354,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 13.0,
+        "literal_count": 11.0,
+        "source_tokens": 455.0,
+        "l0_tokens": 137.0,
+        "l1_tokens": 395.0,
+        "compression_ratio": 0.8681318681318682,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 13,
+        "literal_count": 11
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java::DateTimeFormatterBuilder.appendLiteral(String text)",
+      "source": "public DateTimeFormatterBuilder appendLiteral(String text) {\n        if (text == null) {\n            throw new IllegalArgumentException(\"Literal must not be null\");\n        }\n        switch (text.length()) {\n            case 0:\n                return this;\n            case 1:\n                return append0(new CharacterLiteral(text.charAt(0)));\n            default:\n                return append0(new StringLiteral(text));\n        }\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java::DateTimeFormatterBuilder.appendLiteral(String text)\nSIGNATURE: public DateTimeFormatterBuilder appendLiteral(String text)",
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java::DateTimeFormatterBuilder.appendLiteral(String text)\nSIGNATURE: public DateTimeFormatterBuilder appendLiteral(String text)\nSTRUCTURE (lossy):\nif (text == null)\nthrow new IllegalArgumentException(\"Literal must not be null\");\nswitch (text.length()) { case 0: return this; case 1: return append0(new CharacterLiteral(text.charAt(0))); default: return append0(new StringLiteral(text)); }\nCALL text.length()\nreturn this;\nreturn append0(new CharacterLiteral(text.charAt(0)));\nCALL append0(new CharacterLiteral(text.charAt(0)))\nCALL text.charAt(0)\nreturn append0(new StringLiteral(text));\nCALL append0(new StringLiteral(text))",
+        "public DateTimeFormatterBuilder appendLiteral(String text) {\n        if (text == null) {\n            throw new IllegalArgumentException(\"Literal must not be null\");\n        }\n        switch (text.length()) {\n            case 0:\n                return this;\n            case 1:\n                return append0(new CharacterLiteral(text.charAt(0)));\n            default:\n                return append0(new StringLiteral(text));\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5625,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 4.0,
+        "literal_count": 5.0,
+        "source_tokens": 110.0,
+        "l0_tokens": 49.0,
+        "l1_tokens": 173.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 4,
+        "literal_count": 5
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.standard()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.alternateWithWeeks()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.alternate()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.alternateExtendedWithWeeks()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/ISOPeriodFormat.java::ISOPeriodFormat.alternateExtended()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.MutablePeriod(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.setPeriod(int years, int months, int weeks, int days,\n                          int hours, int minutes, int seconds, int millis)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.setFieldValue(ReadWritablePeriod period, int field, int value)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.add(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.MutablePeriod(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Period.java::Period.Period(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.isSupported(PeriodType type, int field)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/PeriodFormat.java::PeriodFormat.wordBased(Locale locale)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Period.java::Period.normalizedStandard(PeriodType type)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/DurationFieldType.java::DurationFieldType.StandardDurationFieldType.getField(Chronology chronology)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Period.java::Period.Period(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/ISODateTimeFormat.java::ISODateTimeFormat.dateOptionalTimeParser()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/convert/StringConverter.java::StringConverter.setInto(ReadWritableInterval writableInterval, Object object, Chronology chrono)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/PeriodType.java::PeriodType.forFields(DurationFieldType[] types)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.appendSeparator(String text, String finalText,\n                                                   String[] variants,\n                                                   boolean useBefore, boolean useAfter)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java::DateTimeFormatterBuilder.appendLiteral(String text)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 3993,
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "03d23c568052b71c2c925fa3b3b9ef8591a335fa8269511fd8fb973cad932edf",
+  "evidence_sha256": "8906a3d51590319215d5cbf4e4aad0166029d04175f76aed1876e365fa428653"
+}

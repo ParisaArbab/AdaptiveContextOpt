@@ -1,0 +1,1318 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Lang-59",
+    "repository": "Lang",
+    "language": "java",
+    "revision": "aab6fd56d4180a62c97131d3ab351af6c3eaf08d",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_05/prepared/checkouts/Lang-59",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Lang-59\nEXECUTED BUGGY TEST: org.apache.commons.lang.text.StrBuilderAppendInsertTest::testLang299\nTEST SOURCE: src/test/org/apache/commons/lang/text/StrBuilderAppendInsertTest.java\nTEST SOURCE SHA256: 976be423bfcd8788312349ec1e90561367be373541dfbc029b9d610950e980c6\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testLang299() {\n        StrBuilder sb = new StrBuilder(1);\n        sb.appendFixedWidthPadRight(\"foo\", 1, '-');\n        assertEquals(\"f\", sb.toString());\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.apache.commons.lang.text.StrBuilderAppendInsertTest::testLang299\njava.lang.StringIndexOutOfBoundsException: offset 0, count 3, length 1\n\tat java.base/java.lang.String.checkBoundsOffCount(String.java:3304)\n\tat java.base/java.lang.String.getChars(String.java:855)\n\tat org.apache.commons.lang.text.StrBuilder.appendFixedWidthPadRight(StrBuilder.java:884)\n\tat org.apache.commons.lang.text.StrBuilderAppendInsertTest.testLang299(StrBuilderAppendInsertTest.java:602)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_05/prepared/evidence/Lang-59.txt",
+      "sha256": "89d2dd0df0579fb724a04eba93b4f043fdcb483e4f7fa1267181c7376174611c"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src/java",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Lang-59",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.appendFixedWidthPadRight(int value, int width, char padChar)",
+      "path": "src/java/org/apache/commons/lang/text/StrBuilder.java",
+      "start_line": 907,
+      "end_line": 909,
+      "source": "public StrBuilder appendFixedWidthPadRight(int value, int width, char padChar) {\n        return appendFixedWidthPadRight(String.valueOf(value), width, padChar);\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 51.34198519430743
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.insert(int index, char chars[], int offset, int length)",
+      "path": "src/java/org/apache/commons/lang/text/StrBuilder.java",
+      "start_line": 988,
+      "end_line": 1006,
+      "source": "public StrBuilder insert(int index, char chars[], int offset, int length) {\n        validateIndex(index);\n        if (chars == null) {\n            return insert(index, nullText);\n        }\n        if (offset < 0 || offset > chars.length) {\n            throw new StringIndexOutOfBoundsException(\"Invalid offset: \" + offset);\n        }\n        if (length < 0 || offset + length > chars.length) {\n            throw new StringIndexOutOfBoundsException(\"Invalid length: \" + length);\n        }\n        if (length > 0) {\n            ensureCapacity(size + length);\n            System.arraycopy(buffer, index, buffer, index + length, size - index);\n            System.arraycopy(chars, offset, buffer, index, length);\n            size += length;\n        }\n        return this;\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 49.21202970359729
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.appendFixedWidthPadRight(Object obj, int width, char padChar)",
+      "path": "src/java/org/apache/commons/lang/text/StrBuilder.java",
+      "start_line": 878,
+      "end_line": 895,
+      "source": "public StrBuilder appendFixedWidthPadRight(Object obj, int width, char padChar) {\n        if (width > 0) {\n            ensureCapacity(size + width);\n            String str = (obj == null ? getNullText() : obj.toString());\n            int strLen = str.length();\n            if (strLen >= width) {\n                str.getChars(0, strLen, buffer, size);\n            } else {\n                int padLen = width - strLen;\n                str.getChars(0, strLen, buffer, size);\n                for (int i = 0; i < padLen; i++) {\n                    buffer[size + strLen + i] = padChar;\n                }\n            }\n            size += width;\n        }\n        return this;\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 48.20769697130861
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.appendFixedWidthPadLeft(int value, int width, char padChar)",
+      "path": "src/java/org/apache/commons/lang/text/StrBuilder.java",
+      "start_line": 863,
+      "end_line": 865,
+      "source": "public StrBuilder appendFixedWidthPadLeft(int value, int width, char padChar) {\n        return appendFixedWidthPadLeft(String.valueOf(value), width, padChar);\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.97441534976467
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.appendFixedWidthPadLeft(Object obj, int width, char padChar)",
+      "path": "src/java/org/apache/commons/lang/text/StrBuilder.java",
+      "start_line": 834,
+      "end_line": 851,
+      "source": "public StrBuilder appendFixedWidthPadLeft(Object obj, int width, char padChar) {\n        if (width > 0) {\n            ensureCapacity(size + width);\n            String str = (obj == null ? getNullText() : obj.toString());\n            int strLen = str.length();\n            if (strLen >= width) {\n                str.getChars(strLen - width, strLen, buffer, size);\n            } else {\n                int padLen = width - strLen;\n                for (int i = 0; i < padLen; i++) {\n                    buffer[size + i] = padChar;\n                }\n                str.getChars(0, strLen, buffer, size + padLen);\n            }\n            size += width;\n        }\n        return this;\n    }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.92467250590474
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(char[] chars, int startIndex, int length)",
+      "path": "src/java/org/apache/commons/lang/text/StrBuilder.java",
+      "start_line": 638,
+      "end_line": 655,
+      "source": "public StrBuilder append(char[] chars, int startIndex, int length) {\n        if (chars == null) {\n            return appendNull();\n        }\n        if (startIndex < 0 || startIndex > chars.length) {\n            throw new StringIndexOutOfBoundsException(\"Invalid startIndex: \" + length);\n        }\n        if (length < 0 || (startIndex + length) > chars.length) {\n            throw new StringIndexOutOfBoundsException(\"Invalid length: \" + length);\n        }\n        if (length > 0) {\n            int len = length();\n            ensureCapacity(len + length);\n            System.arraycopy(chars, startIndex, buffer, len, length);\n            size += length;\n        }\n        return this;\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.207965761460315
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.getChars(int startIndex, int endIndex, char destination[], int destinationIndex)",
+      "path": "src/java/org/apache/commons/lang/text/StrBuilder.java",
+      "start_line": 404,
+      "end_line": 415,
+      "source": "public void getChars(int startIndex, int endIndex, char destination[], int destinationIndex) {\n        if (startIndex < 0) {\n            throw new StringIndexOutOfBoundsException(startIndex);\n        }\n        if (endIndex < 0 || endIndex > length()) {\n            throw new StringIndexOutOfBoundsException(endIndex);\n        }\n        if (startIndex > endIndex) {\n            throw new StringIndexOutOfBoundsException(\"end < start\");\n        }\n        System.arraycopy(buffer, startIndex, destination, destinationIndex, endIndex - startIndex);\n    }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.69213080185919
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(String str, int startIndex, int length)",
+      "path": "src/java/org/apache/commons/lang/text/StrBuilder.java",
+      "start_line": 491,
+      "end_line": 508,
+      "source": "public StrBuilder append(String str, int startIndex, int length) {\n        if (str == null) {\n            return appendNull();\n        }\n        if (startIndex < 0 || startIndex > str.length()) {\n            throw new StringIndexOutOfBoundsException(\"startIndex must be valid\");\n        }\n        if (length < 0 || (startIndex + length) > str.length()) {\n            throw new StringIndexOutOfBoundsException(\"length must be valid\");\n        }\n        if (length > 0) {\n            int len = length();\n            ensureCapacity(len + length);\n            str.getChars(startIndex, startIndex + length, buffer, len);\n            size += length;\n        }\n        return this;\n    }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.501735858094946
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(StrBuilder str, int startIndex, int length)",
+      "path": "src/java/org/apache/commons/lang/text/StrBuilder.java",
+      "start_line": 589,
+      "end_line": 606,
+      "source": "public StrBuilder append(StrBuilder str, int startIndex, int length) {\n        if (str == null) {\n            return appendNull();\n        }\n        if (startIndex < 0 || startIndex > str.length()) {\n            throw new StringIndexOutOfBoundsException(\"startIndex must be valid\");\n        }\n        if (length < 0 || (startIndex + length) > str.length()) {\n            throw new StringIndexOutOfBoundsException(\"length must be valid\");\n        }\n        if (length > 0) {\n            int len = length();\n            ensureCapacity(len + length);\n            str.getChars(startIndex, startIndex + length, buffer, len);\n            size += length;\n        }\n        return this;\n    }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.39234974380969
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(StringBuffer str, int startIndex, int length)",
+      "path": "src/java/org/apache/commons/lang/text/StrBuilder.java",
+      "start_line": 540,
+      "end_line": 557,
+      "source": "public StrBuilder append(StringBuffer str, int startIndex, int length) {\n        if (str == null) {\n            return appendNull();\n        }\n        if (startIndex < 0 || startIndex > str.length()) {\n            throw new StringIndexOutOfBoundsException(\"startIndex must be valid\");\n        }\n        if (length < 0 || (startIndex + length) > str.length()) {\n            throw new StringIndexOutOfBoundsException(\"length must be valid\");\n        }\n        if (length > 0) {\n            int len = length();\n            ensureCapacity(len + length);\n            str.getChars(startIndex, startIndex + length, buffer, len);\n            size += length;\n        }\n        return this;\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.19519378869184
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.deleteCharAt(int index)",
+      "path": "src/java/org/apache/commons/lang/text/StrBuilder.java",
+      "start_line": 335,
+      "end_line": 341,
+      "source": "public StrBuilder deleteCharAt(int index) {\n        if (index < 0 || index >= size) {\n            throw new StringIndexOutOfBoundsException(index);\n        }\n        deleteImpl(index, index + 1, 1);\n        return this;\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.02439314738861
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/StrSubstitutor.java::StrSubstitutor.replaceIn(StringBuffer source, int offset, int length)",
+      "path": "src/java/org/apache/commons/lang/text/StrSubstitutor.java",
+      "start_line": 459,
+      "end_line": 469,
+      "source": "public boolean replaceIn(StringBuffer source, int offset, int length) {\n        if (source == null) {\n            return false;\n        }\n        StrBuilder buf = new StrBuilder(length).append(source, offset, length);\n        if (substitute(buf, 0, length) == false) {\n            return false;\n        }\n        source.replace(offset, offset + length, buf.toString());\n        return true;\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.00137803340209
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/ArrayUtils.java::ArrayUtils.add(Object array, int index, Object element, Class clss)",
+      "path": "src/java/org/apache/commons/lang/ArrayUtils.java",
+      "start_line": 3774,
+      "end_line": 3794,
+      "source": "private static Object add(Object array, int index, Object element, Class clss) {\n        if (array == null) {\n            if (index != 0) {\n                throw new IndexOutOfBoundsException(\"Index: \" + index + \", Length: 0\");\n            }\n            Object joinedArray = Array.newInstance(clss, 1);\n            Array.set(joinedArray, 0, element);\n            return joinedArray;\n        }\n        int length = Array.getLength(array);\n        if (index > length || index < 0) {\n            throw new IndexOutOfBoundsException(\"Index: \" + index + \", Length: \" + length);\n        }\n        Object result = Array.newInstance(clss, length + 1);\n        System.arraycopy(array, 0, result, 0, index);\n        Array.set(result, index, element);\n        if (index < length) {\n            System.arraycopy(array, index, result, index + 1, length - index);\n        }\n        return result;\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.62142957086377
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.replaceImpl(int startIndex, int endIndex, int removeLen, String insertStr, int insertLen)",
+      "path": "src/java/org/apache/commons/lang/text/StrBuilder.java",
+      "start_line": 1252,
+      "end_line": 1262,
+      "source": "private void replaceImpl(int startIndex, int endIndex, int removeLen, String insertStr, int insertLen) {\n        int newSize = size - removeLen + insertLen;\n        if (insertLen != removeLen) {\n            ensureCapacity(newSize);\n            System.arraycopy(buffer, endIndex, buffer, startIndex + insertLen, size - endIndex);\n            size = newSize;\n        }\n        if (insertLen > 0) {\n            insertStr.getChars(0, insertLen, buffer, startIndex);\n        }\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.598600348818316
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.validateRange(int startIndex, int endIndex)",
+      "path": "src/java/org/apache/commons/lang/text/StrBuilder.java",
+      "start_line": 2180,
+      "end_line": 2191,
+      "source": "protected int validateRange(int startIndex, int endIndex) {\n        if (startIndex < 0) {\n            throw new StringIndexOutOfBoundsException(startIndex);\n        }\n        if (endIndex > size) {\n            endIndex = size;\n        }\n        if (startIndex > endIndex) {\n            throw new StringIndexOutOfBoundsException(\"end < start\");\n        }\n        return endIndex;\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.030381244610965
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.StrBuilderReader.read(char b[], int off, int len)",
+      "path": "src/java/org/apache/commons/lang/text/StrBuilder.java",
+      "start_line": 2265,
+      "end_line": 2282,
+      "source": "public int read(char b[], int off, int len) {\n            if (off < 0 || len < 0 || off > b.length ||\n                    (off + len) > b.length || (off + len) < 0) {\n                throw new IndexOutOfBoundsException();\n            }\n            if (len == 0) {\n                return 0;\n            }\n            if (pos >= StrBuilder.this.size()) {\n                return -1;\n            }\n            if (pos + len > size()) {\n                len = StrBuilder.this.size() - pos;\n            }\n            StrBuilder.this.getChars(pos, pos + len, b, off);\n            pos += len;\n            return len;\n        }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.52483961401453
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/WordUtils.java::WordUtils.wrap(String str, int wrapLength, String newLineStr, boolean wrapLongWords)",
+      "path": "src/java/org/apache/commons/lang/WordUtils.java",
+      "start_line": 163,
+      "end_line": 216,
+      "source": "public static String wrap(String str, int wrapLength, String newLineStr, boolean wrapLongWords) {\n        if (str == null) {\n            return null;\n        }\n        if (newLineStr == null) {\n            newLineStr = SystemUtils.LINE_SEPARATOR;\n        }\n        if (wrapLength < 1) {\n            wrapLength = 1;\n        }\n        int inputLineLength = str.length();\n        int offset = 0;\n        StringBuffer wrappedLine = new StringBuffer(inputLineLength + 32);\n        \n        while ((inputLineLength - offset) > wrapLength) {\n            if (str.charAt(offset) == ' ') {\n                offset++;\n                continue;\n            }\n            int spaceToWrapAt = str.lastIndexOf(' ', wrapLength + offset);\n\n            if (spaceToWrapAt >= offset) {\n                // normal case\n                wrappedLine.append(str.substring(offset, spaceToWrapAt));\n                wrappedLine.append(newLineStr);\n                offset = spaceToWrapAt + 1;\n                \n            } else {\n                // really long word or URL\n                if (wrapLongWords) {\n                    // wrap really long word one line at a time\n                    wrappedLine.append(str.substring(offset, wrapLength + offset));\n                    wrappedLine.append(newLineStr);\n                    offset += wrapLength;\n                } else {\n                    // do not wrap really long word, just extend beyond limit\n                    spaceToWrapAt = str.indexOf(' ', wrapLength + offset);\n                    if (spaceToWrapAt >= 0) {\n                        wrappedLine.append(str.substring(offset, spaceToWrapAt));\n                        wrappedLine.append(newLineStr);\n                        offset = spaceToWrapAt + 1;\n                    } else {\n                        wrappedLine.append(str.substring(offset));\n                        offset = inputLineLength;\n                    }\n                }\n            }\n        }\n\n        // Whatever is left in line is short enough to just pass through\n        wrappedLine.append(str.substring(offset));\n\n        return wrappedLine.toString();\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.8040686115001
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/StringEscapeUtils.java::StringEscapeUtils.unescapeJava(Writer out, String str)",
+      "path": "src/java/org/apache/commons/lang/StringEscapeUtils.java",
+      "start_line": 294,
+      "end_line": 376,
+      "source": "public static void unescapeJava(Writer out, String str) throws IOException {\n        if (out == null) {\n            throw new IllegalArgumentException(\"The Writer must not be null\");\n        }\n        if (str == null) {\n            return;\n        }\n        int sz = str.length();\n        StringBuffer unicode = new StringBuffer(4);\n        boolean hadSlash = false;\n        boolean inUnicode = false;\n        for (int i = 0; i < sz; i++) {\n            char ch = str.charAt(i);\n            if (inUnicode) {\n                // if in unicode, then we're reading unicode\n                // values in somehow\n                unicode.append(ch);\n                if (unicode.length() == 4) {\n                    // unicode now contains the four hex digits\n                    // which represents our unicode character\n                    try {\n                        int value = Integer.parseInt(unicode.toString(), 16);\n                        out.write((char) value);\n                        unicode.setLength(0);\n                        inUnicode = false;\n                        hadSlash = false;\n                    } catch (NumberFormatException nfe) {\n                        throw new NestableRuntimeException(\"Unable to parse unicode value: \" + unicode, nfe);\n                    }\n                }\n                continue;\n            }\n            if (hadSlash) {\n                // handle an escaped value\n                hadSlash = false;\n                switch (ch) {\n                    case '\\\\':\n                        out.write('\\\\');\n                        break;\n                    case '\\'':\n                        out.write('\\'');\n                        break;\n                    case '\\\"':\n                        out.write('\"');\n                        break;\n                    case 'r':\n                        out.write('\\r');\n                        break;\n                    case 'f':\n                        out.write('\\f');\n                        break;\n                    case 't':\n                        out.write('\\t');\n                        break;\n                    case 'n':\n                        out.write('\\n');\n                        break;\n                    case 'b':\n                        out.write('\\b');\n                        break;\n                    case 'u':\n                        {\n                            // uh-oh, we're in unicode country....\n                            inUnicode = true;\n                            break;\n                        }\n                    default :\n                        out.write(ch);\n                        break;\n                }\n                continue;\n            } else if (ch == '\\\\') {\n                hadSlash = true;\n                continue;\n            }\n            out.write(ch);\n        }\n        if (hadSlash) {\n            // then we're in the weird case of a \\ at the end of the\n            // string, let's output it anyway.\n            out.write('\\\\');\n        }\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.791693648686184
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.charAt(int index)",
+      "path": "src/java/org/apache/commons/lang/text/StrBuilder.java",
+      "start_line": 301,
+      "end_line": 306,
+      "source": "public char charAt(int index) {\n        if (index < 0 || index >= length()) {\n            throw new StringIndexOutOfBoundsException(index);\n        }\n        return buffer[index];\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.452308966419274
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)",
+      "path": "src/java/org/apache/commons/lang/builder/EqualsBuilder.java",
+      "start_line": 254,
+      "end_line": 301,
+      "source": "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf \n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars, \n        // then a subclass can test equals to a superclass.\n        Class lhsClass = lhs.getClass();\n        Class rhsClass = rhs.getClass();\n        Class testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and \n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.36878296116991
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/StringUtils.java::StringUtils.padding(int repeat, char padChar)",
+      "path": "src/java/org/apache/commons/lang/StringUtils.java",
+      "start_line": 3695,
+      "end_line": 3704,
+      "source": "private static String padding(int repeat, char padChar) throws IndexOutOfBoundsException {\n        if (repeat < 0) {\n            throw new IndexOutOfBoundsException(\"Cannot pad a negative amount: \" + repeat);\n        }\n        final char[] buf = new char[repeat];\n        for (int i = 0; i < buf.length; i++) {\n            buf[i] = padChar;\n        }\n        return new String(buf);\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.12345575907879
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.validateIndex(int index)",
+      "path": "src/java/org/apache/commons/lang/text/StrBuilder.java",
+      "start_line": 2199,
+      "end_line": 2203,
+      "source": "protected void validateIndex(int index) {\n        if (index < 0 || index > size) {\n            throw new StringIndexOutOfBoundsException(index);\n        }\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.90044163515124
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/exception/NestableDelegate.java::NestableDelegate.indexOfThrowable(Class type, int fromIndex)",
+      "path": "src/java/org/apache/commons/lang/exception/NestableDelegate.java",
+      "start_line": 247,
+      "end_line": 273,
+      "source": "public int indexOfThrowable(Class type, int fromIndex) {\n        if (type == null) {\n            return -1;\n        }\n        if (fromIndex < 0) {\n            throw new IndexOutOfBoundsException(\"The start index was out of bounds: \" + fromIndex);\n        }\n        Throwable[] throwables = ExceptionUtils.getThrowables(this.nestable);\n        if (fromIndex >= throwables.length) {\n            throw new IndexOutOfBoundsException(\"The start index was out of bounds: \"\n                + fromIndex + \" >= \" + throwables.length);\n        }\n        if (matchSubclasses) {\n            for (int i = fromIndex; i < throwables.length; i++) {\n                if (type.isAssignableFrom(throwables[i].getClass())) {\n                    return i;\n                }\n            }\n        } else {\n            for (int i = fromIndex; i < throwables.length; i++) {\n                if (type.equals(throwables[i].getClass())) {\n                    return i;\n                }\n            }\n        }\n        return -1;\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.53245484210284
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/lang/text/StrTokenizer.java::StrTokenizer.tokenize(char[] chars, int offset, int count)",
+      "path": "src/java/org/apache/commons/lang/text/StrTokenizer.java",
+      "start_line": 644,
+      "end_line": 663,
+      "source": "protected List tokenize(char[] chars, int offset, int count) {\n        if (chars == null || count == 0) {\n            return Collections.EMPTY_LIST;\n        }\n        StrBuilder buf = new StrBuilder();\n        List tokens = new ArrayList();\n        int pos = offset;\n        \n        // loop around the entire buffer\n        while (pos >= 0 && pos < count) {\n            // find next token\n            pos = readNextToken(chars, pos, count, buf, tokens);\n            \n            // handle case where end of string is a delimiter\n            if (pos >= count) {\n                addToken(tokens, \"\");\n            }\n        }\n        return tokens;\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.50453109029539
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.appendFixedWidthPadRight(int value, int width, char padChar)",
+      "source": "public StrBuilder appendFixedWidthPadRight(int value, int width, char padChar) {\n        return appendFixedWidthPadRight(String.valueOf(value), width, padChar);\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.appendFixedWidthPadRight(int value, int width, char padChar)\nSIGNATURE: public StrBuilder appendFixedWidthPadRight(int value, int width, char padChar)",
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.appendFixedWidthPadRight(int value, int width, char padChar)\nSIGNATURE: public StrBuilder appendFixedWidthPadRight(int value, int width, char padChar)\nSTRUCTURE (lossy):\nreturn appendFixedWidthPadRight(String.valueOf(value), width, padChar);\nCALL appendFixedWidthPadRight(String.valueOf(value), width, padChar)\nCALL String.valueOf(value)",
+        "public StrBuilder appendFixedWidthPadRight(int value, int width, char padChar) {\n        return appendFixedWidthPadRight(String.valueOf(value), width, padChar);\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 42.0,
+        "l0_tokens": 56.0,
+        "l1_tokens": 103.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.insert(int index, char chars[], int offset, int length)",
+      "source": "public StrBuilder insert(int index, char chars[], int offset, int length) {\n        validateIndex(index);\n        if (chars == null) {\n            return insert(index, nullText);\n        }\n        if (offset < 0 || offset > chars.length) {\n            throw new StringIndexOutOfBoundsException(\"Invalid offset: \" + offset);\n        }\n        if (length < 0 || offset + length > chars.length) {\n            throw new StringIndexOutOfBoundsException(\"Invalid length: \" + length);\n        }\n        if (length > 0) {\n            ensureCapacity(size + length);\n            System.arraycopy(buffer, index, buffer, index + length, size - index);\n            System.arraycopy(chars, offset, buffer, index, length);\n            size += length;\n        }\n        return this;\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.insert(int index, char chars[], int offset, int length)\nSIGNATURE: public StrBuilder insert(int index, char chars[], int offset, int length)",
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.insert(int index, char chars[], int offset, int length)\nSIGNATURE: public StrBuilder insert(int index, char chars[], int offset, int length)\nSTRUCTURE (lossy):\nCALL validateIndex(index)\nif (chars == null)\nreturn insert(index, nullText);\nCALL insert(index, nullText)\nif (offset < 0 || offset > chars.length)\nthrow new StringIndexOutOfBoundsException(\"Invalid offset: \" + offset);\nif (length < 0 || offset + length > chars.length)\nthrow new StringIndexOutOfBoundsException(\"Invalid length: \" + length);\nif (length > 0)\nCALL ensureCapacity(size + length)\nCALL System.arraycopy(buffer, index, buffer, index + length, size - index)\nCALL System.arraycopy(chars, offset, buffer, index, length)\nsize += length\nreturn this;",
+        "public StrBuilder insert(int index, char chars[], int offset, int length) {\n        validateIndex(index);\n        if (chars == null) {\n            return insert(index, nullText);\n        }\n        if (offset < 0 || offset > chars.length) {\n            throw new StringIndexOutOfBoundsException(\"Invalid offset: \" + offset);\n        }\n        if (length < 0 || offset + length > chars.length) {\n            throw new StringIndexOutOfBoundsException(\"Invalid length: \" + length);\n        }\n        if (length > 0) {\n            ensureCapacity(size + length);\n            System.arraycopy(buffer, index, buffer, index + length, size - index);\n            System.arraycopy(chars, offset, buffer, index, length);\n            size += length;\n        }\n        return this;\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5882352941176471,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 5.0,
+        "literal_count": 6.0,
+        "source_tokens": 193.0,
+        "l0_tokens": 54.0,
+        "l1_tokens": 197.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 5,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.appendFixedWidthPadRight(Object obj, int width, char padChar)",
+      "source": "public StrBuilder appendFixedWidthPadRight(Object obj, int width, char padChar) {\n        if (width > 0) {\n            ensureCapacity(size + width);\n            String str = (obj == null ? getNullText() : obj.toString());\n            int strLen = str.length();\n            if (strLen >= width) {\n                str.getChars(0, strLen, buffer, size);\n            } else {\n                int padLen = width - strLen;\n                str.getChars(0, strLen, buffer, size);\n                for (int i = 0; i < padLen; i++) {\n                    buffer[size + strLen + i] = padChar;\n                }\n            }\n            size += width;\n        }\n        return this;\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.appendFixedWidthPadRight(Object obj, int width, char padChar)\nSIGNATURE: public StrBuilder appendFixedWidthPadRight(Object obj, int width, char padChar)",
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.appendFixedWidthPadRight(Object obj, int width, char padChar)\nSIGNATURE: public StrBuilder appendFixedWidthPadRight(Object obj, int width, char padChar)\nSTRUCTURE (lossy):\nif (width > 0)\nCALL ensureCapacity(size + width)\nString str = (obj == null ? getNullText() : obj.toString());\nCALL getNullText()\nCALL obj.toString()\nint strLen = str.length();\nCALL str.length()\nif (strLen >= width)\nCALL str.getChars(0, strLen, buffer, size)\nint padLen = width - strLen;\nfor (int i = 0; i < padLen; i++)\nint i = 0;\ni++\nbuffer[size + strLen + i] = padChar\nsize += width\nreturn this;",
+        "public StrBuilder appendFixedWidthPadRight(Object obj, int width, char padChar) {\n        if (width > 0) {\n            ensureCapacity(size + width);\n            String str = (obj == null ? getNullText() : obj.toString());\n            int strLen = str.length();\n            if (strLen >= width) {\n                str.getChars(0, strLen, buffer, size);\n            } else {\n                int padLen = width - strLen;\n                str.getChars(0, strLen, buffer, size);\n                for (int i = 0; i < padLen; i++) {\n                    buffer[size + strLen + i] = padChar;\n                }\n            }\n            size += width;\n        }\n        return this;\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5757575757575758,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 6.0,
+        "literal_count": 5.0,
+        "source_tokens": 169.0,
+        "l0_tokens": 57.0,
+        "l1_tokens": 161.0,
+        "compression_ratio": 0.9526627218934911,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 6,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.appendFixedWidthPadLeft(int value, int width, char padChar)",
+      "source": "public StrBuilder appendFixedWidthPadLeft(int value, int width, char padChar) {\n        return appendFixedWidthPadLeft(String.valueOf(value), width, padChar);\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.appendFixedWidthPadLeft(int value, int width, char padChar)\nSIGNATURE: public StrBuilder appendFixedWidthPadLeft(int value, int width, char padChar)",
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.appendFixedWidthPadLeft(int value, int width, char padChar)\nSIGNATURE: public StrBuilder appendFixedWidthPadLeft(int value, int width, char padChar)\nSTRUCTURE (lossy):\nreturn appendFixedWidthPadLeft(String.valueOf(value), width, padChar);\nCALL appendFixedWidthPadLeft(String.valueOf(value), width, padChar)\nCALL String.valueOf(value)",
+        "public StrBuilder appendFixedWidthPadLeft(int value, int width, char padChar) {\n        return appendFixedWidthPadLeft(String.valueOf(value), width, padChar);\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.75,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 41.0,
+        "l0_tokens": 56.0,
+        "l1_tokens": 102.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.appendFixedWidthPadLeft(Object obj, int width, char padChar)",
+      "source": "public StrBuilder appendFixedWidthPadLeft(Object obj, int width, char padChar) {\n        if (width > 0) {\n            ensureCapacity(size + width);\n            String str = (obj == null ? getNullText() : obj.toString());\n            int strLen = str.length();\n            if (strLen >= width) {\n                str.getChars(strLen - width, strLen, buffer, size);\n            } else {\n                int padLen = width - strLen;\n                for (int i = 0; i < padLen; i++) {\n                    buffer[size + i] = padChar;\n                }\n                str.getChars(0, strLen, buffer, size + padLen);\n            }\n            size += width;\n        }\n        return this;\n    }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.appendFixedWidthPadLeft(Object obj, int width, char padChar)\nSIGNATURE: public StrBuilder appendFixedWidthPadLeft(Object obj, int width, char padChar)",
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.appendFixedWidthPadLeft(Object obj, int width, char padChar)\nSIGNATURE: public StrBuilder appendFixedWidthPadLeft(Object obj, int width, char padChar)\nSTRUCTURE (lossy):\nif (width > 0)\nCALL ensureCapacity(size + width)\nString str = (obj == null ? getNullText() : obj.toString());\nCALL getNullText()\nCALL obj.toString()\nint strLen = str.length();\nCALL str.length()\nif (strLen >= width)\nCALL str.getChars(strLen - width, strLen, buffer, size)\nint padLen = width - strLen;\nfor (int i = 0; i < padLen; i++)\nint i = 0;\ni++\nbuffer[size + i] = padChar\nCALL str.getChars(0, strLen, buffer, size + padLen)\nsize += width\nreturn this;",
+        "public StrBuilder appendFixedWidthPadLeft(Object obj, int width, char padChar) {\n        if (width > 0) {\n            ensureCapacity(size + width);\n            String str = (obj == null ? getNullText() : obj.toString());\n            int strLen = str.length();\n            if (strLen >= width) {\n                str.getChars(strLen - width, strLen, buffer, size);\n            } else {\n                int padLen = width - strLen;\n                for (int i = 0; i < padLen; i++) {\n                    buffer[size + i] = padChar;\n                }\n                str.getChars(0, strLen, buffer, size + padLen);\n            }\n            size += width;\n        }\n        return this;\n    }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5454545454545454,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 6.0,
+        "literal_count": 4.0,
+        "source_tokens": 172.0,
+        "l0_tokens": 56.0,
+        "l1_tokens": 175.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 6,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(char[] chars, int startIndex, int length)",
+      "source": "public StrBuilder append(char[] chars, int startIndex, int length) {\n        if (chars == null) {\n            return appendNull();\n        }\n        if (startIndex < 0 || startIndex > chars.length) {\n            throw new StringIndexOutOfBoundsException(\"Invalid startIndex: \" + length);\n        }\n        if (length < 0 || (startIndex + length) > chars.length) {\n            throw new StringIndexOutOfBoundsException(\"Invalid length: \" + length);\n        }\n        if (length > 0) {\n            int len = length();\n            ensureCapacity(len + length);\n            System.arraycopy(chars, startIndex, buffer, len, length);\n            size += length;\n        }\n        return this;\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(char[] chars, int startIndex, int length)\nSIGNATURE: public StrBuilder append(char[] chars, int startIndex, int length)",
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(char[] chars, int startIndex, int length)\nSIGNATURE: public StrBuilder append(char[] chars, int startIndex, int length)\nSTRUCTURE (lossy):\nif (chars == null)\nreturn appendNull();\nCALL appendNull()\nif (startIndex < 0 || startIndex > chars.length)\nthrow new StringIndexOutOfBoundsException(\"Invalid startIndex: \" + length);\nif (length < 0 || (startIndex + length) > chars.length)\nthrow new StringIndexOutOfBoundsException(\"Invalid length: \" + length);\nif (length > 0)\nint len = length();\nCALL length()\nCALL ensureCapacity(len + length)\nCALL System.arraycopy(chars, startIndex, buffer, len, length)\nsize += length\nreturn this;",
+        "public StrBuilder append(char[] chars, int startIndex, int length) {\n        if (chars == null) {\n            return appendNull();\n        }\n        if (startIndex < 0 || startIndex > chars.length) {\n            throw new StringIndexOutOfBoundsException(\"Invalid startIndex: \" + length);\n        }\n        if (length < 0 || (startIndex + length) > chars.length) {\n            throw new StringIndexOutOfBoundsException(\"Invalid length: \" + length);\n        }\n        if (length > 0) {\n            int len = length();\n            ensureCapacity(len + length);\n            System.arraycopy(chars, startIndex, buffer, len, length);\n            size += length;\n        }\n        return this;\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5882352941176471,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 4.0,
+        "literal_count": 6.0,
+        "source_tokens": 173.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 176.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 4,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.getChars(int startIndex, int endIndex, char destination[], int destinationIndex)",
+      "source": "public void getChars(int startIndex, int endIndex, char destination[], int destinationIndex) {\n        if (startIndex < 0) {\n            throw new StringIndexOutOfBoundsException(startIndex);\n        }\n        if (endIndex < 0 || endIndex > length()) {\n            throw new StringIndexOutOfBoundsException(endIndex);\n        }\n        if (startIndex > endIndex) {\n            throw new StringIndexOutOfBoundsException(\"end < start\");\n        }\n        System.arraycopy(buffer, startIndex, destination, destinationIndex, endIndex - startIndex);\n    }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.getChars(int startIndex, int endIndex, char destination[], int destinationIndex)\nSIGNATURE: public void getChars(int startIndex, int endIndex, char destination[], int destinationIndex)",
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.getChars(int startIndex, int endIndex, char destination[], int destinationIndex)\nSIGNATURE: public void getChars(int startIndex, int endIndex, char destination[], int destinationIndex)\nSTRUCTURE (lossy):\nif (startIndex < 0)\nthrow new StringIndexOutOfBoundsException(startIndex);\nif (endIndex < 0 || endIndex > length())\nCALL length()\nthrow new StringIndexOutOfBoundsException(endIndex);\nif (startIndex > endIndex)\nthrow new StringIndexOutOfBoundsException(\"end < start\");\nCALL System.arraycopy(buffer, startIndex, destination, destinationIndex, endIndex - startIndex)",
+        "public void getChars(int startIndex, int endIndex, char destination[], int destinationIndex) {\n        if (startIndex < 0) {\n            throw new StringIndexOutOfBoundsException(startIndex);\n        }\n        if (endIndex < 0 || endIndex > length()) {\n            throw new StringIndexOutOfBoundsException(endIndex);\n        }\n        if (startIndex > endIndex) {\n            throw new StringIndexOutOfBoundsException(\"end < start\");\n        }\n        System.arraycopy(buffer, startIndex, destination, destinationIndex, endIndex - startIndex);\n    }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7241379310344828,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 2.0,
+        "literal_count": 3.0,
+        "source_tokens": 138.0,
+        "l0_tokens": 65.0,
+        "l1_tokens": 161.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 2,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(String str, int startIndex, int length)",
+      "source": "public StrBuilder append(String str, int startIndex, int length) {\n        if (str == null) {\n            return appendNull();\n        }\n        if (startIndex < 0 || startIndex > str.length()) {\n            throw new StringIndexOutOfBoundsException(\"startIndex must be valid\");\n        }\n        if (length < 0 || (startIndex + length) > str.length()) {\n            throw new StringIndexOutOfBoundsException(\"length must be valid\");\n        }\n        if (length > 0) {\n            int len = length();\n            ensureCapacity(len + length);\n            str.getChars(startIndex, startIndex + length, buffer, len);\n            size += length;\n        }\n        return this;\n    }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(String str, int startIndex, int length)\nSIGNATURE: public StrBuilder append(String str, int startIndex, int length)",
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(String str, int startIndex, int length)\nSIGNATURE: public StrBuilder append(String str, int startIndex, int length)\nSTRUCTURE (lossy):\nif (str == null)\nreturn appendNull();\nCALL appendNull()\nif (startIndex < 0 || startIndex > str.length())\nCALL str.length()\nthrow new StringIndexOutOfBoundsException(\"startIndex must be valid\");\nif (length < 0 || (startIndex + length) > str.length())\nthrow new StringIndexOutOfBoundsException(\"length must be valid\");\nif (length > 0)\nint len = length();\nCALL length()\nCALL ensureCapacity(len + length)\nCALL str.getChars(startIndex, startIndex + length, buffer, len)\nsize += length\nreturn this;",
+        "public StrBuilder append(String str, int startIndex, int length) {\n        if (str == null) {\n            return appendNull();\n        }\n        if (startIndex < 0 || startIndex > str.length()) {\n            throw new StringIndexOutOfBoundsException(\"startIndex must be valid\");\n        }\n        if (length < 0 || (startIndex + length) > str.length()) {\n            throw new StringIndexOutOfBoundsException(\"length must be valid\");\n        }\n        if (length > 0) {\n            int len = length();\n            ensureCapacity(len + length);\n            str.getChars(startIndex, startIndex + length, buffer, len);\n            size += length;\n        }\n        return this;\n    }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6363636363636364,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 6.0,
+        "literal_count": 6.0,
+        "source_tokens": 170.0,
+        "l0_tokens": 49.0,
+        "l1_tokens": 177.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 6,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(StrBuilder str, int startIndex, int length)",
+      "source": "public StrBuilder append(StrBuilder str, int startIndex, int length) {\n        if (str == null) {\n            return appendNull();\n        }\n        if (startIndex < 0 || startIndex > str.length()) {\n            throw new StringIndexOutOfBoundsException(\"startIndex must be valid\");\n        }\n        if (length < 0 || (startIndex + length) > str.length()) {\n            throw new StringIndexOutOfBoundsException(\"length must be valid\");\n        }\n        if (length > 0) {\n            int len = length();\n            ensureCapacity(len + length);\n            str.getChars(startIndex, startIndex + length, buffer, len);\n            size += length;\n        }\n        return this;\n    }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(StrBuilder str, int startIndex, int length)\nSIGNATURE: public StrBuilder append(StrBuilder str, int startIndex, int length)",
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(StrBuilder str, int startIndex, int length)\nSIGNATURE: public StrBuilder append(StrBuilder str, int startIndex, int length)\nSTRUCTURE (lossy):\nif (str == null)\nreturn appendNull();\nCALL appendNull()\nif (startIndex < 0 || startIndex > str.length())\nCALL str.length()\nthrow new StringIndexOutOfBoundsException(\"startIndex must be valid\");\nif (length < 0 || (startIndex + length) > str.length())\nthrow new StringIndexOutOfBoundsException(\"length must be valid\");\nif (length > 0)\nint len = length();\nCALL length()\nCALL ensureCapacity(len + length)\nCALL str.getChars(startIndex, startIndex + length, buffer, len)\nsize += length\nreturn this;",
+        "public StrBuilder append(StrBuilder str, int startIndex, int length) {\n        if (str == null) {\n            return appendNull();\n        }\n        if (startIndex < 0 || startIndex > str.length()) {\n            throw new StringIndexOutOfBoundsException(\"startIndex must be valid\");\n        }\n        if (length < 0 || (startIndex + length) > str.length()) {\n            throw new StringIndexOutOfBoundsException(\"length must be valid\");\n        }\n        if (length > 0) {\n            int len = length();\n            ensureCapacity(len + length);\n            str.getChars(startIndex, startIndex + length, buffer, len);\n            size += length;\n        }\n        return this;\n    }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6363636363636364,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 6.0,
+        "literal_count": 6.0,
+        "source_tokens": 171.0,
+        "l0_tokens": 51.0,
+        "l1_tokens": 179.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 6,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(StringBuffer str, int startIndex, int length)",
+      "source": "public StrBuilder append(StringBuffer str, int startIndex, int length) {\n        if (str == null) {\n            return appendNull();\n        }\n        if (startIndex < 0 || startIndex > str.length()) {\n            throw new StringIndexOutOfBoundsException(\"startIndex must be valid\");\n        }\n        if (length < 0 || (startIndex + length) > str.length()) {\n            throw new StringIndexOutOfBoundsException(\"length must be valid\");\n        }\n        if (length > 0) {\n            int len = length();\n            ensureCapacity(len + length);\n            str.getChars(startIndex, startIndex + length, buffer, len);\n            size += length;\n        }\n        return this;\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(StringBuffer str, int startIndex, int length)\nSIGNATURE: public StrBuilder append(StringBuffer str, int startIndex, int length)",
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(StringBuffer str, int startIndex, int length)\nSIGNATURE: public StrBuilder append(StringBuffer str, int startIndex, int length)\nSTRUCTURE (lossy):\nif (str == null)\nreturn appendNull();\nCALL appendNull()\nif (startIndex < 0 || startIndex > str.length())\nCALL str.length()\nthrow new StringIndexOutOfBoundsException(\"startIndex must be valid\");\nif (length < 0 || (startIndex + length) > str.length())\nthrow new StringIndexOutOfBoundsException(\"length must be valid\");\nif (length > 0)\nint len = length();\nCALL length()\nCALL ensureCapacity(len + length)\nCALL str.getChars(startIndex, startIndex + length, buffer, len)\nsize += length\nreturn this;",
+        "public StrBuilder append(StringBuffer str, int startIndex, int length) {\n        if (str == null) {\n            return appendNull();\n        }\n        if (startIndex < 0 || startIndex > str.length()) {\n            throw new StringIndexOutOfBoundsException(\"startIndex must be valid\");\n        }\n        if (length < 0 || (startIndex + length) > str.length()) {\n            throw new StringIndexOutOfBoundsException(\"length must be valid\");\n        }\n        if (length > 0) {\n            int len = length();\n            ensureCapacity(len + length);\n            str.getChars(startIndex, startIndex + length, buffer, len);\n            size += length;\n        }\n        return this;\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6363636363636364,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 6.0,
+        "literal_count": 6.0,
+        "source_tokens": 172.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 180.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 6,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.deleteCharAt(int index)",
+      "source": "public StrBuilder deleteCharAt(int index) {\n        if (index < 0 || index >= size) {\n            throw new StringIndexOutOfBoundsException(index);\n        }\n        deleteImpl(index, index + 1, 1);\n        return this;\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.deleteCharAt(int index)\nSIGNATURE: public StrBuilder deleteCharAt(int index)",
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.deleteCharAt(int index)\nSIGNATURE: public StrBuilder deleteCharAt(int index)\nSTRUCTURE (lossy):\nif (index < 0 || index >= size)\nthrow new StringIndexOutOfBoundsException(index);\nCALL deleteImpl(index, index + 1, 1)\nreturn this;",
+        "public StrBuilder deleteCharAt(int index) {\n        if (index < 0 || index >= size) {\n            throw new StringIndexOutOfBoundsException(index);\n        }\n        deleteImpl(index, index + 1, 1);\n        return this;\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7083333333333334,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 3.0,
+        "source_tokens": 57.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 76.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/StrSubstitutor.java::StrSubstitutor.replaceIn(StringBuffer source, int offset, int length)",
+      "source": "public boolean replaceIn(StringBuffer source, int offset, int length) {\n        if (source == null) {\n            return false;\n        }\n        StrBuilder buf = new StrBuilder(length).append(source, offset, length);\n        if (substitute(buf, 0, length) == false) {\n            return false;\n        }\n        source.replace(offset, offset + length, buf.toString());\n        return true;\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/StrSubstitutor.java::StrSubstitutor.replaceIn(StringBuffer source, int offset, int length)\nSIGNATURE: public boolean replaceIn(StringBuffer source, int offset, int length)",
+        "METHOD: src/java/org/apache/commons/lang/text/StrSubstitutor.java::StrSubstitutor.replaceIn(StringBuffer source, int offset, int length)\nSIGNATURE: public boolean replaceIn(StringBuffer source, int offset, int length)\nSTRUCTURE (lossy):\nif (source == null)\nreturn false;\nStrBuilder buf = new StrBuilder(length).append(source, offset, length);\nCALL new StrBuilder(length).append(source, offset, length)\nif (substitute(buf, 0, length) == false)\nCALL substitute(buf, 0, length)\nCALL source.replace(offset, offset + length, buf.toString())\nCALL buf.toString()\nreturn true;",
+        "public boolean replaceIn(StringBuffer source, int offset, int length) {\n        if (source == null) {\n            return false;\n        }\n        StrBuilder buf = new StrBuilder(length).append(source, offset, length);\n        if (substitute(buf, 0, length) == false) {\n            return false;\n        }\n        source.replace(offset, offset + length, buf.toString());\n        return true;\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5925925925925926,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 4.0,
+        "literal_count": 2.0,
+        "source_tokens": 99.0,
+        "l0_tokens": 55.0,
+        "l1_tokens": 142.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 4,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/ArrayUtils.java::ArrayUtils.add(Object array, int index, Object element, Class clss)",
+      "source": "private static Object add(Object array, int index, Object element, Class clss) {\n        if (array == null) {\n            if (index != 0) {\n                throw new IndexOutOfBoundsException(\"Index: \" + index + \", Length: 0\");\n            }\n            Object joinedArray = Array.newInstance(clss, 1);\n            Array.set(joinedArray, 0, element);\n            return joinedArray;\n        }\n        int length = Array.getLength(array);\n        if (index > length || index < 0) {\n            throw new IndexOutOfBoundsException(\"Index: \" + index + \", Length: \" + length);\n        }\n        Object result = Array.newInstance(clss, length + 1);\n        System.arraycopy(array, 0, result, 0, index);\n        Array.set(result, index, element);\n        if (index < length) {\n            System.arraycopy(array, index, result, index + 1, length - index);\n        }\n        return result;\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/ArrayUtils.java::ArrayUtils.add(Object array, int index, Object element, Class clss)\nSIGNATURE: private static Object add(Object array, int index, Object element, Class clss)",
+        "METHOD: src/java/org/apache/commons/lang/ArrayUtils.java::ArrayUtils.add(Object array, int index, Object element, Class clss)\nSIGNATURE: private static Object add(Object array, int index, Object element, Class clss)\nSTRUCTURE (lossy):\nif (array == null)\nif (index != 0)\nthrow new IndexOutOfBoundsException(\"Index: \" + index + \", Length: 0\");\nObject joinedArray = Array.newInstance(clss, 1);\nCALL Array.newInstance(clss, 1)\nCALL Array.set(joinedArray, 0, element)\nreturn joinedArray;\nint length = Array.getLength(array);\nCALL Array.getLength(array)\nif (index > length || index < 0)\nthrow new IndexOutOfBoundsException(\"Index: \" + index + \", Length: \" + length);\nObject result = Array.newInstance(clss, length + 1);\nCALL Array.newInstance(clss, length + 1)\nCALL System.arraycopy(array, 0, result, 0, index)\nCALL Array.set(result, index, element)\nif (index < length)\nCALL System.arraycopy(array, index, result, index + 1, length - index)\nreturn result;",
+        "private static Object add(Object array, int index, Object element, Class clss) {\n        if (array == null) {\n            if (index != 0) {\n                throw new IndexOutOfBoundsException(\"Index: \" + index + \", Length: 0\");\n            }\n            Object joinedArray = Array.newInstance(clss, 1);\n            Array.set(joinedArray, 0, element);\n            return joinedArray;\n        }\n        int length = Array.getLength(array);\n        if (index > length || index < 0) {\n            throw new IndexOutOfBoundsException(\"Index: \" + index + \", Length: \" + length);\n        }\n        Object result = Array.newInstance(clss, length + 1);\n        System.arraycopy(array, 0, result, 0, index);\n        Array.set(result, index, element);\n        if (index < length) {\n            System.arraycopy(array, index, result, index + 1, length - index);\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 7.0,
+        "literal_count": 13.0,
+        "source_tokens": 222.0,
+        "l0_tokens": 54.0,
+        "l1_tokens": 238.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 7,
+        "literal_count": 13
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.replaceImpl(int startIndex, int endIndex, int removeLen, String insertStr, int insertLen)",
+      "source": "private void replaceImpl(int startIndex, int endIndex, int removeLen, String insertStr, int insertLen) {\n        int newSize = size - removeLen + insertLen;\n        if (insertLen != removeLen) {\n            ensureCapacity(newSize);\n            System.arraycopy(buffer, endIndex, buffer, startIndex + insertLen, size - endIndex);\n            size = newSize;\n        }\n        if (insertLen > 0) {\n            insertStr.getChars(0, insertLen, buffer, startIndex);\n        }\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.replaceImpl(int startIndex, int endIndex, int removeLen, String insertStr, int insertLen)\nSIGNATURE: private void replaceImpl(int startIndex, int endIndex, int removeLen, String insertStr, int insertLen)",
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.replaceImpl(int startIndex, int endIndex, int removeLen, String insertStr, int insertLen)\nSIGNATURE: private void replaceImpl(int startIndex, int endIndex, int removeLen, String insertStr, int insertLen)\nSTRUCTURE (lossy):\nint newSize = size - removeLen + insertLen;\nif (insertLen != removeLen)\nCALL ensureCapacity(newSize)\nCALL System.arraycopy(buffer, endIndex, buffer, startIndex + insertLen, size - endIndex)\nsize = newSize\nif (insertLen > 0)\nCALL insertStr.getChars(0, insertLen, buffer, startIndex)",
+        "private void replaceImpl(int startIndex, int endIndex, int removeLen, String insertStr, int insertLen) {\n        int newSize = size - removeLen + insertLen;\n        if (insertLen != removeLen) {\n            ensureCapacity(newSize);\n            System.arraycopy(buffer, endIndex, buffer, startIndex + insertLen, size - endIndex);\n            size = newSize;\n        }\n        if (insertLen > 0) {\n            insertStr.getChars(0, insertLen, buffer, startIndex);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 3.0,
+        "literal_count": 2.0,
+        "source_tokens": 120.0,
+        "l0_tokens": 70.0,
+        "l1_tokens": 145.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 3,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.validateRange(int startIndex, int endIndex)",
+      "source": "protected int validateRange(int startIndex, int endIndex) {\n        if (startIndex < 0) {\n            throw new StringIndexOutOfBoundsException(startIndex);\n        }\n        if (endIndex > size) {\n            endIndex = size;\n        }\n        if (startIndex > endIndex) {\n            throw new StringIndexOutOfBoundsException(\"end < start\");\n        }\n        return endIndex;\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.validateRange(int startIndex, int endIndex)\nSIGNATURE: protected int validateRange(int startIndex, int endIndex)",
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.validateRange(int startIndex, int endIndex)\nSIGNATURE: protected int validateRange(int startIndex, int endIndex)\nSTRUCTURE (lossy):\nif (startIndex < 0)\nthrow new StringIndexOutOfBoundsException(startIndex);\nif (endIndex > size)\nendIndex = size\nif (startIndex > endIndex)\nthrow new StringIndexOutOfBoundsException(\"end < start\");\nreturn endIndex;",
+        "protected int validateRange(int startIndex, int endIndex) {\n        if (startIndex < 0) {\n            throw new StringIndexOutOfBoundsException(startIndex);\n        }\n        if (endIndex > size) {\n            endIndex = size;\n        }\n        if (startIndex > endIndex) {\n            throw new StringIndexOutOfBoundsException(\"end < start\");\n        }\n        return endIndex;\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7083333333333334,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 0.0,
+        "literal_count": 2.0,
+        "source_tokens": 96.0,
+        "l0_tokens": 47.0,
+        "l1_tokens": 105.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 0,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.StrBuilderReader.read(char b[], int off, int len)",
+      "source": "public int read(char b[], int off, int len) {\n            if (off < 0 || len < 0 || off > b.length ||\n                    (off + len) > b.length || (off + len) < 0) {\n                throw new IndexOutOfBoundsException();\n            }\n            if (len == 0) {\n                return 0;\n            }\n            if (pos >= StrBuilder.this.size()) {\n                return -1;\n            }\n            if (pos + len > size()) {\n                len = StrBuilder.this.size() - pos;\n            }\n            StrBuilder.this.getChars(pos, pos + len, b, off);\n            pos += len;\n            return len;\n        }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.StrBuilderReader.read(char b[], int off, int len)\nSIGNATURE: public int read(char b[], int off, int len)",
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.StrBuilderReader.read(char b[], int off, int len)\nSIGNATURE: public int read(char b[], int off, int len)\nSTRUCTURE (lossy):\nif (off < 0 || len < 0 || off > b.length || (off + len) > b.length || (off + len) < 0)\nthrow new IndexOutOfBoundsException();\nif (len == 0)\nreturn 0;\nif (pos >= StrBuilder.this.size())\nCALL StrBuilder.this.size()\nreturn -1;\nif (pos + len > size())\nCALL size()\nlen = StrBuilder.this.size() - pos\nCALL StrBuilder.this.getChars(pos, pos + len, b, off)\npos += len\nreturn len;",
+        "public int read(char b[], int off, int len) {\n            if (off < 0 || len < 0 || off > b.length ||\n                    (off + len) > b.length || (off + len) < 0) {\n                throw new IndexOutOfBoundsException();\n            }\n            if (len == 0) {\n                return 0;\n            }\n            if (pos >= StrBuilder.this.size()) {\n                return -1;\n            }\n            if (pos + len > size()) {\n                len = StrBuilder.this.size() - pos;\n            }\n            StrBuilder.this.getChars(pos, pos + len, b, off);\n            pos += len;\n            return len;\n        }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6551724137931034,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 4.0,
+        "literal_count": 6.0,
+        "source_tokens": 155.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 143.0,
+        "compression_ratio": 0.9225806451612903,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 4,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/WordUtils.java::WordUtils.wrap(String str, int wrapLength, String newLineStr, boolean wrapLongWords)",
+      "source": "public static String wrap(String str, int wrapLength, String newLineStr, boolean wrapLongWords) {\n        if (str == null) {\n            return null;\n        }\n        if (newLineStr == null) {\n            newLineStr = SystemUtils.LINE_SEPARATOR;\n        }\n        if (wrapLength < 1) {\n            wrapLength = 1;\n        }\n        int inputLineLength = str.length();\n        int offset = 0;\n        StringBuffer wrappedLine = new StringBuffer(inputLineLength + 32);\n        \n        while ((inputLineLength - offset) > wrapLength) {\n            if (str.charAt(offset) == ' ') {\n                offset++;\n                continue;\n            }\n            int spaceToWrapAt = str.lastIndexOf(' ', wrapLength + offset);\n\n            if (spaceToWrapAt >= offset) {\n                // normal case\n                wrappedLine.append(str.substring(offset, spaceToWrapAt));\n                wrappedLine.append(newLineStr);\n                offset = spaceToWrapAt + 1;\n                \n            } else {\n                // really long word or URL\n                if (wrapLongWords) {\n                    // wrap really long word one line at a time\n                    wrappedLine.append(str.substring(offset, wrapLength + offset));\n                    wrappedLine.append(newLineStr);\n                    offset += wrapLength;\n                } else {\n                    // do not wrap really long word, just extend beyond limit\n                    spaceToWrapAt = str.indexOf(' ', wrapLength + offset);\n                    if (spaceToWrapAt >= 0) {\n                        wrappedLine.append(str.substring(offset, spaceToWrapAt));\n                        wrappedLine.append(newLineStr);\n                        offset = spaceToWrapAt + 1;\n                    } else {\n                        wrappedLine.append(str.substring(offset));\n                        offset = inputLineLength;\n                    }\n                }\n            }\n        }\n\n        // Whatever is left in line is short enough to just pass through\n        wrappedLine.append(str.substring(offset));\n\n        return wrappedLine.toString();\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/WordUtils.java::WordUtils.wrap(String str, int wrapLength, String newLineStr, boolean wrapLongWords)\nSIGNATURE: public static String wrap(String str, int wrapLength, String newLineStr, boolean wrapLongWords)",
+        "METHOD: src/java/org/apache/commons/lang/WordUtils.java::WordUtils.wrap(String str, int wrapLength, String newLineStr, boolean wrapLongWords)\nSIGNATURE: public static String wrap(String str, int wrapLength, String newLineStr, boolean wrapLongWords)\nSTRUCTURE (lossy):\nif (str == null)\nreturn null;\nif (newLineStr == null)\nnewLineStr = SystemUtils.LINE_SEPARATOR\nif (wrapLength < 1)\nwrapLength = 1\nint inputLineLength = str.length();\nCALL str.length()\nint offset = 0;\nStringBuffer wrappedLine = new StringBuffer(inputLineLength + 32);\nwhile ((inputLineLength - offset) > wrapLength)\nif (str.charAt(offset) == ' ')\nCALL str.charAt(offset)\noffset++\nint spaceToWrapAt = str.lastIndexOf(' ', wrapLength + offset);\nCALL str.lastIndexOf(' ', wrapLength + offset)\nif (spaceToWrapAt >= offset)\nCALL wrappedLine.append(str.substring(offset, spaceToWrapAt))\nCALL str.substring(offset, spaceToWrapAt)\nCALL wrappedLine.append(newLineStr)\noffset = spaceToWrapAt + 1\nif (wrapLongWords)\nCALL wrappedLine.append(str.substring(offset, wrapLength + offset))\nCALL str.substring(offset, wrapLength + offset)\noffset += wrapLength\nspaceToWrapAt = str.indexOf(' ', wrapLength + offset)\nCALL str.indexOf(' ', wrapLength + offset)\nif (spaceToWrapAt >= 0)\nCALL wrappedLine.append(str.substring(offset))\nCALL str.substring(offset)\noffset = inputLineLength\nreturn wrappedLine.toString();\nCALL wrappedLine.toString()",
+        "public static String wrap(String str, int wrapLength, String newLineStr, boolean wrapLongWords) {\n        if (str == null) {\n            return null;\n        }\n        if (newLineStr == null) {\n            newLineStr = SystemUtils.LINE_SEPARATOR;\n        }\n        if (wrapLength < 1) {\n            wrapLength = 1;\n        }\n        int inputLineLength = str.length();\n        int offset = 0;\n        StringBuffer wrappedLine = new StringBuffer(inputLineLength + 32);\n        \n        while ((inputLineLength - offset) > wrapLength) {\n            if (str.charAt(offset) == ' ') {\n                offset++;\n                continue;\n            }\n            int spaceToWrapAt = str.lastIndexOf(' ', wrapLength + offset);\n\n            if (spaceToWrapAt >= offset) {\n                // normal case\n                wrappedLine.append(str.substring(offset, spaceToWrapAt));\n                wrappedLine.append(newLineStr);\n                offset = spaceToWrapAt + 1;\n                \n            } else {\n                // really long word or URL\n                if (wrapLongWords) {\n                    // wrap really long word one line at a time\n                    wrappedLine.append(str.substring(offset, wrapLength + offset));\n                    wrappedLine.append(newLineStr);\n                    offset += wrapLength;\n                } else {\n                    // do not wrap really long word, just extend beyond limit\n                    spaceToWrapAt = str.indexOf(' ', wrapLength + offset);\n                    if (spaceToWrapAt >= 0) {\n                        wrappedLine.append(str.substring(offset, spaceToWrapAt));\n                        wrappedLine.append(newLineStr);\n                        offset = spaceToWrapAt + 1;\n                    } else {\n                        wrappedLine.append(str.substring(offset));\n                        offset = inputLineLength;\n                    }\n                }\n            }\n        }\n\n        // Whatever is left in line is short enough to just pass through\n        wrappedLine.append(str.substring(offset));\n\n        return wrappedLine.toString();\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2962962962962963,
+        "trace_match": 0.0,
+        "complexity": 9.0,
+        "call_count": 18.0,
+        "literal_count": 13.0,
+        "source_tokens": 529.0,
+        "l0_tokens": 62.0,
+        "l1_tokens": 347.0,
+        "compression_ratio": 0.6559546313799622,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 9,
+        "call_count": 18,
+        "literal_count": 13
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/StringEscapeUtils.java::StringEscapeUtils.unescapeJava(Writer out, String str)",
+      "source": "public static void unescapeJava(Writer out, String str) throws IOException {\n        if (out == null) {\n            throw new IllegalArgumentException(\"The Writer must not be null\");\n        }\n        if (str == null) {\n            return;\n        }\n        int sz = str.length();\n        StringBuffer unicode = new StringBuffer(4);\n        boolean hadSlash = false;\n        boolean inUnicode = false;\n        for (int i = 0; i < sz; i++) {\n            char ch = str.charAt(i);\n            if (inUnicode) {\n                // if in unicode, then we're reading unicode\n                // values in somehow\n                unicode.append(ch);\n                if (unicode.length() == 4) {\n                    // unicode now contains the four hex digits\n                    // which represents our unicode character\n                    try {\n                        int value = Integer.parseInt(unicode.toString(), 16);\n                        out.write((char) value);\n                        unicode.setLength(0);\n                        inUnicode = false;\n                        hadSlash = false;\n                    } catch (NumberFormatException nfe) {\n                        throw new NestableRuntimeException(\"Unable to parse unicode value: \" + unicode, nfe);\n                    }\n                }\n                continue;\n            }\n            if (hadSlash) {\n                // handle an escaped value\n                hadSlash = false;\n                switch (ch) {\n                    case '\\\\':\n                        out.write('\\\\');\n                        break;\n                    case '\\'':\n                        out.write('\\'');\n                        break;\n                    case '\\\"':\n                        out.write('\"');\n                        break;\n                    case 'r':\n                        out.write('\\r');\n                        break;\n                    case 'f':\n                        out.write('\\f');\n                        break;\n                    case 't':\n                        out.write('\\t');\n                        break;\n                    case 'n':\n                        out.write('\\n');\n                        break;\n                    case 'b':\n                        out.write('\\b');\n                        break;\n                    case 'u':\n                        {\n                            // uh-oh, we're in unicode country....\n                            inUnicode = true;\n                            break;\n                        }\n                    default :\n                        out.write(ch);\n                        break;\n                }\n                continue;\n            } else if (ch == '\\\\') {\n                hadSlash = true;\n                continue;\n            }\n            out.write(ch);\n        }\n        if (hadSlash) {\n            // then we're in the weird case of a \\ at the end of the\n            // string, let's output it anyway.\n            out.write('\\\\');\n        }\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/StringEscapeUtils.java::StringEscapeUtils.unescapeJava(Writer out, String str)\nSIGNATURE: public static void unescapeJava(Writer out, String str) throws IOException",
+        "METHOD: src/java/org/apache/commons/lang/StringEscapeUtils.java::StringEscapeUtils.unescapeJava(Writer out, String str)\nSIGNATURE: public static void unescapeJava(Writer out, String str) throws IOException\nSTRUCTURE (lossy):\nif (out == null)\nthrow new IllegalArgumentException(\"The Writer must not be null\");\nif (str == null)\nreturn;\nint sz = str.length();\nCALL str.length()\nStringBuffer unicode = new StringBuffer(4);\nboolean hadSlash = false;\nboolean inUnicode = false;\nfor (int i = 0; i < sz; i++)\nint i = 0;\ni++\nchar ch = str.charAt(i);\nCALL str.charAt(i)\nif (inUnicode)\nCALL unicode.append(ch)\nif (unicode.length() == 4)\nCALL unicode.length()\nint value = Integer.parseInt(unicode.toString(), 16);\nCALL Integer.parseInt(unicode.toString(), 16)\nCALL unicode.toString()\nCALL out.write((char) value)\nCALL unicode.setLength(0)\ninUnicode = false\nhadSlash = false\ncatch (NumberFormatException nfe)\nthrow new NestableRuntimeException(\"Unable to parse unicode value: \" + unicode, nfe);\nif (hadSlash)\nswitch (ch) { case '\\\\': out.write('\\\\'); break; case '\\'': out.write('\\''); break; case '\\\"': out.write('\"'); break; case 'r': out.write('\\r'); break; case 'f': out.write('\\f'); break; case 't': out.write('\\t'); break; case 'n': out.write('\\n'); break; case 'b': out.write('\\b'); break; case 'u': { // uh-oh, we're in unicode country.... inUnicode = true; break; } default : out.write(ch); break; }\nCALL out.write('\\\\')\nCALL out.write('\\'')\nCALL out.write('\"')\nCALL out.write('\\r')\nCALL out.write('\\f')\nCALL out.write('\\t')\nCALL out.write('\\n')\nCALL out.write('\\b')\ninUnicode = true\nCALL out.write(ch)\nif (ch == '\\\\')\nhadSlash = true",
+        "public static void unescapeJava(Writer out, String str) throws IOException {\n        if (out == null) {\n            throw new IllegalArgumentException(\"The Writer must not be null\");\n        }\n        if (str == null) {\n            return;\n        }\n        int sz = str.length();\n        StringBuffer unicode = new StringBuffer(4);\n        boolean hadSlash = false;\n        boolean inUnicode = false;\n        for (int i = 0; i < sz; i++) {\n            char ch = str.charAt(i);\n            if (inUnicode) {\n                // if in unicode, then we're reading unicode\n                // values in somehow\n                unicode.append(ch);\n                if (unicode.length() == 4) {\n                    // unicode now contains the four hex digits\n                    // which represents our unicode character\n                    try {\n                        int value = Integer.parseInt(unicode.toString(), 16);\n                        out.write((char) value);\n                        unicode.setLength(0);\n                        inUnicode = false;\n                        hadSlash = false;\n                    } catch (NumberFormatException nfe) {\n                        throw new NestableRuntimeException(\"Unable to parse unicode value: \" + unicode, nfe);\n                    }\n                }\n                continue;\n            }\n            if (hadSlash) {\n                // handle an escaped value\n                hadSlash = false;\n                switch (ch) {\n                    case '\\\\':\n                        out.write('\\\\');\n                        break;\n                    case '\\'':\n                        out.write('\\'');\n                        break;\n                    case '\\\"':\n                        out.write('\"');\n                        break;\n                    case 'r':\n                        out.write('\\r');\n                        break;\n                    case 'f':\n                        out.write('\\f');\n                        break;\n                    case 't':\n                        out.write('\\t');\n                        break;\n                    case 'n':\n                        out.write('\\n');\n                        break;\n                    case 'b':\n                        out.write('\\b');\n                        break;\n                    case 'u':\n                        {\n                            // uh-oh, we're in unicode country....\n                            inUnicode = true;\n                            break;\n                        }\n                    default :\n                        out.write(ch);\n                        break;\n                }\n                continue;\n            } else if (ch == '\\\\') {\n                hadSlash = true;\n                continue;\n            }\n            out.write(ch);\n        }\n        if (hadSlash) {\n            // then we're in the weird case of a \\ at the end of the\n            // string, let's output it anyway.\n            out.write('\\\\');\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2375,
+        "trace_match": 0.0,
+        "complexity": 11.0,
+        "call_count": 19.0,
+        "literal_count": 28.0,
+        "source_tokens": 751.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 408.0,
+        "compression_ratio": 0.5432756324900133,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 11,
+        "call_count": 19,
+        "literal_count": 28
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.charAt(int index)",
+      "source": "public char charAt(int index) {\n        if (index < 0 || index >= length()) {\n            throw new StringIndexOutOfBoundsException(index);\n        }\n        return buffer[index];\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.charAt(int index)\nSIGNATURE: public char charAt(int index)",
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.charAt(int index)\nSIGNATURE: public char charAt(int index)\nSTRUCTURE (lossy):\nif (index < 0 || index >= length())\nCALL length()\nthrow new StringIndexOutOfBoundsException(index);\nreturn buffer[index];",
+        "public char charAt(int index) {\n        if (index < 0 || index >= length()) {\n            throw new StringIndexOutOfBoundsException(index);\n        }\n        return buffer[index];\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7727272727272727,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 47.0,
+        "l0_tokens": 33.0,
+        "l1_tokens": 69.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)",
+      "source": "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf \n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars, \n        // then a subclass can test equals to a superclass.\n        Class lhsClass = lhs.getClass();\n        Class rhsClass = rhs.getClass();\n        Class testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and \n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)\nSIGNATURE: public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)",
+        "METHOD: src/java/org/apache/commons/lang/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)\nSIGNATURE: public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)\nSTRUCTURE (lossy):\nif (lhs == rhs)\nreturn true;\nif (lhs == null || rhs == null)\nreturn false;\nClass lhsClass = lhs.getClass();\nCALL lhs.getClass()\nClass rhsClass = rhs.getClass();\nCALL rhs.getClass()\nClass testClass;\nif (lhsClass.isInstance(rhs))\nCALL lhsClass.isInstance(rhs)\ntestClass = lhsClass\nif (!rhsClass.isInstance(lhs))\nCALL rhsClass.isInstance(lhs)\ntestClass = rhsClass\nif (rhsClass.isInstance(lhs))\nif (!lhsClass.isInstance(rhs))\nEqualsBuilder equalsBuilder = new EqualsBuilder();\nCALL reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields)\nwhile (testClass.getSuperclass() != null && testClass != reflectUpToClass)\nCALL testClass.getSuperclass()\ntestClass = testClass.getSuperclass()\ncatch (IllegalArgumentException e)\nreturn equalsBuilder.isEquals();\nCALL equalsBuilder.isEquals()",
+        "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf \n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars, \n        // then a subclass can test equals to a superclass.\n        Class lhsClass = lhs.getClass();\n        Class rhsClass = rhs.getClass();\n        Class testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and \n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.25,
+        "trace_match": 0.0,
+        "complexity": 9.0,
+        "call_count": 11.0,
+        "literal_count": 3.0,
+        "source_tokens": 530.0,
+        "l0_tokens": 92.0,
+        "l1_tokens": 297.0,
+        "compression_ratio": 0.560377358490566,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 9,
+        "call_count": 11,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/StringUtils.java::StringUtils.padding(int repeat, char padChar)",
+      "source": "private static String padding(int repeat, char padChar) throws IndexOutOfBoundsException {\n        if (repeat < 0) {\n            throw new IndexOutOfBoundsException(\"Cannot pad a negative amount: \" + repeat);\n        }\n        final char[] buf = new char[repeat];\n        for (int i = 0; i < buf.length; i++) {\n            buf[i] = padChar;\n        }\n        return new String(buf);\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/StringUtils.java::StringUtils.padding(int repeat, char padChar)\nSIGNATURE: private static String padding(int repeat, char padChar) throws IndexOutOfBoundsException",
+        "METHOD: src/java/org/apache/commons/lang/StringUtils.java::StringUtils.padding(int repeat, char padChar)\nSIGNATURE: private static String padding(int repeat, char padChar) throws IndexOutOfBoundsException\nSTRUCTURE (lossy):\nif (repeat < 0)\nthrow new IndexOutOfBoundsException(\"Cannot pad a negative amount: \" + repeat);\nfinal char[] buf = new char[repeat];\nfor (int i = 0; i < buf.length; i++)\nint i = 0;\ni++\nbuf[i] = padChar\nreturn new String(buf);",
+        "private static String padding(int repeat, char padChar) throws IndexOutOfBoundsException {\n        if (repeat < 0) {\n            throw new IndexOutOfBoundsException(\"Cannot pad a negative amount: \" + repeat);\n        }\n        final char[] buf = new char[repeat];\n        for (int i = 0; i < buf.length; i++) {\n            buf[i] = padChar;\n        }\n        return new String(buf);\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 0.0,
+        "literal_count": 3.0,
+        "source_tokens": 97.0,
+        "l0_tokens": 51.0,
+        "l1_tokens": 113.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 0,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.validateIndex(int index)",
+      "source": "protected void validateIndex(int index) {\n        if (index < 0 || index > size) {\n            throw new StringIndexOutOfBoundsException(index);\n        }\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.validateIndex(int index)\nSIGNATURE: protected void validateIndex(int index)",
+        "METHOD: src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.validateIndex(int index)\nSIGNATURE: protected void validateIndex(int index)\nSTRUCTURE (lossy):\nif (index < 0 || index > size)\nthrow new StringIndexOutOfBoundsException(index);",
+        "protected void validateIndex(int index) {\n        if (index < 0 || index > size) {\n            throw new StringIndexOutOfBoundsException(index);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8095238095238095,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 0.0,
+        "literal_count": 1.0,
+        "source_tokens": 40.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 63.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 0,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/exception/NestableDelegate.java::NestableDelegate.indexOfThrowable(Class type, int fromIndex)",
+      "source": "public int indexOfThrowable(Class type, int fromIndex) {\n        if (type == null) {\n            return -1;\n        }\n        if (fromIndex < 0) {\n            throw new IndexOutOfBoundsException(\"The start index was out of bounds: \" + fromIndex);\n        }\n        Throwable[] throwables = ExceptionUtils.getThrowables(this.nestable);\n        if (fromIndex >= throwables.length) {\n            throw new IndexOutOfBoundsException(\"The start index was out of bounds: \"\n                + fromIndex + \" >= \" + throwables.length);\n        }\n        if (matchSubclasses) {\n            for (int i = fromIndex; i < throwables.length; i++) {\n                if (type.isAssignableFrom(throwables[i].getClass())) {\n                    return i;\n                }\n            }\n        } else {\n            for (int i = fromIndex; i < throwables.length; i++) {\n                if (type.equals(throwables[i].getClass())) {\n                    return i;\n                }\n            }\n        }\n        return -1;\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/exception/NestableDelegate.java::NestableDelegate.indexOfThrowable(Class type, int fromIndex)\nSIGNATURE: public int indexOfThrowable(Class type, int fromIndex)",
+        "METHOD: src/java/org/apache/commons/lang/exception/NestableDelegate.java::NestableDelegate.indexOfThrowable(Class type, int fromIndex)\nSIGNATURE: public int indexOfThrowable(Class type, int fromIndex)\nSTRUCTURE (lossy):\nif (type == null)\nreturn -1;\nif (fromIndex < 0)\nthrow new IndexOutOfBoundsException(\"The start index was out of bounds: \" + fromIndex);\nThrowable[] throwables = ExceptionUtils.getThrowables(this.nestable);\nCALL ExceptionUtils.getThrowables(this.nestable)\nif (fromIndex >= throwables.length)\nthrow new IndexOutOfBoundsException(\"The start index was out of bounds: \" + fromIndex + \" >= \" + throwables.length);\nif (matchSubclasses)\nfor (int i = fromIndex; i < throwables.length; i++)\nint i = fromIndex;\ni++\nif (type.isAssignableFrom(throwables[i].getClass()))\nCALL type.isAssignableFrom(throwables[i].getClass())\nCALL throwables[i].getClass()\nreturn i;\nif (type.equals(throwables[i].getClass()))\nCALL type.equals(throwables[i].getClass())",
+        "public int indexOfThrowable(Class type, int fromIndex) {\n        if (type == null) {\n            return -1;\n        }\n        if (fromIndex < 0) {\n            throw new IndexOutOfBoundsException(\"The start index was out of bounds: \" + fromIndex);\n        }\n        Throwable[] throwables = ExceptionUtils.getThrowables(this.nestable);\n        if (fromIndex >= throwables.length) {\n            throw new IndexOutOfBoundsException(\"The start index was out of bounds: \"\n                + fromIndex + \" >= \" + throwables.length);\n        }\n        if (matchSubclasses) {\n            for (int i = fromIndex; i < throwables.length; i++) {\n                if (type.isAssignableFrom(throwables[i].getClass())) {\n                    return i;\n                }\n            }\n        } else {\n            for (int i = fromIndex; i < throwables.length; i++) {\n                if (type.equals(throwables[i].getClass())) {\n                    return i;\n                }\n            }\n        }\n        return -1;\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4722222222222222,
+        "trace_match": 0.0,
+        "complexity": 9.0,
+        "call_count": 5.0,
+        "literal_count": 7.0,
+        "source_tokens": 252.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 239.0,
+        "compression_ratio": 0.9484126984126984,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 9,
+        "call_count": 5,
+        "literal_count": 7
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/lang/text/StrTokenizer.java::StrTokenizer.tokenize(char[] chars, int offset, int count)",
+      "source": "protected List tokenize(char[] chars, int offset, int count) {\n        if (chars == null || count == 0) {\n            return Collections.EMPTY_LIST;\n        }\n        StrBuilder buf = new StrBuilder();\n        List tokens = new ArrayList();\n        int pos = offset;\n        \n        // loop around the entire buffer\n        while (pos >= 0 && pos < count) {\n            // find next token\n            pos = readNextToken(chars, pos, count, buf, tokens);\n            \n            // handle case where end of string is a delimiter\n            if (pos >= count) {\n                addToken(tokens, \"\");\n            }\n        }\n        return tokens;\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/lang/text/StrTokenizer.java::StrTokenizer.tokenize(char[] chars, int offset, int count)\nSIGNATURE: protected List tokenize(char[] chars, int offset, int count)",
+        "METHOD: src/java/org/apache/commons/lang/text/StrTokenizer.java::StrTokenizer.tokenize(char[] chars, int offset, int count)\nSIGNATURE: protected List tokenize(char[] chars, int offset, int count)\nSTRUCTURE (lossy):\nif (chars == null || count == 0)\nreturn Collections.EMPTY_LIST;\nStrBuilder buf = new StrBuilder();\nList tokens = new ArrayList();\nint pos = offset;\nwhile (pos >= 0 && pos < count)\npos = readNextToken(chars, pos, count, buf, tokens)\nCALL readNextToken(chars, pos, count, buf, tokens)\nif (pos >= count)\nCALL addToken(tokens, \"\")\nreturn tokens;",
+        "protected List tokenize(char[] chars, int offset, int count) {\n        if (chars == null || count == 0) {\n            return Collections.EMPTY_LIST;\n        }\n        StrBuilder buf = new StrBuilder();\n        List tokens = new ArrayList();\n        int pos = offset;\n        \n        // loop around the entire buffer\n        while (pos >= 0 && pos < count) {\n            // find next token\n            pos = readNextToken(chars, pos, count, buf, tokens);\n            \n            // handle case where end of string is a delimiter\n            if (pos >= count) {\n                addToken(tokens, \"\");\n            }\n        }\n        return tokens;\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.36363636363636365,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 2.0,
+        "literal_count": 4.0,
+        "source_tokens": 163.0,
+        "l0_tokens": 49.0,
+        "l1_tokens": 139.0,
+        "compression_ratio": 0.852760736196319,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 2,
+        "literal_count": 4
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.appendFixedWidthPadRight(int value, int width, char padChar)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.insert(int index, char chars[], int offset, int length)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.appendFixedWidthPadRight(Object obj, int width, char padChar)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.appendFixedWidthPadLeft(int value, int width, char padChar)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.appendFixedWidthPadLeft(Object obj, int width, char padChar)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(char[] chars, int startIndex, int length)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.getChars(int startIndex, int endIndex, char destination[], int destinationIndex)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(String str, int startIndex, int length)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(StrBuilder str, int startIndex, int length)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.append(StringBuffer str, int startIndex, int length)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.deleteCharAt(int index)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/StrSubstitutor.java::StrSubstitutor.replaceIn(StringBuffer source, int offset, int length)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/ArrayUtils.java::ArrayUtils.add(Object array, int index, Object element, Class clss)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.replaceImpl(int startIndex, int endIndex, int removeLen, String insertStr, int insertLen)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.validateRange(int startIndex, int endIndex)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.StrBuilderReader.read(char b[], int off, int len)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/WordUtils.java::WordUtils.wrap(String str, int wrapLength, String newLineStr, boolean wrapLongWords)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/StringEscapeUtils.java::StringEscapeUtils.unescapeJava(Writer out, String str)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.charAt(int index)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,\n            String[] excludeFields)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/StringUtils.java::StringUtils.padding(int repeat, char padChar)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/StrBuilder.java::StrBuilder.validateIndex(int index)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/exception/NestableDelegate.java::NestableDelegate.indexOfThrowable(Class type, int fromIndex)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/lang/text/StrTokenizer.java::StrTokenizer.tokenize(char[] chars, int offset, int count)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 2012,
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "be1085a46e9f41c74a7353f53cc48ff151378b6f08a72cab3bd570e3736d4ec4",
+  "evidence_sha256": "89d2dd0df0579fb724a04eba93b4f043fdcb483e4f7fa1267181c7376174611c"
+}

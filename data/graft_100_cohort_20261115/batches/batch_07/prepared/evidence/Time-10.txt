@@ -1,0 +1,62 @@
+OFFICIAL DEFECTS4J BUG: Time-10
+EXECUTED BUGGY TEST: org.joda.time.TestDays::testFactory_daysBetween_RPartial_MonthDay
+TEST SOURCE: src/test/java/org/joda/time/TestDays.java
+TEST SOURCE SHA256: 1f18a027be9396ddfea161e11107bbfe8f9b5ce7a1fbad219e3103811f14cfbe
+COMPLETE EXECUTED TEST METHOD (verbatim):
+public void testFactory_daysBetween_RPartial_MonthDay() {
+        MonthDay start1 = new MonthDay(2, 1);
+        MonthDay start2 = new MonthDay(2, 28);
+        MonthDay end1 = new MonthDay(2, 28);
+        MonthDay end2 = new MonthDay(2, 29);
+        
+        assertEquals(27, Days.daysBetween(start1, end1).getDays());
+        assertEquals(28, Days.daysBetween(start1, end2).getDays());
+        assertEquals(0, Days.daysBetween(start2, end1).getDays());
+        assertEquals(1, Days.daysBetween(start2, end2).getDays());
+        
+        assertEquals(-27, Days.daysBetween(end1, start1).getDays());
+        assertEquals(-28, Days.daysBetween(end2, start1).getDays());
+        assertEquals(0, Days.daysBetween(end1, start2).getDays());
+        assertEquals(-1, Days.daysBetween(end2, start2).getDays());
+    }
+OBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):
+--- org.joda.time.TestDays::testFactory_daysBetween_RPartial_MonthDay
+org.joda.time.IllegalFieldValueException: Value 29 for dayOfMonth must be in the range [1,28]
+	at org.joda.time.field.FieldUtils.verifyValueBounds(FieldUtils.java:220)
+	at org.joda.time.field.PreciseDurationDateTimeField.set(PreciseDurationDateTimeField.java:78)
+	at org.joda.time.chrono.BaseChronology.set(BaseChronology.java:240)
+	at org.joda.time.base.BaseSingleFieldPeriod.between(BaseSingleFieldPeriod.java:104)
+	at org.joda.time.Days.daysBetween(Days.java:141)
+	at org.joda.time.TestDays.testFactory_daysBetween_RPartial_MonthDay(TestDays.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)

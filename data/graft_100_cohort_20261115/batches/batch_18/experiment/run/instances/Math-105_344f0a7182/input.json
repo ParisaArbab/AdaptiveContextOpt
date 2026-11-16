@@ -1,0 +1,1318 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Math-105",
+    "repository": "Math",
+    "language": "java",
+    "revision": "d6b7f13cd3968a6f6419809bab65bc136028e12d",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_18/prepared/checkouts/Math-105",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Math-105\nEXECUTED BUGGY TEST: org.apache.commons.math.stat.regression.SimpleRegressionTest::testSSENonNegative\nTEST SOURCE: src/test/org/apache/commons/math/stat/regression/SimpleRegressionTest.java\nTEST SOURCE SHA256: bfca6a548edabfd3fca56a4d9f63fc148981cc3f850647176d8f3dc018896d5e\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testSSENonNegative() {\n        double[] y = { 8915.102, 8919.302, 8923.502 };\n        double[] x = { 1.107178495E2, 1.107264895E2, 1.107351295E2 };\n        SimpleRegression reg = new SimpleRegression();\n        for (int i = 0; i < x.length; i++) {\n            reg.addData(x[i], y[i]);\n        }\n        assertTrue(reg.getSumSquaredErrors() >= 0.0);\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.apache.commons.math.stat.regression.SimpleRegressionTest::testSSENonNegative\njunit.framework.AssertionFailedError\n\tat junit.framework.Assert.fail(Assert.java:55)\n\tat junit.framework.Assert.assertTrue(Assert.java:22)\n\tat junit.framework.Assert.assertTrue(Assert.java:31)\n\tat junit.framework.TestCase.assertTrue(TestCase.java:201)\n\tat org.apache.commons.math.stat.regression.SimpleRegressionTest.testSSENonNegative(SimpleRegressionTest.java:275)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_18/prepared/evidence/Math-105.txt",
+      "sha256": "b08fae36928b512b087f663eb6f0cf400117a2c55f5b46941cb55b059d1f57d6"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src/java",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Math-105",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getMeanSquareError()",
+      "path": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java",
+      "start_line": 314,
+      "end_line": 319,
+      "source": "public double getMeanSquareError() {\n        if (n < 3) {\n            return Double.NaN;\n        }\n        return getSumSquaredErrors() / (double) (n - 2);\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.18928771845879
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getSumSquaredErrors()",
+      "path": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java",
+      "start_line": 263,
+      "end_line": 265,
+      "source": "public double getSumSquaredErrors() {\n        return sumYY - sumXY * sumXY / sumXX;\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 38.838617344333656
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.addData(double[][] data)",
+      "path": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java",
+      "start_line": 139,
+      "end_line": 143,
+      "source": "public void addData(double[][] data) {\n        for (int i = 0; i < data.length; i++) {\n            addData(data[i][0], data[i][1]);\n        }\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.79415190943803
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getRSquare()",
+      "path": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java",
+      "start_line": 358,
+      "end_line": 361,
+      "source": "public double getRSquare() {\n        double ssto = getTotalSumSquares();\n        return (ssto - getSumSquaredErrors()) / ssto;\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.580055399613165
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.isNonNegative(long[][] in)",
+      "path": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "start_line": 268,
+      "end_line": 277,
+      "source": "private boolean isNonNegative(long[][] in) {\n        for (int i = 0; i < in.length; i ++) {\n            for (int j = 0; j < in[i].length; j++) {\n                if (in[i][j] < 0) {\n                    return false;\n                }\n            }\n        }\n        return true;\n    }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 30.64898870667633
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/util/ResizableDoubleArray.java::ResizableDoubleArray.setElement(int index, double value)",
+      "path": "src/java/org/apache/commons/math/util/ResizableDoubleArray.java",
+      "start_line": 570,
+      "end_line": 582,
+      "source": "public synchronized void setElement(int index, double value) {\n        if (index < 0) {\n            String msg = \"Cannot set an element at a negative index\";\n            throw new ArrayIndexOutOfBoundsException(msg);\n        }\n        if (index + 1 > numElements) {\n            numElements = index + 1;\n        }       \n        if ((startIndex + index) >= internalArray.length) {\n            expandTo(startIndex + (index + 1));\n        }    \n        internalArray[startIndex + index] = value;\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 29.062450348735396
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.isNonNegative(long[] in)",
+      "path": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "start_line": 251,
+      "end_line": 258,
+      "source": "private boolean isNonNegative(long[] in) {\n        for (int i = 0; i < in.length; i ++) {\n            if (in[i] < 0) {\n                return false;\n            }\n        }\n        return true;\n    }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 28.908763247577603
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquare(double[] expected, long[] observed)",
+      "path": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "start_line": 46,
+      "end_line": 63,
+      "source": "public double chiSquare(double[] expected, long[] observed)\n        throws IllegalArgumentException {\n        double sumSq = 0.0d;\n        double dev = 0.0d;\n        if ((expected.length < 2) || (expected.length != observed.length)) {\n            throw new IllegalArgumentException(\n                    \"observed, expected array lengths incorrect\");\n        }\n        if (!isPositive(expected) || !isNonNegative(observed)) {\n            throw new IllegalArgumentException(\n                \"observed counts must be non-negative and expected counts must be postive\");\n        }\n        for (int i = 0; i < observed.length; i++) {\n            dev = ((double) observed[i] - expected[i]);\n            sumSq += dev * dev / expected[i];\n        }\n        return sumSq;\n    }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 28.277610116288873
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/transform/FastFourierTransformer.java::FastFourierTransformer.fft(Complex data[])",
+      "path": "src/java/org/apache/commons/math/transform/FastFourierTransformer.java",
+      "start_line": 340,
+      "end_line": 396,
+      "source": "protected Complex[] fft(Complex data[]) throws MathException,\n        IllegalArgumentException {\n\n        int i, j, k, m, N = data.length;\n        Complex A, B, C, D, E, F, z, f[] = new Complex[N];\n\n        // initial simple cases\n        verifyDataSet(data);\n        if (N == 1) {\n            f[0] = data[0];\n            return f;\n        }\n        if (N == 2) {\n            f[0] = data[0].add(data[1]);\n            f[1] = data[0].subtract(data[1]);\n            return f;\n        }\n\n        // permute original data array in bit-reversal order\n        j = 0;\n        for (i = 0; i < N; i++) {\n            f[i] = data[j];\n            k = N >> 1;\n            while (j >= k && k > 0) {\n                j -= k; k >>= 1;\n            }\n            j += k;\n        }\n\n        // the bottom base-4 round\n        for (i = 0; i < N; i += 4) {\n            A = f[i].add(f[i+1]);\n            B = f[i+2].add(f[i+3]);\n            C = f[i].subtract(f[i+1]);\n            D = f[i+2].subtract(f[i+3]);\n            E = C.add(D.multiply(Complex.I));\n            F = C.subtract(D.multiply(Complex.I));\n            f[i] = A.add(B);\n            f[i+2] = A.subtract(B);\n            // omegaCount indicates forward or inverse transform\n            f[i+1] = omegaCount < 0 ? E : F;\n            f[i+3] = omegaCount > 0 ? E : F;\n        }\n\n        // iterations from bottom to top take O(N*logN) time\n        for (i = 4; i < N; i <<= 1) {\n            m = N / (i<<1);\n            for (j = 0; j < N; j += i<<1) {\n                for (k = 0; k < i; k++) {\n                    z = f[i+j+k].multiply(omega[k*m]);\n                    f[i+j+k] = f[j+k].subtract(z);\n                    f[j+k] = f[j+k].add(z);\n                }\n            }\n        }\n        return f;\n    }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 28.130285707260466
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.addData(double x, double y)",
+      "path": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java",
+      "start_line": 105,
+      "end_line": 121,
+      "source": "public void addData(double x, double y) {\n        if (n == 0) {\n            xbar = x;\n            ybar = y;\n        } else {\n            double dx = x - xbar;\n            double dy = y - ybar;\n            sumXX += dx * dx * (double) n / (double) (n + 1.0);\n            sumYY += dy * dy * (double) n / (double) (n + 1.0);\n            sumXY += dx * dy * (double) n / (double) (n + 1.0);\n            xbar += dx / (double) (n + 1.0);\n            ybar += dy / (double) (n + 1.0);\n        }\n        sumX += x;\n        sumY += y;\n        n++;\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 27.13803093843366
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/util/ResizableDoubleArray.java::ResizableDoubleArray.addElement(double value)",
+      "path": "src/java/org/apache/commons/math/util/ResizableDoubleArray.java",
+      "start_line": 250,
+      "end_line": 259,
+      "source": "public synchronized void addElement(double value) {\n        numElements++;\n        if ((startIndex + numElements) > internalArray.length) {\n            expand();\n        }\n        internalArray[startIndex + (numElements - 1)] = value;\n        if (shouldContract()) {\n            contract();\n        }\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 26.94887636050655
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/util/ResizableDoubleArray.java::ResizableDoubleArray.addElementRolling(double value)",
+      "path": "src/java/org/apache/commons/math/util/ResizableDoubleArray.java",
+      "start_line": 277,
+      "end_line": 294,
+      "source": "public synchronized double addElementRolling(double value) {\n        double discarded = internalArray[startIndex];\n\n        if ((startIndex + (numElements + 1)) > internalArray.length) {\n            expand();\n        }\n        // Increment the start index\n        startIndex += 1;\n\n        // Add the new value\n        internalArray[startIndex + (numElements - 1)] = value;\n\n        // Check the contraction criteria\n        if (shouldContract()) {\n            contract();\n        }\n        return discarded;\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 26.76290216000104
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getSlope()",
+      "path": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java",
+      "start_line": 224,
+      "end_line": 232,
+      "source": "public double getSlope() {\n        if (n < 2) {\n            return Double.NaN; //not enough data \n        }\n        if (Math.abs(sumXX) < 10 * Double.MIN_VALUE) {\n            return Double.NaN; //not enough variation in x\n        }\n        return sumXY / sumXX;\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.950263969880258
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getSlopeStdErr()",
+      "path": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java",
+      "start_line": 389,
+      "end_line": 391,
+      "source": "public double getSlopeStdErr() {\n        return Math.sqrt(getMeanSquareError() / sumXX);\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.746293504649536
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/random/RandomDataImpl.java::RandomDataImpl.shuffle(int[] list, int end)",
+      "path": "src/java/org/apache/commons/math/random/RandomDataImpl.java",
+      "start_line": 570,
+      "end_line": 582,
+      "source": "private void shuffle(int[] list, int end) {\n        int target = 0;\n        for (int i = list.length - 1 ; i >= end; i--) {\n            if (i == 0) {\n                target = 0;\n            } else {\n                target = nextInt(0, i);\n            }\n            int temp = list[target];\n            list[target] = list[i];\n            list[i] = temp;\n        }\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.396461752729973
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getInterceptStdErr()",
+      "path": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java",
+      "start_line": 374,
+      "end_line": 377,
+      "source": "public double getInterceptStdErr() {\n        return Math.sqrt(\n            getMeanSquareError() * ((1d / (double) n) + (xbar * xbar) / sumXX));\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.289689283759508
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/transform/FastSineTransformer.java::FastSineTransformer.fst(double f[])",
+      "path": "src/java/org/apache/commons/math/transform/FastSineTransformer.java",
+      "start_line": 212,
+      "end_line": 250,
+      "source": "protected double[] fst(double f[]) throws MathException,\n        IllegalArgumentException {\n\n        double A, B, x[], F[] = new double[f.length];\n\n        FastFourierTransformer.verifyDataSet(f);\n        if (f[0] != 0.0) {\n            throw new IllegalArgumentException\n                (\"The first element is not zero: \" + f[0]);\n        }\n        int N = f.length;\n        if (N == 1) {       // trivial case\n            F[0] = 0.0;\n            return F;\n        }\n\n        // construct a new array and perform FFT on it\n        x = new double[N];\n        x[0] = 0.0;\n        x[N >> 1] = 2.0 * f[N >> 1];\n        for (int i = 1; i < (N >> 1); i++) {\n            A = Math.sin(i * Math.PI / N) * (f[i] + f[N-i]);\n            B = 0.5 * (f[i] - f[N-i]);\n            x[i] = A + B;\n            x[N-i] = A - B;\n        }\n        FastFourierTransformer transformer = new FastFourierTransformer();\n        Complex y[] = transformer.transform(x);\n\n        // reconstruct the FST result for the original array\n        F[0] = 0.0;\n        F[1] = 0.5 * y[0].getReal();\n        for (int i = 1; i < (N >> 1); i++) {\n            F[2*i] = -y[i].getImaginary();\n            F[2*i+1] = y[i].getReal() + F[2*i-1];\n        }\n\n        return F;\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 24.6022427860617
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/complex/ComplexFormat.java::ComplexFormat.parse(String source, ParsePosition pos)",
+      "path": "src/java/org/apache/commons/math/complex/ComplexFormat.java",
+      "start_line": 319,
+      "end_line": 387,
+      "source": "public Complex parse(String source, ParsePosition pos) {\n        int initialIndex = pos.getIndex();\n\n        // parse whitespace\n        parseAndIgnoreWhitespace(source, pos);\n\n        // parse real\n        Number re = parseNumber(source, getRealFormat(), pos);\n        if (re == null) {\n            // invalid real number\n            // set index back to initial, error index should already be set\n            // character examined.\n            pos.setIndex(initialIndex);\n            return null;\n        }\n\n        // parse sign\n        int startIndex = pos.getIndex();\n        char c = parseNextCharacter(source, pos);\n        int sign = 0;\n        switch (c) {\n        case 0 :\n            // no sign\n            // return real only complex number\n            return new Complex(re.doubleValue(), 0.0);\n        case '-' :\n            sign = -1;\n            break;\n        case '+' :\n            sign = 1;\n            break;\n        default :\n            // invalid sign\n            // set index back to initial, error index should be the last\n            // character examined.\n            pos.setIndex(initialIndex);\n            pos.setErrorIndex(startIndex);\n            return null;\n        }\n\n        // parse whitespace\n        parseAndIgnoreWhitespace(source, pos);\n\n        // parse imaginary\n        Number im = parseNumber(source, getRealFormat(), pos);\n        if (im == null) {\n            // invalid imaginary number\n            // set index back to initial, error index should already be set\n            // character examined.\n            pos.setIndex(initialIndex);\n            return null;\n        }\n\n        // parse imaginary character\n        int n = getImaginaryCharacter().length();\n        startIndex = pos.getIndex();\n        int endIndex = startIndex + n;\n        if (source.substring(startIndex, endIndex).compareTo(\n            getImaginaryCharacter()) != 0) {\n            // set index back to initial, error index should be the start index\n            // character examined.\n            pos.setIndex(initialIndex);\n            pos.setErrorIndex(startIndex);\n            return null;\n        }\n        pos.setIndex(endIndex);\n\n        return new Complex(re.doubleValue(), im.doubleValue() * sign);\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 24.538938627645088
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java::TTestImpl.t(double mu, double[] observed)",
+      "path": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java",
+      "start_line": 172,
+      "end_line": 179,
+      "source": "public double t(double mu, double[] observed)\n    throws IllegalArgumentException {\n        if ((observed == null) || (observed.length < 2)) {\n            throw new IllegalArgumentException(\"insufficient data for t statistic\");\n        }\n        return t(StatUtils.mean(observed), mu, StatUtils.variance(observed),\n                observed.length);\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 24.498663845583014
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.isRectangular(long[][] in)",
+      "path": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "start_line": 217,
+      "end_line": 224,
+      "source": "private boolean isRectangular(long[][] in) {\n        for (int i = 1; i < in.length; i++) {\n            if (in[i].length != in[0].length) {\n                return false;\n            }\n        }  \n        return true;\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 24.20259446814
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getRegressionSumSquares()",
+      "path": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java",
+      "start_line": 300,
+      "end_line": 302,
+      "source": "public double getRegressionSumSquares() {\n        return getRegressionSumSquares(getSlope());\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 24.023954522122843
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.clear()",
+      "path": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java",
+      "start_line": 148,
+      "end_line": 155,
+      "source": "public void clear() {\n        sumX = 0d;\n        sumXX = 0d;\n        sumY = 0d;\n        sumYY = 0d;\n        sumXY = 0d;\n        n = 0;\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 23.995076112845094
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.checkArray(long[][] in)",
+      "path": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "start_line": 174,
+      "end_line": 192,
+      "source": "private void checkArray(long[][] in) throws IllegalArgumentException {\n        \n        if (in.length < 2) {\n            throw new IllegalArgumentException(\"Input table must have at least two rows\");\n        }\n        \n        if (in[0].length < 2) {\n            throw new IllegalArgumentException(\"Input table must have at least two columns\");\n        }    \n        \n        if (!isRectangular(in)) {\n            throw new IllegalArgumentException(\"Input table must be rectangular\");\n        }\n        \n        if (!isNonNegative(in)) {\n            throw new IllegalArgumentException(\"All entries in input 2-way table must be non-negative\");\n        }\n        \n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 23.939387008153478
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.isPositive(double[] in)",
+      "path": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "start_line": 234,
+      "end_line": 241,
+      "source": "private boolean isPositive(double[] in) {\n        for (int i = 0; i < in.length; i ++) {\n            if (in[i] <= 0) {\n                return false;\n            }\n        }\n        return true;\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 23.845414623123283
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getMeanSquareError()",
+      "source": "public double getMeanSquareError() {\n        if (n < 3) {\n            return Double.NaN;\n        }\n        return getSumSquaredErrors() / (double) (n - 2);\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getMeanSquareError()\nSIGNATURE: public double getMeanSquareError()",
+        "METHOD: src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getMeanSquareError()\nSIGNATURE: public double getMeanSquareError()\nSTRUCTURE (lossy):\nif (n < 3)\nreturn Double.NaN;\nreturn getSumSquaredErrors() / (double) (n - 2);\nCALL getSumSquaredErrors()",
+        "public double getMeanSquareError() {\n        if (n < 3) {\n            return Double.NaN;\n        }\n        return getSumSquaredErrors() / (double) (n - 2);\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8421052631578947,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 2.0,
+        "source_tokens": 41.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 72.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getSumSquaredErrors()",
+      "source": "public double getSumSquaredErrors() {\n        return sumYY - sumXY * sumXY / sumXX;\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getSumSquaredErrors()\nSIGNATURE: public double getSumSquaredErrors()",
+        "METHOD: src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getSumSquaredErrors()\nSIGNATURE: public double getSumSquaredErrors()\nSTRUCTURE (lossy):\nreturn sumYY - sumXY * sumXY / sumXX;",
+        "public double getSumSquaredErrors() {\n        return sumYY - sumXY * sumXY / sumXX;\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.9375,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 23.0,
+        "l0_tokens": 42.0,
+        "l1_tokens": 56.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.addData(double[][] data)",
+      "source": "public void addData(double[][] data) {\n        for (int i = 0; i < data.length; i++) {\n            addData(data[i][0], data[i][1]);\n        }\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.addData(double[][] data)\nSIGNATURE: public void addData(double[][] data)",
+        "METHOD: src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.addData(double[][] data)\nSIGNATURE: public void addData(double[][] data)\nSTRUCTURE (lossy):\nfor (int i = 0; i < data.length; i++)\nint i = 0;\ni++\nCALL addData(data[i][0], data[i][1])",
+        "public void addData(double[][] data) {\n        for (int i = 0; i < data.length; i++) {\n            addData(data[i][0], data[i][1]);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 1.0,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 3.0,
+        "source_tokens": 37.0,
+        "l0_tokens": 43.0,
+        "l1_tokens": 70.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getRSquare()",
+      "source": "public double getRSquare() {\n        double ssto = getTotalSumSquares();\n        return (ssto - getSumSquaredErrors()) / ssto;\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getRSquare()\nSIGNATURE: public double getRSquare()",
+        "METHOD: src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getRSquare()\nSIGNATURE: public double getRSquare()\nSTRUCTURE (lossy):\ndouble ssto = getTotalSumSquares();\nCALL getTotalSumSquares()\nreturn (ssto - getSumSquaredErrors()) / ssto;\nCALL getSumSquaredErrors()",
+        "public double getRSquare() {\n        double ssto = getTotalSumSquares();\n        return (ssto - getSumSquaredErrors()) / ssto;\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.75,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 33.0,
+        "l0_tokens": 37.0,
+        "l1_tokens": 76.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.isNonNegative(long[][] in)",
+      "source": "private boolean isNonNegative(long[][] in) {\n        for (int i = 0; i < in.length; i ++) {\n            for (int j = 0; j < in[i].length; j++) {\n                if (in[i][j] < 0) {\n                    return false;\n                }\n            }\n        }\n        return true;\n    }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.isNonNegative(long[][] in)\nSIGNATURE: private boolean isNonNegative(long[][] in)",
+        "METHOD: src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.isNonNegative(long[][] in)\nSIGNATURE: private boolean isNonNegative(long[][] in)\nSTRUCTURE (lossy):\nfor (int i = 0; i < in.length; i ++)\nint i = 0;\ni ++\nfor (int j = 0; j < in[i].length; j++)\nint j = 0;\nj++\nif (in[i][j] < 0)\nreturn false;\nreturn true;",
+        "private boolean isNonNegative(long[][] in) {\n        for (int i = 0; i < in.length; i ++) {\n            for (int j = 0; j < in[i].length; j++) {\n                if (in[i][j] < 0) {\n                    return false;\n                }\n            }\n        }\n        return true;\n    }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6086956521739131,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 0.0,
+        "literal_count": 3.0,
+        "source_tokens": 71.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 88.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 0,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/util/ResizableDoubleArray.java::ResizableDoubleArray.setElement(int index, double value)",
+      "source": "public synchronized void setElement(int index, double value) {\n        if (index < 0) {\n            String msg = \"Cannot set an element at a negative index\";\n            throw new ArrayIndexOutOfBoundsException(msg);\n        }\n        if (index + 1 > numElements) {\n            numElements = index + 1;\n        }       \n        if ((startIndex + index) >= internalArray.length) {\n            expandTo(startIndex + (index + 1));\n        }    \n        internalArray[startIndex + index] = value;\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/util/ResizableDoubleArray.java::ResizableDoubleArray.setElement(int index, double value)\nSIGNATURE: public synchronized void setElement(int index, double value)",
+        "METHOD: src/java/org/apache/commons/math/util/ResizableDoubleArray.java::ResizableDoubleArray.setElement(int index, double value)\nSIGNATURE: public synchronized void setElement(int index, double value)\nSTRUCTURE (lossy):\nif (index < 0)\nString msg = \"Cannot set an element at a negative index\";\nthrow new ArrayIndexOutOfBoundsException(msg);\nif (index + 1 > numElements)\nnumElements = index + 1\nif ((startIndex + index) >= internalArray.length)\nCALL expandTo(startIndex + (index + 1))\ninternalArray[startIndex + index] = value",
+        "public synchronized void setElement(int index, double value) {\n        if (index < 0) {\n            String msg = \"Cannot set an element at a negative index\";\n            throw new ArrayIndexOutOfBoundsException(msg);\n        }\n        if (index + 1 > numElements) {\n            numElements = index + 1;\n        }       \n        if ((startIndex + index) >= internalArray.length) {\n            expandTo(startIndex + (index + 1));\n        }    \n        internalArray[startIndex + index] = value;\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.48484848484848486,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 1.0,
+        "literal_count": 5.0,
+        "source_tokens": 125.0,
+        "l0_tokens": 51.0,
+        "l1_tokens": 132.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 1,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.isNonNegative(long[] in)",
+      "source": "private boolean isNonNegative(long[] in) {\n        for (int i = 0; i < in.length; i ++) {\n            if (in[i] < 0) {\n                return false;\n            }\n        }\n        return true;\n    }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.isNonNegative(long[] in)\nSIGNATURE: private boolean isNonNegative(long[] in)",
+        "METHOD: src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.isNonNegative(long[] in)\nSIGNATURE: private boolean isNonNegative(long[] in)\nSTRUCTURE (lossy):\nfor (int i = 0; i < in.length; i ++)\nint i = 0;\ni ++\nif (in[i] < 0)\nreturn false;\nreturn true;",
+        "private boolean isNonNegative(long[] in) {\n        for (int i = 0; i < in.length; i ++) {\n            if (in[i] < 0) {\n                return false;\n            }\n        }\n        return true;\n    }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6086956521739131,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 0.0,
+        "literal_count": 2.0,
+        "source_tokens": 50.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 72.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 0,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquare(double[] expected, long[] observed)",
+      "source": "public double chiSquare(double[] expected, long[] observed)\n        throws IllegalArgumentException {\n        double sumSq = 0.0d;\n        double dev = 0.0d;\n        if ((expected.length < 2) || (expected.length != observed.length)) {\n            throw new IllegalArgumentException(\n                    \"observed, expected array lengths incorrect\");\n        }\n        if (!isPositive(expected) || !isNonNegative(observed)) {\n            throw new IllegalArgumentException(\n                \"observed counts must be non-negative and expected counts must be postive\");\n        }\n        for (int i = 0; i < observed.length; i++) {\n            dev = ((double) observed[i] - expected[i]);\n            sumSq += dev * dev / expected[i];\n        }\n        return sumSq;\n    }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquare(double[] expected, long[] observed)\nSIGNATURE: public double chiSquare(double[] expected, long[] observed)\n        throws IllegalArgumentException",
+        "METHOD: src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquare(double[] expected, long[] observed)\nSIGNATURE: public double chiSquare(double[] expected, long[] observed)\n        throws IllegalArgumentException\nSTRUCTURE (lossy):\ndouble sumSq = 0.0d;\ndouble dev = 0.0d;\nif ((expected.length < 2) || (expected.length != observed.length))\nthrow new IllegalArgumentException( \"observed, expected array lengths incorrect\");\nif (!isPositive(expected) || !isNonNegative(observed))\nCALL isPositive(expected)\nCALL isNonNegative(observed)\nthrow new IllegalArgumentException( \"observed counts must be non-negative and expected counts must be postive\");\nfor (int i = 0; i < observed.length; i++)\nint i = 0;\ni++\ndev = ((double) observed[i] - expected[i])\nsumSq += dev * dev / expected[i]\nreturn sumSq;",
+        "public double chiSquare(double[] expected, long[] observed)\n        throws IllegalArgumentException {\n        double sumSq = 0.0d;\n        double dev = 0.0d;\n        if ((expected.length < 2) || (expected.length != observed.length)) {\n            throw new IllegalArgumentException(\n                    \"observed, expected array lengths incorrect\");\n        }\n        if (!isPositive(expected) || !isNonNegative(observed)) {\n            throw new IllegalArgumentException(\n                \"observed counts must be non-negative and expected counts must be postive\");\n        }\n        for (int i = 0; i < observed.length; i++) {\n            dev = ((double) observed[i] - expected[i]);\n            sumSq += dev * dev / expected[i];\n        }\n        return sumSq;\n    }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.46153846153846156,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 2.0,
+        "literal_count": 6.0,
+        "source_tokens": 192.0,
+        "l0_tokens": 64.0,
+        "l1_tokens": 209.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 2,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/transform/FastFourierTransformer.java::FastFourierTransformer.fft(Complex data[])",
+      "source": "protected Complex[] fft(Complex data[]) throws MathException,\n        IllegalArgumentException {\n\n        int i, j, k, m, N = data.length;\n        Complex A, B, C, D, E, F, z, f[] = new Complex[N];\n\n        // initial simple cases\n        verifyDataSet(data);\n        if (N == 1) {\n            f[0] = data[0];\n            return f;\n        }\n        if (N == 2) {\n            f[0] = data[0].add(data[1]);\n            f[1] = data[0].subtract(data[1]);\n            return f;\n        }\n\n        // permute original data array in bit-reversal order\n        j = 0;\n        for (i = 0; i < N; i++) {\n            f[i] = data[j];\n            k = N >> 1;\n            while (j >= k && k > 0) {\n                j -= k; k >>= 1;\n            }\n            j += k;\n        }\n\n        // the bottom base-4 round\n        for (i = 0; i < N; i += 4) {\n            A = f[i].add(f[i+1]);\n            B = f[i+2].add(f[i+3]);\n            C = f[i].subtract(f[i+1]);\n            D = f[i+2].subtract(f[i+3]);\n            E = C.add(D.multiply(Complex.I));\n            F = C.subtract(D.multiply(Complex.I));\n            f[i] = A.add(B);\n            f[i+2] = A.subtract(B);\n            // omegaCount indicates forward or inverse transform\n            f[i+1] = omegaCount < 0 ? E : F;\n            f[i+3] = omegaCount > 0 ? E : F;\n        }\n\n        // iterations from bottom to top take O(N*logN) time\n        for (i = 4; i < N; i <<= 1) {\n            m = N / (i<<1);\n            for (j = 0; j < N; j += i<<1) {\n                for (k = 0; k < i; k++) {\n                    z = f[i+j+k].multiply(omega[k*m]);\n                    f[i+j+k] = f[j+k].subtract(z);\n                    f[j+k] = f[j+k].add(z);\n                }\n            }\n        }\n        return f;\n    }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/transform/FastFourierTransformer.java::FastFourierTransformer.fft(Complex data[])\nSIGNATURE: protected Complex[] fft(Complex data[]) throws MathException,\n        IllegalArgumentException",
+        "METHOD: src/java/org/apache/commons/math/transform/FastFourierTransformer.java::FastFourierTransformer.fft(Complex data[])\nSIGNATURE: protected Complex[] fft(Complex data[]) throws MathException,\n        IllegalArgumentException\nSTRUCTURE (lossy):\nint i, j, k, m, N = data.length;\nComplex A, B, C, D, E, F, z, f[] = new Complex[N];\nCALL verifyDataSet(data)\nif (N == 1)\nf[0] = data[0]\nreturn f;\nif (N == 2)\nf[0] = data[0].add(data[1])\nCALL data[0].add(data[1])\nf[1] = data[0].subtract(data[1])\nCALL data[0].subtract(data[1])\nj = 0\nfor (i = 0; i < N; i++)\ni = 0\ni++\nf[i] = data[j]\nk = N >> 1\nwhile (j >= k && k > 0)\nj -= k\nk >>= 1\nj += k\nfor (i = 0; i < N; i += 4)\ni += 4\nA = f[i].add(f[i+1])\nCALL f[i].add(f[i+1])\nB = f[i+2].add(f[i+3])\nCALL f[i+2].add(f[i+3])\nC = f[i].subtract(f[i+1])\nCALL f[i].subtract(f[i+1])\nD = f[i+2].subtract(f[i+3])\nCALL f[i+2].subtract(f[i+3])\nE = C.add(D.multiply(Complex.I))\nCALL C.add(D.multiply(Complex.I))\nCALL D.multiply(Complex.I)\nF = C.subtract(D.multiply(Complex.I))\nCALL C.subtract(D.multiply(Complex.I))\nf[i] = A.add(B)\nCALL A.add(B)\nf[i+2] = A.subtract(B)\nCALL A.subtract(B)\nf[i+1] = omegaCount < 0 ? E : F\nf[i+3] = omegaCount > 0 ? E : F\nfor (i = 4; i < N; i <<= 1)\ni = 4\ni <<= 1\nm = N / (i<<1)\nfor (j = 0; j < N; j += i<<1)\nj += i<<1\nfor (k = 0; k < i; k++)\nk = 0\nk++\nz = f[i+j+k].multiply(omega[k*m])\nCALL f[i+j+k].multiply(omega[k*m])\nf[i+j+k] = f[j+k].subtract(z)\nCALL f[j+k].subtract(z)\nf[j+k] = f[j+k].add(z)\nCALL f[j+k].add(z)",
+        "protected Complex[] fft(Complex data[]) throws MathException,\n        IllegalArgumentException {\n\n        int i, j, k, m, N = data.length;\n        Complex A, B, C, D, E, F, z, f[] = new Complex[N];\n\n        // initial simple cases\n        verifyDataSet(data);\n        if (N == 1) {\n            f[0] = data[0];\n            return f;\n        }\n        if (N == 2) {\n            f[0] = data[0].add(data[1]);\n            f[1] = data[0].subtract(data[1]);\n            return f;\n        }\n\n        // permute original data array in bit-reversal order\n        j = 0;\n        for (i = 0; i < N; i++) {\n            f[i] = data[j];\n            k = N >> 1;\n            while (j >= k && k > 0) {\n                j -= k; k >>= 1;\n            }\n            j += k;\n        }\n\n        // the bottom base-4 round\n        for (i = 0; i < N; i += 4) {\n            A = f[i].add(f[i+1]);\n            B = f[i+2].add(f[i+3]);\n            C = f[i].subtract(f[i+1]);\n            D = f[i+2].subtract(f[i+3]);\n            E = C.add(D.multiply(Complex.I));\n            F = C.subtract(D.multiply(Complex.I));\n            f[i] = A.add(B);\n            f[i+2] = A.subtract(B);\n            // omegaCount indicates forward or inverse transform\n            f[i+1] = omegaCount < 0 ? E : F;\n            f[i+3] = omegaCount > 0 ? E : F;\n        }\n\n        // iterations from bottom to top take O(N*logN) time\n        for (i = 4; i < N; i <<= 1) {\n            m = N / (i<<1);\n            for (j = 0; j < N; j += i<<1) {\n                for (k = 0; k < i; k++) {\n                    z = f[i+j+k].multiply(omega[k*m]);\n                    f[i+j+k] = f[j+k].subtract(z);\n                    f[j+k] = f[j+k].add(z);\n                }\n            }\n        }\n        return f;\n    }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2830188679245283,
+        "trace_match": 0.0,
+        "complexity": 9.0,
+        "call_count": 16.0,
+        "literal_count": 34.0,
+        "source_tokens": 435.0,
+        "l0_tokens": 57.0,
+        "l1_tokens": 368.0,
+        "compression_ratio": 0.8459770114942529,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 9,
+        "call_count": 16,
+        "literal_count": 34
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.addData(double x, double y)",
+      "source": "public void addData(double x, double y) {\n        if (n == 0) {\n            xbar = x;\n            ybar = y;\n        } else {\n            double dx = x - xbar;\n            double dy = y - ybar;\n            sumXX += dx * dx * (double) n / (double) (n + 1.0);\n            sumYY += dy * dy * (double) n / (double) (n + 1.0);\n            sumXY += dx * dy * (double) n / (double) (n + 1.0);\n            xbar += dx / (double) (n + 1.0);\n            ybar += dy / (double) (n + 1.0);\n        }\n        sumX += x;\n        sumY += y;\n        n++;\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.addData(double x, double y)\nSIGNATURE: public void addData(double x, double y)",
+        "METHOD: src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.addData(double x, double y)\nSIGNATURE: public void addData(double x, double y)\nSTRUCTURE (lossy):\nif (n == 0)\nxbar = x\nybar = y\ndouble dx = x - xbar;\ndouble dy = y - ybar;\nsumXX += dx * dx * (double) n / (double) (n + 1.0)\nsumYY += dy * dy * (double) n / (double) (n + 1.0)\nsumXY += dx * dy * (double) n / (double) (n + 1.0)\nxbar += dx / (double) (n + 1.0)\nybar += dy / (double) (n + 1.0)\nsumX += x\nsumY += y\nn++",
+        "public void addData(double x, double y) {\n        if (n == 0) {\n            xbar = x;\n            ybar = y;\n        } else {\n            double dx = x - xbar;\n            double dy = y - ybar;\n            sumXX += dx * dx * (double) n / (double) (n + 1.0);\n            sumYY += dy * dy * (double) n / (double) (n + 1.0);\n            sumXY += dx * dy * (double) n / (double) (n + 1.0);\n            xbar += dx / (double) (n + 1.0);\n            ybar += dy / (double) (n + 1.0);\n        }\n        sumX += x;\n        sumY += y;\n        n++;\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8333333333333334,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 0.0,
+        "literal_count": 6.0,
+        "source_tokens": 136.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 128.0,
+        "compression_ratio": 0.9411764705882353,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 0,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/util/ResizableDoubleArray.java::ResizableDoubleArray.addElement(double value)",
+      "source": "public synchronized void addElement(double value) {\n        numElements++;\n        if ((startIndex + numElements) > internalArray.length) {\n            expand();\n        }\n        internalArray[startIndex + (numElements - 1)] = value;\n        if (shouldContract()) {\n            contract();\n        }\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/util/ResizableDoubleArray.java::ResizableDoubleArray.addElement(double value)\nSIGNATURE: public synchronized void addElement(double value)",
+        "METHOD: src/java/org/apache/commons/math/util/ResizableDoubleArray.java::ResizableDoubleArray.addElement(double value)\nSIGNATURE: public synchronized void addElement(double value)\nSTRUCTURE (lossy):\nnumElements++\nif ((startIndex + numElements) > internalArray.length)\nCALL expand()\ninternalArray[startIndex + (numElements - 1)] = value\nif (shouldContract())\nCALL shouldContract()\nCALL contract()",
+        "public synchronized void addElement(double value) {\n        numElements++;\n        if ((startIndex + numElements) > internalArray.length) {\n            expand();\n        }\n        internalArray[startIndex + (numElements - 1)] = value;\n        if (shouldContract()) {\n            contract();\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.56,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 3.0,
+        "literal_count": 1.0,
+        "source_tokens": 77.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 99.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 3,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/util/ResizableDoubleArray.java::ResizableDoubleArray.addElementRolling(double value)",
+      "source": "public synchronized double addElementRolling(double value) {\n        double discarded = internalArray[startIndex];\n\n        if ((startIndex + (numElements + 1)) > internalArray.length) {\n            expand();\n        }\n        // Increment the start index\n        startIndex += 1;\n\n        // Add the new value\n        internalArray[startIndex + (numElements - 1)] = value;\n\n        // Check the contraction criteria\n        if (shouldContract()) {\n            contract();\n        }\n        return discarded;\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/util/ResizableDoubleArray.java::ResizableDoubleArray.addElementRolling(double value)\nSIGNATURE: public synchronized double addElementRolling(double value)",
+        "METHOD: src/java/org/apache/commons/math/util/ResizableDoubleArray.java::ResizableDoubleArray.addElementRolling(double value)\nSIGNATURE: public synchronized double addElementRolling(double value)\nSTRUCTURE (lossy):\ndouble discarded = internalArray[startIndex];\nif ((startIndex + (numElements + 1)) > internalArray.length)\nCALL expand()\nstartIndex += 1\ninternalArray[startIndex + (numElements - 1)] = value\nif (shouldContract())\nCALL shouldContract()\nCALL contract()\nreturn discarded;",
+        "public synchronized double addElementRolling(double value) {\n        double discarded = internalArray[startIndex];\n\n        if ((startIndex + (numElements + 1)) > internalArray.length) {\n            expand();\n        }\n        // Increment the start index\n        startIndex += 1;\n\n        // Add the new value\n        internalArray[startIndex + (numElements - 1)] = value;\n\n        // Check the contraction criteria\n        if (shouldContract()) {\n            contract();\n        }\n        return discarded;\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.42424242424242425,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 3.0,
+        "literal_count": 3.0,
+        "source_tokens": 129.0,
+        "l0_tokens": 49.0,
+        "l1_tokens": 121.0,
+        "compression_ratio": 0.937984496124031,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 3,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getSlope()",
+      "source": "public double getSlope() {\n        if (n < 2) {\n            return Double.NaN; //not enough data \n        }\n        if (Math.abs(sumXX) < 10 * Double.MIN_VALUE) {\n            return Double.NaN; //not enough variation in x\n        }\n        return sumXY / sumXX;\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getSlope()\nSIGNATURE: public double getSlope()",
+        "METHOD: src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getSlope()\nSIGNATURE: public double getSlope()\nSTRUCTURE (lossy):\nif (n < 2)\nreturn Double.NaN;\nif (Math.abs(sumXX) < 10 * Double.MIN_VALUE)\nCALL Math.abs(sumXX)\nreturn sumXY / sumXX;",
+        "public double getSlope() {\n        if (n < 2) {\n            return Double.NaN; //not enough data \n        }\n        if (Math.abs(sumXX) < 10 * Double.MIN_VALUE) {\n            return Double.NaN; //not enough variation in x\n        }\n        return sumXY / sumXX;\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6363636363636364,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 1.0,
+        "literal_count": 2.0,
+        "source_tokens": 67.0,
+        "l0_tokens": 36.0,
+        "l1_tokens": 70.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 1,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getSlopeStdErr()",
+      "source": "public double getSlopeStdErr() {\n        return Math.sqrt(getMeanSquareError() / sumXX);\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getSlopeStdErr()\nSIGNATURE: public double getSlopeStdErr()",
+        "METHOD: src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getSlopeStdErr()\nSIGNATURE: public double getSlopeStdErr()\nSTRUCTURE (lossy):\nreturn Math.sqrt(getMeanSquareError() / sumXX);\nCALL Math.sqrt(getMeanSquareError() / sumXX)\nCALL getMeanSquareError()",
+        "public double getSlopeStdErr() {\n        return Math.sqrt(getMeanSquareError() / sumXX);\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6666666666666666,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 24.0,
+        "l0_tokens": 39.0,
+        "l1_tokens": 74.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/random/RandomDataImpl.java::RandomDataImpl.shuffle(int[] list, int end)",
+      "source": "private void shuffle(int[] list, int end) {\n        int target = 0;\n        for (int i = list.length - 1 ; i >= end; i--) {\n            if (i == 0) {\n                target = 0;\n            } else {\n                target = nextInt(0, i);\n            }\n            int temp = list[target];\n            list[target] = list[i];\n            list[i] = temp;\n        }\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/random/RandomDataImpl.java::RandomDataImpl.shuffle(int[] list, int end)\nSIGNATURE: private void shuffle(int[] list, int end)",
+        "METHOD: src/java/org/apache/commons/math/random/RandomDataImpl.java::RandomDataImpl.shuffle(int[] list, int end)\nSIGNATURE: private void shuffle(int[] list, int end)\nSTRUCTURE (lossy):\nint target = 0;\nfor (int i = list.length - 1 ; i >= end; i--)\nint i = list.length - 1 ;\ni--\nif (i == 0)\ntarget = 0\ntarget = nextInt(0, i)\nCALL nextInt(0, i)\nint temp = list[target];\nlist[target] = list[i]\nlist[i] = temp",
+        "private void shuffle(int[] list, int end) {\n        int target = 0;\n        for (int i = list.length - 1 ; i >= end; i--) {\n            if (i == 0) {\n                target = 0;\n            } else {\n                target = nextInt(0, i);\n            }\n            int temp = list[target];\n            list[target] = list[i];\n            list[i] = temp;\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6190476190476191,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 1.0,
+        "literal_count": 5.0,
+        "source_tokens": 93.0,
+        "l0_tokens": 42.0,
+        "l1_tokens": 101.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 1,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getInterceptStdErr()",
+      "source": "public double getInterceptStdErr() {\n        return Math.sqrt(\n            getMeanSquareError() * ((1d / (double) n) + (xbar * xbar) / sumXX));\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getInterceptStdErr()\nSIGNATURE: public double getInterceptStdErr()",
+        "METHOD: src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getInterceptStdErr()\nSIGNATURE: public double getInterceptStdErr()\nSTRUCTURE (lossy):\nreturn Math.sqrt( getMeanSquareError() * ((1d / (double) n) + (xbar * xbar) / sumXX));\nCALL Math.sqrt( getMeanSquareError() * ((1d / (double) n) + (xbar * xbar) / sumXX))\nCALL getMeanSquareError()",
+        "public double getInterceptStdErr() {\n        return Math.sqrt(\n            getMeanSquareError() * ((1d / (double) n) + (xbar * xbar) / sumXX));\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6363636363636364,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 38.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 95.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/transform/FastSineTransformer.java::FastSineTransformer.fst(double f[])",
+      "source": "protected double[] fst(double f[]) throws MathException,\n        IllegalArgumentException {\n\n        double A, B, x[], F[] = new double[f.length];\n\n        FastFourierTransformer.verifyDataSet(f);\n        if (f[0] != 0.0) {\n            throw new IllegalArgumentException\n                (\"The first element is not zero: \" + f[0]);\n        }\n        int N = f.length;\n        if (N == 1) {       // trivial case\n            F[0] = 0.0;\n            return F;\n        }\n\n        // construct a new array and perform FFT on it\n        x = new double[N];\n        x[0] = 0.0;\n        x[N >> 1] = 2.0 * f[N >> 1];\n        for (int i = 1; i < (N >> 1); i++) {\n            A = Math.sin(i * Math.PI / N) * (f[i] + f[N-i]);\n            B = 0.5 * (f[i] - f[N-i]);\n            x[i] = A + B;\n            x[N-i] = A - B;\n        }\n        FastFourierTransformer transformer = new FastFourierTransformer();\n        Complex y[] = transformer.transform(x);\n\n        // reconstruct the FST result for the original array\n        F[0] = 0.0;\n        F[1] = 0.5 * y[0].getReal();\n        for (int i = 1; i < (N >> 1); i++) {\n            F[2*i] = -y[i].getImaginary();\n            F[2*i+1] = y[i].getReal() + F[2*i-1];\n        }\n\n        return F;\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/transform/FastSineTransformer.java::FastSineTransformer.fst(double f[])\nSIGNATURE: protected double[] fst(double f[]) throws MathException,\n        IllegalArgumentException",
+        "METHOD: src/java/org/apache/commons/math/transform/FastSineTransformer.java::FastSineTransformer.fst(double f[])\nSIGNATURE: protected double[] fst(double f[]) throws MathException,\n        IllegalArgumentException\nSTRUCTURE (lossy):\ndouble A, B, x[], F[] = new double[f.length];\nCALL FastFourierTransformer.verifyDataSet(f)\nif (f[0] != 0.0)\nthrow new IllegalArgumentException (\"The first element is not zero: \" + f[0]);\nint N = f.length;\nif (N == 1)\nF[0] = 0.0\nreturn F;\nx = new double[N]\nx[0] = 0.0\nx[N >> 1] = 2.0 * f[N >> 1]\nfor (int i = 1; i < (N >> 1); i++)\nint i = 1;\ni++\nA = Math.sin(i * Math.PI / N) * (f[i] + f[N-i])\nCALL Math.sin(i * Math.PI / N)\nB = 0.5 * (f[i] - f[N-i])\nx[i] = A + B\nx[N-i] = A - B\nFastFourierTransformer transformer = new FastFourierTransformer();\nComplex y[] = transformer.transform(x);\nCALL transformer.transform(x)\nF[1] = 0.5 * y[0].getReal()\nCALL y[0].getReal()\nF[2*i] = -y[i].getImaginary()\nCALL y[i].getImaginary()\nF[2*i+1] = y[i].getReal() + F[2*i-1]\nCALL y[i].getReal()",
+        "protected double[] fst(double f[]) throws MathException,\n        IllegalArgumentException {\n\n        double A, B, x[], F[] = new double[f.length];\n\n        FastFourierTransformer.verifyDataSet(f);\n        if (f[0] != 0.0) {\n            throw new IllegalArgumentException\n                (\"The first element is not zero: \" + f[0]);\n        }\n        int N = f.length;\n        if (N == 1) {       // trivial case\n            F[0] = 0.0;\n            return F;\n        }\n\n        // construct a new array and perform FFT on it\n        x = new double[N];\n        x[0] = 0.0;\n        x[N >> 1] = 2.0 * f[N >> 1];\n        for (int i = 1; i < (N >> 1); i++) {\n            A = Math.sin(i * Math.PI / N) * (f[i] + f[N-i]);\n            B = 0.5 * (f[i] - f[N-i]);\n            x[i] = A + B;\n            x[N-i] = A - B;\n        }\n        FastFourierTransformer transformer = new FastFourierTransformer();\n        Complex y[] = transformer.transform(x);\n\n        // reconstruct the FST result for the original array\n        F[0] = 0.0;\n        F[1] = 0.5 * y[0].getReal();\n        for (int i = 1; i < (N >> 1); i++) {\n            F[2*i] = -y[i].getImaginary();\n            F[2*i+1] = y[i].getReal() + F[2*i-1];\n        }\n\n        return F;\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3829787234042553,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 6.0,
+        "literal_count": 27.0,
+        "source_tokens": 308.0,
+        "l0_tokens": 54.0,
+        "l1_tokens": 252.0,
+        "compression_ratio": 0.8181818181818182,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 6,
+        "literal_count": 27
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/complex/ComplexFormat.java::ComplexFormat.parse(String source, ParsePosition pos)",
+      "source": "public Complex parse(String source, ParsePosition pos) {\n        int initialIndex = pos.getIndex();\n\n        // parse whitespace\n        parseAndIgnoreWhitespace(source, pos);\n\n        // parse real\n        Number re = parseNumber(source, getRealFormat(), pos);\n        if (re == null) {\n            // invalid real number\n            // set index back to initial, error index should already be set\n            // character examined.\n            pos.setIndex(initialIndex);\n            return null;\n        }\n\n        // parse sign\n        int startIndex = pos.getIndex();\n        char c = parseNextCharacter(source, pos);\n        int sign = 0;\n        switch (c) {\n        case 0 :\n            // no sign\n            // return real only complex number\n            return new Complex(re.doubleValue(), 0.0);\n        case '-' :\n            sign = -1;\n            break;\n        case '+' :\n            sign = 1;\n            break;\n        default :\n            // invalid sign\n            // set index back to initial, error index should be the last\n            // character examined.\n            pos.setIndex(initialIndex);\n            pos.setErrorIndex(startIndex);\n            return null;\n        }\n\n        // parse whitespace\n        parseAndIgnoreWhitespace(source, pos);\n\n        // parse imaginary\n        Number im = parseNumber(source, getRealFormat(), pos);\n        if (im == null) {\n            // invalid imaginary number\n            // set index back to initial, error index should already be set\n            // character examined.\n            pos.setIndex(initialIndex);\n            return null;\n        }\n\n        // parse imaginary character\n        int n = getImaginaryCharacter().length();\n        startIndex = pos.getIndex();\n        int endIndex = startIndex + n;\n        if (source.substring(startIndex, endIndex).compareTo(\n            getImaginaryCharacter()) != 0) {\n            // set index back to initial, error index should be the start index\n            // character examined.\n            pos.setIndex(initialIndex);\n            pos.setErrorIndex(startIndex);\n            return null;\n        }\n        pos.setIndex(endIndex);\n\n        return new Complex(re.doubleValue(), im.doubleValue() * sign);\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/complex/ComplexFormat.java::ComplexFormat.parse(String source, ParsePosition pos)\nSIGNATURE: public Complex parse(String source, ParsePosition pos)",
+        "METHOD: src/java/org/apache/commons/math/complex/ComplexFormat.java::ComplexFormat.parse(String source, ParsePosition pos)\nSIGNATURE: public Complex parse(String source, ParsePosition pos)\nSTRUCTURE (lossy):\nint initialIndex = pos.getIndex();\nCALL pos.getIndex()\nCALL parseAndIgnoreWhitespace(source, pos)\nNumber re = parseNumber(source, getRealFormat(), pos);\nCALL parseNumber(source, getRealFormat(), pos)\nCALL getRealFormat()\nif (re == null)\nCALL pos.setIndex(initialIndex)\nreturn null;\nint startIndex = pos.getIndex();\nchar c = parseNextCharacter(source, pos);\nCALL parseNextCharacter(source, pos)\nint sign = 0;\nswitch (c) { case 0 : // no sign // return real only complex number return new Complex(re.doubleValue(), 0.0); case '-' : sign = -1; break; case '+' : sign = 1; break; default : // invalid sign // set index back to initial, error index should be the last // character examined. pos.setIndex(initialIndex); pos.setErrorIndex(startIndex); return null; }\nreturn new Complex(re.doubleValue(), 0.0);\nCALL re.doubleValue()\nsign = -1\nsign = 1\nCALL pos.setErrorIndex(startIndex)\nNumber im = parseNumber(source, getRealFormat(), pos);\nif (im == null)\nint n = getImaginaryCharacter().length();\nCALL getImaginaryCharacter().length()\nCALL getImaginaryCharacter()\nstartIndex = pos.getIndex()\nint endIndex = startIndex + n;\nif (source.substring(startIndex, endIndex).compareTo( getImaginaryCharacter()) != 0)\nCALL source.substring(startIndex, endIndex).compareTo( getImaginaryCharacter())\nCALL source.substring(startIndex, endIndex)\nCALL pos.setIndex(endIndex)\nreturn new Complex(re.doubleValue(), im.doubleValue() * sign);\nCALL im.doubleValue()",
+        "public Complex parse(String source, ParsePosition pos) {\n        int initialIndex = pos.getIndex();\n\n        // parse whitespace\n        parseAndIgnoreWhitespace(source, pos);\n\n        // parse real\n        Number re = parseNumber(source, getRealFormat(), pos);\n        if (re == null) {\n            // invalid real number\n            // set index back to initial, error index should already be set\n            // character examined.\n            pos.setIndex(initialIndex);\n            return null;\n        }\n\n        // parse sign\n        int startIndex = pos.getIndex();\n        char c = parseNextCharacter(source, pos);\n        int sign = 0;\n        switch (c) {\n        case 0 :\n            // no sign\n            // return real only complex number\n            return new Complex(re.doubleValue(), 0.0);\n        case '-' :\n            sign = -1;\n            break;\n        case '+' :\n            sign = 1;\n            break;\n        default :\n            // invalid sign\n            // set index back to initial, error index should be the last\n            // character examined.\n            pos.setIndex(initialIndex);\n            pos.setErrorIndex(startIndex);\n            return null;\n        }\n\n        // parse whitespace\n        parseAndIgnoreWhitespace(source, pos);\n\n        // parse imaginary\n        Number im = parseNumber(source, getRealFormat(), pos);\n        if (im == null) {\n            // invalid imaginary number\n            // set index back to initial, error index should already be set\n            // character examined.\n            pos.setIndex(initialIndex);\n            return null;\n        }\n\n        // parse imaginary character\n        int n = getImaginaryCharacter().length();\n        startIndex = pos.getIndex();\n        int endIndex = startIndex + n;\n        if (source.substring(startIndex, endIndex).compareTo(\n            getImaginaryCharacter()) != 0) {\n            // set index back to initial, error index should be the start index\n            // character examined.\n            pos.setIndex(initialIndex);\n            pos.setErrorIndex(startIndex);\n            return null;\n        }\n        pos.setIndex(endIndex);\n\n        return new Complex(re.doubleValue(), im.doubleValue() * sign);\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3269230769230769,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 25.0,
+        "literal_count": 14.0,
+        "source_tokens": 559.0,
+        "l0_tokens": 47.0,
+        "l1_tokens": 412.0,
+        "compression_ratio": 0.7370304114490162,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 25,
+        "literal_count": 14
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/stat/inference/TTestImpl.java::TTestImpl.t(double mu, double[] observed)",
+      "source": "public double t(double mu, double[] observed)\n    throws IllegalArgumentException {\n        if ((observed == null) || (observed.length < 2)) {\n            throw new IllegalArgumentException(\"insufficient data for t statistic\");\n        }\n        return t(StatUtils.mean(observed), mu, StatUtils.variance(observed),\n                observed.length);\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/stat/inference/TTestImpl.java::TTestImpl.t(double mu, double[] observed)\nSIGNATURE: public double t(double mu, double[] observed)\n    throws IllegalArgumentException",
+        "METHOD: src/java/org/apache/commons/math/stat/inference/TTestImpl.java::TTestImpl.t(double mu, double[] observed)\nSIGNATURE: public double t(double mu, double[] observed)\n    throws IllegalArgumentException\nSTRUCTURE (lossy):\nif ((observed == null) || (observed.length < 2))\nthrow new IllegalArgumentException(\"insufficient data for t statistic\");\nreturn t(StatUtils.mean(observed), mu, StatUtils.variance(observed), observed.length);\nCALL t(StatUtils.mean(observed), mu, StatUtils.variance(observed), observed.length)\nCALL StatUtils.mean(observed)\nCALL StatUtils.variance(observed)",
+        "public double t(double mu, double[] observed)\n    throws IllegalArgumentException {\n        if ((observed == null) || (observed.length < 2)) {\n            throw new IllegalArgumentException(\"insufficient data for t statistic\");\n        }\n        return t(StatUtils.mean(observed), mu, StatUtils.variance(observed),\n                observed.length);\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5517241379310345,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 3.0,
+        "literal_count": 3.0,
+        "source_tokens": 89.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 146.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 3,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.isRectangular(long[][] in)",
+      "source": "private boolean isRectangular(long[][] in) {\n        for (int i = 1; i < in.length; i++) {\n            if (in[i].length != in[0].length) {\n                return false;\n            }\n        }  \n        return true;\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.isRectangular(long[][] in)\nSIGNATURE: private boolean isRectangular(long[][] in)",
+        "METHOD: src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.isRectangular(long[][] in)\nSIGNATURE: private boolean isRectangular(long[][] in)\nSTRUCTURE (lossy):\nfor (int i = 1; i < in.length; i++)\nint i = 1;\ni++\nif (in[i].length != in[0].length)\nreturn false;\nreturn true;",
+        "private boolean isRectangular(long[][] in) {\n        for (int i = 1; i < in.length; i++) {\n            if (in[i].length != in[0].length) {\n                return false;\n            }\n        }  \n        return true;\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5909090909090909,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 0.0,
+        "literal_count": 2.0,
+        "source_tokens": 56.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 78.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 0,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getRegressionSumSquares()",
+      "source": "public double getRegressionSumSquares() {\n        return getRegressionSumSquares(getSlope());\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getRegressionSumSquares()\nSIGNATURE: public double getRegressionSumSquares()",
+        "METHOD: src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getRegressionSumSquares()\nSIGNATURE: public double getRegressionSumSquares()\nSTRUCTURE (lossy):\nreturn getRegressionSumSquares(getSlope());\nCALL getRegressionSumSquares(getSlope())\nCALL getSlope()",
+        "public double getRegressionSumSquares() {\n        return getRegressionSumSquares(getSlope());\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8125,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 25.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 74.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.clear()",
+      "source": "public void clear() {\n        sumX = 0d;\n        sumXX = 0d;\n        sumY = 0d;\n        sumYY = 0d;\n        sumXY = 0d;\n        n = 0;\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.clear()\nSIGNATURE: public void clear()",
+        "METHOD: src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.clear()\nSIGNATURE: public void clear()\nSTRUCTURE (lossy):\nsumX = 0d\nsumXX = 0d\nsumY = 0d\nsumYY = 0d\nsumXY = 0d\nn = 0",
+        "public void clear() {\n        sumX = 0d;\n        sumXX = 0d;\n        sumY = 0d;\n        sumYY = 0d;\n        sumXY = 0d;\n        n = 0;\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.9230769230769231,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 6.0,
+        "source_tokens": 35.0,
+        "l0_tokens": 34.0,
+        "l1_tokens": 54.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.checkArray(long[][] in)",
+      "source": "private void checkArray(long[][] in) throws IllegalArgumentException {\n        \n        if (in.length < 2) {\n            throw new IllegalArgumentException(\"Input table must have at least two rows\");\n        }\n        \n        if (in[0].length < 2) {\n            throw new IllegalArgumentException(\"Input table must have at least two columns\");\n        }    \n        \n        if (!isRectangular(in)) {\n            throw new IllegalArgumentException(\"Input table must be rectangular\");\n        }\n        \n        if (!isNonNegative(in)) {\n            throw new IllegalArgumentException(\"All entries in input 2-way table must be non-negative\");\n        }\n        \n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.checkArray(long[][] in)\nSIGNATURE: private void checkArray(long[][] in) throws IllegalArgumentException",
+        "METHOD: src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.checkArray(long[][] in)\nSIGNATURE: private void checkArray(long[][] in) throws IllegalArgumentException\nSTRUCTURE (lossy):\nif (in.length < 2)\nthrow new IllegalArgumentException(\"Input table must have at least two rows\");\nif (in[0].length < 2)\nthrow new IllegalArgumentException(\"Input table must have at least two columns\");\nif (!isRectangular(in))\nCALL isRectangular(in)\nthrow new IllegalArgumentException(\"Input table must be rectangular\");\nif (!isNonNegative(in))\nCALL isNonNegative(in)\nthrow new IllegalArgumentException(\"All entries in input 2-way table must be non-negative\");",
+        "private void checkArray(long[][] in) throws IllegalArgumentException {\n        \n        if (in.length < 2) {\n            throw new IllegalArgumentException(\"Input table must have at least two rows\");\n        }\n        \n        if (in[0].length < 2) {\n            throw new IllegalArgumentException(\"Input table must have at least two columns\");\n        }    \n        \n        if (!isRectangular(in)) {\n            throw new IllegalArgumentException(\"Input table must be rectangular\");\n        }\n        \n        if (!isNonNegative(in)) {\n            throw new IllegalArgumentException(\"All entries in input 2-way table must be non-negative\");\n        }\n        \n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.34210526315789475,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 2.0,
+        "literal_count": 7.0,
+        "source_tokens": 167.0,
+        "l0_tokens": 51.0,
+        "l1_tokens": 170.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 2,
+        "literal_count": 7
+      }
+    },
+    {
+      "function_id": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.isPositive(double[] in)",
+      "source": "private boolean isPositive(double[] in) {\n        for (int i = 0; i < in.length; i ++) {\n            if (in[i] <= 0) {\n                return false;\n            }\n        }\n        return true;\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.isPositive(double[] in)\nSIGNATURE: private boolean isPositive(double[] in)",
+        "METHOD: src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.isPositive(double[] in)\nSIGNATURE: private boolean isPositive(double[] in)\nSTRUCTURE (lossy):\nfor (int i = 0; i < in.length; i ++)\nint i = 0;\ni ++\nif (in[i] <= 0)\nreturn false;\nreturn true;",
+        "private boolean isPositive(double[] in) {\n        for (int i = 0; i < in.length; i ++) {\n            if (in[i] <= 0) {\n                return false;\n            }\n        }\n        return true;\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6363636363636364,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 0.0,
+        "literal_count": 2.0,
+        "source_tokens": 50.0,
+        "l0_tokens": 43.0,
+        "l1_tokens": 72.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 0,
+        "literal_count": 2
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getMeanSquareError()": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getSumSquaredErrors()": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.addData(double[][] data)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getRSquare()": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.isNonNegative(long[][] in)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/util/ResizableDoubleArray.java::ResizableDoubleArray.setElement(int index, double value)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.isNonNegative(long[] in)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquare(double[] expected, long[] observed)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/transform/FastFourierTransformer.java::FastFourierTransformer.fft(Complex data[])": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.addData(double x, double y)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/util/ResizableDoubleArray.java::ResizableDoubleArray.addElement(double value)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/util/ResizableDoubleArray.java::ResizableDoubleArray.addElementRolling(double value)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getSlope()": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getSlopeStdErr()": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/random/RandomDataImpl.java::RandomDataImpl.shuffle(int[] list, int end)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getInterceptStdErr()": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/transform/FastSineTransformer.java::FastSineTransformer.fst(double f[])": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/complex/ComplexFormat.java::ComplexFormat.parse(String source, ParsePosition pos)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/stat/inference/TTestImpl.java::TTestImpl.t(double mu, double[] observed)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.isRectangular(long[][] in)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.getRegressionSumSquares()": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java::SimpleRegression.clear()": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.checkArray(long[][] in)": {
+      "ranks": {}
+    },
+    "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.isPositive(double[] in)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 1367,
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "f5291acac3aefae9101e6ebe6cc70c360e72fedfb75364170dbac6dc107ccd14",
+  "evidence_sha256": "b08fae36928b512b087f663eb6f0cf400117a2c55f5b46941cb55b059d1f57d6"
+}

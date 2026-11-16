@@ -131,7 +131,10 @@ class CodeEntity:
             or not 1 <= self.start_line <= self.end_line
         ):
             raise CompatibilityError(
-                "Candidate source span must use positive ordered integer lines"
+                "Candidate source span must use positive ordered integer lines: "
+                f"entity={self.entity_id!r}, path={self.path!r}, "
+                f"start={self.start_line!r} ({type(self.start_line).__name__}), "
+                f"end={self.end_line!r} ({type(self.end_line).__name__})"
             )
         if (
             not isinstance(self.prior, (int, float))

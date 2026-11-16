@@ -1,0 +1,1318 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Lang-35",
+    "repository": "Lang",
+    "language": "java",
+    "revision": "748e806324da6427e591b9b6a1fa4ea0c38d0068",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_01/prepared/checkouts/Lang-35",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Lang-35\nEXECUTED BUGGY TEST: org.apache.commons.lang3.ArrayUtilsAddTest::testLANG571\nTEST SOURCE: src/test/java/org/apache/commons/lang3/ArrayUtilsAddTest.java\nTEST SOURCE SHA256: 126eb521cf36c9d21446ff74cb86e68551aff3b06ffb164d5b0f3a7061745ab9\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testLANG571(){\n        String[] stringArray=null;\n        String aString=null;\n        try {\n            @SuppressWarnings(\"unused\")\n            String[] sa = ArrayUtils.add(stringArray, aString);\n            fail(\"Should have caused IllegalArgumentException\");\n        } catch (IllegalArgumentException iae){\n            //expected\n        }\n        try {\n            @SuppressWarnings(\"unused\")\n            String[] sa = ArrayUtils.add(stringArray, 0, aString);\n            fail(\"Should have caused IllegalArgumentException\");\n        } catch (IllegalArgumentException iae){\n            //expected\n        }\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.apache.commons.lang3.ArrayUtilsAddTest::testLANG571\njava.lang.ClassCastException: class [Ljava.lang.Object; cannot be cast to class [Ljava.lang.String; ([Ljava.lang.Object; and [Ljava.lang.String; are in module java.base of loader 'bootstrap')\n\tat org.apache.commons.lang3.ArrayUtilsAddTest.testLANG571(ArrayUtilsAddTest.java:232)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_01/prepared/evidence/Lang-35.txt",
+      "sha256": "b35f095936885c04eb7fb4bed8c94ed82e2504d6b7291add5a3a45d394345397"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src/main/java",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Lang-35",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.stripAccents(String input)",
+      "path": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "start_line": 628,
+      "end_line": 674,
+      "source": "public static String stripAccents(String input) {\n        if(input == null) {\n            return null;\n        }\n        if(SystemUtils.isJavaVersionAtLeast(1.6f)) {\n\n            // String decomposed = Normalizer.normalize(input, Normalizer.Form.NFD);\n\n            // START of 1.5 reflection - in 1.6 use the line commented out above\n            try {\n                // get java.text.Normalizer.Form class\n                Class<?> normalizerFormClass = ClassUtils.getClass(\"java.text.Normalizer$Form\", false);\n\n                // get Normlizer class\n                Class<?> normalizerClass = ClassUtils.getClass(\"java.text.Normalizer\", false);\n\n                // get static method on Normalizer\n                java.lang.reflect.Method method = normalizerClass.getMethod(\"normalize\", CharSequence.class, normalizerFormClass );\n\n                // get Normalizer.NFD field\n                java.lang.reflect.Field nfd = normalizerFormClass.getField(\"NFD\");\n\n                // invoke method\n                String decomposed = (String) method.invoke( null, input, nfd.get(null) );\n                // END of 1.5 reflection\n\n                java.util.regex.Pattern accentPattern = java.util.regex.Pattern.compile(\"\\\\p{InCombiningDiacriticalMarks}+\");\n                return accentPattern.matcher(decomposed).replaceAll(\"\");\n            } catch(ClassNotFoundException cnfe) {\n                throw new RuntimeException(\"ClassNotFoundException occurred during 1.6 backcompat code\", cnfe);\n            } catch(NoSuchMethodException nsme) {\n                throw new RuntimeException(\"NoSuchMethodException occurred during 1.6 backcompat code\", nsme);\n            } catch(NoSuchFieldException nsfe) {\n                throw new RuntimeException(\"NoSuchFieldException occurred during 1.6 backcompat code\", nsfe);\n            } catch(IllegalAccessException iae) {\n                throw new RuntimeException(\"IllegalAccessException occurred during 1.6 backcompat code\", iae);\n            } catch(IllegalArgumentException iae) {\n                throw new RuntimeException(\"IllegalArgumentException occurred during 1.6 backcompat code\", iae);\n            } catch(java.lang.reflect.InvocationTargetException ite) {\n                throw new RuntimeException(\"InvocationTargetException occurred during 1.6 backcompat code\", ite);\n            } catch(SecurityException se) {\n                throw new RuntimeException(\"SecurityException occurred during 1.6 backcompat code\", se);\n            }\n        } else {\n            throw new UnsupportedOperationException(\"The stripAccents(String) method is not supported until Java 1.6\");\n        }\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 47.67030528536022
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)",
+      "path": "src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java",
+      "start_line": 255,
+      "end_line": 302,
+      "source": "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf \n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars, \n        // then a subclass can test equals to a superclass.\n        Class<?> lhsClass = lhs.getClass();\n        Class<?> rhsClass = rhs.getClass();\n        Class<?> testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and \n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 44.47172876813954
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/exception/ExceptionUtils.java::ExceptionUtils.getCauseUsingMethodName(Throwable throwable, String methodName)",
+      "path": "src/main/java/org/apache/commons/lang3/exception/ExceptionUtils.java",
+      "start_line": 208,
+      "end_line": 230,
+      "source": "private static Throwable getCauseUsingMethodName(Throwable throwable, String methodName) {\n        Method method = null;\n        try {\n            method = throwable.getClass().getMethod(methodName, (Class[]) null);\n        } catch (NoSuchMethodException ignored) {\n            // exception ignored\n        } catch (SecurityException ignored) {\n            // exception ignored\n        }\n\n        if (method != null && Throwable.class.isAssignableFrom(method.getReturnType())) {\n            try {\n                return (Throwable) method.invoke(throwable, ArrayUtils.EMPTY_OBJECT_ARRAY);\n            } catch (IllegalAccessException ignored) {\n                // exception ignored\n            } catch (IllegalArgumentException ignored) {\n                // exception ignored\n            } catch (InvocationTargetException ignored) {\n                // exception ignored\n            }\n        }\n        return null;\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.15931290201146
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object arg)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 331,
+      "end_line": 335,
+      "source": "public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeStaticMethod(cls, methodName, new Object[] { arg });\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.7133494280442
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object[] args)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 121,
+      "end_line": 133,
+      "source": "public static Object invokeMethod(Object object, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class<?>[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeMethod(object, methodName, args, parameterTypes);\n    }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.51228593952432
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/SerializationUtils.java::SerializationUtils.serialize(Serializable obj, OutputStream outputStream)",
+      "path": "src/main/java/org/apache/commons/lang3/SerializationUtils.java",
+      "start_line": 100,
+      "end_line": 121,
+      "source": "public static void serialize(Serializable obj, OutputStream outputStream) {\n        if (outputStream == null) {\n            throw new IllegalArgumentException(\"The OutputStream must not be null\");\n        }\n        ObjectOutputStream out = null;\n        try {\n            // stream closed in the finally\n            out = new ObjectOutputStream(outputStream);\n            out.writeObject(obj);\n            \n        } catch (IOException ex) {\n            throw new SerializationException(ex);\n        } finally {\n            try {\n                if (out != null) {\n                    out.close();\n                }\n            } catch (IOException ex) {\n                // ignore close exception\n            }\n        }\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.29155896477249
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/ArrayUtils.java::ArrayUtils.add(T[] array, int index, T element)",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "start_line": 3567,
+      "end_line": 3579,
+      "source": "public static <T> T[] add(T[] array, int index, T element) {\n        Class<?> clss = null;\n        if (array != null) {\n            clss = array.getClass().getComponentType();\n        } else if (element != null) {\n            clss = element.getClass();\n        } else {\n            return (T[]) new Object[] { null };\n        }\n        @SuppressWarnings(\"unchecked\") // the add method creates an array of type clss, which is type T\n        final T[] newArray = (T[]) add(array, index, element, clss);\n        return newArray;\n    }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.17549737595351
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object arg)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 435,
+      "end_line": 439,
+      "source": "public static Object invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeExactStaticMethod(cls, methodName, new Object[] { arg });\n    }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.14382520473624
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object[] args)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 217,
+      "end_line": 229,
+      "source": "public static Object invokeExactMethod(Object object, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class<?>[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeExactMethod(object, methodName, args, parameterTypes);\n    }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.03549743062102
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object[] args, Class<?>[] parameterTypes)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 154,
+      "end_line": 172,
+      "source": "public static Object invokeMethod(Object object, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        if (parameterTypes == null) {\n            parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;\n        }\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Method method = getMatchingAccessibleMethod(object.getClass(),\n                methodName, parameterTypes);\n        if (method == null) {\n            throw new NoSuchMethodException(\"No such accessible method: \"\n                    + methodName + \"() on object: \"\n                    + object.getClass().getName());\n        }\n        return method.invoke(object, args);\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.8691834640285
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object[] args)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 361,
+      "end_line": 373,
+      "source": "public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class<?>[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeStaticMethod(cls, methodName, args, parameterTypes);\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.82029880714911
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object[] args, Class<?>[] parameterTypes)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 250,
+      "end_line": 268,
+      "source": "public static Object invokeExactMethod(Object object, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        if (parameterTypes == null) {\n            parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;\n        }\n        Method method = getAccessibleMethod(object.getClass(), methodName,\n                parameterTypes);\n        if (method == null) {\n            throw new NoSuchMethodException(\"No such accessible method: \"\n                    + methodName + \"() on object: \"\n                    + object.getClass().getName());\n        }\n        return method.invoke(object, args);\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.74996052129812
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object[] args)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 459,
+      "end_line": 471,
+      "source": "public static Object invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class<?>[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeExactStaticMethod(cls, methodName, args, parameterTypes);\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.35375049683001
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object[] args, Class<?>[] parameterTypes)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 397,
+      "end_line": 414,
+      "source": "public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        if (parameterTypes == null) {\n            parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;\n        }\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Method method = getMatchingAccessibleMethod(cls, methodName,\n                parameterTypes);\n        if (method == null) {\n            throw new NoSuchMethodException(\"No such accessible method: \"\n                    + methodName + \"() on class: \" + cls.getName());\n        }\n        return method.invoke(null, args);\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.336460891367004
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object[] args, Class<?>[] parameterTypes)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 289,
+      "end_line": 305,
+      "source": "public static Object invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        if (parameterTypes == null) {\n            parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;\n        }\n        Method method = getAccessibleMethod(cls, methodName, parameterTypes);\n        if (method == null) {\n            throw new NoSuchMethodException(\"No such accessible method: \"\n                    + methodName + \"() on class: \" + cls.getName());\n        }\n        return method.invoke(null, args);\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.21266596644447
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/ArrayUtils.java::ArrayUtils.addAll(T[] array1, T... array2)",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "start_line": 3000,
+      "end_line": 3026,
+      "source": "public static <T> T[] addAll(T[] array1, T... array2) {\n        if (array1 == null) {\n            return clone(array2);\n        } else if (array2 == null) {\n            return clone(array1);\n        }\n        final Class<?> type1 = array1.getClass().getComponentType();\n        @SuppressWarnings(\"unchecked\") // OK, because array is of type T\n        T[] joinedArray = (T[]) Array.newInstance(type1, array1.length + array2.length);\n        System.arraycopy(array1, 0, joinedArray, 0, array1.length);\n        try {\n            System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);\n        } catch (ArrayStoreException ase) {\n            // Check if problem was due to incompatible types\n            /*\n             * We do this here, rather than before the copy because:\n             * - it would be a wasted check most of the time\n             * - safer, in case check turns out to be too strict\n             */\n            final Class<?> type2 = array2.getClass().getComponentType();\n            if (!type1.isAssignableFrom(type2)){\n                throw new IllegalArgumentException(\"Cannot store \"+type2.getName()+\" in an array of \"+type1.getName(), ase);\n            }\n            throw ase; // No, so rethrow original\n        }\n        return joinedArray;\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.94698635060907
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/ArrayUtils.java::ArrayUtils.add(T[] array, T element)",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "start_line": 3288,
+      "end_line": 3301,
+      "source": "public static <T> T[] add(T[] array, T element) {\n        Class<?> type;\n        if (array != null){\n            type = array.getClass();\n        } else if (element != null) {\n            type = element.getClass();\n        } else {\n            type = Object.class;\n        }\n        @SuppressWarnings(\"unchecked\") // type must be T\n        T[] newArray = (T[]) copyArrayGrow1(array, type);\n        newArray[newArray.length - 1] = element;\n        return newArray;\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.90168500143383
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object arg)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 93,
+      "end_line": 97,
+      "source": "public static Object invokeMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeMethod(object, methodName, new Object[] { arg });\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.42520282637603
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object arg)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 193,
+      "end_line": 197,
+      "source": "public static Object invokeExactMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeExactMethod(object, methodName, new Object[] { arg });\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.91318100069622
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/ConstructorUtils.java::ConstructorUtils.invokeConstructor(Class<?> cls, Object arg)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/ConstructorUtils.java",
+      "start_line": 85,
+      "end_line": 89,
+      "source": "public static Object invokeConstructor(Class<?> cls, Object arg)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException, InstantiationException {\n        return invokeConstructor(cls, new Object[] { arg });\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.1978058401447
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/ConstructorUtils.java::ConstructorUtils.invokeExactConstructor(Class<?> cls, Object arg)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/ConstructorUtils.java",
+      "start_line": 176,
+      "end_line": 180,
+      "source": "public static Object invokeExactConstructor(Class<?> cls, Object arg)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException, InstantiationException {\n        return invokeExactConstructor(cls, new Object[] { arg });\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.53071272412699
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/FieldUtils.java::FieldUtils.writeField(Object target, String fieldName, Object value, boolean forceAccess)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/FieldUtils.java",
+      "start_line": 549,
+      "end_line": 561,
+      "source": "public static void writeField(Object target, String fieldName, Object value, boolean forceAccess)\n            throws IllegalAccessException {\n        if (target == null) {\n            throw new IllegalArgumentException(\"target object must not be null\");\n        }\n        Class<?> cls = target.getClass();\n        Field field = getField(cls, fieldName, forceAccess);\n        if (field == null) {\n            throw new IllegalArgumentException(\"Cannot locate declared field \" + cls.getName() + \".\" + fieldName);\n        }\n        //already forced access above, don't repeat it here:\n        writeField(field, target, value);\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.49398160614267
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/ConstructorUtils.java::ConstructorUtils.invokeConstructor(Class<?> cls, Object[] args)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/ConstructorUtils.java",
+      "start_line": 109,
+      "end_line": 120,
+      "source": "public static Object invokeConstructor(Class<?> cls, Object[] args)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException, InstantiationException {\n        if (null == args) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Class<?> parameterTypes[] = new Class[args.length];\n        for (int i = 0; i < args.length; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeConstructor(cls, args, parameterTypes);\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.17207694835841
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/FieldUtils.java::FieldUtils.writeDeclaredField(Object target, String fieldName, Object value, boolean forceAccess)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/FieldUtils.java",
+      "start_line": 586,
+      "end_line": 598,
+      "source": "public static void writeDeclaredField(Object target, String fieldName, Object value, boolean forceAccess)\n            throws IllegalAccessException {\n        if (target == null) {\n            throw new IllegalArgumentException(\"target object must not be null\");\n        }\n        Class<?> cls = target.getClass();\n        Field field = getDeclaredField(cls, fieldName, forceAccess);\n        if (field == null) {\n            throw new IllegalArgumentException(\"Cannot locate declared field \" + cls.getName() + \".\" + fieldName);\n        }\n        //already forced access above, don't repeat it here:\n        writeField(field, target, value);\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.077313383288036
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.stripAccents(String input)",
+      "source": "public static String stripAccents(String input) {\n        if(input == null) {\n            return null;\n        }\n        if(SystemUtils.isJavaVersionAtLeast(1.6f)) {\n\n            // String decomposed = Normalizer.normalize(input, Normalizer.Form.NFD);\n\n            // START of 1.5 reflection - in 1.6 use the line commented out above\n            try {\n                // get java.text.Normalizer.Form class\n                Class<?> normalizerFormClass = ClassUtils.getClass(\"java.text.Normalizer$Form\", false);\n\n                // get Normlizer class\n                Class<?> normalizerClass = ClassUtils.getClass(\"java.text.Normalizer\", false);\n\n                // get static method on Normalizer\n                java.lang.reflect.Method method = normalizerClass.getMethod(\"normalize\", CharSequence.class, normalizerFormClass );\n\n                // get Normalizer.NFD field\n                java.lang.reflect.Field nfd = normalizerFormClass.getField(\"NFD\");\n\n                // invoke method\n                String decomposed = (String) method.invoke( null, input, nfd.get(null) );\n                // END of 1.5 reflection\n\n                java.util.regex.Pattern accentPattern = java.util.regex.Pattern.compile(\"\\\\p{InCombiningDiacriticalMarks}+\");\n                return accentPattern.matcher(decomposed).replaceAll(\"\");\n            } catch(ClassNotFoundException cnfe) {\n                throw new RuntimeException(\"ClassNotFoundException occurred during 1.6 backcompat code\", cnfe);\n            } catch(NoSuchMethodException nsme) {\n                throw new RuntimeException(\"NoSuchMethodException occurred during 1.6 backcompat code\", nsme);\n            } catch(NoSuchFieldException nsfe) {\n                throw new RuntimeException(\"NoSuchFieldException occurred during 1.6 backcompat code\", nsfe);\n            } catch(IllegalAccessException iae) {\n                throw new RuntimeException(\"IllegalAccessException occurred during 1.6 backcompat code\", iae);\n            } catch(IllegalArgumentException iae) {\n                throw new RuntimeException(\"IllegalArgumentException occurred during 1.6 backcompat code\", iae);\n            } catch(java.lang.reflect.InvocationTargetException ite) {\n                throw new RuntimeException(\"InvocationTargetException occurred during 1.6 backcompat code\", ite);\n            } catch(SecurityException se) {\n                throw new RuntimeException(\"SecurityException occurred during 1.6 backcompat code\", se);\n            }\n        } else {\n            throw new UnsupportedOperationException(\"The stripAccents(String) method is not supported until Java 1.6\");\n        }\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.stripAccents(String input)\nSIGNATURE: public static String stripAccents(String input)",
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.stripAccents(String input)\nSIGNATURE: public static String stripAccents(String input)\nSTRUCTURE (lossy):\nif(input == null)\nreturn null;\nif(SystemUtils.isJavaVersionAtLeast(1.6f))\nCALL SystemUtils.isJavaVersionAtLeast(1.6f)\nClass<?> normalizerFormClass = ClassUtils.getClass(\"java.text.Normalizer$Form\", false);\nCALL ClassUtils.getClass(\"java.text.Normalizer$Form\", false)\nClass<?> normalizerClass = ClassUtils.getClass(\"java.text.Normalizer\", false);\nCALL ClassUtils.getClass(\"java.text.Normalizer\", false)\njava.lang.reflect.Method method = normalizerClass.getMethod(\"normalize\", CharSequence.class, normalizerFormClass );\nCALL normalizerClass.getMethod(\"normalize\", CharSequence.class, normalizerFormClass )\njava.lang.reflect.Field nfd = normalizerFormClass.getField(\"NFD\");\nCALL normalizerFormClass.getField(\"NFD\")\nString decomposed = (String) method.invoke( null, input, nfd.get(null) );\nCALL method.invoke( null, input, nfd.get(null) )\nCALL nfd.get(null)\njava.util.regex.Pattern accentPattern = java.util.regex.Pattern.compile(\"\\\\p{InCombiningDiacriticalMarks}+\");\nCALL java.util.regex.Pattern.compile(\"\\\\p{InCombiningDiacriticalMarks}+\")\nreturn accentPattern.matcher(decomposed).replaceAll(\"\");\nCALL accentPattern.matcher(decomposed).replaceAll(\"\")\nCALL accentPattern.matcher(decomposed)\ncatch(ClassNotFoundException cnfe)\nthrow new RuntimeException(\"ClassNotFoundException occurred during 1.6 backcompat code\", cnfe);\ncatch(NoSuchMethodException nsme)\nthrow new RuntimeException(\"NoSuchMethodException occurred during 1.6 backcompat code\", nsme);\ncatch(NoSuchFieldException nsfe)\nthrow new RuntimeException(\"NoSuchFieldException occurred during 1.6 backcompat code\", nsfe);\ncatch(IllegalAccessException iae)\nthrow new RuntimeException(\"IllegalAccessException occurred during 1.6 backcompat code\", iae);\ncatch(IllegalArgumentException iae)\nthrow new RuntimeException(\"IllegalArgumentException occurred during 1.6 backcompat code\", iae);\ncatch(java.lang.reflect.InvocationTargetException ite)\nthrow new RuntimeException(\"InvocationTargetException occurred during 1.6 backcompat code\", ite);\ncatch(SecurityException se)\n\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public static String stripAccents(String input) {\n        if(input == null) {\n            return null;\n        }\n        if(SystemUtils.isJavaVersionAtLeast(1.6f)) {\n\n            // String decomposed = Normalizer.normalize(input, Normalizer.Form.NFD);\n\n            // START of 1.5 reflection - in 1.6 use the line commented out above\n            try {\n                // get java.text.Normalizer.Form class\n                Class<?> normalizerFormClass = ClassUtils.getClass(\"java.text.Normalizer$Form\", false);\n\n                // get Normlizer class\n                Class<?> normalizerClass = ClassUtils.getClass(\"java.text.Normalizer\", false);\n\n                // get static method on Normalizer\n                java.lang.reflect.Method method = normalizerClass.getMethod(\"normalize\", CharSequence.class, normalizerFormClass );\n\n                // get Normalizer.NFD field\n                java.lang.reflect.Field nfd = normalizerFormClass.getField(\"NFD\");\n\n                // invoke method\n                String decomposed = (String) method.invoke( null, input, nfd.get(null) );\n                // END of 1.5 reflection\n\n                java.util.regex.Pattern accentPattern = java.util.regex.Pattern.compile(\"\\\\p{InCombiningDiacriticalMarks}+\");\n                return accentPattern.matcher(decomposed).replaceAll(\"\");\n            } catch(ClassNotFoundException cnfe) {\n                throw new RuntimeException(\"ClassNotFoundException occurred during 1.6 backcompat code\", cnfe);\n            } catch(NoSuchMethodException nsme) {\n                throw new RuntimeException(\"NoSuchMethodException occurred during 1.6 backcompat code\", nsme);\n            } catch(NoSuchFieldException nsfe) {\n                throw new RuntimeException(\"NoSuchFieldException occurred during 1.6 backcompat code\", nsfe);\n            } catch(IllegalAccessException iae) {\n                throw new RuntimeException(\"IllegalAccessException occurred during 1.6 backcompat code\", iae);\n            } catch(IllegalArgumentException iae) {\n                throw new RuntimeException(\"IllegalArgumentException occurred during 1.6 backcompat code\", iae);\n            } catch(java.lang.reflect.InvocationTargetException ite) {\n                throw new RuntimeException(\"InvocationTargetException occurred during 1.6 backcompat code\", ite);\n            } catch(SecurityException se) {\n                throw new RuntimeException(\"SecurityException occurred during 1.6 backcompat code\", se);\n            }\n        } else {\n            throw new UnsupportedOperationException(\"The stripAccents(String) method is not supported until Java 1.6\");\n        }\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2823529411764706,
+        "trace_match": 0.0,
+        "complexity": 10.0,
+        "call_count": 10.0,
+        "literal_count": 20.0,
+        "source_tokens": 658.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.8647416413373861,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 10,
+        "call_count": 10,
+        "literal_count": 20
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)",
+      "source": "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf \n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars, \n        // then a subclass can test equals to a superclass.\n        Class<?> lhsClass = lhs.getClass();\n        Class<?> rhsClass = rhs.getClass();\n        Class<?> testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and \n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)\nSIGNATURE: public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)",
+        "METHOD: src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)\nSIGNATURE: public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)\nSTRUCTURE (lossy):\nif (lhs == rhs)\nreturn true;\nif (lhs == null || rhs == null)\nreturn false;\nClass<?> lhsClass = lhs.getClass();\nCALL lhs.getClass()\nClass<?> rhsClass = rhs.getClass();\nCALL rhs.getClass()\nClass<?> testClass;\nif (lhsClass.isInstance(rhs))\nCALL lhsClass.isInstance(rhs)\ntestClass = lhsClass\nif (!rhsClass.isInstance(lhs))\nCALL rhsClass.isInstance(lhs)\ntestClass = rhsClass\nif (rhsClass.isInstance(lhs))\nif (!lhsClass.isInstance(rhs))\nEqualsBuilder equalsBuilder = new EqualsBuilder();\nCALL reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields)\nwhile (testClass.getSuperclass() != null && testClass != reflectUpToClass)\nCALL testClass.getSuperclass()\ntestClass = testClass.getSuperclass()\ncatch (IllegalArgumentException e)\nreturn equalsBuilder.isEquals();\nCALL equalsBuilder.isEquals()",
+        "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf \n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars, \n        // then a subclass can test equals to a superclass.\n        Class<?> lhsClass = lhs.getClass();\n        Class<?> rhsClass = rhs.getClass();\n        Class<?> testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and \n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3188405797101449,
+        "trace_match": 0.0,
+        "complexity": 9.0,
+        "call_count": 11.0,
+        "literal_count": 3.0,
+        "source_tokens": 533.0,
+        "l0_tokens": 95.0,
+        "l1_tokens": 303.0,
+        "compression_ratio": 0.5684803001876173,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 9,
+        "call_count": 11,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/exception/ExceptionUtils.java::ExceptionUtils.getCauseUsingMethodName(Throwable throwable, String methodName)",
+      "source": "private static Throwable getCauseUsingMethodName(Throwable throwable, String methodName) {\n        Method method = null;\n        try {\n            method = throwable.getClass().getMethod(methodName, (Class[]) null);\n        } catch (NoSuchMethodException ignored) {\n            // exception ignored\n        } catch (SecurityException ignored) {\n            // exception ignored\n        }\n\n        if (method != null && Throwable.class.isAssignableFrom(method.getReturnType())) {\n            try {\n                return (Throwable) method.invoke(throwable, ArrayUtils.EMPTY_OBJECT_ARRAY);\n            } catch (IllegalAccessException ignored) {\n                // exception ignored\n            } catch (IllegalArgumentException ignored) {\n                // exception ignored\n            } catch (InvocationTargetException ignored) {\n                // exception ignored\n            }\n        }\n        return null;\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/exception/ExceptionUtils.java::ExceptionUtils.getCauseUsingMethodName(Throwable throwable, String methodName)\nSIGNATURE: private static Throwable getCauseUsingMethodName(Throwable throwable, String methodName)",
+        "METHOD: src/main/java/org/apache/commons/lang3/exception/ExceptionUtils.java::ExceptionUtils.getCauseUsingMethodName(Throwable throwable, String methodName)\nSIGNATURE: private static Throwable getCauseUsingMethodName(Throwable throwable, String methodName)\nSTRUCTURE (lossy):\nMethod method = null;\nmethod = throwable.getClass().getMethod(methodName, (Class[]) null)\nCALL throwable.getClass().getMethod(methodName, (Class[]) null)\nCALL throwable.getClass()\ncatch (NoSuchMethodException ignored)\ncatch (SecurityException ignored)\nif (method != null && Throwable.class.isAssignableFrom(method.getReturnType()))\nCALL Throwable.class.isAssignableFrom(method.getReturnType())\nCALL method.getReturnType()\nreturn (Throwable) method.invoke(throwable, ArrayUtils.EMPTY_OBJECT_ARRAY);\nCALL method.invoke(throwable, ArrayUtils.EMPTY_OBJECT_ARRAY)\ncatch (IllegalAccessException ignored)\ncatch (IllegalArgumentException ignored)\ncatch (InvocationTargetException ignored)\nreturn null;",
+        "private static Throwable getCauseUsingMethodName(Throwable throwable, String methodName) {\n        Method method = null;\n        try {\n            method = throwable.getClass().getMethod(methodName, (Class[]) null);\n        } catch (NoSuchMethodException ignored) {\n            // exception ignored\n        } catch (SecurityException ignored) {\n            // exception ignored\n        }\n\n        if (method != null && Throwable.class.isAssignableFrom(method.getReturnType())) {\n            try {\n                return (Throwable) method.invoke(throwable, ArrayUtils.EMPTY_OBJECT_ARRAY);\n            } catch (IllegalAccessException ignored) {\n                // exception ignored\n            } catch (IllegalArgumentException ignored) {\n                // exception ignored\n            } catch (InvocationTargetException ignored) {\n                // exception ignored\n            }\n        }\n        return null;\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5526315789473685,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 5.0,
+        "literal_count": 5.0,
+        "source_tokens": 230.0,
+        "l0_tokens": 64.0,
+        "l1_tokens": 243.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 5,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object arg)",
+      "source": "public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeStaticMethod(cls, methodName, new Object[] { arg });\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException\nSTRUCTURE (lossy):\nreturn invokeStaticMethod(cls, methodName, new Object[] { arg });\nCALL invokeStaticMethod(cls, methodName, new Object[] { arg })",
+        "public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeStaticMethod(cls, methodName, new Object[] { arg });\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6428571428571429,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 68.0,
+        "l0_tokens": 90.0,
+        "l1_tokens": 127.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object[] args)",
+      "source": "public static Object invokeMethod(Object object, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class<?>[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeMethod(object, methodName, args, parameterTypes);\n    }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object[] args)\nSIGNATURE: public static Object invokeMethod(Object object, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object[] args)\nSIGNATURE: public static Object invokeMethod(Object object, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException\nSTRUCTURE (lossy):\nif (args == null)\nargs = ArrayUtils.EMPTY_OBJECT_ARRAY\nint arguments = args.length;\nClass<?>[] parameterTypes = new Class[arguments];\nfor (int i = 0; i < arguments; i++)\nint i = 0;\ni++\nparameterTypes[i] = args[i].getClass()\nCALL args[i].getClass()\nreturn invokeMethod(object, methodName, args, parameterTypes);\nCALL invokeMethod(object, methodName, args, parameterTypes)",
+        "public static Object invokeMethod(Object object, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class<?>[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeMethod(object, methodName, args, parameterTypes);\n    }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5405405405405406,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 139.0,
+        "l0_tokens": 89.0,
+        "l1_tokens": 187.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/SerializationUtils.java::SerializationUtils.serialize(Serializable obj, OutputStream outputStream)",
+      "source": "public static void serialize(Serializable obj, OutputStream outputStream) {\n        if (outputStream == null) {\n            throw new IllegalArgumentException(\"The OutputStream must not be null\");\n        }\n        ObjectOutputStream out = null;\n        try {\n            // stream closed in the finally\n            out = new ObjectOutputStream(outputStream);\n            out.writeObject(obj);\n            \n        } catch (IOException ex) {\n            throw new SerializationException(ex);\n        } finally {\n            try {\n                if (out != null) {\n                    out.close();\n                }\n            } catch (IOException ex) {\n                // ignore close exception\n            }\n        }\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/SerializationUtils.java::SerializationUtils.serialize(Serializable obj, OutputStream outputStream)\nSIGNATURE: public static void serialize(Serializable obj, OutputStream outputStream)",
+        "METHOD: src/main/java/org/apache/commons/lang3/SerializationUtils.java::SerializationUtils.serialize(Serializable obj, OutputStream outputStream)\nSIGNATURE: public static void serialize(Serializable obj, OutputStream outputStream)\nSTRUCTURE (lossy):\nif (outputStream == null)\nthrow new IllegalArgumentException(\"The OutputStream must not be null\");\nObjectOutputStream out = null;\nout = new ObjectOutputStream(outputStream)\nCALL out.writeObject(obj)\ncatch (IOException ex)\nthrow new SerializationException(ex);\nif (out != null)\nCALL out.close()",
+        "public static void serialize(Serializable obj, OutputStream outputStream) {\n        if (outputStream == null) {\n            throw new IllegalArgumentException(\"The OutputStream must not be null\");\n        }\n        ObjectOutputStream out = null;\n        try {\n            // stream closed in the finally\n            out = new ObjectOutputStream(outputStream);\n            out.writeObject(obj);\n            \n        } catch (IOException ex) {\n            throw new SerializationException(ex);\n        } finally {\n            try {\n                if (out != null) {\n                    out.close();\n                }\n            } catch (IOException ex) {\n                // ignore close exception\n            }\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 2.0,
+        "literal_count": 4.0,
+        "source_tokens": 182.0,
+        "l0_tokens": 58.0,
+        "l1_tokens": 136.0,
+        "compression_ratio": 0.7472527472527473,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 2,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/ArrayUtils.java::ArrayUtils.add(T[] array, int index, T element)",
+      "source": "public static <T> T[] add(T[] array, int index, T element) {\n        Class<?> clss = null;\n        if (array != null) {\n            clss = array.getClass().getComponentType();\n        } else if (element != null) {\n            clss = element.getClass();\n        } else {\n            return (T[]) new Object[] { null };\n        }\n        @SuppressWarnings(\"unchecked\") // the add method creates an array of type clss, which is type T\n        final T[] newArray = (T[]) add(array, index, element, clss);\n        return newArray;\n    }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/ArrayUtils.java::ArrayUtils.add(T[] array, int index, T element)\nSIGNATURE: public static <T> T[] add(T[] array, int index, T element)",
+        "METHOD: src/main/java/org/apache/commons/lang3/ArrayUtils.java::ArrayUtils.add(T[] array, int index, T element)\nSIGNATURE: public static <T> T[] add(T[] array, int index, T element)\nSTRUCTURE (lossy):\nClass<?> clss = null;\nif (array != null)\nclss = array.getClass().getComponentType()\nCALL array.getClass().getComponentType()\nCALL array.getClass()\nif (element != null)\nclss = element.getClass()\nCALL element.getClass()\nreturn (T[]) new Object[] { null };\n@SuppressWarnings(\"unchecked\") // the add method creates an array of type clss, which is type T final T[] newArray = (T[]) add(array, index, element, clss);\nCALL add(array, index, element, clss)\nreturn newArray;",
+        "public static <T> T[] add(T[] array, int index, T element) {\n        Class<?> clss = null;\n        if (array != null) {\n            clss = array.getClass().getComponentType();\n        } else if (element != null) {\n            clss = element.getClass();\n        } else {\n            return (T[]) new Object[] { null };\n        }\n        @SuppressWarnings(\"unchecked\") // the add method creates an array of type clss, which is type T\n        final T[] newArray = (T[]) add(array, index, element, clss);\n        return newArray;\n    }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5454545454545454,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 4.0,
+        "literal_count": 5.0,
+        "source_tokens": 133.0,
+        "l0_tokens": 46.0,
+        "l1_tokens": 167.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 4,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object arg)",
+      "source": "public static Object invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeExactStaticMethod(cls, methodName, new Object[] { arg });\n    }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException\nSTRUCTURE (lossy):\nreturn invokeExactStaticMethod(cls, methodName, new Object[] { arg });\nCALL invokeExactStaticMethod(cls, methodName, new Object[] { arg })",
+        "public static Object invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeExactStaticMethod(cls, methodName, new Object[] { arg });\n    }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6206896551724138,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 70.0,
+        "l0_tokens": 93.0,
+        "l1_tokens": 132.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object[] args)",
+      "source": "public static Object invokeExactMethod(Object object, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class<?>[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeExactMethod(object, methodName, args, parameterTypes);\n    }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object[] args)\nSIGNATURE: public static Object invokeExactMethod(Object object, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object[] args)\nSIGNATURE: public static Object invokeExactMethod(Object object, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException\nSTRUCTURE (lossy):\nif (args == null)\nargs = ArrayUtils.EMPTY_OBJECT_ARRAY\nint arguments = args.length;\nClass<?>[] parameterTypes = new Class[arguments];\nfor (int i = 0; i < arguments; i++)\nint i = 0;\ni++\nparameterTypes[i] = args[i].getClass()\nCALL args[i].getClass()\nreturn invokeExactMethod(object, methodName, args, parameterTypes);\nCALL invokeExactMethod(object, methodName, args, parameterTypes)",
+        "public static Object invokeExactMethod(Object object, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class<?>[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeExactMethod(object, methodName, args, parameterTypes);\n    }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5263157894736842,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 142.0,
+        "l0_tokens": 92.0,
+        "l1_tokens": 192.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object[] args, Class<?>[] parameterTypes)",
+      "source": "public static Object invokeMethod(Object object, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        if (parameterTypes == null) {\n            parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;\n        }\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Method method = getMatchingAccessibleMethod(object.getClass(),\n                methodName, parameterTypes);\n        if (method == null) {\n            throw new NoSuchMethodException(\"No such accessible method: \"\n                    + methodName + \"() on object: \"\n                    + object.getClass().getName());\n        }\n        return method.invoke(object, args);\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\nSIGNATURE: public static Object invokeMethod(Object object, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\nSIGNATURE: public static Object invokeMethod(Object object, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException\nSTRUCTURE (lossy):\nif (parameterTypes == null)\nparameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY\nif (args == null)\nargs = ArrayUtils.EMPTY_OBJECT_ARRAY\nMethod method = getMatchingAccessibleMethod(object.getClass(), methodName, parameterTypes);\nCALL getMatchingAccessibleMethod(object.getClass(), methodName, parameterTypes)\nCALL object.getClass()\nif (method == null)\nthrow new NoSuchMethodException(\"No such accessible method: \" + methodName + \"() on object: \" + object.getClass().getName());\nCALL object.getClass().getName()\nreturn method.invoke(object, args);\nCALL method.invoke(object, args)",
+        "public static Object invokeMethod(Object object, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        if (parameterTypes == null) {\n            parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;\n        }\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Method method = getMatchingAccessibleMethod(object.getClass(),\n                methodName, parameterTypes);\n        if (method == null) {\n            throw new NoSuchMethodException(\"No such accessible method: \"\n                    + methodName + \"() on object: \"\n                    + object.getClass().getName());\n        }\n        return method.invoke(object, args);\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5555555555555556,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 5.0,
+        "literal_count": 5.0,
+        "source_tokens": 202.0,
+        "l0_tokens": 106.0,
+        "l1_tokens": 254.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 5,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object[] args)",
+      "source": "public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class<?>[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeStaticMethod(cls, methodName, args, parameterTypes);\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object[] args)\nSIGNATURE: public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object[] args)\nSIGNATURE: public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException\nSTRUCTURE (lossy):\nif (args == null)\nargs = ArrayUtils.EMPTY_OBJECT_ARRAY\nint arguments = args.length;\nClass<?>[] parameterTypes = new Class[arguments];\nfor (int i = 0; i < arguments; i++)\nint i = 0;\ni++\nparameterTypes[i] = args[i].getClass()\nCALL args[i].getClass()\nreturn invokeStaticMethod(cls, methodName, args, parameterTypes);\nCALL invokeStaticMethod(cls, methodName, args, parameterTypes)",
+        "public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class<?>[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeStaticMethod(cls, methodName, args, parameterTypes);\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5263157894736842,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 141.0,
+        "l0_tokens": 92.0,
+        "l1_tokens": 191.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object[] args, Class<?>[] parameterTypes)",
+      "source": "public static Object invokeExactMethod(Object object, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        if (parameterTypes == null) {\n            parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;\n        }\n        Method method = getAccessibleMethod(object.getClass(), methodName,\n                parameterTypes);\n        if (method == null) {\n            throw new NoSuchMethodException(\"No such accessible method: \"\n                    + methodName + \"() on object: \"\n                    + object.getClass().getName());\n        }\n        return method.invoke(object, args);\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\nSIGNATURE: public static Object invokeExactMethod(Object object, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\nSIGNATURE: public static Object invokeExactMethod(Object object, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException\nSTRUCTURE (lossy):\nif (args == null)\nargs = ArrayUtils.EMPTY_OBJECT_ARRAY\nif (parameterTypes == null)\nparameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY\nMethod method = getAccessibleMethod(object.getClass(), methodName, parameterTypes);\nCALL getAccessibleMethod(object.getClass(), methodName, parameterTypes)\nCALL object.getClass()\nif (method == null)\nthrow new NoSuchMethodException(\"No such accessible method: \" + methodName + \"() on object: \" + object.getClass().getName());\nCALL object.getClass().getName()\nreturn method.invoke(object, args);\nCALL method.invoke(object, args)",
+        "public static Object invokeExactMethod(Object object, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        if (parameterTypes == null) {\n            parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;\n        }\n        Method method = getAccessibleMethod(object.getClass(), methodName,\n                parameterTypes);\n        if (method == null) {\n            throw new NoSuchMethodException(\"No such accessible method: \"\n                    + methodName + \"() on object: \"\n                    + object.getClass().getName());\n        }\n        return method.invoke(object, args);\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5555555555555556,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 5.0,
+        "literal_count": 5.0,
+        "source_tokens": 201.0,
+        "l0_tokens": 108.0,
+        "l1_tokens": 252.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 5,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object[] args)",
+      "source": "public static Object invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class<?>[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeExactStaticMethod(cls, methodName, args, parameterTypes);\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object[] args)\nSIGNATURE: public static Object invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object[] args)\nSIGNATURE: public static Object invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException\nSTRUCTURE (lossy):\nif (args == null)\nargs = ArrayUtils.EMPTY_OBJECT_ARRAY\nint arguments = args.length;\nClass<?>[] parameterTypes = new Class[arguments];\nfor (int i = 0; i < arguments; i++)\nint i = 0;\ni++\nparameterTypes[i] = args[i].getClass()\nCALL args[i].getClass()\nreturn invokeExactStaticMethod(cls, methodName, args, parameterTypes);\nCALL invokeExactStaticMethod(cls, methodName, args, parameterTypes)",
+        "public static Object invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object[] args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        int arguments = args.length;\n        Class<?>[] parameterTypes = new Class[arguments];\n        for (int i = 0; i < arguments; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeExactStaticMethod(cls, methodName, args, parameterTypes);\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5128205128205128,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 144.0,
+        "l0_tokens": 94.0,
+        "l1_tokens": 196.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object[] args, Class<?>[] parameterTypes)",
+      "source": "public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        if (parameterTypes == null) {\n            parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;\n        }\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Method method = getMatchingAccessibleMethod(cls, methodName,\n                parameterTypes);\n        if (method == null) {\n            throw new NoSuchMethodException(\"No such accessible method: \"\n                    + methodName + \"() on class: \" + cls.getName());\n        }\n        return method.invoke(null, args);\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\nSIGNATURE: public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\nSIGNATURE: public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException\nSTRUCTURE (lossy):\nif (parameterTypes == null)\nparameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY\nif (args == null)\nargs = ArrayUtils.EMPTY_OBJECT_ARRAY\nMethod method = getMatchingAccessibleMethod(cls, methodName, parameterTypes);\nCALL getMatchingAccessibleMethod(cls, methodName, parameterTypes)\nif (method == null)\nthrow new NoSuchMethodException(\"No such accessible method: \" + methodName + \"() on class: \" + cls.getName());\nCALL cls.getName()\nreturn method.invoke(null, args);\nCALL method.invoke(null, args)",
+        "public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        if (parameterTypes == null) {\n            parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;\n        }\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Method method = getMatchingAccessibleMethod(cls, methodName,\n                parameterTypes);\n        if (method == null) {\n            throw new NoSuchMethodException(\"No such accessible method: \"\n                    + methodName + \"() on class: \" + cls.getName());\n        }\n        return method.invoke(null, args);\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5405405405405406,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 3.0,
+        "literal_count": 6.0,
+        "source_tokens": 190.0,
+        "l0_tokens": 108.0,
+        "l1_tokens": 235.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 3,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object[] args, Class<?>[] parameterTypes)",
+      "source": "public static Object invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        if (parameterTypes == null) {\n            parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;\n        }\n        Method method = getAccessibleMethod(cls, methodName, parameterTypes);\n        if (method == null) {\n            throw new NoSuchMethodException(\"No such accessible method: \"\n                    + methodName + \"() on class: \" + cls.getName());\n        }\n        return method.invoke(null, args);\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\nSIGNATURE: public static Object invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\nSIGNATURE: public static Object invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException\nSTRUCTURE (lossy):\nif (args == null)\nargs = ArrayUtils.EMPTY_OBJECT_ARRAY\nif (parameterTypes == null)\nparameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY\nMethod method = getAccessibleMethod(cls, methodName, parameterTypes);\nCALL getAccessibleMethod(cls, methodName, parameterTypes)\nif (method == null)\nthrow new NoSuchMethodException(\"No such accessible method: \" + methodName + \"() on class: \" + cls.getName());\nCALL cls.getName()\nreturn method.invoke(null, args);\nCALL method.invoke(null, args)",
+        "public static Object invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object[] args, Class<?>[] parameterTypes)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        if (parameterTypes == null) {\n            parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;\n        }\n        Method method = getAccessibleMethod(cls, methodName, parameterTypes);\n        if (method == null) {\n            throw new NoSuchMethodException(\"No such accessible method: \"\n                    + methodName + \"() on class: \" + cls.getName());\n        }\n        return method.invoke(null, args);\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5405405405405406,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 3.0,
+        "literal_count": 6.0,
+        "source_tokens": 186.0,
+        "l0_tokens": 111.0,
+        "l1_tokens": 234.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 3,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/ArrayUtils.java::ArrayUtils.addAll(T[] array1, T... array2)",
+      "source": "public static <T> T[] addAll(T[] array1, T... array2) {\n        if (array1 == null) {\n            return clone(array2);\n        } else if (array2 == null) {\n            return clone(array1);\n        }\n        final Class<?> type1 = array1.getClass().getComponentType();\n        @SuppressWarnings(\"unchecked\") // OK, because array is of type T\n        T[] joinedArray = (T[]) Array.newInstance(type1, array1.length + array2.length);\n        System.arraycopy(array1, 0, joinedArray, 0, array1.length);\n        try {\n            System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);\n        } catch (ArrayStoreException ase) {\n            // Check if problem was due to incompatible types\n            /*\n             * We do this here, rather than before the copy because:\n             * - it would be a wasted check most of the time\n             * - safer, in case check turns out to be too strict\n             */\n            final Class<?> type2 = array2.getClass().getComponentType();\n            if (!type1.isAssignableFrom(type2)){\n                throw new IllegalArgumentException(\"Cannot store \"+type2.getName()+\" in an array of \"+type1.getName(), ase);\n            }\n            throw ase; // No, so rethrow original\n        }\n        return joinedArray;\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/ArrayUtils.java::ArrayUtils.addAll(T[] array1, T... array2)\nSIGNATURE: public static <T> T[] addAll(T[] array1, T... array2)",
+        "METHOD: src/main/java/org/apache/commons/lang3/ArrayUtils.java::ArrayUtils.addAll(T[] array1, T... array2)\nSIGNATURE: public static <T> T[] addAll(T[] array1, T... array2)\nSTRUCTURE (lossy):\nif (array1 == null)\nreturn clone(array2);\nCALL clone(array2)\nif (array2 == null)\nreturn clone(array1);\nCALL clone(array1)\nfinal Class<?> type1 = array1.getClass().getComponentType();\nCALL array1.getClass().getComponentType()\nCALL array1.getClass()\n@SuppressWarnings(\"unchecked\") // OK, because array is of type T T[] joinedArray = (T[]) Array.newInstance(type1, array1.length + array2.length);\nCALL Array.newInstance(type1, array1.length + array2.length)\nCALL System.arraycopy(array1, 0, joinedArray, 0, array1.length)\nCALL System.arraycopy(array2, 0, joinedArray, array1.length, array2.length)\ncatch (ArrayStoreException ase)\nfinal Class<?> type2 = array2.getClass().getComponentType();\nCALL array2.getClass().getComponentType()\nCALL array2.getClass()\nif (!type1.isAssignableFrom(type2))\nCALL type1.isAssignableFrom(type2)\nthrow new IllegalArgumentException(\"Cannot store \"+type2.getName()+\" in an array of \"+type1.getName(), ase);\nCALL type2.getName()\nCALL type1.getName()\nthrow ase;\nreturn joinedArray;",
+        "public static <T> T[] addAll(T[] array1, T... array2) {\n        if (array1 == null) {\n            return clone(array2);\n        } else if (array2 == null) {\n            return clone(array1);\n        }\n        final Class<?> type1 = array1.getClass().getComponentType();\n        @SuppressWarnings(\"unchecked\") // OK, because array is of type T\n        T[] joinedArray = (T[]) Array.newInstance(type1, array1.length + array2.length);\n        System.arraycopy(array1, 0, joinedArray, 0, array1.length);\n        try {\n            System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);\n        } catch (ArrayStoreException ase) {\n            // Check if problem was due to incompatible types\n            /*\n             * We do this here, rather than before the copy because:\n             * - it would be a wasted check most of the time\n             * - safer, in case check turns out to be too strict\n             */\n            final Class<?> type2 = array2.getClass().getComponentType();\n            if (!type1.isAssignableFrom(type2)){\n                throw new IllegalArgumentException(\"Cannot store \"+type2.getName()+\" in an array of \"+type1.getName(), ase);\n            }\n            throw ase; // No, so rethrow original\n        }\n        return joinedArray;\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3013698630136986,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 12.0,
+        "literal_count": 8.0,
+        "source_tokens": 321.0,
+        "l0_tokens": 43.0,
+        "l1_tokens": 299.0,
+        "compression_ratio": 0.9314641744548287,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 12,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/ArrayUtils.java::ArrayUtils.add(T[] array, T element)",
+      "source": "public static <T> T[] add(T[] array, T element) {\n        Class<?> type;\n        if (array != null){\n            type = array.getClass();\n        } else if (element != null) {\n            type = element.getClass();\n        } else {\n            type = Object.class;\n        }\n        @SuppressWarnings(\"unchecked\") // type must be T\n        T[] newArray = (T[]) copyArrayGrow1(array, type);\n        newArray[newArray.length - 1] = element;\n        return newArray;\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/ArrayUtils.java::ArrayUtils.add(T[] array, T element)\nSIGNATURE: public static <T> T[] add(T[] array, T element)",
+        "METHOD: src/main/java/org/apache/commons/lang3/ArrayUtils.java::ArrayUtils.add(T[] array, T element)\nSIGNATURE: public static <T> T[] add(T[] array, T element)\nSTRUCTURE (lossy):\nClass<?> type;\nif (array != null)\ntype = array.getClass()\nCALL array.getClass()\nif (element != null)\ntype = element.getClass()\nCALL element.getClass()\ntype = Object.class\n@SuppressWarnings(\"unchecked\") // type must be T T[] newArray = (T[]) copyArrayGrow1(array, type);\nCALL copyArrayGrow1(array, type)\nnewArray[newArray.length - 1] = element\nreturn newArray;",
+        "public static <T> T[] add(T[] array, T element) {\n        Class<?> type;\n        if (array != null){\n            type = array.getClass();\n        } else if (element != null) {\n            type = element.getClass();\n        } else {\n            type = Object.class;\n        }\n        @SuppressWarnings(\"unchecked\") // type must be T\n        T[] newArray = (T[]) copyArrayGrow1(array, type);\n        newArray[newArray.length - 1] = element;\n        return newArray;\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6071428571428571,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 3.0,
+        "literal_count": 5.0,
+        "source_tokens": 118.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 135.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 3,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object arg)",
+      "source": "public static Object invokeMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeMethod(object, methodName, new Object[] { arg });\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException\nSTRUCTURE (lossy):\nreturn invokeMethod(object, methodName, new Object[] { arg });\nCALL invokeMethod(object, methodName, new Object[] { arg })",
+        "public static Object invokeMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeMethod(object, methodName, new Object[] { arg });\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6538461538461539,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 66.0,
+        "l0_tokens": 88.0,
+        "l1_tokens": 123.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object arg)",
+      "source": "public static Object invokeExactMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeExactMethod(object, methodName, new Object[] { arg });\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeExactMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeExactMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException\nSTRUCTURE (lossy):\nreturn invokeExactMethod(object, methodName, new Object[] { arg });\nCALL invokeExactMethod(object, methodName, new Object[] { arg })",
+        "public static Object invokeExactMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeExactMethod(object, methodName, new Object[] { arg });\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6296296296296297,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 68.0,
+        "l0_tokens": 90.0,
+        "l1_tokens": 128.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/ConstructorUtils.java::ConstructorUtils.invokeConstructor(Class<?> cls, Object arg)",
+      "source": "public static Object invokeConstructor(Class<?> cls, Object arg)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException, InstantiationException {\n        return invokeConstructor(cls, new Object[] { arg });\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/ConstructorUtils.java::ConstructorUtils.invokeConstructor(Class<?> cls, Object arg)\nSIGNATURE: public static Object invokeConstructor(Class<?> cls, Object arg)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException, InstantiationException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/ConstructorUtils.java::ConstructorUtils.invokeConstructor(Class<?> cls, Object arg)\nSIGNATURE: public static Object invokeConstructor(Class<?> cls, Object arg)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException, InstantiationException\nSTRUCTURE (lossy):\nreturn invokeConstructor(cls, new Object[] { arg });\nCALL invokeConstructor(cls, new Object[] { arg })",
+        "public static Object invokeConstructor(Class<?> cls, Object arg)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException, InstantiationException {\n        return invokeConstructor(cls, new Object[] { arg });\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6071428571428571,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 66.0,
+        "l0_tokens": 86.0,
+        "l1_tokens": 116.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/ConstructorUtils.java::ConstructorUtils.invokeExactConstructor(Class<?> cls, Object arg)",
+      "source": "public static Object invokeExactConstructor(Class<?> cls, Object arg)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException, InstantiationException {\n        return invokeExactConstructor(cls, new Object[] { arg });\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/ConstructorUtils.java::ConstructorUtils.invokeExactConstructor(Class<?> cls, Object arg)\nSIGNATURE: public static Object invokeExactConstructor(Class<?> cls, Object arg)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException, InstantiationException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/ConstructorUtils.java::ConstructorUtils.invokeExactConstructor(Class<?> cls, Object arg)\nSIGNATURE: public static Object invokeExactConstructor(Class<?> cls, Object arg)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException, InstantiationException\nSTRUCTURE (lossy):\nreturn invokeExactConstructor(cls, new Object[] { arg });\nCALL invokeExactConstructor(cls, new Object[] { arg })",
+        "public static Object invokeExactConstructor(Class<?> cls, Object arg)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException, InstantiationException {\n        return invokeExactConstructor(cls, new Object[] { arg });\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5862068965517241,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 68.0,
+        "l0_tokens": 88.0,
+        "l1_tokens": 121.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/FieldUtils.java::FieldUtils.writeField(Object target, String fieldName, Object value, boolean forceAccess)",
+      "source": "public static void writeField(Object target, String fieldName, Object value, boolean forceAccess)\n            throws IllegalAccessException {\n        if (target == null) {\n            throw new IllegalArgumentException(\"target object must not be null\");\n        }\n        Class<?> cls = target.getClass();\n        Field field = getField(cls, fieldName, forceAccess);\n        if (field == null) {\n            throw new IllegalArgumentException(\"Cannot locate declared field \" + cls.getName() + \".\" + fieldName);\n        }\n        //already forced access above, don't repeat it here:\n        writeField(field, target, value);\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/FieldUtils.java::FieldUtils.writeField(Object target, String fieldName, Object value, boolean forceAccess)\nSIGNATURE: public static void writeField(Object target, String fieldName, Object value, boolean forceAccess)\n            throws IllegalAccessException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/FieldUtils.java::FieldUtils.writeField(Object target, String fieldName, Object value, boolean forceAccess)\nSIGNATURE: public static void writeField(Object target, String fieldName, Object value, boolean forceAccess)\n            throws IllegalAccessException\nSTRUCTURE (lossy):\nif (target == null)\nthrow new IllegalArgumentException(\"target object must not be null\");\nClass<?> cls = target.getClass();\nCALL target.getClass()\nField field = getField(cls, fieldName, forceAccess);\nCALL getField(cls, fieldName, forceAccess)\nif (field == null)\nthrow new IllegalArgumentException(\"Cannot locate declared field \" + cls.getName() + \".\" + fieldName);\nCALL cls.getName()\nCALL writeField(field, target, value)",
+        "public static void writeField(Object target, String fieldName, Object value, boolean forceAccess)\n            throws IllegalAccessException {\n        if (target == null) {\n            throw new IllegalArgumentException(\"target object must not be null\");\n        }\n        Class<?> cls = target.getClass();\n        Field field = getField(cls, fieldName, forceAccess);\n        if (field == null) {\n            throw new IllegalArgumentException(\"Cannot locate declared field \" + cls.getName() + \".\" + fieldName);\n        }\n        //already forced access above, don't repeat it here:\n        writeField(field, target, value);\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.46511627906976744,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 4.0,
+        "literal_count": 5.0,
+        "source_tokens": 158.0,
+        "l0_tokens": 78.0,
+        "l1_tokens": 189.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 4,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/ConstructorUtils.java::ConstructorUtils.invokeConstructor(Class<?> cls, Object[] args)",
+      "source": "public static Object invokeConstructor(Class<?> cls, Object[] args)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException, InstantiationException {\n        if (null == args) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Class<?> parameterTypes[] = new Class[args.length];\n        for (int i = 0; i < args.length; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeConstructor(cls, args, parameterTypes);\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/ConstructorUtils.java::ConstructorUtils.invokeConstructor(Class<?> cls, Object[] args)\nSIGNATURE: public static Object invokeConstructor(Class<?> cls, Object[] args)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException, InstantiationException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/ConstructorUtils.java::ConstructorUtils.invokeConstructor(Class<?> cls, Object[] args)\nSIGNATURE: public static Object invokeConstructor(Class<?> cls, Object[] args)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException, InstantiationException\nSTRUCTURE (lossy):\nif (null == args)\nargs = ArrayUtils.EMPTY_OBJECT_ARRAY\nClass<?> parameterTypes[] = new Class[args.length];\nfor (int i = 0; i < args.length; i++)\nint i = 0;\ni++\nparameterTypes[i] = args[i].getClass()\nCALL args[i].getClass()\nreturn invokeConstructor(cls, args, parameterTypes);\nCALL invokeConstructor(cls, args, parameterTypes)",
+        "public static Object invokeConstructor(Class<?> cls, Object[] args)\n            throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException, InstantiationException {\n        if (null == args) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Class<?> parameterTypes[] = new Class[args.length];\n        for (int i = 0; i < args.length; i++) {\n            parameterTypes[i] = args[i].getClass();\n        }\n        return invokeConstructor(cls, args, parameterTypes);\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5135135135135135,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 131.0,
+        "l0_tokens": 87.0,
+        "l1_tokens": 174.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/FieldUtils.java::FieldUtils.writeDeclaredField(Object target, String fieldName, Object value, boolean forceAccess)",
+      "source": "public static void writeDeclaredField(Object target, String fieldName, Object value, boolean forceAccess)\n            throws IllegalAccessException {\n        if (target == null) {\n            throw new IllegalArgumentException(\"target object must not be null\");\n        }\n        Class<?> cls = target.getClass();\n        Field field = getDeclaredField(cls, fieldName, forceAccess);\n        if (field == null) {\n            throw new IllegalArgumentException(\"Cannot locate declared field \" + cls.getName() + \".\" + fieldName);\n        }\n        //already forced access above, don't repeat it here:\n        writeField(field, target, value);\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/FieldUtils.java::FieldUtils.writeDeclaredField(Object target, String fieldName, Object value, boolean forceAccess)\nSIGNATURE: public static void writeDeclaredField(Object target, String fieldName, Object value, boolean forceAccess)\n            throws IllegalAccessException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/FieldUtils.java::FieldUtils.writeDeclaredField(Object target, String fieldName, Object value, boolean forceAccess)\nSIGNATURE: public static void writeDeclaredField(Object target, String fieldName, Object value, boolean forceAccess)\n            throws IllegalAccessException\nSTRUCTURE (lossy):\nif (target == null)\nthrow new IllegalArgumentException(\"target object must not be null\");\nClass<?> cls = target.getClass();\nCALL target.getClass()\nField field = getDeclaredField(cls, fieldName, forceAccess);\nCALL getDeclaredField(cls, fieldName, forceAccess)\nif (field == null)\nthrow new IllegalArgumentException(\"Cannot locate declared field \" + cls.getName() + \".\" + fieldName);\nCALL cls.getName()\nCALL writeField(field, target, value)",
+        "public static void writeDeclaredField(Object target, String fieldName, Object value, boolean forceAccess)\n            throws IllegalAccessException {\n        if (target == null) {\n            throw new IllegalArgumentException(\"target object must not be null\");\n        }\n        Class<?> cls = target.getClass();\n        Field field = getDeclaredField(cls, fieldName, forceAccess);\n        if (field == null) {\n            throw new IllegalArgumentException(\"Cannot locate declared field \" + cls.getName() + \".\" + fieldName);\n        }\n        //already forced access above, don't repeat it here:\n        writeField(field, target, value);\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.46511627906976744,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 4.0,
+        "literal_count": 5.0,
+        "source_tokens": 162.0,
+        "l0_tokens": 82.0,
+        "l1_tokens": 197.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 4,
+        "literal_count": 5
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.stripAccents(String input)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/exception/ExceptionUtils.java::ExceptionUtils.getCauseUsingMethodName(Throwable throwable, String methodName)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object arg)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object[] args)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/SerializationUtils.java::SerializationUtils.serialize(Serializable obj, OutputStream outputStream)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/ArrayUtils.java::ArrayUtils.add(T[] array, int index, T element)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object arg)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object[] args)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object[] args, Class<?>[] parameterTypes)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object[] args)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object[] args, Class<?>[] parameterTypes)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object[] args)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object[] args, Class<?>[] parameterTypes)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object[] args, Class<?>[] parameterTypes)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/ArrayUtils.java::ArrayUtils.addAll(T[] array1, T... array2)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/ArrayUtils.java::ArrayUtils.add(T[] array, T element)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object arg)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object arg)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/ConstructorUtils.java::ConstructorUtils.invokeConstructor(Class<?> cls, Object arg)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/ConstructorUtils.java::ConstructorUtils.invokeExactConstructor(Class<?> cls, Object arg)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/FieldUtils.java::FieldUtils.writeField(Object target, String fieldName, Object value, boolean forceAccess)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/ConstructorUtils.java::ConstructorUtils.invokeConstructor(Class<?> cls, Object[] args)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/FieldUtils.java::FieldUtils.writeDeclaredField(Object target, String fieldName, Object value, boolean forceAccess)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 1986,
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "7200b18152b9685bc2eb2d54f2319b686ef65101cea0f8e8b931af0af550505a",
+  "evidence_sha256": "b35f095936885c04eb7fb4bed8c94ed82e2504d6b7291add5a3a45d394345397"
+}

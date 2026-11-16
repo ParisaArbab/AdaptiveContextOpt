@@ -1,0 +1,56 @@
+OFFICIAL DEFECTS4J BUG: Closure-165
+EXECUTED BUGGY TEST: com.google.javascript.jscomp.TypeCheckTest::testIssue725
+TEST SOURCE: test/com/google/javascript/jscomp/TypeCheckTest.java
+TEST SOURCE SHA256: eb6c291ca8c5c16e1a0c6f38c5fd293ec2b501240a3bbc392029554335061dc7
+COMPLETE EXECUTED TEST METHOD (verbatim):
+public void testIssue725() throws Exception {
+    testTypes(
+        "/** @typedef {{name: string}} */ var RecordType1;" +
+        "/** @typedef {{name2: string}} */ var RecordType2;" +
+        "/** @param {RecordType1} rec */ function f(rec) {" +
+        "  alert(rec.name2);" +
+        "}",
+        "Property name2 never defined on rec");
+  }
+OBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):
+--- com.google.javascript.jscomp.TypeCheckTest::testIssue725
+junit.framework.AssertionFailedError: expected a warning
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.TestCase.assertTrue(TestCase.java:192)
+	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:10001)
+	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:9981)
+	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:9919)
+	at com.google.javascript.jscomp.TypeCheckTest.testIssue725(TypeCheckTest.java:5852)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)

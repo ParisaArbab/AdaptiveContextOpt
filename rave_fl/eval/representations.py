@@ -1,10 +1,12 @@
 """Language-specific structural representations and gold-free source indexing."""
 import ast
+from bisect import bisect_right
 import os
 from dataclasses import replace
 from pathlib import Path
 import re
 import textwrap
+import sys
 
 from rave_fl.code_sketch import FEATURE_NAMES, java_sketch, words
 from rave_fl.core import approx_tokens
@@ -240,10 +242,29 @@ def index_source(instance, granularity, max_files=3000, max_bytes=30_000_000):
 
             walk(tree.body)
         elif instance.language == "java":
+            if os.environ.get("GRAFT_TRACE_JAVA_INDEX") == "1":
+                print(
+                    f"[java-index] parsing {rel} ({len(source.encode())} bytes)",
+                    file=sys.stderr,
+                    flush=True,
+                )
             tree = java_tree(source)
+            if os.environ.get("GRAFT_TRACE_JAVA_INDEX") == "1":
+                print(f"[java-index] parsed {rel}", file=sys.stderr, flush=True)
             data = source.encode()
+            # Avoid tree-sitter Point.row / Point.column. In py-tree-sitter
+            # 0.26.0 their refcount bug can corrupt Python's heap for line
+            # numbers above 256, producing a SIGSEGV in unrelated code.
+            # Derive exact 1-based lines from original UTF-8 byte offsets.
+            line_starts = [0]
+            line_starts.extend(i + 1 for i, byte in enumerate(data) if byte == 10)
 
-            def walk_java(n, parents=()):
+            # Explicit stack avoids Python/native stack exhaustion on deeply
+            # nested real-world Java syntax trees. Preserve original AST
+            # preorder and class-qualified candidate IDs.
+            pending = [(tree, ())]
+            while pending:
+                n, parents = pending.pop()
                 current = parents
                 if n.type in {"class_declaration", "interface_declaration", "enum_declaration"}:
                     name = n.child_by_field_name("name")
@@ -261,21 +282,40 @@ def index_source(instance, granularity, max_files=3000, max_bytes=30_000_000):
                         + ".".join((*parents, data[name.start_byte : name.end_byte].decode()))
                         + data[params.start_byte : params.end_byte].decode()
                     )
+                    # Native byte positions are half-open [start, end).
+                    # Validate before slicing or constructing CodeEntity.
+                    byte_start = int(n.start_byte)
+                    byte_end = int(n.end_byte)
+                    if not 0 <= byte_start < byte_end <= len(data):
+                        raise CompatibilityError(
+                            "Invalid Java AST method byte span: "
+                            f"file={rel!r}, entity={ident!r}, "
+                            f"start_byte={byte_start}, end_byte={byte_end}, "
+                            f"file_bytes={len(data)}"
+                        )
+                    start = bisect_right(line_starts, byte_start)
+                    end = bisect_right(line_starts, byte_end)
+                    if not 1 <= start <= end:
+                        raise CompatibilityError(
+                            "Invalid Java AST method line span: "
+                            f"file={rel!r}, entity={ident!r}, "
+                            f"start={start}, end={end}"
+                        )
                     entities.append(
                         CodeEntity(
                             ident,
                             rel,
-                            n.start_point.row + 1,
-                            n.end_point.row + 1,
+                            start,
+                            end,
                             data[n.start_byte : n.end_byte].decode(),
                             0.5,
                             kind="method",
                         )
                     )
-                for child in n.named_children:
-                    walk_java(child, current)
+                pending.extend((child, current) for child in reversed(n.named_children))
+            if os.environ.get("GRAFT_TRACE_JAVA_INDEX") == "1":
+                print(f"[java-index] finished {rel}", file=sys.stderr, flush=True)
 
-            walk_java(tree)
         else:
             raise CompatibilityError(
                 "Method indexing unsupported for "

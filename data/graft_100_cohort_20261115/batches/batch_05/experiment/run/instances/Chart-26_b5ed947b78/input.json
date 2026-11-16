@@ -1,0 +1,1318 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Chart-26",
+    "repository": "Chart",
+    "language": "java",
+    "revision": "d1f4716c7a642845137a2f5dde72d5c16a349e31",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_05/prepared/checkouts/Chart-26",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Chart-26\nEXECUTED BUGGY TEST: org.jfree.chart.junit.AreaChartTests::testDrawWithNullInfo\nTEST SOURCE: tests/org/jfree/chart/junit/AreaChartTests.java\nTEST SOURCE SHA256: 3f37c97d97f8eeb3f7376ebf3a5e88310dca544dab924b93f50ba9988a48d04b\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testDrawWithNullInfo() {\n        boolean success = false;\n        try {\n            BufferedImage image = new BufferedImage(200 , 100, \n                    BufferedImage.TYPE_INT_RGB);\n            Graphics2D g2 = image.createGraphics();\n            this.chart.draw(g2, new Rectangle2D.Double(0, 0, 200, 100), null, \n                    null);\n            g2.dispose();\n            success = true;\n        }\n        catch (Exception e) {\n            success = false;\n        }\n        assertTrue(success);\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.jfree.chart.junit.AreaChartTests::testDrawWithNullInfo\njunit.framework.AssertionFailedError\n\tat junit.framework.Assert.fail(Assert.java:55)\n\tat junit.framework.Assert.assertTrue(Assert.java:22)\n\tat junit.framework.Assert.assertTrue(Assert.java:31)\n\tat junit.framework.TestCase.assertTrue(TestCase.java:201)\n\tat org.jfree.chart.junit.AreaChartTests.testDrawWithNullInfo(AreaChartTests.java:149)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_05/prepared/evidence/Chart-26.txt",
+      "sha256": "c1bf234d75db0b36412c262676e15bef498a3a6075d41866debf2f4323413391"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "source",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Chart-26",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "source/org/jfree/chart/JFreeChart.java::JFreeChart.createBufferedImage(int imageWidth, \n                                             int imageHeight,\n                                             double drawWidth, \n                                             double drawHeight, \n                                             ChartRenderingInfo info)",
+      "path": "source/org/jfree/chart/JFreeChart.java",
+      "start_line": 1406,
+      "end_line": 1424,
+      "source": "public BufferedImage createBufferedImage(int imageWidth, \n                                             int imageHeight,\n                                             double drawWidth, \n                                             double drawHeight, \n                                             ChartRenderingInfo info) {\n\n        BufferedImage image = new BufferedImage(imageWidth, imageHeight, \n                BufferedImage.TYPE_INT_RGB);\n        Graphics2D g2 = image.createGraphics();\n        double scaleX = imageWidth / drawWidth;\n        double scaleY = imageHeight / drawHeight;\n        AffineTransform st = AffineTransform.getScaleInstance(scaleX, scaleY);\n        g2.transform(st);\n        draw(g2, new Rectangle2D.Double(0, 0, drawWidth, drawHeight), null, \n                info);\n        g2.dispose();\n        return image;\n\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 62.909835101194254
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/JFreeChart.java::JFreeChart.createBufferedImage(int width, int height, \n                                             int imageType, \n                                             ChartRenderingInfo info)",
+      "path": "source/org/jfree/chart/JFreeChart.java",
+      "start_line": 1382,
+      "end_line": 1390,
+      "source": "public BufferedImage createBufferedImage(int width, int height, \n                                             int imageType, \n                                             ChartRenderingInfo info) {\n        BufferedImage image = new BufferedImage(width, height, imageType);\n        Graphics2D g2 = image.createGraphics();\n        draw(g2, new Rectangle2D.Double(0, 0, width, height), null, info);\n        g2.dispose();\n        return image;\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 59.04503777712388
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getCenterPoint()",
+      "path": "source/org/jfree/chart/util/RefineryUtilities.java",
+      "start_line": 110,
+      "end_line": 126,
+      "source": "public static Point getCenterPoint ()\n    {\n      GraphicsEnvironment localGraphicsEnvironment \n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\"getCenterPoint\", \n                  (Class[]) null);\n          return (Point) method.invoke(localGraphicsEnvironment, \n                  (Object[]) null);\n      }\n      catch (Exception e) {\n        // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Point (s.width / 2, s.height / 2);\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 55.566071414701426
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getMaximumWindowBounds()",
+      "path": "source/org/jfree/chart/util/RefineryUtilities.java",
+      "start_line": 135,
+      "end_line": 150,
+      "source": "public static Rectangle getMaximumWindowBounds() {\n      GraphicsEnvironment localGraphicsEnvironment\n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\n                  \"getMaximumWindowBounds\", (Class[]) null);\n          return (Rectangle) method.invoke(localGraphicsEnvironment, \n                  (Object[]) null);\n      }\n      catch (Exception e) {\n          // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Rectangle (0, 0, s.width, s.height);\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 54.702003093156854
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.OptionalLibraryHolder.loadLibrary(String classname)",
+      "path": "source/org/jfree/chart/ui/BasicProjectInfo.java",
+      "start_line": 111,
+      "end_line": 132,
+      "source": "protected Library loadLibrary(String classname) {\n            if (classname == null) {\n                return null;\n            }\n            try {\n                Class c = ObjectUtilities.getClassLoader(\n                        getClass()).loadClass(classname);\n                try {\n                    Method m = c.getMethod(\"getInstance\", (Class[]) null);\n                    return (Library) m.invoke(null, (Object[]) null);\n                }\n                catch(Exception e) {\n                    // ok, fall back ...\n                }\n                return (Library) c.newInstance();\n            }\n            catch (Exception e) {\n                // ok, this library has no 'getInstance()' method. Check the\n                // default constructor ...\n                return null;\n            }\n        }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 53.46569039630504
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/ChartUtilities.java::ChartUtilities.writeScaledChartAsPNG(OutputStream out,\n            JFreeChart chart, int width, int height, int widthScaleFactor,\n            int heightScaleFactor)",
+      "path": "source/org/jfree/chart/ChartUtilities.java",
+      "start_line": 222,
+      "end_line": 265,
+      "source": "public static void writeScaledChartAsPNG(OutputStream out,\n            JFreeChart chart, int width, int height, int widthScaleFactor,\n            int heightScaleFactor) throws IOException {\n\n        if (out == null) {\n            throw new IllegalArgumentException(\"Null 'out' argument.\");\n        }\n        if (chart == null) {\n            throw new IllegalArgumentException(\"Null 'chart' argument.\");\n        }\n\n        double desiredWidth = width * widthScaleFactor;\n        double desiredHeight = height * heightScaleFactor;\n        double defaultWidth = width;\n        double defaultHeight = height;\n        boolean scale = false;\n\n        // get desired width and height from somewhere then...\n        if ((widthScaleFactor != 1) || (heightScaleFactor != 1)) {\n            scale = true;\n        }\n\n        double scaleX = desiredWidth / defaultWidth;\n        double scaleY = desiredHeight / defaultHeight;\n\n        BufferedImage image = new BufferedImage((int) desiredWidth, \n                (int) desiredHeight, BufferedImage.TYPE_INT_ARGB);\n        Graphics2D g2 = image.createGraphics();\n\n        if (scale) {\n            AffineTransform saved = g2.getTransform();\n            g2.transform(AffineTransform.getScaleInstance(scaleX, scaleY));\n            chart.draw(g2, new Rectangle2D.Double(0, 0, defaultWidth, \n                    defaultHeight), null, null);\n            g2.setTransform(saved);\n            g2.dispose();\n        }\n        else {\n            chart.draw(g2, new Rectangle2D.Double(0, 0, defaultWidth, \n                    defaultHeight), null, null);\n        }\n        out.write(encodeAsPNG(image));\n\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 47.61402210203031
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/jdbc/JDBCPieDataset.java::JDBCPieDataset.executeQuery(Connection con, String query)",
+      "path": "source/org/jfree/data/jdbc/JDBCPieDataset.java",
+      "start_line": 165,
+      "end_line": 235,
+      "source": "public void executeQuery(Connection con, String query) throws SQLException {\n\n        Statement statement = null;\n        ResultSet resultSet = null;\n\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int columnCount = metaData.getColumnCount();\n            if (columnCount != 2) {\n                throw new SQLException(\n                    \"Invalid sql generated.  PieDataSet requires 2 columns only\"\n                );\n            }\n\n            int columnType = metaData.getColumnType(2);\n            double value = Double.NaN;\n            while (resultSet.next()) {\n                Comparable key = resultSet.getString(1);\n                switch (columnType) {\n                    case Types.NUMERIC:\n                    case Types.REAL:\n                    case Types.INTEGER:\n                    case Types.DOUBLE:\n                    case Types.FLOAT:\n                    case Types.DECIMAL:\n                    case Types.BIGINT:\n                        value = resultSet.getDouble(2);\n                        setValue(key, value);\n                        break;\n\n                    case Types.DATE:\n                    case Types.TIME:\n                    case Types.TIMESTAMP:\n                        Timestamp date = resultSet.getTimestamp(2);\n                        value = date.getTime();\n                        setValue(key, value);\n                        break;\n\n                    default:\n                        System.err.println(\n                            \"JDBCPieDataset - unknown data type\"\n                        );\n                        break;\n                }\n            }\n\n            fireDatasetChanged();\n\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    System.err.println(\"JDBCPieDataset: swallowing exception.\");\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    System.err.println(\"JDBCPieDataset: swallowing exception.\");\n                }\n            }\n        }\n    }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 44.78499931462139
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.isJDK14()",
+      "path": "source/org/jfree/chart/util/ObjectUtilities.java",
+      "start_line": 440,
+      "end_line": 471,
+      "source": "public static boolean isJDK14() {\n        ClassLoader loader = getClassLoader(ObjectUtilities.class);\n        if (loader != null) {\n            try {\n              loader.loadClass(\"java.util.RandomAccess\");\n              return true;\n            }\n            catch (ClassNotFoundException e) {\n              return false;\n            }\n            catch(Exception e) {\n              // do nothing, but do not crash ...\n            }\n        }\n        // OK, the quick and dirty, but secure way failed. Lets try it\n        // using the standard way.\n        try {\n            String version = System.getProperty(\n                    \"java.vm.specification.version\");\n            // parse the beast...\n            if (version == null) {\n                return false;\n            }\n\n            String[] versions = parseVersions(version);\n            String[] target = new String[]{ \"1\", \"4\" };\n            return (ArrayUtilities.compareVersionArrays(versions, target) >= 0);\n        }\n        catch(Exception e) {\n            return false;\n        }\n    }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.11407330694935
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.clone(final Object object)",
+      "path": "source/org/jfree/chart/util/ObjectUtilities.java",
+      "start_line": 162,
+      "end_line": 190,
+      "source": "public static Object clone(final Object object)\n        throws CloneNotSupportedException {\n        if (object == null) {\n            throw new IllegalArgumentException(\"Null 'object' argument.\");\n        }\n        if (object instanceof PublicCloneable) {\n            final PublicCloneable pc = (PublicCloneable) object;\n            return pc.clone();\n        }\n        else {\n            try {\n                final Method method = object.getClass().getMethod(\"clone\",\n                        (Class[]) null);\n                if (Modifier.isPublic(method.getModifiers())) {\n                    return method.invoke(object, (Object[]) null);\n                }\n            }\n            catch (NoSuchMethodException e) {\n                e.printStackTrace();\n            }\n            catch (IllegalAccessException e) {\n                e.printStackTrace();\n            }\n            catch (InvocationTargetException e) {\n                e.printStackTrace();\n            }\n        }\n        throw new CloneNotSupportedException(\"Failed to clone.\");\n    }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.089056886496536
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)",
+      "path": "source/org/jfree/data/jdbc/JDBCXYDataset.java",
+      "start_line": 231,
+      "end_line": 414,
+      "source": "public void executeQuery(Connection con, String query) \n        throws SQLException {\n\n        if (con == null) {\n            throw new SQLException(\n                \"There is no database to execute the query.\"\n            );\n        }\n\n        ResultSet resultSet = null;\n        Statement statement = null;\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int numberOfColumns = metaData.getColumnCount();\n            int numberOfValidColumns = 0;\n            int [] columnTypes = new int[numberOfColumns];\n            for (int column = 0; column < numberOfColumns; column++) {\n                try {\n                    int type = metaData.getColumnType(column + 1);\n                    switch (type) {\n\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIT:\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            ++numberOfValidColumns;\n                            columnTypes[column] = type;\n                            break;\n                        default:\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                catch (SQLException e) {\n                    columnTypes[column] = Types.NULL;\n                    throw e;\n                }\n            }\n\n\n            if (numberOfValidColumns <= 1) {\n                throw new SQLException(\n                    \"Not enough valid columns where generated by query.\"\n                );\n            }\n\n            /// First column is X data\n            this.columnNames = new String[numberOfValidColumns - 1];\n            /// Get the column names and cache them.\n            int currentColumn = 0;\n            for (int column = 1; column < numberOfColumns; column++) {\n                if (columnTypes[column] != Types.NULL) {\n                    this.columnNames[currentColumn] \n                        = metaData.getColumnLabel(column + 1);\n                    ++currentColumn;\n                }\n            }\n\n            // Might need to add, to free memory from any previous result sets\n            if (this.rows != null) {\n                for (int column = 0; column < this.rows.size(); column++) {\n                    ArrayList row = (ArrayList) this.rows.get(column);\n                    row.clear();\n                }\n                this.rows.clear();\n            }\n\n            // Are we working with a time series.\n            switch (columnTypes[0]) {\n                case Types.DATE:\n                case Types.TIME:\n                case Types.TIMESTAMP:\n                    this.isTimeSeries = true;\n                    break;\n                default :\n                    this.isTimeSeries = false;\n                    break;\n            }\n\n            // Get all rows.\n            // rows = new ArrayList();\n            while (resultSet.next()) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    Object xObject = resultSet.getObject(column + 1);\n                    switch (columnTypes[column]) {\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            newRow.add(xObject);\n                            break;\n\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                            newRow.add(new Long(((Date) xObject).getTime()));\n                            break;\n                        case Types.NULL:\n                            break;\n                        default:\n                            System.err.println(\"Unknown data\");\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// a kludge to make everything work when no rows returned\n            if (this.rows.size() == 0) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    if (columnTypes[column] != Types.NULL) {\n                        newRow.add(new Integer(0));\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// Determine max and min values.\n            if (this.rows.size() < 1) {\n                this.maxValue = 0.0;\n                this.minValue = 0.0;\n            }\n            else {\n                ArrayList row = (ArrayList) this.rows.get(0);\n                this.maxValue = Double.NEGATIVE_INFINITY;\n                this.minValue = Double.POSITIVE_INFINITY;\n                for (int rowNum = 0; rowNum < this.rows.size(); ++rowNum) {\n                    row = (ArrayList) this.rows.get(rowNum);\n                    for (int column = 1; column < numberOfColumns; column++) {\n                        Object testValue = row.get(column);\n                        if (testValue != null) {\n                            double test = ((Number) testValue).doubleValue();\n                        \n                            if (test < this.minValue) {\n                                this.minValue = test;\n                            }\n                            if (test > this.maxValue) {\n                                this.maxValue = test;\n                            }\n                        }\n                    }\n                }\n            }\n\n            fireDatasetChanged(); // Tell the listeners a new table has arrived.\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n        }\n\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.401894385681985
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/encoders/SunJPEGEncoderAdapter.java::SunJPEGEncoderAdapter.encode(BufferedImage bufferedImage, OutputStream outputStream)",
+      "path": "source/org/jfree/chart/encoders/SunJPEGEncoderAdapter.java",
+      "start_line": 158,
+      "end_line": 177,
+      "source": "public void encode(BufferedImage bufferedImage, OutputStream outputStream) \n            throws IOException {\n        if (bufferedImage == null) {\n            throw new IllegalArgumentException(\"Null 'image' argument.\");\n        }\n        if (outputStream == null) {\n            throw new IllegalArgumentException(\"Null 'outputStream' argument.\");\n        }\n        Iterator iterator = ImageIO.getImageWritersByFormatName(\"jpeg\");\n        ImageWriter writer = (ImageWriter) iterator.next();\n        ImageWriteParam p = writer.getDefaultWriteParam();\n        p.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);\n        p.setCompressionQuality(this.quality);\n        ImageOutputStream ios = ImageIO.createImageOutputStream(outputStream);\n        writer.setOutput(ios);\n        writer.write(null, new IIOImage(bufferedImage, null, null), p);\n        ios.flush();\n        writer.dispose();\n        ios.close();\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.19900267361963
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/JFreeChart.java::JFreeChart.createBufferedImage(int width, int height, \n                                             ChartRenderingInfo info)",
+      "path": "source/org/jfree/chart/JFreeChart.java",
+      "start_line": 1365,
+      "end_line": 1369,
+      "source": "public BufferedImage createBufferedImage(int width, int height, \n                                             ChartRenderingInfo info) {\n        return createBufferedImage(width, height, BufferedImage.TYPE_INT_RGB, \n                info);\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.76294784976022
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/ChartPanel.java::ChartPanel.paintComponent(Graphics g)",
+      "path": "source/org/jfree/chart/ChartPanel.java",
+      "start_line": 1164,
+      "end_line": 1284,
+      "source": "public void paintComponent(Graphics g) {\n        super.paintComponent(g);\n        if (this.chart == null) {\n            return;\n        }\n        Graphics2D g2 = (Graphics2D) g.create();\n\n        // first determine the size of the chart rendering area...\n        Dimension size = getSize();\n        Insets insets = getInsets();\n        Rectangle2D available = new Rectangle2D.Double(insets.left, insets.top,\n                size.getWidth() - insets.left - insets.right,\n                size.getHeight() - insets.top - insets.bottom);\n\n        // work out if scaling is required...\n        boolean scale = false;\n        double drawWidth = available.getWidth();\n        double drawHeight = available.getHeight();\n        this.scaleX = 1.0;\n        this.scaleY = 1.0;\n\n        if (drawWidth < this.minimumDrawWidth) {\n            this.scaleX = drawWidth / this.minimumDrawWidth;\n            drawWidth = this.minimumDrawWidth;\n            scale = true;\n        }\n        else if (drawWidth > this.maximumDrawWidth) {\n            this.scaleX = drawWidth / this.maximumDrawWidth;\n            drawWidth = this.maximumDrawWidth;\n            scale = true;\n        }\n\n        if (drawHeight < this.minimumDrawHeight) {\n            this.scaleY = drawHeight / this.minimumDrawHeight;\n            drawHeight = this.minimumDrawHeight;\n            scale = true;\n        }\n        else if (drawHeight > this.maximumDrawHeight) {\n            this.scaleY = drawHeight / this.maximumDrawHeight;\n            drawHeight = this.maximumDrawHeight;\n            scale = true;\n        }\n\n        Rectangle2D chartArea = new Rectangle2D.Double(0.0, 0.0, drawWidth, \n                drawHeight);\n\n        // are we using the chart buffer?\n        if (this.useBuffer) {\n\n            // do we need to resize the buffer?\n            if ((this.chartBuffer == null) \n                    || (this.chartBufferWidth != available.getWidth())\n                    || (this.chartBufferHeight != available.getHeight())\n            ) {\n                this.chartBufferWidth = (int) available.getWidth();\n                this.chartBufferHeight = (int) available.getHeight();\n                this.chartBuffer = createImage(\n                        this.chartBufferWidth, this.chartBufferHeight);\n//                GraphicsConfiguration gc = g2.getDeviceConfiguration();\n//                this.chartBuffer = gc.createCompatibleImage(\n//                        this.chartBufferWidth, this.chartBufferHeight, \n//                        Transparency.TRANSLUCENT);\n                this.refreshBuffer = true;\n            }\n\n            // do we need to redraw the buffer?\n            if (this.refreshBuffer) {\n\n                Rectangle2D bufferArea = new Rectangle2D.Double(\n                        0, 0, this.chartBufferWidth, this.chartBufferHeight);\n\n                Graphics2D bufferG2 \n                    = (Graphics2D) this.chartBuffer.getGraphics();\n                if (scale) {\n                    AffineTransform saved = bufferG2.getTransform();\n                    AffineTransform st = AffineTransform.getScaleInstance(\n                            this.scaleX, this.scaleY);\n                    bufferG2.transform(st);\n                    this.chart.draw(bufferG2, chartArea, this.anchor, \n                            this.info);\n                    bufferG2.setTransform(saved);\n                }\n                else {\n                    this.chart.draw(bufferG2, bufferArea, this.anchor, \n                            this.info);\n                }\n\n                this.refreshBuffer = false;\n\n            }\n\n            // zap the buffer onto the panel...\n            g2.drawImage(this.chartBuffer, insets.left, insets.top, this);\n\n        }\n\n        // or redrawing the chart every time...\n        else {\n\n            AffineTransform saved = g2.getTransform();\n            g2.translate(insets.left, insets.top);\n            if (scale) {\n                AffineTransform st = AffineTransform.getScaleInstance(\n                        this.scaleX, this.scaleY);\n                g2.transform(st);\n            }\n            this.chart.draw(g2, chartArea, this.anchor, this.info);\n            g2.setTransform(saved);\n\n        }\n        \n        // Redraw the zoom rectangle (if present)\n        drawZoomRectangle(g2);\n        \n        g2.dispose();\n\n        this.anchor = null;\n        this.verticalTraceLine = null;\n        this.horizontalTraceLine = null;\n\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.01948417274314
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/encoders/ImageEncoderFactory.java::ImageEncoderFactory.init()",
+      "path": "source/org/jfree/chart/encoders/ImageEncoderFactory.java",
+      "start_line": 66,
+      "end_line": 83,
+      "source": "private static void init() {\n        encoders = new Hashtable();\n        encoders.put(\"jpeg\", \"org.jfree.chart.encoders.SunJPEGEncoderAdapter\");\n        try {\n            //  Test for being run under JDK 1.4+\n            Class.forName(\"javax.imageio.ImageIO\");\n            //  Test for JFreeChart being compiled under JDK 1.4+\n            Class.forName(\"org.jfree.chart.encoders.SunPNGEncoderAdapter\");\n            encoders.put(\"png\", \n                    \"org.jfree.chart.encoders.SunPNGEncoderAdapter\");\n            encoders.put(\"jpeg\",\n                    \"org.jfree.chart.encoders.SunJPEGEncoderAdapter\");\n        } \n        catch (ClassNotFoundException e) {\n            encoders.put(\"png\", \n                    \"org.jfree.chart.encoders.KeypointPNGEncoderAdapter\");\n        }\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 38.774823694452884
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/KeyToGroupMap.java::KeyToGroupMap.clone(Object object)",
+      "path": "source/org/jfree/data/KeyToGroupMap.java",
+      "start_line": 276,
+      "end_line": 297,
+      "source": "private static Object clone(Object object) {\n        if (object == null) {\n            return null;   \n        }\n        Class c = object.getClass();\n        Object result = null;\n        try {\n            Method m = c.getMethod(\"clone\", (Class[]) null);\n            if (Modifier.isPublic(m.getModifiers())) {\n                try {\n                    result = m.invoke(object, (Object[]) null);\n                }\n                catch (Exception e) {\n                    e.printStackTrace();  \n                }\n            }\n        }\n        catch (NoSuchMethodException e) {\n            result = object;\n        }\n        return result;\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 38.45269307694903
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/ChartUtilities.java::ChartUtilities.writeChartAsPNG(OutputStream out, JFreeChart chart,\n            int width, int height,  ChartRenderingInfo info)",
+      "path": "source/org/jfree/chart/ChartUtilities.java",
+      "start_line": 164,
+      "end_line": 174,
+      "source": "public static void writeChartAsPNG(OutputStream out, JFreeChart chart,\n            int width, int height,  ChartRenderingInfo info) \n            throws IOException {\n\n        if (chart == null) {\n            throw new IllegalArgumentException(\"Null 'chart' argument.\");\n        }\n        BufferedImage bufferedImage \n                = chart.createBufferedImage(width, height, info);\n        EncoderUtil.writeBufferedImage(bufferedImage, ImageFormat.PNG, out);\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 37.008106660791356
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/ChartUtilities.java::ChartUtilities.writeChartAsPNG(OutputStream out, JFreeChart chart,\n            int width, int height, ChartRenderingInfo info,\n            boolean encodeAlpha, int compression)",
+      "path": "source/org/jfree/chart/ChartUtilities.java",
+      "start_line": 193,
+      "end_line": 208,
+      "source": "public static void writeChartAsPNG(OutputStream out, JFreeChart chart,\n            int width, int height, ChartRenderingInfo info,\n            boolean encodeAlpha, int compression) throws IOException {\n\n        if (out == null) {\n            throw new IllegalArgumentException(\"Null 'out' argument.\");\n        }\n        if (chart == null) {\n            throw new IllegalArgumentException(\"Null 'chart' argument.\");\n        }\n        BufferedImage chartImage = chart.createBufferedImage(width, height, \n                BufferedImage.TYPE_INT_ARGB, info);\n        ChartUtilities.writeBufferedImageAsPNG(out, chartImage, encodeAlpha, \n                compression);\n\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.95167189784931
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/plot/Plot.java::Plot.drawBackground(Graphics2D g2, Rectangle2D area)",
+      "path": "source/org/jfree/chart/plot/Plot.java",
+      "start_line": 929,
+      "end_line": 934,
+      "source": "public void drawBackground(Graphics2D g2, Rectangle2D area) {\n        // some subclasses override this method completely, so don't put \n        // anything here that *must* be done\n        fillBackground(g2, area);\n        drawBackgroundImage(g2, area);\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.55115656062462
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/title/LegendTitle.java::LegendTitle.draw(Graphics2D g2, Rectangle2D area, Object params)",
+      "path": "source/org/jfree/chart/title/LegendTitle.java",
+      "start_line": 508,
+      "end_line": 524,
+      "source": "public Object draw(Graphics2D g2, Rectangle2D area, Object params) {\n        Rectangle2D target = (Rectangle2D) area.clone();\n        target = trimMargin(target);\n        if (this.backgroundPaint != null) {\n            g2.setPaint(this.backgroundPaint);\n            g2.fill(target);\n        }\n        BlockFrame border = getFrame();\n        border.draw(g2, target);\n        border.getInsets().trim(target);\n        BlockContainer container = this.wrapper;\n        if (container == null) {\n            container = this.items; \n        }\n        target = trimPadding(target);\n        return container.draw(g2, target, params);   \n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.49862493412752
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/ChartUtilities.java::ChartUtilities.writeChartAsJPEG(OutputStream out, JFreeChart chart,\n            int width, int height, ChartRenderingInfo info)",
+      "path": "source/org/jfree/chart/ChartUtilities.java",
+      "start_line": 407,
+      "end_line": 417,
+      "source": "public static void writeChartAsJPEG(OutputStream out, JFreeChart chart,\n            int width, int height, ChartRenderingInfo info) \n            throws IOException {\n\n        if (chart == null) {\n            throw new IllegalArgumentException(\"Null 'chart' argument.\");\n        }\n        BufferedImage image = chart.createBufferedImage(width, height, info);\n        EncoderUtil.writeBufferedImage(image, ImageFormat.JPEG, out);\n\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.78281543523631
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/encoders/SunPNGEncoderAdapter.java::SunPNGEncoderAdapter.encode(BufferedImage bufferedImage, OutputStream outputStream)",
+      "path": "source/org/jfree/chart/encoders/SunPNGEncoderAdapter.java",
+      "start_line": 121,
+      "end_line": 130,
+      "source": "public void encode(BufferedImage bufferedImage, OutputStream outputStream) \n        throws IOException {\n        if (bufferedImage == null) {\n            throw new IllegalArgumentException(\"Null 'image' argument.\");\n        }\n        if (outputStream == null) {\n            throw new IllegalArgumentException(\"Null 'outputStream' argument.\");\n        }\n        ImageIO.write(bufferedImage, ImageFormat.PNG, outputStream);\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.704257641962826
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/TimeSeries.java::TimeSeries.removeAgedItems(long latest, boolean notify)",
+      "path": "source/org/jfree/data/time/TimeSeries.java",
+      "start_line": 762,
+      "end_line": 796,
+      "source": "public void removeAgedItems(long latest, boolean notify) {\n        \n        // find the serial index of the period specified by 'latest'\n        long index = Long.MAX_VALUE; \n        try {\n            Method m = RegularTimePeriod.class.getDeclaredMethod(\n                    \"createInstance\", new Class[] {Class.class, Date.class, \n                    TimeZone.class});\n            RegularTimePeriod newest = (RegularTimePeriod) m.invoke(\n                    this.timePeriodClass, new Object[] {this.timePeriodClass,\n                            new Date(latest), TimeZone.getDefault()});\n            index = newest.getSerialIndex();\n        }\n        catch (NoSuchMethodException e) {\n            e.printStackTrace();\n        }\n        catch (IllegalAccessException e) {\n            e.printStackTrace();\n        }\n        catch (InvocationTargetException e) {\n            e.printStackTrace();\n        }\n        \n        // check if there are any values earlier than specified by the history \n        // count...\n        boolean removed = false;\n        while (getItemCount() > 0 && (index \n                - getTimePeriod(0).getSerialIndex()) > this.maximumItemAge) {\n            this.data.remove(0);\n            removed = true;\n        }\n        if (removed && notify) {\n            fireSeriesChanged();\n        }\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.510137567567185
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/JFreeChart.java::JFreeChart.draw(Graphics2D g2, \n                     Rectangle2D chartArea, Point2D anchor, \n                     ChartRenderingInfo info)",
+      "path": "source/org/jfree/chart/JFreeChart.java",
+      "start_line": 1126,
+      "end_line": 1219,
+      "source": "public void draw(Graphics2D g2, \n                     Rectangle2D chartArea, Point2D anchor, \n                     ChartRenderingInfo info) {\n\n        notifyListeners(new ChartProgressEvent(this, this, \n                ChartProgressEvent.DRAWING_STARTED, 0));\n\n        // record the chart area, if info is requested...\n        if (info != null) {\n            info.clear();\n            info.setChartArea(chartArea);\n        }\n\n        // ensure no drawing occurs outside chart area...\n        Shape savedClip = g2.getClip();\n        g2.clip(chartArea);\n\n        g2.addRenderingHints(this.renderingHints);\n\n        // draw the chart background...\n        if (this.backgroundPaint != null) {\n            g2.setPaint(this.backgroundPaint);\n            g2.fill(chartArea);\n        }\n\n        if (this.backgroundImage != null) {\n            Composite originalComposite = g2.getComposite();\n            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, \n                    this.backgroundImageAlpha));\n            Rectangle2D dest = new Rectangle2D.Double(0.0, 0.0, \n                    this.backgroundImage.getWidth(null), \n                    this.backgroundImage.getHeight(null));\n            Align.align(dest, chartArea, this.backgroundImageAlignment);\n            g2.drawImage(this.backgroundImage, (int) dest.getX(), \n                    (int) dest.getY(), (int) dest.getWidth(), \n                    (int) dest.getHeight(), null);\n            g2.setComposite(originalComposite);\n        }\n\n        if (isBorderVisible()) {\n            Paint paint = getBorderPaint();\n            Stroke stroke = getBorderStroke();\n            if (paint != null && stroke != null) {\n                Rectangle2D borderArea = new Rectangle2D.Double(\n                        chartArea.getX(), chartArea.getY(), \n                        chartArea.getWidth() - 1.0, chartArea.getHeight() \n                        - 1.0);\n                g2.setPaint(paint);\n                g2.setStroke(stroke);\n                g2.draw(borderArea);\n            }\n        }\n\n        // draw the title and subtitles...\n        Rectangle2D nonTitleArea = new Rectangle2D.Double();\n        nonTitleArea.setRect(chartArea);\n        this.padding.trim(nonTitleArea);\n        \n        EntityCollection entities = null;\n        if (info != null) {\n            entities = info.getEntityCollection();   \n        }\n        if (this.title != null) {\n            EntityCollection e = drawTitle(this.title, g2, nonTitleArea, \n                    (entities != null));\n            if (e != null) {\n                entities.addAll(e);   \n            }\n        }\n\n        Iterator iterator = this.subtitles.iterator();\n        while (iterator.hasNext()) {\n            Title currentTitle = (Title) iterator.next();\n            EntityCollection e = drawTitle(currentTitle, g2, nonTitleArea, \n                    (entities != null));\n            if (e != null) {\n                entities.addAll(e);   \n            }\n        }\n\n        Rectangle2D plotArea = nonTitleArea;\n \n        // draw the plot (axes and data visualisation)\n        PlotRenderingInfo plotInfo = null;\n        if (info != null) {\n            plotInfo = info.getPlotInfo();\n        }\n        this.plot.draw(g2, plotArea, anchor, null, plotInfo);\n\n        g2.setClip(savedClip);\n\n        notifyListeners(new ChartProgressEvent(this, this, \n                ChartProgressEvent.DRAWING_FINISHED, 100));\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.489107893632365
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/axis/ValueAxis.java::ValueAxis.drawAxisLine(Graphics2D g2, double cursor,\n                                Rectangle2D dataArea, RectangleEdge edge)",
+      "path": "source/org/jfree/chart/axis/ValueAxis.java",
+      "start_line": 517,
+      "end_line": 606,
+      "source": "protected void drawAxisLine(Graphics2D g2, double cursor,\n                                Rectangle2D dataArea, RectangleEdge edge) {\n        Line2D axisLine = null;\n        if (edge == RectangleEdge.TOP) {\n            axisLine = new Line2D.Double(dataArea.getX(), cursor, \n                    dataArea.getMaxX(), cursor);  \n        }\n        else if (edge == RectangleEdge.BOTTOM) {\n            axisLine = new Line2D.Double(dataArea.getX(), cursor, \n                    dataArea.getMaxX(), cursor);  \n        }\n        else if (edge == RectangleEdge.LEFT) {\n            axisLine = new Line2D.Double(cursor, dataArea.getY(), cursor, \n                    dataArea.getMaxY());  \n        }\n        else if (edge == RectangleEdge.RIGHT) {\n            axisLine = new Line2D.Double(cursor, dataArea.getY(), cursor, \n                    dataArea.getMaxY());  \n        }\n        g2.setPaint(getAxisLinePaint());\n        g2.setStroke(getAxisLineStroke());\n        g2.draw(axisLine);\n        \n        boolean drawUpOrRight = false;  \n        boolean drawDownOrLeft = false;\n        if (this.positiveArrowVisible) {\n            if (this.inverted) {\n                drawDownOrLeft = true;   \n            }\n            else {\n                drawUpOrRight = true;   \n            }\n        }\n        if (this.negativeArrowVisible) {\n            if (this.inverted) {\n                drawUpOrRight = true;   \n            }\n            else {\n                drawDownOrLeft = true;   \n            }\n        }\n        if (drawUpOrRight) {\n            double x = 0.0;\n            double y = 0.0;\n            Shape arrow = null;\n            if (edge == RectangleEdge.TOP || edge == RectangleEdge.BOTTOM) {\n                x = dataArea.getMaxX();\n                y = cursor;\n                arrow = this.rightArrow; \n            }\n            else if (edge == RectangleEdge.LEFT \n                    || edge == RectangleEdge.RIGHT) {\n                x = cursor;\n                y = dataArea.getMinY();\n                arrow = this.upArrow; \n            }\n\n            // draw the arrow...\n            AffineTransform transformer = new AffineTransform();\n            transformer.setToTranslation(x, y);\n            Shape shape = transformer.createTransformedShape(arrow);\n            g2.fill(shape);\n            g2.draw(shape);\n        }\n        \n        if (drawDownOrLeft) {\n            double x = 0.0;\n            double y = 0.0;\n            Shape arrow = null;\n            if (edge == RectangleEdge.TOP || edge == RectangleEdge.BOTTOM) {\n                x = dataArea.getMinX();\n                y = cursor;\n                arrow = this.leftArrow; \n            }\n            else if (edge == RectangleEdge.LEFT \n                    || edge == RectangleEdge.RIGHT) {\n                x = cursor;\n                y = dataArea.getMaxY();\n                arrow = this.downArrow; \n            }\n\n            // draw the arrow...\n            AffineTransform transformer = new AffineTransform();\n            transformer.setToTranslation(x, y);\n            Shape shape = transformer.createTransformedShape(arrow);\n            g2.fill(shape);\n            g2.draw(shape);\n        }\n        \n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.48516614238751
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "source/org/jfree/chart/JFreeChart.java::JFreeChart.createBufferedImage(int imageWidth, \n                                             int imageHeight,\n                                             double drawWidth, \n                                             double drawHeight, \n                                             ChartRenderingInfo info)",
+      "source": "public BufferedImage createBufferedImage(int imageWidth, \n                                             int imageHeight,\n                                             double drawWidth, \n                                             double drawHeight, \n                                             ChartRenderingInfo info) {\n\n        BufferedImage image = new BufferedImage(imageWidth, imageHeight, \n                BufferedImage.TYPE_INT_RGB);\n        Graphics2D g2 = image.createGraphics();\n        double scaleX = imageWidth / drawWidth;\n        double scaleY = imageHeight / drawHeight;\n        AffineTransform st = AffineTransform.getScaleInstance(scaleX, scaleY);\n        g2.transform(st);\n        draw(g2, new Rectangle2D.Double(0, 0, drawWidth, drawHeight), null, \n                info);\n        g2.dispose();\n        return image;\n\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: source/org/jfree/chart/JFreeChart.java::JFreeChart.createBufferedImage(int imageWidth, \n                                             int imageHeight,\n                                             double drawWidth, \n                                             double drawHeight, \n                                             ChartRenderingInfo info)\nSIGNATURE: public BufferedImage createBufferedImage(int imageWidth, \n                                             int imageHeight,\n                                             double drawWidth, \n                                             double drawHeight, \n                                             ChartRenderingInfo info)",
+        "METHOD: source/org/jfree/chart/JFreeChart.java::JFreeChart.createBufferedImage(int imageWidth, \n                                             int imageHeight,\n                                             double drawWidth, \n                                             double drawHeight, \n                                             ChartRenderingInfo info)\nSIGNATURE: public BufferedImage createBufferedImage(int imageWidth, \n                                             int imageHeight,\n                                             double drawWidth, \n                                             double drawHeight, \n                                             ChartRenderingInfo info)\nSTRUCTURE (lossy):\nBufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);\nGraphics2D g2 = image.createGraphics();\nCALL image.createGraphics()\ndouble scaleX = imageWidth / drawWidth;\ndouble scaleY = imageHeight / drawHeight;\nAffineTransform st = AffineTransform.getScaleInstance(scaleX, scaleY);\nCALL AffineTransform.getScaleInstance(scaleX, scaleY)\nCALL g2.transform(st)\nCALL draw(g2, new Rectangle2D.Double(0, 0, drawWidth, drawHeight), null, info)\nCALL g2.dispose()\nreturn image;",
+        "public BufferedImage createBufferedImage(int imageWidth, \n                                             int imageHeight,\n                                             double drawWidth, \n                                             double drawHeight, \n                                             ChartRenderingInfo info) {\n\n        BufferedImage image = new BufferedImage(imageWidth, imageHeight, \n                BufferedImage.TYPE_INT_RGB);\n        Graphics2D g2 = image.createGraphics();\n        double scaleX = imageWidth / drawWidth;\n        double scaleY = imageHeight / drawHeight;\n        AffineTransform st = AffineTransform.getScaleInstance(scaleX, scaleY);\n        g2.transform(st);\n        draw(g2, new Rectangle2D.Double(0, 0, drawWidth, drawHeight), null, \n                info);\n        g2.dispose();\n        return image;\n\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 5.0,
+        "literal_count": 3.0,
+        "source_tokens": 211.0,
+        "l0_tokens": 172.0,
+        "l1_tokens": 302.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 5,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/JFreeChart.java::JFreeChart.createBufferedImage(int width, int height, \n                                             int imageType, \n                                             ChartRenderingInfo info)",
+      "source": "public BufferedImage createBufferedImage(int width, int height, \n                                             int imageType, \n                                             ChartRenderingInfo info) {\n        BufferedImage image = new BufferedImage(width, height, imageType);\n        Graphics2D g2 = image.createGraphics();\n        draw(g2, new Rectangle2D.Double(0, 0, width, height), null, info);\n        g2.dispose();\n        return image;\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: source/org/jfree/chart/JFreeChart.java::JFreeChart.createBufferedImage(int width, int height, \n                                             int imageType, \n                                             ChartRenderingInfo info)\nSIGNATURE: public BufferedImage createBufferedImage(int width, int height, \n                                             int imageType, \n                                             ChartRenderingInfo info)",
+        "METHOD: source/org/jfree/chart/JFreeChart.java::JFreeChart.createBufferedImage(int width, int height, \n                                             int imageType, \n                                             ChartRenderingInfo info)\nSIGNATURE: public BufferedImage createBufferedImage(int width, int height, \n                                             int imageType, \n                                             ChartRenderingInfo info)\nSTRUCTURE (lossy):\nBufferedImage image = new BufferedImage(width, height, imageType);\nGraphics2D g2 = image.createGraphics();\nCALL image.createGraphics()\nCALL draw(g2, new Rectangle2D.Double(0, 0, width, height), null, info)\nCALL g2.dispose()\nreturn image;",
+        "public BufferedImage createBufferedImage(int width, int height, \n                                             int imageType, \n                                             ChartRenderingInfo info) {\n        BufferedImage image = new BufferedImage(width, height, imageType);\n        Graphics2D g2 = image.createGraphics();\n        draw(g2, new Rectangle2D.Double(0, 0, width, height), null, info);\n        g2.dispose();\n        return image;\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8333333333333334,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 3.0,
+        "literal_count": 3.0,
+        "source_tokens": 112.0,
+        "l0_tokens": 110.0,
+        "l1_tokens": 175.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 3,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getCenterPoint()",
+      "source": "public static Point getCenterPoint ()\n    {\n      GraphicsEnvironment localGraphicsEnvironment \n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\"getCenterPoint\", \n                  (Class[]) null);\n          return (Point) method.invoke(localGraphicsEnvironment, \n                  (Object[]) null);\n      }\n      catch (Exception e) {\n        // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Point (s.width / 2, s.height / 2);\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getCenterPoint()\nSIGNATURE: public static Point getCenterPoint ()",
+        "METHOD: source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getCenterPoint()\nSIGNATURE: public static Point getCenterPoint ()\nSTRUCTURE (lossy):\nGraphicsEnvironment localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();\nCALL GraphicsEnvironment.getLocalGraphicsEnvironment()\nMethod method = GraphicsEnvironment.class.getMethod(\"getCenterPoint\", (Class[]) null);\nCALL GraphicsEnvironment.class.getMethod(\"getCenterPoint\", (Class[]) null)\nreturn (Point) method.invoke(localGraphicsEnvironment, (Object[]) null);\nCALL method.invoke(localGraphicsEnvironment, (Object[]) null)\ncatch (Exception e)\nDimension s = Toolkit.getDefaultToolkit().getScreenSize();\nCALL Toolkit.getDefaultToolkit().getScreenSize()\nCALL Toolkit.getDefaultToolkit()\nreturn new Point (s.width / 2, s.height / 2);",
+        "public static Point getCenterPoint ()\n    {\n      GraphicsEnvironment localGraphicsEnvironment \n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\"getCenterPoint\", \n                  (Class[]) null);\n          return (Point) method.invoke(localGraphicsEnvironment, \n                  (Object[]) null);\n      }\n      catch (Exception e) {\n        // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Point (s.width / 2, s.height / 2);\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.46153846153846156,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 5.0,
+        "literal_count": 6.0,
+        "source_tokens": 155.0,
+        "l0_tokens": 36.0,
+        "l1_tokens": 205.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 5,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getMaximumWindowBounds()",
+      "source": "public static Rectangle getMaximumWindowBounds() {\n      GraphicsEnvironment localGraphicsEnvironment\n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\n                  \"getMaximumWindowBounds\", (Class[]) null);\n          return (Rectangle) method.invoke(localGraphicsEnvironment, \n                  (Object[]) null);\n      }\n      catch (Exception e) {\n          // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Rectangle (0, 0, s.width, s.height);\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getMaximumWindowBounds()\nSIGNATURE: public static Rectangle getMaximumWindowBounds()",
+        "METHOD: source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getMaximumWindowBounds()\nSIGNATURE: public static Rectangle getMaximumWindowBounds()\nSTRUCTURE (lossy):\nGraphicsEnvironment localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();\nCALL GraphicsEnvironment.getLocalGraphicsEnvironment()\nMethod method = GraphicsEnvironment.class.getMethod( \"getMaximumWindowBounds\", (Class[]) null);\nCALL GraphicsEnvironment.class.getMethod( \"getMaximumWindowBounds\", (Class[]) null)\nreturn (Rectangle) method.invoke(localGraphicsEnvironment, (Object[]) null);\nCALL method.invoke(localGraphicsEnvironment, (Object[]) null)\ncatch (Exception e)\nDimension s = Toolkit.getDefaultToolkit().getScreenSize();\nCALL Toolkit.getDefaultToolkit().getScreenSize()\nCALL Toolkit.getDefaultToolkit()\nreturn new Rectangle (0, 0, s.width, s.height);",
+        "public static Rectangle getMaximumWindowBounds() {\n      GraphicsEnvironment localGraphicsEnvironment\n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\n                  \"getMaximumWindowBounds\", (Class[]) null);\n          return (Rectangle) method.invoke(localGraphicsEnvironment, \n                  (Object[]) null);\n      }\n      catch (Exception e) {\n          // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Rectangle (0, 0, s.width, s.height);\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.43902439024390244,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 5.0,
+        "literal_count": 6.0,
+        "source_tokens": 161.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 216.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 5,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.OptionalLibraryHolder.loadLibrary(String classname)",
+      "source": "protected Library loadLibrary(String classname) {\n            if (classname == null) {\n                return null;\n            }\n            try {\n                Class c = ObjectUtilities.getClassLoader(\n                        getClass()).loadClass(classname);\n                try {\n                    Method m = c.getMethod(\"getInstance\", (Class[]) null);\n                    return (Library) m.invoke(null, (Object[]) null);\n                }\n                catch(Exception e) {\n                    // ok, fall back ...\n                }\n                return (Library) c.newInstance();\n            }\n            catch (Exception e) {\n                // ok, this library has no 'getInstance()' method. Check the\n                // default constructor ...\n                return null;\n            }\n        }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.OptionalLibraryHolder.loadLibrary(String classname)\nSIGNATURE: protected Library loadLibrary(String classname)",
+        "METHOD: source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.OptionalLibraryHolder.loadLibrary(String classname)\nSIGNATURE: protected Library loadLibrary(String classname)\nSTRUCTURE (lossy):\nif (classname == null)\nreturn null;\nClass c = ObjectUtilities.getClassLoader( getClass()).loadClass(classname);\nCALL ObjectUtilities.getClassLoader( getClass()).loadClass(classname)\nCALL ObjectUtilities.getClassLoader( getClass())\nCALL getClass()\nMethod m = c.getMethod(\"getInstance\", (Class[]) null);\nCALL c.getMethod(\"getInstance\", (Class[]) null)\nreturn (Library) m.invoke(null, (Object[]) null);\nCALL m.invoke(null, (Object[]) null)\ncatch(Exception e)\nreturn (Library) c.newInstance();\nCALL c.newInstance()\ncatch (Exception e)",
+        "protected Library loadLibrary(String classname) {\n            if (classname == null) {\n                return null;\n            }\n            try {\n                Class c = ObjectUtilities.getClassLoader(\n                        getClass()).loadClass(classname);\n                try {\n                    Method m = c.getMethod(\"getInstance\", (Class[]) null);\n                    return (Library) m.invoke(null, (Object[]) null);\n                }\n                catch(Exception e) {\n                    // ok, fall back ...\n                }\n                return (Library) c.newInstance();\n            }\n            catch (Exception e) {\n                // ok, this library has no 'getInstance()' method. Check the\n                // default constructor ...\n                return null;\n            }\n        }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4864864864864865,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 6.0,
+        "literal_count": 7.0,
+        "source_tokens": 204.0,
+        "l0_tokens": 46.0,
+        "l1_tokens": 184.0,
+        "compression_ratio": 0.9019607843137255,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 6,
+        "literal_count": 7
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/ChartUtilities.java::ChartUtilities.writeScaledChartAsPNG(OutputStream out,\n            JFreeChart chart, int width, int height, int widthScaleFactor,\n            int heightScaleFactor)",
+      "source": "public static void writeScaledChartAsPNG(OutputStream out,\n            JFreeChart chart, int width, int height, int widthScaleFactor,\n            int heightScaleFactor) throws IOException {\n\n        if (out == null) {\n            throw new IllegalArgumentException(\"Null 'out' argument.\");\n        }\n        if (chart == null) {\n            throw new IllegalArgumentException(\"Null 'chart' argument.\");\n        }\n\n        double desiredWidth = width * widthScaleFactor;\n        double desiredHeight = height * heightScaleFactor;\n        double defaultWidth = width;\n        double defaultHeight = height;\n        boolean scale = false;\n\n        // get desired width and height from somewhere then...\n        if ((widthScaleFactor != 1) || (heightScaleFactor != 1)) {\n            scale = true;\n        }\n\n        double scaleX = desiredWidth / defaultWidth;\n        double scaleY = desiredHeight / defaultHeight;\n\n        BufferedImage image = new BufferedImage((int) desiredWidth, \n                (int) desiredHeight, BufferedImage.TYPE_INT_ARGB);\n        Graphics2D g2 = image.createGraphics();\n\n        if (scale) {\n            AffineTransform saved = g2.getTransform();\n            g2.transform(AffineTransform.getScaleInstance(scaleX, scaleY));\n            chart.draw(g2, new Rectangle2D.Double(0, 0, defaultWidth, \n                    defaultHeight), null, null);\n            g2.setTransform(saved);\n            g2.dispose();\n        }\n        else {\n            chart.draw(g2, new Rectangle2D.Double(0, 0, defaultWidth, \n                    defaultHeight), null, null);\n        }\n        out.write(encodeAsPNG(image));\n\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: source/org/jfree/chart/ChartUtilities.java::ChartUtilities.writeScaledChartAsPNG(OutputStream out,\n            JFreeChart chart, int width, int height, int widthScaleFactor,\n            int heightScaleFactor)\nSIGNATURE: public static void writeScaledChartAsPNG(OutputStream out,\n            JFreeChart chart, int width, int height, int widthScaleFactor,\n            int heightScaleFactor) throws IOException",
+        "METHOD: source/org/jfree/chart/ChartUtilities.java::ChartUtilities.writeScaledChartAsPNG(OutputStream out,\n            JFreeChart chart, int width, int height, int widthScaleFactor,\n            int heightScaleFactor)\nSIGNATURE: public static void writeScaledChartAsPNG(OutputStream out,\n            JFreeChart chart, int width, int height, int widthScaleFactor,\n            int heightScaleFactor) throws IOException\nSTRUCTURE (lossy):\nif (out == null)\nthrow new IllegalArgumentException(\"Null 'out' argument.\");\nif (chart == null)\nthrow new IllegalArgumentException(\"Null 'chart' argument.\");\ndouble desiredWidth = width * widthScaleFactor;\ndouble desiredHeight = height * heightScaleFactor;\ndouble defaultWidth = width;\ndouble defaultHeight = height;\nboolean scale = false;\nif ((widthScaleFactor != 1) || (heightScaleFactor != 1))\nscale = true\ndouble scaleX = desiredWidth / defaultWidth;\ndouble scaleY = desiredHeight / defaultHeight;\nBufferedImage image = new BufferedImage((int) desiredWidth, (int) desiredHeight, BufferedImage.TYPE_INT_ARGB);\nGraphics2D g2 = image.createGraphics();\nCALL image.createGraphics()\nif (scale)\nAffineTransform saved = g2.getTransform();\nCALL g2.getTransform()\nCALL g2.transform(AffineTransform.getScaleInstance(scaleX, scaleY))\nCALL AffineTransform.getScaleInstance(scaleX, scaleY)\nCALL chart.draw(g2, new Rectangle2D.Double(0, 0, defaultWidth, defaultHeight), null, null)\nCALL g2.setTransform(saved)\nCALL g2.dispose()\nCALL out.write(encodeAsPNG(image))\nCALL encodeAsPNG(image)",
+        "public static void writeScaledChartAsPNG(OutputStream out,\n            JFreeChart chart, int width, int height, int widthScaleFactor,\n            int heightScaleFactor) throws IOException {\n\n        if (out == null) {\n            throw new IllegalArgumentException(\"Null 'out' argument.\");\n        }\n        if (chart == null) {\n            throw new IllegalArgumentException(\"Null 'chart' argument.\");\n        }\n\n        double desiredWidth = width * widthScaleFactor;\n        double desiredHeight = height * heightScaleFactor;\n        double defaultWidth = width;\n        double defaultHeight = height;\n        boolean scale = false;\n\n        // get desired width and height from somewhere then...\n        if ((widthScaleFactor != 1) || (heightScaleFactor != 1)) {\n            scale = true;\n        }\n\n        double scaleX = desiredWidth / defaultWidth;\n        double scaleY = desiredHeight / defaultHeight;\n\n        BufferedImage image = new BufferedImage((int) desiredWidth, \n                (int) desiredHeight, BufferedImage.TYPE_INT_ARGB);\n        Graphics2D g2 = image.createGraphics();\n\n        if (scale) {\n            AffineTransform saved = g2.getTransform();\n            g2.transform(AffineTransform.getScaleInstance(scaleX, scaleY));\n            chart.draw(g2, new Rectangle2D.Double(0, 0, defaultWidth, \n                    defaultHeight), null, null);\n            g2.setTransform(saved);\n            g2.dispose();\n        }\n        else {\n            chart.draw(g2, new Rectangle2D.Double(0, 0, defaultWidth, \n                    defaultHeight), null, null);\n        }\n        out.write(encodeAsPNG(image));\n\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4642857142857143,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 10.0,
+        "literal_count": 14.0,
+        "source_tokens": 408.0,
+        "l0_tokens": 104.0,
+        "l1_tokens": 378.0,
+        "compression_ratio": 0.9264705882352942,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 10,
+        "literal_count": 14
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/jdbc/JDBCPieDataset.java::JDBCPieDataset.executeQuery(Connection con, String query)",
+      "source": "public void executeQuery(Connection con, String query) throws SQLException {\n\n        Statement statement = null;\n        ResultSet resultSet = null;\n\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int columnCount = metaData.getColumnCount();\n            if (columnCount != 2) {\n                throw new SQLException(\n                    \"Invalid sql generated.  PieDataSet requires 2 columns only\"\n                );\n            }\n\n            int columnType = metaData.getColumnType(2);\n            double value = Double.NaN;\n            while (resultSet.next()) {\n                Comparable key = resultSet.getString(1);\n                switch (columnType) {\n                    case Types.NUMERIC:\n                    case Types.REAL:\n                    case Types.INTEGER:\n                    case Types.DOUBLE:\n                    case Types.FLOAT:\n                    case Types.DECIMAL:\n                    case Types.BIGINT:\n                        value = resultSet.getDouble(2);\n                        setValue(key, value);\n                        break;\n\n                    case Types.DATE:\n                    case Types.TIME:\n                    case Types.TIMESTAMP:\n                        Timestamp date = resultSet.getTimestamp(2);\n                        value = date.getTime();\n                        setValue(key, value);\n                        break;\n\n                    default:\n                        System.err.println(\n                            \"JDBCPieDataset - unknown data type\"\n                        );\n                        break;\n                }\n            }\n\n            fireDatasetChanged();\n\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    System.err.println(\"JDBCPieDataset: swallowing exception.\");\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    System.err.println(\"JDBCPieDataset: swallowing exception.\");\n                }\n            }\n        }\n    }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: source/org/jfree/data/jdbc/JDBCPieDataset.java::JDBCPieDataset.executeQuery(Connection con, String query)\nSIGNATURE: public void executeQuery(Connection con, String query) throws SQLException",
+        "METHOD: source/org/jfree/data/jdbc/JDBCPieDataset.java::JDBCPieDataset.executeQuery(Connection con, String query)\nSIGNATURE: public void executeQuery(Connection con, String query) throws SQLException\nSTRUCTURE (lossy):\nStatement statement = null;\nResultSet resultSet = null;\nstatement = con.createStatement()\nCALL con.createStatement()\nresultSet = statement.executeQuery(query)\nCALL statement.executeQuery(query)\nResultSetMetaData metaData = resultSet.getMetaData();\nCALL resultSet.getMetaData()\nint columnCount = metaData.getColumnCount();\nCALL metaData.getColumnCount()\nif (columnCount != 2)\nthrow new SQLException( \"Invalid sql generated. PieDataSet requires 2 columns only\" );\nint columnType = metaData.getColumnType(2);\nCALL metaData.getColumnType(2)\ndouble value = Double.NaN;\nwhile (resultSet.next())\nCALL resultSet.next()\nComparable key = resultSet.getString(1);\nCALL resultSet.getString(1)\nswitch (columnType) { case Types.NUMERIC: case Types.REAL: case Types.INTEGER: case Types.DOUBLE: case Types.FLOAT: case Types.DECIMAL: case Types.BIGINT: value = resultSet.getDouble(2); setValue(key, value); break; case Types.DATE: case Types.TIME: case Types.TIMESTAMP: Timestamp date = resultSet.getTimestamp(2); value = date.getTime(); setValue(key, value); break; default: System.err.println( \"JDBCPieDataset - unknown data type\" ); break; }\nvalue = resultSet.getDouble(2)\nCALL resultSet.getDouble(2)\nCALL setValue(key, value)\nTimestamp date = resultSet.getTimestamp(2);\nCALL resultSet.getTimestamp(2)\nvalue = date.getTime()\nCALL date.getTime()\nCALL System.err.println( \"JDBCPieDataset - unknown data type\" )\nCALL fireDatasetChanged()\nif (resultSet != null)\nCALL resultSet.close()\ncatch (Exception e)\nCALL System.err.println(\"JDBCPieDataset: swallowing exception.\")\nif (statement != null)\nCALL statement.close()",
+        "public void executeQuery(Connection con, String query) throws SQLException {\n\n        Statement statement = null;\n        ResultSet resultSet = null;\n\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int columnCount = metaData.getColumnCount();\n            if (columnCount != 2) {\n                throw new SQLException(\n                    \"Invalid sql generated.  PieDataSet requires 2 columns only\"\n                );\n            }\n\n            int columnType = metaData.getColumnType(2);\n            double value = Double.NaN;\n            while (resultSet.next()) {\n                Comparable key = resultSet.getString(1);\n                switch (columnType) {\n                    case Types.NUMERIC:\n                    case Types.REAL:\n                    case Types.INTEGER:\n                    case Types.DOUBLE:\n                    case Types.FLOAT:\n                    case Types.DECIMAL:\n                    case Types.BIGINT:\n                        value = resultSet.getDouble(2);\n                        setValue(key, value);\n                        break;\n\n                    case Types.DATE:\n                    case Types.TIME:\n                    case Types.TIMESTAMP:\n                        Timestamp date = resultSet.getTimestamp(2);\n                        value = date.getTime();\n                        setValue(key, value);\n                        break;\n\n                    default:\n                        System.err.println(\n                            \"JDBCPieDataset - unknown data type\"\n                        );\n                        break;\n                }\n            }\n\n            fireDatasetChanged();\n\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    System.err.println(\"JDBCPieDataset: swallowing exception.\");\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    System.err.println(\"JDBCPieDataset: swallowing exception.\");\n                }\n            }\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.30434782608695654,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 18.0,
+        "literal_count": 13.0,
+        "source_tokens": 593.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 454.0,
+        "compression_ratio": 0.7655986509274874,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 18,
+        "literal_count": 13
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.isJDK14()",
+      "source": "public static boolean isJDK14() {\n        ClassLoader loader = getClassLoader(ObjectUtilities.class);\n        if (loader != null) {\n            try {\n              loader.loadClass(\"java.util.RandomAccess\");\n              return true;\n            }\n            catch (ClassNotFoundException e) {\n              return false;\n            }\n            catch(Exception e) {\n              // do nothing, but do not crash ...\n            }\n        }\n        // OK, the quick and dirty, but secure way failed. Lets try it\n        // using the standard way.\n        try {\n            String version = System.getProperty(\n                    \"java.vm.specification.version\");\n            // parse the beast...\n            if (version == null) {\n                return false;\n            }\n\n            String[] versions = parseVersions(version);\n            String[] target = new String[]{ \"1\", \"4\" };\n            return (ArrayUtilities.compareVersionArrays(versions, target) >= 0);\n        }\n        catch(Exception e) {\n            return false;\n        }\n    }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.isJDK14()\nSIGNATURE: public static boolean isJDK14()",
+        "METHOD: source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.isJDK14()\nSIGNATURE: public static boolean isJDK14()\nSTRUCTURE (lossy):\nClassLoader loader = getClassLoader(ObjectUtilities.class);\nCALL getClassLoader(ObjectUtilities.class)\nif (loader != null)\nCALL loader.loadClass(\"java.util.RandomAccess\")\nreturn true;\ncatch (ClassNotFoundException e)\nreturn false;\ncatch(Exception e)\nString version = System.getProperty( \"java.vm.specification.version\");\nCALL System.getProperty( \"java.vm.specification.version\")\nif (version == null)\nString[] versions = parseVersions(version);\nCALL parseVersions(version)\nString[] target = new String[]{ \"1\", \"4\" };\nreturn (ArrayUtilities.compareVersionArrays(versions, target) >= 0);\nCALL ArrayUtilities.compareVersionArrays(versions, target)",
+        "public static boolean isJDK14() {\n        ClassLoader loader = getClassLoader(ObjectUtilities.class);\n        if (loader != null) {\n            try {\n              loader.loadClass(\"java.util.RandomAccess\");\n              return true;\n            }\n            catch (ClassNotFoundException e) {\n              return false;\n            }\n            catch(Exception e) {\n              // do nothing, but do not crash ...\n            }\n        }\n        // OK, the quick and dirty, but secure way failed. Lets try it\n        // using the standard way.\n        try {\n            String version = System.getProperty(\n                    \"java.vm.specification.version\");\n            // parse the beast...\n            if (version == null) {\n                return false;\n            }\n\n            String[] versions = parseVersions(version);\n            String[] target = new String[]{ \"1\", \"4\" };\n            return (ArrayUtilities.compareVersionArrays(versions, target) >= 0);\n        }\n        catch(Exception e) {\n            return false;\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3018867924528302,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 5.0,
+        "literal_count": 8.0,
+        "source_tokens": 264.0,
+        "l0_tokens": 32.0,
+        "l1_tokens": 198.0,
+        "compression_ratio": 0.75,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 5,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.clone(final Object object)",
+      "source": "public static Object clone(final Object object)\n        throws CloneNotSupportedException {\n        if (object == null) {\n            throw new IllegalArgumentException(\"Null 'object' argument.\");\n        }\n        if (object instanceof PublicCloneable) {\n            final PublicCloneable pc = (PublicCloneable) object;\n            return pc.clone();\n        }\n        else {\n            try {\n                final Method method = object.getClass().getMethod(\"clone\",\n                        (Class[]) null);\n                if (Modifier.isPublic(method.getModifiers())) {\n                    return method.invoke(object, (Object[]) null);\n                }\n            }\n            catch (NoSuchMethodException e) {\n                e.printStackTrace();\n            }\n            catch (IllegalAccessException e) {\n                e.printStackTrace();\n            }\n            catch (InvocationTargetException e) {\n                e.printStackTrace();\n            }\n        }\n        throw new CloneNotSupportedException(\"Failed to clone.\");\n    }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.clone(final Object object)\nSIGNATURE: public static Object clone(final Object object)\n        throws CloneNotSupportedException",
+        "METHOD: source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.clone(final Object object)\nSIGNATURE: public static Object clone(final Object object)\n        throws CloneNotSupportedException\nSTRUCTURE (lossy):\nif (object == null)\nthrow new IllegalArgumentException(\"Null 'object' argument.\");\nif (object instanceof PublicCloneable)\nfinal PublicCloneable pc = (PublicCloneable) object;\nreturn pc.clone();\nCALL pc.clone()\nfinal Method method = object.getClass().getMethod(\"clone\", (Class[]) null);\nCALL object.getClass().getMethod(\"clone\", (Class[]) null)\nCALL object.getClass()\nif (Modifier.isPublic(method.getModifiers()))\nCALL Modifier.isPublic(method.getModifiers())\nCALL method.getModifiers()\nreturn method.invoke(object, (Object[]) null);\nCALL method.invoke(object, (Object[]) null)\ncatch (NoSuchMethodException e)\nCALL e.printStackTrace()\ncatch (IllegalAccessException e)\ncatch (InvocationTargetException e)\nthrow new CloneNotSupportedException(\"Failed to clone.\");",
+        "public static Object clone(final Object object)\n        throws CloneNotSupportedException {\n        if (object == null) {\n            throw new IllegalArgumentException(\"Null 'object' argument.\");\n        }\n        if (object instanceof PublicCloneable) {\n            final PublicCloneable pc = (PublicCloneable) object;\n            return pc.clone();\n        }\n        else {\n            try {\n                final Method method = object.getClass().getMethod(\"clone\",\n                        (Class[]) null);\n                if (Modifier.isPublic(method.getModifiers())) {\n                    return method.invoke(object, (Object[]) null);\n                }\n            }\n            catch (NoSuchMethodException e) {\n                e.printStackTrace();\n            }\n            catch (IllegalAccessException e) {\n                e.printStackTrace();\n            }\n            catch (InvocationTargetException e) {\n                e.printStackTrace();\n            }\n        }\n        throw new CloneNotSupportedException(\"Failed to clone.\");\n    }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.36585365853658536,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 9.0,
+        "literal_count": 6.0,
+        "source_tokens": 263.0,
+        "l0_tokens": 51.0,
+        "l1_tokens": 246.0,
+        "compression_ratio": 0.935361216730038,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 9,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)",
+      "source": "public void executeQuery(Connection con, String query) \n        throws SQLException {\n\n        if (con == null) {\n            throw new SQLException(\n                \"There is no database to execute the query.\"\n            );\n        }\n\n        ResultSet resultSet = null;\n        Statement statement = null;\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int numberOfColumns = metaData.getColumnCount();\n            int numberOfValidColumns = 0;\n            int [] columnTypes = new int[numberOfColumns];\n            for (int column = 0; column < numberOfColumns; column++) {\n                try {\n                    int type = metaData.getColumnType(column + 1);\n                    switch (type) {\n\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIT:\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            ++numberOfValidColumns;\n                            columnTypes[column] = type;\n                            break;\n                        default:\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                catch (SQLException e) {\n                    columnTypes[column] = Types.NULL;\n                    throw e;\n                }\n            }\n\n\n            if (numberOfValidColumns <= 1) {\n                throw new SQLException(\n                    \"Not enough valid columns where generated by query.\"\n                );\n            }\n\n            /// First column is X data\n            this.columnNames = new String[numberOfValidColumns - 1];\n            /// Get the column names and cache them.\n            int currentColumn = 0;\n            for (int column = 1; column < numberOfColumns; column++) {\n                if (columnTypes[column] != Types.NULL) {\n                    this.columnNames[currentColumn] \n                        = metaData.getColumnLabel(column + 1);\n                    ++currentColumn;\n                }\n            }\n\n            // Might need to add, to free memory from any previous result sets\n            if (this.rows != null) {\n                for (int column = 0; column < this.rows.size(); column++) {\n                    ArrayList row = (ArrayList) this.rows.get(column);\n                    row.clear();\n                }\n                this.rows.clear();\n            }\n\n            // Are we working with a time series.\n            switch (columnTypes[0]) {\n                case Types.DATE:\n                case Types.TIME:\n                case Types.TIMESTAMP:\n                    this.isTimeSeries = true;\n                    break;\n                default :\n                    this.isTimeSeries = false;\n                    break;\n            }\n\n            // Get all rows.\n            // rows = new ArrayList();\n            while (resultSet.next()) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    Object xObject = resultSet.getObject(column + 1);\n                    switch (columnTypes[column]) {\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            newRow.add(xObject);\n                            break;\n\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                            newRow.add(new Long(((Date) xObject).getTime()));\n                            break;\n                        case Types.NULL:\n                            break;\n                        default:\n                            System.err.println(\"Unknown data\");\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// a kludge to make everything work when no rows returned\n            if (this.rows.size() == 0) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    if (columnTypes[column] != Types.NULL) {\n                        newRow.add(new Integer(0));\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// Determine max and min values.\n            if (this.rows.size() < 1) {\n                this.maxValue = 0.0;\n                this.minValue = 0.0;\n            }\n            else {\n                ArrayList row = (ArrayList) this.rows.get(0);\n                this.maxValue = Double.NEGATIVE_INFINITY;\n                this.minValue = Double.POSITIVE_INFINITY;\n                for (int rowNum = 0; rowNum < this.rows.size(); ++rowNum) {\n                    row = (ArrayList) this.rows.get(rowNum);\n                    for (int column = 1; column < numberOfColumns; column++) {\n                        Object testValue = row.get(column);\n                        if (testValue != null) {\n                            double test = ((Number) testValue).doubleValue();\n                        \n                            if (test < this.minValue) {\n                                this.minValue = test;\n                            }\n                            if (test > this.maxValue) {\n                                this.maxValue = test;\n                            }\n                        }\n                    }\n                }\n            }\n\n            fireDatasetChanged(); // Tell the listeners a new table has arrived.\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n        }\n\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)\nSIGNATURE: public void executeQuery(Connection con, String query) \n        throws SQLException",
+        "METHOD: source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)\nSIGNATURE: public void executeQuery(Connection con, String query) \n        throws SQLException\nSTRUCTURE (lossy):\nif (con == null)\nthrow new SQLException( \"There is no database to execute the query.\" );\nResultSet resultSet = null;\nStatement statement = null;\nstatement = con.createStatement()\nCALL con.createStatement()\nresultSet = statement.executeQuery(query)\nCALL statement.executeQuery(query)\nResultSetMetaData metaData = resultSet.getMetaData();\nCALL resultSet.getMetaData()\nint numberOfColumns = metaData.getColumnCount();\nCALL metaData.getColumnCount()\nint numberOfValidColumns = 0;\nint [] columnTypes = new int[numberOfColumns];\nfor (int column = 0; column < numberOfColumns; column++)\nint column = 0;\ncolumn++\nint type = metaData.getColumnType(column + 1);\nCALL metaData.getColumnType(column + 1)\nswitch (type) { case Types.NUMERIC: case Types.REAL: case Types.INTEGER: case Types.DOUBLE: case Types.FLOAT: case Types.DECIMAL: case Types.BIT: case Types.DATE: case Types.TIME: case Types.TIMESTAMP: case Types.BIGINT: case Types.SMALLINT: ++numberOfValidColumns; columnTypes[column] = type; break; default: columnTypes[column] = Types.NULL; break; }\n++numberOfValidColumns\ncolumnTypes[column] = type\ncolumnTypes[column] = Types.NULL\ncatch (SQLException e)\nthrow e;\nif (numberOfValidColumns <= 1)\nthrow new SQLException( \"Not enough valid columns where generated by query.\" );\nthis.columnNames = new String[numberOfValidColumns - 1]\nint currentColumn = 0;\nfor (int column = 1; column < numberOfColumns; column++)\nint column = 1;\nif (columnTypes[column] != Types.NULL)\nthis.columnNames[currentColumn] = metaData.getColumnLabel(column + 1)\nCALL metaData.getColumnLabel(column + 1)\n++currentColumn\nif (this.rows != null)\nfor (int column = 0; column < this.rows.size(); column++)\nCALL this.rows.size()\nArrayList row = (ArrayList) this.rows.get(column);\nCALL this.rows.get(column)\nCALL row.clear()\nCALL this.rows.clear()\nswitch (columnTypes[0]) { case Types.DATE: case Types.TIME: case Types.TIMESTAMP: this.isTimeSeries = true; break; default : this.isTimeSeries = false; break; }\nthi\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public void executeQuery(Connection con, String query) \n        throws SQLException {\n\n        if (con == null) {\n            throw new SQLException(\n                \"There is no database to execute the query.\"\n            );\n        }\n\n        ResultSet resultSet = null;\n        Statement statement = null;\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int numberOfColumns = metaData.getColumnCount();\n            int numberOfValidColumns = 0;\n            int [] columnTypes = new int[numberOfColumns];\n            for (int column = 0; column < numberOfColumns; column++) {\n                try {\n                    int type = metaData.getColumnType(column + 1);\n                    switch (type) {\n\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIT:\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            ++numberOfValidColumns;\n                            columnTypes[column] = type;\n                            break;\n                        default:\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                catch (SQLException e) {\n                    columnTypes[column] = Types.NULL;\n                    throw e;\n                }\n            }\n\n\n            if (numberOfValidColumns <= 1) {\n                throw new SQLException(\n                    \"Not enough valid columns where generated by query.\"\n                );\n            }\n\n            /// First column is X data\n            this.columnNames = new String[numberOfValidColumns - 1];\n            /// Get the column names and cache them.\n            int currentColumn = 0;\n            for (int column = 1; column < numberOfColumns; column++) {\n                if (columnTypes[column] != Types.NULL) {\n                    this.columnNames[currentColumn] \n                        = metaData.getColumnLabel(column + 1);\n                    ++currentColumn;\n                }\n            }\n\n            // Might need to add, to free memory from any previous result sets\n            if (this.rows != null) {\n                for (int column = 0; column < this.rows.size(); column++) {\n                    ArrayList row = (ArrayList) this.rows.get(column);\n                    row.clear();\n                }\n                this.rows.clear();\n            }\n\n            // Are we working with a time series.\n            switch (columnTypes[0]) {\n                case Types.DATE:\n                case Types.TIME:\n                case Types.TIMESTAMP:\n                    this.isTimeSeries = true;\n                    break;\n                default :\n                    this.isTimeSeries = false;\n                    break;\n            }\n\n            // Get all rows.\n            // rows = new ArrayList();\n            while (resultSet.next()) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    Object xObject = resultSet.getObject(column + 1);\n                    switch (columnTypes[column]) {\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            newRow.add(xObject);\n                            break;\n\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                            newRow.add(new Long(((Date) xObject).getTime()));\n                            break;\n                        case Types.NULL:\n                            break;\n                        default:\n                            System.err.println(\"Unknown data\");\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// a kludge to make everything work when no rows returned\n            if (this.rows.size() == 0) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    if (columnTypes[column] != Types.NULL) {\n                        newRow.add(new Integer(0));\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// Determine max and min values.\n            if (this.rows.size() < 1) {\n                this.maxValue = 0.0;\n                this.minValue = 0.0;\n            }\n            else {\n                ArrayList row = (ArrayList) this.rows.get(0);\n                this.maxValue = Double.NEGATIVE_INFINITY;\n                this.minValue = Double.POSITIVE_INFINITY;\n                for (int rowNum = 0; rowNum < this.rows.size(); ++rowNum) {\n                    row = (ArrayList) this.rows.get(rowNum);\n                    for (int column = 1; column < numberOfColumns; column++) {\n                        Object testValue = row.get(column);\n                        if (testValue != null) {\n                            double test = ((Number) testValue).doubleValue();\n                        \n                            if (test < this.minValue) {\n                                this.minValue = test;\n                            }\n                            if (test > this.maxValue) {\n                                this.maxValue = test;\n                            }\n                        }\n                    }\n                }\n            }\n\n            fireDatasetChanged(); // Tell the listeners a new table has arrived.\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n        }\n\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.203125,
+        "trace_match": 0.0,
+        "complexity": 27.0,
+        "call_count": 29.0,
+        "literal_count": 31.0,
+        "source_tokens": 1719.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.3310063990692263,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 27,
+        "call_count": 29,
+        "literal_count": 31
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/encoders/SunJPEGEncoderAdapter.java::SunJPEGEncoderAdapter.encode(BufferedImage bufferedImage, OutputStream outputStream)",
+      "source": "public void encode(BufferedImage bufferedImage, OutputStream outputStream) \n            throws IOException {\n        if (bufferedImage == null) {\n            throw new IllegalArgumentException(\"Null 'image' argument.\");\n        }\n        if (outputStream == null) {\n            throw new IllegalArgumentException(\"Null 'outputStream' argument.\");\n        }\n        Iterator iterator = ImageIO.getImageWritersByFormatName(\"jpeg\");\n        ImageWriter writer = (ImageWriter) iterator.next();\n        ImageWriteParam p = writer.getDefaultWriteParam();\n        p.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);\n        p.setCompressionQuality(this.quality);\n        ImageOutputStream ios = ImageIO.createImageOutputStream(outputStream);\n        writer.setOutput(ios);\n        writer.write(null, new IIOImage(bufferedImage, null, null), p);\n        ios.flush();\n        writer.dispose();\n        ios.close();\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: source/org/jfree/chart/encoders/SunJPEGEncoderAdapter.java::SunJPEGEncoderAdapter.encode(BufferedImage bufferedImage, OutputStream outputStream)\nSIGNATURE: public void encode(BufferedImage bufferedImage, OutputStream outputStream) \n            throws IOException",
+        "METHOD: source/org/jfree/chart/encoders/SunJPEGEncoderAdapter.java::SunJPEGEncoderAdapter.encode(BufferedImage bufferedImage, OutputStream outputStream)\nSIGNATURE: public void encode(BufferedImage bufferedImage, OutputStream outputStream) \n            throws IOException\nSTRUCTURE (lossy):\nif (bufferedImage == null)\nthrow new IllegalArgumentException(\"Null 'image' argument.\");\nif (outputStream == null)\nthrow new IllegalArgumentException(\"Null 'outputStream' argument.\");\nIterator iterator = ImageIO.getImageWritersByFormatName(\"jpeg\");\nCALL ImageIO.getImageWritersByFormatName(\"jpeg\")\nImageWriter writer = (ImageWriter) iterator.next();\nCALL iterator.next()\nImageWriteParam p = writer.getDefaultWriteParam();\nCALL writer.getDefaultWriteParam()\nCALL p.setCompressionMode(ImageWriteParam.MODE_EXPLICIT)\nCALL p.setCompressionQuality(this.quality)\nImageOutputStream ios = ImageIO.createImageOutputStream(outputStream);\nCALL ImageIO.createImageOutputStream(outputStream)\nCALL writer.setOutput(ios)\nCALL writer.write(null, new IIOImage(bufferedImage, null, null), p)\nCALL ios.flush()\nCALL writer.dispose()\nCALL ios.close()",
+        "public void encode(BufferedImage bufferedImage, OutputStream outputStream) \n            throws IOException {\n        if (bufferedImage == null) {\n            throw new IllegalArgumentException(\"Null 'image' argument.\");\n        }\n        if (outputStream == null) {\n            throw new IllegalArgumentException(\"Null 'outputStream' argument.\");\n        }\n        Iterator iterator = ImageIO.getImageWritersByFormatName(\"jpeg\");\n        ImageWriter writer = (ImageWriter) iterator.next();\n        ImageWriteParam p = writer.getDefaultWriteParam();\n        p.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);\n        p.setCompressionQuality(this.quality);\n        ImageOutputStream ios = ImageIO.createImageOutputStream(outputStream);\n        writer.setOutput(ios);\n        writer.write(null, new IIOImage(bufferedImage, null, null), p);\n        ios.flush();\n        writer.dispose();\n        ios.close();\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3617021276595745,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 11.0,
+        "literal_count": 8.0,
+        "source_tokens": 228.0,
+        "l0_tokens": 68.0,
+        "l1_tokens": 280.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 11,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/JFreeChart.java::JFreeChart.createBufferedImage(int width, int height, \n                                             ChartRenderingInfo info)",
+      "source": "public BufferedImage createBufferedImage(int width, int height, \n                                             ChartRenderingInfo info) {\n        return createBufferedImage(width, height, BufferedImage.TYPE_INT_RGB, \n                info);\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: source/org/jfree/chart/JFreeChart.java::JFreeChart.createBufferedImage(int width, int height, \n                                             ChartRenderingInfo info)\nSIGNATURE: public BufferedImage createBufferedImage(int width, int height, \n                                             ChartRenderingInfo info)",
+        "METHOD: source/org/jfree/chart/JFreeChart.java::JFreeChart.createBufferedImage(int width, int height, \n                                             ChartRenderingInfo info)\nSIGNATURE: public BufferedImage createBufferedImage(int width, int height, \n                                             ChartRenderingInfo info)\nSTRUCTURE (lossy):\nreturn createBufferedImage(width, height, BufferedImage.TYPE_INT_RGB, info);\nCALL createBufferedImage(width, height, BufferedImage.TYPE_INT_RGB, info)",
+        "public BufferedImage createBufferedImage(int width, int height, \n                                             ChartRenderingInfo info) {\n        return createBufferedImage(width, height, BufferedImage.TYPE_INT_RGB, \n                info);\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7647058823529411,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 61.0,
+        "l0_tokens": 80.0,
+        "l1_tokens": 122.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/ChartPanel.java::ChartPanel.paintComponent(Graphics g)",
+      "source": "public void paintComponent(Graphics g) {\n        super.paintComponent(g);\n        if (this.chart == null) {\n            return;\n        }\n        Graphics2D g2 = (Graphics2D) g.create();\n\n        // first determine the size of the chart rendering area...\n        Dimension size = getSize();\n        Insets insets = getInsets();\n        Rectangle2D available = new Rectangle2D.Double(insets.left, insets.top,\n                size.getWidth() - insets.left - insets.right,\n                size.getHeight() - insets.top - insets.bottom);\n\n        // work out if scaling is required...\n        boolean scale = false;\n        double drawWidth = available.getWidth();\n        double drawHeight = available.getHeight();\n        this.scaleX = 1.0;\n        this.scaleY = 1.0;\n\n        if (drawWidth < this.minimumDrawWidth) {\n            this.scaleX = drawWidth / this.minimumDrawWidth;\n            drawWidth = this.minimumDrawWidth;\n            scale = true;\n        }\n        else if (drawWidth > this.maximumDrawWidth) {\n            this.scaleX = drawWidth / this.maximumDrawWidth;\n            drawWidth = this.maximumDrawWidth;\n            scale = true;\n        }\n\n        if (drawHeight < this.minimumDrawHeight) {\n            this.scaleY = drawHeight / this.minimumDrawHeight;\n            drawHeight = this.minimumDrawHeight;\n            scale = true;\n        }\n        else if (drawHeight > this.maximumDrawHeight) {\n            this.scaleY = drawHeight / this.maximumDrawHeight;\n            drawHeight = this.maximumDrawHeight;\n            scale = true;\n        }\n\n        Rectangle2D chartArea = new Rectangle2D.Double(0.0, 0.0, drawWidth, \n                drawHeight);\n\n        // are we using the chart buffer?\n        if (this.useBuffer) {\n\n            // do we need to resize the buffer?\n            if ((this.chartBuffer == null) \n                    || (this.chartBufferWidth != available.getWidth())\n                    || (this.chartBufferHeight != available.getHeight())\n            ) {\n                this.chartBufferWidth = (int) available.getWidth();\n                this.chartBufferHeight = (int) available.getHeight();\n                this.chartBuffer = createImage(\n                        this.chartBufferWidth, this.chartBufferHeight);\n//                GraphicsConfiguration gc = g2.getDeviceConfiguration();\n//                this.chartBuffer = gc.createCompatibleImage(\n//                        this.chartBufferWidth, this.chartBufferHeight, \n//                        Transparency.TRANSLUCENT);\n                this.refreshBuffer = true;\n            }\n\n            // do we need to redraw the buffer?\n            if (this.refreshBuffer) {\n\n                Rectangle2D bufferArea = new Rectangle2D.Double(\n                        0, 0, this.chartBufferWidth, this.chartBufferHeight);\n\n                Graphics2D bufferG2 \n                    = (Graphics2D) this.chartBuffer.getGraphics();\n                if (scale) {\n                    AffineTransform saved = bufferG2.getTransform();\n                    AffineTransform st = AffineTransform.getScaleInstance(\n                            this.scaleX, this.scaleY);\n                    bufferG2.transform(st);\n                    this.chart.draw(bufferG2, chartArea, this.anchor, \n                            this.info);\n                    bufferG2.setTransform(saved);\n                }\n                else {\n                    this.chart.draw(bufferG2, bufferArea, this.anchor, \n                            this.info);\n                }\n\n                this.refreshBuffer = false;\n\n            }\n\n            // zap the buffer onto the panel...\n            g2.drawImage(this.chartBuffer, insets.left, insets.top, this);\n\n        }\n\n        // or redrawing the chart every time...\n        else {\n\n            AffineTransform saved = g2.getTransform();\n            g2.translate(insets.left, insets.top);\n            if (scale) {\n                AffineTransform st = AffineTransform.getScaleInstance(\n                        this.scaleX, this.scaleY);\n                g2.transform(st);\n            }\n            this.chart.draw(g2, chartArea, this.anchor, this.info);\n            g2.setTransform(saved);\n\n        }\n        \n        // Redraw the zoom rectangle (if present)\n        drawZoomRectangle(g2);\n        \n        g2.dispose();\n\n        this.anchor = null;\n        this.verticalTraceLine = null;\n        this.horizontalTraceLine = null;\n\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: source/org/jfree/chart/ChartPanel.java::ChartPanel.paintComponent(Graphics g)\nSIGNATURE: public void paintComponent(Graphics g)",
+        "METHOD: source/org/jfree/chart/ChartPanel.java::ChartPanel.paintComponent(Graphics g)\nSIGNATURE: public void paintComponent(Graphics g)\nSTRUCTURE (lossy):\nCALL super.paintComponent(g)\nif (this.chart == null)\nreturn;\nGraphics2D g2 = (Graphics2D) g.create();\nCALL g.create()\nDimension size = getSize();\nCALL getSize()\nInsets insets = getInsets();\nCALL getInsets()\nRectangle2D available = new Rectangle2D.Double(insets.left, insets.top, size.getWidth() - insets.left - insets.right, size.getHeight() - insets.top - insets.bottom);\nCALL size.getWidth()\nCALL size.getHeight()\nboolean scale = false;\ndouble drawWidth = available.getWidth();\nCALL available.getWidth()\ndouble drawHeight = available.getHeight();\nCALL available.getHeight()\nthis.scaleX = 1.0\nthis.scaleY = 1.0\nif (drawWidth < this.minimumDrawWidth)\nthis.scaleX = drawWidth / this.minimumDrawWidth\ndrawWidth = this.minimumDrawWidth\nscale = true\nif (drawWidth > this.maximumDrawWidth)\nthis.scaleX = drawWidth / this.maximumDrawWidth\ndrawWidth = this.maximumDrawWidth\nif (drawHeight < this.minimumDrawHeight)\nthis.scaleY = drawHeight / this.minimumDrawHeight\ndrawHeight = this.minimumDrawHeight\nif (drawHeight > this.maximumDrawHeight)\nthis.scaleY = drawHeight / this.maximumDrawHeight\ndrawHeight = this.maximumDrawHeight\nRectangle2D chartArea = new Rectangle2D.Double(0.0, 0.0, drawWidth, drawHeight);\nif (this.useBuffer)\nif ((this.chartBuffer == null) || (this.chartBufferWidth != available.getWidth()) || (this.chartBufferHeight != available.getHeight()) )\nthis.chartBufferWidth = (int) available.getWidth()\nthis.chartBufferHeight = (int) available.getHeight()\nthis.chartBuffer = createImage( this.chartBufferWidth, this.chartBufferHeight)\nCALL createImage( this.chartBufferWidth, this.chartBufferHeight)\nthis.refreshBuffer = true\nif (this.refreshBuffer)\nRectangle2D bufferArea = new Rectangle2D.Double( 0, 0, this.chartBufferWidth, this.chartBufferHeight);\nGraphics2D bufferG2 = (Graphics2D) this.chartBuffer.getGraphics();\nCALL this.chartBuffer.getGraphics()\nif (scale)\nAffineTransform saved = bufferG2.getTransform();\nCALL bufferG2.getTransform()\nAffineTransform st = AffineTransform.getScaleInstance( this.scaleX, this.scaleY);\nCALL Affine\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public void paintComponent(Graphics g) {\n        super.paintComponent(g);\n        if (this.chart == null) {\n            return;\n        }\n        Graphics2D g2 = (Graphics2D) g.create();\n\n        // first determine the size of the chart rendering area...\n        Dimension size = getSize();\n        Insets insets = getInsets();\n        Rectangle2D available = new Rectangle2D.Double(insets.left, insets.top,\n                size.getWidth() - insets.left - insets.right,\n                size.getHeight() - insets.top - insets.bottom);\n\n        // work out if scaling is required...\n        boolean scale = false;\n        double drawWidth = available.getWidth();\n        double drawHeight = available.getHeight();\n        this.scaleX = 1.0;\n        this.scaleY = 1.0;\n\n        if (drawWidth < this.minimumDrawWidth) {\n            this.scaleX = drawWidth / this.minimumDrawWidth;\n            drawWidth = this.minimumDrawWidth;\n            scale = true;\n        }\n        else if (drawWidth > this.maximumDrawWidth) {\n            this.scaleX = drawWidth / this.maximumDrawWidth;\n            drawWidth = this.maximumDrawWidth;\n            scale = true;\n        }\n\n        if (drawHeight < this.minimumDrawHeight) {\n            this.scaleY = drawHeight / this.minimumDrawHeight;\n            drawHeight = this.minimumDrawHeight;\n            scale = true;\n        }\n        else if (drawHeight > this.maximumDrawHeight) {\n            this.scaleY = drawHeight / this.maximumDrawHeight;\n            drawHeight = this.maximumDrawHeight;\n            scale = true;\n        }\n\n        Rectangle2D chartArea = new Rectangle2D.Double(0.0, 0.0, drawWidth, \n                drawHeight);\n\n        // are we using the chart buffer?\n        if (this.useBuffer) {\n\n            // do we need to resize the buffer?\n            if ((this.chartBuffer == null) \n                    || (this.chartBufferWidth != available.getWidth())\n                    || (this.chartBufferHeight != available.getHeight())\n            ) {\n                this.chartBufferWidth = (int) available.getWidth();\n                this.chartBufferHeight = (int) available.getHeight();\n                this.chartBuffer = createImage(\n                        this.chartBufferWidth, this.chartBufferHeight);\n//                GraphicsConfiguration gc = g2.getDeviceConfiguration();\n//                this.chartBuffer = gc.createCompatibleImage(\n//                        this.chartBufferWidth, this.chartBufferHeight, \n//                        Transparency.TRANSLUCENT);\n                this.refreshBuffer = true;\n            }\n\n            // do we need to redraw the buffer?\n            if (this.refreshBuffer) {\n\n                Rectangle2D bufferArea = new Rectangle2D.Double(\n                        0, 0, this.chartBufferWidth, this.chartBufferHeight);\n\n                Graphics2D bufferG2 \n                    = (Graphics2D) this.chartBuffer.getGraphics();\n                if (scale) {\n                    AffineTransform saved = bufferG2.getTransform();\n                    AffineTransform st = AffineTransform.getScaleInstance(\n                            this.scaleX, this.scaleY);\n                    bufferG2.transform(st);\n                    this.chart.draw(bufferG2, chartArea, this.anchor, \n                            this.info);\n                    bufferG2.setTransform(saved);\n                }\n                else {\n                    this.chart.draw(bufferG2, bufferArea, this.anchor, \n                            this.info);\n                }\n\n                this.refreshBuffer = false;\n\n            }\n\n            // zap the buffer onto the panel...\n            g2.drawImage(this.chartBuffer, insets.left, insets.top, this);\n\n        }\n\n        // or redrawing the chart every time...\n        else {\n\n            AffineTransform saved = g2.getTransform();\n            g2.translate(insets.left, insets.top);\n            if (scale) {\n                AffineTransform st = AffineTransform.getScaleInstance(\n                        this.scaleX, this.scaleY);\n                g2.transform(st);\n            }\n            this.chart.draw(g2, chartArea, this.anchor, this.info);\n            g2.setTransform(saved);\n\n        }\n        \n        // Redraw the zoom rectangle (if present)\n        drawZoomRectangle(g2);\n        \n        g2.dispose();\n\n        this.anchor = null;\n        this.verticalTraceLine = null;\n        this.horizontalTraceLine = null;\n\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2857142857142857,
+        "trace_match": 0.0,
+        "complexity": 11.0,
+        "call_count": 29.0,
+        "literal_count": 11.0,
+        "source_tokens": 1107.0,
+        "l0_tokens": 34.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.5140018066847335,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 11,
+        "call_count": 29,
+        "literal_count": 11
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/encoders/ImageEncoderFactory.java::ImageEncoderFactory.init()",
+      "source": "private static void init() {\n        encoders = new Hashtable();\n        encoders.put(\"jpeg\", \"org.jfree.chart.encoders.SunJPEGEncoderAdapter\");\n        try {\n            //  Test for being run under JDK 1.4+\n            Class.forName(\"javax.imageio.ImageIO\");\n            //  Test for JFreeChart being compiled under JDK 1.4+\n            Class.forName(\"org.jfree.chart.encoders.SunPNGEncoderAdapter\");\n            encoders.put(\"png\", \n                    \"org.jfree.chart.encoders.SunPNGEncoderAdapter\");\n            encoders.put(\"jpeg\",\n                    \"org.jfree.chart.encoders.SunJPEGEncoderAdapter\");\n        } \n        catch (ClassNotFoundException e) {\n            encoders.put(\"png\", \n                    \"org.jfree.chart.encoders.KeypointPNGEncoderAdapter\");\n        }\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: source/org/jfree/chart/encoders/ImageEncoderFactory.java::ImageEncoderFactory.init()\nSIGNATURE: private static void init()",
+        "METHOD: source/org/jfree/chart/encoders/ImageEncoderFactory.java::ImageEncoderFactory.init()\nSIGNATURE: private static void init()\nSTRUCTURE (lossy):\nencoders = new Hashtable()\nCALL encoders.put(\"jpeg\", \"org.jfree.chart.encoders.SunJPEGEncoderAdapter\")\nCALL Class.forName(\"javax.imageio.ImageIO\")\nCALL Class.forName(\"org.jfree.chart.encoders.SunPNGEncoderAdapter\")\nCALL encoders.put(\"png\", \"org.jfree.chart.encoders.SunPNGEncoderAdapter\")\ncatch (ClassNotFoundException e)\nCALL encoders.put(\"png\", \"org.jfree.chart.encoders.KeypointPNGEncoderAdapter\")",
+        "private static void init() {\n        encoders = new Hashtable();\n        encoders.put(\"jpeg\", \"org.jfree.chart.encoders.SunJPEGEncoderAdapter\");\n        try {\n            //  Test for being run under JDK 1.4+\n            Class.forName(\"javax.imageio.ImageIO\");\n            //  Test for JFreeChart being compiled under JDK 1.4+\n            Class.forName(\"org.jfree.chart.encoders.SunPNGEncoderAdapter\");\n            encoders.put(\"png\", \n                    \"org.jfree.chart.encoders.SunPNGEncoderAdapter\");\n            encoders.put(\"jpeg\",\n                    \"org.jfree.chart.encoders.SunJPEGEncoderAdapter\");\n        } \n        catch (ClassNotFoundException e) {\n            encoders.put(\"png\", \n                    \"org.jfree.chart.encoders.KeypointPNGEncoderAdapter\");\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.358974358974359,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 6.0,
+        "literal_count": 10.0,
+        "source_tokens": 197.0,
+        "l0_tokens": 33.0,
+        "l1_tokens": 138.0,
+        "compression_ratio": 0.700507614213198,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 6,
+        "literal_count": 10
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/KeyToGroupMap.java::KeyToGroupMap.clone(Object object)",
+      "source": "private static Object clone(Object object) {\n        if (object == null) {\n            return null;   \n        }\n        Class c = object.getClass();\n        Object result = null;\n        try {\n            Method m = c.getMethod(\"clone\", (Class[]) null);\n            if (Modifier.isPublic(m.getModifiers())) {\n                try {\n                    result = m.invoke(object, (Object[]) null);\n                }\n                catch (Exception e) {\n                    e.printStackTrace();  \n                }\n            }\n        }\n        catch (NoSuchMethodException e) {\n            result = object;\n        }\n        return result;\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: source/org/jfree/data/KeyToGroupMap.java::KeyToGroupMap.clone(Object object)\nSIGNATURE: private static Object clone(Object object)",
+        "METHOD: source/org/jfree/data/KeyToGroupMap.java::KeyToGroupMap.clone(Object object)\nSIGNATURE: private static Object clone(Object object)\nSTRUCTURE (lossy):\nif (object == null)\nreturn null;\nClass c = object.getClass();\nCALL object.getClass()\nObject result = null;\nMethod m = c.getMethod(\"clone\", (Class[]) null);\nCALL c.getMethod(\"clone\", (Class[]) null)\nif (Modifier.isPublic(m.getModifiers()))\nCALL Modifier.isPublic(m.getModifiers())\nCALL m.getModifiers()\nresult = m.invoke(object, (Object[]) null)\nCALL m.invoke(object, (Object[]) null)\ncatch (Exception e)\nCALL e.printStackTrace()\ncatch (NoSuchMethodException e)\nresult = object\nreturn result;",
+        "private static Object clone(Object object) {\n        if (object == null) {\n            return null;   \n        }\n        Class c = object.getClass();\n        Object result = null;\n        try {\n            Method m = c.getMethod(\"clone\", (Class[]) null);\n            if (Modifier.isPublic(m.getModifiers())) {\n                try {\n                    result = m.invoke(object, (Object[]) null);\n                }\n                catch (Exception e) {\n                    e.printStackTrace();  \n                }\n            }\n        }\n        catch (NoSuchMethodException e) {\n            result = object;\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.41379310344827586,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 6.0,
+        "literal_count": 6.0,
+        "source_tokens": 162.0,
+        "l0_tokens": 35.0,
+        "l1_tokens": 163.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 6,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/ChartUtilities.java::ChartUtilities.writeChartAsPNG(OutputStream out, JFreeChart chart,\n            int width, int height,  ChartRenderingInfo info)",
+      "source": "public static void writeChartAsPNG(OutputStream out, JFreeChart chart,\n            int width, int height,  ChartRenderingInfo info) \n            throws IOException {\n\n        if (chart == null) {\n            throw new IllegalArgumentException(\"Null 'chart' argument.\");\n        }\n        BufferedImage bufferedImage \n                = chart.createBufferedImage(width, height, info);\n        EncoderUtil.writeBufferedImage(bufferedImage, ImageFormat.PNG, out);\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: source/org/jfree/chart/ChartUtilities.java::ChartUtilities.writeChartAsPNG(OutputStream out, JFreeChart chart,\n            int width, int height,  ChartRenderingInfo info)\nSIGNATURE: public static void writeChartAsPNG(OutputStream out, JFreeChart chart,\n            int width, int height,  ChartRenderingInfo info) \n            throws IOException",
+        "METHOD: source/org/jfree/chart/ChartUtilities.java::ChartUtilities.writeChartAsPNG(OutputStream out, JFreeChart chart,\n            int width, int height,  ChartRenderingInfo info)\nSIGNATURE: public static void writeChartAsPNG(OutputStream out, JFreeChart chart,\n            int width, int height,  ChartRenderingInfo info) \n            throws IOException\nSTRUCTURE (lossy):\nif (chart == null)\nthrow new IllegalArgumentException(\"Null 'chart' argument.\");\nBufferedImage bufferedImage = chart.createBufferedImage(width, height, info);\nCALL chart.createBufferedImage(width, height, info)\nCALL EncoderUtil.writeBufferedImage(bufferedImage, ImageFormat.PNG, out)",
+        "public static void writeChartAsPNG(OutputStream out, JFreeChart chart,\n            int width, int height,  ChartRenderingInfo info) \n            throws IOException {\n\n        if (chart == null) {\n            throw new IllegalArgumentException(\"Null 'chart' argument.\");\n        }\n        BufferedImage bufferedImage \n                = chart.createBufferedImage(width, height, info);\n        EncoderUtil.writeBufferedImage(bufferedImage, ImageFormat.PNG, out);\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.48484848484848486,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 117.0,
+        "l0_tokens": 89.0,
+        "l1_tokens": 165.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/ChartUtilities.java::ChartUtilities.writeChartAsPNG(OutputStream out, JFreeChart chart,\n            int width, int height, ChartRenderingInfo info,\n            boolean encodeAlpha, int compression)",
+      "source": "public static void writeChartAsPNG(OutputStream out, JFreeChart chart,\n            int width, int height, ChartRenderingInfo info,\n            boolean encodeAlpha, int compression) throws IOException {\n\n        if (out == null) {\n            throw new IllegalArgumentException(\"Null 'out' argument.\");\n        }\n        if (chart == null) {\n            throw new IllegalArgumentException(\"Null 'chart' argument.\");\n        }\n        BufferedImage chartImage = chart.createBufferedImage(width, height, \n                BufferedImage.TYPE_INT_ARGB, info);\n        ChartUtilities.writeBufferedImageAsPNG(out, chartImage, encodeAlpha, \n                compression);\n\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: source/org/jfree/chart/ChartUtilities.java::ChartUtilities.writeChartAsPNG(OutputStream out, JFreeChart chart,\n            int width, int height, ChartRenderingInfo info,\n            boolean encodeAlpha, int compression)\nSIGNATURE: public static void writeChartAsPNG(OutputStream out, JFreeChart chart,\n            int width, int height, ChartRenderingInfo info,\n            boolean encodeAlpha, int compression) throws IOException",
+        "METHOD: source/org/jfree/chart/ChartUtilities.java::ChartUtilities.writeChartAsPNG(OutputStream out, JFreeChart chart,\n            int width, int height, ChartRenderingInfo info,\n            boolean encodeAlpha, int compression)\nSIGNATURE: public static void writeChartAsPNG(OutputStream out, JFreeChart chart,\n            int width, int height, ChartRenderingInfo info,\n            boolean encodeAlpha, int compression) throws IOException\nSTRUCTURE (lossy):\nif (out == null)\nthrow new IllegalArgumentException(\"Null 'out' argument.\");\nif (chart == null)\nthrow new IllegalArgumentException(\"Null 'chart' argument.\");\nBufferedImage chartImage = chart.createBufferedImage(width, height, BufferedImage.TYPE_INT_ARGB, info);\nCALL chart.createBufferedImage(width, height, BufferedImage.TYPE_INT_ARGB, info)\nCALL ChartUtilities.writeBufferedImageAsPNG(out, chartImage, encodeAlpha, compression)",
+        "public static void writeChartAsPNG(OutputStream out, JFreeChart chart,\n            int width, int height, ChartRenderingInfo info,\n            boolean encodeAlpha, int compression) throws IOException {\n\n        if (out == null) {\n            throw new IllegalArgumentException(\"Null 'out' argument.\");\n        }\n        if (chart == null) {\n            throw new IllegalArgumentException(\"Null 'chart' argument.\");\n        }\n        BufferedImage chartImage = chart.createBufferedImage(width, height, \n                BufferedImage.TYPE_INT_ARGB, info);\n        ChartUtilities.writeBufferedImageAsPNG(out, chartImage, encodeAlpha, \n                compression);\n\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 2.0,
+        "literal_count": 4.0,
+        "source_tokens": 167.0,
+        "l0_tokens": 110.0,
+        "l1_tokens": 222.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 2,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/plot/Plot.java::Plot.drawBackground(Graphics2D g2, Rectangle2D area)",
+      "source": "public void drawBackground(Graphics2D g2, Rectangle2D area) {\n        // some subclasses override this method completely, so don't put \n        // anything here that *must* be done\n        fillBackground(g2, area);\n        drawBackgroundImage(g2, area);\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: source/org/jfree/chart/plot/Plot.java::Plot.drawBackground(Graphics2D g2, Rectangle2D area)\nSIGNATURE: public void drawBackground(Graphics2D g2, Rectangle2D area)",
+        "METHOD: source/org/jfree/chart/plot/Plot.java::Plot.drawBackground(Graphics2D g2, Rectangle2D area)\nSIGNATURE: public void drawBackground(Graphics2D g2, Rectangle2D area)\nSTRUCTURE (lossy):\nCALL fillBackground(g2, area)\nCALL drawBackgroundImage(g2, area)",
+        "public void drawBackground(Graphics2D g2, Rectangle2D area) {\n        // some subclasses override this method completely, so don't put \n        // anything here that *must* be done\n        fillBackground(g2, area);\n        drawBackgroundImage(g2, area);\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 65.0,
+        "l0_tokens": 43.0,
+        "l1_tokens": 64.0,
+        "compression_ratio": 0.9846153846153847,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/title/LegendTitle.java::LegendTitle.draw(Graphics2D g2, Rectangle2D area, Object params)",
+      "source": "public Object draw(Graphics2D g2, Rectangle2D area, Object params) {\n        Rectangle2D target = (Rectangle2D) area.clone();\n        target = trimMargin(target);\n        if (this.backgroundPaint != null) {\n            g2.setPaint(this.backgroundPaint);\n            g2.fill(target);\n        }\n        BlockFrame border = getFrame();\n        border.draw(g2, target);\n        border.getInsets().trim(target);\n        BlockContainer container = this.wrapper;\n        if (container == null) {\n            container = this.items; \n        }\n        target = trimPadding(target);\n        return container.draw(g2, target, params);   \n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: source/org/jfree/chart/title/LegendTitle.java::LegendTitle.draw(Graphics2D g2, Rectangle2D area, Object params)\nSIGNATURE: public Object draw(Graphics2D g2, Rectangle2D area, Object params)",
+        "METHOD: source/org/jfree/chart/title/LegendTitle.java::LegendTitle.draw(Graphics2D g2, Rectangle2D area, Object params)\nSIGNATURE: public Object draw(Graphics2D g2, Rectangle2D area, Object params)\nSTRUCTURE (lossy):\nRectangle2D target = (Rectangle2D) area.clone();\nCALL area.clone()\ntarget = trimMargin(target)\nCALL trimMargin(target)\nif (this.backgroundPaint != null)\nCALL g2.setPaint(this.backgroundPaint)\nCALL g2.fill(target)\nBlockFrame border = getFrame();\nCALL getFrame()\nCALL border.draw(g2, target)\nCALL border.getInsets().trim(target)\nCALL border.getInsets()\nBlockContainer container = this.wrapper;\nif (container == null)\ncontainer = this.items\ntarget = trimPadding(target)\nCALL trimPadding(target)\nreturn container.draw(g2, target, params);\nCALL container.draw(g2, target, params)",
+        "public Object draw(Graphics2D g2, Rectangle2D area, Object params) {\n        Rectangle2D target = (Rectangle2D) area.clone();\n        target = trimMargin(target);\n        if (this.backgroundPaint != null) {\n            g2.setPaint(this.backgroundPaint);\n            g2.fill(target);\n        }\n        BlockFrame border = getFrame();\n        border.draw(g2, target);\n        border.getInsets().trim(target);\n        BlockContainer container = this.wrapper;\n        if (container == null) {\n            container = this.items; \n        }\n        target = trimPadding(target);\n        return container.draw(g2, target, params);   \n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.38235294117647056,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 10.0,
+        "literal_count": 2.0,
+        "source_tokens": 159.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 198.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 10,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/ChartUtilities.java::ChartUtilities.writeChartAsJPEG(OutputStream out, JFreeChart chart,\n            int width, int height, ChartRenderingInfo info)",
+      "source": "public static void writeChartAsJPEG(OutputStream out, JFreeChart chart,\n            int width, int height, ChartRenderingInfo info) \n            throws IOException {\n\n        if (chart == null) {\n            throw new IllegalArgumentException(\"Null 'chart' argument.\");\n        }\n        BufferedImage image = chart.createBufferedImage(width, height, info);\n        EncoderUtil.writeBufferedImage(image, ImageFormat.JPEG, out);\n\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: source/org/jfree/chart/ChartUtilities.java::ChartUtilities.writeChartAsJPEG(OutputStream out, JFreeChart chart,\n            int width, int height, ChartRenderingInfo info)\nSIGNATURE: public static void writeChartAsJPEG(OutputStream out, JFreeChart chart,\n            int width, int height, ChartRenderingInfo info) \n            throws IOException",
+        "METHOD: source/org/jfree/chart/ChartUtilities.java::ChartUtilities.writeChartAsJPEG(OutputStream out, JFreeChart chart,\n            int width, int height, ChartRenderingInfo info)\nSIGNATURE: public static void writeChartAsJPEG(OutputStream out, JFreeChart chart,\n            int width, int height, ChartRenderingInfo info) \n            throws IOException\nSTRUCTURE (lossy):\nif (chart == null)\nthrow new IllegalArgumentException(\"Null 'chart' argument.\");\nBufferedImage image = chart.createBufferedImage(width, height, info);\nCALL chart.createBufferedImage(width, height, info)\nCALL EncoderUtil.writeBufferedImage(image, ImageFormat.JPEG, out)",
+        "public static void writeChartAsJPEG(OutputStream out, JFreeChart chart,\n            int width, int height, ChartRenderingInfo info) \n            throws IOException {\n\n        if (chart == null) {\n            throw new IllegalArgumentException(\"Null 'chart' argument.\");\n        }\n        BufferedImage image = chart.createBufferedImage(width, height, info);\n        EncoderUtil.writeBufferedImage(image, ImageFormat.JPEG, out);\n\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.48484848484848486,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 109.0,
+        "l0_tokens": 89.0,
+        "l1_tokens": 161.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/encoders/SunPNGEncoderAdapter.java::SunPNGEncoderAdapter.encode(BufferedImage bufferedImage, OutputStream outputStream)",
+      "source": "public void encode(BufferedImage bufferedImage, OutputStream outputStream) \n        throws IOException {\n        if (bufferedImage == null) {\n            throw new IllegalArgumentException(\"Null 'image' argument.\");\n        }\n        if (outputStream == null) {\n            throw new IllegalArgumentException(\"Null 'outputStream' argument.\");\n        }\n        ImageIO.write(bufferedImage, ImageFormat.PNG, outputStream);\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: source/org/jfree/chart/encoders/SunPNGEncoderAdapter.java::SunPNGEncoderAdapter.encode(BufferedImage bufferedImage, OutputStream outputStream)\nSIGNATURE: public void encode(BufferedImage bufferedImage, OutputStream outputStream) \n        throws IOException",
+        "METHOD: source/org/jfree/chart/encoders/SunPNGEncoderAdapter.java::SunPNGEncoderAdapter.encode(BufferedImage bufferedImage, OutputStream outputStream)\nSIGNATURE: public void encode(BufferedImage bufferedImage, OutputStream outputStream) \n        throws IOException\nSTRUCTURE (lossy):\nif (bufferedImage == null)\nthrow new IllegalArgumentException(\"Null 'image' argument.\");\nif (outputStream == null)\nthrow new IllegalArgumentException(\"Null 'outputStream' argument.\");\nCALL ImageIO.write(bufferedImage, ImageFormat.PNG, outputStream)",
+        "public void encode(BufferedImage bufferedImage, OutputStream outputStream) \n        throws IOException {\n        if (bufferedImage == null) {\n            throw new IllegalArgumentException(\"Null 'image' argument.\");\n        }\n        if (outputStream == null) {\n            throw new IllegalArgumentException(\"Null 'outputStream' argument.\");\n        }\n        ImageIO.write(bufferedImage, ImageFormat.PNG, outputStream);\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.48148148148148145,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 1.0,
+        "literal_count": 4.0,
+        "source_tokens": 107.0,
+        "l0_tokens": 66.0,
+        "l1_tokens": 133.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 1,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/TimeSeries.java::TimeSeries.removeAgedItems(long latest, boolean notify)",
+      "source": "public void removeAgedItems(long latest, boolean notify) {\n        \n        // find the serial index of the period specified by 'latest'\n        long index = Long.MAX_VALUE; \n        try {\n            Method m = RegularTimePeriod.class.getDeclaredMethod(\n                    \"createInstance\", new Class[] {Class.class, Date.class, \n                    TimeZone.class});\n            RegularTimePeriod newest = (RegularTimePeriod) m.invoke(\n                    this.timePeriodClass, new Object[] {this.timePeriodClass,\n                            new Date(latest), TimeZone.getDefault()});\n            index = newest.getSerialIndex();\n        }\n        catch (NoSuchMethodException e) {\n            e.printStackTrace();\n        }\n        catch (IllegalAccessException e) {\n            e.printStackTrace();\n        }\n        catch (InvocationTargetException e) {\n            e.printStackTrace();\n        }\n        \n        // check if there are any values earlier than specified by the history \n        // count...\n        boolean removed = false;\n        while (getItemCount() > 0 && (index \n                - getTimePeriod(0).getSerialIndex()) > this.maximumItemAge) {\n            this.data.remove(0);\n            removed = true;\n        }\n        if (removed && notify) {\n            fireSeriesChanged();\n        }\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/TimeSeries.java::TimeSeries.removeAgedItems(long latest, boolean notify)\nSIGNATURE: public void removeAgedItems(long latest, boolean notify)",
+        "METHOD: source/org/jfree/data/time/TimeSeries.java::TimeSeries.removeAgedItems(long latest, boolean notify)\nSIGNATURE: public void removeAgedItems(long latest, boolean notify)\nSTRUCTURE (lossy):\nlong index = Long.MAX_VALUE;\nMethod m = RegularTimePeriod.class.getDeclaredMethod( \"createInstance\", new Class[] {Class.class, Date.class, TimeZone.class});\nCALL RegularTimePeriod.class.getDeclaredMethod( \"createInstance\", new Class[] {Class.class, Date.class, TimeZone.class})\nRegularTimePeriod newest = (RegularTimePeriod) m.invoke( this.timePeriodClass, new Object[] {this.timePeriodClass, new Date(latest), TimeZone.getDefault()});\nCALL m.invoke( this.timePeriodClass, new Object[] {this.timePeriodClass, new Date(latest), TimeZone.getDefault()})\nCALL TimeZone.getDefault()\nindex = newest.getSerialIndex()\nCALL newest.getSerialIndex()\ncatch (NoSuchMethodException e)\nCALL e.printStackTrace()\ncatch (IllegalAccessException e)\ncatch (InvocationTargetException e)\nboolean removed = false;\nwhile (getItemCount() > 0 && (index - getTimePeriod(0).getSerialIndex()) > this.maximumItemAge)\nCALL getItemCount()\nCALL getTimePeriod(0).getSerialIndex()\nCALL getTimePeriod(0)\nCALL this.data.remove(0)\nremoved = true\nif (removed && notify)\nCALL fireSeriesChanged()",
+        "public void removeAgedItems(long latest, boolean notify) {\n        \n        // find the serial index of the period specified by 'latest'\n        long index = Long.MAX_VALUE; \n        try {\n            Method m = RegularTimePeriod.class.getDeclaredMethod(\n                    \"createInstance\", new Class[] {Class.class, Date.class, \n                    TimeZone.class});\n            RegularTimePeriod newest = (RegularTimePeriod) m.invoke(\n                    this.timePeriodClass, new Object[] {this.timePeriodClass,\n                            new Date(latest), TimeZone.getDefault()});\n            index = newest.getSerialIndex();\n        }\n        catch (NoSuchMethodException e) {\n            e.printStackTrace();\n        }\n        catch (IllegalAccessException e) {\n            e.printStackTrace();\n        }\n        catch (InvocationTargetException e) {\n            e.printStackTrace();\n        }\n        \n        // check if there are any values earlier than specified by the history \n        // count...\n        boolean removed = false;\n        while (getItemCount() > 0 && (index \n                - getTimePeriod(0).getSerialIndex()) > this.maximumItemAge) {\n            this.data.remove(0);\n            removed = true;\n        }\n        if (removed && notify) {\n            fireSeriesChanged();\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.27941176470588236,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 12.0,
+        "literal_count": 8.0,
+        "source_tokens": 330.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 313.0,
+        "compression_ratio": 0.9484848484848485,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 12,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/JFreeChart.java::JFreeChart.draw(Graphics2D g2, \n                     Rectangle2D chartArea, Point2D anchor, \n                     ChartRenderingInfo info)",
+      "source": "public void draw(Graphics2D g2, \n                     Rectangle2D chartArea, Point2D anchor, \n                     ChartRenderingInfo info) {\n\n        notifyListeners(new ChartProgressEvent(this, this, \n                ChartProgressEvent.DRAWING_STARTED, 0));\n\n        // record the chart area, if info is requested...\n        if (info != null) {\n            info.clear();\n            info.setChartArea(chartArea);\n        }\n\n        // ensure no drawing occurs outside chart area...\n        Shape savedClip = g2.getClip();\n        g2.clip(chartArea);\n\n        g2.addRenderingHints(this.renderingHints);\n\n        // draw the chart background...\n        if (this.backgroundPaint != null) {\n            g2.setPaint(this.backgroundPaint);\n            g2.fill(chartArea);\n        }\n\n        if (this.backgroundImage != null) {\n            Composite originalComposite = g2.getComposite();\n            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, \n                    this.backgroundImageAlpha));\n            Rectangle2D dest = new Rectangle2D.Double(0.0, 0.0, \n                    this.backgroundImage.getWidth(null), \n                    this.backgroundImage.getHeight(null));\n            Align.align(dest, chartArea, this.backgroundImageAlignment);\n            g2.drawImage(this.backgroundImage, (int) dest.getX(), \n                    (int) dest.getY(), (int) dest.getWidth(), \n                    (int) dest.getHeight(), null);\n            g2.setComposite(originalComposite);\n        }\n\n        if (isBorderVisible()) {\n            Paint paint = getBorderPaint();\n            Stroke stroke = getBorderStroke();\n            if (paint != null && stroke != null) {\n                Rectangle2D borderArea = new Rectangle2D.Double(\n                        chartArea.getX(), chartArea.getY(), \n                        chartArea.getWidth() - 1.0, chartArea.getHeight() \n                        - 1.0);\n                g2.setPaint(paint);\n                g2.setStroke(stroke);\n                g2.draw(borderArea);\n            }\n        }\n\n        // draw the title and subtitles...\n        Rectangle2D nonTitleArea = new Rectangle2D.Double();\n        nonTitleArea.setRect(chartArea);\n        this.padding.trim(nonTitleArea);\n        \n        EntityCollection entities = null;\n        if (info != null) {\n            entities = info.getEntityCollection();   \n        }\n        if (this.title != null) {\n            EntityCollection e = drawTitle(this.title, g2, nonTitleArea, \n                    (entities != null));\n            if (e != null) {\n                entities.addAll(e);   \n            }\n        }\n\n        Iterator iterator = this.subtitles.iterator();\n        while (iterator.hasNext()) {\n            Title currentTitle = (Title) iterator.next();\n            EntityCollection e = drawTitle(currentTitle, g2, nonTitleArea, \n                    (entities != null));\n            if (e != null) {\n                entities.addAll(e);   \n            }\n        }\n\n        Rectangle2D plotArea = nonTitleArea;\n \n        // draw the plot (axes and data visualisation)\n        PlotRenderingInfo plotInfo = null;\n        if (info != null) {\n            plotInfo = info.getPlotInfo();\n        }\n        this.plot.draw(g2, plotArea, anchor, null, plotInfo);\n\n        g2.setClip(savedClip);\n\n        notifyListeners(new ChartProgressEvent(this, this, \n                ChartProgressEvent.DRAWING_FINISHED, 100));\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: source/org/jfree/chart/JFreeChart.java::JFreeChart.draw(Graphics2D g2, \n                     Rectangle2D chartArea, Point2D anchor, \n                     ChartRenderingInfo info)\nSIGNATURE: public void draw(Graphics2D g2, \n                     Rectangle2D chartArea, Point2D anchor, \n                     ChartRenderingInfo info)",
+        "METHOD: source/org/jfree/chart/JFreeChart.java::JFreeChart.draw(Graphics2D g2, \n                     Rectangle2D chartArea, Point2D anchor, \n                     ChartRenderingInfo info)\nSIGNATURE: public void draw(Graphics2D g2, \n                     Rectangle2D chartArea, Point2D anchor, \n                     ChartRenderingInfo info)\nSTRUCTURE (lossy):\nCALL notifyListeners(new ChartProgressEvent(this, this, ChartProgressEvent.DRAWING_STARTED, 0))\nif (info != null)\nCALL info.clear()\nCALL info.setChartArea(chartArea)\nShape savedClip = g2.getClip();\nCALL g2.getClip()\nCALL g2.clip(chartArea)\nCALL g2.addRenderingHints(this.renderingHints)\nif (this.backgroundPaint != null)\nCALL g2.setPaint(this.backgroundPaint)\nCALL g2.fill(chartArea)\nif (this.backgroundImage != null)\nComposite originalComposite = g2.getComposite();\nCALL g2.getComposite()\nCALL g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.backgroundImageAlpha))\nCALL AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.backgroundImageAlpha)\nRectangle2D dest = new Rectangle2D.Double(0.0, 0.0, this.backgroundImage.getWidth(null), this.backgroundImage.getHeight(null));\nCALL this.backgroundImage.getWidth(null)\nCALL this.backgroundImage.getHeight(null)\nCALL Align.align(dest, chartArea, this.backgroundImageAlignment)\nCALL g2.drawImage(this.backgroundImage, (int) dest.getX(), (int) dest.getY(), (int) dest.getWidth(), (int) dest.getHeight(), null)\nCALL dest.getX()\nCALL dest.getY()\nCALL dest.getWidth()\nCALL dest.getHeight()\nCALL g2.setComposite(originalComposite)\nif (isBorderVisible())\nCALL isBorderVisible()\nPaint paint = getBorderPaint();\nCALL getBorderPaint()\nStroke stroke = getBorderStroke();\nCALL getBorderStroke()\nif (paint != null && stroke != null)\nRectangle2D borderArea = new Rectangle2D.Double( chartArea.getX(), chartArea.getY(), chartArea.getWidth() - 1.0, chartArea.getHeight() - 1.0);\nCALL chartArea.getX()\nCALL chartArea.getY()\nCALL chartArea.getWidth()\nCALL chartArea.getHeight()\nCALL g2.setPaint(paint)\nCALL g2.setStroke(stroke)\nCALL g2.draw(borderArea)\nRectangle2D nonTitleArea = new Rectangle2D.Double();\nCALL nonTitleArea.setRect(chartArea)\nCALL this.padding.trim(nonTitleArea)\nEntityC\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public void draw(Graphics2D g2, \n                     Rectangle2D chartArea, Point2D anchor, \n                     ChartRenderingInfo info) {\n\n        notifyListeners(new ChartProgressEvent(this, this, \n                ChartProgressEvent.DRAWING_STARTED, 0));\n\n        // record the chart area, if info is requested...\n        if (info != null) {\n            info.clear();\n            info.setChartArea(chartArea);\n        }\n\n        // ensure no drawing occurs outside chart area...\n        Shape savedClip = g2.getClip();\n        g2.clip(chartArea);\n\n        g2.addRenderingHints(this.renderingHints);\n\n        // draw the chart background...\n        if (this.backgroundPaint != null) {\n            g2.setPaint(this.backgroundPaint);\n            g2.fill(chartArea);\n        }\n\n        if (this.backgroundImage != null) {\n            Composite originalComposite = g2.getComposite();\n            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, \n                    this.backgroundImageAlpha));\n            Rectangle2D dest = new Rectangle2D.Double(0.0, 0.0, \n                    this.backgroundImage.getWidth(null), \n                    this.backgroundImage.getHeight(null));\n            Align.align(dest, chartArea, this.backgroundImageAlignment);\n            g2.drawImage(this.backgroundImage, (int) dest.getX(), \n                    (int) dest.getY(), (int) dest.getWidth(), \n                    (int) dest.getHeight(), null);\n            g2.setComposite(originalComposite);\n        }\n\n        if (isBorderVisible()) {\n            Paint paint = getBorderPaint();\n            Stroke stroke = getBorderStroke();\n            if (paint != null && stroke != null) {\n                Rectangle2D borderArea = new Rectangle2D.Double(\n                        chartArea.getX(), chartArea.getY(), \n                        chartArea.getWidth() - 1.0, chartArea.getHeight() \n                        - 1.0);\n                g2.setPaint(paint);\n                g2.setStroke(stroke);\n                g2.draw(borderArea);\n            }\n        }\n\n        // draw the title and subtitles...\n        Rectangle2D nonTitleArea = new Rectangle2D.Double();\n        nonTitleArea.setRect(chartArea);\n        this.padding.trim(nonTitleArea);\n        \n        EntityCollection entities = null;\n        if (info != null) {\n            entities = info.getEntityCollection();   \n        }\n        if (this.title != null) {\n            EntityCollection e = drawTitle(this.title, g2, nonTitleArea, \n                    (entities != null));\n            if (e != null) {\n                entities.addAll(e);   \n            }\n        }\n\n        Iterator iterator = this.subtitles.iterator();\n        while (iterator.hasNext()) {\n            Title currentTitle = (Title) iterator.next();\n            EntityCollection e = drawTitle(currentTitle, g2, nonTitleArea, \n                    (entities != null));\n            if (e != null) {\n                entities.addAll(e);   \n            }\n        }\n\n        Rectangle2D plotArea = nonTitleArea;\n \n        // draw the plot (axes and data visualisation)\n        PlotRenderingInfo plotInfo = null;\n        if (info != null) {\n            plotInfo = info.getPlotInfo();\n        }\n        this.plot.draw(g2, plotArea, anchor, null, plotInfo);\n\n        g2.setClip(savedClip);\n\n        notifyListeners(new ChartProgressEvent(this, this, \n                ChartProgressEvent.DRAWING_FINISHED, 100));\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.22784810126582278,
+        "trace_match": 0.0,
+        "complexity": 12.0,
+        "call_count": 44.0,
+        "literal_count": 24.0,
+        "source_tokens": 858.0,
+        "l0_tokens": 85.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.6631701631701632,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 12,
+        "call_count": 44,
+        "literal_count": 24
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/axis/ValueAxis.java::ValueAxis.drawAxisLine(Graphics2D g2, double cursor,\n                                Rectangle2D dataArea, RectangleEdge edge)",
+      "source": "protected void drawAxisLine(Graphics2D g2, double cursor,\n                                Rectangle2D dataArea, RectangleEdge edge) {\n        Line2D axisLine = null;\n        if (edge == RectangleEdge.TOP) {\n            axisLine = new Line2D.Double(dataArea.getX(), cursor, \n                    dataArea.getMaxX(), cursor);  \n        }\n        else if (edge == RectangleEdge.BOTTOM) {\n            axisLine = new Line2D.Double(dataArea.getX(), cursor, \n                    dataArea.getMaxX(), cursor);  \n        }\n        else if (edge == RectangleEdge.LEFT) {\n            axisLine = new Line2D.Double(cursor, dataArea.getY(), cursor, \n                    dataArea.getMaxY());  \n        }\n        else if (edge == RectangleEdge.RIGHT) {\n            axisLine = new Line2D.Double(cursor, dataArea.getY(), cursor, \n                    dataArea.getMaxY());  \n        }\n        g2.setPaint(getAxisLinePaint());\n        g2.setStroke(getAxisLineStroke());\n        g2.draw(axisLine);\n        \n        boolean drawUpOrRight = false;  \n        boolean drawDownOrLeft = false;\n        if (this.positiveArrowVisible) {\n            if (this.inverted) {\n                drawDownOrLeft = true;   \n            }\n            else {\n                drawUpOrRight = true;   \n            }\n        }\n        if (this.negativeArrowVisible) {\n            if (this.inverted) {\n                drawUpOrRight = true;   \n            }\n            else {\n                drawDownOrLeft = true;   \n            }\n        }\n        if (drawUpOrRight) {\n            double x = 0.0;\n            double y = 0.0;\n            Shape arrow = null;\n            if (edge == RectangleEdge.TOP || edge == RectangleEdge.BOTTOM) {\n                x = dataArea.getMaxX();\n                y = cursor;\n                arrow = this.rightArrow; \n            }\n            else if (edge == RectangleEdge.LEFT \n                    || edge == RectangleEdge.RIGHT) {\n                x = cursor;\n                y = dataArea.getMinY();\n                arrow = this.upArrow; \n            }\n\n            // draw the arrow...\n            AffineTransform transformer = new AffineTransform();\n            transformer.setToTranslation(x, y);\n            Shape shape = transformer.createTransformedShape(arrow);\n            g2.fill(shape);\n            g2.draw(shape);\n        }\n        \n        if (drawDownOrLeft) {\n            double x = 0.0;\n            double y = 0.0;\n            Shape arrow = null;\n            if (edge == RectangleEdge.TOP || edge == RectangleEdge.BOTTOM) {\n                x = dataArea.getMinX();\n                y = cursor;\n                arrow = this.leftArrow; \n            }\n            else if (edge == RectangleEdge.LEFT \n                    || edge == RectangleEdge.RIGHT) {\n                x = cursor;\n                y = dataArea.getMaxY();\n                arrow = this.downArrow; \n            }\n\n            // draw the arrow...\n            AffineTransform transformer = new AffineTransform();\n            transformer.setToTranslation(x, y);\n            Shape shape = transformer.createTransformedShape(arrow);\n            g2.fill(shape);\n            g2.draw(shape);\n        }\n        \n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: source/org/jfree/chart/axis/ValueAxis.java::ValueAxis.drawAxisLine(Graphics2D g2, double cursor,\n                                Rectangle2D dataArea, RectangleEdge edge)\nSIGNATURE: protected void drawAxisLine(Graphics2D g2, double cursor,\n                                Rectangle2D dataArea, RectangleEdge edge)",
+        "METHOD: source/org/jfree/chart/axis/ValueAxis.java::ValueAxis.drawAxisLine(Graphics2D g2, double cursor,\n                                Rectangle2D dataArea, RectangleEdge edge)\nSIGNATURE: protected void drawAxisLine(Graphics2D g2, double cursor,\n                                Rectangle2D dataArea, RectangleEdge edge)\nSTRUCTURE (lossy):\nLine2D axisLine = null;\nif (edge == RectangleEdge.TOP)\naxisLine = new Line2D.Double(dataArea.getX(), cursor, dataArea.getMaxX(), cursor)\nCALL dataArea.getX()\nCALL dataArea.getMaxX()\nif (edge == RectangleEdge.BOTTOM)\nif (edge == RectangleEdge.LEFT)\naxisLine = new Line2D.Double(cursor, dataArea.getY(), cursor, dataArea.getMaxY())\nCALL dataArea.getY()\nCALL dataArea.getMaxY()\nif (edge == RectangleEdge.RIGHT)\nCALL g2.setPaint(getAxisLinePaint())\nCALL getAxisLinePaint()\nCALL g2.setStroke(getAxisLineStroke())\nCALL getAxisLineStroke()\nCALL g2.draw(axisLine)\nboolean drawUpOrRight = false;\nboolean drawDownOrLeft = false;\nif (this.positiveArrowVisible)\nif (this.inverted)\ndrawDownOrLeft = true\ndrawUpOrRight = true\nif (this.negativeArrowVisible)\nif (drawUpOrRight)\ndouble x = 0.0;\ndouble y = 0.0;\nShape arrow = null;\nif (edge == RectangleEdge.TOP || edge == RectangleEdge.BOTTOM)\nx = dataArea.getMaxX()\ny = cursor\narrow = this.rightArrow\nif (edge == RectangleEdge.LEFT || edge == RectangleEdge.RIGHT)\nx = cursor\ny = dataArea.getMinY()\nCALL dataArea.getMinY()\narrow = this.upArrow\nAffineTransform transformer = new AffineTransform();\nCALL transformer.setToTranslation(x, y)\nShape shape = transformer.createTransformedShape(arrow);\nCALL transformer.createTransformedShape(arrow)\nCALL g2.fill(shape)\nCALL g2.draw(shape)\nif (drawDownOrLeft)\nx = dataArea.getMinX()\nCALL dataArea.getMinX()\narrow = this.leftArrow\ny = dataArea.getMaxY()\narrow = this.downArrow",
+        "protected void drawAxisLine(Graphics2D g2, double cursor,\n                                Rectangle2D dataArea, RectangleEdge edge) {\n        Line2D axisLine = null;\n        if (edge == RectangleEdge.TOP) {\n            axisLine = new Line2D.Double(dataArea.getX(), cursor, \n                    dataArea.getMaxX(), cursor);  \n        }\n        else if (edge == RectangleEdge.BOTTOM) {\n            axisLine = new Line2D.Double(dataArea.getX(), cursor, \n                    dataArea.getMaxX(), cursor);  \n        }\n        else if (edge == RectangleEdge.LEFT) {\n            axisLine = new Line2D.Double(cursor, dataArea.getY(), cursor, \n                    dataArea.getMaxY());  \n        }\n        else if (edge == RectangleEdge.RIGHT) {\n            axisLine = new Line2D.Double(cursor, dataArea.getY(), cursor, \n                    dataArea.getMaxY());  \n        }\n        g2.setPaint(getAxisLinePaint());\n        g2.setStroke(getAxisLineStroke());\n        g2.draw(axisLine);\n        \n        boolean drawUpOrRight = false;  \n        boolean drawDownOrLeft = false;\n        if (this.positiveArrowVisible) {\n            if (this.inverted) {\n                drawDownOrLeft = true;   \n            }\n            else {\n                drawUpOrRight = true;   \n            }\n        }\n        if (this.negativeArrowVisible) {\n            if (this.inverted) {\n                drawUpOrRight = true;   \n            }\n            else {\n                drawDownOrLeft = true;   \n            }\n        }\n        if (drawUpOrRight) {\n            double x = 0.0;\n            double y = 0.0;\n            Shape arrow = null;\n            if (edge == RectangleEdge.TOP || edge == RectangleEdge.BOTTOM) {\n                x = dataArea.getMaxX();\n                y = cursor;\n                arrow = this.rightArrow; \n            }\n            else if (edge == RectangleEdge.LEFT \n                    || edge == RectangleEdge.RIGHT) {\n                x = cursor;\n                y = dataArea.getMinY();\n                arrow = this.upArrow; \n            }\n\n            // draw the arrow...\n            AffineTransform transformer = new AffineTransform();\n            transformer.setToTranslation(x, y);\n            Shape shape = transformer.createTransformedShape(arrow);\n            g2.fill(shape);\n            g2.draw(shape);\n        }\n        \n        if (drawDownOrLeft) {\n            double x = 0.0;\n            double y = 0.0;\n            Shape arrow = null;\n            if (edge == RectangleEdge.TOP || edge == RectangleEdge.BOTTOM) {\n                x = dataArea.getMinX();\n                y = cursor;\n                arrow = this.leftArrow; \n            }\n            else if (edge == RectangleEdge.LEFT \n                    || edge == RectangleEdge.RIGHT) {\n                x = cursor;\n                y = dataArea.getMaxY();\n                arrow = this.downArrow; \n            }\n\n            // draw the arrow...\n            AffineTransform transformer = new AffineTransform();\n            transformer.setToTranslation(x, y);\n            Shape shape = transformer.createTransformedShape(arrow);\n            g2.fill(shape);\n            g2.draw(shape);\n        }\n        \n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.36538461538461536,
+        "trace_match": 0.0,
+        "complexity": 15.0,
+        "call_count": 25.0,
+        "literal_count": 7.0,
+        "source_tokens": 792.0,
+        "l0_tokens": 81.0,
+        "l1_tokens": 448.0,
+        "compression_ratio": 0.5656565656565656,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 15,
+        "call_count": 25,
+        "literal_count": 7
+      }
+    }
+  ],
+  "rank_metadata": {
+    "source/org/jfree/chart/JFreeChart.java::JFreeChart.createBufferedImage(int imageWidth, \n                                             int imageHeight,\n                                             double drawWidth, \n                                             double drawHeight, \n                                             ChartRenderingInfo info)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/JFreeChart.java::JFreeChart.createBufferedImage(int width, int height, \n                                             int imageType, \n                                             ChartRenderingInfo info)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getCenterPoint()": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getMaximumWindowBounds()": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.OptionalLibraryHolder.loadLibrary(String classname)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/ChartUtilities.java::ChartUtilities.writeScaledChartAsPNG(OutputStream out,\n            JFreeChart chart, int width, int height, int widthScaleFactor,\n            int heightScaleFactor)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/jdbc/JDBCPieDataset.java::JDBCPieDataset.executeQuery(Connection con, String query)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.isJDK14()": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.clone(final Object object)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/encoders/SunJPEGEncoderAdapter.java::SunJPEGEncoderAdapter.encode(BufferedImage bufferedImage, OutputStream outputStream)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/JFreeChart.java::JFreeChart.createBufferedImage(int width, int height, \n                                             ChartRenderingInfo info)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/ChartPanel.java::ChartPanel.paintComponent(Graphics g)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/encoders/ImageEncoderFactory.java::ImageEncoderFactory.init()": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/KeyToGroupMap.java::KeyToGroupMap.clone(Object object)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/ChartUtilities.java::ChartUtilities.writeChartAsPNG(OutputStream out, JFreeChart chart,\n            int width, int height,  ChartRenderingInfo info)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/ChartUtilities.java::ChartUtilities.writeChartAsPNG(OutputStream out, JFreeChart chart,\n            int width, int height, ChartRenderingInfo info,\n            boolean encodeAlpha, int compression)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/plot/Plot.java::Plot.drawBackground(Graphics2D g2, Rectangle2D area)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/title/LegendTitle.java::LegendTitle.draw(Graphics2D g2, Rectangle2D area, Object params)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/ChartUtilities.java::ChartUtilities.writeChartAsJPEG(OutputStream out, JFreeChart chart,\n            int width, int height, ChartRenderingInfo info)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/encoders/SunPNGEncoderAdapter.java::SunPNGEncoderAdapter.encode(BufferedImage bufferedImage, OutputStream outputStream)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/TimeSeries.java::TimeSeries.removeAgedItems(long latest, boolean notify)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/JFreeChart.java::JFreeChart.draw(Graphics2D g2, \n                     Rectangle2D chartArea, Point2D anchor, \n                     ChartRenderingInfo info)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/axis/ValueAxis.java::ValueAxis.drawAxisLine(Graphics2D g2, double cursor,\n                                Rectangle2D dataArea, RectangleEdge edge)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 7144,
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "7e8de57e41e11fea97a39cac7f470d3492923bd0aae85b349bc4150f458828b8",
+  "evidence_sha256": "c1bf234d75db0b36412c262676e15bef498a3a6075d41866debf2f4323413391"
+}

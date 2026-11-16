@@ -1,0 +1,2263 @@
+{
+  "nodes": [
+    {
+      "id": "failure_03a626ddadb9b3bdc826",
+      "kind": "failure",
+      "text": "public void testDigitLimitConstructor() throws ConvergenceException {\n        assertFraction(2, 5, new BigFraction(0.4, 9));\n        assertFraction(2, 5, new BigFraction(0.4, 99));\n        assertFraction(2, 5, new BigFraction(0.4, 999));\n\n        assertFraction(3, 5, new BigFraction(0.6152, 9));\n        assertFraction(8, 13, new BigFraction(0.6152, 99));\n        assertFraction(510, 829, new BigFraction(0.6152, 999));\n        assertFraction(769, 1250, new BigFraction(0.6152, 9999));\n        \n        // MATH-996\n        assertFraction(1, 2, new BigFraction(0.5000000001, 10));\nThe last line shown above failed with the following stack trace.\norg.apache.commons.math3.fraction.FractionConversionException: illegal state: Overflow trying to convert 0.5 to fraction (2,499,999,794/4,999,999,587)\n\tat org.apache.commons.math3.fraction.BigFraction.<init>(BigFraction.java:306)\n\tat org.apache.commons.math3.fraction.BigFraction.<init>(BigFraction.java:356)\n\tat org.apache.commons.math3.fraction.BigFractionTest.testDigitLimitConstructor(BigFractionTest.java:159)",
+      "origin": {
+        "path": "/home/parbab/RAVE_FL_Research/AdaptiveContextOpt_AdaptivePilot/results/graft_independent_qwen7b_20261105_123254/evidence/Math-1.txt",
+        "start_line": 1,
+        "end_line": 17,
+        "source_hash": "ca4d68993d1b7081d38aafd04a0d6d4b189b870dfbe7d3aa463ddd6f64e697cc",
+        "extractor": "supplied_text:trigger_description"
+      },
+      "owner": "",
+      "document": "failure",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "method_0a4ad1502c19ddab4b64",
+      "kind": "method",
+      "text": "private BigFraction(final double value, final double epsilon,\n                        final int maxDenominator, int maxIterations)\n        throws FractionConversionException",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 235,
+        "end_line": 335,
+        "source_hash": "b588c75d9da3ad4920d9c34d3678385699e5064640e6d0612af69437bb4356b5",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [
+        "value",
+        "epsilon",
+        "maxDenominator",
+        "maxIterations"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_d889b06b35d9f6914afa",
+      "kind": "code",
+      "text": "long overflow = Integer.MAX_VALUE;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 272,
+        "end_line": 272,
+        "source_hash": "b588c75d9da3ad4920d9c34d3678385699e5064640e6d0612af69437bb4356b5",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [
+        "overflow"
+      ],
+      "uses": [
+        "Integer",
+        "MAX_VALUE"
+      ]
+    },
+    {
+      "id": "code_4177ded668124d20901f",
+      "kind": "code",
+      "text": "double r0 = value;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 273,
+        "end_line": 273,
+        "source_hash": "b588c75d9da3ad4920d9c34d3678385699e5064640e6d0612af69437bb4356b5",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [
+        "r0"
+      ],
+      "uses": [
+        "value"
+      ]
+    },
+    {
+      "id": "code_3bce9effd943b56ac21f",
+      "kind": "code",
+      "text": "long a0 = (long) FastMath.floor(r0);",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 274,
+        "end_line": 274,
+        "source_hash": "b588c75d9da3ad4920d9c34d3678385699e5064640e6d0612af69437bb4356b5",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [
+        "a0"
+      ],
+      "uses": [
+        "FastMath",
+        "r0"
+      ]
+    },
+    {
+      "id": "code_42253453d47997436b15",
+      "kind": "code",
+      "text": "if (a0 > overflow) {\n            throw new FractionConversionException(value, a0, 1l);\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 275,
+        "end_line": 277,
+        "source_hash": "b588c75d9da3ad4920d9c34d3678385699e5064640e6d0612af69437bb4356b5",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [],
+      "uses": [
+        "a0",
+        "overflow",
+        "value"
+      ]
+    },
+    {
+      "id": "code_51477c263a546e8b37a0",
+      "kind": "code",
+      "text": "// check for (almost) integer arguments, which should not go",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 279,
+        "end_line": 279,
+        "source_hash": "b588c75d9da3ad4920d9c34d3678385699e5064640e6d0612af69437bb4356b5",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_0c95a8be3f718b4234a5",
+      "kind": "code",
+      "text": "// to iterations.",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 280,
+        "end_line": 280,
+        "source_hash": "b588c75d9da3ad4920d9c34d3678385699e5064640e6d0612af69437bb4356b5",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_d69c43cee1756d7b073f",
+      "kind": "code",
+      "text": "if (FastMath.abs(a0 - value) < epsilon) {\n            numerator = BigInteger.valueOf(a0);\n            denominator = BigInteger.ONE;\n            return;\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 281,
+        "end_line": 285,
+        "source_hash": "b588c75d9da3ad4920d9c34d3678385699e5064640e6d0612af69437bb4356b5",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [],
+      "uses": [
+        "BigInteger",
+        "FastMath",
+        "ONE",
+        "a0",
+        "denominator",
+        "epsilon",
+        "numerator",
+        "value"
+      ]
+    },
+    {
+      "id": "code_5034e8a9f4a1e2e4ca45",
+      "kind": "code",
+      "text": "long p0 = 1;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 287,
+        "end_line": 287,
+        "source_hash": "b588c75d9da3ad4920d9c34d3678385699e5064640e6d0612af69437bb4356b5",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [
+        "p0"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_477198a22b5f0957a141",
+      "kind": "code",
+      "text": "long q0 = 0;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 288,
+        "end_line": 288,
+        "source_hash": "b588c75d9da3ad4920d9c34d3678385699e5064640e6d0612af69437bb4356b5",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [
+        "q0"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_ab32126d9f9bcb4482bd",
+      "kind": "code",
+      "text": "long p1 = a0;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 289,
+        "end_line": 289,
+        "source_hash": "b588c75d9da3ad4920d9c34d3678385699e5064640e6d0612af69437bb4356b5",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [
+        "p1"
+      ],
+      "uses": [
+        "a0"
+      ]
+    },
+    {
+      "id": "code_05c46a08be75089ee7da",
+      "kind": "code",
+      "text": "long q1 = 1;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 290,
+        "end_line": 290,
+        "source_hash": "b588c75d9da3ad4920d9c34d3678385699e5064640e6d0612af69437bb4356b5",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [
+        "q1"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_d801eb5d0873c2c6c11b",
+      "kind": "code",
+      "text": "long p2 = 0;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 292,
+        "end_line": 292,
+        "source_hash": "b588c75d9da3ad4920d9c34d3678385699e5064640e6d0612af69437bb4356b5",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [
+        "p2"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_04ce3c8e59b3a9c07ca6",
+      "kind": "code",
+      "text": "long q2 = 1;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 293,
+        "end_line": 293,
+        "source_hash": "b588c75d9da3ad4920d9c34d3678385699e5064640e6d0612af69437bb4356b5",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [
+        "q2"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_9941ce68ab6f1e31200b",
+      "kind": "code",
+      "text": "int n = 0;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 295,
+        "end_line": 295,
+        "source_hash": "b588c75d9da3ad4920d9c34d3678385699e5064640e6d0612af69437bb4356b5",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [
+        "n"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_6026ac85013999ddd4be",
+      "kind": "code",
+      "text": "boolean stop = false;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 296,
+        "end_line": 296,
+        "source_hash": "b588c75d9da3ad4920d9c34d3678385699e5064640e6d0612af69437bb4356b5",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [
+        "stop"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_df83e8e610e0ab09a542",
+      "kind": "code",
+      "text": "do {\n            ++n;\n            final double r1 = 1.0 / (r0 - a0);\n            final long a1 = (long) FastMath.floor(r1);\n            p2 = (a1 * p1) + p0;\n            q2 = (a1 * q1) + q0;\n            if ((p2 > overflow) || (q2 > overflow)) {\n                throw new FractionConversionException(value, p2, q2);\n            }\n\n            final double convergent = (double) p2 / (double) q2;\n            if ((n < maxIterations) &&\n                (FastMath.abs(convergent - value) > epsilon) &&\n                (q2 < maxDenominator)) {\n                p0 = p1;\n                p1 = p2;\n                q0 = q1;\n                q1 = q2;\n                a0 = a1;\n                r0 = r1;\n            } else {\n                stop = true;\n            }\n        } while (!stop);",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 297,
+        "end_line": 320,
+        "source_hash": "b588c75d9da3ad4920d9c34d3678385699e5064640e6d0612af69437bb4356b5",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [
+        "a1",
+        "convergent",
+        "r1"
+      ],
+      "uses": [
+        "FastMath",
+        "a0",
+        "epsilon",
+        "maxDenominator",
+        "maxIterations",
+        "n",
+        "overflow",
+        "p0",
+        "p1",
+        "p2",
+        "q0",
+        "q1",
+        "q2",
+        "r0",
+        "stop",
+        "value"
+      ]
+    },
+    {
+      "id": "code_cf12551990fd8f962e47",
+      "kind": "code",
+      "text": "if (n >= maxIterations) {\n            throw new FractionConversionException(value, maxIterations);\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 322,
+        "end_line": 324,
+        "source_hash": "b588c75d9da3ad4920d9c34d3678385699e5064640e6d0612af69437bb4356b5",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [],
+      "uses": [
+        "maxIterations",
+        "n",
+        "value"
+      ]
+    },
+    {
+      "id": "code_dc9f058c526e6a6cd426",
+      "kind": "code",
+      "text": "if (q2 < maxDenominator) {\n            numerator   = BigInteger.valueOf(p2);\n            denominator = BigInteger.valueOf(q2);\n        } else {\n            numerator   = BigInteger.valueOf(p1);\n            denominator = BigInteger.valueOf(q1);\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 326,
+        "end_line": 332,
+        "source_hash": "b588c75d9da3ad4920d9c34d3678385699e5064640e6d0612af69437bb4356b5",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [],
+      "uses": [
+        "BigInteger",
+        "denominator",
+        "maxDenominator",
+        "numerator",
+        "p1",
+        "p2",
+        "q1",
+        "q2"
+      ]
+    },
+    {
+      "id": "method_d845b2023321ae3bbba8",
+      "kind": "method",
+      "text": "@Override\n    public String getLocalizedMessage()",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/exception/MathIllegalStateException.java",
+        "start_line": 83,
+        "end_line": 87,
+        "source_hash": "36c25278b1e95ad3d2da95eed77c8f5007798bc839a7175d56d72dfb0254b9a1",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "org.apache.commons.math3.exception.MathIllegalStateException.getLocalizedMessage()",
+      "document": "src/main/java/org/apache/commons/math3/exception/MathIllegalStateException.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_8b666dcb9fed37b6d782",
+      "kind": "code",
+      "text": "return context.getLocalizedMessage();",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/exception/MathIllegalStateException.java",
+        "start_line": 86,
+        "end_line": 86,
+        "source_hash": "36c25278b1e95ad3d2da95eed77c8f5007798bc839a7175d56d72dfb0254b9a1",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.exception.MathIllegalStateException.getLocalizedMessage()",
+      "document": "src/main/java/org/apache/commons/math3/exception/MathIllegalStateException.java",
+      "defines": [],
+      "uses": [
+        "context"
+      ]
+    },
+    {
+      "id": "method_950ed02a766ace877500",
+      "kind": "method",
+      "text": "     * <p>",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+        "start_line": 147,
+        "end_line": 243,
+        "source_hash": "5b540774ea5493cb8ccb6a6cbf38c9f968c68b8d22b13da3bac990d15e4d08e1",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "org.apache.commons.math3.fraction.Fraction.Fraction(double,double,int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "method_2f3eec7f3a62efd2d7a9",
+      "kind": "method",
+      "text": "public Fraction negate()",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+        "start_line": 406,
+        "end_line": 415,
+        "source_hash": "10b81f0043cca82c480772622ca3eb96abf96719263e54817bd1cdb9ed59eb33",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "org.apache.commons.math3.fraction.Fraction.negate()",
+      "document": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_e3d3e7b16be9d681501b",
+      "kind": "code",
+      "text": "if (numerator==Integer.MIN_VALUE) {\n            throw new MathArithmeticException(LocalizedFormats.OVERFLOW_IN_FRACTION, numerator, denominator);\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+        "start_line": 407,
+        "end_line": 409,
+        "source_hash": "10b81f0043cca82c480772622ca3eb96abf96719263e54817bd1cdb9ed59eb33",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.Fraction.negate()",
+      "document": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "defines": [],
+      "uses": [
+        "Integer",
+        "LocalizedFormats",
+        "MIN_VALUE",
+        "OVERFLOW_IN_FRACTION",
+        "denominator",
+        "numerator"
+      ]
+    },
+    {
+      "id": "code_6b5e15fb54b3a37e2254",
+      "kind": "code",
+      "text": "return new Fraction(-numerator, denominator);",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+        "start_line": 410,
+        "end_line": 410,
+        "source_hash": "10b81f0043cca82c480772622ca3eb96abf96719263e54817bd1cdb9ed59eb33",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.Fraction.negate()",
+      "document": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "defines": [],
+      "uses": [
+        "denominator",
+        "numerator"
+      ]
+    },
+    {
+      "id": "method_c45d16187a6a8b9cddc7",
+      "kind": "method",
+      "text": "public FractionConversionException(double value, long p, long q)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/FractionConversionException.java",
+        "start_line": 45,
+        "end_line": 54,
+        "source_hash": "d4598048af4ddad74f1cf8bb7d8e9bc37a2da7852a5c31e0be4fbf642d24f3a3",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "org.apache.commons.math3.fraction.FractionConversionException.FractionConversionException(double,long,long)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/FractionConversionException.java",
+      "defines": [
+        "value",
+        "p",
+        "q"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_c0823c387eedd244e181",
+      "kind": "code",
+      "text": "super(LocalizedFormats.FRACTION_CONVERSION_OVERFLOW, value, p, q);",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/FractionConversionException.java",
+        "start_line": 53,
+        "end_line": 53,
+        "source_hash": "d4598048af4ddad74f1cf8bb7d8e9bc37a2da7852a5c31e0be4fbf642d24f3a3",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.FractionConversionException.FractionConversionException(double,long,long)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/FractionConversionException.java",
+      "defines": [],
+      "uses": [
+        "FRACTION_CONVERSION_OVERFLOW",
+        "LocalizedFormats",
+        "p",
+        "q",
+        "value"
+      ]
+    },
+    {
+      "id": "method_c06d37447c1ef5b24184",
+      "kind": "method",
+      "text": "     * References:",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+        "start_line": 127,
+        "end_line": 145,
+        "source_hash": "85e53c43b528c1abcdda0fd6a2b232b9174b1ef8c195384a98f78562a5abfe90",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "org.apache.commons.math3.fraction.Fraction.Fraction(double,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "method_caf53bf482ea3825fde4",
+      "kind": "method",
+      "text": "     * @return a {@code Fraction} instance with the resulting values",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+        "start_line": 528,
+        "end_line": 552,
+        "source_hash": "3f97f8f9458c7fb274cbb8e1a84efeed7eaff3af26e308d0ca637ce8d46ca391",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "org.apache.commons.math3.fraction.Fraction.multiply(Fraction)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "method_d0e7894052e7d103825c",
+      "kind": "method",
+      "text": "public BigFraction(final long num, final long den)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 399,
+        "end_line": 412,
+        "source_hash": "15c9ccc0d4248979cac8ef9a5e7be00022e4b9e33881770dd5cd5feb212ef12a",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(long,long)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [
+        "num",
+        "den"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_8e8507c94cc9fac2678d",
+      "kind": "code",
+      "text": "this(BigInteger.valueOf(num), BigInteger.valueOf(den));",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 409,
+        "end_line": 409,
+        "source_hash": "15c9ccc0d4248979cac8ef9a5e7be00022e4b9e33881770dd5cd5feb212ef12a",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(long,long)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [],
+      "uses": [
+        "BigInteger",
+        "den",
+        "num"
+      ]
+    },
+    {
+      "id": "method_563a1ec9a30fba4d1482",
+      "kind": "method",
+      "text": "     * <p>",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 337,
+        "end_line": 357,
+        "source_hash": "2475edd812b51576c70db33f1de0788320fe72b49e2081462c73e739e379e513",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "method_300c0724cca4a72daf59",
+      "kind": "method",
+      "text": "public static Fraction getReducedFraction(int numerator, int denominator)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+        "start_line": 605,
+        "end_line": 642,
+        "source_hash": "537b9f78b65acd41e8699784f2a91b464964f27b00b900e73a8bc253860860fa",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "org.apache.commons.math3.fraction.Fraction.getReducedFraction(int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "defines": [
+        "numerator",
+        "denominator"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_35561b7f0453b4ac6081",
+      "kind": "code",
+      "text": "if (denominator == 0) {\n            throw new MathArithmeticException(LocalizedFormats.ZERO_DENOMINATOR_IN_FRACTION,\n                                              numerator, denominator);\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+        "start_line": 612,
+        "end_line": 615,
+        "source_hash": "537b9f78b65acd41e8699784f2a91b464964f27b00b900e73a8bc253860860fa",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.Fraction.getReducedFraction(int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "defines": [],
+      "uses": [
+        "LocalizedFormats",
+        "ZERO_DENOMINATOR_IN_FRACTION",
+        "denominator",
+        "numerator"
+      ]
+    },
+    {
+      "id": "code_eba836fc3def04b2e0ef",
+      "kind": "code",
+      "text": "if (numerator==0) {\n            return ZERO; // normalize zero.\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+        "start_line": 616,
+        "end_line": 618,
+        "source_hash": "537b9f78b65acd41e8699784f2a91b464964f27b00b900e73a8bc253860860fa",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.Fraction.getReducedFraction(int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "defines": [],
+      "uses": [
+        "ZERO",
+        "numerator"
+      ]
+    },
+    {
+      "id": "code_7970bc353b16d9973060",
+      "kind": "code",
+      "text": "// allow 2^k/-2^31 as a valid fraction (where k>0)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+        "start_line": 619,
+        "end_line": 619,
+        "source_hash": "537b9f78b65acd41e8699784f2a91b464964f27b00b900e73a8bc253860860fa",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.Fraction.getReducedFraction(int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_547b533e75b54194779f",
+      "kind": "code",
+      "text": "if (denominator==Integer.MIN_VALUE && (numerator&1)==0) {\n            numerator/=2; denominator/=2;\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+        "start_line": 620,
+        "end_line": 622,
+        "source_hash": "537b9f78b65acd41e8699784f2a91b464964f27b00b900e73a8bc253860860fa",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.Fraction.getReducedFraction(int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "defines": [],
+      "uses": [
+        "Integer",
+        "MIN_VALUE",
+        "denominator",
+        "numerator"
+      ]
+    },
+    {
+      "id": "code_5b121c8a2962aedbcac2",
+      "kind": "code",
+      "text": "if (denominator < 0) {\n            if (numerator==Integer.MIN_VALUE ||\n                    denominator==Integer.MIN_VALUE) {\n                throw new MathArithmeticException(LocalizedFormats.OVERFLOW_IN_FRACTION,\n                                                  numerator, denominator);\n            }\n            numerator = -numerator;\n            denominator = -denominator;\n        }",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+        "start_line": 623,
+        "end_line": 631,
+        "source_hash": "537b9f78b65acd41e8699784f2a91b464964f27b00b900e73a8bc253860860fa",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.Fraction.getReducedFraction(int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "defines": [],
+      "uses": [
+        "Integer",
+        "LocalizedFormats",
+        "MIN_VALUE",
+        "OVERFLOW_IN_FRACTION",
+        "denominator",
+        "numerator"
+      ]
+    },
+    {
+      "id": "code_73e8fa5b1802e51dd62f",
+      "kind": "code",
+      "text": "// simplify fraction.",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+        "start_line": 632,
+        "end_line": 632,
+        "source_hash": "537b9f78b65acd41e8699784f2a91b464964f27b00b900e73a8bc253860860fa",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.Fraction.getReducedFraction(int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_ad1acb3bf34412dfab99",
+      "kind": "code",
+      "text": "int gcd = ArithmeticUtils.gcd(numerator, denominator);",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+        "start_line": 633,
+        "end_line": 633,
+        "source_hash": "537b9f78b65acd41e8699784f2a91b464964f27b00b900e73a8bc253860860fa",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.Fraction.getReducedFraction(int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "defines": [
+        "gcd"
+      ],
+      "uses": [
+        "ArithmeticUtils",
+        "denominator",
+        "numerator"
+      ]
+    },
+    {
+      "id": "code_0bae5555f27cad502509",
+      "kind": "code",
+      "text": "numerator /= gcd;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+        "start_line": 634,
+        "end_line": 634,
+        "source_hash": "537b9f78b65acd41e8699784f2a91b464964f27b00b900e73a8bc253860860fa",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.Fraction.getReducedFraction(int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "defines": [],
+      "uses": [
+        "gcd",
+        "numerator"
+      ]
+    },
+    {
+      "id": "code_92ee97f86c735d6b0866",
+      "kind": "code",
+      "text": "denominator /= gcd;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+        "start_line": 635,
+        "end_line": 635,
+        "source_hash": "537b9f78b65acd41e8699784f2a91b464964f27b00b900e73a8bc253860860fa",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.Fraction.getReducedFraction(int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "defines": [],
+      "uses": [
+        "denominator",
+        "gcd"
+      ]
+    },
+    {
+      "id": "code_6f92fdeed72695fa7f8b",
+      "kind": "code",
+      "text": "return new Fraction(numerator, denominator);",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+        "start_line": 636,
+        "end_line": 636,
+        "source_hash": "537b9f78b65acd41e8699784f2a91b464964f27b00b900e73a8bc253860860fa",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.Fraction.getReducedFraction(int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "defines": [],
+      "uses": [
+        "denominator",
+        "numerator"
+      ]
+    },
+    {
+      "id": "method_a3f4d0e82506117f460c",
+      "kind": "method",
+      "text": "public ConvergenceException(Localizable pattern,\n                                Object ... args)",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/exception/ConvergenceException.java",
+        "start_line": 40,
+        "end_line": 50,
+        "source_hash": "e37d4a2a72f4bed32974eb78af49c2e5f2bc5e048ac3c8cd4bbbc49d0220f4d1",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "org.apache.commons.math3.exception.ConvergenceException.ConvergenceException(Localizable,Object)",
+      "document": "src/main/java/org/apache/commons/math3/exception/ConvergenceException.java",
+      "defines": [
+        "pattern"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_80b482d95ea1f70cbb8a",
+      "kind": "code",
+      "text": "getContext().addMessage(pattern, args);",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/exception/ConvergenceException.java",
+        "start_line": 49,
+        "end_line": 49,
+        "source_hash": "e37d4a2a72f4bed32974eb78af49c2e5f2bc5e048ac3c8cd4bbbc49d0220f4d1",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.exception.ConvergenceException.ConvergenceException(Localizable,Object)",
+      "document": "src/main/java/org/apache/commons/math3/exception/ConvergenceException.java",
+      "defines": [],
+      "uses": [
+        "args",
+        "pattern"
+      ]
+    },
+    {
+      "id": "method_ef62916af774c9a6ac57",
+      "kind": "method",
+      "text": "     * @return a {@code Fraction} instance with the resulting values",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+        "start_line": 471,
+        "end_line": 526,
+        "source_hash": "3b8eeed3a01f9f9016e14e78a2f434f21516daf2f72e38e8096da773b668a6c7",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "org.apache.commons.math3.fraction.Fraction.addSub(Fraction,boolean)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "method_c298098ea4c79010975a",
+      "kind": "method",
+      "text": "public int getDenominatorAsInt()",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 760,
+        "end_line": 769,
+        "source_hash": "87ae31e8646217385760279a13baa1014bb822d894dca931f2d9e9f2d84f1e9a",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.getDenominatorAsInt()",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_2e78e737f981707d5100",
+      "kind": "code",
+      "text": "return denominator.intValue();",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 766,
+        "end_line": 766,
+        "source_hash": "87ae31e8646217385760279a13baa1014bb822d894dca931f2d9e9f2d84f1e9a",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.getDenominatorAsInt()",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [],
+      "uses": [
+        "denominator"
+      ]
+    },
+    {
+      "id": "method_51bc1412bc4b7a6e58c0",
+      "kind": "method",
+      "text": "public BigFraction(final double value, final double epsilon,\n                       final int maxIterations)\n        throws FractionConversionException",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 208,
+        "end_line": 233,
+        "source_hash": "ba732addc022c9d79ddd4d0739b5a22e07e09ceff48e58651f2ca3e8d511bf4c",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [
+        "value",
+        "epsilon",
+        "maxIterations"
+      ],
+      "uses": []
+    },
+    {
+      "id": "code_9bea09699ae96220ba9b",
+      "kind": "code",
+      "text": "this(value, epsilon, Integer.MAX_VALUE, maxIterations);",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 232,
+        "end_line": 232,
+        "source_hash": "ba732addc022c9d79ddd4d0739b5a22e07e09ceff48e58651f2ca3e8d511bf4c",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [],
+      "uses": [
+        "Integer",
+        "MAX_VALUE",
+        "epsilon",
+        "maxIterations",
+        "value"
+      ]
+    },
+    {
+      "id": "method_d653612bd1d125121e44",
+      "kind": "method",
+      "text": "public int getNumeratorAsInt()",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 793,
+        "end_line": 802,
+        "source_hash": "9993a35fd3939a1882d222ec21df99ce8b1cbf3c82a0ca491ae2aa1c229dacf9",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.getNumeratorAsInt()",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_5f7eda8832fba2db10d7",
+      "kind": "code",
+      "text": "return numerator.intValue();",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+        "start_line": 799,
+        "end_line": 799,
+        "source_hash": "9993a35fd3939a1882d222ec21df99ce8b1cbf3c82a0ca491ae2aa1c229dacf9",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.fraction.BigFraction.getNumeratorAsInt()",
+      "document": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "defines": [],
+      "uses": [
+        "numerator"
+      ]
+    },
+    {
+      "id": "method_cac6b2d05703f5146296",
+      "kind": "method",
+      "text": "public ExceptionContext getContext()",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/exception/MathIllegalStateException.java",
+        "start_line": 72,
+        "end_line": 75,
+        "source_hash": "4ade7230a4fd2df91e0448d5781a3f9d449c15543078cc8f536df86b35a750ec",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "org.apache.commons.math3.exception.MathIllegalStateException.getContext()",
+      "document": "src/main/java/org/apache/commons/math3/exception/MathIllegalStateException.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_4fb36b98aeb62d776661",
+      "kind": "code",
+      "text": "return context;",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/exception/MathIllegalStateException.java",
+        "start_line": 74,
+        "end_line": 74,
+        "source_hash": "4ade7230a4fd2df91e0448d5781a3f9d449c15543078cc8f536df86b35a750ec",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.exception.MathIllegalStateException.getContext()",
+      "document": "src/main/java/org/apache/commons/math3/exception/MathIllegalStateException.java",
+      "defines": [],
+      "uses": [
+        "context"
+      ]
+    },
+    {
+      "id": "method_3bc7e0b1b563fb491f77",
+      "kind": "method",
+      "text": "     * @throws MathArithmeticException if the denominator is {@code zero}",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+        "start_line": 254,
+        "end_line": 289,
+        "source_hash": "42b7ba61dd246b0b32e52a03c7e44c79ab179d81a561d70fd1d6799c72566dc2",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "org.apache.commons.math3.fraction.Fraction.Fraction(int,int)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "method_4e866acec91837195152",
+      "kind": "method",
+      "text": "public MathIllegalStateException()",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/exception/MathIllegalStateException.java",
+        "start_line": 65,
+        "end_line": 70,
+        "source_hash": "4622e711192754be09e87121b71d50706c8464b7ec6bf7e035e96c285a523f32",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "org.apache.commons.math3.exception.MathIllegalStateException.MathIllegalStateException()",
+      "document": "src/main/java/org/apache/commons/math3/exception/MathIllegalStateException.java",
+      "defines": [],
+      "uses": []
+    },
+    {
+      "id": "code_c888ba250d7816f3d48b",
+      "kind": "code",
+      "text": "this(LocalizedFormats.ILLEGAL_STATE);",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/exception/MathIllegalStateException.java",
+        "start_line": 69,
+        "end_line": 69,
+        "source_hash": "4622e711192754be09e87121b71d50706c8464b7ec6bf7e035e96c285a523f32",
+        "extractor": "AST_top_level_statement"
+      },
+      "owner": "org.apache.commons.math3.exception.MathIllegalStateException.MathIllegalStateException()",
+      "document": "src/main/java/org/apache/commons/math3/exception/MathIllegalStateException.java",
+      "defines": [],
+      "uses": [
+        "ILLEGAL_STATE",
+        "LocalizedFormats"
+      ]
+    },
+    {
+      "id": "method_7dcaca8f818688714c6e",
+      "kind": "method",
+      "text": "     * @throws IllegalArgumentException if the fraction is {@code null}",
+      "origin": {
+        "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+        "start_line": 563,
+        "end_line": 582,
+        "source_hash": "aa85a160f8ab067ff8c96a3e340a56796793f456d96071de828155d108b0da25",
+        "extractor": "supplied_buggy_source"
+      },
+      "owner": "org.apache.commons.math3.fraction.Fraction.divide(Fraction)",
+      "document": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "defines": [],
+      "uses": []
+    }
+  ],
+  "edges": [
+    {
+      "source": "code_d889b06b35d9f6914afa",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_4177ded668124d20901f",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d889b06b35d9f6914afa",
+      "target": "code_4177ded668124d20901f",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_4177ded668124d20901f",
+      "target": "code_d889b06b35d9f6914afa",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_3bce9effd943b56ac21f",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_4177ded668124d20901f",
+      "target": "code_3bce9effd943b56ac21f",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_3bce9effd943b56ac21f",
+      "target": "code_4177ded668124d20901f",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_42253453d47997436b15",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_3bce9effd943b56ac21f",
+      "target": "code_42253453d47997436b15",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_42253453d47997436b15",
+      "target": "code_3bce9effd943b56ac21f",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_51477c263a546e8b37a0",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_42253453d47997436b15",
+      "target": "code_51477c263a546e8b37a0",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_51477c263a546e8b37a0",
+      "target": "code_42253453d47997436b15",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0c95a8be3f718b4234a5",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_51477c263a546e8b37a0",
+      "target": "code_0c95a8be3f718b4234a5",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0c95a8be3f718b4234a5",
+      "target": "code_51477c263a546e8b37a0",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d69c43cee1756d7b073f",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0c95a8be3f718b4234a5",
+      "target": "code_d69c43cee1756d7b073f",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d69c43cee1756d7b073f",
+      "target": "code_0c95a8be3f718b4234a5",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5034e8a9f4a1e2e4ca45",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d69c43cee1756d7b073f",
+      "target": "code_5034e8a9f4a1e2e4ca45",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5034e8a9f4a1e2e4ca45",
+      "target": "code_d69c43cee1756d7b073f",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_477198a22b5f0957a141",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5034e8a9f4a1e2e4ca45",
+      "target": "code_477198a22b5f0957a141",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_477198a22b5f0957a141",
+      "target": "code_5034e8a9f4a1e2e4ca45",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ab32126d9f9bcb4482bd",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_477198a22b5f0957a141",
+      "target": "code_ab32126d9f9bcb4482bd",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ab32126d9f9bcb4482bd",
+      "target": "code_477198a22b5f0957a141",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_05c46a08be75089ee7da",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ab32126d9f9bcb4482bd",
+      "target": "code_05c46a08be75089ee7da",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_05c46a08be75089ee7da",
+      "target": "code_ab32126d9f9bcb4482bd",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d801eb5d0873c2c6c11b",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_05c46a08be75089ee7da",
+      "target": "code_d801eb5d0873c2c6c11b",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d801eb5d0873c2c6c11b",
+      "target": "code_05c46a08be75089ee7da",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_04ce3c8e59b3a9c07ca6",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d801eb5d0873c2c6c11b",
+      "target": "code_04ce3c8e59b3a9c07ca6",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_04ce3c8e59b3a9c07ca6",
+      "target": "code_d801eb5d0873c2c6c11b",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_9941ce68ab6f1e31200b",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_04ce3c8e59b3a9c07ca6",
+      "target": "code_9941ce68ab6f1e31200b",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_9941ce68ab6f1e31200b",
+      "target": "code_04ce3c8e59b3a9c07ca6",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6026ac85013999ddd4be",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_9941ce68ab6f1e31200b",
+      "target": "code_6026ac85013999ddd4be",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6026ac85013999ddd4be",
+      "target": "code_9941ce68ab6f1e31200b",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_df83e8e610e0ab09a542",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6026ac85013999ddd4be",
+      "target": "code_df83e8e610e0ab09a542",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_df83e8e610e0ab09a542",
+      "target": "code_6026ac85013999ddd4be",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_cf12551990fd8f962e47",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_df83e8e610e0ab09a542",
+      "target": "code_cf12551990fd8f962e47",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_cf12551990fd8f962e47",
+      "target": "code_df83e8e610e0ab09a542",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_dc9f058c526e6a6cd426",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_cf12551990fd8f962e47",
+      "target": "code_dc9f058c526e6a6cd426",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_dc9f058c526e6a6cd426",
+      "target": "code_cf12551990fd8f962e47",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_4177ded668124d20901f",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_3bce9effd943b56ac21f",
+      "target": "code_4177ded668124d20901f",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_42253453d47997436b15",
+      "target": "code_3bce9effd943b56ac21f",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_42253453d47997436b15",
+      "target": "code_d889b06b35d9f6914afa",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_42253453d47997436b15",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d69c43cee1756d7b073f",
+      "target": "code_3bce9effd943b56ac21f",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_d69c43cee1756d7b073f",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ab32126d9f9bcb4482bd",
+      "target": "code_3bce9effd943b56ac21f",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_df83e8e610e0ab09a542",
+      "target": "code_3bce9effd943b56ac21f",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_df83e8e610e0ab09a542",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_df83e8e610e0ab09a542",
+      "target": "code_9941ce68ab6f1e31200b",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_df83e8e610e0ab09a542",
+      "target": "code_d889b06b35d9f6914afa",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_df83e8e610e0ab09a542",
+      "target": "code_5034e8a9f4a1e2e4ca45",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_df83e8e610e0ab09a542",
+      "target": "code_ab32126d9f9bcb4482bd",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_df83e8e610e0ab09a542",
+      "target": "code_d801eb5d0873c2c6c11b",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_df83e8e610e0ab09a542",
+      "target": "code_477198a22b5f0957a141",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_df83e8e610e0ab09a542",
+      "target": "code_05c46a08be75089ee7da",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_df83e8e610e0ab09a542",
+      "target": "code_04ce3c8e59b3a9c07ca6",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_df83e8e610e0ab09a542",
+      "target": "code_4177ded668124d20901f",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_df83e8e610e0ab09a542",
+      "target": "code_6026ac85013999ddd4be",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_cf12551990fd8f962e47",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_cf12551990fd8f962e47",
+      "target": "code_9941ce68ab6f1e31200b",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_dc9f058c526e6a6cd426",
+      "target": "method_0a4ad1502c19ddab4b64",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_dc9f058c526e6a6cd426",
+      "target": "code_ab32126d9f9bcb4482bd",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_dc9f058c526e6a6cd426",
+      "target": "code_d801eb5d0873c2c6c11b",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_dc9f058c526e6a6cd426",
+      "target": "code_05c46a08be75089ee7da",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_dc9f058c526e6a6cd426",
+      "target": "code_04ce3c8e59b3a9c07ca6",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_8b666dcb9fed37b6d782",
+      "target": "method_d845b2023321ae3bbba8",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_e3d3e7b16be9d681501b",
+      "target": "method_2f3eec7f3a62efd2d7a9",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6b5e15fb54b3a37e2254",
+      "target": "method_2f3eec7f3a62efd2d7a9",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_e3d3e7b16be9d681501b",
+      "target": "code_6b5e15fb54b3a37e2254",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6b5e15fb54b3a37e2254",
+      "target": "code_e3d3e7b16be9d681501b",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_c0823c387eedd244e181",
+      "target": "method_c45d16187a6a8b9cddc7",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_c0823c387eedd244e181",
+      "target": "method_c45d16187a6a8b9cddc7",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_8e8507c94cc9fac2678d",
+      "target": "method_d0e7894052e7d103825c",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_8e8507c94cc9fac2678d",
+      "target": "method_d0e7894052e7d103825c",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_35561b7f0453b4ac6081",
+      "target": "method_300c0724cca4a72daf59",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_eba836fc3def04b2e0ef",
+      "target": "method_300c0724cca4a72daf59",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_35561b7f0453b4ac6081",
+      "target": "code_eba836fc3def04b2e0ef",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_eba836fc3def04b2e0ef",
+      "target": "code_35561b7f0453b4ac6081",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_7970bc353b16d9973060",
+      "target": "method_300c0724cca4a72daf59",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_eba836fc3def04b2e0ef",
+      "target": "code_7970bc353b16d9973060",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_7970bc353b16d9973060",
+      "target": "code_eba836fc3def04b2e0ef",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_547b533e75b54194779f",
+      "target": "method_300c0724cca4a72daf59",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_7970bc353b16d9973060",
+      "target": "code_547b533e75b54194779f",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_547b533e75b54194779f",
+      "target": "code_7970bc353b16d9973060",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5b121c8a2962aedbcac2",
+      "target": "method_300c0724cca4a72daf59",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_547b533e75b54194779f",
+      "target": "code_5b121c8a2962aedbcac2",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5b121c8a2962aedbcac2",
+      "target": "code_547b533e75b54194779f",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_73e8fa5b1802e51dd62f",
+      "target": "method_300c0724cca4a72daf59",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5b121c8a2962aedbcac2",
+      "target": "code_73e8fa5b1802e51dd62f",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_73e8fa5b1802e51dd62f",
+      "target": "code_5b121c8a2962aedbcac2",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ad1acb3bf34412dfab99",
+      "target": "method_300c0724cca4a72daf59",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_73e8fa5b1802e51dd62f",
+      "target": "code_ad1acb3bf34412dfab99",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ad1acb3bf34412dfab99",
+      "target": "code_73e8fa5b1802e51dd62f",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0bae5555f27cad502509",
+      "target": "method_300c0724cca4a72daf59",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ad1acb3bf34412dfab99",
+      "target": "code_0bae5555f27cad502509",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0bae5555f27cad502509",
+      "target": "code_ad1acb3bf34412dfab99",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_92ee97f86c735d6b0866",
+      "target": "method_300c0724cca4a72daf59",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0bae5555f27cad502509",
+      "target": "code_92ee97f86c735d6b0866",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_92ee97f86c735d6b0866",
+      "target": "code_0bae5555f27cad502509",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6f92fdeed72695fa7f8b",
+      "target": "method_300c0724cca4a72daf59",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_92ee97f86c735d6b0866",
+      "target": "code_6f92fdeed72695fa7f8b",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6f92fdeed72695fa7f8b",
+      "target": "code_92ee97f86c735d6b0866",
+      "relation": "ADJACENT",
+      "provenance": "same method source order",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_35561b7f0453b4ac6081",
+      "target": "method_300c0724cca4a72daf59",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_eba836fc3def04b2e0ef",
+      "target": "method_300c0724cca4a72daf59",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_547b533e75b54194779f",
+      "target": "method_300c0724cca4a72daf59",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5b121c8a2962aedbcac2",
+      "target": "method_300c0724cca4a72daf59",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_ad1acb3bf34412dfab99",
+      "target": "method_300c0724cca4a72daf59",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0bae5555f27cad502509",
+      "target": "code_ad1acb3bf34412dfab99",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_0bae5555f27cad502509",
+      "target": "method_300c0724cca4a72daf59",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_92ee97f86c735d6b0866",
+      "target": "method_300c0724cca4a72daf59",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_92ee97f86c735d6b0866",
+      "target": "code_ad1acb3bf34412dfab99",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_6f92fdeed72695fa7f8b",
+      "target": "method_300c0724cca4a72daf59",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_80b482d95ea1f70cbb8a",
+      "target": "method_a3f4d0e82506117f460c",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_80b482d95ea1f70cbb8a",
+      "target": "method_a3f4d0e82506117f460c",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_2e78e737f981707d5100",
+      "target": "method_c298098ea4c79010975a",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_9bea09699ae96220ba9b",
+      "target": "method_51bc1412bc4b7a6e58c0",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_9bea09699ae96220ba9b",
+      "target": "method_51bc1412bc4b7a6e58c0",
+      "relation": "REQUIRES",
+      "provenance": "AST lexical definition, not reaching-definition proof",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_5f7eda8832fba2db10d7",
+      "target": "method_d653612bd1d125121e44",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_4fb36b98aeb62d776661",
+      "target": "method_cac6b2d05703f5146296",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    },
+    {
+      "source": "code_c888ba250d7816f3d48b",
+      "target": "method_4e866acec91837195152",
+      "relation": "PART_OF",
+      "provenance": "AST containment",
+      "confidence": 1.0
+    }
+  ],
+  "targets": {
+    "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)": "method_0a4ad1502c19ddab4b64",
+    "org.apache.commons.math3.exception.MathIllegalStateException.getLocalizedMessage()": "method_d845b2023321ae3bbba8",
+    "org.apache.commons.math3.fraction.Fraction.Fraction(double,double,int,int)": "method_950ed02a766ace877500",
+    "org.apache.commons.math3.fraction.Fraction.negate()": "method_2f3eec7f3a62efd2d7a9",
+    "org.apache.commons.math3.fraction.FractionConversionException.FractionConversionException(double,long,long)": "method_c45d16187a6a8b9cddc7",
+    "org.apache.commons.math3.fraction.Fraction.Fraction(double,int)": "method_c06d37447c1ef5b24184",
+    "org.apache.commons.math3.fraction.Fraction.multiply(Fraction)": "method_caf53bf482ea3825fde4",
+    "org.apache.commons.math3.fraction.BigFraction.BigFraction(long,long)": "method_d0e7894052e7d103825c",
+    "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,int)": "method_563a1ec9a30fba4d1482",
+    "org.apache.commons.math3.fraction.Fraction.getReducedFraction(int,int)": "method_300c0724cca4a72daf59",
+    "org.apache.commons.math3.exception.ConvergenceException.ConvergenceException(Localizable,Object)": "method_a3f4d0e82506117f460c",
+    "org.apache.commons.math3.fraction.Fraction.addSub(Fraction,boolean)": "method_ef62916af774c9a6ac57",
+    "org.apache.commons.math3.fraction.BigFraction.getDenominatorAsInt()": "method_c298098ea4c79010975a",
+    "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int)": "method_51bc1412bc4b7a6e58c0",
+    "org.apache.commons.math3.fraction.BigFraction.getNumeratorAsInt()": "method_d653612bd1d125121e44",
+    "org.apache.commons.math3.exception.MathIllegalStateException.getContext()": "method_cac6b2d05703f5146296",
+    "org.apache.commons.math3.fraction.Fraction.Fraction(int,int)": "method_3bc7e0b1b563fb491f77",
+    "org.apache.commons.math3.exception.MathIllegalStateException.MathIllegalStateException()": "method_4e866acec91837195152",
+    "org.apache.commons.math3.fraction.Fraction.divide(Fraction)": "method_7dcaca8f818688714c6e"
+  },
+  "sources": {
+    "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)": {
+      "source": "    /**\n     * Create a fraction given the double value and either the maximum error\n     * allowed or the maximum number of denominator digits.\n     * <p>\n     *\n     * NOTE: This constructor is called with EITHER - a valid epsilon value and\n     * the maxDenominator set to Integer.MAX_VALUE (that way the maxDenominator\n     * has no effect). OR - a valid maxDenominator value and the epsilon value\n     * set to zero (that way epsilon only has effect if there is an exact match\n     * before the maxDenominator value is reached).\n     * </p>\n     * <p>\n     *\n     * It has been done this way so that the same code can be (re)used for both\n     * scenarios. However this could be confusing to users if it were part of\n     * the public API and this constructor should therefore remain PRIVATE.\n     * </p>\n     *\n     * See JIRA issue ticket MATH-181 for more details:\n     *\n     * https://issues.apache.org/jira/browse/MATH-181\n     *\n     * @param value\n     *            the double value to convert to a fraction.\n     * @param epsilon\n     *            maximum error allowed. The resulting fraction is within\n     *            <code>epsilon</code> of <code>value</code>, in absolute terms.\n     * @param maxDenominator\n     *            maximum denominator value allowed.\n     * @param maxIterations\n     *            maximum number of convergents.\n     * @throws FractionConversionException\n     *             if the continued fraction failed to converge.\n     */\n    private BigFraction(final double value, final double epsilon,\n                        final int maxDenominator, int maxIterations)\n        throws FractionConversionException {\n        long overflow = Integer.MAX_VALUE;\n        double r0 = value;\n        long a0 = (long) FastMath.floor(r0);\n        if (a0 > overflow) {\n            throw new FractionConversionException(value, a0, 1l);\n        }\n\n        // check for (almost) integer arguments, which should not go\n        // to iterations.\n        if (FastMath.abs(a0 - value) < epsilon) {\n            numerator = BigInteger.valueOf(a0);\n            denominator = BigInteger.ONE;\n            return;\n        }\n\n        long p0 = 1;\n        long q0 = 0;\n        long p1 = a0;\n        long q1 = 1;\n\n        long p2 = 0;\n        long q2 = 1;\n\n        int n = 0;\n        boolean stop = false;\n        do {\n            ++n;\n            final double r1 = 1.0 / (r0 - a0);\n            final long a1 = (long) FastMath.floor(r1);\n            p2 = (a1 * p1) + p0;\n            q2 = (a1 * q1) + q0;\n            if ((p2 > overflow) || (q2 > overflow)) {\n                throw new FractionConversionException(value, p2, q2);\n            }\n\n            final double convergent = (double) p2 / (double) q2;\n            if ((n < maxIterations) &&\n                (FastMath.abs(convergent - value) > epsilon) &&\n                (q2 < maxDenominator)) {\n                p0 = p1;\n                p1 = p2;\n                q0 = q1;\n                q1 = q2;\n                a0 = a1;\n                r0 = r1;\n            } else {\n                stop = true;\n            }\n        } while (!stop);\n\n        if (n >= maxIterations) {\n            throw new FractionConversionException(value, maxIterations);\n        }\n\n        if (q2 < maxDenominator) {\n            numerator   = BigInteger.valueOf(p2);\n            denominator = BigInteger.valueOf(q2);\n        } else {\n            numerator   = BigInteger.valueOf(p1);\n            denominator = BigInteger.valueOf(q1);\n        }\n    }\n\n    /**",
+      "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "sha256": "b588c75d9da3ad4920d9c34d3678385699e5064640e6d0612af69437bb4356b5",
+      "start_line": 235,
+      "end_line": 335
+    },
+    "org.apache.commons.math3.exception.MathIllegalStateException.getLocalizedMessage()": {
+      "source": "    /** {@inheritDoc} */\n    @Override\n    public String getLocalizedMessage() {\n        return context.getLocalizedMessage();\n    }",
+      "path": "src/main/java/org/apache/commons/math3/exception/MathIllegalStateException.java",
+      "sha256": "36c25278b1e95ad3d2da95eed77c8f5007798bc839a7175d56d72dfb0254b9a1",
+      "start_line": 83,
+      "end_line": 87
+    },
+    "org.apache.commons.math3.fraction.Fraction.Fraction(double,double,int,int)": {
+      "source": "     * <p>\n     *\n     * NOTE: This constructor is called with EITHER\n     *   - a valid epsilon value and the maxDenominator set to Integer.MAX_VALUE\n     *     (that way the maxDenominator has no effect).\n     * OR\n     *   - a valid maxDenominator value and the epsilon value set to zero\n     *     (that way epsilon only has effect if there is an exact match before\n     *     the maxDenominator value is reached).\n     * </p><p>\n     *\n     * It has been done this way so that the same code can be (re)used for both\n     * scenarios. However this could be confusing to users if it were part of\n     * the public API and this constructor should therefore remain PRIVATE.\n     * </p>\n     *\n     * See JIRA issue ticket MATH-181 for more details:\n     *\n     *     https://issues.apache.org/jira/browse/MATH-181\n     *\n     * @param value the double value to convert to a fraction.\n     * @param epsilon maximum error allowed.  The resulting fraction is within\n     *        {@code epsilon} of {@code value}, in absolute terms.\n     * @param maxDenominator maximum denominator value allowed.\n     * @param maxIterations maximum number of convergents\n     * @throws FractionConversionException if the continued fraction failed to\n     *         converge.\n     */\n    private Fraction(double value, double epsilon, int maxDenominator, int maxIterations)\n        throws FractionConversionException\n    {\n        long overflow = Integer.MAX_VALUE;\n        double r0 = value;\n        long a0 = (long)FastMath.floor(r0);\n        if (FastMath.abs(a0) > overflow) {\n            throw new FractionConversionException(value, a0, 1l);\n        }\n\n        // check for (almost) integer arguments, which should not go\n        // to iterations.\n        if (FastMath.abs(a0 - value) < epsilon) {\n            this.numerator = (int) a0;\n            this.denominator = 1;\n            return;\n        }\n\n        long p0 = 1;\n        long q0 = 0;\n        long p1 = a0;\n        long q1 = 1;\n\n        long p2 = 0;\n        long q2 = 1;\n\n        int n = 0;\n        boolean stop = false;\n        do {\n            ++n;\n            double r1 = 1.0 / (r0 - a0);\n            long a1 = (long)FastMath.floor(r1);\n            p2 = (a1 * p1) + p0;\n            q2 = (a1 * q1) + q0;\n            if ((FastMath.abs(p2) > overflow) || (FastMath.abs(q2) > overflow)) {\n                throw new FractionConversionException(value, p2, q2);\n            }\n\n            double convergent = (double)p2 / (double)q2;\n            if (n < maxIterations && FastMath.abs(convergent - value) > epsilon && q2 < maxDenominator) {\n                p0 = p1;\n                p1 = p2;\n                q0 = q1;\n                q1 = q2;\n                a0 = a1;\n                r0 = r1;\n            } else {\n                stop = true;\n            }\n        } while (!stop);\n\n        if (n >= maxIterations) {\n            throw new FractionConversionException(value, maxIterations);\n        }\n\n        if (q2 < maxDenominator) {\n            this.numerator = (int) p2;\n            this.denominator = (int) q2;\n        } else {\n            this.numerator = (int) p1;\n            this.denominator = (int) q1;\n        }\n\n    }\n\n    /**\n     * Create a fraction from an int.\n     * The fraction is num / 1.\n     * @param num the numerator.",
+      "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "sha256": "5b540774ea5493cb8ccb6a6cbf38c9f968c68b8d22b13da3bac990d15e4d08e1",
+      "start_line": 147,
+      "end_line": 243
+    },
+    "org.apache.commons.math3.fraction.Fraction.negate()": {
+      "source": "    public Fraction negate() {\n        if (numerator==Integer.MIN_VALUE) {\n            throw new MathArithmeticException(LocalizedFormats.OVERFLOW_IN_FRACTION, numerator, denominator);\n        }\n        return new Fraction(-numerator, denominator);\n    }\n\n    /**\n     * Return the multiplicative inverse of this fraction.\n     * @return the reciprocal fraction",
+      "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "sha256": "10b81f0043cca82c480772622ca3eb96abf96719263e54817bd1cdb9ed59eb33",
+      "start_line": 406,
+      "end_line": 415
+    },
+    "org.apache.commons.math3.fraction.FractionConversionException.FractionConversionException(double,long,long)": {
+      "source": "    /**\n     * Constructs an exception with specified formatted detail message.\n     * Message formatting is delegated to {@link java.text.MessageFormat}.\n     * @param value double value to convert\n     * @param p current numerator\n     * @param q current denominator\n     */\n    public FractionConversionException(double value, long p, long q) {\n        super(LocalizedFormats.FRACTION_CONVERSION_OVERFLOW, value, p, q);\n    }",
+      "path": "src/main/java/org/apache/commons/math3/fraction/FractionConversionException.java",
+      "sha256": "d4598048af4ddad74f1cf8bb7d8e9bc37a2da7852a5c31e0be4fbf642d24f3a3",
+      "start_line": 45,
+      "end_line": 54
+    },
+    "org.apache.commons.math3.fraction.Fraction.Fraction(double,int)": {
+      "source": "     * References:\n     * <ul>\n     * <li><a href=\"http://mathworld.wolfram.com/ContinuedFraction.html\">\n     * Continued Fraction</a> equations (11) and (22)-(26)</li>\n     * </ul>\n     * </p>\n     * @param value the double value to convert to a fraction.\n     * @param maxDenominator The maximum allowed value for denominator\n     * @throws FractionConversionException if the continued fraction failed to\n     *         converge\n     */\n    public Fraction(double value, int maxDenominator)\n        throws FractionConversionException\n    {\n       this(value, 0, maxDenominator, 100);\n    }\n\n    /**\n     * Create a fraction given the double value and either the maximum error",
+      "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "sha256": "85e53c43b528c1abcdda0fd6a2b232b9174b1ef8c195384a98f78562a5abfe90",
+      "start_line": 127,
+      "end_line": 145
+    },
+    "org.apache.commons.math3.fraction.Fraction.multiply(Fraction)": {
+      "source": "     * @return a {@code Fraction} instance with the resulting values\n     * @throws NullArgumentException if the fraction is {@code null}\n     * @throws MathArithmeticException if the resulting numerator or denominator exceeds\n     *  {@code Integer.MAX_VALUE}\n     */\n    public Fraction multiply(Fraction fraction) {\n        if (fraction == null) {\n            throw new NullArgumentException(LocalizedFormats.FRACTION);\n        }\n        if (numerator == 0 || fraction.numerator == 0) {\n            return ZERO;\n        }\n        // knuth 4.5.1\n        // make sure we don't overflow unless the result *must* overflow.\n        int d1 = ArithmeticUtils.gcd(numerator, fraction.denominator);\n        int d2 = ArithmeticUtils.gcd(fraction.numerator, denominator);\n        return getReducedFraction\n        (ArithmeticUtils.mulAndCheck(numerator/d1, fraction.numerator/d2),\n                ArithmeticUtils.mulAndCheck(denominator/d2, fraction.denominator/d1));\n    }\n\n    /**\n     * Multiply the fraction by an integer.\n     * @param i the <tt>integer</tt> to multiply by.\n     * @return this * i",
+      "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "sha256": "3f97f8f9458c7fb274cbb8e1a84efeed7eaff3af26e308d0ca637ce8d46ca391",
+      "start_line": 528,
+      "end_line": 552
+    },
+    "org.apache.commons.math3.fraction.BigFraction.BigFraction(long,long)": {
+      "source": "     * Create a {@link BigFraction} given the numerator and denominator as simple\n     * <tt>long</tt>. The {@link BigFraction} is reduced to lowest terms.\n     * </p>\n     *\n     * @param num\n     *            the numerator.\n     * @param den\n     *            the denominator.\n     */\n    public BigFraction(final long num, final long den) {\n        this(BigInteger.valueOf(num), BigInteger.valueOf(den));\n    }\n\n    /**",
+      "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "sha256": "15c9ccc0d4248979cac8ef9a5e7be00022e4b9e33881770dd5cd5feb212ef12a",
+      "start_line": 399,
+      "end_line": 412
+    },
+    "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,int)": {
+      "source": "     * <p>\n     * References:\n     * <ul>\n     * <li><a href=\"http://mathworld.wolfram.com/ContinuedFraction.html\">\n     * Continued Fraction</a> equations (11) and (22)-(26)</li>\n     * </ul>\n     * </p>\n     *\n     * @param value\n     *            the double value to convert to a fraction.\n     * @param maxDenominator\n     *            The maximum allowed value for denominator.\n     * @throws FractionConversionException\n     *             if the continued fraction failed to converge.\n     */\n    public BigFraction(final double value, final int maxDenominator)\n        throws FractionConversionException {\n        this(value, 0, maxDenominator, 100);\n    }\n\n    /**",
+      "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "sha256": "2475edd812b51576c70db33f1de0788320fe72b49e2081462c73e739e379e513",
+      "start_line": 337,
+      "end_line": 357
+    },
+    "org.apache.commons.math3.fraction.Fraction.getReducedFraction(int,int)": {
+      "source": "     *\n     * @param numerator  the numerator, for example the three in 'three sevenths'\n     * @param denominator  the denominator, for example the seven in 'three sevenths'\n     * @return a new fraction instance, with the numerator and denominator reduced\n     * @throws MathArithmeticException if the denominator is {@code zero}\n     */\n    public static Fraction getReducedFraction(int numerator, int denominator) {\n        if (denominator == 0) {\n            throw new MathArithmeticException(LocalizedFormats.ZERO_DENOMINATOR_IN_FRACTION,\n                                              numerator, denominator);\n        }\n        if (numerator==0) {\n            return ZERO; // normalize zero.\n        }\n        // allow 2^k/-2^31 as a valid fraction (where k>0)\n        if (denominator==Integer.MIN_VALUE && (numerator&1)==0) {\n            numerator/=2; denominator/=2;\n        }\n        if (denominator < 0) {\n            if (numerator==Integer.MIN_VALUE ||\n                    denominator==Integer.MIN_VALUE) {\n                throw new MathArithmeticException(LocalizedFormats.OVERFLOW_IN_FRACTION,\n                                                  numerator, denominator);\n            }\n            numerator = -numerator;\n            denominator = -denominator;\n        }\n        // simplify fraction.\n        int gcd = ArithmeticUtils.gcd(numerator, denominator);\n        numerator /= gcd;\n        denominator /= gcd;\n        return new Fraction(numerator, denominator);\n    }\n\n    /**\n     * <p>\n     * Returns the {@code String} representing this fraction, ie\n     * \"num / dem\" or just \"num\" if the denominator is one.",
+      "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "sha256": "537b9f78b65acd41e8699784f2a91b464964f27b00b900e73a8bc253860860fa",
+      "start_line": 605,
+      "end_line": 642
+    },
+    "org.apache.commons.math3.exception.ConvergenceException.ConvergenceException(Localizable,Object)": {
+      "source": "    /**\n     * Construct the exception with a specific context and arguments.\n     *\n     * @param pattern Message pattern providing the specific context of\n     * the error.\n     * @param args Arguments.\n     */\n    public ConvergenceException(Localizable pattern,\n                                Object ... args) {\n        getContext().addMessage(pattern, args);\n    }",
+      "path": "src/main/java/org/apache/commons/math3/exception/ConvergenceException.java",
+      "sha256": "e37d4a2a72f4bed32974eb78af49c2e5f2bc5e048ac3c8cd4bbbc49d0220f4d1",
+      "start_line": 40,
+      "end_line": 50
+    },
+    "org.apache.commons.math3.fraction.Fraction.addSub(Fraction,boolean)": {
+      "source": "     * @return a {@code Fraction} instance with the resulting values\n     * @throws NullArgumentException if the fraction is {@code null}\n     * @throws MathArithmeticException if the resulting numerator or denominator\n     *   cannot be represented in an {@code int}.\n     */\n    private Fraction addSub(Fraction fraction, boolean isAdd) {\n        if (fraction == null) {\n            throw new NullArgumentException(LocalizedFormats.FRACTION);\n        }\n        // zero is identity for addition.\n        if (numerator == 0) {\n            return isAdd ? fraction : fraction.negate();\n        }\n        if (fraction.numerator == 0) {\n            return this;\n        }\n        // if denominators are randomly distributed, d1 will be 1 about 61%\n        // of the time.\n        int d1 = ArithmeticUtils.gcd(denominator, fraction.denominator);\n        if (d1==1) {\n            // result is ( (u*v' +/- u'v) / u'v')\n            int uvp = ArithmeticUtils.mulAndCheck(numerator, fraction.denominator);\n            int upv = ArithmeticUtils.mulAndCheck(fraction.numerator, denominator);\n            return new Fraction\n                (isAdd ? ArithmeticUtils.addAndCheck(uvp, upv) :\n                 ArithmeticUtils.subAndCheck(uvp, upv),\n                 ArithmeticUtils.mulAndCheck(denominator, fraction.denominator));\n        }\n        // the quantity 't' requires 65 bits of precision; see knuth 4.5.1\n        // exercise 7.  we're going to use a BigInteger.\n        // t = u(v'/d1) +/- v(u'/d1)\n        BigInteger uvp = BigInteger.valueOf(numerator)\n        .multiply(BigInteger.valueOf(fraction.denominator/d1));\n        BigInteger upv = BigInteger.valueOf(fraction.numerator)\n        .multiply(BigInteger.valueOf(denominator/d1));\n        BigInteger t = isAdd ? uvp.add(upv) : uvp.subtract(upv);\n        // but d2 doesn't need extra precision because\n        // d2 = gcd(t,d1) = gcd(t mod d1, d1)\n        int tmodd1 = t.mod(BigInteger.valueOf(d1)).intValue();\n        int d2 = (tmodd1==0)?d1:ArithmeticUtils.gcd(tmodd1, d1);\n\n        // result is (t/d2) / (u'/d1)(v'/d2)\n        BigInteger w = t.divide(BigInteger.valueOf(d2));\n        if (w.bitLength() > 31) {\n            throw new MathArithmeticException(LocalizedFormats.NUMERATOR_OVERFLOW_AFTER_MULTIPLY,\n                                              w);\n        }\n        return new Fraction (w.intValue(),\n                ArithmeticUtils.mulAndCheck(denominator/d1,\n                        fraction.denominator/d2));\n    }\n\n    /**\n     * <p>Multiplies the value of this fraction by another, returning the\n     * result in reduced form.</p>\n     *",
+      "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "sha256": "3b8eeed3a01f9f9016e14e78a2f434f21516daf2f72e38e8096da773b668a6c7",
+      "start_line": 471,
+      "end_line": 526
+    },
+    "org.apache.commons.math3.fraction.BigFraction.getDenominatorAsInt()": {
+      "source": "     * Access the denominator as a <tt>int</tt>.\n     * </p>\n     *\n     * @return the denominator as a <tt>int</tt>.\n     */\n    public int getDenominatorAsInt() {\n        return denominator.intValue();\n    }\n\n    /**",
+      "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "sha256": "87ae31e8646217385760279a13baa1014bb822d894dca931f2d9e9f2d84f1e9a",
+      "start_line": 760,
+      "end_line": 769
+    },
+    "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int)": {
+      "source": "    /**\n     * Create a fraction given the double value and maximum error allowed.\n     * <p>\n     * References:\n     * <ul>\n     * <li><a href=\"http://mathworld.wolfram.com/ContinuedFraction.html\">\n     * Continued Fraction</a> equations (11) and (22)-(26)</li>\n     * </ul>\n     * </p>\n     *\n     * @param value\n     *            the double value to convert to a fraction.\n     * @param epsilon\n     *            maximum error allowed. The resulting fraction is within\n     *            <code>epsilon</code> of <code>value</code>, in absolute terms.\n     * @param maxIterations\n     *            maximum number of convergents.\n     * @throws FractionConversionException\n     *             if the continued fraction failed to converge.\n     * @see #BigFraction(double)\n     */\n    public BigFraction(final double value, final double epsilon,\n                       final int maxIterations)\n        throws FractionConversionException {\n        this(value, epsilon, Integer.MAX_VALUE, maxIterations);\n    }",
+      "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "sha256": "ba732addc022c9d79ddd4d0739b5a22e07e09ceff48e58651f2ca3e8d511bf4c",
+      "start_line": 208,
+      "end_line": 233
+    },
+    "org.apache.commons.math3.fraction.BigFraction.getNumeratorAsInt()": {
+      "source": "     * Access the numerator as a <tt>int</tt>.\n     * </p>\n     *\n     * @return the numerator as a <tt>int</tt>.\n     */\n    public int getNumeratorAsInt() {\n        return numerator.intValue();\n    }\n\n    /**",
+      "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "sha256": "9993a35fd3939a1882d222ec21df99ce8b1cbf3c82a0ca491ae2aa1c229dacf9",
+      "start_line": 793,
+      "end_line": 802
+    },
+    "org.apache.commons.math3.exception.MathIllegalStateException.getContext()": {
+      "source": "    /** {@inheritDoc} */\n    public ExceptionContext getContext() {\n        return context;\n    }",
+      "path": "src/main/java/org/apache/commons/math3/exception/MathIllegalStateException.java",
+      "sha256": "4ade7230a4fd2df91e0448d5781a3f9d449c15543078cc8f536df86b35a750ec",
+      "start_line": 72,
+      "end_line": 75
+    },
+    "org.apache.commons.math3.fraction.Fraction.Fraction(int,int)": {
+      "source": "     * @throws MathArithmeticException if the denominator is {@code zero}\n     */\n    public Fraction(int num, int den) {\n        if (den == 0) {\n            throw new MathArithmeticException(LocalizedFormats.ZERO_DENOMINATOR_IN_FRACTION,\n                                              num, den);\n        }\n        if (den < 0) {\n            if (num == Integer.MIN_VALUE ||\n                den == Integer.MIN_VALUE) {\n                throw new MathArithmeticException(LocalizedFormats.OVERFLOW_IN_FRACTION,\n                                                  num, den);\n            }\n            num = -num;\n            den = -den;\n        }\n        // reduce numerator and denominator by greatest common denominator.\n        final int d = ArithmeticUtils.gcd(num, den);\n        if (d > 1) {\n            num /= d;\n            den /= d;\n        }\n\n        // move sign to numerator.\n        if (den < 0) {\n            num = -num;\n            den = -den;\n        }\n        this.numerator   = num;\n        this.denominator = den;\n    }\n\n    /**\n     * Returns the absolute value of this fraction.\n     * @return the absolute value.\n     */",
+      "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "sha256": "42b7ba61dd246b0b32e52a03c7e44c79ab179d81a561d70fd1d6799c72566dc2",
+      "start_line": 254,
+      "end_line": 289
+    },
+    "org.apache.commons.math3.exception.MathIllegalStateException.MathIllegalStateException()": {
+      "source": "    /**\n     * Default constructor.\n     */\n    public MathIllegalStateException() {\n        this(LocalizedFormats.ILLEGAL_STATE);\n    }",
+      "path": "src/main/java/org/apache/commons/math3/exception/MathIllegalStateException.java",
+      "sha256": "4622e711192754be09e87121b71d50706c8464b7ec6bf7e035e96c285a523f32",
+      "start_line": 65,
+      "end_line": 70
+    },
+    "org.apache.commons.math3.fraction.Fraction.divide(Fraction)": {
+      "source": "     * @throws IllegalArgumentException if the fraction is {@code null}\n     * @throws MathArithmeticException if the fraction to divide by is zero\n     * @throws MathArithmeticException if the resulting numerator or denominator exceeds\n     *  {@code Integer.MAX_VALUE}\n     */\n    public Fraction divide(Fraction fraction) {\n        if (fraction == null) {\n            throw new NullArgumentException(LocalizedFormats.FRACTION);\n        }\n        if (fraction.numerator == 0) {\n            throw new MathArithmeticException(LocalizedFormats.ZERO_FRACTION_TO_DIVIDE_BY,\n                                              fraction.numerator, fraction.denominator);\n        }\n        return multiply(fraction.reciprocal());\n    }\n\n    /**\n     * Divide the fraction by an integer.\n     * @param i the <tt>integer</tt> to divide by.\n     * @return this * i",
+      "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "sha256": "aa85a160f8ab067ff8c96a3e340a56796793f456d96071de828155d108b0da25",
+      "start_line": 563,
+      "end_line": 582
+    }
+  },
+  "language": "java",
+  "revision": "d7fd760eb8c5ba8dc7bc30fd565575f2547e0c86",
+  "diagnostics": [
+    {
+      "owner": "org.apache.commons.math3.fraction.Fraction.Fraction(double,double,int,int)",
+      "kind": "parse_error",
+      "detail": "Java method AST could not be extracted"
+    },
+    {
+      "owner": "org.apache.commons.math3.fraction.Fraction.Fraction(double,int)",
+      "kind": "parse_error",
+      "detail": "Java method AST could not be extracted"
+    },
+    {
+      "owner": "org.apache.commons.math3.fraction.Fraction.multiply(Fraction)",
+      "kind": "parse_error",
+      "detail": "Java method AST could not be extracted"
+    },
+    {
+      "owner": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,int)",
+      "kind": "parse_error",
+      "detail": "Java method AST could not be extracted"
+    },
+    {
+      "owner": "org.apache.commons.math3.fraction.Fraction.addSub(Fraction,boolean)",
+      "kind": "parse_error",
+      "detail": "Java method AST could not be extracted"
+    },
+    {
+      "owner": "org.apache.commons.math3.fraction.Fraction.Fraction(int,int)",
+      "kind": "parse_error",
+      "detail": "Java method AST could not be extracted"
+    },
+    {
+      "owner": "org.apache.commons.math3.fraction.Fraction.divide(Fraction)",
+      "kind": "parse_error",
+      "detail": "Java method AST could not be extracted"
+    },
+    {
+      "kind": "coverage_status",
+      "detail": "not supplied; ranker scores do not create coverage edges"
+    }
+  ],
+  "schema": "graft-graph-v1"
+}

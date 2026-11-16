@@ -1,0 +1,1199 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Math-1",
+    "repository": "Math-1",
+    "language": "java",
+    "revision": "d7fd760eb8c5ba8dc7bc30fd565575f2547e0c86",
+    "checkout": "/home/parbab/RAVE_FL_Research/AdaptiveContextOpt_AdaptivePilot/data/rave_fl_checkouts/Math-1",
+    "issue": "",
+    "evidence": {
+      "kind": "trigger_description",
+      "text": "public void testDigitLimitConstructor() throws ConvergenceException {\n        assertFraction(2, 5, new BigFraction(0.4, 9));\n        assertFraction(2, 5, new BigFraction(0.4, 99));\n        assertFraction(2, 5, new BigFraction(0.4, 999));\n\n        assertFraction(3, 5, new BigFraction(0.6152, 9));\n        assertFraction(8, 13, new BigFraction(0.6152, 99));\n        assertFraction(510, 829, new BigFraction(0.6152, 999));\n        assertFraction(769, 1250, new BigFraction(0.6152, 9999));\n        \n        // MATH-996\n        assertFraction(1, 2, new BigFraction(0.5000000001, 10));\nThe last line shown above failed with the following stack trace.\norg.apache.commons.math3.fraction.FractionConversionException: illegal state: Overflow trying to convert 0.5 to fraction (2,499,999,794/4,999,999,587)\n\tat org.apache.commons.math3.fraction.BigFraction.<init>(BigFraction.java:306)\n\tat org.apache.commons.math3.fraction.BigFraction.<init>(BigFraction.java:356)\n\tat org.apache.commons.math3.fraction.BigFractionTest.testDigitLimitConstructor(BigFractionTest.java:159)",
+      "source": "/home/parbab/RAVE_FL_Research/AdaptiveContextOpt_AdaptivePilot/results/graft_independent_qwen7b_20261105_123254/evidence/Math-1.txt",
+      "sha256": "ca4d68993d1b7081d38aafd04a0d6d4b189b870dfbe7d3aa463ddd6f64e697cc"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "/home/parbab/RAVE_FL_Research/AdaptiveContextOpt/references/FlexFL_Time25",
+    "source_root": ".",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": false,
+      "independent_bug_id": "Math-1",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "start_line": 235,
+      "end_line": 335,
+      "source": "    /**\n     * Create a fraction given the double value and either the maximum error\n     * allowed or the maximum number of denominator digits.\n     * <p>\n     *\n     * NOTE: This constructor is called with EITHER - a valid epsilon value and\n     * the maxDenominator set to Integer.MAX_VALUE (that way the maxDenominator\n     * has no effect). OR - a valid maxDenominator value and the epsilon value\n     * set to zero (that way epsilon only has effect if there is an exact match\n     * before the maxDenominator value is reached).\n     * </p>\n     * <p>\n     *\n     * It has been done this way so that the same code can be (re)used for both\n     * scenarios. However this could be confusing to users if it were part of\n     * the public API and this constructor should therefore remain PRIVATE.\n     * </p>\n     *\n     * See JIRA issue ticket MATH-181 for more details:\n     *\n     * https://issues.apache.org/jira/browse/MATH-181\n     *\n     * @param value\n     *            the double value to convert to a fraction.\n     * @param epsilon\n     *            maximum error allowed. The resulting fraction is within\n     *            <code>epsilon</code> of <code>value</code>, in absolute terms.\n     * @param maxDenominator\n     *            maximum denominator value allowed.\n     * @param maxIterations\n     *            maximum number of convergents.\n     * @throws FractionConversionException\n     *             if the continued fraction failed to converge.\n     */\n    private BigFraction(final double value, final double epsilon,\n                        final int maxDenominator, int maxIterations)\n        throws FractionConversionException {\n        long overflow = Integer.MAX_VALUE;\n        double r0 = value;\n        long a0 = (long) FastMath.floor(r0);\n        if (a0 > overflow) {\n            throw new FractionConversionException(value, a0, 1l);\n        }\n\n        // check for (almost) integer arguments, which should not go\n        // to iterations.\n        if (FastMath.abs(a0 - value) < epsilon) {\n            numerator = BigInteger.valueOf(a0);\n            denominator = BigInteger.ONE;\n            return;\n        }\n\n        long p0 = 1;\n        long q0 = 0;\n        long p1 = a0;\n        long q1 = 1;\n\n        long p2 = 0;\n        long q2 = 1;\n\n        int n = 0;\n        boolean stop = false;\n        do {\n            ++n;\n            final double r1 = 1.0 / (r0 - a0);\n            final long a1 = (long) FastMath.floor(r1);\n            p2 = (a1 * p1) + p0;\n            q2 = (a1 * q1) + q0;\n            if ((p2 > overflow) || (q2 > overflow)) {\n                throw new FractionConversionException(value, p2, q2);\n            }\n\n            final double convergent = (double) p2 / (double) q2;\n            if ((n < maxIterations) &&\n                (FastMath.abs(convergent - value) > epsilon) &&\n                (q2 < maxDenominator)) {\n                p0 = p1;\n                p1 = p2;\n                q0 = q1;\n                q1 = q2;\n                a0 = a1;\n                r0 = r1;\n            } else {\n                stop = true;\n            }\n        } while (!stop);\n\n        if (n >= maxIterations) {\n            throw new FractionConversionException(value, maxIterations);\n        }\n\n        if (q2 < maxDenominator) {\n            numerator   = BigInteger.valueOf(p2);\n            denominator = BigInteger.valueOf(q2);\n        } else {\n            numerator   = BigInteger.valueOf(p1);\n            denominator = BigInteger.valueOf(q1);\n        }\n    }\n\n    /**",
+      "prior": 1.0,
+      "ranks": {
+        "SBIR": 1,
+        "Ochiai": 6,
+        "BoostN": 1
+      },
+      "scores": {},
+      "kind": "method"
+    },
+    {
+      "entity_id": "org.apache.commons.math3.exception.MathIllegalStateException.getLocalizedMessage()",
+      "path": "src/main/java/org/apache/commons/math3/exception/MathIllegalStateException.java",
+      "start_line": 83,
+      "end_line": 87,
+      "source": "    /** {@inheritDoc} */\n    @Override\n    public String getLocalizedMessage() {\n        return context.getLocalizedMessage();\n    }",
+      "prior": 1.0,
+      "ranks": {
+        "SBIR": 5,
+        "Ochiai": 1
+      },
+      "scores": {},
+      "kind": "method"
+    },
+    {
+      "entity_id": "org.apache.commons.math3.fraction.Fraction.Fraction(double,double,int,int)",
+      "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "start_line": 147,
+      "end_line": 243,
+      "source": "     * <p>\n     *\n     * NOTE: This constructor is called with EITHER\n     *   - a valid epsilon value and the maxDenominator set to Integer.MAX_VALUE\n     *     (that way the maxDenominator has no effect).\n     * OR\n     *   - a valid maxDenominator value and the epsilon value set to zero\n     *     (that way epsilon only has effect if there is an exact match before\n     *     the maxDenominator value is reached).\n     * </p><p>\n     *\n     * It has been done this way so that the same code can be (re)used for both\n     * scenarios. However this could be confusing to users if it were part of\n     * the public API and this constructor should therefore remain PRIVATE.\n     * </p>\n     *\n     * See JIRA issue ticket MATH-181 for more details:\n     *\n     *     https://issues.apache.org/jira/browse/MATH-181\n     *\n     * @param value the double value to convert to a fraction.\n     * @param epsilon maximum error allowed.  The resulting fraction is within\n     *        {@code epsilon} of {@code value}, in absolute terms.\n     * @param maxDenominator maximum denominator value allowed.\n     * @param maxIterations maximum number of convergents\n     * @throws FractionConversionException if the continued fraction failed to\n     *         converge.\n     */\n    private Fraction(double value, double epsilon, int maxDenominator, int maxIterations)\n        throws FractionConversionException\n    {\n        long overflow = Integer.MAX_VALUE;\n        double r0 = value;\n        long a0 = (long)FastMath.floor(r0);\n        if (FastMath.abs(a0) > overflow) {\n            throw new FractionConversionException(value, a0, 1l);\n        }\n\n        // check for (almost) integer arguments, which should not go\n        // to iterations.\n        if (FastMath.abs(a0 - value) < epsilon) {\n            this.numerator = (int) a0;\n            this.denominator = 1;\n            return;\n        }\n\n        long p0 = 1;\n        long q0 = 0;\n        long p1 = a0;\n        long q1 = 1;\n\n        long p2 = 0;\n        long q2 = 1;\n\n        int n = 0;\n        boolean stop = false;\n        do {\n            ++n;\n            double r1 = 1.0 / (r0 - a0);\n            long a1 = (long)FastMath.floor(r1);\n            p2 = (a1 * p1) + p0;\n            q2 = (a1 * q1) + q0;\n            if ((FastMath.abs(p2) > overflow) || (FastMath.abs(q2) > overflow)) {\n                throw new FractionConversionException(value, p2, q2);\n            }\n\n            double convergent = (double)p2 / (double)q2;\n            if (n < maxIterations && FastMath.abs(convergent - value) > epsilon && q2 < maxDenominator) {\n                p0 = p1;\n                p1 = p2;\n                q0 = q1;\n                q1 = q2;\n                a0 = a1;\n                r0 = r1;\n            } else {\n                stop = true;\n            }\n        } while (!stop);\n\n        if (n >= maxIterations) {\n            throw new FractionConversionException(value, maxIterations);\n        }\n\n        if (q2 < maxDenominator) {\n            this.numerator = (int) p2;\n            this.denominator = (int) q2;\n        } else {\n            this.numerator = (int) p1;\n            this.denominator = (int) q1;\n        }\n\n    }\n\n    /**\n     * Create a fraction from an int.\n     * The fraction is num / 1.\n     * @param num the numerator.",
+      "prior": 0.9,
+      "ranks": {
+        "SBIR": 7,
+        "BoostN": 2
+      },
+      "scores": {},
+      "kind": "method"
+    },
+    {
+      "entity_id": "org.apache.commons.math3.fraction.Fraction.negate()",
+      "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "start_line": 406,
+      "end_line": 415,
+      "source": "    public Fraction negate() {\n        if (numerator==Integer.MIN_VALUE) {\n            throw new MathArithmeticException(LocalizedFormats.OVERFLOW_IN_FRACTION, numerator, denominator);\n        }\n        return new Fraction(-numerator, denominator);\n    }\n\n    /**\n     * Return the multiplicative inverse of this fraction.\n     * @return the reciprocal fraction",
+      "prior": 0.9,
+      "ranks": {
+        "SBIR": 2,
+        "BoostN": 8
+      },
+      "scores": {},
+      "kind": "method"
+    },
+    {
+      "entity_id": "org.apache.commons.math3.fraction.FractionConversionException.FractionConversionException(double,long,long)",
+      "path": "src/main/java/org/apache/commons/math3/fraction/FractionConversionException.java",
+      "start_line": 45,
+      "end_line": 54,
+      "source": "    /**\n     * Constructs an exception with specified formatted detail message.\n     * Message formatting is delegated to {@link java.text.MessageFormat}.\n     * @param value double value to convert\n     * @param p current numerator\n     * @param q current denominator\n     */\n    public FractionConversionException(double value, long p, long q) {\n        super(LocalizedFormats.FRACTION_CONVERSION_OVERFLOW, value, p, q);\n    }",
+      "prior": 0.9,
+      "ranks": {
+        "Ochiai": 2
+      },
+      "scores": {},
+      "kind": "method"
+    },
+    {
+      "entity_id": "org.apache.commons.math3.fraction.Fraction.Fraction(double,int)",
+      "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "start_line": 127,
+      "end_line": 145,
+      "source": "     * References:\n     * <ul>\n     * <li><a href=\"http://mathworld.wolfram.com/ContinuedFraction.html\">\n     * Continued Fraction</a> equations (11) and (22)-(26)</li>\n     * </ul>\n     * </p>\n     * @param value the double value to convert to a fraction.\n     * @param maxDenominator The maximum allowed value for denominator\n     * @throws FractionConversionException if the continued fraction failed to\n     *         converge\n     */\n    public Fraction(double value, int maxDenominator)\n        throws FractionConversionException\n    {\n       this(value, 0, maxDenominator, 100);\n    }\n\n    /**\n     * Create a fraction given the double value and either the maximum error",
+      "prior": 0.8,
+      "ranks": {
+        "Ochiai": 3,
+        "BoostN": 6
+      },
+      "scores": {},
+      "kind": "method"
+    },
+    {
+      "entity_id": "org.apache.commons.math3.fraction.Fraction.multiply(Fraction)",
+      "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "start_line": 528,
+      "end_line": 552,
+      "source": "     * @return a {@code Fraction} instance with the resulting values\n     * @throws NullArgumentException if the fraction is {@code null}\n     * @throws MathArithmeticException if the resulting numerator or denominator exceeds\n     *  {@code Integer.MAX_VALUE}\n     */\n    public Fraction multiply(Fraction fraction) {\n        if (fraction == null) {\n            throw new NullArgumentException(LocalizedFormats.FRACTION);\n        }\n        if (numerator == 0 || fraction.numerator == 0) {\n            return ZERO;\n        }\n        // knuth 4.5.1\n        // make sure we don't overflow unless the result *must* overflow.\n        int d1 = ArithmeticUtils.gcd(numerator, fraction.denominator);\n        int d2 = ArithmeticUtils.gcd(fraction.numerator, denominator);\n        return getReducedFraction\n        (ArithmeticUtils.mulAndCheck(numerator/d1, fraction.numerator/d2),\n                ArithmeticUtils.mulAndCheck(denominator/d2, fraction.denominator/d1));\n    }\n\n    /**\n     * Multiply the fraction by an integer.\n     * @param i the <tt>integer</tt> to multiply by.\n     * @return this * i",
+      "prior": 0.8,
+      "ranks": {
+        "SBIR": 9,
+        "BoostN": 3
+      },
+      "scores": {},
+      "kind": "method"
+    },
+    {
+      "entity_id": "org.apache.commons.math3.fraction.BigFraction.BigFraction(long,long)",
+      "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "start_line": 399,
+      "end_line": 412,
+      "source": "     * Create a {@link BigFraction} given the numerator and denominator as simple\n     * <tt>long</tt>. The {@link BigFraction} is reduced to lowest terms.\n     * </p>\n     *\n     * @param num\n     *            the numerator.\n     * @param den\n     *            the denominator.\n     */\n    public BigFraction(final long num, final long den) {\n        this(BigInteger.valueOf(num), BigInteger.valueOf(den));\n    }\n\n    /**",
+      "prior": 0.8,
+      "ranks": {
+        "SBIR": 3
+      },
+      "scores": {},
+      "kind": "method"
+    },
+    {
+      "entity_id": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,int)",
+      "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "start_line": 337,
+      "end_line": 357,
+      "source": "     * <p>\n     * References:\n     * <ul>\n     * <li><a href=\"http://mathworld.wolfram.com/ContinuedFraction.html\">\n     * Continued Fraction</a> equations (11) and (22)-(26)</li>\n     * </ul>\n     * </p>\n     *\n     * @param value\n     *            the double value to convert to a fraction.\n     * @param maxDenominator\n     *            The maximum allowed value for denominator.\n     * @throws FractionConversionException\n     *             if the continued fraction failed to converge.\n     */\n    public BigFraction(final double value, final int maxDenominator)\n        throws FractionConversionException {\n        this(value, 0, maxDenominator, 100);\n    }\n\n    /**",
+      "prior": 0.7,
+      "ranks": {
+        "Ochiai": 4,
+        "BoostN": 7
+      },
+      "scores": {},
+      "kind": "method"
+    },
+    {
+      "entity_id": "org.apache.commons.math3.fraction.Fraction.getReducedFraction(int,int)",
+      "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "start_line": 605,
+      "end_line": 642,
+      "source": "     *\n     * @param numerator  the numerator, for example the three in 'three sevenths'\n     * @param denominator  the denominator, for example the seven in 'three sevenths'\n     * @return a new fraction instance, with the numerator and denominator reduced\n     * @throws MathArithmeticException if the denominator is {@code zero}\n     */\n    public static Fraction getReducedFraction(int numerator, int denominator) {\n        if (denominator == 0) {\n            throw new MathArithmeticException(LocalizedFormats.ZERO_DENOMINATOR_IN_FRACTION,\n                                              numerator, denominator);\n        }\n        if (numerator==0) {\n            return ZERO; // normalize zero.\n        }\n        // allow 2^k/-2^31 as a valid fraction (where k>0)\n        if (denominator==Integer.MIN_VALUE && (numerator&1)==0) {\n            numerator/=2; denominator/=2;\n        }\n        if (denominator < 0) {\n            if (numerator==Integer.MIN_VALUE ||\n                    denominator==Integer.MIN_VALUE) {\n                throw new MathArithmeticException(LocalizedFormats.OVERFLOW_IN_FRACTION,\n                                                  numerator, denominator);\n            }\n            numerator = -numerator;\n            denominator = -denominator;\n        }\n        // simplify fraction.\n        int gcd = ArithmeticUtils.gcd(numerator, denominator);\n        numerator /= gcd;\n        denominator /= gcd;\n        return new Fraction(numerator, denominator);\n    }\n\n    /**\n     * <p>\n     * Returns the {@code String} representing this fraction, ie\n     * \"num / dem\" or just \"num\" if the denominator is one.",
+      "prior": 0.7,
+      "ranks": {
+        "SBIR": 4,
+        "BoostN": 4
+      },
+      "scores": {},
+      "kind": "method"
+    },
+    {
+      "entity_id": "org.apache.commons.math3.exception.ConvergenceException.ConvergenceException(Localizable,Object)",
+      "path": "src/main/java/org/apache/commons/math3/exception/ConvergenceException.java",
+      "start_line": 40,
+      "end_line": 50,
+      "source": "    /**\n     * Construct the exception with a specific context and arguments.\n     *\n     * @param pattern Message pattern providing the specific context of\n     * the error.\n     * @param args Arguments.\n     */\n    public ConvergenceException(Localizable pattern,\n                                Object ... args) {\n        getContext().addMessage(pattern, args);\n    }",
+      "prior": 0.6,
+      "ranks": {
+        "SBIR": 6,
+        "Ochiai": 5
+      },
+      "scores": {},
+      "kind": "method"
+    },
+    {
+      "entity_id": "org.apache.commons.math3.fraction.Fraction.addSub(Fraction,boolean)",
+      "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "start_line": 471,
+      "end_line": 526,
+      "source": "     * @return a {@code Fraction} instance with the resulting values\n     * @throws NullArgumentException if the fraction is {@code null}\n     * @throws MathArithmeticException if the resulting numerator or denominator\n     *   cannot be represented in an {@code int}.\n     */\n    private Fraction addSub(Fraction fraction, boolean isAdd) {\n        if (fraction == null) {\n            throw new NullArgumentException(LocalizedFormats.FRACTION);\n        }\n        // zero is identity for addition.\n        if (numerator == 0) {\n            return isAdd ? fraction : fraction.negate();\n        }\n        if (fraction.numerator == 0) {\n            return this;\n        }\n        // if denominators are randomly distributed, d1 will be 1 about 61%\n        // of the time.\n        int d1 = ArithmeticUtils.gcd(denominator, fraction.denominator);\n        if (d1==1) {\n            // result is ( (u*v' +/- u'v) / u'v')\n            int uvp = ArithmeticUtils.mulAndCheck(numerator, fraction.denominator);\n            int upv = ArithmeticUtils.mulAndCheck(fraction.numerator, denominator);\n            return new Fraction\n                (isAdd ? ArithmeticUtils.addAndCheck(uvp, upv) :\n                 ArithmeticUtils.subAndCheck(uvp, upv),\n                 ArithmeticUtils.mulAndCheck(denominator, fraction.denominator));\n        }\n        // the quantity 't' requires 65 bits of precision; see knuth 4.5.1\n        // exercise 7.  we're going to use a BigInteger.\n        // t = u(v'/d1) +/- v(u'/d1)\n        BigInteger uvp = BigInteger.valueOf(numerator)\n        .multiply(BigInteger.valueOf(fraction.denominator/d1));\n        BigInteger upv = BigInteger.valueOf(fraction.numerator)\n        .multiply(BigInteger.valueOf(denominator/d1));\n        BigInteger t = isAdd ? uvp.add(upv) : uvp.subtract(upv);\n        // but d2 doesn't need extra precision because\n        // d2 = gcd(t,d1) = gcd(t mod d1, d1)\n        int tmodd1 = t.mod(BigInteger.valueOf(d1)).intValue();\n        int d2 = (tmodd1==0)?d1:ArithmeticUtils.gcd(tmodd1, d1);\n\n        // result is (t/d2) / (u'/d1)(v'/d2)\n        BigInteger w = t.divide(BigInteger.valueOf(d2));\n        if (w.bitLength() > 31) {\n            throw new MathArithmeticException(LocalizedFormats.NUMERATOR_OVERFLOW_AFTER_MULTIPLY,\n                                              w);\n        }\n        return new Fraction (w.intValue(),\n                ArithmeticUtils.mulAndCheck(denominator/d1,\n                        fraction.denominator/d2));\n    }\n\n    /**\n     * <p>Multiplies the value of this fraction by another, returning the\n     * result in reduced form.</p>\n     *",
+      "prior": 0.6,
+      "ranks": {
+        "BoostN": 5
+      },
+      "scores": {},
+      "kind": "method"
+    },
+    {
+      "entity_id": "org.apache.commons.math3.fraction.BigFraction.getDenominatorAsInt()",
+      "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "start_line": 760,
+      "end_line": 769,
+      "source": "     * Access the denominator as a <tt>int</tt>.\n     * </p>\n     *\n     * @return the denominator as a <tt>int</tt>.\n     */\n    public int getDenominatorAsInt() {\n        return denominator.intValue();\n    }\n\n    /**",
+      "prior": 0.4,
+      "ranks": {
+        "Ochiai": 7
+      },
+      "scores": {},
+      "kind": "method"
+    },
+    {
+      "entity_id": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int)",
+      "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "start_line": 208,
+      "end_line": 233,
+      "source": "    /**\n     * Create a fraction given the double value and maximum error allowed.\n     * <p>\n     * References:\n     * <ul>\n     * <li><a href=\"http://mathworld.wolfram.com/ContinuedFraction.html\">\n     * Continued Fraction</a> equations (11) and (22)-(26)</li>\n     * </ul>\n     * </p>\n     *\n     * @param value\n     *            the double value to convert to a fraction.\n     * @param epsilon\n     *            maximum error allowed. The resulting fraction is within\n     *            <code>epsilon</code> of <code>value</code>, in absolute terms.\n     * @param maxIterations\n     *            maximum number of convergents.\n     * @throws FractionConversionException\n     *             if the continued fraction failed to converge.\n     * @see #BigFraction(double)\n     */\n    public BigFraction(final double value, final double epsilon,\n                       final int maxIterations)\n        throws FractionConversionException {\n        this(value, epsilon, Integer.MAX_VALUE, maxIterations);\n    }",
+      "prior": 0.30000000000000004,
+      "ranks": {
+        "SBIR": 8
+      },
+      "scores": {},
+      "kind": "method"
+    },
+    {
+      "entity_id": "org.apache.commons.math3.fraction.BigFraction.getNumeratorAsInt()",
+      "path": "src/main/java/org/apache/commons/math3/fraction/BigFraction.java",
+      "start_line": 793,
+      "end_line": 802,
+      "source": "     * Access the numerator as a <tt>int</tt>.\n     * </p>\n     *\n     * @return the numerator as a <tt>int</tt>.\n     */\n    public int getNumeratorAsInt() {\n        return numerator.intValue();\n    }\n\n    /**",
+      "prior": 0.30000000000000004,
+      "ranks": {
+        "Ochiai": 8
+      },
+      "scores": {},
+      "kind": "method"
+    },
+    {
+      "entity_id": "org.apache.commons.math3.exception.MathIllegalStateException.getContext()",
+      "path": "src/main/java/org/apache/commons/math3/exception/MathIllegalStateException.java",
+      "start_line": 72,
+      "end_line": 75,
+      "source": "    /** {@inheritDoc} */\n    public ExceptionContext getContext() {\n        return context;\n    }",
+      "prior": 0.19999999999999996,
+      "ranks": {
+        "SBIR": 10,
+        "Ochiai": 9
+      },
+      "scores": {},
+      "kind": "method"
+    },
+    {
+      "entity_id": "org.apache.commons.math3.fraction.Fraction.Fraction(int,int)",
+      "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "start_line": 254,
+      "end_line": 289,
+      "source": "     * @throws MathArithmeticException if the denominator is {@code zero}\n     */\n    public Fraction(int num, int den) {\n        if (den == 0) {\n            throw new MathArithmeticException(LocalizedFormats.ZERO_DENOMINATOR_IN_FRACTION,\n                                              num, den);\n        }\n        if (den < 0) {\n            if (num == Integer.MIN_VALUE ||\n                den == Integer.MIN_VALUE) {\n                throw new MathArithmeticException(LocalizedFormats.OVERFLOW_IN_FRACTION,\n                                                  num, den);\n            }\n            num = -num;\n            den = -den;\n        }\n        // reduce numerator and denominator by greatest common denominator.\n        final int d = ArithmeticUtils.gcd(num, den);\n        if (d > 1) {\n            num /= d;\n            den /= d;\n        }\n\n        // move sign to numerator.\n        if (den < 0) {\n            num = -num;\n            den = -den;\n        }\n        this.numerator   = num;\n        this.denominator = den;\n    }\n\n    /**\n     * Returns the absolute value of this fraction.\n     * @return the absolute value.\n     */",
+      "prior": 0.19999999999999996,
+      "ranks": {
+        "BoostN": 9
+      },
+      "scores": {},
+      "kind": "method"
+    },
+    {
+      "entity_id": "org.apache.commons.math3.exception.MathIllegalStateException.MathIllegalStateException()",
+      "path": "src/main/java/org/apache/commons/math3/exception/MathIllegalStateException.java",
+      "start_line": 65,
+      "end_line": 70,
+      "source": "    /**\n     * Default constructor.\n     */\n    public MathIllegalStateException() {\n        this(LocalizedFormats.ILLEGAL_STATE);\n    }",
+      "prior": 0.09999999999999998,
+      "ranks": {
+        "Ochiai": 10
+      },
+      "scores": {},
+      "kind": "method"
+    },
+    {
+      "entity_id": "org.apache.commons.math3.fraction.Fraction.divide(Fraction)",
+      "path": "src/main/java/org/apache/commons/math3/fraction/Fraction.java",
+      "start_line": 563,
+      "end_line": 582,
+      "source": "     * @throws IllegalArgumentException if the fraction is {@code null}\n     * @throws MathArithmeticException if the fraction to divide by is zero\n     * @throws MathArithmeticException if the resulting numerator or denominator exceeds\n     *  {@code Integer.MAX_VALUE}\n     */\n    public Fraction divide(Fraction fraction) {\n        if (fraction == null) {\n            throw new NullArgumentException(LocalizedFormats.FRACTION);\n        }\n        if (fraction.numerator == 0) {\n            throw new MathArithmeticException(LocalizedFormats.ZERO_FRACTION_TO_DIVIDE_BY,\n                                              fraction.numerator, fraction.denominator);\n        }\n        return multiply(fraction.reciprocal());\n    }\n\n    /**\n     * Divide the fraction by an integer.\n     * @param i the <tt>integer</tt> to divide by.\n     * @return this * i",
+      "prior": 0.09999999999999998,
+      "ranks": {
+        "BoostN": 10
+      },
+      "scores": {},
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)",
+      "source": "    /**\n     * Create a fraction given the double value and either the maximum error\n     * allowed or the maximum number of denominator digits.\n     * <p>\n     *\n     * NOTE: This constructor is called with EITHER - a valid epsilon value and\n     * the maxDenominator set to Integer.MAX_VALUE (that way the maxDenominator\n     * has no effect). OR - a valid maxDenominator value and the epsilon value\n     * set to zero (that way epsilon only has effect if there is an exact match\n     * before the maxDenominator value is reached).\n     * </p>\n     * <p>\n     *\n     * It has been done this way so that the same code can be (re)used for both\n     * scenarios. However this could be confusing to users if it were part of\n     * the public API and this constructor should therefore remain PRIVATE.\n     * </p>\n     *\n     * See JIRA issue ticket MATH-181 for more details:\n     *\n     * https://issues.apache.org/jira/browse/MATH-181\n     *\n     * @param value\n     *            the double value to convert to a fraction.\n     * @param epsilon\n     *            maximum error allowed. The resulting fraction is within\n     *            <code>epsilon</code> of <code>value</code>, in absolute terms.\n     * @param maxDenominator\n     *            maximum denominator value allowed.\n     * @param maxIterations\n     *            maximum number of convergents.\n     * @throws FractionConversionException\n     *             if the continued fraction failed to converge.\n     */\n    private BigFraction(final double value, final double epsilon,\n                        final int maxDenominator, int maxIterations)\n        throws FractionConversionException {\n        long overflow = Integer.MAX_VALUE;\n        double r0 = value;\n        long a0 = (long) FastMath.floor(r0);\n        if (a0 > overflow) {\n            throw new FractionConversionException(value, a0, 1l);\n        }\n\n        // check for (almost) integer arguments, which should not go\n        // to iterations.\n        if (FastMath.abs(a0 - value) < epsilon) {\n            numerator = BigInteger.valueOf(a0);\n            denominator = BigInteger.ONE;\n            return;\n        }\n\n        long p0 = 1;\n        long q0 = 0;\n        long p1 = a0;\n        long q1 = 1;\n\n        long p2 = 0;\n        long q2 = 1;\n\n        int n = 0;\n        boolean stop = false;\n        do {\n            ++n;\n            final double r1 = 1.0 / (r0 - a0);\n            final long a1 = (long) FastMath.floor(r1);\n            p2 = (a1 * p1) + p0;\n            q2 = (a1 * q1) + q0;\n            if ((p2 > overflow) || (q2 > overflow)) {\n                throw new FractionConversionException(value, p2, q2);\n            }\n\n            final double convergent = (double) p2 / (double) q2;\n            if ((n < maxIterations) &&\n                (FastMath.abs(convergent - value) > epsilon) &&\n                (q2 < maxDenominator)) {\n                p0 = p1;\n                p1 = p2;\n                q0 = q1;\n                q1 = q2;\n                a0 = a1;\n                r0 = r1;\n            } else {\n                stop = true;\n            }\n        } while (!stop);\n\n        if (n >= maxIterations) {\n            throw new FractionConversionException(value, maxIterations);\n        }\n\n        if (q2 < maxDenominator) {\n            numerator   = BigInteger.valueOf(p2);\n            denominator = BigInteger.valueOf(q2);\n        } else {\n            numerator   = BigInteger.valueOf(p1);\n            denominator = BigInteger.valueOf(q1);\n        }\n    }\n\n    /**",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)\nSIGNATURE: private BigFraction(final double value, final double epsilon,\n                        final int maxDenominator, int maxIterations)\n        throws FractionConversionException",
+        "METHOD: org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)\nSIGNATURE: private BigFraction(final double value, final double epsilon,\n                        final int maxDenominator, int maxIterations)\n        throws FractionConversionException\nSTRUCTURE (lossy):\nlong overflow = Integer.MAX_VALUE;\ndouble r0 = value;\nlong a0 = (long) FastMath.floor(r0);\nCALL FastMath.floor(r0)\nif (a0 > overflow)\nthrow new FractionConversionException(value, a0, 1l);\nif (FastMath.abs(a0 - value) < epsilon)\nCALL FastMath.abs(a0 - value)\nnumerator = BigInteger.valueOf(a0)\nCALL BigInteger.valueOf(a0)\ndenominator = BigInteger.ONE\nreturn;\nlong p0 = 1;\nlong q0 = 0;\nlong p1 = a0;\nlong q1 = 1;\nlong p2 = 0;\nlong q2 = 1;\nint n = 0;\nboolean stop = false;\ndo\n++n\nfinal double r1 = 1.0 / (r0 - a0);\nfinal long a1 = (long) FastMath.floor(r1);\nCALL FastMath.floor(r1)\np2 = (a1 * p1) + p0\nq2 = (a1 * q1) + q0\nif ((p2 > overflow) || (q2 > overflow))\nthrow new FractionConversionException(value, p2, q2);\nfinal double convergent = (double) p2 / (double) q2;\nif ((n < maxIterations) && (FastMath.abs(convergent - value) > epsilon) && (q2 < maxDenominator))\nCALL FastMath.abs(convergent - value)\np0 = p1\np1 = p2\nq0 = q1\nq1 = q2\na0 = a1\nr0 = r1\nstop = true\nif (n >= maxIterations)\nthrow new FractionConversionException(value, maxIterations);\nif (q2 < maxDenominator)\nnumerator = BigInteger.valueOf(p2)\nCALL BigInteger.valueOf(p2)\ndenominator = BigInteger.valueOf(q2)\nCALL BigInteger.valueOf(q2)\nnumerator = BigInteger.valueOf(p1)\nCALL BigInteger.valueOf(p1)\ndenominator = BigInteger.valueOf(q1)\nCALL BigInteger.valueOf(q1)",
+        "    /**\n     * Create a fraction given the double value and either the maximum error\n     * allowed or the maximum number of denominator digits.\n     * <p>\n     *\n     * NOTE: This constructor is called with EITHER - a valid epsilon value and\n     * the maxDenominator set to Integer.MAX_VALUE (that way the maxDenominator\n     * has no effect). OR - a valid maxDenominator value and the epsilon value\n     * set to zero (that way epsilon only has effect if there is an exact match\n     * before the maxDenominator value is reached).\n     * </p>\n     * <p>\n     *\n     * It has been done this way so that the same code can be (re)used for both\n     * scenarios. However this could be confusing to users if it were part of\n     * the public API and this constructor should therefore remain PRIVATE.\n     * </p>\n     *\n     * See JIRA issue ticket MATH-181 for more details:\n     *\n     * https://issues.apache.org/jira/browse/MATH-181\n     *\n     * @param value\n     *            the double value to convert to a fraction.\n     * @param epsilon\n     *            maximum error allowed. The resulting fraction is within\n     *            <code>epsilon</code> of <code>value</code>, in absolute terms.\n     * @param maxDenominator\n     *            maximum denominator value allowed.\n     * @param maxIterations\n     *            maximum number of convergents.\n     * @throws FractionConversionException\n     *             if the continued fraction failed to converge.\n     */\n    private BigFraction(final double value, final double epsilon,\n                        final int maxDenominator, int maxIterations)\n        throws FractionConversionException {\n        long overflow = Integer.MAX_VALUE;\n        double r0 = value;\n        long a0 = (long) FastMath.floor(r0);\n        if (a0 > overflow) {\n            throw new FractionConversionException(value, a0, 1l);\n        }\n\n        // check for (almost) integer arguments, which should not go\n        // to iterations.\n        if (FastMath.abs(a0 - value) < epsilon) {\n            numerator = BigInteger.valueOf(a0);\n            denominator = BigInteger.ONE;\n            return;\n        }\n\n        long p0 = 1;\n        long q0 = 0;\n        long p1 = a0;\n        long q1 = 1;\n\n        long p2 = 0;\n        long q2 = 1;\n\n        int n = 0;\n        boolean stop = false;\n        do {\n            ++n;\n            final double r1 = 1.0 / (r0 - a0);\n            final long a1 = (long) FastMath.floor(r1);\n            p2 = (a1 * p1) + p0;\n            q2 = (a1 * q1) + q0;\n            if ((p2 > overflow) || (q2 > overflow)) {\n                throw new FractionConversionException(value, p2, q2);\n            }\n\n            final double convergent = (double) p2 / (double) q2;\n            if ((n < maxIterations) &&\n                (FastMath.abs(convergent - value) > epsilon) &&\n                (q2 < maxDenominator)) {\n                p0 = p1;\n                p1 = p2;\n                q0 = q1;\n                q1 = q2;\n                a0 = a1;\n                r0 = r1;\n            } else {\n                stop = true;\n            }\n        } while (!stop);\n\n        if (n >= maxIterations) {\n            throw new FractionConversionException(value, maxIterations);\n        }\n\n        if (q2 < maxDenominator) {\n            numerator   = BigInteger.valueOf(p2);\n            denominator = BigInteger.valueOf(q2);\n        } else {\n            numerator   = BigInteger.valueOf(p1);\n            denominator = BigInteger.valueOf(q1);\n        }\n    }\n\n    /**"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.05263157894736842,
+        "ranking_gap": 0,
+        "ranker_agreement": 1.0,
+        "ranker_disagreement": 0.5,
+        "failure_relevance": 0.1651376146788991,
+        "trace_match": 1.0,
+        "complexity": 8.0,
+        "call_count": 9.0,
+        "literal_count": 8.0,
+        "source_tokens": 875.0,
+        "l0_tokens": 69.0,
+        "l1_tokens": 405.0,
+        "compression_ratio": 0.46285714285714286,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 9,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "org.apache.commons.math3.exception.MathIllegalStateException.getLocalizedMessage()",
+      "source": "    /** {@inheritDoc} */\n    @Override\n    public String getLocalizedMessage() {\n        return context.getLocalizedMessage();\n    }",
+      "prior": 1.0,
+      "rank": 2,
+      "levels": [
+        "METHOD: org.apache.commons.math3.exception.MathIllegalStateException.getLocalizedMessage()\nSIGNATURE: @Override\n    public String getLocalizedMessage()",
+        "METHOD: org.apache.commons.math3.exception.MathIllegalStateException.getLocalizedMessage()\nSIGNATURE: @Override\n    public String getLocalizedMessage()\nSTRUCTURE (lossy):\nreturn context.getLocalizedMessage();\nCALL context.getLocalizedMessage()",
+        "    /** {@inheritDoc} */\n    @Override\n    public String getLocalizedMessage() {\n        return context.getLocalizedMessage();\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.10526315789473684,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.4,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 33.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 61.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.apache.commons.math3.fraction.Fraction.Fraction(double,double,int,int)",
+      "source": "     * <p>\n     *\n     * NOTE: This constructor is called with EITHER\n     *   - a valid epsilon value and the maxDenominator set to Integer.MAX_VALUE\n     *     (that way the maxDenominator has no effect).\n     * OR\n     *   - a valid maxDenominator value and the epsilon value set to zero\n     *     (that way epsilon only has effect if there is an exact match before\n     *     the maxDenominator value is reached).\n     * </p><p>\n     *\n     * It has been done this way so that the same code can be (re)used for both\n     * scenarios. However this could be confusing to users if it were part of\n     * the public API and this constructor should therefore remain PRIVATE.\n     * </p>\n     *\n     * See JIRA issue ticket MATH-181 for more details:\n     *\n     *     https://issues.apache.org/jira/browse/MATH-181\n     *\n     * @param value the double value to convert to a fraction.\n     * @param epsilon maximum error allowed.  The resulting fraction is within\n     *        {@code epsilon} of {@code value}, in absolute terms.\n     * @param maxDenominator maximum denominator value allowed.\n     * @param maxIterations maximum number of convergents\n     * @throws FractionConversionException if the continued fraction failed to\n     *         converge.\n     */\n    private Fraction(double value, double epsilon, int maxDenominator, int maxIterations)\n        throws FractionConversionException\n    {\n        long overflow = Integer.MAX_VALUE;\n        double r0 = value;\n        long a0 = (long)FastMath.floor(r0);\n        if (FastMath.abs(a0) > overflow) {\n            throw new FractionConversionException(value, a0, 1l);\n        }\n\n        // check for (almost) integer arguments, which should not go\n        // to iterations.\n        if (FastMath.abs(a0 - value) < epsilon) {\n            this.numerator = (int) a0;\n            this.denominator = 1;\n            return;\n        }\n\n        long p0 = 1;\n        long q0 = 0;\n        long p1 = a0;\n        long q1 = 1;\n\n        long p2 = 0;\n        long q2 = 1;\n\n        int n = 0;\n        boolean stop = false;\n        do {\n            ++n;\n            double r1 = 1.0 / (r0 - a0);\n            long a1 = (long)FastMath.floor(r1);\n            p2 = (a1 * p1) + p0;\n            q2 = (a1 * q1) + q0;\n            if ((FastMath.abs(p2) > overflow) || (FastMath.abs(q2) > overflow)) {\n                throw new FractionConversionException(value, p2, q2);\n            }\n\n            double convergent = (double)p2 / (double)q2;\n            if (n < maxIterations && FastMath.abs(convergent - value) > epsilon && q2 < maxDenominator) {\n                p0 = p1;\n                p1 = p2;\n                q0 = q1;\n                q1 = q2;\n                a0 = a1;\n                r0 = r1;\n            } else {\n                stop = true;\n            }\n        } while (!stop);\n\n        if (n >= maxIterations) {\n            throw new FractionConversionException(value, maxIterations);\n        }\n\n        if (q2 < maxDenominator) {\n            this.numerator = (int) p2;\n            this.denominator = (int) q2;\n        } else {\n            this.numerator = (int) p1;\n            this.denominator = (int) q1;\n        }\n\n    }\n\n    /**\n     * Create a fraction from an int.\n     * The fraction is num / 1.\n     * @param num the numerator.",
+      "prior": 0.9,
+      "rank": 3,
+      "levels": [
+        "METHOD: org.apache.commons.math3.fraction.Fraction.Fraction(double,double,int,int)\nSIGNATURE: org.apache.commons.math3.fraction.Fraction.Fraction(double,double,int,int)",
+        "METHOD: org.apache.commons.math3.fraction.Fraction.Fraction(double,double,int,int)\nSIGNATURE: org.apache.commons.math3.fraction.Fraction.Fraction(double,double,int,int)\nSTRUCTURE (lossy):\n",
+        "     * <p>\n     *\n     * NOTE: This constructor is called with EITHER\n     *   - a valid epsilon value and the maxDenominator set to Integer.MAX_VALUE\n     *     (that way the maxDenominator has no effect).\n     * OR\n     *   - a valid maxDenominator value and the epsilon value set to zero\n     *     (that way epsilon only has effect if there is an exact match before\n     *     the maxDenominator value is reached).\n     * </p><p>\n     *\n     * It has been done this way so that the same code can be (re)used for both\n     * scenarios. However this could be confusing to users if it were part of\n     * the public API and this constructor should therefore remain PRIVATE.\n     * </p>\n     *\n     * See JIRA issue ticket MATH-181 for more details:\n     *\n     *     https://issues.apache.org/jira/browse/MATH-181\n     *\n     * @param value the double value to convert to a fraction.\n     * @param epsilon maximum error allowed.  The resulting fraction is within\n     *        {@code epsilon} of {@code value}, in absolute terms.\n     * @param maxDenominator maximum denominator value allowed.\n     * @param maxIterations maximum number of convergents\n     * @throws FractionConversionException if the continued fraction failed to\n     *         converge.\n     */\n    private Fraction(double value, double epsilon, int maxDenominator, int maxIterations)\n        throws FractionConversionException\n    {\n        long overflow = Integer.MAX_VALUE;\n        double r0 = value;\n        long a0 = (long)FastMath.floor(r0);\n        if (FastMath.abs(a0) > overflow) {\n            throw new FractionConversionException(value, a0, 1l);\n        }\n\n        // check for (almost) integer arguments, which should not go\n        // to iterations.\n        if (FastMath.abs(a0 - value) < epsilon) {\n            this.numerator = (int) a0;\n            this.denominator = 1;\n            return;\n        }\n\n        long p0 = 1;\n        long q0 = 0;\n        long p1 = a0;\n        long q1 = 1;\n\n        long p2 = 0;\n        long q2 = 1;\n\n        int n = 0;\n        boolean stop = false;\n        do {\n            ++n;\n            double r1 = 1.0 / (r0 - a0);\n            long a1 = (long)FastMath.floor(r1);\n            p2 = (a1 * p1) + p0;\n            q2 = (a1 * q1) + q0;\n            if ((FastMath.abs(p2) > overflow) || (FastMath.abs(q2) > overflow)) {\n                throw new FractionConversionException(value, p2, q2);\n            }\n\n            double convergent = (double)p2 / (double)q2;\n            if (n < maxIterations && FastMath.abs(convergent - value) > epsilon && q2 < maxDenominator) {\n                p0 = p1;\n                p1 = p2;\n                q0 = q1;\n                q1 = q2;\n                a0 = a1;\n                r0 = r1;\n            } else {\n                stop = true;\n            }\n        } while (!stop);\n\n        if (n >= maxIterations) {\n            throw new FractionConversionException(value, maxIterations);\n        }\n\n        if (q2 < maxDenominator) {\n            this.numerator = (int) p2;\n            this.denominator = (int) q2;\n        } else {\n            this.numerator = (int) p1;\n            this.denominator = (int) q1;\n        }\n\n    }\n\n    /**\n     * Create a fraction from an int.\n     * The fraction is num / 1.\n     * @param num the numerator."
+      ],
+      "features": {
+        "prior": 0.9,
+        "rank_fraction": 0.15789473684210525,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.5,
+        "failure_relevance": 0.16037735849056603,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 820.0,
+        "l0_tokens": 42.0,
+        "l1_tokens": 47.0,
+        "compression_ratio": 0.05731707317073171,
+        "parse_error": 1.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": true,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.apache.commons.math3.fraction.Fraction.negate()",
+      "source": "    public Fraction negate() {\n        if (numerator==Integer.MIN_VALUE) {\n            throw new MathArithmeticException(LocalizedFormats.OVERFLOW_IN_FRACTION, numerator, denominator);\n        }\n        return new Fraction(-numerator, denominator);\n    }\n\n    /**\n     * Return the multiplicative inverse of this fraction.\n     * @return the reciprocal fraction",
+      "prior": 0.9,
+      "rank": 4,
+      "levels": [
+        "METHOD: org.apache.commons.math3.fraction.Fraction.negate()\nSIGNATURE: public Fraction negate()",
+        "METHOD: org.apache.commons.math3.fraction.Fraction.negate()\nSIGNATURE: public Fraction negate()\nSTRUCTURE (lossy):\nif (numerator==Integer.MIN_VALUE)\nthrow new MathArithmeticException(LocalizedFormats.OVERFLOW_IN_FRACTION, numerator, denominator);\nreturn new Fraction(-numerator, denominator);",
+        "    public Fraction negate() {\n        if (numerator==Integer.MIN_VALUE) {\n            throw new MathArithmeticException(LocalizedFormats.OVERFLOW_IN_FRACTION, numerator, denominator);\n        }\n        return new Fraction(-numerator, denominator);\n    }\n\n    /**\n     * Return the multiplicative inverse of this fraction.\n     * @return the reciprocal fraction"
+      ],
+      "features": {
+        "prior": 0.9,
+        "rank_fraction": 0.21052631578947367,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.6,
+        "failure_relevance": 0.4230769230769231,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 91.0,
+        "l0_tokens": 24.0,
+        "l1_tokens": 73.0,
+        "compression_ratio": 0.8021978021978022,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.apache.commons.math3.fraction.FractionConversionException.FractionConversionException(double,long,long)",
+      "source": "    /**\n     * Constructs an exception with specified formatted detail message.\n     * Message formatting is delegated to {@link java.text.MessageFormat}.\n     * @param value double value to convert\n     * @param p current numerator\n     * @param q current denominator\n     */\n    public FractionConversionException(double value, long p, long q) {\n        super(LocalizedFormats.FRACTION_CONVERSION_OVERFLOW, value, p, q);\n    }",
+      "prior": 0.9,
+      "rank": 5,
+      "levels": [
+        "METHOD: org.apache.commons.math3.fraction.FractionConversionException.FractionConversionException(double,long,long)\nSIGNATURE: public FractionConversionException(double value, long p, long q)",
+        "METHOD: org.apache.commons.math3.fraction.FractionConversionException.FractionConversionException(double,long,long)\nSIGNATURE: public FractionConversionException(double value, long p, long q)\nSTRUCTURE (lossy):\n",
+        "    /**\n     * Constructs an exception with specified formatted detail message.\n     * Message formatting is delegated to {@link java.text.MessageFormat}.\n     * @param value double value to convert\n     * @param p current numerator\n     * @param q current denominator\n     */\n    public FractionConversionException(double value, long p, long q) {\n        super(LocalizedFormats.FRACTION_CONVERSION_OVERFLOW, value, p, q);\n    }"
+      ],
+      "features": {
+        "prior": 0.9,
+        "rank_fraction": 0.2631578947368421,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.375,
+        "trace_match": 1.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 107.0,
+        "l0_tokens": 48.0,
+        "l1_tokens": 53.0,
+        "compression_ratio": 0.4953271028037383,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.apache.commons.math3.fraction.Fraction.Fraction(double,int)",
+      "source": "     * References:\n     * <ul>\n     * <li><a href=\"http://mathworld.wolfram.com/ContinuedFraction.html\">\n     * Continued Fraction</a> equations (11) and (22)-(26)</li>\n     * </ul>\n     * </p>\n     * @param value the double value to convert to a fraction.\n     * @param maxDenominator The maximum allowed value for denominator\n     * @throws FractionConversionException if the continued fraction failed to\n     *         converge\n     */\n    public Fraction(double value, int maxDenominator)\n        throws FractionConversionException\n    {\n       this(value, 0, maxDenominator, 100);\n    }\n\n    /**\n     * Create a fraction given the double value and either the maximum error",
+      "prior": 0.8,
+      "rank": 6,
+      "levels": [
+        "METHOD: org.apache.commons.math3.fraction.Fraction.Fraction(double,int)\nSIGNATURE: </p>\n     * @param value the double value to convert to a fraction.\n     * @param maxDenominator The maximum allowed value for denominator\n     * @throws FractionConversionException if the continued fraction failed to\n     *         converge\n     */\n    public Fraction(double value, int maxDenominator)\n        throws FractionConversionException",
+        "METHOD: org.apache.commons.math3.fraction.Fraction.Fraction(double,int)\nSIGNATURE: </p>\n     * @param value the double value to convert to a fraction.\n     * @param maxDenominator The maximum allowed value for denominator\n     * @throws FractionConversionException if the continued fraction failed to\n     *         converge\n     */\n    public Fraction(double value, int maxDenominator)\n        throws FractionConversionException\nSTRUCTURE (lossy):\n",
+        "     * References:\n     * <ul>\n     * <li><a href=\"http://mathworld.wolfram.com/ContinuedFraction.html\">\n     * Continued Fraction</a> equations (11) and (22)-(26)</li>\n     * </ul>\n     * </p>\n     * @param value the double value to convert to a fraction.\n     * @param maxDenominator The maximum allowed value for denominator\n     * @throws FractionConversionException if the continued fraction failed to\n     *         converge\n     */\n    public Fraction(double value, int maxDenominator)\n        throws FractionConversionException\n    {\n       this(value, 0, maxDenominator, 100);\n    }\n\n    /**\n     * Create a fraction given the double value and either the maximum error"
+      ],
+      "features": {
+        "prior": 0.8,
+        "rank_fraction": 0.3157894736842105,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.3,
+        "failure_relevance": 0.32432432432432434,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 2.0,
+        "source_tokens": 170.0,
+        "l0_tokens": 108.0,
+        "l1_tokens": 113.0,
+        "compression_ratio": 0.6647058823529411,
+        "parse_error": 1.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": true,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "org.apache.commons.math3.fraction.Fraction.multiply(Fraction)",
+      "source": "     * @return a {@code Fraction} instance with the resulting values\n     * @throws NullArgumentException if the fraction is {@code null}\n     * @throws MathArithmeticException if the resulting numerator or denominator exceeds\n     *  {@code Integer.MAX_VALUE}\n     */\n    public Fraction multiply(Fraction fraction) {\n        if (fraction == null) {\n            throw new NullArgumentException(LocalizedFormats.FRACTION);\n        }\n        if (numerator == 0 || fraction.numerator == 0) {\n            return ZERO;\n        }\n        // knuth 4.5.1\n        // make sure we don't overflow unless the result *must* overflow.\n        int d1 = ArithmeticUtils.gcd(numerator, fraction.denominator);\n        int d2 = ArithmeticUtils.gcd(fraction.numerator, denominator);\n        return getReducedFraction\n        (ArithmeticUtils.mulAndCheck(numerator/d1, fraction.numerator/d2),\n                ArithmeticUtils.mulAndCheck(denominator/d2, fraction.denominator/d1));\n    }\n\n    /**\n     * Multiply the fraction by an integer.\n     * @param i the <tt>integer</tt> to multiply by.\n     * @return this * i",
+      "prior": 0.8,
+      "rank": 7,
+      "levels": [
+        "METHOD: org.apache.commons.math3.fraction.Fraction.multiply(Fraction)\nSIGNATURE: the resulting values\n     * @throws NullArgumentException if the fraction is {@code null}\n     * @throws MathArithmeticException if the resulting numerator or denominator exceeds\n     *  {@code Integer.MAX_VALUE}\n     */\n    public Fraction multiply(Fraction fraction)",
+        "METHOD: org.apache.commons.math3.fraction.Fraction.multiply(Fraction)\nSIGNATURE: the resulting values\n     * @throws NullArgumentException if the fraction is {@code null}\n     * @throws MathArithmeticException if the resulting numerator or denominator exceeds\n     *  {@code Integer.MAX_VALUE}\n     */\n    public Fraction multiply(Fraction fraction)\nSTRUCTURE (lossy):\nif (fraction == null)\nthrow new NullArgumentException(LocalizedFormats.FRACTION);\nif (numerator == 0 || fraction.numerator == 0)\nreturn ZERO;\nint d1 = ArithmeticUtils.gcd(numerator, fraction.denominator);\nCALL ArithmeticUtils.gcd(numerator, fraction.denominator)\nint d2 = ArithmeticUtils.gcd(fraction.numerator, denominator);\nCALL ArithmeticUtils.gcd(fraction.numerator, denominator)\nreturn getReducedFraction (ArithmeticUtils.mulAndCheck(numerator/d1, fraction.numerator/d2), ArithmeticUtils.mulAndCheck(denominator/d2, fraction.denominator/d1));\nCALL getReducedFraction (ArithmeticUtils.mulAndCheck(numerator/d1, fraction.numerator/d2), ArithmeticUtils.mulAndCheck(denominator/d2, fraction.denominator/d1))\nCALL ArithmeticUtils.mulAndCheck(numerator/d1, fraction.numerator/d2)\nCALL ArithmeticUtils.mulAndCheck(denominator/d2, fraction.denominator/d1)",
+        "     * @return a {@code Fraction} instance with the resulting values\n     * @throws NullArgumentException if the fraction is {@code null}\n     * @throws MathArithmeticException if the resulting numerator or denominator exceeds\n     *  {@code Integer.MAX_VALUE}\n     */\n    public Fraction multiply(Fraction fraction) {\n        if (fraction == null) {\n            throw new NullArgumentException(LocalizedFormats.FRACTION);\n        }\n        if (numerator == 0 || fraction.numerator == 0) {\n            return ZERO;\n        }\n        // knuth 4.5.1\n        // make sure we don't overflow unless the result *must* overflow.\n        int d1 = ArithmeticUtils.gcd(numerator, fraction.denominator);\n        int d2 = ArithmeticUtils.gcd(fraction.numerator, denominator);\n        return getReducedFraction\n        (ArithmeticUtils.mulAndCheck(numerator/d1, fraction.numerator/d2),\n                ArithmeticUtils.mulAndCheck(denominator/d2, fraction.denominator/d1));\n    }\n\n    /**\n     * Multiply the fraction by an integer.\n     * @param i the <tt>integer</tt> to multiply by.\n     * @return this * i"
+      ],
+      "features": {
+        "prior": 0.8,
+        "rank_fraction": 0.3684210526315789,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.6,
+        "failure_relevance": 0.2653061224489796,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 5.0,
+        "literal_count": 3.0,
+        "source_tokens": 274.0,
+        "l0_tokens": 88.0,
+        "l1_tokens": 306.0,
+        "compression_ratio": 1,
+        "parse_error": 1.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": true,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 5,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "org.apache.commons.math3.fraction.BigFraction.BigFraction(long,long)",
+      "source": "     * Create a {@link BigFraction} given the numerator and denominator as simple\n     * <tt>long</tt>. The {@link BigFraction} is reduced to lowest terms.\n     * </p>\n     *\n     * @param num\n     *            the numerator.\n     * @param den\n     *            the denominator.\n     */\n    public BigFraction(final long num, final long den) {\n        this(BigInteger.valueOf(num), BigInteger.valueOf(den));\n    }\n\n    /**",
+      "prior": 0.8,
+      "rank": 8,
+      "levels": [
+        "METHOD: org.apache.commons.math3.fraction.BigFraction.BigFraction(long,long)\nSIGNATURE: public BigFraction(final long num, final long den)",
+        "METHOD: org.apache.commons.math3.fraction.BigFraction.BigFraction(long,long)\nSIGNATURE: public BigFraction(final long num, final long den)\nSTRUCTURE (lossy):\nCALL BigInteger.valueOf(num)\nCALL BigInteger.valueOf(den)",
+        "     * Create a {@link BigFraction} given the numerator and denominator as simple\n     * <tt>long</tt>. The {@link BigFraction} is reduced to lowest terms.\n     * </p>\n     *\n     * @param num\n     *            the numerator.\n     * @param den\n     *            the denominator.\n     */\n    public BigFraction(final long num, final long den) {\n        this(BigInteger.valueOf(num), BigInteger.valueOf(den));\n    }\n\n    /**"
+      ],
+      "features": {
+        "prior": 0.8,
+        "rank_fraction": 0.42105263157894735,
+        "ranking_gap": 0.10000000000000009,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.3076923076923077,
+        "trace_match": 1.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 106.0,
+        "l0_tokens": 35.0,
+        "l1_tokens": 54.0,
+        "compression_ratio": 0.5094339622641509,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,int)",
+      "source": "     * <p>\n     * References:\n     * <ul>\n     * <li><a href=\"http://mathworld.wolfram.com/ContinuedFraction.html\">\n     * Continued Fraction</a> equations (11) and (22)-(26)</li>\n     * </ul>\n     * </p>\n     *\n     * @param value\n     *            the double value to convert to a fraction.\n     * @param maxDenominator\n     *            The maximum allowed value for denominator.\n     * @throws FractionConversionException\n     *             if the continued fraction failed to converge.\n     */\n    public BigFraction(final double value, final int maxDenominator)\n        throws FractionConversionException {\n        this(value, 0, maxDenominator, 100);\n    }\n\n    /**",
+      "prior": 0.7,
+      "rank": 9,
+      "levels": [
+        "METHOD: org.apache.commons.math3.fraction.BigFraction.BigFraction(double,int)\nSIGNATURE: </p>\n     *\n     * @param value\n     *            the double value to convert to a fraction.\n     * @param maxDenominator\n     *            The maximum allowed value for denominator.\n     * @throws FractionConversionException\n     *             if the continued fraction failed to converge.\n     */\n    public BigFraction(final double value, final int maxDenominator)\n        throws FractionConversionException",
+        "METHOD: org.apache.commons.math3.fraction.BigFraction.BigFraction(double,int)\nSIGNATURE: </p>\n     *\n     * @param value\n     *            the double value to convert to a fraction.\n     * @param maxDenominator\n     *            The maximum allowed value for denominator.\n     * @throws FractionConversionException\n     *             if the continued fraction failed to converge.\n     */\n    public BigFraction(final double value, final int maxDenominator)\n        throws FractionConversionException\nSTRUCTURE (lossy):\n",
+        "     * <p>\n     * References:\n     * <ul>\n     * <li><a href=\"http://mathworld.wolfram.com/ContinuedFraction.html\">\n     * Continued Fraction</a> equations (11) and (22)-(26)</li>\n     * </ul>\n     * </p>\n     *\n     * @param value\n     *            the double value to convert to a fraction.\n     * @param maxDenominator\n     *            The maximum allowed value for denominator.\n     * @throws FractionConversionException\n     *             if the continued fraction failed to converge.\n     */\n    public BigFraction(final double value, final int maxDenominator)\n        throws FractionConversionException {\n        this(value, 0, maxDenominator, 100);\n    }\n\n    /**"
+      ],
+      "features": {
+        "prior": 0.7,
+        "rank_fraction": 0.47368421052631576,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.3,
+        "failure_relevance": 0.37142857142857144,
+        "trace_match": 1.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 2.0,
+        "source_tokens": 168.0,
+        "l0_tokens": 125.0,
+        "l1_tokens": 130.0,
+        "compression_ratio": 0.7738095238095238,
+        "parse_error": 1.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": true,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "org.apache.commons.math3.fraction.Fraction.getReducedFraction(int,int)",
+      "source": "     *\n     * @param numerator  the numerator, for example the three in 'three sevenths'\n     * @param denominator  the denominator, for example the seven in 'three sevenths'\n     * @return a new fraction instance, with the numerator and denominator reduced\n     * @throws MathArithmeticException if the denominator is {@code zero}\n     */\n    public static Fraction getReducedFraction(int numerator, int denominator) {\n        if (denominator == 0) {\n            throw new MathArithmeticException(LocalizedFormats.ZERO_DENOMINATOR_IN_FRACTION,\n                                              numerator, denominator);\n        }\n        if (numerator==0) {\n            return ZERO; // normalize zero.\n        }\n        // allow 2^k/-2^31 as a valid fraction (where k>0)\n        if (denominator==Integer.MIN_VALUE && (numerator&1)==0) {\n            numerator/=2; denominator/=2;\n        }\n        if (denominator < 0) {\n            if (numerator==Integer.MIN_VALUE ||\n                    denominator==Integer.MIN_VALUE) {\n                throw new MathArithmeticException(LocalizedFormats.OVERFLOW_IN_FRACTION,\n                                                  numerator, denominator);\n            }\n            numerator = -numerator;\n            denominator = -denominator;\n        }\n        // simplify fraction.\n        int gcd = ArithmeticUtils.gcd(numerator, denominator);\n        numerator /= gcd;\n        denominator /= gcd;\n        return new Fraction(numerator, denominator);\n    }\n\n    /**\n     * <p>\n     * Returns the {@code String} representing this fraction, ie\n     * \"num / dem\" or just \"num\" if the denominator is one.",
+      "prior": 0.7,
+      "rank": 10,
+      "levels": [
+        "METHOD: org.apache.commons.math3.fraction.Fraction.getReducedFraction(int,int)\nSIGNATURE: public static Fraction getReducedFraction(int numerator, int denominator)",
+        "METHOD: org.apache.commons.math3.fraction.Fraction.getReducedFraction(int,int)\nSIGNATURE: public static Fraction getReducedFraction(int numerator, int denominator)\nSTRUCTURE (lossy):\nif (denominator == 0)\nthrow new MathArithmeticException(LocalizedFormats.ZERO_DENOMINATOR_IN_FRACTION, numerator, denominator);\nif (numerator==0)\nreturn ZERO;\nif (denominator==Integer.MIN_VALUE && (numerator&1)==0)\nnumerator/=2\ndenominator/=2\nif (denominator < 0)\nif (numerator==Integer.MIN_VALUE || denominator==Integer.MIN_VALUE)\nthrow new MathArithmeticException(LocalizedFormats.OVERFLOW_IN_FRACTION, numerator, denominator);\nnumerator = -numerator\ndenominator = -denominator\nint gcd = ArithmeticUtils.gcd(numerator, denominator);\nCALL ArithmeticUtils.gcd(numerator, denominator)\nnumerator /= gcd\ndenominator /= gcd\nreturn new Fraction(numerator, denominator);",
+        "     *\n     * @param numerator  the numerator, for example the three in 'three sevenths'\n     * @param denominator  the denominator, for example the seven in 'three sevenths'\n     * @return a new fraction instance, with the numerator and denominator reduced\n     * @throws MathArithmeticException if the denominator is {@code zero}\n     */\n    public static Fraction getReducedFraction(int numerator, int denominator) {\n        if (denominator == 0) {\n            throw new MathArithmeticException(LocalizedFormats.ZERO_DENOMINATOR_IN_FRACTION,\n                                              numerator, denominator);\n        }\n        if (numerator==0) {\n            return ZERO; // normalize zero.\n        }\n        // allow 2^k/-2^31 as a valid fraction (where k>0)\n        if (denominator==Integer.MIN_VALUE && (numerator&1)==0) {\n            numerator/=2; denominator/=2;\n        }\n        if (denominator < 0) {\n            if (numerator==Integer.MIN_VALUE ||\n                    denominator==Integer.MIN_VALUE) {\n                throw new MathArithmeticException(LocalizedFormats.OVERFLOW_IN_FRACTION,\n                                                  numerator, denominator);\n            }\n            numerator = -numerator;\n            denominator = -denominator;\n        }\n        // simplify fraction.\n        int gcd = ArithmeticUtils.gcd(numerator, denominator);\n        numerator /= gcd;\n        denominator /= gcd;\n        return new Fraction(numerator, denominator);\n    }\n\n    /**\n     * <p>\n     * Returns the {@code String} representing this fraction, ie\n     * \"num / dem\" or just \"num\" if the denominator is one."
+      ],
+      "features": {
+        "prior": 0.7,
+        "rank_fraction": 0.5263157894736842,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.0,
+        "failure_relevance": 0.25,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 1.0,
+        "literal_count": 7.0,
+        "source_tokens": 408.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 212.0,
+        "compression_ratio": 0.5196078431372549,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 1,
+        "literal_count": 7
+      }
+    },
+    {
+      "function_id": "org.apache.commons.math3.exception.ConvergenceException.ConvergenceException(Localizable,Object)",
+      "source": "    /**\n     * Construct the exception with a specific context and arguments.\n     *\n     * @param pattern Message pattern providing the specific context of\n     * the error.\n     * @param args Arguments.\n     */\n    public ConvergenceException(Localizable pattern,\n                                Object ... args) {\n        getContext().addMessage(pattern, args);\n    }",
+      "prior": 0.6,
+      "rank": 11,
+      "levels": [
+        "METHOD: org.apache.commons.math3.exception.ConvergenceException.ConvergenceException(Localizable,Object)\nSIGNATURE: public ConvergenceException(Localizable pattern,\n                                Object ... args)",
+        "METHOD: org.apache.commons.math3.exception.ConvergenceException.ConvergenceException(Localizable,Object)\nSIGNATURE: public ConvergenceException(Localizable pattern,\n                                Object ... args)\nSTRUCTURE (lossy):\nCALL getContext().addMessage(pattern, args)\nCALL getContext()",
+        "    /**\n     * Construct the exception with a specific context and arguments.\n     *\n     * @param pattern Message pattern providing the specific context of\n     * the error.\n     * @param args Arguments.\n     */\n    public ConvergenceException(Localizable pattern,\n                                Object ... args) {\n        getContext().addMessage(pattern, args);\n    }"
+      ],
+      "features": {
+        "prior": 0.6,
+        "rank_fraction": 0.5789473684210527,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.1,
+        "failure_relevance": 0.375,
+        "trace_match": 1.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 93.0,
+        "l0_tokens": 54.0,
+        "l1_tokens": 74.0,
+        "compression_ratio": 0.7956989247311828,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.apache.commons.math3.fraction.Fraction.addSub(Fraction,boolean)",
+      "source": "     * @return a {@code Fraction} instance with the resulting values\n     * @throws NullArgumentException if the fraction is {@code null}\n     * @throws MathArithmeticException if the resulting numerator or denominator\n     *   cannot be represented in an {@code int}.\n     */\n    private Fraction addSub(Fraction fraction, boolean isAdd) {\n        if (fraction == null) {\n            throw new NullArgumentException(LocalizedFormats.FRACTION);\n        }\n        // zero is identity for addition.\n        if (numerator == 0) {\n            return isAdd ? fraction : fraction.negate();\n        }\n        if (fraction.numerator == 0) {\n            return this;\n        }\n        // if denominators are randomly distributed, d1 will be 1 about 61%\n        // of the time.\n        int d1 = ArithmeticUtils.gcd(denominator, fraction.denominator);\n        if (d1==1) {\n            // result is ( (u*v' +/- u'v) / u'v')\n            int uvp = ArithmeticUtils.mulAndCheck(numerator, fraction.denominator);\n            int upv = ArithmeticUtils.mulAndCheck(fraction.numerator, denominator);\n            return new Fraction\n                (isAdd ? ArithmeticUtils.addAndCheck(uvp, upv) :\n                 ArithmeticUtils.subAndCheck(uvp, upv),\n                 ArithmeticUtils.mulAndCheck(denominator, fraction.denominator));\n        }\n        // the quantity 't' requires 65 bits of precision; see knuth 4.5.1\n        // exercise 7.  we're going to use a BigInteger.\n        // t = u(v'/d1) +/- v(u'/d1)\n        BigInteger uvp = BigInteger.valueOf(numerator)\n        .multiply(BigInteger.valueOf(fraction.denominator/d1));\n        BigInteger upv = BigInteger.valueOf(fraction.numerator)\n        .multiply(BigInteger.valueOf(denominator/d1));\n        BigInteger t = isAdd ? uvp.add(upv) : uvp.subtract(upv);\n        // but d2 doesn't need extra precision because\n        // d2 = gcd(t,d1) = gcd(t mod d1, d1)\n        int tmodd1 = t.mod(BigInteger.valueOf(d1)).intValue();\n        int d2 = (tmodd1==0)?d1:ArithmeticUtils.gcd(tmodd1, d1);\n\n        // result is (t/d2) / (u'/d1)(v'/d2)\n        BigInteger w = t.divide(BigInteger.valueOf(d2));\n        if (w.bitLength() > 31) {\n            throw new MathArithmeticException(LocalizedFormats.NUMERATOR_OVERFLOW_AFTER_MULTIPLY,\n                                              w);\n        }\n        return new Fraction (w.intValue(),\n                ArithmeticUtils.mulAndCheck(denominator/d1,\n                        fraction.denominator/d2));\n    }\n\n    /**\n     * <p>Multiplies the value of this fraction by another, returning the\n     * result in reduced form.</p>\n     *",
+      "prior": 0.6,
+      "rank": 12,
+      "levels": [
+        "METHOD: org.apache.commons.math3.fraction.Fraction.addSub(Fraction,boolean)\nSIGNATURE: the resulting values\n     * @throws NullArgumentException if the fraction is {@code null}\n     * @throws MathArithmeticException if the resulting numerator or denominator\n     *   cannot be represented in an {@code int}.\n     */\n    private Fraction addSub(Fraction fraction, boolean isAdd)",
+        "METHOD: org.apache.commons.math3.fraction.Fraction.addSub(Fraction,boolean)\nSIGNATURE: the resulting values\n     * @throws NullArgumentException if the fraction is {@code null}\n     * @throws MathArithmeticException if the resulting numerator or denominator\n     *   cannot be represented in an {@code int}.\n     */\n    private Fraction addSub(Fraction fraction, boolean isAdd)\nSTRUCTURE (lossy):\nif (fraction == null)\nthrow new NullArgumentException(LocalizedFormats.FRACTION);\nif (numerator == 0)\nreturn isAdd ? fraction : fraction.negate();\nCALL fraction.negate()\nif (fraction.numerator == 0)\nreturn this;\nint d1 = ArithmeticUtils.gcd(denominator, fraction.denominator);\nCALL ArithmeticUtils.gcd(denominator, fraction.denominator)\nif (d1==1)\nint uvp = ArithmeticUtils.mulAndCheck(numerator, fraction.denominator);\nCALL ArithmeticUtils.mulAndCheck(numerator, fraction.denominator)\nint upv = ArithmeticUtils.mulAndCheck(fraction.numerator, denominator);\nCALL ArithmeticUtils.mulAndCheck(fraction.numerator, denominator)\nreturn new Fraction (isAdd ? ArithmeticUtils.addAndCheck(uvp, upv) : ArithmeticUtils.subAndCheck(uvp, upv), ArithmeticUtils.mulAndCheck(denominator, fraction.denominator));\nCALL ArithmeticUtils.addAndCheck(uvp, upv)\nCALL ArithmeticUtils.subAndCheck(uvp, upv)\nCALL ArithmeticUtils.mulAndCheck(denominator, fraction.denominator)\nBigInteger uvp = BigInteger.valueOf(numerator) .multiply(BigInteger.valueOf(fraction.denominator/d1));\nCALL BigInteger.valueOf(numerator) .multiply(BigInteger.valueOf(fraction.denominator/d1))\nCALL BigInteger.valueOf(numerator)\nCALL BigInteger.valueOf(fraction.denominator/d1)\nBigInteger upv = BigInteger.valueOf(fraction.numerator) .multiply(BigInteger.valueOf(denominator/d1));\nCALL BigInteger.valueOf(fraction.numerator) .multiply(BigInteger.valueOf(denominator/d1))\nCALL BigInteger.valueOf(fraction.numerator)\nCALL BigInteger.valueOf(denominator/d1)\nBigInteger t = isAdd ? uvp.add(upv) : uvp.subtract(upv);\nCALL uvp.add(upv)\nCALL uvp.subtract(upv)\nint tmodd1 = t.mod(BigInteger.valueOf(d1)).intValue();\nCALL t.mod(BigInteger.valueOf(d1)).intValue()\nCALL t.mod(BigInteger.valueOf(d1))\nCALL BigInteger.valueOf(d1)\nint d2 = (tmodd1==0)?d1:ArithmeticUt\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "     * @return a {@code Fraction} instance with the resulting values\n     * @throws NullArgumentException if the fraction is {@code null}\n     * @throws MathArithmeticException if the resulting numerator or denominator\n     *   cannot be represented in an {@code int}.\n     */\n    private Fraction addSub(Fraction fraction, boolean isAdd) {\n        if (fraction == null) {\n            throw new NullArgumentException(LocalizedFormats.FRACTION);\n        }\n        // zero is identity for addition.\n        if (numerator == 0) {\n            return isAdd ? fraction : fraction.negate();\n        }\n        if (fraction.numerator == 0) {\n            return this;\n        }\n        // if denominators are randomly distributed, d1 will be 1 about 61%\n        // of the time.\n        int d1 = ArithmeticUtils.gcd(denominator, fraction.denominator);\n        if (d1==1) {\n            // result is ( (u*v' +/- u'v) / u'v')\n            int uvp = ArithmeticUtils.mulAndCheck(numerator, fraction.denominator);\n            int upv = ArithmeticUtils.mulAndCheck(fraction.numerator, denominator);\n            return new Fraction\n                (isAdd ? ArithmeticUtils.addAndCheck(uvp, upv) :\n                 ArithmeticUtils.subAndCheck(uvp, upv),\n                 ArithmeticUtils.mulAndCheck(denominator, fraction.denominator));\n        }\n        // the quantity 't' requires 65 bits of precision; see knuth 4.5.1\n        // exercise 7.  we're going to use a BigInteger.\n        // t = u(v'/d1) +/- v(u'/d1)\n        BigInteger uvp = BigInteger.valueOf(numerator)\n        .multiply(BigInteger.valueOf(fraction.denominator/d1));\n        BigInteger upv = BigInteger.valueOf(fraction.numerator)\n        .multiply(BigInteger.valueOf(denominator/d1));\n        BigInteger t = isAdd ? uvp.add(upv) : uvp.subtract(upv);\n        // but d2 doesn't need extra precision because\n        // d2 = gcd(t,d1) = gcd(t mod d1, d1)\n        int tmodd1 = t.mod(BigInteger.valueOf(d1)).intValue();\n        int d2 = (tmodd1==0)?d1:ArithmeticUtils.gcd(tmodd1, d1);\n\n        // result is (t/d2) / (u'/d1)(v'/d2)\n        BigInteger w = t.divide(BigInteger.valueOf(d2));\n        if (w.bitLength() > 31) {\n            throw new MathArithmeticException(LocalizedFormats.NUMERATOR_OVERFLOW_AFTER_MULTIPLY,\n                                              w);\n        }\n        return new Fraction (w.intValue(),\n                ArithmeticUtils.mulAndCheck(denominator/d1,\n                        fraction.denominator/d2));\n    }\n\n    /**\n     * <p>Multiplies the value of this fraction by another, returning the\n     * result in reduced form.</p>\n     *"
+      ],
+      "features": {
+        "prior": 0.6,
+        "rank_fraction": 0.631578947368421,
+        "ranking_gap": 0.19999999999999996,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.1566265060240964,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 24.0,
+        "literal_count": 6.0,
+        "source_tokens": 652.0,
+        "l0_tokens": 95.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.8726993865030674,
+        "parse_error": 1.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": true,
+        "truncated": true,
+        "complexity": 6,
+        "call_count": 24,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "org.apache.commons.math3.fraction.BigFraction.getDenominatorAsInt()",
+      "source": "     * Access the denominator as a <tt>int</tt>.\n     * </p>\n     *\n     * @return the denominator as a <tt>int</tt>.\n     */\n    public int getDenominatorAsInt() {\n        return denominator.intValue();\n    }\n\n    /**",
+      "prior": 0.4,
+      "rank": 13,
+      "levels": [
+        "METHOD: org.apache.commons.math3.fraction.BigFraction.getDenominatorAsInt()\nSIGNATURE: public int getDenominatorAsInt()",
+        "METHOD: org.apache.commons.math3.fraction.BigFraction.getDenominatorAsInt()\nSIGNATURE: public int getDenominatorAsInt()\nSTRUCTURE (lossy):\nreturn denominator.intValue();\nCALL denominator.intValue()",
+        "     * Access the denominator as a <tt>int</tt>.\n     * </p>\n     *\n     * @return the denominator as a <tt>int</tt>.\n     */\n    public int getDenominatorAsInt() {\n        return denominator.intValue();\n    }\n\n    /**"
+      ],
+      "features": {
+        "prior": 0.4,
+        "rank_fraction": 0.6842105263157895,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.5714285714285714,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 55.0,
+        "l0_tokens": 30.0,
+        "l1_tokens": 50.0,
+        "compression_ratio": 0.9090909090909091,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int)",
+      "source": "    /**\n     * Create a fraction given the double value and maximum error allowed.\n     * <p>\n     * References:\n     * <ul>\n     * <li><a href=\"http://mathworld.wolfram.com/ContinuedFraction.html\">\n     * Continued Fraction</a> equations (11) and (22)-(26)</li>\n     * </ul>\n     * </p>\n     *\n     * @param value\n     *            the double value to convert to a fraction.\n     * @param epsilon\n     *            maximum error allowed. The resulting fraction is within\n     *            <code>epsilon</code> of <code>value</code>, in absolute terms.\n     * @param maxIterations\n     *            maximum number of convergents.\n     * @throws FractionConversionException\n     *             if the continued fraction failed to converge.\n     * @see #BigFraction(double)\n     */\n    public BigFraction(final double value, final double epsilon,\n                       final int maxIterations)\n        throws FractionConversionException {\n        this(value, epsilon, Integer.MAX_VALUE, maxIterations);\n    }",
+      "prior": 0.30000000000000004,
+      "rank": 14,
+      "levels": [
+        "METHOD: org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int)\nSIGNATURE: public BigFraction(final double value, final double epsilon,\n                       final int maxIterations)\n        throws FractionConversionException",
+        "METHOD: org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int)\nSIGNATURE: public BigFraction(final double value, final double epsilon,\n                       final int maxIterations)\n        throws FractionConversionException\nSTRUCTURE (lossy):\n",
+        "    /**\n     * Create a fraction given the double value and maximum error allowed.\n     * <p>\n     * References:\n     * <ul>\n     * <li><a href=\"http://mathworld.wolfram.com/ContinuedFraction.html\">\n     * Continued Fraction</a> equations (11) and (22)-(26)</li>\n     * </ul>\n     * </p>\n     *\n     * @param value\n     *            the double value to convert to a fraction.\n     * @param epsilon\n     *            maximum error allowed. The resulting fraction is within\n     *            <code>epsilon</code> of <code>value</code>, in absolute terms.\n     * @param maxIterations\n     *            maximum number of convergents.\n     * @throws FractionConversionException\n     *             if the continued fraction failed to converge.\n     * @see #BigFraction(double)\n     */\n    public BigFraction(final double value, final double epsilon,\n                       final int maxIterations)\n        throws FractionConversionException {\n        this(value, epsilon, Integer.MAX_VALUE, maxIterations);\n    }"
+      ],
+      "features": {
+        "prior": 0.30000000000000004,
+        "rank_fraction": 0.7368421052631579,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.2765957446808511,
+        "trace_match": 1.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 252.0,
+        "l0_tokens": 62.0,
+        "l1_tokens": 67.0,
+        "compression_ratio": 0.26587301587301587,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.apache.commons.math3.fraction.BigFraction.getNumeratorAsInt()",
+      "source": "     * Access the numerator as a <tt>int</tt>.\n     * </p>\n     *\n     * @return the numerator as a <tt>int</tt>.\n     */\n    public int getNumeratorAsInt() {\n        return numerator.intValue();\n    }\n\n    /**",
+      "prior": 0.30000000000000004,
+      "rank": 15,
+      "levels": [
+        "METHOD: org.apache.commons.math3.fraction.BigFraction.getNumeratorAsInt()\nSIGNATURE: public int getNumeratorAsInt()",
+        "METHOD: org.apache.commons.math3.fraction.BigFraction.getNumeratorAsInt()\nSIGNATURE: public int getNumeratorAsInt()\nSTRUCTURE (lossy):\nreturn numerator.intValue();\nCALL numerator.intValue()",
+        "     * Access the numerator as a <tt>int</tt>.\n     * </p>\n     *\n     * @return the numerator as a <tt>int</tt>.\n     */\n    public int getNumeratorAsInt() {\n        return numerator.intValue();\n    }\n\n    /**"
+      ],
+      "features": {
+        "prior": 0.30000000000000004,
+        "rank_fraction": 0.7894736842105263,
+        "ranking_gap": 0.10000000000000009,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.5714285714285714,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 53.0,
+        "l0_tokens": 29.0,
+        "l1_tokens": 48.0,
+        "compression_ratio": 0.9056603773584906,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.apache.commons.math3.exception.MathIllegalStateException.getContext()",
+      "source": "    /** {@inheritDoc} */\n    public ExceptionContext getContext() {\n        return context;\n    }",
+      "prior": 0.19999999999999996,
+      "rank": 16,
+      "levels": [
+        "METHOD: org.apache.commons.math3.exception.MathIllegalStateException.getContext()\nSIGNATURE: public ExceptionContext getContext()",
+        "METHOD: org.apache.commons.math3.exception.MathIllegalStateException.getContext()\nSIGNATURE: public ExceptionContext getContext()\nSTRUCTURE (lossy):\nreturn context;",
+        "    /** {@inheritDoc} */\n    public ExceptionContext getContext() {\n        return context;\n    }"
+      ],
+      "features": {
+        "prior": 0.19999999999999996,
+        "rank_fraction": 0.8421052631578947,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.6666666666666666,
+        "ranker_disagreement": 0.1,
+        "failure_relevance": 0.6428571428571429,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 25.0,
+        "l0_tokens": 33.0,
+        "l1_tokens": 41.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.apache.commons.math3.fraction.Fraction.Fraction(int,int)",
+      "source": "     * @throws MathArithmeticException if the denominator is {@code zero}\n     */\n    public Fraction(int num, int den) {\n        if (den == 0) {\n            throw new MathArithmeticException(LocalizedFormats.ZERO_DENOMINATOR_IN_FRACTION,\n                                              num, den);\n        }\n        if (den < 0) {\n            if (num == Integer.MIN_VALUE ||\n                den == Integer.MIN_VALUE) {\n                throw new MathArithmeticException(LocalizedFormats.OVERFLOW_IN_FRACTION,\n                                                  num, den);\n            }\n            num = -num;\n            den = -den;\n        }\n        // reduce numerator and denominator by greatest common denominator.\n        final int d = ArithmeticUtils.gcd(num, den);\n        if (d > 1) {\n            num /= d;\n            den /= d;\n        }\n\n        // move sign to numerator.\n        if (den < 0) {\n            num = -num;\n            den = -den;\n        }\n        this.numerator   = num;\n        this.denominator = den;\n    }\n\n    /**\n     * Returns the absolute value of this fraction.\n     * @return the absolute value.\n     */",
+      "prior": 0.19999999999999996,
+      "rank": 17,
+      "levels": [
+        "METHOD: org.apache.commons.math3.fraction.Fraction.Fraction(int,int)\nSIGNATURE: org.apache.commons.math3.fraction.Fraction.Fraction(int,int)",
+        "METHOD: org.apache.commons.math3.fraction.Fraction.Fraction(int,int)\nSIGNATURE: org.apache.commons.math3.fraction.Fraction.Fraction(int,int)\nSTRUCTURE (lossy):\n",
+        "     * @throws MathArithmeticException if the denominator is {@code zero}\n     */\n    public Fraction(int num, int den) {\n        if (den == 0) {\n            throw new MathArithmeticException(LocalizedFormats.ZERO_DENOMINATOR_IN_FRACTION,\n                                              num, den);\n        }\n        if (den < 0) {\n            if (num == Integer.MIN_VALUE ||\n                den == Integer.MIN_VALUE) {\n                throw new MathArithmeticException(LocalizedFormats.OVERFLOW_IN_FRACTION,\n                                                  num, den);\n            }\n            num = -num;\n            den = -den;\n        }\n        // reduce numerator and denominator by greatest common denominator.\n        final int d = ArithmeticUtils.gcd(num, den);\n        if (d > 1) {\n            num /= d;\n            den /= d;\n        }\n\n        // move sign to numerator.\n        if (den < 0) {\n            num = -num;\n            den = -den;\n        }\n        this.numerator   = num;\n        this.denominator = den;\n    }\n\n    /**\n     * Returns the absolute value of this fraction.\n     * @return the absolute value.\n     */"
+      ],
+      "features": {
+        "prior": 0.19999999999999996,
+        "rank_fraction": 0.8947368421052632,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.3076923076923077,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 284.0,
+        "l0_tokens": 35.0,
+        "l1_tokens": 40.0,
+        "compression_ratio": 0.14084507042253522,
+        "parse_error": 1.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": true,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.apache.commons.math3.exception.MathIllegalStateException.MathIllegalStateException()",
+      "source": "    /**\n     * Default constructor.\n     */\n    public MathIllegalStateException() {\n        this(LocalizedFormats.ILLEGAL_STATE);\n    }",
+      "prior": 0.09999999999999998,
+      "rank": 18,
+      "levels": [
+        "METHOD: org.apache.commons.math3.exception.MathIllegalStateException.MathIllegalStateException()\nSIGNATURE: public MathIllegalStateException()",
+        "METHOD: org.apache.commons.math3.exception.MathIllegalStateException.MathIllegalStateException()\nSIGNATURE: public MathIllegalStateException()\nSTRUCTURE (lossy):\n",
+        "    /**\n     * Default constructor.\n     */\n    public MathIllegalStateException() {\n        this(LocalizedFormats.ILLEGAL_STATE);\n    }"
+      ],
+      "features": {
+        "prior": 0.09999999999999998,
+        "rank_fraction": 0.9473684210526315,
+        "ranking_gap": 0,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.7142857142857143,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 34.0,
+        "l0_tokens": 36.0,
+        "l1_tokens": 41.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "org.apache.commons.math3.fraction.Fraction.divide(Fraction)",
+      "source": "     * @throws IllegalArgumentException if the fraction is {@code null}\n     * @throws MathArithmeticException if the fraction to divide by is zero\n     * @throws MathArithmeticException if the resulting numerator or denominator exceeds\n     *  {@code Integer.MAX_VALUE}\n     */\n    public Fraction divide(Fraction fraction) {\n        if (fraction == null) {\n            throw new NullArgumentException(LocalizedFormats.FRACTION);\n        }\n        if (fraction.numerator == 0) {\n            throw new MathArithmeticException(LocalizedFormats.ZERO_FRACTION_TO_DIVIDE_BY,\n                                              fraction.numerator, fraction.denominator);\n        }\n        return multiply(fraction.reciprocal());\n    }\n\n    /**\n     * Divide the fraction by an integer.\n     * @param i the <tt>integer</tt> to divide by.\n     * @return this * i",
+      "prior": 0.09999999999999998,
+      "rank": 19,
+      "levels": [
+        "METHOD: org.apache.commons.math3.fraction.Fraction.divide(Fraction)\nSIGNATURE: org.apache.commons.math3.fraction.Fraction.divide(Fraction)",
+        "METHOD: org.apache.commons.math3.fraction.Fraction.divide(Fraction)\nSIGNATURE: org.apache.commons.math3.fraction.Fraction.divide(Fraction)\nSTRUCTURE (lossy):\n",
+        "     * @throws IllegalArgumentException if the fraction is {@code null}\n     * @throws MathArithmeticException if the fraction to divide by is zero\n     * @throws MathArithmeticException if the resulting numerator or denominator exceeds\n     *  {@code Integer.MAX_VALUE}\n     */\n    public Fraction divide(Fraction fraction) {\n        if (fraction == null) {\n            throw new NullArgumentException(LocalizedFormats.FRACTION);\n        }\n        if (fraction.numerator == 0) {\n            throw new MathArithmeticException(LocalizedFormats.ZERO_FRACTION_TO_DIVIDE_BY,\n                                              fraction.numerator, fraction.denominator);\n        }\n        return multiply(fraction.reciprocal());\n    }\n\n    /**\n     * Divide the fraction by an integer.\n     * @param i the <tt>integer</tt> to divide by.\n     * @return this * i"
+      ],
+      "features": {
+        "prior": 0.09999999999999998,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.09999999999999998,
+        "ranker_agreement": 0.3333333333333333,
+        "ranker_disagreement": 0.6666666666666667,
+        "failure_relevance": 0.36363636363636365,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 213.0,
+        "l0_tokens": 35.0,
+        "l1_tokens": 40.0,
+        "compression_ratio": 0.18779342723004694,
+        "parse_error": 1.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": true,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    }
+  ],
+  "rank_metadata": {
+    "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int,int)": {
+      "methods": [
+        "SBIR",
+        "Ochiai",
+        "BoostN"
+      ],
+      "ranks": {
+        "SBIR": 1,
+        "Ochiai": 6,
+        "BoostN": 1
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.math3.exception.MathIllegalStateException.getLocalizedMessage()": {
+      "methods": [
+        "SBIR",
+        "Ochiai"
+      ],
+      "ranks": {
+        "SBIR": 5,
+        "Ochiai": 1
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.math3.fraction.Fraction.Fraction(double,double,int,int)": {
+      "methods": [
+        "SBIR",
+        "BoostN"
+      ],
+      "ranks": {
+        "SBIR": 7,
+        "BoostN": 2
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.math3.fraction.Fraction.negate()": {
+      "methods": [
+        "SBIR",
+        "BoostN"
+      ],
+      "ranks": {
+        "SBIR": 2,
+        "BoostN": 8
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.math3.fraction.FractionConversionException.FractionConversionException(double,long,long)": {
+      "methods": [
+        "Ochiai"
+      ],
+      "ranks": {
+        "Ochiai": 2
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.math3.fraction.Fraction.Fraction(double,int)": {
+      "methods": [
+        "Ochiai",
+        "BoostN"
+      ],
+      "ranks": {
+        "Ochiai": 3,
+        "BoostN": 6
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.math3.fraction.Fraction.multiply(Fraction)": {
+      "methods": [
+        "SBIR",
+        "BoostN"
+      ],
+      "ranks": {
+        "SBIR": 9,
+        "BoostN": 3
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.math3.fraction.BigFraction.BigFraction(long,long)": {
+      "methods": [
+        "SBIR"
+      ],
+      "ranks": {
+        "SBIR": 3
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,int)": {
+      "methods": [
+        "Ochiai",
+        "BoostN"
+      ],
+      "ranks": {
+        "Ochiai": 4,
+        "BoostN": 7
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.math3.fraction.Fraction.getReducedFraction(int,int)": {
+      "methods": [
+        "SBIR",
+        "BoostN"
+      ],
+      "ranks": {
+        "SBIR": 4,
+        "BoostN": 4
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.math3.exception.ConvergenceException.ConvergenceException(Localizable,Object)": {
+      "methods": [
+        "SBIR",
+        "Ochiai"
+      ],
+      "ranks": {
+        "SBIR": 6,
+        "Ochiai": 5
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.math3.fraction.Fraction.addSub(Fraction,boolean)": {
+      "methods": [
+        "BoostN"
+      ],
+      "ranks": {
+        "BoostN": 5
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.math3.fraction.BigFraction.getDenominatorAsInt()": {
+      "methods": [
+        "Ochiai"
+      ],
+      "ranks": {
+        "Ochiai": 7
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.math3.fraction.BigFraction.BigFraction(double,double,int)": {
+      "methods": [
+        "SBIR"
+      ],
+      "ranks": {
+        "SBIR": 8
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.math3.fraction.BigFraction.getNumeratorAsInt()": {
+      "methods": [
+        "Ochiai"
+      ],
+      "ranks": {
+        "Ochiai": 8
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.math3.exception.MathIllegalStateException.getContext()": {
+      "methods": [
+        "SBIR",
+        "Ochiai"
+      ],
+      "ranks": {
+        "SBIR": 10,
+        "Ochiai": 9
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.math3.fraction.Fraction.Fraction(int,int)": {
+      "methods": [
+        "BoostN"
+      ],
+      "ranks": {
+        "BoostN": 9
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.math3.exception.MathIllegalStateException.MathIllegalStateException()": {
+      "methods": [
+        "Ochiai"
+      ],
+      "ranks": {
+        "Ochiai": 10
+      },
+      "top_per_method": 10
+    },
+    "org.apache.commons.math3.fraction.Fraction.divide(Fraction)": {
+      "methods": [
+        "BoostN"
+      ],
+      "ranks": {
+        "BoostN": 10
+      },
+      "top_per_method": 10
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "flexfl",
+    "top_per_method": 10,
+    "rank_scores": "Historical ordinal priors, not measured semantic/coverage scores"
+  },
+  "pool_hash": "86525b185554814b6346299fbb12bb49c9631f2ab4b7bbd7b4beda9d98bc40f9",
+  "evidence_sha256": "ca4d68993d1b7081d38aafd04a0d6d4b189b870dfbe7d3aa463ddd6f64e697cc"
+}
