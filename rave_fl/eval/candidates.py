@@ -166,7 +166,19 @@ def provide(instance, opts):
                 if d[t]
             )
         scores.append((score, e))
-    ordered = sorted(scores, key=lambda pair: (-pair[0], pair[1].entity_id))[:count]
+    # Indexers may return multiple spans with the same method ID. Preserve each
+    # original retrieval score and deterministic tie-break, but select the first
+    # (highest-ranked) occurrence of each ID before applying the count limit.
+    # In particular, never truncate to 24 *before* deduplication.
+    ordered = []
+    seen = set()
+    for score, entity in sorted(scores, key=lambda pair: (-pair[0], pair[1].entity_id)):
+        if entity.entity_id in seen:
+            continue
+        seen.add(entity.entity_id)
+        ordered.append((score, entity))
+        if len(ordered) == count:
+            break
     return (
         [
             replace(e, prior=1 - n / max(1, len(ordered)), scores={provider: score})
@@ -175,6 +187,8 @@ def provide(instance, opts):
         {
             "provider": provider,
             "indexed_entities": len(pool),
+            "retrieved_unique_entities": len(ordered),
+            "deduplication": "highest_bm25_or_lexical_score_per_entity_id",
             "query": "issue plus allowed failure evidence",
             "prior": "ordinal retrieval rank",
         },
