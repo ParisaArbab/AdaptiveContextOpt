@@ -1,0 +1,1320 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Closure-32",
+    "repository": "Closure",
+    "language": "java",
+    "revision": "9722206db78a2d392f204a6d1d3c444713067c51",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_02/prepared/checkouts/Closure-32",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Closure-32\nEXECUTED BUGGY TEST: com.google.javascript.jscomp.IntegrationTest::testIssue701\nTEST SOURCE: test/com/google/javascript/jscomp/IntegrationTest.java\nTEST SOURCE SHA256: 2cd8db7a0d08ddf57d695a11a0184bded9103fa555096b6507e19b7185b77622\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testIssue701() {\n    // Check ASCII art in license comments.\n    String ascii = \"/**\\n\" +\n        \" * @preserve\\n\" +\n        \"   This\\n\" +\n        \"     is\\n\" +\n        \"       ASCII    ART\\n\" +\n        \"*/\";\n    String result = \"/*\\n\\n\" +\n        \"   This\\n\" +\n        \"     is\\n\" +\n        \"       ASCII    ART\\n\" +\n        \"*/\\n\";\n    testSame(createCompilerOptions(), ascii);\n    assertEquals(result, lastCompiler.toSource());\n  }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- com.google.javascript.jscomp.IntegrationTest::testIssue701\njunit.framework.ComparisonFailure: expected:</*\n\n [  This\n     is\n      ] ASCII    ART\n*/\n> but was:</*\n\n [This\n is\n] ASCII    ART\n*/\n>\n\tat junit.framework.Assert.assertEquals(Assert.java:100)\n\tat junit.framework.Assert.assertEquals(Assert.java:107)\n\tat junit.framework.TestCase.assertEquals(TestCase.java:269)\n\tat com.google.javascript.jscomp.IntegrationTest.testIssue701(IntegrationTest.java:1674)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_02/prepared/evidence/Closure-32.txt",
+      "sha256": "f3f6e00583227490cc228b30729064ac3ad6a3bd90d30d1b71bb75ee6ef1733b"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Closure-32",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()",
+      "path": "src/com/google/javascript/jscomp/ant/CompileTask.java",
+      "start_line": 248,
+      "end_line": 274,
+      "source": "public void execute() {\n    if (this.outputFile == null) {\n      throw new BuildException(\"outputFile attribute must be set\");\n    }\n\n    Compiler.setLoggingLevel(Level.OFF);\n\n    CompilerOptions options = createCompilerOptions();\n    Compiler compiler = createCompiler(options);\n\n    List<SourceFile> externs = findExternFiles();\n    List<SourceFile> sources = findSourceFiles();\n\n    if (isStale() || forceRecompile) {\n      log(\"Compiling \" + sources.size() + \" file(s) with \" +\n          externs.size() + \" extern(s)\");\n\n      Result result = compiler.compile(externs, sources, options);\n      if (result.success) {\n        writeResult(compiler.toSource());\n      } else {\n        throw new BuildException(\"Compilation failed.\");\n      }\n    } else {\n      log(\"None of the files changed. Compilation skipped.\");\n    }\n  }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 53.417680079245514
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)",
+      "path": "src/com/google/javascript/jscomp/ant/CompileTask.java",
+      "start_line": 481,
+      "end_line": 499,
+      "source": "private void writeResult(String source) {\n    if (this.outputFile.getParentFile().mkdirs()) {\n      log(\"Created missing parent directory \" +\n          this.outputFile.getParentFile(), Project.MSG_DEBUG);\n    }\n\n    try {\n      OutputStreamWriter out = new OutputStreamWriter(\n          new FileOutputStream(this.outputFile), outputEncoding);\n      out.append(source);\n      out.flush();\n      out.close();\n    } catch (IOException e) {\n      throw new BuildException(e);\n    }\n\n    log(\"Compiled javascript written to \" + this.outputFile.getAbsolutePath(),\n        Project.MSG_DEBUG);\n  }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 45.45863402580057
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/DefaultPassConfig.java::DefaultPassConfig.createInternal(final AbstractCompiler\n        compiler)",
+      "path": "src/com/google/javascript/jscomp/DefaultPassConfig.java",
+      "start_line": 745,
+      "end_line": 756,
+      "source": "@Override\n    protected HotSwapCompilerPass createInternal(final AbstractCompiler\n        compiler) {\n      // The current approach to protecting \"hidden\" side-effects is to\n      // wrap them in a function call that is stripped later, this shouldn't\n      // be done in IDE mode where AST changes may be unexpected.\n      boolean protectHiddenSideEffects =\n          options.protectHiddenSideEffects && !options.ideMode;\n      return new CheckSideEffects(compiler,\n          options.checkSuspiciousCode ? CheckLevel.WARNING : CheckLevel.OFF,\n              protectHiddenSideEffects);\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.25178506176522
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.doRun()",
+      "path": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java",
+      "start_line": 705,
+      "end_line": 751,
+      "source": "protected int doRun() throws FlagUsageException, IOException {\n    Compiler.setLoggingLevel(Level.parse(config.loggingLevel));\n\n    List<SourceFile> externs = createExterns();\n\n    compiler = createCompiler();\n    B options = createOptions();\n\n    List<JSModule> modules = null;\n    Result result = null;\n\n    setRunOptions(options);\n\n    boolean writeOutputToFile = !config.jsOutputFile.isEmpty();\n    if (writeOutputToFile) {\n      jsOutput = fileNameToLegacyOutputWriter(config.jsOutputFile);\n    } else if (jsOutput instanceof OutputStream) {\n      jsOutput = streamToLegacyOutputWriter((OutputStream) jsOutput);\n    }\n\n    List<String> jsFiles = config.js;\n    List<String> moduleSpecs = config.module;\n    if (!moduleSpecs.isEmpty()) {\n      modules = createJsModules(moduleSpecs, jsFiles);\n      if (config.skipNormalOutputs) {\n        compiler.initModules(externs, modules, options);\n      } else {\n        result = compiler.compileModules(externs, modules, options);\n      }\n    } else {\n      List<SourceFile> inputs = createSourceInputs(jsFiles);\n      if (config.skipNormalOutputs) {\n        compiler.init(externs, inputs, options);\n      } else {\n        result = compiler.compile(externs, inputs, options);\n      }\n    }\n\n    int errCode = processResults(result, modules, options);\n    // Flush the output if we are writing to a file.\n    // We can't close yet, because we may need to write phase ordering\n    // info to it later.\n    if (jsOutput instanceof Flushable) {\n      ((Flushable) jsOutput).flush();\n    }\n    return errCode;\n  }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.5185354263101
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ParallelCompilerPass.java::ParallelCompilerPass.execute()",
+      "path": "src/com/google/javascript/jscomp/ParallelCompilerPass.java",
+      "start_line": 136,
+      "end_line": 177,
+      "source": "private Result execute() {\n    int numChildThread = numWorkers - 1;\n    Thread[] workers = new Thread[numChildThread];\n    final Result[] results = new Result[numChildThread];\n\n    for (int i = 0; i < numChildThread; i++) {\n      final int index = i;\n      Thread worker = new Thread() {\n        @Override\n          public void run() {\n            results[index] = processAllTasks();\n          }\n       };\n       workers[i] = worker;\n       worker.start();\n    }\n\n    Result result = processAllTasks();\n\n    // Wait for the child to finish.\n    for (int i = 0; i < numChildThread; i++) {\n      try {\n        workers[i].join();\n      } catch (InterruptedException e) {\n        // None of the children thread should be interrupted in the execution\n        // of this method. If, for whatever reason, this happens, we will\n        // re-throw it and investigate the cause.\n        result.exceptions.add(e);\n        // One of our thread was interrupted, we'll make the current thread to\n        // be interrupted so any callers that is interested in cancellable\n        // execution can cancel.\n        Thread.currentThread().interrupt();\n      }\n    }\n\n    // Combine the result.\n    for (int i = 0; i < numChildThread; i++) {\n      result.combine(results[i]);\n    }\n\n    return result;\n  }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.24303989809173
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.isStale()",
+      "path": "src/com/google/javascript/jscomp/ant/CompileTask.java",
+      "start_line": 507,
+      "end_line": 515,
+      "source": "private boolean isStale() {\n    long lastRun = outputFile.lastModified();\n    long sourcesLastModified = Math.max(\n        getLastModifiedTime(this.sourceFileLists),\n        getLastModifiedTime(this.sourcePaths));\n    long externsLastModified = getLastModifiedTime(this.externFileLists);\n\n    return lastRun <= sourcesLastModified || lastRun <= externsLastModified;\n  }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 37.80758720916306
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)",
+      "path": "src/com/google/javascript/jscomp/ant/AntErrorManager.java",
+      "start_line": 41,
+      "end_line": 51,
+      "source": "@Override\n  public void println(CheckLevel level, JSError error) {\n    switch (level) {\n      case ERROR:\n        this.task.log(error.format(level, this.formatter), Project.MSG_ERR);\n        break;\n      case WARNING:\n        this.task.log(error.format(level, this.formatter), Project.MSG_WARN);\n        break;\n    }\n  }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 37.801310591601194
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.setRunOptions(CompilerOptions options)",
+      "path": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java",
+      "start_line": 214,
+      "end_line": 331,
+      "source": "protected void setRunOptions(CompilerOptions options)\n      throws FlagUsageException, IOException {\n    DiagnosticGroups diagnosticGroups = getDiagnosticGroups();\n\n    if (config.warningGuards != null) {\n      for (WarningGuardSpec.Entry entry : config.warningGuards.entries) {\n        diagnosticGroups.setWarningLevel(options, entry.groupName, entry.level);\n      }\n    }\n\n    createDefineOrTweakReplacements(config.define, options, false);\n\n    options.setTweakProcessing(config.tweakProcessing);\n    createDefineOrTweakReplacements(config.tweak, options, true);\n\n    // Dependency options\n    if (config.onlyClosureDependencies) {\n      if (config.closureEntryPoints.isEmpty()) {\n        throw new FlagUsageException(\"When only_closure_dependencies is \"\n          + \"on, you must specify at least one closure_entry_point\");\n      }\n\n      options.setDependencyOptions(new DependencyOptions()\n          .setDependencyPruning(true)\n          .setDependencySorting(true)\n          .setMoocherDropping(true)\n          .setEntryPoints(config.closureEntryPoints));\n    } else if (config.manageClosureDependencies ||\n        config.closureEntryPoints.size() > 0) {\n      options.setDependencyOptions(new DependencyOptions()\n          .setDependencyPruning(true)\n          .setDependencySorting(true)\n          .setMoocherDropping(false)\n          .setEntryPoints(config.closureEntryPoints));\n    }\n\n    options.devMode = config.jscompDevMode;\n    options.setCodingConvention(config.codingConvention);\n    options.setSummaryDetailLevel(config.summaryDetailLevel);\n\n    legacyOutputCharset = options.outputCharset = getLegacyOutputCharset();\n    outputCharset2 = getOutputCharset2();\n    inputCharset = getInputCharset();\n\n    if (config.jsOutputFile.length() > 0) {\n      if (config.skipNormalOutputs) {\n        throw new FlagUsageException(\"skip_normal_outputs and js_output_file\"\n            + \" cannot be used together.\");\n      }\n    }\n\n    if (config.skipNormalOutputs && config.printAst) {\n      throw new FlagUsageException(\"skip_normal_outputs and print_ast cannot\"\n          + \" be used together.\");\n    }\n\n    if (config.skipNormalOutputs && config.printTree) {\n      throw new FlagUsageException(\"skip_normal_outputs and print_tree cannot\"\n          + \" be used together.\");\n    }\n\n    if (config.createSourceMap.length() > 0) {\n      options.sourceMapOutputPath = config.createSourceMap;\n    }\n    options.sourceMapDetailLevel = config.sourceMapDetailLevel;\n    options.sourceMapFormat = config.sourceMapFormat;\n\n    if (!config.variableMapInputFile.equals(\"\")) {\n      options.inputVariableMapSerialized =\n          VariableMap.load(config.variableMapInputFile).toBytes();\n    }\n\n    if (!config.propertyMapInputFile.equals(\"\")) {\n      options.inputPropertyMapSerialized =\n          VariableMap.load(config.propertyMapInputFile).toBytes();\n    }\n\n    if (config.languageIn.length() > 0) {\n      if (config.languageIn.equals(\"ECMASCRIPT5_STRICT\") ||\n          config.languageIn.equals(\"ES5_STRICT\")) {\n        options.setLanguageIn(CompilerOptions.LanguageMode.ECMASCRIPT5_STRICT);\n      } else if (config.languageIn.equals(\"ECMASCRIPT5\") ||\n          config.languageIn.equals(\"ES5\")) {\n        options.setLanguageIn(CompilerOptions.LanguageMode.ECMASCRIPT5);\n      } else if (config.languageIn.equals(\"ECMASCRIPT3\") ||\n                 config.languageIn.equals(\"ES3\")) {\n        options.setLanguageIn(CompilerOptions.LanguageMode.ECMASCRIPT3);\n      } else {\n        throw new FlagUsageException(\"Unknown language `\" + config.languageIn +\n                                     \"' specified.\");\n      }\n    }\n\n    if (!config.outputManifests.isEmpty()) {\n      Set<String> uniqueNames = Sets.newHashSet();\n      for (String filename : config.outputManifests) {\n        if (!uniqueNames.add(filename)) {\n          throw new FlagUsageException(\"output_manifest flags specify \" +\n              \"duplicate file names: \" + filename);\n        }\n      }\n    }\n\n    if (!config.outputBundles.isEmpty()) {\n      Set<String> uniqueNames = Sets.newHashSet();\n      for (String filename : config.outputBundles) {\n        if (!uniqueNames.add(filename)) {\n          throw new FlagUsageException(\"output_bundle flags specify \" +\n              \"duplicate file names: \" + filename);\n        }\n      }\n    }\n\n    options.acceptConstKeyword = config.acceptConstKeyword;\n    options.transformAMDToCJSModules = config.transformAMDToCJSModules;\n    options.processCommonJSModules = config.processCommonJSModules;\n    options.commonJSModulePathPrefix = config.commonJSModulePathPrefix;\n  }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.754412832650196
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/DefaultPassConfig.java::DefaultPassConfig.createInternal(final AbstractCompiler compiler)",
+      "path": "src/com/google/javascript/jscomp/DefaultPassConfig.java",
+      "start_line": 2173,
+      "end_line": 2176,
+      "source": "@Override\n      protected CompilerPass createInternal(final AbstractCompiler compiler) {\n        return runInSerial(options.customPasses.get(executionTime));\n      }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.389853529185636
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/XtbMessageBundle.java::XtbMessageBundle.Handler.startElement(String uri, String localName, String qName,\n                             Attributes atts)",
+      "path": "src/com/google/javascript/jscomp/XtbMessageBundle.java",
+      "start_line": 153,
+      "end_line": 171,
+      "source": "@Override\n    public void startElement(String uri, String localName, String qName,\n                             Attributes atts) {\n      if (BUNDLE_ELEM_NAME.equals(qName)) {\n        Preconditions.checkState(lang == null);\n        lang = atts.getValue(LANG_ATT_NAME);\n        Preconditions.checkState(lang != null && !lang.isEmpty());\n      } else if (TRANSLATION_ELEM_NAME.equals(qName)) {\n        Preconditions.checkState(msgBuilder == null);\n        String id = atts.getValue(MESSAGE_ID_ATT_NAME);\n        Preconditions.checkState(id != null && !id.isEmpty());\n        msgBuilder = new JsMessage.Builder(id);\n      } else if (PLACEHOLDER_ELEM_NAME.equals(qName)) {\n        Preconditions.checkState(msgBuilder != null);\n        String phRef = atts.getValue(PLACEHOLDER_NAME_ATT_NAME);\n        phRef = JsMessageVisitor.toLowerCamelCaseWithNumericSuffixes(phRef);\n        msgBuilder.appendPlaceholderReference(phRef);\n      }\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.161640509354434
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.setWarning(String value)",
+      "path": "src/com/google/javascript/jscomp/ant/CompileTask.java",
+      "start_line": 102,
+      "end_line": 113,
+      "source": "public void setWarning(String value) {\n    if (\"default\".equalsIgnoreCase(value)) {\n      this.warningLevel = WarningLevel.DEFAULT;\n    } else if (\"quiet\".equalsIgnoreCase(value)) {\n      this.warningLevel = WarningLevel.QUIET;\n    } else if (\"verbose\".equalsIgnoreCase(value)) {\n      this.warningLevel = WarningLevel.VERBOSE;\n    } else {\n      throw new BuildException(\n          \"Unrecognized 'warning' option value (\" + value + \")\");\n    }\n  }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.06794258056402
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()",
+      "path": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java",
+      "start_line": 341,
+      "end_line": 379,
+      "source": "final public void run() {\n    int result = 0;\n    int runs = 1;\n    if (config.computePhaseOrdering) {\n      runs = NUM_RUNS_TO_DETERMINE_OPTIMAL_ORDER;\n      PhaseOptimizer.randomizeLoops();\n    }\n    try {\n      for (int i = 0; i < runs && result == 0; i++) {\n        runTimeStats.recordStartRun();\n        result = doRun();\n        runTimeStats.recordEndRun();\n      }\n    } catch (AbstractCommandLineRunner.FlagUsageException e) {\n      System.err.println(e.getMessage());\n      result = -1;\n    } catch (Throwable t) {\n      t.printStackTrace();\n      result = -2;\n    }\n\n    if (config.computePhaseOrdering) {\n      runTimeStats.outputBestPhaseOrdering();\n    }\n\n    try {\n      if (jsOutput instanceof Closeable) {\n        ((Closeable) jsOutput).close();\n      }\n    } catch (IOException e) {\n      throw Throwables.propagate(e);\n    }\n\n    if (testMode) {\n      exitCodeReceiverForTesting.apply(result);\n    } else {\n      System.exit(result);\n    }\n  }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.180175964572136
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.createCompiler(CompilerOptions options)",
+      "path": "src/com/google/javascript/jscomp/ant/CompileTask.java",
+      "start_line": 401,
+      "end_line": 408,
+      "source": "private Compiler createCompiler(CompilerOptions options) {\n    Compiler compiler = new Compiler();\n    MessageFormatter formatter =\n        options.errorFormat.toFormatter(compiler, false);\n    AntErrorManager errorManager = new AntErrorManager(formatter, this);\n    compiler.setErrorManager(errorManager);\n    return compiler;\n  }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.621702999264585
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.outputSourceMap(B options, String associatedName)",
+      "path": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java",
+      "start_line": 1169,
+      "end_line": 1179,
+      "source": "private void outputSourceMap(B options, String associatedName)\n      throws IOException {\n    if (Strings.isNullOrEmpty(options.sourceMapOutputPath)) {\n      return;\n    }\n\n    String outName = expandSourceMapPath(options, null);\n    Writer out = fileNameToOutputWriter2(outName);\n    compiler.getSourceMap().appendTo(out, associatedName);\n    out.close();\n  }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.57458419885556
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()",
+      "path": "src/com/google/javascript/jscomp/ant/CompileTask.java",
+      "start_line": 473,
+      "end_line": 479,
+      "source": "private List<SourceFile> getDefaultExterns() {\n    try {\n      return CommandLineRunner.getDefaultExterns();\n    } catch (IOException e) {\n      throw new BuildException(e);\n    }\n  }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.534475571769605
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/DefaultPassConfig.java::DefaultPassConfig.createInternal(AbstractCompiler compiler)",
+      "path": "src/com/google/javascript/jscomp/DefaultPassConfig.java",
+      "start_line": 1915,
+      "end_line": 1923,
+      "source": "@Override\n    protected CompilerPass createInternal(AbstractCompiler compiler) {\n      return new AliasStrings(\n          compiler,\n          compiler.getModuleGraph(),\n          options.aliasAllStrings ? null : options.aliasableStrings,\n          options.aliasStringsBlacklist,\n          options.outputJsStringUsage);\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.33663675377846
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.processResults(Result result, List<JSModule> modules, B options)",
+      "path": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java",
+      "start_line": 756,
+      "end_line": 878,
+      "source": "int processResults(Result result, List<JSModule> modules, B options)\n       throws FlagUsageException, IOException {\n    if (config.computePhaseOrdering) {\n      return 0;\n    }\n\n    if (config.printPassGraph) {\n      if (compiler.getRoot() == null) {\n        return 1;\n      } else {\n        jsOutput.append(\n            DotFormatter.toDot(compiler.getPassConfig().getPassGraph()));\n        jsOutput.append('\\n');\n        return 0;\n      }\n    }\n\n    if (config.printAst) {\n      if (compiler.getRoot() == null) {\n        return 1;\n      } else {\n        ControlFlowGraph<Node> cfg = compiler.computeCFG();\n        DotFormatter.appendDot(\n            compiler.getRoot().getLastChild(), cfg, jsOutput);\n        jsOutput.append('\\n');\n        return 0;\n      }\n    }\n\n    if (config.printTree) {\n      if (compiler.getRoot() == null) {\n        jsOutput.append(\"Code contains errors; no tree was generated.\\n\");\n        return 1;\n      } else {\n        compiler.getRoot().appendStringTree(jsOutput);\n        jsOutput.append(\"\\n\");\n        return 0;\n      }\n    }\n\n    rootRelativePathsMap = constructRootRelativePathsMap();\n\n    if (config.skipNormalOutputs) {\n      // Output the manifest and bundle files if requested.\n      outputManifest();\n      outputBundle();\n      return 0;\n    } else if (result.success) {\n      if (modules == null) {\n        writeOutput(\n            jsOutput, compiler, compiler.toSource(), config.outputWrapper,\n            OUTPUT_WRAPPER_MARKER);\n\n        // Output the source map if requested.\n        outputSourceMap(options, config.jsOutputFile);\n      } else {\n        parsedModuleWrappers = parseModuleWrappers(\n            config.moduleWrapper, modules);\n        maybeCreateDirsForPath(config.moduleOutputPathPrefix);\n\n        // If the source map path is in fact a pattern for each\n        // module, create a stream per-module. Otherwise, create\n        // a single source map.\n        Writer mapOut = null;\n\n        if (!shouldGenerateMapPerModule(options)) {\n          mapOut = fileNameToOutputWriter2(expandSourceMapPath(options, null));\n        }\n\n        for (JSModule m : modules) {\n          if (shouldGenerateMapPerModule(options)) {\n            mapOut = fileNameToOutputWriter2(expandSourceMapPath(options, m));\n          }\n\n          Writer writer =\n              fileNameToLegacyOutputWriter(getModuleOutputFileName(m));\n\n          if (options.sourceMapOutputPath != null) {\n            compiler.getSourceMap().reset();\n          }\n\n          writeModuleOutput(writer, m);\n\n          if (options.sourceMapOutputPath != null) {\n            compiler.getSourceMap().appendTo(mapOut, m.getName());\n          }\n\n          writer.close();\n\n          if (shouldGenerateMapPerModule(options) && mapOut != null) {\n            mapOut.close();\n            mapOut = null;\n          }\n        }\n\n        if (mapOut != null) {\n          mapOut.close();\n        }\n      }\n\n      // Output the externs if required.\n      if (options.externExportsPath != null) {\n        Writer eeOut =\n            openExternExportsStream(options, config.jsOutputFile);\n        eeOut.append(result.externExport);\n        eeOut.close();\n      }\n\n      // Output the variable and property name maps if requested.\n      outputNameMaps(options);\n\n      // Output the manifest and bundle files if requested.\n      outputManifest();\n      outputBundle();\n\n      if (options.tracer.isOn()) {\n        outputTracerReport();\n      }\n    }\n\n    // return 0 if no errors, the error count otherwise\n    return Math.min(result.errors.length, 0x7f);\n  }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.25246748386821
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.main(String[] args)",
+      "path": "src/com/google/javascript/jscomp/CommandLineRunner.java",
+      "start_line": 877,
+      "end_line": 884,
+      "source": "public static void main(String[] args) {\n    CommandLineRunner runner = new CommandLineRunner(args);\n    if (runner.shouldRunCompiler()) {\n      runner.run();\n    } else {\n      System.exit(-1);\n    }\n  }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.79756599370181
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/NameReferenceGraph.java::NameReferenceGraph.NameReferenceGraph(AbstractCompiler compiler)",
+      "path": "src/com/google/javascript/jscomp/NameReferenceGraph.java",
+      "start_line": 86,
+      "end_line": 102,
+      "source": "public NameReferenceGraph(AbstractCompiler compiler) {\n    super(true, true);\n    this.compiler = compiler;\n\n    // Initialize builtins.\n    UNKNOWN = new Name(\"{UNKNOWN}\", true);\n    UNKNOWN.isAliased = true;\n    UNKNOWN.type = compiler.getTypeRegistry().getNativeType(\n        JSTypeNative.NO_TYPE);\n    this.createNode(UNKNOWN);\n\n    MAIN = new Name(\"{Global Main}\", true);\n    this.createNode(MAIN);\n\n    WINDOW = new Name(\"window\", true);\n    this.createNode(WINDOW);\n  }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.76211468651057
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)",
+      "path": "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java",
+      "start_line": 1452,
+      "end_line": 1606,
+      "source": "private JSType createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope) {\n    switch (n.getType()) {\n      case Token.LC: // Record type.\n        return createRecordTypeFromNodes(\n            n.getFirstChild(), sourceName, scope);\n\n      case Token.BANG: // Not nullable\n        return createFromTypeNodesInternal(\n            n.getFirstChild(), sourceName, scope)\n            .restrictByNotNullOrUndefined();\n\n      case Token.QMARK: // Nullable or unknown\n        Node firstChild = n.getFirstChild();\n        if (firstChild == null) {\n          return getNativeType(UNKNOWN_TYPE);\n        }\n        return createDefaultObjectUnion(\n            createFromTypeNodesInternal(\n                firstChild, sourceName, scope));\n\n      case Token.EQUALS: // Optional\n        return createOptionalType(\n            createFromTypeNodesInternal(\n                n.getFirstChild(), sourceName, scope));\n\n      case Token.ELLIPSIS: // Var args\n        return createOptionalType(\n            createFromTypeNodesInternal(\n                n.getFirstChild(), sourceName, scope));\n\n      case Token.STAR: // The AllType\n        return getNativeType(ALL_TYPE);\n\n      case Token.LB: // Array type\n        // TODO(nicksantos): Enforce membership restrictions on the Array.\n        return getNativeType(ARRAY_TYPE);\n\n      case Token.PIPE: // Union type\n        UnionTypeBuilder builder = new UnionTypeBuilder(this);\n        for (Node child = n.getFirstChild(); child != null;\n             child = child.getNext()) {\n          builder.addAlternate(\n              createFromTypeNodesInternal(child, sourceName, scope));\n        }\n        return builder.build();\n\n      case Token.EMPTY: // When the return value of a function is not specified\n        return getNativeType(UNKNOWN_TYPE);\n\n      case Token.VOID: // Only allowed in the return value of a function.\n        return getNativeType(VOID_TYPE);\n\n      case Token.STRING:\n        JSType namedType = getType(scope, n.getString(), sourceName,\n            n.getLineno(), n.getCharno());\n        if (resolveMode != ResolveMode.LAZY_NAMES) {\n          namedType = namedType.resolveInternal(reporter, scope);\n        }\n        if ((namedType instanceof ObjectType) &&\n            !(nonNullableTypeNames.contains(n.getString()))) {\n          Node typeList = n.getFirstChild();\n          if (typeList != null &&\n              (\"Array\".equals(n.getString()) ||\n               \"Object\".equals(n.getString()))) {\n            JSType parameterType =\n                createFromTypeNodesInternal(\n                    typeList.getLastChild(), sourceName, scope);\n            namedType = new ParameterizedType(\n                this, (ObjectType) namedType, parameterType);\n            if (typeList.hasMoreThanOneChild()) {\n              JSType indexType =\n                  createFromTypeNodesInternal(\n                      typeList.getFirstChild(), sourceName, scope);\n              namedType = new IndexedType(\n                  this, (ObjectType) namedType, indexType);\n            }\n          }\n          return createDefaultObjectUnion(namedType);\n        } else {\n          return namedType;\n        }\n\n      case Token.FUNCTION:\n        ObjectType thisType = null;\n        boolean isConstructor = false;\n        Node current = n.getFirstChild();\n        if (current.getType() == Token.THIS ||\n            current.getType() == Token.NEW) {\n          Node contextNode = current.getFirstChild();\n          thisType =\n              ObjectType.cast(\n                  createFromTypeNodesInternal(\n                      contextNode, sourceName, scope)\n                  .restrictByNotNullOrUndefined());\n          if (thisType == null) {\n            reporter.warning(\n                ScriptRuntime.getMessage0(\n                    current.getType() == Token.THIS ?\n                    \"msg.jsdoc.function.thisnotobject\" :\n                    \"msg.jsdoc.function.newnotobject\"),\n                sourceName,\n                contextNode.getLineno(), contextNode.getCharno());\n          }\n\n          isConstructor = current.getType() == Token.NEW;\n          current = current.getNext();\n        }\n\n        FunctionParamBuilder paramBuilder = new FunctionParamBuilder(this);\n\n        if (current.getType() == Token.PARAM_LIST) {\n          Node args = current.getFirstChild();\n          for (Node arg = current.getFirstChild(); arg != null;\n               arg = arg.getNext()) {\n            if (arg.getType() == Token.ELLIPSIS) {\n              if (arg.getChildCount() == 0) {\n                paramBuilder.addVarArgs(getNativeType(UNKNOWN_TYPE));\n              } else {\n                paramBuilder.addVarArgs(\n                    createFromTypeNodesInternal(\n                        arg.getFirstChild(), sourceName, scope));\n              }\n            } else {\n              JSType type = createFromTypeNodesInternal(\n                  arg, sourceName, scope);\n              if (arg.getType() == Token.EQUALS) {\n                boolean addSuccess = paramBuilder.addOptionalParams(type);\n                if (!addSuccess) {\n                  reporter.warning(\n                      ScriptRuntime.getMessage0(\"msg.jsdoc.function.varargs\"),\n                      sourceName, arg.getLineno(), arg.getCharno());\n                }\n              } else {\n                paramBuilder.addRequiredParams(type);\n              }\n            }\n          }\n          current = current.getNext();\n        }\n\n        JSType returnType =\n            createFromTypeNodesInternal(current, sourceName, scope);\n\n        return new FunctionBuilder(this)\n            .withParams(paramBuilder)\n            .withReturnType(returnType)\n            .withTypeOfThis(thisType)\n            .setIsConstructor(isConstructor)\n            .build();\n    }\n\n    throw new IllegalStateException(\n        \"Unexpected node in type expression: \" + n.toString());\n  }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.749788102886086
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/AstValidator.java::AstValidator.validateAssignmentTarget(Node n)",
+      "path": "src/com/google/javascript/jscomp/AstValidator.java",
+      "start_line": 606,
+      "end_line": 617,
+      "source": "private void validateAssignmentTarget(Node n) {\n    switch (n.getType()) {\n      case Token.NAME:\n      case Token.GETELEM:\n      case Token.GETPROP:\n        validateExpression(n);\n        return;\n      default:\n        violation(\"Expected assignment target expression but was \"\n            + Token.name(n.getType()), n);\n    }\n  }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.50237127714798
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)",
+      "path": "src/com/google/javascript/jscomp/SourceMap.java",
+      "start_line": 117,
+      "end_line": 148,
+      "source": "public void addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition) {\n    String sourceFile = node.getSourceFileName();\n\n    // If the node does not have an associated source file or\n    // its line number is -1, then the node does not have sufficient\n    // information for a mapping to be useful.\n    if (sourceFile == null || node.getLineno() < 0) {\n      return;\n    }\n\n    sourceFile = fixupSourceLocation(sourceFile);\n\n    String originalName = (String) node.getProp(Node.ORIGINALNAME_PROP);\n\n    // Strangely, Rhino source lines are one based but columns are\n    // zero based.\n    // We don't change this for the v1 or v2 source maps but for\n    // v3 we make them both 0 based.\n    int lineBaseOffset = 1;\n    if (generator instanceof SourceMapGeneratorV1\n        || generator instanceof SourceMapGeneratorV2) {\n      lineBaseOffset = 0;\n    }\n\n    generator.addMapping(\n        sourceFile, originalName,\n        new FilePosition(node.getLineno() - lineBaseOffset, node.getCharno()),\n        outputStartPosition, outputEndPosition);\n  }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.318307139486
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.findJavaScriptFiles(FileList fileList)",
+      "path": "src/com/google/javascript/jscomp/ant/CompileTask.java",
+      "start_line": 441,
+      "end_line": 451,
+      "source": "private List<SourceFile> findJavaScriptFiles(FileList fileList) {\n    List<SourceFile> files = Lists.newLinkedList();\n    File baseDir = fileList.getDir(getProject());\n\n    for (String included : fileList.getFiles(getProject())) {\n      files.add(SourceFile.fromFile(new File(baseDir, included),\n          Charset.forName(encoding)));\n    }\n\n    return files;\n  }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.965241975885814
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.setOutputEncoding(String outputEncoding)",
+      "path": "src/com/google/javascript/jscomp/ant/CompileTask.java",
+      "start_line": 183,
+      "end_line": 185,
+      "source": "public void setOutputEncoding(String outputEncoding) {\n    this.outputEncoding = outputEncoding;\n  }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.92551613115261
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()",
+      "source": "public void execute() {\n    if (this.outputFile == null) {\n      throw new BuildException(\"outputFile attribute must be set\");\n    }\n\n    Compiler.setLoggingLevel(Level.OFF);\n\n    CompilerOptions options = createCompilerOptions();\n    Compiler compiler = createCompiler(options);\n\n    List<SourceFile> externs = findExternFiles();\n    List<SourceFile> sources = findSourceFiles();\n\n    if (isStale() || forceRecompile) {\n      log(\"Compiling \" + sources.size() + \" file(s) with \" +\n          externs.size() + \" extern(s)\");\n\n      Result result = compiler.compile(externs, sources, options);\n      if (result.success) {\n        writeResult(compiler.toSource());\n      } else {\n        throw new BuildException(\"Compilation failed.\");\n      }\n    } else {\n      log(\"None of the files changed. Compilation skipped.\");\n    }\n  }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()\nSIGNATURE: public void execute()",
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()\nSIGNATURE: public void execute()\nSTRUCTURE (lossy):\nif (this.outputFile == null)\nthrow new BuildException(\"outputFile attribute must be set\");\nCALL Compiler.setLoggingLevel(Level.OFF)\nCompilerOptions options = createCompilerOptions();\nCALL createCompilerOptions()\nCompiler compiler = createCompiler(options);\nCALL createCompiler(options)\nList<SourceFile> externs = findExternFiles();\nCALL findExternFiles()\nList<SourceFile> sources = findSourceFiles();\nCALL findSourceFiles()\nif (isStale() || forceRecompile)\nCALL isStale()\nCALL log(\"Compiling \" + sources.size() + \" file(s) with \" + externs.size() + \" extern(s)\")\nCALL sources.size()\nCALL externs.size()\nResult result = compiler.compile(externs, sources, options);\nCALL compiler.compile(externs, sources, options)\nif (result.success)\nCALL writeResult(compiler.toSource())\nCALL compiler.toSource()\nthrow new BuildException(\"Compilation failed.\");\nCALL log(\"None of the files changed. Compilation skipped.\")",
+        "public void execute() {\n    if (this.outputFile == null) {\n      throw new BuildException(\"outputFile attribute must be set\");\n    }\n\n    Compiler.setLoggingLevel(Level.OFF);\n\n    CompilerOptions options = createCompilerOptions();\n    Compiler compiler = createCompiler(options);\n\n    List<SourceFile> externs = findExternFiles();\n    List<SourceFile> sources = findSourceFiles();\n\n    if (isStale() || forceRecompile) {\n      log(\"Compiling \" + sources.size() + \" file(s) with \" +\n          externs.size() + \" extern(s)\");\n\n      Result result = compiler.compile(externs, sources, options);\n      if (result.success) {\n        writeResult(compiler.toSource());\n      } else {\n        throw new BuildException(\"Compilation failed.\");\n      }\n    } else {\n      log(\"None of the files changed. Compilation skipped.\");\n    }\n  }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.33962264150943394,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 13.0,
+        "literal_count": 7.0,
+        "source_tokens": 207.0,
+        "l0_tokens": 30.0,
+        "l1_tokens": 261.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 13,
+        "literal_count": 7
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)",
+      "source": "private void writeResult(String source) {\n    if (this.outputFile.getParentFile().mkdirs()) {\n      log(\"Created missing parent directory \" +\n          this.outputFile.getParentFile(), Project.MSG_DEBUG);\n    }\n\n    try {\n      OutputStreamWriter out = new OutputStreamWriter(\n          new FileOutputStream(this.outputFile), outputEncoding);\n      out.append(source);\n      out.flush();\n      out.close();\n    } catch (IOException e) {\n      throw new BuildException(e);\n    }\n\n    log(\"Compiled javascript written to \" + this.outputFile.getAbsolutePath(),\n        Project.MSG_DEBUG);\n  }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)\nSIGNATURE: private void writeResult(String source)",
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)\nSIGNATURE: private void writeResult(String source)\nSTRUCTURE (lossy):\nif (this.outputFile.getParentFile().mkdirs())\nCALL this.outputFile.getParentFile().mkdirs()\nCALL this.outputFile.getParentFile()\nCALL log(\"Created missing parent directory \" + this.outputFile.getParentFile(), Project.MSG_DEBUG)\nOutputStreamWriter out = new OutputStreamWriter( new FileOutputStream(this.outputFile), outputEncoding);\nCALL out.append(source)\nCALL out.flush()\nCALL out.close()\ncatch (IOException e)\nthrow new BuildException(e);\nCALL log(\"Compiled javascript written to \" + this.outputFile.getAbsolutePath(), Project.MSG_DEBUG)\nCALL this.outputFile.getAbsolutePath()",
+        "private void writeResult(String source) {\n    if (this.outputFile.getParentFile().mkdirs()) {\n      log(\"Created missing parent directory \" +\n          this.outputFile.getParentFile(), Project.MSG_DEBUG);\n    }\n\n    try {\n      OutputStreamWriter out = new OutputStreamWriter(\n          new FileOutputStream(this.outputFile), outputEncoding);\n      out.append(source);\n      out.flush();\n      out.close();\n    } catch (IOException e) {\n      throw new BuildException(e);\n    }\n\n    log(\"Compiled javascript written to \" + this.outputFile.getAbsolutePath(),\n        Project.MSG_DEBUG);\n  }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.32608695652173914,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 9.0,
+        "literal_count": 2.0,
+        "source_tokens": 148.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 188.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 9,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/DefaultPassConfig.java::DefaultPassConfig.createInternal(final AbstractCompiler\n        compiler)",
+      "source": "@Override\n    protected HotSwapCompilerPass createInternal(final AbstractCompiler\n        compiler) {\n      // The current approach to protecting \"hidden\" side-effects is to\n      // wrap them in a function call that is stripped later, this shouldn't\n      // be done in IDE mode where AST changes may be unexpected.\n      boolean protectHiddenSideEffects =\n          options.protectHiddenSideEffects && !options.ideMode;\n      return new CheckSideEffects(compiler,\n          options.checkSuspiciousCode ? CheckLevel.WARNING : CheckLevel.OFF,\n              protectHiddenSideEffects);\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/DefaultPassConfig.java::DefaultPassConfig.createInternal(final AbstractCompiler\n        compiler)\nSIGNATURE: @Override\n    protected HotSwapCompilerPass createInternal(final AbstractCompiler\n        compiler)",
+        "METHOD: src/com/google/javascript/jscomp/DefaultPassConfig.java::DefaultPassConfig.createInternal(final AbstractCompiler\n        compiler)\nSIGNATURE: @Override\n    protected HotSwapCompilerPass createInternal(final AbstractCompiler\n        compiler)\nSTRUCTURE (lossy):\nboolean protectHiddenSideEffects = options.protectHiddenSideEffects && !options.ideMode;\nreturn new CheckSideEffects(compiler, options.checkSuspiciousCode ? CheckLevel.WARNING : CheckLevel.OFF, protectHiddenSideEffects);",
+        "@Override\n    protected HotSwapCompilerPass createInternal(final AbstractCompiler\n        compiler) {\n      // The current approach to protecting \"hidden\" side-effects is to\n      // wrap them in a function call that is stripped later, this shouldn't\n      // be done in IDE mode where AST changes may be unexpected.\n      boolean protectHiddenSideEffects =\n          options.protectHiddenSideEffects && !options.ideMode;\n      return new CheckSideEffects(compiler,\n          options.checkSuspiciousCode ? CheckLevel.WARNING : CheckLevel.OFF,\n              protectHiddenSideEffects);\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2641509433962264,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 148.0,
+        "l0_tokens": 63.0,
+        "l1_tokens": 123.0,
+        "compression_ratio": 0.831081081081081,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.doRun()",
+      "source": "protected int doRun() throws FlagUsageException, IOException {\n    Compiler.setLoggingLevel(Level.parse(config.loggingLevel));\n\n    List<SourceFile> externs = createExterns();\n\n    compiler = createCompiler();\n    B options = createOptions();\n\n    List<JSModule> modules = null;\n    Result result = null;\n\n    setRunOptions(options);\n\n    boolean writeOutputToFile = !config.jsOutputFile.isEmpty();\n    if (writeOutputToFile) {\n      jsOutput = fileNameToLegacyOutputWriter(config.jsOutputFile);\n    } else if (jsOutput instanceof OutputStream) {\n      jsOutput = streamToLegacyOutputWriter((OutputStream) jsOutput);\n    }\n\n    List<String> jsFiles = config.js;\n    List<String> moduleSpecs = config.module;\n    if (!moduleSpecs.isEmpty()) {\n      modules = createJsModules(moduleSpecs, jsFiles);\n      if (config.skipNormalOutputs) {\n        compiler.initModules(externs, modules, options);\n      } else {\n        result = compiler.compileModules(externs, modules, options);\n      }\n    } else {\n      List<SourceFile> inputs = createSourceInputs(jsFiles);\n      if (config.skipNormalOutputs) {\n        compiler.init(externs, inputs, options);\n      } else {\n        result = compiler.compile(externs, inputs, options);\n      }\n    }\n\n    int errCode = processResults(result, modules, options);\n    // Flush the output if we are writing to a file.\n    // We can't close yet, because we may need to write phase ordering\n    // info to it later.\n    if (jsOutput instanceof Flushable) {\n      ((Flushable) jsOutput).flush();\n    }\n    return errCode;\n  }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.doRun()\nSIGNATURE: protected int doRun() throws FlagUsageException, IOException",
+        "METHOD: src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.doRun()\nSIGNATURE: protected int doRun() throws FlagUsageException, IOException\nSTRUCTURE (lossy):\nCALL Compiler.setLoggingLevel(Level.parse(config.loggingLevel))\nCALL Level.parse(config.loggingLevel)\nList<SourceFile> externs = createExterns();\nCALL createExterns()\ncompiler = createCompiler()\nCALL createCompiler()\nB options = createOptions();\nCALL createOptions()\nList<JSModule> modules = null;\nResult result = null;\nCALL setRunOptions(options)\nboolean writeOutputToFile = !config.jsOutputFile.isEmpty();\nCALL config.jsOutputFile.isEmpty()\nif (writeOutputToFile)\njsOutput = fileNameToLegacyOutputWriter(config.jsOutputFile)\nCALL fileNameToLegacyOutputWriter(config.jsOutputFile)\nif (jsOutput instanceof OutputStream)\njsOutput = streamToLegacyOutputWriter((OutputStream) jsOutput)\nCALL streamToLegacyOutputWriter((OutputStream) jsOutput)\nList<String> jsFiles = config.js;\nList<String> moduleSpecs = config.module;\nif (!moduleSpecs.isEmpty())\nCALL moduleSpecs.isEmpty()\nmodules = createJsModules(moduleSpecs, jsFiles)\nCALL createJsModules(moduleSpecs, jsFiles)\nif (config.skipNormalOutputs)\nCALL compiler.initModules(externs, modules, options)\nresult = compiler.compileModules(externs, modules, options)\nCALL compiler.compileModules(externs, modules, options)\nList<SourceFile> inputs = createSourceInputs(jsFiles);\nCALL createSourceInputs(jsFiles)\nCALL compiler.init(externs, inputs, options)\nresult = compiler.compile(externs, inputs, options)\nCALL compiler.compile(externs, inputs, options)\nint errCode = processResults(result, modules, options);\nCALL processResults(result, modules, options)\nif (jsOutput instanceof Flushable)\nCALL ((Flushable) jsOutput).flush()\nreturn errCode;",
+        "protected int doRun() throws FlagUsageException, IOException {\n    Compiler.setLoggingLevel(Level.parse(config.loggingLevel));\n\n    List<SourceFile> externs = createExterns();\n\n    compiler = createCompiler();\n    B options = createOptions();\n\n    List<JSModule> modules = null;\n    Result result = null;\n\n    setRunOptions(options);\n\n    boolean writeOutputToFile = !config.jsOutputFile.isEmpty();\n    if (writeOutputToFile) {\n      jsOutput = fileNameToLegacyOutputWriter(config.jsOutputFile);\n    } else if (jsOutput instanceof OutputStream) {\n      jsOutput = streamToLegacyOutputWriter((OutputStream) jsOutput);\n    }\n\n    List<String> jsFiles = config.js;\n    List<String> moduleSpecs = config.module;\n    if (!moduleSpecs.isEmpty()) {\n      modules = createJsModules(moduleSpecs, jsFiles);\n      if (config.skipNormalOutputs) {\n        compiler.initModules(externs, modules, options);\n      } else {\n        result = compiler.compileModules(externs, modules, options);\n      }\n    } else {\n      List<SourceFile> inputs = createSourceInputs(jsFiles);\n      if (config.skipNormalOutputs) {\n        compiler.init(externs, inputs, options);\n      } else {\n        result = compiler.compile(externs, inputs, options);\n      }\n    }\n\n    int errCode = processResults(result, modules, options);\n    // Flush the output if we are writing to a file.\n    // We can't close yet, because we may need to write phase ordering\n    // info to it later.\n    if (jsOutput instanceof Flushable) {\n      ((Flushable) jsOutput).flush();\n    }\n    return errCode;\n  }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.20270270270270271,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 18.0,
+        "literal_count": 2.0,
+        "source_tokens": 389.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 445.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 18,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ParallelCompilerPass.java::ParallelCompilerPass.execute()",
+      "source": "private Result execute() {\n    int numChildThread = numWorkers - 1;\n    Thread[] workers = new Thread[numChildThread];\n    final Result[] results = new Result[numChildThread];\n\n    for (int i = 0; i < numChildThread; i++) {\n      final int index = i;\n      Thread worker = new Thread() {\n        @Override\n          public void run() {\n            results[index] = processAllTasks();\n          }\n       };\n       workers[i] = worker;\n       worker.start();\n    }\n\n    Result result = processAllTasks();\n\n    // Wait for the child to finish.\n    for (int i = 0; i < numChildThread; i++) {\n      try {\n        workers[i].join();\n      } catch (InterruptedException e) {\n        // None of the children thread should be interrupted in the execution\n        // of this method. If, for whatever reason, this happens, we will\n        // re-throw it and investigate the cause.\n        result.exceptions.add(e);\n        // One of our thread was interrupted, we'll make the current thread to\n        // be interrupted so any callers that is interested in cancellable\n        // execution can cancel.\n        Thread.currentThread().interrupt();\n      }\n    }\n\n    // Combine the result.\n    for (int i = 0; i < numChildThread; i++) {\n      result.combine(results[i]);\n    }\n\n    return result;\n  }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ParallelCompilerPass.java::ParallelCompilerPass.execute()\nSIGNATURE: private Result execute()",
+        "METHOD: src/com/google/javascript/jscomp/ParallelCompilerPass.java::ParallelCompilerPass.execute()\nSIGNATURE: private Result execute()\nSTRUCTURE (lossy):\nint numChildThread = numWorkers - 1;\nThread[] workers = new Thread[numChildThread];\nfinal Result[] results = new Result[numChildThread];\nfor (int i = 0; i < numChildThread; i++)\nint i = 0;\ni++\nfinal int index = i;\nThread worker = new Thread() { @Override public void run() { results[index] = processAllTasks(); } };\nresults[index] = processAllTasks()\nCALL processAllTasks()\nworkers[i] = worker\nCALL worker.start()\nResult result = processAllTasks();\nCALL workers[i].join()\ncatch (InterruptedException e)\nCALL result.exceptions.add(e)\nCALL Thread.currentThread().interrupt()\nCALL Thread.currentThread()\nCALL result.combine(results[i])\nreturn result;",
+        "private Result execute() {\n    int numChildThread = numWorkers - 1;\n    Thread[] workers = new Thread[numChildThread];\n    final Result[] results = new Result[numChildThread];\n\n    for (int i = 0; i < numChildThread; i++) {\n      final int index = i;\n      Thread worker = new Thread() {\n        @Override\n          public void run() {\n            results[index] = processAllTasks();\n          }\n       };\n       workers[i] = worker;\n       worker.start();\n    }\n\n    Result result = processAllTasks();\n\n    // Wait for the child to finish.\n    for (int i = 0; i < numChildThread; i++) {\n      try {\n        workers[i].join();\n      } catch (InterruptedException e) {\n        // None of the children thread should be interrupted in the execution\n        // of this method. If, for whatever reason, this happens, we will\n        // re-throw it and investigate the cause.\n        result.exceptions.add(e);\n        // One of our thread was interrupted, we'll make the current thread to\n        // be interrupted so any callers that is interested in cancellable\n        // execution can cancel.\n        Thread.currentThread().interrupt();\n      }\n    }\n\n    // Combine the result.\n    for (int i = 0; i < numChildThread; i++) {\n      result.combine(results[i]);\n    }\n\n    return result;\n  }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.22857142857142856,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 8.0,
+        "literal_count": 4.0,
+        "source_tokens": 322.0,
+        "l0_tokens": 34.0,
+        "l1_tokens": 201.0,
+        "compression_ratio": 0.6242236024844721,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 8,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.isStale()",
+      "source": "private boolean isStale() {\n    long lastRun = outputFile.lastModified();\n    long sourcesLastModified = Math.max(\n        getLastModifiedTime(this.sourceFileLists),\n        getLastModifiedTime(this.sourcePaths));\n    long externsLastModified = getLastModifiedTime(this.externFileLists);\n\n    return lastRun <= sourcesLastModified || lastRun <= externsLastModified;\n  }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.isStale()\nSIGNATURE: private boolean isStale()",
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.isStale()\nSIGNATURE: private boolean isStale()\nSTRUCTURE (lossy):\nlong lastRun = outputFile.lastModified();\nCALL outputFile.lastModified()\nlong sourcesLastModified = Math.max( getLastModifiedTime(this.sourceFileLists), getLastModifiedTime(this.sourcePaths));\nCALL Math.max( getLastModifiedTime(this.sourceFileLists), getLastModifiedTime(this.sourcePaths))\nCALL getLastModifiedTime(this.sourceFileLists)\nCALL getLastModifiedTime(this.sourcePaths)\nlong externsLastModified = getLastModifiedTime(this.externFileLists);\nCALL getLastModifiedTime(this.externFileLists)\nreturn lastRun <= sourcesLastModified || lastRun <= externsLastModified;",
+        "private boolean isStale() {\n    long lastRun = outputFile.lastModified();\n    long sourcesLastModified = Math.max(\n        getLastModifiedTime(this.sourceFileLists),\n        getLastModifiedTime(this.sourcePaths));\n    long externsLastModified = getLastModifiedTime(this.externFileLists);\n\n    return lastRun <= sourcesLastModified || lastRun <= externsLastModified;\n  }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 5.0,
+        "literal_count": 0.0,
+        "source_tokens": 93.0,
+        "l0_tokens": 31.0,
+        "l1_tokens": 178.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 5,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)",
+      "source": "@Override\n  public void println(CheckLevel level, JSError error) {\n    switch (level) {\n      case ERROR:\n        this.task.log(error.format(level, this.formatter), Project.MSG_ERR);\n        break;\n      case WARNING:\n        this.task.log(error.format(level, this.formatter), Project.MSG_WARN);\n        break;\n    }\n  }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)\nSIGNATURE: @Override\n  public void println(CheckLevel level, JSError error)",
+        "METHOD: src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)\nSIGNATURE: @Override\n  public void println(CheckLevel level, JSError error)\nSTRUCTURE (lossy):\nswitch (level) { case ERROR: this.task.log(error.format(level, this.formatter), Project.MSG_ERR); break; case WARNING: this.task.log(error.format(level, this.formatter), Project.MSG_WARN); break; }\nCALL this.task.log(error.format(level, this.formatter), Project.MSG_ERR)\nCALL error.format(level, this.formatter)\nCALL this.task.log(error.format(level, this.formatter), Project.MSG_WARN)",
+        "@Override\n  public void println(CheckLevel level, JSError error) {\n    switch (level) {\n      case ERROR:\n        this.task.log(error.format(level, this.formatter), Project.MSG_ERR);\n        break;\n      case WARNING:\n        this.task.log(error.format(level, this.formatter), Project.MSG_WARN);\n        break;\n    }\n  }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4482758620689655,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 4.0,
+        "literal_count": 0.0,
+        "source_tokens": 80.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 151.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 4,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.setRunOptions(CompilerOptions options)",
+      "source": "protected void setRunOptions(CompilerOptions options)\n      throws FlagUsageException, IOException {\n    DiagnosticGroups diagnosticGroups = getDiagnosticGroups();\n\n    if (config.warningGuards != null) {\n      for (WarningGuardSpec.Entry entry : config.warningGuards.entries) {\n        diagnosticGroups.setWarningLevel(options, entry.groupName, entry.level);\n      }\n    }\n\n    createDefineOrTweakReplacements(config.define, options, false);\n\n    options.setTweakProcessing(config.tweakProcessing);\n    createDefineOrTweakReplacements(config.tweak, options, true);\n\n    // Dependency options\n    if (config.onlyClosureDependencies) {\n      if (config.closureEntryPoints.isEmpty()) {\n        throw new FlagUsageException(\"When only_closure_dependencies is \"\n          + \"on, you must specify at least one closure_entry_point\");\n      }\n\n      options.setDependencyOptions(new DependencyOptions()\n          .setDependencyPruning(true)\n          .setDependencySorting(true)\n          .setMoocherDropping(true)\n          .setEntryPoints(config.closureEntryPoints));\n    } else if (config.manageClosureDependencies ||\n        config.closureEntryPoints.size() > 0) {\n      options.setDependencyOptions(new DependencyOptions()\n          .setDependencyPruning(true)\n          .setDependencySorting(true)\n          .setMoocherDropping(false)\n          .setEntryPoints(config.closureEntryPoints));\n    }\n\n    options.devMode = config.jscompDevMode;\n    options.setCodingConvention(config.codingConvention);\n    options.setSummaryDetailLevel(config.summaryDetailLevel);\n\n    legacyOutputCharset = options.outputCharset = getLegacyOutputCharset();\n    outputCharset2 = getOutputCharset2();\n    inputCharset = getInputCharset();\n\n    if (config.jsOutputFile.length() > 0) {\n      if (config.skipNormalOutputs) {\n        throw new FlagUsageException(\"skip_normal_outputs and js_output_file\"\n            + \" cannot be used together.\");\n      }\n    }\n\n    if (config.skipNormalOutputs && config.printAst) {\n      throw new FlagUsageException(\"skip_normal_outputs and print_ast cannot\"\n          + \" be used together.\");\n    }\n\n    if (config.skipNormalOutputs && config.printTree) {\n      throw new FlagUsageException(\"skip_normal_outputs and print_tree cannot\"\n          + \" be used together.\");\n    }\n\n    if (config.createSourceMap.length() > 0) {\n      options.sourceMapOutputPath = config.createSourceMap;\n    }\n    options.sourceMapDetailLevel = config.sourceMapDetailLevel;\n    options.sourceMapFormat = config.sourceMapFormat;\n\n    if (!config.variableMapInputFile.equals(\"\")) {\n      options.inputVariableMapSerialized =\n          VariableMap.load(config.variableMapInputFile).toBytes();\n    }\n\n    if (!config.propertyMapInputFile.equals(\"\")) {\n      options.inputPropertyMapSerialized =\n          VariableMap.load(config.propertyMapInputFile).toBytes();\n    }\n\n    if (config.languageIn.length() > 0) {\n      if (config.languageIn.equals(\"ECMASCRIPT5_STRICT\") ||\n          config.languageIn.equals(\"ES5_STRICT\")) {\n        options.setLanguageIn(CompilerOptions.LanguageMode.ECMASCRIPT5_STRICT);\n      } else if (config.languageIn.equals(\"ECMASCRIPT5\") ||\n          config.languageIn.equals(\"ES5\")) {\n        options.setLanguageIn(CompilerOptions.LanguageMode.ECMASCRIPT5);\n      } else if (config.languageIn.equals(\"ECMASCRIPT3\") ||\n                 config.languageIn.equals(\"ES3\")) {\n        options.setLanguageIn(CompilerOptions.LanguageMode.ECMASCRIPT3);\n      } else {\n        throw new FlagUsageException(\"Unknown language `\" + config.languageIn +\n                                     \"' specified.\");\n      }\n    }\n\n    if (!config.outputManifests.isEmpty()) {\n      Set<String> uniqueNames = Sets.newHashSet();\n      for (String filename : config.outputManifests) {\n        if (!uniqueNames.add(filename)) {\n          throw new FlagUsageException(\"output_manifest flags specify \" +\n              \"duplicate file names: \" + filename);\n        }\n      }\n    }\n\n    if (!config.outputBundles.isEmpty()) {\n      Set<String> uniqueNames = Sets.newHashSet();\n      for (String filename : config.outputBundles) {\n        if (!uniqueNames.add(filename)) {\n          throw new FlagUsageException(\"output_bundle flags specify \" +\n              \"duplicate file names: \" + filename);\n        }\n      }\n    }\n\n    options.acceptConstKeyword = config.acceptConstKeyword;\n    options.transformAMDToCJSModules = config.transformAMDToCJSModules;\n    options.processCommonJSModules = config.processCommonJSModules;\n    options.commonJSModulePathPrefix = config.commonJSModulePathPrefix;\n  }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.setRunOptions(CompilerOptions options)\nSIGNATURE: protected void setRunOptions(CompilerOptions options)\n      throws FlagUsageException, IOException",
+        "METHOD: src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.setRunOptions(CompilerOptions options)\nSIGNATURE: protected void setRunOptions(CompilerOptions options)\n      throws FlagUsageException, IOException\nSTRUCTURE (lossy):\nDiagnosticGroups diagnosticGroups = getDiagnosticGroups();\nCALL getDiagnosticGroups()\nif (config.warningGuards != null)\nfor (WarningGuardSpec.Entry entry : config.warningGuards.entries)\nCALL diagnosticGroups.setWarningLevel(options, entry.groupName, entry.level)\nCALL createDefineOrTweakReplacements(config.define, options, false)\nCALL options.setTweakProcessing(config.tweakProcessing)\nCALL createDefineOrTweakReplacements(config.tweak, options, true)\nif (config.onlyClosureDependencies)\nif (config.closureEntryPoints.isEmpty())\nCALL config.closureEntryPoints.isEmpty()\nthrow new FlagUsageException(\"When only_closure_dependencies is \" + \"on, you must specify at least one closure_entry_point\");\nCALL options.setDependencyOptions(new DependencyOptions() .setDependencyPruning(true) .setDependencySorting(true) .setMoocherDropping(true) .setEntryPoints(config.closureEntryPoints))\nCALL new DependencyOptions() .setDependencyPruning(true) .setDependencySorting(true) .setMoocherDropping(true) .setEntryPoints(config.closureEntryPoints)\nCALL new DependencyOptions() .setDependencyPruning(true) .setDependencySorting(true) .setMoocherDropping(true)\nCALL new DependencyOptions() .setDependencyPruning(true) .setDependencySorting(true)\nCALL new DependencyOptions() .setDependencyPruning(true)\nif (config.manageClosureDependencies || config.closureEntryPoints.size() > 0)\nCALL config.closureEntryPoints.size()\nCALL options.setDependencyOptions(new DependencyOptions() .setDependencyPruning(true) .setDependencySorting(true) .setMoocherDropping(false) .setEntryPoints(config.closureEntryPoints))\nCALL new DependencyOptions() .setDependencyPruning(true) .setDependencySorting(true) .setMoocherDropping(false) .setEntryPoints(config.closureEntryPoints)\nCALL new DependencyOptions() .setDependencyPruning(true) .setDependencySorting(true) .setMoocherDropping(false)\noptions.devMode = config.jscompDevMode\nCALL options.setCodingConvention(confi\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "protected void setRunOptions(CompilerOptions options)\n      throws FlagUsageException, IOException {\n    DiagnosticGroups diagnosticGroups = getDiagnosticGroups();\n\n    if (config.warningGuards != null) {\n      for (WarningGuardSpec.Entry entry : config.warningGuards.entries) {\n        diagnosticGroups.setWarningLevel(options, entry.groupName, entry.level);\n      }\n    }\n\n    createDefineOrTweakReplacements(config.define, options, false);\n\n    options.setTweakProcessing(config.tweakProcessing);\n    createDefineOrTweakReplacements(config.tweak, options, true);\n\n    // Dependency options\n    if (config.onlyClosureDependencies) {\n      if (config.closureEntryPoints.isEmpty()) {\n        throw new FlagUsageException(\"When only_closure_dependencies is \"\n          + \"on, you must specify at least one closure_entry_point\");\n      }\n\n      options.setDependencyOptions(new DependencyOptions()\n          .setDependencyPruning(true)\n          .setDependencySorting(true)\n          .setMoocherDropping(true)\n          .setEntryPoints(config.closureEntryPoints));\n    } else if (config.manageClosureDependencies ||\n        config.closureEntryPoints.size() > 0) {\n      options.setDependencyOptions(new DependencyOptions()\n          .setDependencyPruning(true)\n          .setDependencySorting(true)\n          .setMoocherDropping(false)\n          .setEntryPoints(config.closureEntryPoints));\n    }\n\n    options.devMode = config.jscompDevMode;\n    options.setCodingConvention(config.codingConvention);\n    options.setSummaryDetailLevel(config.summaryDetailLevel);\n\n    legacyOutputCharset = options.outputCharset = getLegacyOutputCharset();\n    outputCharset2 = getOutputCharset2();\n    inputCharset = getInputCharset();\n\n    if (config.jsOutputFile.length() > 0) {\n      if (config.skipNormalOutputs) {\n        throw new FlagUsageException(\"skip_normal_outputs and js_output_file\"\n            + \" cannot be used together.\");\n      }\n    }\n\n    if (config.skipNormalOutputs && config.printAst) {\n      throw new FlagUsageException(\"skip_normal_outputs and print_ast cannot\"\n          + \" be used together.\");\n    }\n\n    if (config.skipNormalOutputs && config.printTree) {\n      throw new FlagUsageException(\"skip_normal_outputs and print_tree cannot\"\n          + \" be used together.\");\n    }\n\n    if (config.createSourceMap.length() > 0) {\n      options.sourceMapOutputPath = config.createSourceMap;\n    }\n    options.sourceMapDetailLevel = config.sourceMapDetailLevel;\n    options.sourceMapFormat = config.sourceMapFormat;\n\n    if (!config.variableMapInputFile.equals(\"\")) {\n      options.inputVariableMapSerialized =\n          VariableMap.load(config.variableMapInputFile).toBytes();\n    }\n\n    if (!config.propertyMapInputFile.equals(\"\")) {\n      options.inputPropertyMapSerialized =\n          VariableMap.load(config.propertyMapInputFile).toBytes();\n    }\n\n    if (config.languageIn.length() > 0) {\n      if (config.languageIn.equals(\"ECMASCRIPT5_STRICT\") ||\n          config.languageIn.equals(\"ES5_STRICT\")) {\n        options.setLanguageIn(CompilerOptions.LanguageMode.ECMASCRIPT5_STRICT);\n      } else if (config.languageIn.equals(\"ECMASCRIPT5\") ||\n          config.languageIn.equals(\"ES5\")) {\n        options.setLanguageIn(CompilerOptions.LanguageMode.ECMASCRIPT5);\n      } else if (config.languageIn.equals(\"ECMASCRIPT3\") ||\n                 config.languageIn.equals(\"ES3\")) {\n        options.setLanguageIn(CompilerOptions.LanguageMode.ECMASCRIPT3);\n      } else {\n        throw new FlagUsageException(\"Unknown language `\" + config.languageIn +\n                                     \"' specified.\");\n      }\n    }\n\n    if (!config.outputManifests.isEmpty()) {\n      Set<String> uniqueNames = Sets.newHashSet();\n      for (String filename : config.outputManifests) {\n        if (!uniqueNames.add(filename)) {\n          throw new FlagUsageException(\"output_manifest flags specify \" +\n              \"duplicate file names: \" + filename);\n        }\n      }\n    }\n\n    if (!config.outputBundles.isEmpty()) {\n      Set<String> uniqueNames = Sets.newHashSet();\n      for (String filename : config.outputBundles) {\n        if (!uniqueNames.add(filename)) {\n          throw new FlagUsageException(\"output_bundle flags specify \" +\n              \"duplicate file names: \" + filename);\n        }\n      }\n    }\n\n    options.acceptConstKeyword = config.acceptConstKeyword;\n    options.transformAMDToCJSModules = config.transformAMDToCJSModules;\n    options.processCommonJSModules = config.processCommonJSModules;\n    options.commonJSModulePathPrefix = config.commonJSModulePathPrefix;\n  }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.13846153846153847,
+        "trace_match": 0.0,
+        "complexity": 23.0,
+        "call_count": 46.0,
+        "literal_count": 27.0,
+        "source_tokens": 1144.0,
+        "l0_tokens": 62.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.4973776223776224,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 23,
+        "call_count": 46,
+        "literal_count": 27
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/DefaultPassConfig.java::DefaultPassConfig.createInternal(final AbstractCompiler compiler)",
+      "source": "@Override\n      protected CompilerPass createInternal(final AbstractCompiler compiler) {\n        return runInSerial(options.customPasses.get(executionTime));\n      }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/DefaultPassConfig.java::DefaultPassConfig.createInternal(final AbstractCompiler compiler)\nSIGNATURE: @Override\n      protected CompilerPass createInternal(final AbstractCompiler compiler)",
+        "METHOD: src/com/google/javascript/jscomp/DefaultPassConfig.java::DefaultPassConfig.createInternal(final AbstractCompiler compiler)\nSIGNATURE: @Override\n      protected CompilerPass createInternal(final AbstractCompiler compiler)\nSTRUCTURE (lossy):\nreturn runInSerial(options.customPasses.get(executionTime));\nCALL runInSerial(options.customPasses.get(executionTime))\nCALL options.customPasses.get(executionTime)",
+        "@Override\n      protected CompilerPass createInternal(final AbstractCompiler compiler) {\n        return runInSerial(options.customPasses.get(executionTime));\n      }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.48,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 42.0,
+        "l0_tokens": 57.0,
+        "l1_tokens": 103.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/XtbMessageBundle.java::XtbMessageBundle.Handler.startElement(String uri, String localName, String qName,\n                             Attributes atts)",
+      "source": "@Override\n    public void startElement(String uri, String localName, String qName,\n                             Attributes atts) {\n      if (BUNDLE_ELEM_NAME.equals(qName)) {\n        Preconditions.checkState(lang == null);\n        lang = atts.getValue(LANG_ATT_NAME);\n        Preconditions.checkState(lang != null && !lang.isEmpty());\n      } else if (TRANSLATION_ELEM_NAME.equals(qName)) {\n        Preconditions.checkState(msgBuilder == null);\n        String id = atts.getValue(MESSAGE_ID_ATT_NAME);\n        Preconditions.checkState(id != null && !id.isEmpty());\n        msgBuilder = new JsMessage.Builder(id);\n      } else if (PLACEHOLDER_ELEM_NAME.equals(qName)) {\n        Preconditions.checkState(msgBuilder != null);\n        String phRef = atts.getValue(PLACEHOLDER_NAME_ATT_NAME);\n        phRef = JsMessageVisitor.toLowerCamelCaseWithNumericSuffixes(phRef);\n        msgBuilder.appendPlaceholderReference(phRef);\n      }\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/XtbMessageBundle.java::XtbMessageBundle.Handler.startElement(String uri, String localName, String qName,\n                             Attributes atts)\nSIGNATURE: @Override\n    public void startElement(String uri, String localName, String qName,\n                             Attributes atts)",
+        "METHOD: src/com/google/javascript/jscomp/XtbMessageBundle.java::XtbMessageBundle.Handler.startElement(String uri, String localName, String qName,\n                             Attributes atts)\nSIGNATURE: @Override\n    public void startElement(String uri, String localName, String qName,\n                             Attributes atts)\nSTRUCTURE (lossy):\nif (BUNDLE_ELEM_NAME.equals(qName))\nCALL BUNDLE_ELEM_NAME.equals(qName)\nCALL Preconditions.checkState(lang == null)\nlang = atts.getValue(LANG_ATT_NAME)\nCALL atts.getValue(LANG_ATT_NAME)\nCALL Preconditions.checkState(lang != null && !lang.isEmpty())\nCALL lang.isEmpty()\nif (TRANSLATION_ELEM_NAME.equals(qName))\nCALL TRANSLATION_ELEM_NAME.equals(qName)\nCALL Preconditions.checkState(msgBuilder == null)\nString id = atts.getValue(MESSAGE_ID_ATT_NAME);\nCALL atts.getValue(MESSAGE_ID_ATT_NAME)\nCALL Preconditions.checkState(id != null && !id.isEmpty())\nCALL id.isEmpty()\nmsgBuilder = new JsMessage.Builder(id)\nif (PLACEHOLDER_ELEM_NAME.equals(qName))\nCALL PLACEHOLDER_ELEM_NAME.equals(qName)\nCALL Preconditions.checkState(msgBuilder != null)\nString phRef = atts.getValue(PLACEHOLDER_NAME_ATT_NAME);\nCALL atts.getValue(PLACEHOLDER_NAME_ATT_NAME)\nphRef = JsMessageVisitor.toLowerCamelCaseWithNumericSuffixes(phRef)\nCALL JsMessageVisitor.toLowerCamelCaseWithNumericSuffixes(phRef)\nCALL msgBuilder.appendPlaceholderReference(phRef)",
+        "@Override\n    public void startElement(String uri, String localName, String qName,\n                             Attributes atts) {\n      if (BUNDLE_ELEM_NAME.equals(qName)) {\n        Preconditions.checkState(lang == null);\n        lang = atts.getValue(LANG_ATT_NAME);\n        Preconditions.checkState(lang != null && !lang.isEmpty());\n      } else if (TRANSLATION_ELEM_NAME.equals(qName)) {\n        Preconditions.checkState(msgBuilder == null);\n        String id = atts.getValue(MESSAGE_ID_ATT_NAME);\n        Preconditions.checkState(id != null && !id.isEmpty());\n        msgBuilder = new JsMessage.Builder(id);\n      } else if (PLACEHOLDER_ELEM_NAME.equals(qName)) {\n        Preconditions.checkState(msgBuilder != null);\n        String phRef = atts.getValue(PLACEHOLDER_NAME_ATT_NAME);\n        phRef = JsMessageVisitor.toLowerCamelCaseWithNumericSuffixes(phRef);\n        msgBuilder.appendPlaceholderReference(phRef);\n      }\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2916666666666667,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 15.0,
+        "literal_count": 5.0,
+        "source_tokens": 233.0,
+        "l0_tokens": 83.0,
+        "l1_tokens": 344.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 15,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.setWarning(String value)",
+      "source": "public void setWarning(String value) {\n    if (\"default\".equalsIgnoreCase(value)) {\n      this.warningLevel = WarningLevel.DEFAULT;\n    } else if (\"quiet\".equalsIgnoreCase(value)) {\n      this.warningLevel = WarningLevel.QUIET;\n    } else if (\"verbose\".equalsIgnoreCase(value)) {\n      this.warningLevel = WarningLevel.VERBOSE;\n    } else {\n      throw new BuildException(\n          \"Unrecognized 'warning' option value (\" + value + \")\");\n    }\n  }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.setWarning(String value)\nSIGNATURE: public void setWarning(String value)",
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.setWarning(String value)\nSIGNATURE: public void setWarning(String value)\nSTRUCTURE (lossy):\nif (\"default\".equalsIgnoreCase(value))\nCALL \"default\".equalsIgnoreCase(value)\nthis.warningLevel = WarningLevel.DEFAULT\nif (\"quiet\".equalsIgnoreCase(value))\nCALL \"quiet\".equalsIgnoreCase(value)\nthis.warningLevel = WarningLevel.QUIET\nif (\"verbose\".equalsIgnoreCase(value))\nCALL \"verbose\".equalsIgnoreCase(value)\nthis.warningLevel = WarningLevel.VERBOSE\nthrow new BuildException( \"Unrecognized 'warning' option value (\" + value + \")\");",
+        "public void setWarning(String value) {\n    if (\"default\".equalsIgnoreCase(value)) {\n      this.warningLevel = WarningLevel.DEFAULT;\n    } else if (\"quiet\".equalsIgnoreCase(value)) {\n      this.warningLevel = WarningLevel.QUIET;\n    } else if (\"verbose\".equalsIgnoreCase(value)) {\n      this.warningLevel = WarningLevel.VERBOSE;\n    } else {\n      throw new BuildException(\n          \"Unrecognized 'warning' option value (\" + value + \")\");\n    }\n  }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 3.0,
+        "literal_count": 5.0,
+        "source_tokens": 112.0,
+        "l0_tokens": 37.0,
+        "l1_tokens": 150.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 3,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()",
+      "source": "final public void run() {\n    int result = 0;\n    int runs = 1;\n    if (config.computePhaseOrdering) {\n      runs = NUM_RUNS_TO_DETERMINE_OPTIMAL_ORDER;\n      PhaseOptimizer.randomizeLoops();\n    }\n    try {\n      for (int i = 0; i < runs && result == 0; i++) {\n        runTimeStats.recordStartRun();\n        result = doRun();\n        runTimeStats.recordEndRun();\n      }\n    } catch (AbstractCommandLineRunner.FlagUsageException e) {\n      System.err.println(e.getMessage());\n      result = -1;\n    } catch (Throwable t) {\n      t.printStackTrace();\n      result = -2;\n    }\n\n    if (config.computePhaseOrdering) {\n      runTimeStats.outputBestPhaseOrdering();\n    }\n\n    try {\n      if (jsOutput instanceof Closeable) {\n        ((Closeable) jsOutput).close();\n      }\n    } catch (IOException e) {\n      throw Throwables.propagate(e);\n    }\n\n    if (testMode) {\n      exitCodeReceiverForTesting.apply(result);\n    } else {\n      System.exit(result);\n    }\n  }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()\nSIGNATURE: final public void run()",
+        "METHOD: src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()\nSIGNATURE: final public void run()\nSTRUCTURE (lossy):\nint result = 0;\nint runs = 1;\nif (config.computePhaseOrdering)\nruns = NUM_RUNS_TO_DETERMINE_OPTIMAL_ORDER\nCALL PhaseOptimizer.randomizeLoops()\nfor (int i = 0; i < runs && result == 0; i++)\nint i = 0;\ni++\nCALL runTimeStats.recordStartRun()\nresult = doRun()\nCALL doRun()\nCALL runTimeStats.recordEndRun()\ncatch (AbstractCommandLineRunner.FlagUsageException e)\nCALL System.err.println(e.getMessage())\nCALL e.getMessage()\nresult = -1\ncatch (Throwable t)\nCALL t.printStackTrace()\nresult = -2\nCALL runTimeStats.outputBestPhaseOrdering()\nif (jsOutput instanceof Closeable)\nCALL ((Closeable) jsOutput).close()\ncatch (IOException e)\nthrow Throwables.propagate(e);\nCALL Throwables.propagate(e)\nif (testMode)\nCALL exitCodeReceiverForTesting.apply(result)\nCALL System.exit(result)",
+        "final public void run() {\n    int result = 0;\n    int runs = 1;\n    if (config.computePhaseOrdering) {\n      runs = NUM_RUNS_TO_DETERMINE_OPTIMAL_ORDER;\n      PhaseOptimizer.randomizeLoops();\n    }\n    try {\n      for (int i = 0; i < runs && result == 0; i++) {\n        runTimeStats.recordStartRun();\n        result = doRun();\n        runTimeStats.recordEndRun();\n      }\n    } catch (AbstractCommandLineRunner.FlagUsageException e) {\n      System.err.println(e.getMessage());\n      result = -1;\n    } catch (Throwable t) {\n      t.printStackTrace();\n      result = -2;\n    }\n\n    if (config.computePhaseOrdering) {\n      runTimeStats.outputBestPhaseOrdering();\n    }\n\n    try {\n      if (jsOutput instanceof Closeable) {\n        ((Closeable) jsOutput).close();\n      }\n    } catch (IOException e) {\n      throw Throwables.propagate(e);\n    }\n\n    if (testMode) {\n      exitCodeReceiverForTesting.apply(result);\n    } else {\n      System.exit(result);\n    }\n  }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2,
+        "trace_match": 0.0,
+        "complexity": 9.0,
+        "call_count": 12.0,
+        "literal_count": 6.0,
+        "source_tokens": 241.0,
+        "l0_tokens": 35.0,
+        "l1_tokens": 232.0,
+        "compression_ratio": 0.9626556016597511,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 9,
+        "call_count": 12,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.createCompiler(CompilerOptions options)",
+      "source": "private Compiler createCompiler(CompilerOptions options) {\n    Compiler compiler = new Compiler();\n    MessageFormatter formatter =\n        options.errorFormat.toFormatter(compiler, false);\n    AntErrorManager errorManager = new AntErrorManager(formatter, this);\n    compiler.setErrorManager(errorManager);\n    return compiler;\n  }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.createCompiler(CompilerOptions options)\nSIGNATURE: private Compiler createCompiler(CompilerOptions options)",
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.createCompiler(CompilerOptions options)\nSIGNATURE: private Compiler createCompiler(CompilerOptions options)\nSTRUCTURE (lossy):\nCompiler compiler = new Compiler();\nMessageFormatter formatter = options.errorFormat.toFormatter(compiler, false);\nCALL options.errorFormat.toFormatter(compiler, false)\nAntErrorManager errorManager = new AntErrorManager(formatter, this);\nCALL compiler.setErrorManager(errorManager)\nreturn compiler;",
+        "private Compiler createCompiler(CompilerOptions options) {\n    Compiler compiler = new Compiler();\n    MessageFormatter formatter =\n        options.errorFormat.toFormatter(compiler, false);\n    AntErrorManager errorManager = new AntErrorManager(formatter, this);\n    compiler.setErrorManager(errorManager);\n    return compiler;\n  }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4782608695652174,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 83.0,
+        "l0_tokens": 46.0,
+        "l1_tokens": 125.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.outputSourceMap(B options, String associatedName)",
+      "source": "private void outputSourceMap(B options, String associatedName)\n      throws IOException {\n    if (Strings.isNullOrEmpty(options.sourceMapOutputPath)) {\n      return;\n    }\n\n    String outName = expandSourceMapPath(options, null);\n    Writer out = fileNameToOutputWriter2(outName);\n    compiler.getSourceMap().appendTo(out, associatedName);\n    out.close();\n  }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.outputSourceMap(B options, String associatedName)\nSIGNATURE: private void outputSourceMap(B options, String associatedName)\n      throws IOException",
+        "METHOD: src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.outputSourceMap(B options, String associatedName)\nSIGNATURE: private void outputSourceMap(B options, String associatedName)\n      throws IOException\nSTRUCTURE (lossy):\nif (Strings.isNullOrEmpty(options.sourceMapOutputPath))\nCALL Strings.isNullOrEmpty(options.sourceMapOutputPath)\nreturn;\nString outName = expandSourceMapPath(options, null);\nCALL expandSourceMapPath(options, null)\nWriter out = fileNameToOutputWriter2(outName);\nCALL fileNameToOutputWriter2(outName)\nCALL compiler.getSourceMap().appendTo(out, associatedName)\nCALL compiler.getSourceMap()\nCALL out.close()",
+        "private void outputSourceMap(B options, String associatedName)\n      throws IOException {\n    if (Strings.isNullOrEmpty(options.sourceMapOutputPath)) {\n      return;\n    }\n\n    String outName = expandSourceMapPath(options, null);\n    Writer out = fileNameToOutputWriter2(outName);\n    compiler.getSourceMap().appendTo(out, associatedName);\n    out.close();\n  }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.34285714285714286,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 6.0,
+        "literal_count": 1.0,
+        "source_tokens": 90.0,
+        "l0_tokens": 62.0,
+        "l1_tokens": 168.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 6,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()",
+      "source": "private List<SourceFile> getDefaultExterns() {\n    try {\n      return CommandLineRunner.getDefaultExterns();\n    } catch (IOException e) {\n      throw new BuildException(e);\n    }\n  }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()\nSIGNATURE: private List<SourceFile> getDefaultExterns()",
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()\nSIGNATURE: private List<SourceFile> getDefaultExterns()\nSTRUCTURE (lossy):\nreturn CommandLineRunner.getDefaultExterns();\nCALL CommandLineRunner.getDefaultExterns()\ncatch (IOException e)\nthrow new BuildException(e);",
+        "private List<SourceFile> getDefaultExterns() {\n    try {\n      return CommandLineRunner.getDefaultExterns();\n    } catch (IOException e) {\n      throw new BuildException(e);\n    }\n  }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4074074074074074,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 46.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 78.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/DefaultPassConfig.java::DefaultPassConfig.createInternal(AbstractCompiler compiler)",
+      "source": "@Override\n    protected CompilerPass createInternal(AbstractCompiler compiler) {\n      return new AliasStrings(\n          compiler,\n          compiler.getModuleGraph(),\n          options.aliasAllStrings ? null : options.aliasableStrings,\n          options.aliasStringsBlacklist,\n          options.outputJsStringUsage);\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/DefaultPassConfig.java::DefaultPassConfig.createInternal(AbstractCompiler compiler)\nSIGNATURE: @Override\n    protected CompilerPass createInternal(AbstractCompiler compiler)",
+        "METHOD: src/com/google/javascript/jscomp/DefaultPassConfig.java::DefaultPassConfig.createInternal(AbstractCompiler compiler)\nSIGNATURE: @Override\n    protected CompilerPass createInternal(AbstractCompiler compiler)\nSTRUCTURE (lossy):\nreturn new AliasStrings( compiler, compiler.getModuleGraph(), options.aliasAllStrings ? null : options.aliasableStrings, options.aliasStringsBlacklist, options.outputJsStringUsage);\nCALL compiler.getModuleGraph()",
+        "@Override\n    protected CompilerPass createInternal(AbstractCompiler compiler) {\n      return new AliasStrings(\n          compiler,\n          compiler.getModuleGraph(),\n          options.aliasAllStrings ? null : options.aliasableStrings,\n          options.aliasStringsBlacklist,\n          options.outputJsStringUsage);\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.43333333333333335,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 81.0,
+        "l0_tokens": 54.0,
+        "l1_tokens": 112.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.processResults(Result result, List<JSModule> modules, B options)",
+      "source": "int processResults(Result result, List<JSModule> modules, B options)\n       throws FlagUsageException, IOException {\n    if (config.computePhaseOrdering) {\n      return 0;\n    }\n\n    if (config.printPassGraph) {\n      if (compiler.getRoot() == null) {\n        return 1;\n      } else {\n        jsOutput.append(\n            DotFormatter.toDot(compiler.getPassConfig().getPassGraph()));\n        jsOutput.append('\\n');\n        return 0;\n      }\n    }\n\n    if (config.printAst) {\n      if (compiler.getRoot() == null) {\n        return 1;\n      } else {\n        ControlFlowGraph<Node> cfg = compiler.computeCFG();\n        DotFormatter.appendDot(\n            compiler.getRoot().getLastChild(), cfg, jsOutput);\n        jsOutput.append('\\n');\n        return 0;\n      }\n    }\n\n    if (config.printTree) {\n      if (compiler.getRoot() == null) {\n        jsOutput.append(\"Code contains errors; no tree was generated.\\n\");\n        return 1;\n      } else {\n        compiler.getRoot().appendStringTree(jsOutput);\n        jsOutput.append(\"\\n\");\n        return 0;\n      }\n    }\n\n    rootRelativePathsMap = constructRootRelativePathsMap();\n\n    if (config.skipNormalOutputs) {\n      // Output the manifest and bundle files if requested.\n      outputManifest();\n      outputBundle();\n      return 0;\n    } else if (result.success) {\n      if (modules == null) {\n        writeOutput(\n            jsOutput, compiler, compiler.toSource(), config.outputWrapper,\n            OUTPUT_WRAPPER_MARKER);\n\n        // Output the source map if requested.\n        outputSourceMap(options, config.jsOutputFile);\n      } else {\n        parsedModuleWrappers = parseModuleWrappers(\n            config.moduleWrapper, modules);\n        maybeCreateDirsForPath(config.moduleOutputPathPrefix);\n\n        // If the source map path is in fact a pattern for each\n        // module, create a stream per-module. Otherwise, create\n        // a single source map.\n        Writer mapOut = null;\n\n        if (!shouldGenerateMapPerModule(options)) {\n          mapOut = fileNameToOutputWriter2(expandSourceMapPath(options, null));\n        }\n\n        for (JSModule m : modules) {\n          if (shouldGenerateMapPerModule(options)) {\n            mapOut = fileNameToOutputWriter2(expandSourceMapPath(options, m));\n          }\n\n          Writer writer =\n              fileNameToLegacyOutputWriter(getModuleOutputFileName(m));\n\n          if (options.sourceMapOutputPath != null) {\n            compiler.getSourceMap().reset();\n          }\n\n          writeModuleOutput(writer, m);\n\n          if (options.sourceMapOutputPath != null) {\n            compiler.getSourceMap().appendTo(mapOut, m.getName());\n          }\n\n          writer.close();\n\n          if (shouldGenerateMapPerModule(options) && mapOut != null) {\n            mapOut.close();\n            mapOut = null;\n          }\n        }\n\n        if (mapOut != null) {\n          mapOut.close();\n        }\n      }\n\n      // Output the externs if required.\n      if (options.externExportsPath != null) {\n        Writer eeOut =\n            openExternExportsStream(options, config.jsOutputFile);\n        eeOut.append(result.externExport);\n        eeOut.close();\n      }\n\n      // Output the variable and property name maps if requested.\n      outputNameMaps(options);\n\n      // Output the manifest and bundle files if requested.\n      outputManifest();\n      outputBundle();\n\n      if (options.tracer.isOn()) {\n        outputTracerReport();\n      }\n    }\n\n    // return 0 if no errors, the error count otherwise\n    return Math.min(result.errors.length, 0x7f);\n  }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.processResults(Result result, List<JSModule> modules, B options)\nSIGNATURE: int processResults(Result result, List<JSModule> modules, B options)\n       throws FlagUsageException, IOException",
+        "METHOD: src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.processResults(Result result, List<JSModule> modules, B options)\nSIGNATURE: int processResults(Result result, List<JSModule> modules, B options)\n       throws FlagUsageException, IOException\nSTRUCTURE (lossy):\nif (config.computePhaseOrdering)\nreturn 0;\nif (config.printPassGraph)\nif (compiler.getRoot() == null)\nCALL compiler.getRoot()\nreturn 1;\nCALL jsOutput.append( DotFormatter.toDot(compiler.getPassConfig().getPassGraph()))\nCALL DotFormatter.toDot(compiler.getPassConfig().getPassGraph())\nCALL compiler.getPassConfig().getPassGraph()\nCALL compiler.getPassConfig()\nCALL jsOutput.append('\\n')\nif (config.printAst)\nControlFlowGraph<Node> cfg = compiler.computeCFG();\nCALL compiler.computeCFG()\nCALL DotFormatter.appendDot( compiler.getRoot().getLastChild(), cfg, jsOutput)\nCALL compiler.getRoot().getLastChild()\nif (config.printTree)\nCALL jsOutput.append(\"Code contains errors; no tree was generated.\\n\")\nCALL compiler.getRoot().appendStringTree(jsOutput)\nCALL jsOutput.append(\"\\n\")\nrootRelativePathsMap = constructRootRelativePathsMap()\nCALL constructRootRelativePathsMap()\nif (config.skipNormalOutputs)\nCALL outputManifest()\nCALL outputBundle()\nif (result.success)\nif (modules == null)\nCALL writeOutput( jsOutput, compiler, compiler.toSource(), config.outputWrapper, OUTPUT_WRAPPER_MARKER)\nCALL compiler.toSource()\nCALL outputSourceMap(options, config.jsOutputFile)\nparsedModuleWrappers = parseModuleWrappers( config.moduleWrapper, modules)\nCALL parseModuleWrappers( config.moduleWrapper, modules)\nCALL maybeCreateDirsForPath(config.moduleOutputPathPrefix)\nWriter mapOut = null;\nif (!shouldGenerateMapPerModule(options))\nCALL shouldGenerateMapPerModule(options)\nmapOut = fileNameToOutputWriter2(expandSourceMapPath(options, null))\nCALL fileNameToOutputWriter2(expandSourceMapPath(options, null))\nCALL expandSourceMapPath(options, null)\nfor (JSModule m : modules)\nif (shouldGenerateMapPerModule(options))\nmapOut = fileNameToOutputWriter2(expandSourceMapPath(options, m))\nCALL fileNameToOutputWriter2(expandSourceMapPath(options, m))\nCALL expandSourceMapPath(options, m)\nWriter writer = fileNameToLe\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "int processResults(Result result, List<JSModule> modules, B options)\n       throws FlagUsageException, IOException {\n    if (config.computePhaseOrdering) {\n      return 0;\n    }\n\n    if (config.printPassGraph) {\n      if (compiler.getRoot() == null) {\n        return 1;\n      } else {\n        jsOutput.append(\n            DotFormatter.toDot(compiler.getPassConfig().getPassGraph()));\n        jsOutput.append('\\n');\n        return 0;\n      }\n    }\n\n    if (config.printAst) {\n      if (compiler.getRoot() == null) {\n        return 1;\n      } else {\n        ControlFlowGraph<Node> cfg = compiler.computeCFG();\n        DotFormatter.appendDot(\n            compiler.getRoot().getLastChild(), cfg, jsOutput);\n        jsOutput.append('\\n');\n        return 0;\n      }\n    }\n\n    if (config.printTree) {\n      if (compiler.getRoot() == null) {\n        jsOutput.append(\"Code contains errors; no tree was generated.\\n\");\n        return 1;\n      } else {\n        compiler.getRoot().appendStringTree(jsOutput);\n        jsOutput.append(\"\\n\");\n        return 0;\n      }\n    }\n\n    rootRelativePathsMap = constructRootRelativePathsMap();\n\n    if (config.skipNormalOutputs) {\n      // Output the manifest and bundle files if requested.\n      outputManifest();\n      outputBundle();\n      return 0;\n    } else if (result.success) {\n      if (modules == null) {\n        writeOutput(\n            jsOutput, compiler, compiler.toSource(), config.outputWrapper,\n            OUTPUT_WRAPPER_MARKER);\n\n        // Output the source map if requested.\n        outputSourceMap(options, config.jsOutputFile);\n      } else {\n        parsedModuleWrappers = parseModuleWrappers(\n            config.moduleWrapper, modules);\n        maybeCreateDirsForPath(config.moduleOutputPathPrefix);\n\n        // If the source map path is in fact a pattern for each\n        // module, create a stream per-module. Otherwise, create\n        // a single source map.\n        Writer mapOut = null;\n\n        if (!shouldGenerateMapPerModule(options)) {\n          mapOut = fileNameToOutputWriter2(expandSourceMapPath(options, null));\n        }\n\n        for (JSModule m : modules) {\n          if (shouldGenerateMapPerModule(options)) {\n            mapOut = fileNameToOutputWriter2(expandSourceMapPath(options, m));\n          }\n\n          Writer writer =\n              fileNameToLegacyOutputWriter(getModuleOutputFileName(m));\n\n          if (options.sourceMapOutputPath != null) {\n            compiler.getSourceMap().reset();\n          }\n\n          writeModuleOutput(writer, m);\n\n          if (options.sourceMapOutputPath != null) {\n            compiler.getSourceMap().appendTo(mapOut, m.getName());\n          }\n\n          writer.close();\n\n          if (shouldGenerateMapPerModule(options) && mapOut != null) {\n            mapOut.close();\n            mapOut = null;\n          }\n        }\n\n        if (mapOut != null) {\n          mapOut.close();\n        }\n      }\n\n      // Output the externs if required.\n      if (options.externExportsPath != null) {\n        Writer eeOut =\n            openExternExportsStream(options, config.jsOutputFile);\n        eeOut.append(result.externExport);\n        eeOut.close();\n      }\n\n      // Output the variable and property name maps if requested.\n      outputNameMaps(options);\n\n      // Output the manifest and bundle files if requested.\n      outputManifest();\n      outputBundle();\n\n      if (options.tracer.isOn()) {\n        outputTracerReport();\n      }\n    }\n\n    // return 0 if no errors, the error count otherwise\n    return Math.min(result.errors.length, 0x7f);\n  }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.13675213675213677,
+        "trace_match": 0.0,
+        "complexity": 20.0,
+        "call_count": 52.0,
+        "literal_count": 25.0,
+        "source_tokens": 888.0,
+        "l0_tokens": 73.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.6407657657657657,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 20,
+        "call_count": 52,
+        "literal_count": 25
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.main(String[] args)",
+      "source": "public static void main(String[] args) {\n    CommandLineRunner runner = new CommandLineRunner(args);\n    if (runner.shouldRunCompiler()) {\n      runner.run();\n    } else {\n      System.exit(-1);\n    }\n  }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.main(String[] args)\nSIGNATURE: public static void main(String[] args)",
+        "METHOD: src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.main(String[] args)\nSIGNATURE: public static void main(String[] args)\nSTRUCTURE (lossy):\nCommandLineRunner runner = new CommandLineRunner(args);\nif (runner.shouldRunCompiler())\nCALL runner.shouldRunCompiler()\nCALL runner.run()\nCALL System.exit(-1)",
+        "public static void main(String[] args) {\n    CommandLineRunner runner = new CommandLineRunner(args);\n    if (runner.shouldRunCompiler()) {\n      runner.run();\n    } else {\n      System.exit(-1);\n    }\n  }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5454545454545454,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 3.0,
+        "literal_count": 1.0,
+        "source_tokens": 51.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 83.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 3,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/NameReferenceGraph.java::NameReferenceGraph.NameReferenceGraph(AbstractCompiler compiler)",
+      "source": "public NameReferenceGraph(AbstractCompiler compiler) {\n    super(true, true);\n    this.compiler = compiler;\n\n    // Initialize builtins.\n    UNKNOWN = new Name(\"{UNKNOWN}\", true);\n    UNKNOWN.isAliased = true;\n    UNKNOWN.type = compiler.getTypeRegistry().getNativeType(\n        JSTypeNative.NO_TYPE);\n    this.createNode(UNKNOWN);\n\n    MAIN = new Name(\"{Global Main}\", true);\n    this.createNode(MAIN);\n\n    WINDOW = new Name(\"window\", true);\n    this.createNode(WINDOW);\n  }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/NameReferenceGraph.java::NameReferenceGraph.NameReferenceGraph(AbstractCompiler compiler)\nSIGNATURE: public NameReferenceGraph(AbstractCompiler compiler)",
+        "METHOD: src/com/google/javascript/jscomp/NameReferenceGraph.java::NameReferenceGraph.NameReferenceGraph(AbstractCompiler compiler)\nSIGNATURE: public NameReferenceGraph(AbstractCompiler compiler)\nSTRUCTURE (lossy):\nthis.compiler = compiler\nUNKNOWN = new Name(\"{UNKNOWN}\", true)\nUNKNOWN.isAliased = true\nUNKNOWN.type = compiler.getTypeRegistry().getNativeType( JSTypeNative.NO_TYPE)\nCALL compiler.getTypeRegistry().getNativeType( JSTypeNative.NO_TYPE)\nCALL compiler.getTypeRegistry()\nCALL this.createNode(UNKNOWN)\nMAIN = new Name(\"{Global Main}\", true)\nCALL this.createNode(MAIN)\nWINDOW = new Name(\"window\", true)\nCALL this.createNode(WINDOW)",
+        "public NameReferenceGraph(AbstractCompiler compiler) {\n    super(true, true);\n    this.compiler = compiler;\n\n    // Initialize builtins.\n    UNKNOWN = new Name(\"{UNKNOWN}\", true);\n    UNKNOWN.isAliased = true;\n    UNKNOWN.type = compiler.getTypeRegistry().getNativeType(\n        JSTypeNative.NO_TYPE);\n    this.createNode(UNKNOWN);\n\n    MAIN = new Name(\"{Global Main}\", true);\n    this.createNode(MAIN);\n\n    WINDOW = new Name(\"window\", true);\n    this.createNode(WINDOW);\n  }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 5.0,
+        "literal_count": 3.0,
+        "source_tokens": 119.0,
+        "l0_tokens": 49.0,
+        "l1_tokens": 160.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 5,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)",
+      "source": "private JSType createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope) {\n    switch (n.getType()) {\n      case Token.LC: // Record type.\n        return createRecordTypeFromNodes(\n            n.getFirstChild(), sourceName, scope);\n\n      case Token.BANG: // Not nullable\n        return createFromTypeNodesInternal(\n            n.getFirstChild(), sourceName, scope)\n            .restrictByNotNullOrUndefined();\n\n      case Token.QMARK: // Nullable or unknown\n        Node firstChild = n.getFirstChild();\n        if (firstChild == null) {\n          return getNativeType(UNKNOWN_TYPE);\n        }\n        return createDefaultObjectUnion(\n            createFromTypeNodesInternal(\n                firstChild, sourceName, scope));\n\n      case Token.EQUALS: // Optional\n        return createOptionalType(\n            createFromTypeNodesInternal(\n                n.getFirstChild(), sourceName, scope));\n\n      case Token.ELLIPSIS: // Var args\n        return createOptionalType(\n            createFromTypeNodesInternal(\n                n.getFirstChild(), sourceName, scope));\n\n      case Token.STAR: // The AllType\n        return getNativeType(ALL_TYPE);\n\n      case Token.LB: // Array type\n        // TODO(nicksantos): Enforce membership restrictions on the Array.\n        return getNativeType(ARRAY_TYPE);\n\n      case Token.PIPE: // Union type\n        UnionTypeBuilder builder = new UnionTypeBuilder(this);\n        for (Node child = n.getFirstChild(); child != null;\n             child = child.getNext()) {\n          builder.addAlternate(\n              createFromTypeNodesInternal(child, sourceName, scope));\n        }\n        return builder.build();\n\n      case Token.EMPTY: // When the return value of a function is not specified\n        return getNativeType(UNKNOWN_TYPE);\n\n      case Token.VOID: // Only allowed in the return value of a function.\n        return getNativeType(VOID_TYPE);\n\n      case Token.STRING:\n        JSType namedType = getType(scope, n.getString(), sourceName,\n            n.getLineno(), n.getCharno());\n        if (resolveMode != ResolveMode.LAZY_NAMES) {\n          namedType = namedType.resolveInternal(reporter, scope);\n        }\n        if ((namedType instanceof ObjectType) &&\n            !(nonNullableTypeNames.contains(n.getString()))) {\n          Node typeList = n.getFirstChild();\n          if (typeList != null &&\n              (\"Array\".equals(n.getString()) ||\n               \"Object\".equals(n.getString()))) {\n            JSType parameterType =\n                createFromTypeNodesInternal(\n                    typeList.getLastChild(), sourceName, scope);\n            namedType = new ParameterizedType(\n                this, (ObjectType) namedType, parameterType);\n            if (typeList.hasMoreThanOneChild()) {\n              JSType indexType =\n                  createFromTypeNodesInternal(\n                      typeList.getFirstChild(), sourceName, scope);\n              namedType = new IndexedType(\n                  this, (ObjectType) namedType, indexType);\n            }\n          }\n          return createDefaultObjectUnion(namedType);\n        } else {\n          return namedType;\n        }\n\n      case Token.FUNCTION:\n        ObjectType thisType = null;\n        boolean isConstructor = false;\n        Node current = n.getFirstChild();\n        if (current.getType() == Token.THIS ||\n            current.getType() == Token.NEW) {\n          Node contextNode = current.getFirstChild();\n          thisType =\n              ObjectType.cast(\n                  createFromTypeNodesInternal(\n                      contextNode, sourceName, scope)\n                  .restrictByNotNullOrUndefined());\n          if (thisType == null) {\n            reporter.warning(\n                ScriptRuntime.getMessage0(\n                    current.getType() == Token.THIS ?\n                    \"msg.jsdoc.function.thisnotobject\" :\n                    \"msg.jsdoc.function.newnotobject\"),\n                sourceName,\n                contextNode.getLineno(), contextNode.getCharno());\n          }\n\n          isConstructor = current.getType() == Token.NEW;\n          current = current.getNext();\n        }\n\n        FunctionParamBuilder paramBuilder = new FunctionParamBuilder(this);\n\n        if (current.getType() == Token.PARAM_LIST) {\n          Node args = current.getFirstChild();\n          for (Node arg = current.getFirstChild(); arg != null;\n               arg = arg.getNext()) {\n            if (arg.getType() == Token.ELLIPSIS) {\n              if (arg.getChildCount() == 0) {\n                paramBuilder.addVarArgs(getNativeType(UNKNOWN_TYPE));\n              } else {\n                paramBuilder.addVarArgs(\n                    createFromTypeNodesInternal(\n                        arg.getFirstChild(), sourceName, scope));\n              }\n            } else {\n              JSType type = createFromTypeNodesInternal(\n                  arg, sourceName, scope);\n              if (arg.getType() == Token.EQUALS) {\n                boolean addSuccess = paramBuilder.addOptionalParams(type);\n                if (!addSuccess) {\n                  reporter.warning(\n                      ScriptRuntime.getMessage0(\"msg.jsdoc.function.varargs\"),\n                      sourceName, arg.getLineno(), arg.getCharno());\n                }\n              } else {\n                paramBuilder.addRequiredParams(type);\n              }\n            }\n          }\n          current = current.getNext();\n        }\n\n        JSType returnType =\n            createFromTypeNodesInternal(current, sourceName, scope);\n\n        return new FunctionBuilder(this)\n            .withParams(paramBuilder)\n            .withReturnType(returnType)\n            .withTypeOfThis(thisType)\n            .setIsConstructor(isConstructor)\n            .build();\n    }\n\n    throw new IllegalStateException(\n        \"Unexpected node in type expression: \" + n.toString());\n  }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)\nSIGNATURE: private JSType createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)",
+        "METHOD: src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)\nSIGNATURE: private JSType createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)\nSTRUCTURE (lossy):\nswitch (n.getType()) { case Token.LC: // Record type. return createRecordTypeFromNodes( n.getFirstChild(), sourceName, scope); case Token.BANG: // Not nullable return createFromTypeNodesInternal( n.getFirstChild(), sourceName, scope) .restrictByNotNullOrUndefined(); case Token.QMARK: // Nullable or unknown Node firstChild = n.getFirstChild(); if (firstChild == null) { return getNativeType(UNKNOWN_TYPE); } return createDefaultObjectUnion( createFromTypeNodesInternal( firstChild, sourceName, scope)); case Token.EQUALS: // Optional return createOptionalType( createFromTypeNodesInternal( n.getFirstChild(), sourceName, scope)); case Token.ELLIPSIS: // Var args return createOptionalType( createFromTypeNodesInternal( n.getFirstChild(), sourceName, scope)); case Token.STAR: // The AllType return getNativeType(ALL_TYPE); case Token.LB: // Array type // TODO(nicksantos): Enforce membership restrictions on the Array. return getNativeType(ARRAY_TYPE); case Token.PIPE: // Union type UnionTypeBuilder builder = new UnionTypeBuilder(this); for (Node child = n.getFirstChild(); child != null; child = child.getNext()) { builder.addAlternate( createFromTypeNodesInternal(child, sourceName, scope)); } return builder.build(); case Token.EMPTY: // When the return value of a function is not specified return getNativeType(UNKNOWN_TYPE); case Token.VOID: // Only allowed in the return value of a function. return getNativeType(VOID_TYPE); case Token.STRING: JSType namedType = getType(scope, n.getString(), sourceName, n.getLineno(), n.getCharno()); if (resolveMode != ResolveMode.LAZY_NAMES) { namedType = namedType.resolveInternal(reporter, scope); } if ((namedType instanceof ObjectType) && !(nonNullableTypeNames.contains(n.getString()))) { Node typeList = n.getFirstChild(); if (typeList != null && (\"Array\".equals(n.getString()) || \"Object\".equals(n.getString()))) { JSType parameterType = creat\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "private JSType createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope) {\n    switch (n.getType()) {\n      case Token.LC: // Record type.\n        return createRecordTypeFromNodes(\n            n.getFirstChild(), sourceName, scope);\n\n      case Token.BANG: // Not nullable\n        return createFromTypeNodesInternal(\n            n.getFirstChild(), sourceName, scope)\n            .restrictByNotNullOrUndefined();\n\n      case Token.QMARK: // Nullable or unknown\n        Node firstChild = n.getFirstChild();\n        if (firstChild == null) {\n          return getNativeType(UNKNOWN_TYPE);\n        }\n        return createDefaultObjectUnion(\n            createFromTypeNodesInternal(\n                firstChild, sourceName, scope));\n\n      case Token.EQUALS: // Optional\n        return createOptionalType(\n            createFromTypeNodesInternal(\n                n.getFirstChild(), sourceName, scope));\n\n      case Token.ELLIPSIS: // Var args\n        return createOptionalType(\n            createFromTypeNodesInternal(\n                n.getFirstChild(), sourceName, scope));\n\n      case Token.STAR: // The AllType\n        return getNativeType(ALL_TYPE);\n\n      case Token.LB: // Array type\n        // TODO(nicksantos): Enforce membership restrictions on the Array.\n        return getNativeType(ARRAY_TYPE);\n\n      case Token.PIPE: // Union type\n        UnionTypeBuilder builder = new UnionTypeBuilder(this);\n        for (Node child = n.getFirstChild(); child != null;\n             child = child.getNext()) {\n          builder.addAlternate(\n              createFromTypeNodesInternal(child, sourceName, scope));\n        }\n        return builder.build();\n\n      case Token.EMPTY: // When the return value of a function is not specified\n        return getNativeType(UNKNOWN_TYPE);\n\n      case Token.VOID: // Only allowed in the return value of a function.\n        return getNativeType(VOID_TYPE);\n\n      case Token.STRING:\n        JSType namedType = getType(scope, n.getString(), sourceName,\n            n.getLineno(), n.getCharno());\n        if (resolveMode != ResolveMode.LAZY_NAMES) {\n          namedType = namedType.resolveInternal(reporter, scope);\n        }\n        if ((namedType instanceof ObjectType) &&\n            !(nonNullableTypeNames.contains(n.getString()))) {\n          Node typeList = n.getFirstChild();\n          if (typeList != null &&\n              (\"Array\".equals(n.getString()) ||\n               \"Object\".equals(n.getString()))) {\n            JSType parameterType =\n                createFromTypeNodesInternal(\n                    typeList.getLastChild(), sourceName, scope);\n            namedType = new ParameterizedType(\n                this, (ObjectType) namedType, parameterType);\n            if (typeList.hasMoreThanOneChild()) {\n              JSType indexType =\n                  createFromTypeNodesInternal(\n                      typeList.getFirstChild(), sourceName, scope);\n              namedType = new IndexedType(\n                  this, (ObjectType) namedType, indexType);\n            }\n          }\n          return createDefaultObjectUnion(namedType);\n        } else {\n          return namedType;\n        }\n\n      case Token.FUNCTION:\n        ObjectType thisType = null;\n        boolean isConstructor = false;\n        Node current = n.getFirstChild();\n        if (current.getType() == Token.THIS ||\n            current.getType() == Token.NEW) {\n          Node contextNode = current.getFirstChild();\n          thisType =\n              ObjectType.cast(\n                  createFromTypeNodesInternal(\n                      contextNode, sourceName, scope)\n                  .restrictByNotNullOrUndefined());\n          if (thisType == null) {\n            reporter.warning(\n                ScriptRuntime.getMessage0(\n                    current.getType() == Token.THIS ?\n                    \"msg.jsdoc.function.thisnotobject\" :\n                    \"msg.jsdoc.function.newnotobject\"),\n                sourceName,\n                contextNode.getLineno(), contextNode.getCharno());\n          }\n\n          isConstructor = current.getType() == Token.NEW;\n          current = current.getNext();\n        }\n\n        FunctionParamBuilder paramBuilder = new FunctionParamBuilder(this);\n\n        if (current.getType() == Token.PARAM_LIST) {\n          Node args = current.getFirstChild();\n          for (Node arg = current.getFirstChild(); arg != null;\n               arg = arg.getNext()) {\n            if (arg.getType() == Token.ELLIPSIS) {\n              if (arg.getChildCount() == 0) {\n                paramBuilder.addVarArgs(getNativeType(UNKNOWN_TYPE));\n              } else {\n                paramBuilder.addVarArgs(\n                    createFromTypeNodesInternal(\n                        arg.getFirstChild(), sourceName, scope));\n              }\n            } else {\n              JSType type = createFromTypeNodesInternal(\n                  arg, sourceName, scope);\n              if (arg.getType() == Token.EQUALS) {\n                boolean addSuccess = paramBuilder.addOptionalParams(type);\n                if (!addSuccess) {\n                  reporter.warning(\n                      ScriptRuntime.getMessage0(\"msg.jsdoc.function.varargs\"),\n                      sourceName, arg.getLineno(), arg.getCharno());\n                }\n              } else {\n                paramBuilder.addRequiredParams(type);\n              }\n            }\n          }\n          current = current.getNext();\n        }\n\n        JSType returnType =\n            createFromTypeNodesInternal(current, sourceName, scope);\n\n        return new FunctionBuilder(this)\n            .withParams(paramBuilder)\n            .withReturnType(returnType)\n            .withTypeOfThis(thisType)\n            .setIsConstructor(isConstructor)\n            .build();\n    }\n\n    throw new IllegalStateException(\n        \"Unexpected node in type expression: \" + n.toString());\n  }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.14754098360655737,
+        "trace_match": 0.0,
+        "complexity": 16.0,
+        "call_count": 84.0,
+        "literal_count": 13.0,
+        "source_tokens": 1469.0,
+        "l0_tokens": 71.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.3873383253914227,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 16,
+        "call_count": 84,
+        "literal_count": 13
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/AstValidator.java::AstValidator.validateAssignmentTarget(Node n)",
+      "source": "private void validateAssignmentTarget(Node n) {\n    switch (n.getType()) {\n      case Token.NAME:\n      case Token.GETELEM:\n      case Token.GETPROP:\n        validateExpression(n);\n        return;\n      default:\n        violation(\"Expected assignment target expression but was \"\n            + Token.name(n.getType()), n);\n    }\n  }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/AstValidator.java::AstValidator.validateAssignmentTarget(Node n)\nSIGNATURE: private void validateAssignmentTarget(Node n)",
+        "METHOD: src/com/google/javascript/jscomp/AstValidator.java::AstValidator.validateAssignmentTarget(Node n)\nSIGNATURE: private void validateAssignmentTarget(Node n)\nSTRUCTURE (lossy):\nswitch (n.getType()) { case Token.NAME: case Token.GETELEM: case Token.GETPROP: validateExpression(n); return; default: violation(\"Expected assignment target expression but was \" + Token.name(n.getType()), n); }\nCALL n.getType()\nCALL validateExpression(n)\nreturn;\nCALL violation(\"Expected assignment target expression but was \" + Token.name(n.getType()), n)\nCALL Token.name(n.getType())",
+        "private void validateAssignmentTarget(Node n) {\n    switch (n.getType()) {\n      case Token.NAME:\n      case Token.GETELEM:\n      case Token.GETPROP:\n        validateExpression(n);\n        return;\n      default:\n        violation(\"Expected assignment target expression but was \"\n            + Token.name(n.getType()), n);\n    }\n  }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.41379310344827586,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 5.0,
+        "literal_count": 1.0,
+        "source_tokens": 83.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 142.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 5,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)",
+      "source": "public void addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition) {\n    String sourceFile = node.getSourceFileName();\n\n    // If the node does not have an associated source file or\n    // its line number is -1, then the node does not have sufficient\n    // information for a mapping to be useful.\n    if (sourceFile == null || node.getLineno() < 0) {\n      return;\n    }\n\n    sourceFile = fixupSourceLocation(sourceFile);\n\n    String originalName = (String) node.getProp(Node.ORIGINALNAME_PROP);\n\n    // Strangely, Rhino source lines are one based but columns are\n    // zero based.\n    // We don't change this for the v1 or v2 source maps but for\n    // v3 we make them both 0 based.\n    int lineBaseOffset = 1;\n    if (generator instanceof SourceMapGeneratorV1\n        || generator instanceof SourceMapGeneratorV2) {\n      lineBaseOffset = 0;\n    }\n\n    generator.addMapping(\n        sourceFile, originalName,\n        new FilePosition(node.getLineno() - lineBaseOffset, node.getCharno()),\n        outputStartPosition, outputEndPosition);\n  }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)\nSIGNATURE: public void addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)",
+        "METHOD: src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)\nSIGNATURE: public void addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)\nSTRUCTURE (lossy):\nString sourceFile = node.getSourceFileName();\nCALL node.getSourceFileName()\nif (sourceFile == null || node.getLineno() < 0)\nCALL node.getLineno()\nreturn;\nsourceFile = fixupSourceLocation(sourceFile)\nCALL fixupSourceLocation(sourceFile)\nString originalName = (String) node.getProp(Node.ORIGINALNAME_PROP);\nCALL node.getProp(Node.ORIGINALNAME_PROP)\nint lineBaseOffset = 1;\nif (generator instanceof SourceMapGeneratorV1 || generator instanceof SourceMapGeneratorV2)\nlineBaseOffset = 0\nCALL generator.addMapping( sourceFile, originalName, new FilePosition(node.getLineno() - lineBaseOffset, node.getCharno()), outputStartPosition, outputEndPosition)\nCALL node.getCharno()",
+        "public void addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition) {\n    String sourceFile = node.getSourceFileName();\n\n    // If the node does not have an associated source file or\n    // its line number is -1, then the node does not have sufficient\n    // information for a mapping to be useful.\n    if (sourceFile == null || node.getLineno() < 0) {\n      return;\n    }\n\n    sourceFile = fixupSourceLocation(sourceFile);\n\n    String originalName = (String) node.getProp(Node.ORIGINALNAME_PROP);\n\n    // Strangely, Rhino source lines are one based but columns are\n    // zero based.\n    // We don't change this for the v1 or v2 source maps but for\n    // v3 we make them both 0 based.\n    int lineBaseOffset = 1;\n    if (generator instanceof SourceMapGeneratorV1\n        || generator instanceof SourceMapGeneratorV2) {\n      lineBaseOffset = 0;\n    }\n\n    generator.addMapping(\n        sourceFile, originalName,\n        new FilePosition(node.getLineno() - lineBaseOffset, node.getCharno()),\n        outputStartPosition, outputEndPosition);\n  }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2153846153846154,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 7.0,
+        "literal_count": 4.0,
+        "source_tokens": 274.0,
+        "l0_tokens": 76.0,
+        "l1_tokens": 248.0,
+        "compression_ratio": 0.9051094890510949,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 7,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.findJavaScriptFiles(FileList fileList)",
+      "source": "private List<SourceFile> findJavaScriptFiles(FileList fileList) {\n    List<SourceFile> files = Lists.newLinkedList();\n    File baseDir = fileList.getDir(getProject());\n\n    for (String included : fileList.getFiles(getProject())) {\n      files.add(SourceFile.fromFile(new File(baseDir, included),\n          Charset.forName(encoding)));\n    }\n\n    return files;\n  }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.findJavaScriptFiles(FileList fileList)\nSIGNATURE: private List<SourceFile> findJavaScriptFiles(FileList fileList)",
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.findJavaScriptFiles(FileList fileList)\nSIGNATURE: private List<SourceFile> findJavaScriptFiles(FileList fileList)\nSTRUCTURE (lossy):\nList<SourceFile> files = Lists.newLinkedList();\nCALL Lists.newLinkedList()\nFile baseDir = fileList.getDir(getProject());\nCALL fileList.getDir(getProject())\nCALL getProject()\nfor (String included : fileList.getFiles(getProject()))\nCALL fileList.getFiles(getProject())\nCALL files.add(SourceFile.fromFile(new File(baseDir, included), Charset.forName(encoding)))\nCALL SourceFile.fromFile(new File(baseDir, included), Charset.forName(encoding))\nCALL Charset.forName(encoding)\nreturn files;",
+        "private List<SourceFile> findJavaScriptFiles(FileList fileList) {\n    List<SourceFile> files = Lists.newLinkedList();\n    File baseDir = fileList.getDir(getProject());\n\n    for (String included : fileList.getFiles(getProject())) {\n      files.add(SourceFile.fromFile(new File(baseDir, included),\n          Charset.forName(encoding)));\n    }\n\n    return files;\n  }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.34375,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 8.0,
+        "literal_count": 0.0,
+        "source_tokens": 91.0,
+        "l0_tokens": 47.0,
+        "l1_tokens": 173.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 8,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.setOutputEncoding(String outputEncoding)",
+      "source": "public void setOutputEncoding(String outputEncoding) {\n    this.outputEncoding = outputEncoding;\n  }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.setOutputEncoding(String outputEncoding)\nSIGNATURE: public void setOutputEncoding(String outputEncoding)",
+        "METHOD: src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.setOutputEncoding(String outputEncoding)\nSIGNATURE: public void setOutputEncoding(String outputEncoding)\nSTRUCTURE (lossy):\nthis.outputEncoding = outputEncoding",
+        "public void setOutputEncoding(String outputEncoding) {\n    this.outputEncoding = outputEncoding;\n  }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.75,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 25.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 59.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.execute()": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.writeResult(String source)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/DefaultPassConfig.java::DefaultPassConfig.createInternal(final AbstractCompiler\n        compiler)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.doRun()": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ParallelCompilerPass.java::ParallelCompilerPass.execute()": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.isStale()": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ant/AntErrorManager.java::AntErrorManager.println(CheckLevel level, JSError error)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.setRunOptions(CompilerOptions options)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/DefaultPassConfig.java::DefaultPassConfig.createInternal(final AbstractCompiler compiler)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/XtbMessageBundle.java::XtbMessageBundle.Handler.startElement(String uri, String localName, String qName,\n                             Attributes atts)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.setWarning(String value)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.run()": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.createCompiler(CompilerOptions options)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.outputSourceMap(B options, String associatedName)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.getDefaultExterns()": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/DefaultPassConfig.java::DefaultPassConfig.createInternal(AbstractCompiler compiler)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java::AbstractCommandLineRunner.processResults(Result result, List<JSModule> modules, B options)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/CommandLineRunner.java::CommandLineRunner.main(String[] args)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/NameReferenceGraph.java::NameReferenceGraph.NameReferenceGraph(AbstractCompiler compiler)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/rhino/jstype/JSTypeRegistry.java::JSTypeRegistry.createFromTypeNodesInternal(Node n, String sourceName,\n      StaticScope<JSType> scope)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/AstValidator.java::AstValidator.validateAssignmentTarget(Node n)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/SourceMap.java::SourceMap.addMapping(\n      Node node,\n      FilePosition outputStartPosition,\n      FilePosition outputEndPosition)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.findJavaScriptFiles(FileList fileList)": {
+      "ranks": {}
+    },
+    "src/com/google/javascript/jscomp/ant/CompileTask.java::CompileTask.setOutputEncoding(String outputEncoding)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 7823,
+    "retrieved_unique_entities": 24,
+    "deduplication": "highest_bm25_or_lexical_score_per_entity_id",
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "1b1f962e969d62bf74e78ccf6f4702d4f14970355dad82942efb2859344c9cc2",
+  "evidence_sha256": "f3f6e00583227490cc228b30729064ac3ad6a3bd90d30d1b71bb75ee6ef1733b"
+}

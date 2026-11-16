@@ -1,0 +1,1320 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Lang-6",
+    "repository": "Lang",
+    "language": "java",
+    "revision": "30f8d49a644ecacee109fa7f7876199c289a3f36",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_02/prepared/checkouts/Lang-6",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Lang-6\nEXECUTED BUGGY TEST: org.apache.commons.lang3.StringUtilsTest::testEscapeSurrogatePairs\nTEST SOURCE: src/test/java/org/apache/commons/lang3/StringUtilsTest.java\nTEST SOURCE SHA256: 8c553b994e8ecbc811cdf3321c2a36c9b998dc5270563a5954b8aab3844293bb\nCOMPLETE EXECUTED TEST METHOD (verbatim):\n@Test\n    public void testEscapeSurrogatePairs() throws Exception {\n        assertEquals(\"\\uD83D\\uDE30\", StringEscapeUtils.escapeCsv(\"\\uD83D\\uDE30\"));\n        // Examples from https://en.wikipedia.org/wiki/UTF-16\n        assertEquals(\"\\uD800\\uDC00\", StringEscapeUtils.escapeCsv(\"\\uD800\\uDC00\"));\n        assertEquals(\"\\uD834\\uDD1E\", StringEscapeUtils.escapeCsv(\"\\uD834\\uDD1E\"));\n        assertEquals(\"\\uDBFF\\uDFFD\", StringEscapeUtils.escapeCsv(\"\\uDBFF\\uDFFD\"));\n        \n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.apache.commons.lang3.StringUtilsTest::testEscapeSurrogatePairs\njava.lang.StringIndexOutOfBoundsException: index 2,length 2\n\tat java.base/java.lang.String.checkIndex(String.java:3278)\n\tat java.base/java.lang.StringUTF16.checkIndex(StringUTF16.java:1470)\n\tat java.base/java.lang.StringUTF16.charAt(StringUTF16.java:1267)\n\tat java.base/java.lang.String.charAt(String.java:695)\n\tat java.base/java.lang.Character.codePointAt(Character.java:8268)\n\tat org.apache.commons.lang3.text.translate.CharSequenceTranslator.translate(CharSequenceTranslator.java:95)\n\tat org.apache.commons.lang3.text.translate.CharSequenceTranslator.translate(CharSequenceTranslator.java:59)\n\tat org.apache.commons.lang3.StringEscapeUtils.escapeCsv(StringEscapeUtils.java:556)\n\tat org.apache.commons.lang3.StringUtilsTest.testEscapeSurrogatePairs(StringUtilsTest.java:2187)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnit4TestMethodAdapter.run(JUnit4TestMethodAdapter.java:109)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_02/prepared/evidence/Lang-6.txt",
+      "sha256": "220c814002e07f63258c3978ee8709e7bdac5e5f357e967d5cd1c6c150d6de8f"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src/main/java",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Lang-6",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/translate/CodePointTranslator.java::CodePointTranslator.translate(CharSequence input, int index, Writer out)",
+      "path": "src/main/java/org/apache/commons/lang3/text/translate/CodePointTranslator.java",
+      "start_line": 35,
+      "end_line": 44,
+      "source": "@Override\n    public final int translate(CharSequence input, int index, Writer out) throws IOException {\n        int codepoint = Character.codePointAt(input, index);\n        boolean consumed = translate(codepoint, out);\n        if (consumed) {\n            return 1;\n        } else {\n            return 0;\n        }\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 56.85027630353009
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java::CharSequenceTranslator.translate(CharSequence input, Writer out)",
+      "path": "src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java",
+      "start_line": 75,
+      "end_line": 98,
+      "source": "public final void translate(CharSequence input, Writer out) throws IOException {\n        if (out == null) {\n            throw new IllegalArgumentException(\"The Writer must not be null\");\n        }\n        if (input == null) {\n            return;\n        }\n        int pos = 0;\n        int len = input.length();\n        while (pos < len) {\n            int consumed = translate(input, pos, out);\n            if (consumed == 0) {\n                char[] c = Character.toChars(Character.codePointAt(input, pos));\n                out.write(c);\n                pos+= c.length;\n                continue;\n            }\n//          // contract with translators is that they have to understand codepoints \n//          // and they just took care of a surrogate pair\n            for (int pt = 0; pt < consumed; pt++) {\n                pos += Character.charCount(Character.codePointAt(input, pos));\n            }\n        }\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 53.7508122225796
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/translate/CodePointTranslator.java::CodePointTranslator.translate(int codepoint, Writer out)",
+      "path": "src/main/java/org/apache/commons/lang3/text/translate/CodePointTranslator.java",
+      "start_line": 54,
+      "end_line": 54,
+      "source": "public abstract boolean translate(int codepoint, Writer out) throws IOException;",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 43.18430346331282
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java::StringEscapeUtils.CsvUnescaper.translate(CharSequence input, int index, Writer out)",
+      "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+      "start_line": 276,
+      "end_line": 298,
+      "source": "@Override\n        public int translate(CharSequence input, int index, Writer out) throws IOException {\n\n            if(index != 0) {\n                throw new IllegalStateException(\"CsvUnescaper should never reach the [1] index\");\n            }\n\n            if ( input.charAt(0) != CSV_QUOTE || input.charAt(input.length() - 1) != CSV_QUOTE ) {\n                out.write(input.toString());\n                return input.length();\n            }\n\n            // strip quotes\n            String quoteless = input.subSequence(1, input.length() - 1).toString();\n\n            if ( StringUtils.containsAny(quoteless, CSV_SEARCH_CHARS) ) {\n                // deal with escaped quotes; ie) \"\"\n                out.write(StringUtils.replace(quoteless, CSV_QUOTE_STR + CSV_QUOTE_STR, CSV_QUOTE_STR));\n            } else {\n                out.write(input.toString());\n            }\n            return input.length();\n        }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.77933120211596
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java::StringEscapeUtils.CsvEscaper.translate(CharSequence input, int index, Writer out)",
+      "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+      "start_line": 153,
+      "end_line": 168,
+      "source": "@Override\n        public int translate(CharSequence input, int index, Writer out) throws IOException {\n\n            if(index != 0) {\n                throw new IllegalStateException(\"CsvEscaper should never reach the [1] index\");\n            }\n\n            if (StringUtils.containsNone(input.toString(), CSV_SEARCH_CHARS)) {\n                out.write(input.toString());\n            } else {\n                out.write(CSV_QUOTE);\n                out.write(StringUtils.replace(input.toString(), CSV_QUOTE_STR, CSV_QUOTE_STR + CSV_QUOTE_STR));\n                out.write(CSV_QUOTE);\n            }\n            return input.length();\n        }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.376640368757
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/translate/UnicodeUnescaper.java::UnicodeUnescaper.translate(CharSequence input, int index, Writer out)",
+      "path": "src/main/java/org/apache/commons/lang3/text/translate/UnicodeUnescaper.java",
+      "start_line": 35,
+      "end_line": 65,
+      "source": "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        if (input.charAt(index) == '\\\\' && index + 1 < input.length() && input.charAt(index + 1) == 'u') {\n            // consume optional additional 'u' chars\n            int i = 2;\n            while (index + i < input.length() && input.charAt(index + i) == 'u') {\n                i++;\n            }\n\n            if (index + i < input.length() && input.charAt(index + i) == '+') {\n                i++;\n            }\n\n            if (index + i + 4 <= input.length()) {\n                // Get 4 hex digits\n                CharSequence unicode = input.subSequence(index + i, index + i + 4);\n\n                try {\n                    int value = Integer.parseInt(unicode.toString(), 16);\n                    out.write((char) value);\n                } catch (NumberFormatException nfe) {\n                    throw new IllegalArgumentException(\"Unable to parse unicode value: \" + unicode, nfe);\n                }\n                return i + 4;\n            } else {\n                throw new IllegalArgumentException(\"Less than 4 hex digits in unicode value: '\" + input.subSequence(index, input.length())\n                        + \"' due to end of CharSequence\");\n            }\n        }\n        return 0;\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.34854270704044
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/translate/AggregateTranslator.java::AggregateTranslator.translate(CharSequence input, int index, Writer out)",
+      "path": "src/main/java/org/apache/commons/lang3/text/translate/AggregateTranslator.java",
+      "start_line": 49,
+      "end_line": 58,
+      "source": "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        for (CharSequenceTranslator translator : translators) {\n            int consumed = translator.translate(input, index, out);\n            if(consumed != 0) {\n                return consumed;\n            }\n        }\n        return 0;\n    }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.08533222271808
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java::CharSequenceTranslator.translate(CharSequence input, int index, Writer out)",
+      "path": "src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java",
+      "start_line": 46,
+      "end_line": 46,
+      "source": "public abstract int translate(CharSequence input, int index, Writer out) throws IOException;",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.84282460042481
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/translate/OctalUnescaper.java::OctalUnescaper.translate(CharSequence input, int index, Writer out)",
+      "path": "src/main/java/org/apache/commons/lang3/text/translate/OctalUnescaper.java",
+      "start_line": 41,
+      "end_line": 59,
+      "source": "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        if(input.charAt(index) == '\\\\' && index < (input.length() - 1) && Character.isDigit(input.charAt(index + 1)) ) {\n            int start = index + 1;\n\n            int end = index + 2;\n            while ( end < input.length() && Character.isDigit(input.charAt(end)) ) {\n                end++;\n                if ( Integer.parseInt(input.subSequence(start, end).toString(), 10) > OCTAL_MAX) {\n                    end--; // rollback\n                    break;\n                }\n            }\n\n            out.write( Integer.parseInt(input.subSequence(start, end).toString(), 8) );\n            return 1 + end - start;\n        }\n        return 0;\n    }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.81943570523056
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/concurrent/CallableBackgroundInitializer.java::CallableBackgroundInitializer.CallableBackgroundInitializer(Callable<T> call, ExecutorService exec)",
+      "path": "src/main/java/org/apache/commons/lang3/concurrent/CallableBackgroundInitializer.java",
+      "start_line": 95,
+      "end_line": 99,
+      "source": "public CallableBackgroundInitializer(Callable<T> call, ExecutorService exec) {\n        super(exec);\n        checkCallable(call);\n        callable = call;\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.21871264815946
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/translate/LookupTranslator.java::LookupTranslator.translate(CharSequence input, int index, Writer out)",
+      "path": "src/main/java/org/apache/commons/lang3/text/translate/LookupTranslator.java",
+      "start_line": 63,
+      "end_line": 79,
+      "source": "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        int max = longest;\n        if (index + longest > input.length()) {\n            max = input.length() - index;\n        }\n        // descend so as to get a greedy algorithm\n        for (int i = max; i >= shortest; i--) {\n            CharSequence subSeq = input.subSequence(index, index + i);\n            CharSequence result = lookupMap.get(subSeq);\n            if (result != null) {\n                out.write(result.toString());\n                return i;\n            }\n        }\n        return 0;\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.86865211603558
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.subSequence(int startIndex, int endIndex)",
+      "path": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java",
+      "start_line": 2039,
+      "end_line": 2051,
+      "source": "@Override\n    public CharSequence subSequence(int startIndex, int endIndex) {\n      if (startIndex < 0) {\n          throw new StringIndexOutOfBoundsException(startIndex);\n      }\n      if (endIndex > size) {\n          throw new StringIndexOutOfBoundsException(endIndex);\n      }\n      if (startIndex > endIndex) {\n          throw new StringIndexOutOfBoundsException(endIndex - startIndex);\n      }\n      return substring(startIndex, endIndex);\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.10570123441558
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java::NumericEntityUnescaper.translate(CharSequence input, int index, Writer out)",
+      "path": "src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java",
+      "start_line": 77,
+      "end_line": 138,
+      "source": "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        int seqEnd = input.length();\n        // Uses -2 to ensure there is something after the &#\n        if(input.charAt(index) == '&' && index < seqEnd - 2 && input.charAt(index + 1) == '#') {\n            int start = index + 2;\n            boolean isHex = false;\n\n            char firstChar = input.charAt(start);\n            if(firstChar == 'x' || firstChar == 'X') {\n                start++;\n                isHex = true;\n\n                // Check there's more than just an x after the &#\n                if(start == seqEnd) {\n                    return 0;\n                }\n            }\n\n            int end = start;\n            // Note that this supports character codes without a ; on the end\n            while(end < seqEnd && ( input.charAt(end) >= '0' && input.charAt(end) <= '9' ||\n                                    input.charAt(end) >= 'a' && input.charAt(end) <= 'f' ||\n                                    input.charAt(end) >= 'A' && input.charAt(end) <= 'F' ) )\n            {\n                end++;\n            }\n\n            boolean semiNext = end != seqEnd && input.charAt(end) == ';';\n\n            if(!semiNext) {\n                if(isSet(OPTION.semiColonRequired)) {\n                    return 0;\n                } else\n                if(isSet(OPTION.errorIfNoSemiColon)) {\n                    throw new IllegalArgumentException(\"Semi-colon required at end of numeric entity\");\n                }\n            }\n\n            int entityValue;\n            try {\n                if(isHex) {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 16);\n                } else {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 10);\n                }\n            } catch(NumberFormatException nfe) {\n                return 0;\n            }\n\n            if(entityValue > 0xFFFF) {\n                char[] chrs = Character.toChars(entityValue);\n                out.write(chrs[0]);\n                out.write(chrs[1]);\n            } else {\n                out.write(entityValue);\n            }\n\n            return 2 + end - start + (isHex ? 1 : 0) + (semiNext ? 1 : 0);\n        }\n        return 0;\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.61227501202518
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object... args)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 83,
+      "end_line": 91,
+      "source": "public static Object invokeMethod(Object object, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Class<?>[] parameterTypes = ClassUtils.toClass(args);\n        return invokeMethod(object, methodName, args, parameterTypes);\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.558793346345205
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/concurrent/CallableBackgroundInitializer.java::CallableBackgroundInitializer.checkCallable(Callable<T> call)",
+      "path": "src/main/java/org/apache/commons/lang3/concurrent/CallableBackgroundInitializer.java",
+      "start_line": 121,
+      "end_line": 125,
+      "source": "private void checkCallable(Callable<T> call) {\n        if (call == null) {\n            throw new IllegalArgumentException(\"Callable must not be null!\");\n        }\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.244032330484664
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object... args)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 150,
+      "end_line": 158,
+      "source": "public static Object invokeExactMethod(Object object, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Class<?>[] parameterTypes = ClassUtils.toClass(args);\n        return invokeExactMethod(object, methodName, args, parameterTypes);\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.06282539557504
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object... args)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 260,
+      "end_line": 268,
+      "source": "public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Class<?>[] parameterTypes = ClassUtils.toClass(args);\n        return invokeStaticMethod(cls, methodName, args, parameterTypes);\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.06282539557504
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object... args)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 329,
+      "end_line": 337,
+      "source": "public static Object invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Class<?>[] parameterTypes = ClassUtils.toClass(args);\n        return invokeExactStaticMethod(cls, methodName, args, parameterTypes);\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.5839794665013
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.getChars(int startIndex, int endIndex, char destination[], int destinationIndex)",
+      "path": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java",
+      "start_line": 411,
+      "end_line": 422,
+      "source": "public void getChars(int startIndex, int endIndex, char destination[], int destinationIndex) {\n        if (startIndex < 0) {\n            throw new StringIndexOutOfBoundsException(startIndex);\n        }\n        if (endIndex < 0 || endIndex > length()) {\n            throw new StringIndexOutOfBoundsException(endIndex);\n        }\n        if (startIndex > endIndex) {\n            throw new StringIndexOutOfBoundsException(\"end < start\");\n        }\n        System.arraycopy(buffer, startIndex, destination, destinationIndex, endIndex - startIndex);\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.562100755698395
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.deleteCharAt(int index)",
+      "path": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java",
+      "start_line": 342,
+      "end_line": 348,
+      "source": "public StrBuilder deleteCharAt(int index) {\n        if (index < 0 || index >= size) {\n            throw new StringIndexOutOfBoundsException(index);\n        }\n        deleteImpl(index, index + 1, 1);\n        return this;\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.528147040621704
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.startTimer()",
+      "path": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java",
+      "start_line": 401,
+      "end_line": 408,
+      "source": "protected ScheduledFuture<?> startTimer() {\n        return getExecutorService().scheduleAtFixedRate(new Runnable() {\n            @Override\n            public void run() {\n                endOfPeriod();\n            }\n        }, getPeriod(), getPeriod(), getUnit());\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.70345505174249
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String... excludeFields)",
+      "path": "src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java",
+      "start_line": 324,
+      "end_line": 371,
+      "source": "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String... excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf\n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars,\n        // then a subclass can test equals to a superclass.\n        Class<?> lhsClass = lhs.getClass();\n        Class<?> rhsClass = rhs.getClass();\n        Class<?> testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and\n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.224731892962946
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.getAccessibleMethodFromSuperclass(Class<?> cls,\n            String methodName, Class<?>... parameterTypes)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 403,
+      "end_line": 417,
+      "source": "private static Method getAccessibleMethodFromSuperclass(Class<?> cls,\n            String methodName, Class<?>... parameterTypes) {\n        Class<?> parentClass = cls.getSuperclass();\n        while (parentClass != null) {\n            if (Modifier.isPublic(parentClass.getModifiers())) {\n                try {\n                    return parentClass.getMethod(methodName, parameterTypes);\n                } catch (NoSuchMethodException e) {\n                    return null;\n                }\n            }\n            parentClass = parentClass.getSuperclass();\n        }\n        return null;\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 30.24994897175163
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.charAt(int index)",
+      "path": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java",
+      "start_line": 307,
+      "end_line": 313,
+      "source": "@Override\n    public char charAt(int index) {\n        if (index < 0 || index >= length()) {\n            throw new StringIndexOutOfBoundsException(index);\n        }\n        return buffer[index];\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 30.185144498471512
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/translate/CodePointTranslator.java::CodePointTranslator.translate(CharSequence input, int index, Writer out)",
+      "source": "@Override\n    public final int translate(CharSequence input, int index, Writer out) throws IOException {\n        int codepoint = Character.codePointAt(input, index);\n        boolean consumed = translate(codepoint, out);\n        if (consumed) {\n            return 1;\n        } else {\n            return 0;\n        }\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/CodePointTranslator.java::CodePointTranslator.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n    public final int translate(CharSequence input, int index, Writer out) throws IOException",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/CodePointTranslator.java::CodePointTranslator.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n    public final int translate(CharSequence input, int index, Writer out) throws IOException\nSTRUCTURE (lossy):\nint codepoint = Character.codePointAt(input, index);\nCALL Character.codePointAt(input, index)\nboolean consumed = translate(codepoint, out);\nCALL translate(codepoint, out)\nif (consumed)\nreturn 1;\nreturn 0;",
+        "@Override\n    public final int translate(CharSequence input, int index, Writer out) throws IOException {\n        int codepoint = Character.codePointAt(input, index);\n        boolean consumed = translate(codepoint, out);\n        if (consumed) {\n            return 1;\n        } else {\n            return 0;\n        }\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6333333333333333,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 80.0,
+        "l0_tokens": 69.0,
+        "l1_tokens": 125.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java::CharSequenceTranslator.translate(CharSequence input, Writer out)",
+      "source": "public final void translate(CharSequence input, Writer out) throws IOException {\n        if (out == null) {\n            throw new IllegalArgumentException(\"The Writer must not be null\");\n        }\n        if (input == null) {\n            return;\n        }\n        int pos = 0;\n        int len = input.length();\n        while (pos < len) {\n            int consumed = translate(input, pos, out);\n            if (consumed == 0) {\n                char[] c = Character.toChars(Character.codePointAt(input, pos));\n                out.write(c);\n                pos+= c.length;\n                continue;\n            }\n//          // contract with translators is that they have to understand codepoints \n//          // and they just took care of a surrogate pair\n            for (int pt = 0; pt < consumed; pt++) {\n                pos += Character.charCount(Character.codePointAt(input, pos));\n            }\n        }\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java::CharSequenceTranslator.translate(CharSequence input, Writer out)\nSIGNATURE: public final void translate(CharSequence input, Writer out) throws IOException",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java::CharSequenceTranslator.translate(CharSequence input, Writer out)\nSIGNATURE: public final void translate(CharSequence input, Writer out) throws IOException\nSTRUCTURE (lossy):\nif (out == null)\nthrow new IllegalArgumentException(\"The Writer must not be null\");\nif (input == null)\nreturn;\nint pos = 0;\nint len = input.length();\nCALL input.length()\nwhile (pos < len)\nint consumed = translate(input, pos, out);\nCALL translate(input, pos, out)\nif (consumed == 0)\nchar[] c = Character.toChars(Character.codePointAt(input, pos));\nCALL Character.toChars(Character.codePointAt(input, pos))\nCALL Character.codePointAt(input, pos)\nCALL out.write(c)\npos+= c.length\nfor (int pt = 0; pt < consumed; pt++)\nint pt = 0;\npt++\npos += Character.charCount(Character.codePointAt(input, pos))\nCALL Character.charCount(Character.codePointAt(input, pos))",
+        "public final void translate(CharSequence input, Writer out) throws IOException {\n        if (out == null) {\n            throw new IllegalArgumentException(\"The Writer must not be null\");\n        }\n        if (input == null) {\n            return;\n        }\n        int pos = 0;\n        int len = input.length();\n        while (pos < len) {\n            int consumed = translate(input, pos, out);\n            if (consumed == 0) {\n                char[] c = Character.toChars(Character.codePointAt(input, pos));\n                out.write(c);\n                pos+= c.length;\n                continue;\n            }\n//          // contract with translators is that they have to understand codepoints \n//          // and they just took care of a surrogate pair\n            for (int pt = 0; pt < consumed; pt++) {\n                pos += Character.charCount(Character.codePointAt(input, pos));\n            }\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3793103448275862,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 7.0,
+        "literal_count": 6.0,
+        "source_tokens": 229.0,
+        "l0_tokens": 62.0,
+        "l1_tokens": 230.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 7,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/translate/CodePointTranslator.java::CodePointTranslator.translate(int codepoint, Writer out)",
+      "source": "public abstract boolean translate(int codepoint, Writer out) throws IOException;",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/CodePointTranslator.java::CodePointTranslator.translate(int codepoint, Writer out)\nSIGNATURE: src/main/java/org/apache/commons/lang3/text/translate/CodePointTranslator.java::CodePointTranslator.translate(int codepoint, Writer out)",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/CodePointTranslator.java::CodePointTranslator.translate(int codepoint, Writer out)\nSIGNATURE: src/main/java/org/apache/commons/lang3/text/translate/CodePointTranslator.java::CodePointTranslator.translate(int codepoint, Writer out)\nSTRUCTURE (lossy):\n",
+        "public abstract boolean translate(int codepoint, Writer out) throws IOException;"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7142857142857143,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 20.0,
+        "l0_tokens": 73.0,
+        "l1_tokens": 78.0,
+        "compression_ratio": 1,
+        "parse_error": 1.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": true,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java::StringEscapeUtils.CsvUnescaper.translate(CharSequence input, int index, Writer out)",
+      "source": "@Override\n        public int translate(CharSequence input, int index, Writer out) throws IOException {\n\n            if(index != 0) {\n                throw new IllegalStateException(\"CsvUnescaper should never reach the [1] index\");\n            }\n\n            if ( input.charAt(0) != CSV_QUOTE || input.charAt(input.length() - 1) != CSV_QUOTE ) {\n                out.write(input.toString());\n                return input.length();\n            }\n\n            // strip quotes\n            String quoteless = input.subSequence(1, input.length() - 1).toString();\n\n            if ( StringUtils.containsAny(quoteless, CSV_SEARCH_CHARS) ) {\n                // deal with escaped quotes; ie) \"\"\n                out.write(StringUtils.replace(quoteless, CSV_QUOTE_STR + CSV_QUOTE_STR, CSV_QUOTE_STR));\n            } else {\n                out.write(input.toString());\n            }\n            return input.length();\n        }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/StringEscapeUtils.java::StringEscapeUtils.CsvUnescaper.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n        public int translate(CharSequence input, int index, Writer out) throws IOException",
+        "METHOD: src/main/java/org/apache/commons/lang3/StringEscapeUtils.java::StringEscapeUtils.CsvUnescaper.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n        public int translate(CharSequence input, int index, Writer out) throws IOException\nSTRUCTURE (lossy):\nif(index != 0)\nthrow new IllegalStateException(\"CsvUnescaper should never reach the [1] index\");\nif ( input.charAt(0) != CSV_QUOTE || input.charAt(input.length() - 1) != CSV_QUOTE )\nCALL input.charAt(0)\nCALL input.charAt(input.length() - 1)\nCALL input.length()\nCALL out.write(input.toString())\nCALL input.toString()\nreturn input.length();\nString quoteless = input.subSequence(1, input.length() - 1).toString();\nCALL input.subSequence(1, input.length() - 1).toString()\nCALL input.subSequence(1, input.length() - 1)\nif ( StringUtils.containsAny(quoteless, CSV_SEARCH_CHARS) )\nCALL StringUtils.containsAny(quoteless, CSV_SEARCH_CHARS)\nCALL out.write(StringUtils.replace(quoteless, CSV_QUOTE_STR + CSV_QUOTE_STR, CSV_QUOTE_STR))\nCALL StringUtils.replace(quoteless, CSV_QUOTE_STR + CSV_QUOTE_STR, CSV_QUOTE_STR)",
+        "@Override\n        public int translate(CharSequence input, int index, Writer out) throws IOException {\n\n            if(index != 0) {\n                throw new IllegalStateException(\"CsvUnescaper should never reach the [1] index\");\n            }\n\n            if ( input.charAt(0) != CSV_QUOTE || input.charAt(input.length() - 1) != CSV_QUOTE ) {\n                out.write(input.toString());\n                return input.length();\n            }\n\n            // strip quotes\n            String quoteless = input.subSequence(1, input.length() - 1).toString();\n\n            if ( StringUtils.containsAny(quoteless, CSV_SEARCH_CHARS) ) {\n                // deal with escaped quotes; ie) \"\"\n                out.write(StringUtils.replace(quoteless, CSV_QUOTE_STR + CSV_QUOTE_STR, CSV_QUOTE_STR));\n            } else {\n                out.write(input.toString());\n            }\n            return input.length();\n        }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.39215686274509803,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 15.0,
+        "literal_count": 6.0,
+        "source_tokens": 228.0,
+        "l0_tokens": 67.0,
+        "l1_tokens": 273.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 15,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java::StringEscapeUtils.CsvEscaper.translate(CharSequence input, int index, Writer out)",
+      "source": "@Override\n        public int translate(CharSequence input, int index, Writer out) throws IOException {\n\n            if(index != 0) {\n                throw new IllegalStateException(\"CsvEscaper should never reach the [1] index\");\n            }\n\n            if (StringUtils.containsNone(input.toString(), CSV_SEARCH_CHARS)) {\n                out.write(input.toString());\n            } else {\n                out.write(CSV_QUOTE);\n                out.write(StringUtils.replace(input.toString(), CSV_QUOTE_STR, CSV_QUOTE_STR + CSV_QUOTE_STR));\n                out.write(CSV_QUOTE);\n            }\n            return input.length();\n        }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/StringEscapeUtils.java::StringEscapeUtils.CsvEscaper.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n        public int translate(CharSequence input, int index, Writer out) throws IOException",
+        "METHOD: src/main/java/org/apache/commons/lang3/StringEscapeUtils.java::StringEscapeUtils.CsvEscaper.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n        public int translate(CharSequence input, int index, Writer out) throws IOException\nSTRUCTURE (lossy):\nif(index != 0)\nthrow new IllegalStateException(\"CsvEscaper should never reach the [1] index\");\nif (StringUtils.containsNone(input.toString(), CSV_SEARCH_CHARS))\nCALL StringUtils.containsNone(input.toString(), CSV_SEARCH_CHARS)\nCALL input.toString()\nCALL out.write(input.toString())\nCALL out.write(CSV_QUOTE)\nCALL out.write(StringUtils.replace(input.toString(), CSV_QUOTE_STR, CSV_QUOTE_STR + CSV_QUOTE_STR))\nCALL StringUtils.replace(input.toString(), CSV_QUOTE_STR, CSV_QUOTE_STR + CSV_QUOTE_STR)\nreturn input.length();\nCALL input.length()",
+        "@Override\n        public int translate(CharSequence input, int index, Writer out) throws IOException {\n\n            if(index != 0) {\n                throw new IllegalStateException(\"CsvEscaper should never reach the [1] index\");\n            }\n\n            if (StringUtils.containsNone(input.toString(), CSV_SEARCH_CHARS)) {\n                out.write(input.toString());\n            } else {\n                out.write(CSV_QUOTE);\n                out.write(StringUtils.replace(input.toString(), CSV_QUOTE_STR, CSV_QUOTE_STR + CSV_QUOTE_STR));\n                out.write(CSV_QUOTE);\n            }\n            return input.length();\n        }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.45454545454545453,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 10.0,
+        "literal_count": 2.0,
+        "source_tokens": 159.0,
+        "l0_tokens": 66.0,
+        "l1_tokens": 206.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 10,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/translate/UnicodeUnescaper.java::UnicodeUnescaper.translate(CharSequence input, int index, Writer out)",
+      "source": "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        if (input.charAt(index) == '\\\\' && index + 1 < input.length() && input.charAt(index + 1) == 'u') {\n            // consume optional additional 'u' chars\n            int i = 2;\n            while (index + i < input.length() && input.charAt(index + i) == 'u') {\n                i++;\n            }\n\n            if (index + i < input.length() && input.charAt(index + i) == '+') {\n                i++;\n            }\n\n            if (index + i + 4 <= input.length()) {\n                // Get 4 hex digits\n                CharSequence unicode = input.subSequence(index + i, index + i + 4);\n\n                try {\n                    int value = Integer.parseInt(unicode.toString(), 16);\n                    out.write((char) value);\n                } catch (NumberFormatException nfe) {\n                    throw new IllegalArgumentException(\"Unable to parse unicode value: \" + unicode, nfe);\n                }\n                return i + 4;\n            } else {\n                throw new IllegalArgumentException(\"Less than 4 hex digits in unicode value: '\" + input.subSequence(index, input.length())\n                        + \"' due to end of CharSequence\");\n            }\n        }\n        return 0;\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/UnicodeUnescaper.java::UnicodeUnescaper.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/UnicodeUnescaper.java::UnicodeUnescaper.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException\nSTRUCTURE (lossy):\nif (input.charAt(index) == '\\\\' && index + 1 < input.length() && input.charAt(index + 1) == 'u')\nCALL input.charAt(index)\nCALL input.length()\nCALL input.charAt(index + 1)\nint i = 2;\nwhile (index + i < input.length() && input.charAt(index + i) == 'u')\nCALL input.charAt(index + i)\ni++\nif (index + i < input.length() && input.charAt(index + i) == '+')\nif (index + i + 4 <= input.length())\nCharSequence unicode = input.subSequence(index + i, index + i + 4);\nCALL input.subSequence(index + i, index + i + 4)\nint value = Integer.parseInt(unicode.toString(), 16);\nCALL Integer.parseInt(unicode.toString(), 16)\nCALL unicode.toString()\nCALL out.write((char) value)\ncatch (NumberFormatException nfe)\nthrow new IllegalArgumentException(\"Unable to parse unicode value: \" + unicode, nfe);\nreturn i + 4;\nthrow new IllegalArgumentException(\"Less than 4 hex digits in unicode value: '\" + input.subSequence(index, input.length()) + \"' due to end of CharSequence\");\nCALL input.subSequence(index, input.length())\nreturn 0;",
+        "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        if (input.charAt(index) == '\\\\' && index + 1 < input.length() && input.charAt(index + 1) == 'u') {\n            // consume optional additional 'u' chars\n            int i = 2;\n            while (index + i < input.length() && input.charAt(index + i) == 'u') {\n                i++;\n            }\n\n            if (index + i < input.length() && input.charAt(index + i) == '+') {\n                i++;\n            }\n\n            if (index + i + 4 <= input.length()) {\n                // Get 4 hex digits\n                CharSequence unicode = input.subSequence(index + i, index + i + 4);\n\n                try {\n                    int value = Integer.parseInt(unicode.toString(), 16);\n                    out.write((char) value);\n                } catch (NumberFormatException nfe) {\n                    throw new IllegalArgumentException(\"Unable to parse unicode value: \" + unicode, nfe);\n                }\n                return i + 4;\n            } else {\n                throw new IllegalArgumentException(\"Less than 4 hex digits in unicode value: '\" + input.subSequence(index, input.length())\n                        + \"' due to end of CharSequence\");\n            }\n        }\n        return 0;\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.35185185185185186,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 14.0,
+        "literal_count": 15.0,
+        "source_tokens": 326.0,
+        "l0_tokens": 66.0,
+        "l1_tokens": 322.0,
+        "compression_ratio": 0.9877300613496932,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 14,
+        "literal_count": 15
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/translate/AggregateTranslator.java::AggregateTranslator.translate(CharSequence input, int index, Writer out)",
+      "source": "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        for (CharSequenceTranslator translator : translators) {\n            int consumed = translator.translate(input, index, out);\n            if(consumed != 0) {\n                return consumed;\n            }\n        }\n        return 0;\n    }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/AggregateTranslator.java::AggregateTranslator.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/AggregateTranslator.java::AggregateTranslator.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException\nSTRUCTURE (lossy):\nfor (CharSequenceTranslator translator : translators)\nint consumed = translator.translate(input, index, out);\nCALL translator.translate(input, index, out)\nif(consumed != 0)\nreturn consumed;\nreturn 0;",
+        "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        for (CharSequenceTranslator translator : translators) {\n            int consumed = translator.translate(input, index, out);\n            if(consumed != 0) {\n                return consumed;\n            }\n        }\n        return 0;\n    }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6153846153846154,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 1.0,
+        "literal_count": 2.0,
+        "source_tokens": 86.0,
+        "l0_tokens": 67.0,
+        "l1_tokens": 122.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 1,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java::CharSequenceTranslator.translate(CharSequence input, int index, Writer out)",
+      "source": "public abstract int translate(CharSequence input, int index, Writer out) throws IOException;",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java::CharSequenceTranslator.translate(CharSequence input, int index, Writer out)\nSIGNATURE: src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java::CharSequenceTranslator.translate(CharSequence input, int index, Writer out)",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java::CharSequenceTranslator.translate(CharSequence input, int index, Writer out)\nSIGNATURE: src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java::CharSequenceTranslator.translate(CharSequence input, int index, Writer out)\nSTRUCTURE (lossy):\n",
+        "public abstract int translate(CharSequence input, int index, Writer out) throws IOException;"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7619047619047619,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 23.0,
+        "l0_tokens": 84.0,
+        "l1_tokens": 89.0,
+        "compression_ratio": 1,
+        "parse_error": 1.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": true,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/translate/OctalUnescaper.java::OctalUnescaper.translate(CharSequence input, int index, Writer out)",
+      "source": "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        if(input.charAt(index) == '\\\\' && index < (input.length() - 1) && Character.isDigit(input.charAt(index + 1)) ) {\n            int start = index + 1;\n\n            int end = index + 2;\n            while ( end < input.length() && Character.isDigit(input.charAt(end)) ) {\n                end++;\n                if ( Integer.parseInt(input.subSequence(start, end).toString(), 10) > OCTAL_MAX) {\n                    end--; // rollback\n                    break;\n                }\n            }\n\n            out.write( Integer.parseInt(input.subSequence(start, end).toString(), 8) );\n            return 1 + end - start;\n        }\n        return 0;\n    }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/OctalUnescaper.java::OctalUnescaper.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/OctalUnescaper.java::OctalUnescaper.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException\nSTRUCTURE (lossy):\nif(input.charAt(index) == '\\\\' && index < (input.length() - 1) && Character.isDigit(input.charAt(index + 1)) )\nCALL input.charAt(index)\nCALL input.length()\nCALL Character.isDigit(input.charAt(index + 1))\nCALL input.charAt(index + 1)\nint start = index + 1;\nint end = index + 2;\nwhile ( end < input.length() && Character.isDigit(input.charAt(end)) )\nCALL Character.isDigit(input.charAt(end))\nCALL input.charAt(end)\nend++\nif ( Integer.parseInt(input.subSequence(start, end).toString(), 10) > OCTAL_MAX)\nCALL Integer.parseInt(input.subSequence(start, end).toString(), 10)\nCALL input.subSequence(start, end).toString()\nCALL input.subSequence(start, end)\nend--\nCALL out.write( Integer.parseInt(input.subSequence(start, end).toString(), 8) )\nCALL Integer.parseInt(input.subSequence(start, end).toString(), 8)\nreturn 1 + end - start;\nreturn 0;",
+        "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        if(input.charAt(index) == '\\\\' && index < (input.length() - 1) && Character.isDigit(input.charAt(index + 1)) ) {\n            int start = index + 1;\n\n            int end = index + 2;\n            while ( end < input.length() && Character.isDigit(input.charAt(end)) ) {\n                end++;\n                if ( Integer.parseInt(input.subSequence(start, end).toString(), 10) > OCTAL_MAX) {\n                    end--; // rollback\n                    break;\n                }\n            }\n\n            out.write( Integer.parseInt(input.subSequence(start, end).toString(), 8) );\n            return 1 + end - start;\n        }\n        return 0;\n    }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5135135135135135,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 14.0,
+        "literal_count": 9.0,
+        "source_tokens": 188.0,
+        "l0_tokens": 65.0,
+        "l1_tokens": 279.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 14,
+        "literal_count": 9
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/concurrent/CallableBackgroundInitializer.java::CallableBackgroundInitializer.CallableBackgroundInitializer(Callable<T> call, ExecutorService exec)",
+      "source": "public CallableBackgroundInitializer(Callable<T> call, ExecutorService exec) {\n        super(exec);\n        checkCallable(call);\n        callable = call;\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/concurrent/CallableBackgroundInitializer.java::CallableBackgroundInitializer.CallableBackgroundInitializer(Callable<T> call, ExecutorService exec)\nSIGNATURE: public CallableBackgroundInitializer(Callable<T> call, ExecutorService exec)",
+        "METHOD: src/main/java/org/apache/commons/lang3/concurrent/CallableBackgroundInitializer.java::CallableBackgroundInitializer.CallableBackgroundInitializer(Callable<T> call, ExecutorService exec)\nSIGNATURE: public CallableBackgroundInitializer(Callable<T> call, ExecutorService exec)\nSTRUCTURE (lossy):\nCALL checkCallable(call)\ncallable = call",
+        "public CallableBackgroundInitializer(Callable<T> call, ExecutorService exec) {\n        super(exec);\n        checkCallable(call);\n        callable = call;\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6666666666666666,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 40.0,
+        "l0_tokens": 71.0,
+        "l1_tokens": 86.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/translate/LookupTranslator.java::LookupTranslator.translate(CharSequence input, int index, Writer out)",
+      "source": "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        int max = longest;\n        if (index + longest > input.length()) {\n            max = input.length() - index;\n        }\n        // descend so as to get a greedy algorithm\n        for (int i = max; i >= shortest; i--) {\n            CharSequence subSeq = input.subSequence(index, index + i);\n            CharSequence result = lookupMap.get(subSeq);\n            if (result != null) {\n                out.write(result.toString());\n                return i;\n            }\n        }\n        return 0;\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/LookupTranslator.java::LookupTranslator.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/LookupTranslator.java::LookupTranslator.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException\nSTRUCTURE (lossy):\nint max = longest;\nif (index + longest > input.length())\nCALL input.length()\nmax = input.length() - index\nfor (int i = max; i >= shortest; i--)\nint i = max;\ni--\nCharSequence subSeq = input.subSequence(index, index + i);\nCALL input.subSequence(index, index + i)\nCharSequence result = lookupMap.get(subSeq);\nCALL lookupMap.get(subSeq)\nif (result != null)\nCALL out.write(result.toString())\nCALL result.toString()\nreturn i;\nreturn 0;",
+        "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        int max = longest;\n        if (index + longest > input.length()) {\n            max = input.length() - index;\n        }\n        // descend so as to get a greedy algorithm\n        for (int i = max; i >= shortest; i--) {\n            CharSequence subSeq = input.subSequence(index, index + i);\n            CharSequence result = lookupMap.get(subSeq);\n            if (result != null) {\n                out.write(result.toString());\n                return i;\n            }\n        }\n        return 0;\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.46153846153846156,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 6.0,
+        "literal_count": 2.0,
+        "source_tokens": 152.0,
+        "l0_tokens": 66.0,
+        "l1_tokens": 178.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 6,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.subSequence(int startIndex, int endIndex)",
+      "source": "@Override\n    public CharSequence subSequence(int startIndex, int endIndex) {\n      if (startIndex < 0) {\n          throw new StringIndexOutOfBoundsException(startIndex);\n      }\n      if (endIndex > size) {\n          throw new StringIndexOutOfBoundsException(endIndex);\n      }\n      if (startIndex > endIndex) {\n          throw new StringIndexOutOfBoundsException(endIndex - startIndex);\n      }\n      return substring(startIndex, endIndex);\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.subSequence(int startIndex, int endIndex)\nSIGNATURE: @Override\n    public CharSequence subSequence(int startIndex, int endIndex)",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.subSequence(int startIndex, int endIndex)\nSIGNATURE: @Override\n    public CharSequence subSequence(int startIndex, int endIndex)\nSTRUCTURE (lossy):\nif (startIndex < 0)\nthrow new StringIndexOutOfBoundsException(startIndex);\nif (endIndex > size)\nthrow new StringIndexOutOfBoundsException(endIndex);\nif (startIndex > endIndex)\nthrow new StringIndexOutOfBoundsException(endIndex - startIndex);\nreturn substring(startIndex, endIndex);\nCALL substring(startIndex, endIndex)",
+        "@Override\n    public CharSequence subSequence(int startIndex, int endIndex) {\n      if (startIndex < 0) {\n          throw new StringIndexOutOfBoundsException(startIndex);\n      }\n      if (endIndex > size) {\n          throw new StringIndexOutOfBoundsException(endIndex);\n      }\n      if (startIndex > endIndex) {\n          throw new StringIndexOutOfBoundsException(endIndex - startIndex);\n      }\n      return substring(startIndex, endIndex);\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6071428571428571,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 113.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 137.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java::NumericEntityUnescaper.translate(CharSequence input, int index, Writer out)",
+      "source": "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        int seqEnd = input.length();\n        // Uses -2 to ensure there is something after the &#\n        if(input.charAt(index) == '&' && index < seqEnd - 2 && input.charAt(index + 1) == '#') {\n            int start = index + 2;\n            boolean isHex = false;\n\n            char firstChar = input.charAt(start);\n            if(firstChar == 'x' || firstChar == 'X') {\n                start++;\n                isHex = true;\n\n                // Check there's more than just an x after the &#\n                if(start == seqEnd) {\n                    return 0;\n                }\n            }\n\n            int end = start;\n            // Note that this supports character codes without a ; on the end\n            while(end < seqEnd && ( input.charAt(end) >= '0' && input.charAt(end) <= '9' ||\n                                    input.charAt(end) >= 'a' && input.charAt(end) <= 'f' ||\n                                    input.charAt(end) >= 'A' && input.charAt(end) <= 'F' ) )\n            {\n                end++;\n            }\n\n            boolean semiNext = end != seqEnd && input.charAt(end) == ';';\n\n            if(!semiNext) {\n                if(isSet(OPTION.semiColonRequired)) {\n                    return 0;\n                } else\n                if(isSet(OPTION.errorIfNoSemiColon)) {\n                    throw new IllegalArgumentException(\"Semi-colon required at end of numeric entity\");\n                }\n            }\n\n            int entityValue;\n            try {\n                if(isHex) {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 16);\n                } else {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 10);\n                }\n            } catch(NumberFormatException nfe) {\n                return 0;\n            }\n\n            if(entityValue > 0xFFFF) {\n                char[] chrs = Character.toChars(entityValue);\n                out.write(chrs[0]);\n                out.write(chrs[1]);\n            } else {\n                out.write(entityValue);\n            }\n\n            return 2 + end - start + (isHex ? 1 : 0) + (semiNext ? 1 : 0);\n        }\n        return 0;\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java::NumericEntityUnescaper.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java::NumericEntityUnescaper.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException\nSTRUCTURE (lossy):\nint seqEnd = input.length();\nCALL input.length()\nif(input.charAt(index) == '&' && index < seqEnd - 2 && input.charAt(index + 1) == '#')\nCALL input.charAt(index)\nCALL input.charAt(index + 1)\nint start = index + 2;\nboolean isHex = false;\nchar firstChar = input.charAt(start);\nCALL input.charAt(start)\nif(firstChar == 'x' || firstChar == 'X')\nstart++\nisHex = true\nif(start == seqEnd)\nreturn 0;\nint end = start;\nwhile(end < seqEnd && ( input.charAt(end) >= '0' && input.charAt(end) <= '9' || input.charAt(end) >= 'a' && input.charAt(end) <= 'f' || input.charAt(end) >= 'A' && input.charAt(end) <= 'F' ) )\nCALL input.charAt(end)\nend++\nboolean semiNext = end != seqEnd && input.charAt(end) == ';';\nif(!semiNext)\nif(isSet(OPTION.semiColonRequired))\nCALL isSet(OPTION.semiColonRequired)\nif(isSet(OPTION.errorIfNoSemiColon))\nCALL isSet(OPTION.errorIfNoSemiColon)\nthrow new IllegalArgumentException(\"Semi-colon required at end of numeric entity\");\nint entityValue;\nif(isHex)\nentityValue = Integer.parseInt(input.subSequence(start, end).toString(), 16)\nCALL Integer.parseInt(input.subSequence(start, end).toString(), 16)\nCALL input.subSequence(start, end).toString()\nCALL input.subSequence(start, end)\nentityValue = Integer.parseInt(input.subSequence(start, end).toString(), 10)\nCALL Integer.parseInt(input.subSequence(start, end).toString(), 10)\ncatch(NumberFormatException nfe)\nif(entityValue > 0xFFFF)\nchar[] chrs = Character.toChars(entityValue);\nCALL Character.toChars(entityValue)\nCALL out.write(chrs[0])\nCALL out.write(chrs[1])\nCALL out.write(entityValue)\nreturn 2 + end - start + (isHex ? 1 : 0) + (semiNext ? 1 : 0);",
+        "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        int seqEnd = input.length();\n        // Uses -2 to ensure there is something after the &#\n        if(input.charAt(index) == '&' && index < seqEnd - 2 && input.charAt(index + 1) == '#') {\n            int start = index + 2;\n            boolean isHex = false;\n\n            char firstChar = input.charAt(start);\n            if(firstChar == 'x' || firstChar == 'X') {\n                start++;\n                isHex = true;\n\n                // Check there's more than just an x after the &#\n                if(start == seqEnd) {\n                    return 0;\n                }\n            }\n\n            int end = start;\n            // Note that this supports character codes without a ; on the end\n            while(end < seqEnd && ( input.charAt(end) >= '0' && input.charAt(end) <= '9' ||\n                                    input.charAt(end) >= 'a' && input.charAt(end) <= 'f' ||\n                                    input.charAt(end) >= 'A' && input.charAt(end) <= 'F' ) )\n            {\n                end++;\n            }\n\n            boolean semiNext = end != seqEnd && input.charAt(end) == ';';\n\n            if(!semiNext) {\n                if(isSet(OPTION.semiColonRequired)) {\n                    return 0;\n                } else\n                if(isSet(OPTION.errorIfNoSemiColon)) {\n                    throw new IllegalArgumentException(\"Semi-colon required at end of numeric entity\");\n                }\n            }\n\n            int entityValue;\n            try {\n                if(isHex) {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 16);\n                } else {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 10);\n                }\n            } catch(NumberFormatException nfe) {\n                return 0;\n            }\n\n            if(entityValue > 0xFFFF) {\n                char[] chrs = Character.toChars(entityValue);\n                out.write(chrs[0]);\n                out.write(chrs[1]);\n            } else {\n                out.write(entityValue);\n            }\n\n            return 2 + end - start + (isHex ? 1 : 0) + (semiNext ? 1 : 0);\n        }\n        return 0;\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2692307692307692,
+        "trace_match": 0.0,
+        "complexity": 11.0,
+        "call_count": 23.0,
+        "literal_count": 29.0,
+        "source_tokens": 573.0,
+        "l0_tokens": 69.0,
+        "l1_tokens": 477.0,
+        "compression_ratio": 0.8324607329842932,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 11,
+        "call_count": 23,
+        "literal_count": 29
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object... args)",
+      "source": "public static Object invokeMethod(Object object, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Class<?>[] parameterTypes = ClassUtils.toClass(args);\n        return invokeMethod(object, methodName, args, parameterTypes);\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object... args)\nSIGNATURE: public static Object invokeMethod(Object object, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object... args)\nSIGNATURE: public static Object invokeMethod(Object object, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException\nSTRUCTURE (lossy):\nif (args == null)\nargs = ArrayUtils.EMPTY_OBJECT_ARRAY\nClass<?>[] parameterTypes = ClassUtils.toClass(args);\nCALL ClassUtils.toClass(args)\nreturn invokeMethod(object, methodName, args, parameterTypes);\nCALL invokeMethod(object, methodName, args, parameterTypes)",
+        "public static Object invokeMethod(Object object, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Class<?>[] parameterTypes = ClassUtils.toClass(args);\n        return invokeMethod(object, methodName, args, parameterTypes);\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5483870967741935,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 104.0,
+        "l0_tokens": 90.0,
+        "l1_tokens": 160.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/concurrent/CallableBackgroundInitializer.java::CallableBackgroundInitializer.checkCallable(Callable<T> call)",
+      "source": "private void checkCallable(Callable<T> call) {\n        if (call == null) {\n            throw new IllegalArgumentException(\"Callable must not be null!\");\n        }\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/concurrent/CallableBackgroundInitializer.java::CallableBackgroundInitializer.checkCallable(Callable<T> call)\nSIGNATURE: private void checkCallable(Callable<T> call)",
+        "METHOD: src/main/java/org/apache/commons/lang3/concurrent/CallableBackgroundInitializer.java::CallableBackgroundInitializer.checkCallable(Callable<T> call)\nSIGNATURE: private void checkCallable(Callable<T> call)\nSTRUCTURE (lossy):\nif (call == null)\nthrow new IllegalArgumentException(\"Callable must not be null!\");",
+        "private void checkCallable(Callable<T> call) {\n        if (call == null) {\n            throw new IllegalArgumentException(\"Callable must not be null!\");\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5217391304347826,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 0.0,
+        "literal_count": 2.0,
+        "source_tokens": 42.0,
+        "l0_tokens": 53.0,
+        "l1_tokens": 79.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 0,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object... args)",
+      "source": "public static Object invokeExactMethod(Object object, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Class<?>[] parameterTypes = ClassUtils.toClass(args);\n        return invokeExactMethod(object, methodName, args, parameterTypes);\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object... args)\nSIGNATURE: public static Object invokeExactMethod(Object object, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object... args)\nSIGNATURE: public static Object invokeExactMethod(Object object, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException\nSTRUCTURE (lossy):\nif (args == null)\nargs = ArrayUtils.EMPTY_OBJECT_ARRAY\nClass<?>[] parameterTypes = ClassUtils.toClass(args);\nCALL ClassUtils.toClass(args)\nreturn invokeExactMethod(object, methodName, args, parameterTypes);\nCALL invokeExactMethod(object, methodName, args, parameterTypes)",
+        "public static Object invokeExactMethod(Object object, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Class<?>[] parameterTypes = ClassUtils.toClass(args);\n        return invokeExactMethod(object, methodName, args, parameterTypes);\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.53125,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 107.0,
+        "l0_tokens": 92.0,
+        "l1_tokens": 165.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object... args)",
+      "source": "public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Class<?>[] parameterTypes = ClassUtils.toClass(args);\n        return invokeStaticMethod(cls, methodName, args, parameterTypes);\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object... args)\nSIGNATURE: public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object... args)\nSIGNATURE: public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException\nSTRUCTURE (lossy):\nif (args == null)\nargs = ArrayUtils.EMPTY_OBJECT_ARRAY\nClass<?>[] parameterTypes = ClassUtils.toClass(args);\nCALL ClassUtils.toClass(args)\nreturn invokeStaticMethod(cls, methodName, args, parameterTypes);\nCALL invokeStaticMethod(cls, methodName, args, parameterTypes)",
+        "public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Class<?>[] parameterTypes = ClassUtils.toClass(args);\n        return invokeStaticMethod(cls, methodName, args, parameterTypes);\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.53125,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 106.0,
+        "l0_tokens": 92.0,
+        "l1_tokens": 164.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object... args)",
+      "source": "public static Object invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Class<?>[] parameterTypes = ClassUtils.toClass(args);\n        return invokeExactStaticMethod(cls, methodName, args, parameterTypes);\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object... args)\nSIGNATURE: public static Object invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object... args)\nSIGNATURE: public static Object invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException\nSTRUCTURE (lossy):\nif (args == null)\nargs = ArrayUtils.EMPTY_OBJECT_ARRAY\nClass<?>[] parameterTypes = ClassUtils.toClass(args);\nCALL ClassUtils.toClass(args)\nreturn invokeExactStaticMethod(cls, methodName, args, parameterTypes);\nCALL invokeExactStaticMethod(cls, methodName, args, parameterTypes)",
+        "public static Object invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object... args) throws NoSuchMethodException,\n            IllegalAccessException, InvocationTargetException {\n        if (args == null) {\n            args = ArrayUtils.EMPTY_OBJECT_ARRAY;\n        }\n        Class<?>[] parameterTypes = ClassUtils.toClass(args);\n        return invokeExactStaticMethod(cls, methodName, args, parameterTypes);\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5151515151515151,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 109.0,
+        "l0_tokens": 95.0,
+        "l1_tokens": 169.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.getChars(int startIndex, int endIndex, char destination[], int destinationIndex)",
+      "source": "public void getChars(int startIndex, int endIndex, char destination[], int destinationIndex) {\n        if (startIndex < 0) {\n            throw new StringIndexOutOfBoundsException(startIndex);\n        }\n        if (endIndex < 0 || endIndex > length()) {\n            throw new StringIndexOutOfBoundsException(endIndex);\n        }\n        if (startIndex > endIndex) {\n            throw new StringIndexOutOfBoundsException(\"end < start\");\n        }\n        System.arraycopy(buffer, startIndex, destination, destinationIndex, endIndex - startIndex);\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.getChars(int startIndex, int endIndex, char destination[], int destinationIndex)\nSIGNATURE: public void getChars(int startIndex, int endIndex, char destination[], int destinationIndex)",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.getChars(int startIndex, int endIndex, char destination[], int destinationIndex)\nSIGNATURE: public void getChars(int startIndex, int endIndex, char destination[], int destinationIndex)\nSTRUCTURE (lossy):\nif (startIndex < 0)\nthrow new StringIndexOutOfBoundsException(startIndex);\nif (endIndex < 0 || endIndex > length())\nCALL length()\nthrow new StringIndexOutOfBoundsException(endIndex);\nif (startIndex > endIndex)\nthrow new StringIndexOutOfBoundsException(\"end < start\");\nCALL System.arraycopy(buffer, startIndex, destination, destinationIndex, endIndex - startIndex)",
+        "public void getChars(int startIndex, int endIndex, char destination[], int destinationIndex) {\n        if (startIndex < 0) {\n            throw new StringIndexOutOfBoundsException(startIndex);\n        }\n        if (endIndex < 0 || endIndex > length()) {\n            throw new StringIndexOutOfBoundsException(endIndex);\n        }\n        if (startIndex > endIndex) {\n            throw new StringIndexOutOfBoundsException(\"end < start\");\n        }\n        System.arraycopy(buffer, startIndex, destination, destinationIndex, endIndex - startIndex);\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 2.0,
+        "literal_count": 3.0,
+        "source_tokens": 138.0,
+        "l0_tokens": 66.0,
+        "l1_tokens": 162.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 2,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.deleteCharAt(int index)",
+      "source": "public StrBuilder deleteCharAt(int index) {\n        if (index < 0 || index >= size) {\n            throw new StringIndexOutOfBoundsException(index);\n        }\n        deleteImpl(index, index + 1, 1);\n        return this;\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.deleteCharAt(int index)\nSIGNATURE: public StrBuilder deleteCharAt(int index)",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.deleteCharAt(int index)\nSIGNATURE: public StrBuilder deleteCharAt(int index)\nSTRUCTURE (lossy):\nif (index < 0 || index >= size)\nthrow new StringIndexOutOfBoundsException(index);\nCALL deleteImpl(index, index + 1, 1)\nreturn this;",
+        "public StrBuilder deleteCharAt(int index) {\n        if (index < 0 || index >= size) {\n            throw new StringIndexOutOfBoundsException(index);\n        }\n        deleteImpl(index, index + 1, 1);\n        return this;\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.64,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 3.0,
+        "source_tokens": 57.0,
+        "l0_tokens": 39.0,
+        "l1_tokens": 77.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.startTimer()",
+      "source": "protected ScheduledFuture<?> startTimer() {\n        return getExecutorService().scheduleAtFixedRate(new Runnable() {\n            @Override\n            public void run() {\n                endOfPeriod();\n            }\n        }, getPeriod(), getPeriod(), getUnit());\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.startTimer()\nSIGNATURE: protected ScheduledFuture<?> startTimer()",
+        "METHOD: src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.startTimer()\nSIGNATURE: protected ScheduledFuture<?> startTimer()\nSTRUCTURE (lossy):\nreturn getExecutorService().scheduleAtFixedRate(new Runnable() { @Override public void run() { endOfPeriod(); } }, getPeriod(), getPeriod(), getUnit());\nCALL getExecutorService().scheduleAtFixedRate(new Runnable() { @Override public void run() { endOfPeriod(); } }, getPeriod(), getPeriod(), getUnit())\nCALL getExecutorService()\nCALL endOfPeriod()\nCALL getPeriod()\nCALL getUnit()",
+        "protected ScheduledFuture<?> startTimer() {\n        return getExecutorService().scheduleAtFixedRate(new Runnable() {\n            @Override\n            public void run() {\n                endOfPeriod();\n            }\n        }, getPeriod(), getPeriod(), getUnit());\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.41935483870967744,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 6.0,
+        "literal_count": 0.0,
+        "source_tokens": 68.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 140.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 6,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String... excludeFields)",
+      "source": "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String... excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf\n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars,\n        // then a subclass can test equals to a superclass.\n        Class<?> lhsClass = lhs.getClass();\n        Class<?> rhsClass = rhs.getClass();\n        Class<?> testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and\n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String... excludeFields)\nSIGNATURE: public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String... excludeFields)",
+        "METHOD: src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String... excludeFields)\nSIGNATURE: public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String... excludeFields)\nSTRUCTURE (lossy):\nif (lhs == rhs)\nreturn true;\nif (lhs == null || rhs == null)\nreturn false;\nClass<?> lhsClass = lhs.getClass();\nCALL lhs.getClass()\nClass<?> rhsClass = rhs.getClass();\nCALL rhs.getClass()\nClass<?> testClass;\nif (lhsClass.isInstance(rhs))\nCALL lhsClass.isInstance(rhs)\ntestClass = lhsClass\nif (!rhsClass.isInstance(lhs))\nCALL rhsClass.isInstance(lhs)\ntestClass = rhsClass\nif (rhsClass.isInstance(lhs))\nif (!lhsClass.isInstance(rhs))\nEqualsBuilder equalsBuilder = new EqualsBuilder();\nCALL reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields)\nwhile (testClass.getSuperclass() != null && testClass != reflectUpToClass)\nCALL testClass.getSuperclass()\ntestClass = testClass.getSuperclass()\ncatch (IllegalArgumentException e)\nreturn equalsBuilder.isEquals();\nCALL equalsBuilder.isEquals()",
+        "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String... excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf\n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars,\n        // then a subclass can test equals to a superclass.\n        Class<?> lhsClass = lhs.getClass();\n        Class<?> rhsClass = rhs.getClass();\n        Class<?> testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and\n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2028985507246377,
+        "trace_match": 0.0,
+        "complexity": 9.0,
+        "call_count": 11.0,
+        "literal_count": 3.0,
+        "source_tokens": 532.0,
+        "l0_tokens": 95.0,
+        "l1_tokens": 303.0,
+        "compression_ratio": 0.5695488721804511,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 9,
+        "call_count": 11,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.getAccessibleMethodFromSuperclass(Class<?> cls,\n            String methodName, Class<?>... parameterTypes)",
+      "source": "private static Method getAccessibleMethodFromSuperclass(Class<?> cls,\n            String methodName, Class<?>... parameterTypes) {\n        Class<?> parentClass = cls.getSuperclass();\n        while (parentClass != null) {\n            if (Modifier.isPublic(parentClass.getModifiers())) {\n                try {\n                    return parentClass.getMethod(methodName, parameterTypes);\n                } catch (NoSuchMethodException e) {\n                    return null;\n                }\n            }\n            parentClass = parentClass.getSuperclass();\n        }\n        return null;\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.getAccessibleMethodFromSuperclass(Class<?> cls,\n            String methodName, Class<?>... parameterTypes)\nSIGNATURE: private static Method getAccessibleMethodFromSuperclass(Class<?> cls,\n            String methodName, Class<?>... parameterTypes)",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.getAccessibleMethodFromSuperclass(Class<?> cls,\n            String methodName, Class<?>... parameterTypes)\nSIGNATURE: private static Method getAccessibleMethodFromSuperclass(Class<?> cls,\n            String methodName, Class<?>... parameterTypes)\nSTRUCTURE (lossy):\nClass<?> parentClass = cls.getSuperclass();\nCALL cls.getSuperclass()\nwhile (parentClass != null)\nif (Modifier.isPublic(parentClass.getModifiers()))\nCALL Modifier.isPublic(parentClass.getModifiers())\nCALL parentClass.getModifiers()\nreturn parentClass.getMethod(methodName, parameterTypes);\nCALL parentClass.getMethod(methodName, parameterTypes)\ncatch (NoSuchMethodException e)\nreturn null;\nparentClass = parentClass.getSuperclass()\nCALL parentClass.getSuperclass()",
+        "private static Method getAccessibleMethodFromSuperclass(Class<?> cls,\n            String methodName, Class<?>... parameterTypes) {\n        Class<?> parentClass = cls.getSuperclass();\n        while (parentClass != null) {\n            if (Modifier.isPublic(parentClass.getModifiers())) {\n                try {\n                    return parentClass.getMethod(methodName, parameterTypes);\n                } catch (NoSuchMethodException e) {\n                    return null;\n                }\n            }\n            parentClass = parentClass.getSuperclass();\n        }\n        return null;\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.45454545454545453,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 5.0,
+        "literal_count": 3.0,
+        "source_tokens": 149.0,
+        "l0_tokens": 83.0,
+        "l1_tokens": 204.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 5,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.charAt(int index)",
+      "source": "@Override\n    public char charAt(int index) {\n        if (index < 0 || index >= length()) {\n            throw new StringIndexOutOfBoundsException(index);\n        }\n        return buffer[index];\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.charAt(int index)\nSIGNATURE: @Override\n    public char charAt(int index)",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.charAt(int index)\nSIGNATURE: @Override\n    public char charAt(int index)\nSTRUCTURE (lossy):\nif (index < 0 || index >= length())\nCALL length()\nthrow new StringIndexOutOfBoundsException(index);\nreturn buffer[index];",
+        "@Override\n    public char charAt(int index) {\n        if (index < 0 || index >= length()) {\n            throw new StringIndexOutOfBoundsException(index);\n        }\n        return buffer[index];\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6666666666666666,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 50.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 74.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/main/java/org/apache/commons/lang3/text/translate/CodePointTranslator.java::CodePointTranslator.translate(CharSequence input, int index, Writer out)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java::CharSequenceTranslator.translate(CharSequence input, Writer out)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/translate/CodePointTranslator.java::CodePointTranslator.translate(int codepoint, Writer out)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java::StringEscapeUtils.CsvUnescaper.translate(CharSequence input, int index, Writer out)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java::StringEscapeUtils.CsvEscaper.translate(CharSequence input, int index, Writer out)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/translate/UnicodeUnescaper.java::UnicodeUnescaper.translate(CharSequence input, int index, Writer out)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/translate/AggregateTranslator.java::AggregateTranslator.translate(CharSequence input, int index, Writer out)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java::CharSequenceTranslator.translate(CharSequence input, int index, Writer out)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/translate/OctalUnescaper.java::OctalUnescaper.translate(CharSequence input, int index, Writer out)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/concurrent/CallableBackgroundInitializer.java::CallableBackgroundInitializer.CallableBackgroundInitializer(Callable<T> call, ExecutorService exec)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/translate/LookupTranslator.java::LookupTranslator.translate(CharSequence input, int index, Writer out)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.subSequence(int startIndex, int endIndex)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java::NumericEntityUnescaper.translate(CharSequence input, int index, Writer out)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object... args)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/concurrent/CallableBackgroundInitializer.java::CallableBackgroundInitializer.checkCallable(Callable<T> call)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object... args)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object... args)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactStaticMethod(Class<?> cls, String methodName,\n            Object... args)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.getChars(int startIndex, int endIndex, char destination[], int destinationIndex)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.deleteCharAt(int index)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.startTimer()": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String... excludeFields)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.getAccessibleMethodFromSuperclass(Class<?> cls,\n            String methodName, Class<?>... parameterTypes)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/StrBuilder.java::StrBuilder.charAt(int index)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 2420,
+    "retrieved_unique_entities": 24,
+    "deduplication": "highest_bm25_or_lexical_score_per_entity_id",
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "666c18a87a49e52a9e80b00d1c13ed2b21d70ea8c2429ab5623499f4f00a3eac",
+  "evidence_sha256": "220c814002e07f63258c3978ee8709e7bdac5e5f357e967d5cd1c6c150d6de8f"
+}

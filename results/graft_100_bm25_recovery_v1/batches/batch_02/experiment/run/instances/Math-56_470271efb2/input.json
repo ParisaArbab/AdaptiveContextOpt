@@ -1,0 +1,1320 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Math-56",
+    "repository": "Math",
+    "language": "java",
+    "revision": "b20a0daa6f822fb67e626d676dacfddcee0afb77",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_02/prepared/checkouts/Math-56",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Math-56\nEXECUTED BUGGY TEST: org.apache.commons.math.util.MultidimensionalCounterTest::testIterationConsistency\nTEST SOURCE: src/test/java/org/apache/commons/math/util/MultidimensionalCounterTest.java\nTEST SOURCE SHA256: 75cdeb758b49c6c718e46abd15c490bc50584304c620024a1539de845af32371\nCOMPLETE EXECUTED TEST METHOD (verbatim):\n@Test\n    public void testIterationConsistency() {\n        final MultidimensionalCounter c = new MultidimensionalCounter(2, 3, 4);\n        final int[][] expected = new int[][] {\n            { 0, 0, 0 },\n            { 0, 0, 1 },\n            { 0, 0, 2 },\n            { 0, 0, 3 },\n            { 0, 1, 0 },\n            { 0, 1, 1 },\n            { 0, 1, 2 },\n            { 0, 1, 3 },\n            { 0, 2, 0 },\n            { 0, 2, 1 },\n            { 0, 2, 2 },\n            { 0, 2, 3 },\n            { 1, 0, 0 },\n            { 1, 0, 1 },\n            { 1, 0, 2 },\n            { 1, 0, 3 },\n            { 1, 1, 0 },\n            { 1, 1, 1 },\n            { 1, 1, 2 },\n            { 1, 1, 3 },\n            { 1, 2, 0 },\n            { 1, 2, 1 },\n            { 1, 2, 2 },\n            { 1, 2, 3 }\n        };\n\n        final int totalSize = c.getSize();\n        final int nDim = c.getDimension();\n        final MultidimensionalCounter.Iterator iter = c.iterator();\n        for (int i = 0; i < totalSize; i++) {\n            if (!iter.hasNext()) {\n                Assert.fail(\"Too short\");\n            }\n            final int uniDimIndex = iter.next();\n            Assert.assertEquals(\"Wrong iteration at \" + i, i, uniDimIndex);\n\n            for (int dimIndex = 0; dimIndex < nDim; dimIndex++) {\n                Assert.assertEquals(\"Wrong multidimensional index for [\" + i + \"][\" + dimIndex + \"]\",\n                                    expected[i][dimIndex], iter.getCount(dimIndex));\n            }\n\n            Assert.assertEquals(\"Wrong unidimensional index for [\" + i + \"]\",\n                                c.getCount(expected[i]), uniDimIndex);\n\n            final int[] indices = c.getCounts(uniDimIndex);\n            for (int dimIndex = 0; dimIndex < nDim; dimIndex++) {\n                Assert.assertEquals(\"Wrong multidimensional index for [\" + i + \"][\" + dimIndex + \"]\",\n                                    expected[i][dimIndex], indices[dimIndex]);\n            }\n        }\n\n        if (iter.hasNext()) {\n            Assert.fail(\"Too long\");\n        }\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.apache.commons.math.util.MultidimensionalCounterTest::testIterationConsistency\njunit.framework.AssertionFailedError: Wrong multidimensional index for [3][2] expected:<3> but was:<2>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.apache.commons.math.util.MultidimensionalCounterTest.testIterationConsistency(MultidimensionalCounterTest.java:172)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnit4TestMethodAdapter.run(JUnit4TestMethodAdapter.java:109)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_02/prepared/evidence/Math-56.txt",
+      "sha256": "ffa1f5c915a0997e814bd57f9ce99a2090077d744f3a409e2e6acdea00dba36a"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src/main/java",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Math-56",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.getCounts(int index)",
+      "path": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java",
+      "start_line": 216,
+      "end_line": 246,
+      "source": "public int[] getCounts(int index) {\n        if (index < 0 ||\n            index >= totalSize) {\n            throw new OutOfRangeException(index, 0, totalSize);\n        }\n\n        final int[] indices = new int[dimension];\n\n        int count = 0;\n        for (int i = 0; i < last; i++) {\n            int idx = 0;\n            final int offset = uniCounterOffset[i];\n            while (count <= index) {\n                count += offset;\n                ++idx;\n            }\n            --idx;\n            count -= offset;\n            indices[i] = idx;\n        }\n\n        int idx = 1;\n        while (count < index) {\n            count += idx;\n            ++idx;\n        }\n        --idx;\n        indices[last] = idx;\n\n        return indices;\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 73.47555729713926
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.MultidimensionalCounter(int ... size)",
+      "path": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java",
+      "start_line": 165,
+      "end_line": 188,
+      "source": "public MultidimensionalCounter(int ... size) {\n        dimension = size.length;\n        this.size = MathUtils.copyOf(size);\n\n        uniCounterOffset = new int[dimension];\n\n        last = dimension - 1;\n        int tS = size[last];\n        for (int i = 0; i < last; i++) {\n            int count = 1;\n            for (int j = i + 1; j < dimension; j++) {\n                count *= size[j];\n            }\n            uniCounterOffset[i] = count;\n            tS *= size[i];\n        }\n        uniCounterOffset[last] = 0;\n\n        if (tS <= 0) {\n            throw new NotStrictlyPositiveException(tS);\n        }\n\n        totalSize = tS;\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 67.36072474449728
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.getCount(int ... c)",
+      "path": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java",
+      "start_line": 259,
+      "end_line": 273,
+      "source": "public int getCount(int ... c) throws OutOfRangeException {\n        if (c.length != dimension) {\n            throw new DimensionMismatchException(c.length, dimension);\n        }\n        int count = 0;\n        for (int i = 0; i < dimension; i++) {\n            final int index = c[i];\n            if (index < 0 ||\n                index >= size[i]) {\n                throw new OutOfRangeException(index, 0, size[i] - 1);\n            }\n            count += uniCounterOffset[i] * c[i];\n        }\n        return count + c[last];\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 54.89666076641048
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.hasNext()",
+      "path": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java",
+      "start_line": 92,
+      "end_line": 99,
+      "source": "public boolean hasNext() {\n            for (int i = 0; i < dimension; i++) {\n                if (counter[i] != size[i] - 1) {\n                    return true;\n                }\n            }\n            return false;\n        }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 51.264885885584306
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.getCount(int dim)",
+      "path": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java",
+      "start_line": 146,
+      "end_line": 148,
+      "source": "public int getCount(int dim) {\n            return counter[dim];\n        }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 49.87747870704313
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.next()",
+      "path": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java",
+      "start_line": 105,
+      "end_line": 116,
+      "source": "public Integer next() {\n            for (int i = last; i >= 0; i--) {\n                if (counter[i] == size[i] - 1) {\n                    counter[i] = 0;\n                } else {\n                    ++counter[i];\n                    break;\n                }\n            }\n\n            return ++count;\n        }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 47.420781836454914
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/ode/nonstiff/GraggBulirschStoerIntegrator.java::GraggBulirschStoerIntegrator.integrate(final FirstOrderDifferentialEquations equations,\n                          final double t0, final double[] y0, final double t, final double[] y)",
+      "path": "src/main/java/org/apache/commons/math/ode/nonstiff/GraggBulirschStoerIntegrator.java",
+      "start_line": 549,
+      "end_line": 962,
+      "source": "@Override\n  public double integrate(final FirstOrderDifferentialEquations equations,\n                          final double t0, final double[] y0, final double t, final double[] y)\n      throws MathUserException, IntegratorException {\n\n    sanityChecks(equations, t0, y0, t, y);\n    setEquations(equations);\n    resetEvaluations();\n    final boolean forward = t > t0;\n\n    // create some internal working arrays\n    final double[] yDot0   = new double[y0.length];\n    final double[] y1      = new double[y0.length];\n    final double[] yTmp    = new double[y0.length];\n    final double[] yTmpDot = new double[y0.length];\n\n    final double[][] diagonal = new double[sequence.length-1][];\n    final double[][] y1Diag = new double[sequence.length-1][];\n    for (int k = 0; k < sequence.length-1; ++k) {\n      diagonal[k] = new double[y0.length];\n      y1Diag[k] = new double[y0.length];\n    }\n\n    final double[][][] fk  = new double[sequence.length][][];\n    for (int k = 0; k < sequence.length; ++k) {\n\n      fk[k]    = new double[sequence[k] + 1][];\n\n      // all substeps start at the same point, so share the first array\n      fk[k][0] = yDot0;\n\n      for (int l = 0; l < sequence[k]; ++l) {\n        fk[k][l+1] = new double[y0.length];\n      }\n\n    }\n\n    if (y != y0) {\n      System.arraycopy(y0, 0, y, 0, y0.length);\n    }\n\n    double[] yDot1      = new double[y0.length];\n    double[][] yMidDots = null;\n    final boolean denseOutput = requiresDenseOutput();\n    if (denseOutput) {\n      yMidDots = new double[1 + 2 * sequence.length][];\n      for (int j = 0; j < yMidDots.length; ++j) {\n        yMidDots[j] = new double[y0.length];\n      }\n    } else {\n      yMidDots    = new double[1][];\n      yMidDots[0] = new double[y0.length];\n    }\n\n    // initial scaling\n    final double[] scale = new double[mainSetDimension];\n    rescale(y, y, scale);\n\n    // initial order selection\n    final double tol =\n        (vecRelativeTolerance == null) ? scalRelativeTolerance : vecRelativeTolerance[0];\n    final double log10R = FastMath.log10(FastMath.max(1.0e-10, tol));\n    int targetIter = FastMath.max(1,\n                              FastMath.min(sequence.length - 2,\n                                       (int) FastMath.floor(0.5 - 0.6 * log10R)));\n\n    // set up an interpolator sharing the integrator arrays\n    AbstractStepInterpolator interpolator = null;\n    if (denseOutput) {\n      interpolator = new GraggBulirschStoerStepInterpolator(y, yDot0,\n                                                            y1, yDot1,\n                                                            yMidDots, forward);\n    } else {\n      interpolator = new DummyStepInterpolator(y, yDot1, forward);\n    }\n    interpolator.storeTime(t0);\n\n    stepStart = t0;\n    double  hNew             = 0;\n    double  maxError         = Double.MAX_VALUE;\n    boolean previousRejected = false;\n    boolean firstTime        = true;\n    boolean newStep          = true;\n    boolean firstStepAlreadyComputed = false;\n    for (StepHandler handler : stepHandlers) {\n        handler.reset();\n    }\n    setStateInitialized(false);\n    costPerTimeUnit[0] = 0;\n    isLastStep = false;\n    do {\n\n      double error;\n      boolean reject = false;\n\n      if (newStep) {\n\n        interpolator.shift();\n\n        // first evaluation, at the beginning of the step\n        if (! firstStepAlreadyComputed) {\n          computeDerivatives(stepStart, y, yDot0);\n        }\n\n        if (firstTime) {\n          hNew = initializeStep(equations, forward,\n                                2 * targetIter + 1, scale,\n                                stepStart, y, yDot0, yTmp, yTmpDot);\n        }\n\n        newStep = false;\n\n      }\n\n      stepSize = hNew;\n\n      // step adjustment near bounds\n      if ((forward && (stepStart + stepSize > t)) ||\n          ((! forward) && (stepStart + stepSize < t))) {\n        stepSize = t - stepStart;\n      }\n      final double nextT = stepStart + stepSize;\n      isLastStep = forward ? (nextT >= t) : (nextT <= t);\n\n      // iterate over several substep sizes\n      int k = -1;\n      for (boolean loop = true; loop; ) {\n\n        ++k;\n\n        // modified midpoint integration with the current substep\n        if ( ! tryStep(stepStart, y, stepSize, k, scale, fk[k],\n                       (k == 0) ? yMidDots[0] : diagonal[k-1],\n                       (k == 0) ? y1 : y1Diag[k-1],\n                       yTmp)) {\n\n          // the stability check failed, we reduce the global step\n          hNew   = FastMath.abs(filterStep(stepSize * stabilityReduction, forward, false));\n          reject = true;\n          loop   = false;\n\n        } else {\n\n          // the substep was computed successfully\n          if (k > 0) {\n\n            // extrapolate the state at the end of the step\n            // using last iteration data\n            extrapolate(0, k, y1Diag, y1);\n            rescale(y, y1, scale);\n\n            // estimate the error at the end of the step.\n            error = 0;\n            for (int j = 0; j < mainSetDimension; ++j) {\n              final double e = FastMath.abs(y1[j] - y1Diag[0][j]) / scale[j];\n              error += e * e;\n            }\n            error = FastMath.sqrt(error / mainSetDimension);\n\n            if ((error > 1.0e15) || ((k > 1) && (error > maxError))) {\n              // error is too big, we reduce the global step\n              hNew   = FastMath.abs(filterStep(stepSize * stabilityReduction, forward, false));\n              reject = true;\n              loop   = false;\n            } else {\n\n              maxError = FastMath.max(4 * error, 1.0);\n\n              // compute optimal stepsize for this order\n              final double exp = 1.0 / (2 * k + 1);\n              double fac = stepControl2 / FastMath.pow(error / stepControl1, exp);\n              final double pow = FastMath.pow(stepControl3, exp);\n              fac = FastMath.max(pow / stepControl4, FastMath.min(1 / pow, fac));\n              optimalStep[k]     = FastMath.abs(filterStep(stepSize * fac, forward, true));\n              costPerTimeUnit[k] = costPerStep[k] / optimalStep[k];\n\n              // check convergence\n              switch (k - targetIter) {\n\n              case -1 :\n                if ((targetIter > 1) && ! previousRejected) {\n\n                  // check if we can stop iterations now\n                  if (error <= 1.0) {\n                    // convergence have been reached just before targetIter\n                    loop = false;\n                  } else {\n                    // estimate if there is a chance convergence will\n                    // be reached on next iteration, using the\n                    // asymptotic evolution of error\n                    final double ratio = ((double) sequence [targetIter] * sequence[targetIter + 1]) /\n                                         (sequence[0] * sequence[0]);\n                    if (error > ratio * ratio) {\n                      // we don't expect to converge on next iteration\n                      // we reject the step immediately and reduce order\n                      reject = true;\n                      loop   = false;\n                      targetIter = k;\n                      if ((targetIter > 1) &&\n                          (costPerTimeUnit[targetIter-1] <\n                           orderControl1 * costPerTimeUnit[targetIter])) {\n                        --targetIter;\n                      }\n                      hNew = optimalStep[targetIter];\n                    }\n                  }\n                }\n                break;\n\n              case 0:\n                if (error <= 1.0) {\n                  // convergence has been reached exactly at targetIter\n                  loop = false;\n                } else {\n                  // estimate if there is a chance convergence will\n                  // be reached on next iteration, using the\n                  // asymptotic evolution of error\n                  final double ratio = ((double) sequence[k+1]) / sequence[0];\n                  if (error > ratio * ratio) {\n                    // we don't expect to converge on next iteration\n                    // we reject the step immediately\n                    reject = true;\n                    loop = false;\n                    if ((targetIter > 1) &&\n                        (costPerTimeUnit[targetIter-1] <\n                         orderControl1 * costPerTimeUnit[targetIter])) {\n                      --targetIter;\n                    }\n                    hNew = optimalStep[targetIter];\n                  }\n                }\n                break;\n\n              case 1 :\n                if (error > 1.0) {\n                  reject = true;\n                  if ((targetIter > 1) &&\n                      (costPerTimeUnit[targetIter-1] <\n                       orderControl1 * costPerTimeUnit[targetIter])) {\n                    --targetIter;\n                  }\n                  hNew = optimalStep[targetIter];\n                }\n                loop = false;\n                break;\n\n              default :\n                if ((firstTime || isLastStep) && (error <= 1.0)) {\n                  loop = false;\n                }\n                break;\n\n              }\n\n            }\n          }\n        }\n      }\n\n      if (! reject) {\n          // derivatives at end of step\n          computeDerivatives(stepStart + stepSize, y1, yDot1);\n      }\n\n      // dense output handling\n      double hInt = getMaxStep();\n      if (denseOutput && ! reject) {\n\n        // extrapolate state at middle point of the step\n        for (int j = 1; j <= k; ++j) {\n          extrapolate(0, j, diagonal, yMidDots[0]);\n        }\n\n        final int mu = 2 * k - mudif + 3;\n\n        for (int l = 0; l < mu; ++l) {\n\n          // derivative at middle point of the step\n          final int l2 = l / 2;\n          double factor = FastMath.pow(0.5 * sequence[l2], l);\n          int middleIndex = fk[l2].length / 2;\n          for (int i = 0; i < y0.length; ++i) {\n            yMidDots[l+1][i] = factor * fk[l2][middleIndex + l][i];\n          }\n          for (int j = 1; j <= k - l2; ++j) {\n            factor = FastMath.pow(0.5 * sequence[j + l2], l);\n            middleIndex = fk[l2+j].length / 2;\n            for (int i = 0; i < y0.length; ++i) {\n              diagonal[j-1][i] = factor * fk[l2+j][middleIndex+l][i];\n            }\n            extrapolate(l2, j, diagonal, yMidDots[l+1]);\n          }\n          for (int i = 0; i < y0.length; ++i) {\n            yMidDots[l+1][i] *= stepSize;\n          }\n\n          // compute centered differences to evaluate next derivatives\n          for (int j = (l + 1) / 2; j <= k; ++j) {\n            for (int m = fk[j].length - 1; m >= 2 * (l + 1); --m) {\n              for (int i = 0; i < y0.length; ++i) {\n                fk[j][m][i] -= fk[j][m-2][i];\n              }\n            }\n          }\n\n        }\n\n        if (mu >= 0) {\n\n          // estimate the dense output coefficients\n          final GraggBulirschStoerStepInterpolator gbsInterpolator\n            = (GraggBulirschStoerStepInterpolator) interpolator;\n          gbsInterpolator.computeCoefficients(mu, stepSize);\n\n          if (useInterpolationError) {\n            // use the interpolation error to limit stepsize\n            final double interpError = gbsInterpolator.estimateError(scale);\n            hInt = FastMath.abs(stepSize / FastMath.max(FastMath.pow(interpError, 1.0 / (mu+4)),\n                                                0.01));\n            if (interpError > 10.0) {\n              hNew = hInt;\n              reject = true;\n            }\n          }\n\n        }\n\n      }\n\n      if (! reject) {\n\n        // Discrete events handling\n        interpolator.storeTime(stepStart + stepSize);\n        stepStart = acceptStep(interpolator, y1, yDot1, t);\n\n        // prepare next step\n        interpolator.storeTime(stepStart);\n        System.arraycopy(y1, 0, y, 0, y0.length);\n        System.arraycopy(yDot1, 0, yDot0, 0, y0.length);\n        firstStepAlreadyComputed = true;\n\n        int optimalIter;\n        if (k == 1) {\n          optimalIter = 2;\n          if (previousRejected) {\n            optimalIter = 1;\n          }\n        } else if (k <= targetIter) {\n          optimalIter = k;\n          if (costPerTimeUnit[k-1] < orderControl1 * costPerTimeUnit[k]) {\n            optimalIter = k-1;\n          } else if (costPerTimeUnit[k] < orderControl2 * costPerTimeUnit[k-1]) {\n            optimalIter = FastMath.min(k+1, sequence.length - 2);\n          }\n        } else {\n          optimalIter = k - 1;\n          if ((k > 2) &&\n              (costPerTimeUnit[k-2] < orderControl1 * costPerTimeUnit[k-1])) {\n            optimalIter = k - 2;\n          }\n          if (costPerTimeUnit[k] < orderControl2 * costPerTimeUnit[optimalIter]) {\n            optimalIter = FastMath.min(k, sequence.length - 2);\n          }\n        }\n\n        if (previousRejected) {\n          // after a rejected step neither order nor stepsize\n          // should increase\n          targetIter = FastMath.min(optimalIter, k);\n          hNew = FastMath.min(FastMath.abs(stepSize), optimalStep[targetIter]);\n        } else {\n          // stepsize control\n          if (optimalIter <= k) {\n            hNew = optimalStep[optimalIter];\n          } else {\n            if ((k < targetIter) &&\n                (costPerTimeUnit[k] < orderControl2 * costPerTimeUnit[k-1])) {\n              hNew = filterStep(optimalStep[k] * costPerStep[optimalIter+1] / costPerStep[k],\n                               forward, false);\n            } else {\n              hNew = filterStep(optimalStep[k] * costPerStep[optimalIter] / costPerStep[k],\n                                forward, false);\n            }\n          }\n\n          targetIter = optimalIter;\n\n        }\n\n        newStep = true;\n\n      }\n\n      hNew = FastMath.min(hNew, hInt);\n      if (! forward) {\n        hNew = -hNew;\n      }\n\n      firstTime = false;\n\n      if (reject) {\n        isLastStep = false;\n        previousRejected = true;\n      } else {\n        previousRejected = false;\n      }\n\n    } while (!isLastStep);\n\n    final double stopTime = stepStart;\n    resetInternalState();\n    return stopTime;\n\n  }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 44.991329961148026
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.getCounts()",
+      "path": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java",
+      "start_line": 131,
+      "end_line": 133,
+      "source": "public int[] getCounts() {\n            return MathUtils.copyOf(counter);\n        }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 44.25592903025883
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/util/CompositeFormat.java::CompositeFormat.parseFixedstring(final String source,\n                                           final String expected,\n                                           final ParsePosition pos)",
+      "path": "src/main/java/org/apache/commons/math/util/CompositeFormat.java",
+      "start_line": 173,
+      "end_line": 191,
+      "source": "public static boolean parseFixedstring(final String source,\n                                           final String expected,\n                                           final ParsePosition pos) {\n\n        final int startIndex = pos.getIndex();\n        final int endIndex = startIndex + expected.length();\n        if ((startIndex >= source.length()) ||\n            (endIndex > source.length()) ||\n            (source.substring(startIndex, endIndex).compareTo(expected) != 0)) {\n            // set index back to start, error index should be the start index\n            pos.setIndex(startIndex);\n            pos.setErrorIndex(startIndex);\n            return false;\n        }\n\n        // the string was here\n        pos.setIndex(endIndex);\n        return true;\n    }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.597526006523054
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquare(long[][] counts)",
+      "path": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "start_line": 152,
+      "end_line": 180,
+      "source": "public double chiSquare(long[][] counts) {\n        checkArray(counts);\n        int nRows = counts.length;\n        int nCols = counts[0].length;\n\n        // compute row, column and total sums\n        double[] rowSum = new double[nRows];\n        double[] colSum = new double[nCols];\n        double total = 0.0d;\n        for (int row = 0; row < nRows; row++) {\n            for (int col = 0; col < nCols; col++) {\n                rowSum[row] += counts[row][col];\n                colSum[col] += counts[row][col];\n                total += counts[row][col];\n            }\n        }\n\n        // compute expected counts and chi-square\n        double sumSq = 0.0d;\n        double expected = 0.0d;\n        for (int row = 0; row < nRows; row++) {\n            for (int col = 0; col < nCols; col++) {\n                expected = (rowSum[row] * colSum[col]) / total;\n                sumSq += ((counts[row][col] - expected) *\n                        (counts[row][col] - expected)) / expected;\n            }\n        }\n        return sumSq;\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.78440573310624
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.getSize()",
+      "path": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java",
+      "start_line": 280,
+      "end_line": 282,
+      "source": "public int getSize() {\n        return totalSize;\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.356710052520924
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/linear/MatrixDimensionMismatchException.java::MatrixDimensionMismatchException.MatrixDimensionMismatchException(int wrongRowDim,\n                                            int wrongColDim,\n                                            int expectedRowDim,\n                                            int expectedColDim)",
+      "path": "src/main/java/org/apache/commons/math/linear/MatrixDimensionMismatchException.java",
+      "start_line": 41,
+      "end_line": 48,
+      "source": "public MatrixDimensionMismatchException(int wrongRowDim,\n                                            int wrongColDim,\n                                            int expectedRowDim,\n                                            int expectedColDim) {\n        super(LocalizedFormats.DIMENSIONS_MISMATCH_2x2,\n              new Integer[] { wrongRowDim, wrongColDim },\n              new Integer[] { expectedRowDim, expectedColDim });\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.25764858442051
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/linear/OpenMapRealVector.java::OpenMapRealVector.equals(Object obj)",
+      "path": "src/main/java/org/apache/commons/math/linear/OpenMapRealVector.java",
+      "start_line": 804,
+      "end_line": 837,
+      "source": "@Override\n    public boolean equals(Object obj) {\n        if (this == obj) {\n            return true;\n        }\n        if (!(obj instanceof OpenMapRealVector)) {\n            return false;\n        }\n        OpenMapRealVector other = (OpenMapRealVector) obj;\n        if (virtualSize != other.virtualSize) {\n            return false;\n        }\n        if (Double.doubleToLongBits(epsilon) !=\n            Double.doubleToLongBits(other.epsilon)) {\n            return false;\n        }\n        Iterator iter = entries.iterator();\n        while (iter.hasNext()) {\n            iter.advance();\n            double test = other.getEntry(iter.key());\n            if (Double.doubleToLongBits(test) != Double.doubleToLongBits(iter.value())) {\n                return false;\n            }\n        }\n        iter = other.getEntries().iterator();\n        while (iter.hasNext()) {\n            iter.advance();\n            double test = iter.value();\n            if (Double.doubleToLongBits(test) != Double.doubleToLongBits(getEntry(iter.key()))) {\n                return false;\n            }\n        }\n        return true;\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.19997729214266
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.getCount()",
+      "path": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java",
+      "start_line": 123,
+      "end_line": 125,
+      "source": "public int getCount() {\n            return count;\n        }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 38.37672213363209
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquare(double[] expected, long[] observed)",
+      "path": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "start_line": 70,
+      "end_line": 102,
+      "source": "public double chiSquare(double[] expected, long[] observed) {\n        if (expected.length < 2) {\n            throw new DimensionMismatchException(expected.length, 2);\n        }\n        if (expected.length != observed.length) {\n            throw new DimensionMismatchException(expected.length, observed.length);\n        }\n        checkPositive(expected);\n        checkNonNegative(observed);\n        double sumExpected = 0d;\n        double sumObserved = 0d;\n        for (int i = 0; i < observed.length; i++) {\n            sumExpected += expected[i];\n            sumObserved += observed[i];\n        }\n        double ratio = 1.0d;\n        boolean rescale = false;\n        if (FastMath.abs(sumExpected - sumObserved) > 10E-6) {\n            ratio = sumObserved / sumExpected;\n            rescale = true;\n        }\n        double sumSq = 0.0d;\n        for (int i = 0; i < observed.length; i++) {\n            if (rescale) {\n                final double dev = observed[i] - ratio * expected[i];\n                sumSq += dev * dev / (ratio * expected[i]);\n            } else {\n                final double dev = observed[i] - expected[i];\n                sumSq += dev * dev / expected[i];\n            }\n        }\n        return sumSq;\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 38.154037491435815
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/linear/AbstractRealVector.java::AbstractRealVector.iterator()",
+      "path": "src/main/java/org/apache/commons/math/linear/AbstractRealVector.java",
+      "start_line": 474,
+      "end_line": 500,
+      "source": "public Iterator<Entry> iterator() {\n        final int dim = getDimension();\n        return new Iterator<Entry>() {\n\n            /** Current index. */\n            private int i = 0;\n\n            /** Current entry. */\n            private EntryImpl e = new EntryImpl();\n\n            /** {@inheritDoc} */\n            public boolean hasNext() {\n                return i < dim;\n            }\n\n            /** {@inheritDoc} */\n            public Entry next() {\n                e.setIndex(i++);\n                return e;\n            }\n\n            /** {@inheritDoc} */\n            public void remove() {\n                throw new MathUnsupportedOperationException();\n            }\n        };\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 37.56929658352483
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/linear/SparseFieldVector.java::SparseFieldVector.equals(Object obj)",
+      "path": "src/main/java/org/apache/commons/math/linear/SparseFieldVector.java",
+      "start_line": 606,
+      "end_line": 648,
+      "source": "@Override\n    public boolean equals(Object obj) {\n\n        if (this == obj) {\n            return true;\n        }\n\n        if (!(obj instanceof SparseFieldVector<?>)) {\n            return false;\n        }\n\n        @SuppressWarnings(\"unchecked\") // OK, because \"else if\" check below ensures that\n                                       // other must be the same type as this\n        SparseFieldVector<T> other = (SparseFieldVector<T>) obj;\n        if (field == null) {\n            if (other.field != null) {\n                return false;\n            }\n        } else if (!field.equals(other.field)) {\n            return false;\n        }\n        if (virtualSize != other.virtualSize) {\n            return false;\n        }\n\n        OpenIntToFieldHashMap<T>.Iterator iter = entries.iterator();\n        while (iter.hasNext()) {\n            iter.advance();\n            T test = other.getEntry(iter.key());\n            if (!test.equals(iter.value())) {\n                return false;\n            }\n        }\n        iter = other.getEntries().iterator();\n        while (iter.hasNext()) {\n            iter.advance();\n            T test = iter.value();\n            if (!test.equals(getEntry(iter.key()))) {\n                return false;\n            }\n        }\n        return true;\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 37.12842285880322
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/linear/OpenMapRealVector.java::OpenMapRealVector.add(OpenMapRealVector v)",
+      "path": "src/main/java/org/apache/commons/math/linear/OpenMapRealVector.java",
+      "start_line": 243,
+      "end_line": 259,
+      "source": "public OpenMapRealVector add(OpenMapRealVector v) {\n        checkVectorDimensions(v.getDimension());\n        boolean copyThis = entries.size() > v.entries.size();\n        OpenMapRealVector res = copyThis ? this.copy() : v.copy();\n        Iterator iter = copyThis ? v.entries.iterator() : entries.iterator();\n        OpenIntToDoubleHashMap randomAccess = copyThis ? entries : v.entries;\n        while (iter.hasNext()) {\n            iter.advance();\n            int key = iter.key();\n            if (randomAccess.containsKey(key)) {\n                res.setEntry(key, randomAccess.get(key) + iter.value());\n            } else {\n                res.setEntry(key, iter.value());\n            }\n        }\n        return res;\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.13738397162417
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/genetics/RandomKey.java::RandomKey.decodeGeneric(List<S> sequence, List<Double> representation, List<Double> sortedRepr)",
+      "path": "src/main/java/org/apache/commons/math/genetics/RandomKey.java",
+      "start_line": 119,
+      "end_line": 139,
+      "source": "private static <S> List<S> decodeGeneric(List<S> sequence, List<Double> representation, List<Double> sortedRepr) {\n        int l = sequence.size();\n\n        if (representation.size() != l) {\n            throw new IllegalArgumentException(String.format(\"Length of sequence for decoding (%s) has to be equal to the length of the RandomKey (%s)\", l, representation.size()));\n        }\n        if (representation.size() != sortedRepr.size()) {\n            throw new IllegalArgumentException(String.format(\"Representation and sortedRepr must have same sizes, %d != %d\", representation.size(), sortedRepr.size()));\n        }\n\n        List<Double> reprCopy = new ArrayList<Double> (representation);// do not modify the orig. representation\n\n        // now find the indices in the original repr and use them for permuting\n        List<S> res = new ArrayList<S> (l);\n        for (int i=0; i<l; i++) {\n            int index = reprCopy.indexOf(sortedRepr.get(i));\n            res.add(sequence.get(index));\n            reprCopy.set(index, null);\n        }\n        return res;\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.11846709984397
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.toString()",
+      "path": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java",
+      "start_line": 295,
+      "end_line": 302,
+      "source": "@Override\n    public String toString() {\n        final StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < dimension; i++) {\n            sb.append(\"[\").append(getCount(i)).append(\"]\");\n        }\n        return sb.toString();\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.98199641423708
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/fraction/BigFractionFormat.java::BigFractionFormat.parseNextBigInteger(final String source,\n                                             final ParsePosition pos)",
+      "path": "src/main/java/org/apache/commons/math/fraction/BigFractionFormat.java",
+      "start_line": 270,
+      "end_line": 289,
+      "source": "protected BigInteger parseNextBigInteger(final String source,\n                                             final ParsePosition pos) {\n\n        final int start = pos.getIndex();\n         int end = (source.charAt(start) == '-') ? (start + 1) : start;\n         while((end < source.length()) &&\n               Character.isDigit(source.charAt(end))) {\n             ++end;\n         }\n\n         try {\n             BigInteger n = new BigInteger(source.substring(start, end));\n             pos.setIndex(end);\n             return n;\n         } catch (NumberFormatException nfe) {\n             pos.setErrorIndex(start);\n             return null;\n         }\n\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.539676466216704
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.iterator()",
+      "path": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java",
+      "start_line": 195,
+      "end_line": 197,
+      "source": "public Iterator iterator() {\n        return new Iterator();\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.5229510476535
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.getSizes()",
+      "path": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java",
+      "start_line": 288,
+      "end_line": 290,
+      "source": "public int[] getSizes() {\n        return MathUtils.copyOf(size);\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.18994548747484
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquareTest(double[] expected, long[] observed)",
+      "path": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+      "start_line": 116,
+      "end_line": 121,
+      "source": "public double chiSquareTest(double[] expected, long[] observed)\n        throws MathException {\n        distribution = new ChiSquaredDistributionImpl(expected.length - 1.0);\n        return 1.0 - distribution.cumulativeProbability(\n            chiSquare(expected, observed));\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.15634383644682
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.getCounts(int index)",
+      "source": "public int[] getCounts(int index) {\n        if (index < 0 ||\n            index >= totalSize) {\n            throw new OutOfRangeException(index, 0, totalSize);\n        }\n\n        final int[] indices = new int[dimension];\n\n        int count = 0;\n        for (int i = 0; i < last; i++) {\n            int idx = 0;\n            final int offset = uniCounterOffset[i];\n            while (count <= index) {\n                count += offset;\n                ++idx;\n            }\n            --idx;\n            count -= offset;\n            indices[i] = idx;\n        }\n\n        int idx = 1;\n        while (count < index) {\n            count += idx;\n            ++idx;\n        }\n        --idx;\n        indices[last] = idx;\n\n        return indices;\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.getCounts(int index)\nSIGNATURE: public int[] getCounts(int index)",
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.getCounts(int index)\nSIGNATURE: public int[] getCounts(int index)\nSTRUCTURE (lossy):\nif (index < 0 || index >= totalSize)\nthrow new OutOfRangeException(index, 0, totalSize);\nfinal int[] indices = new int[dimension];\nint count = 0;\nfor (int i = 0; i < last; i++)\nint i = 0;\ni++\nint idx = 0;\nfinal int offset = uniCounterOffset[i];\nwhile (count <= index)\ncount += offset\n++idx\n--idx\ncount -= offset\nindices[i] = idx\nint idx = 1;\nwhile (count < index)\ncount += idx\nindices[last] = idx\nreturn indices;",
+        "public int[] getCounts(int index) {\n        if (index < 0 ||\n            index >= totalSize) {\n            throw new OutOfRangeException(index, 0, totalSize);\n        }\n\n        final int[] indices = new int[dimension];\n\n        int count = 0;\n        for (int i = 0; i < last; i++) {\n            int idx = 0;\n            final int offset = uniCounterOffset[i];\n            while (count <= index) {\n                count += offset;\n                ++idx;\n            }\n            --idx;\n            count -= offset;\n            indices[i] = idx;\n        }\n\n        int idx = 1;\n        while (count < index) {\n            count += idx;\n            ++idx;\n        }\n        --idx;\n        indices[last] = idx;\n\n        return indices;\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7272727272727273,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 0.0,
+        "literal_count": 6.0,
+        "source_tokens": 185.0,
+        "l0_tokens": 43.0,
+        "l1_tokens": 151.0,
+        "compression_ratio": 0.8162162162162162,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 0,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.MultidimensionalCounter(int ... size)",
+      "source": "public MultidimensionalCounter(int ... size) {\n        dimension = size.length;\n        this.size = MathUtils.copyOf(size);\n\n        uniCounterOffset = new int[dimension];\n\n        last = dimension - 1;\n        int tS = size[last];\n        for (int i = 0; i < last; i++) {\n            int count = 1;\n            for (int j = i + 1; j < dimension; j++) {\n                count *= size[j];\n            }\n            uniCounterOffset[i] = count;\n            tS *= size[i];\n        }\n        uniCounterOffset[last] = 0;\n\n        if (tS <= 0) {\n            throw new NotStrictlyPositiveException(tS);\n        }\n\n        totalSize = tS;\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.MultidimensionalCounter(int ... size)\nSIGNATURE: public MultidimensionalCounter(int ... size)",
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.MultidimensionalCounter(int ... size)\nSIGNATURE: public MultidimensionalCounter(int ... size)\nSTRUCTURE (lossy):\ndimension = size.length\nthis.size = MathUtils.copyOf(size)\nCALL MathUtils.copyOf(size)\nuniCounterOffset = new int[dimension]\nlast = dimension - 1\nint tS = size[last];\nfor (int i = 0; i < last; i++)\nint i = 0;\ni++\nint count = 1;\nfor (int j = i + 1; j < dimension; j++)\nint j = i + 1;\nj++\ncount *= size[j]\nuniCounterOffset[i] = count\ntS *= size[i]\nuniCounterOffset[last] = 0\nif (tS <= 0)\nthrow new NotStrictlyPositiveException(tS);\ntotalSize = tS",
+        "public MultidimensionalCounter(int ... size) {\n        dimension = size.length;\n        this.size = MathUtils.copyOf(size);\n\n        uniCounterOffset = new int[dimension];\n\n        last = dimension - 1;\n        int tS = size[last];\n        for (int i = 0; i < last; i++) {\n            int count = 1;\n            for (int j = i + 1; j < dimension; j++) {\n                count *= size[j];\n            }\n            uniCounterOffset[i] = count;\n            tS *= size[i];\n        }\n        uniCounterOffset[last] = 0;\n\n        if (tS <= 0) {\n            throw new NotStrictlyPositiveException(tS);\n        }\n\n        totalSize = tS;\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 1.0,
+        "literal_count": 6.0,
+        "source_tokens": 159.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 166.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 1,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.getCount(int ... c)",
+      "source": "public int getCount(int ... c) throws OutOfRangeException {\n        if (c.length != dimension) {\n            throw new DimensionMismatchException(c.length, dimension);\n        }\n        int count = 0;\n        for (int i = 0; i < dimension; i++) {\n            final int index = c[i];\n            if (index < 0 ||\n                index >= size[i]) {\n                throw new OutOfRangeException(index, 0, size[i] - 1);\n            }\n            count += uniCounterOffset[i] * c[i];\n        }\n        return count + c[last];\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.getCount(int ... c)\nSIGNATURE: public int getCount(int ... c) throws OutOfRangeException",
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.getCount(int ... c)\nSIGNATURE: public int getCount(int ... c) throws OutOfRangeException\nSTRUCTURE (lossy):\nif (c.length != dimension)\nthrow new DimensionMismatchException(c.length, dimension);\nint count = 0;\nfor (int i = 0; i < dimension; i++)\nint i = 0;\ni++\nfinal int index = c[i];\nif (index < 0 || index >= size[i])\nthrow new OutOfRangeException(index, 0, size[i] - 1);\ncount += uniCounterOffset[i] * c[i]\nreturn count + c[last];",
+        "public int getCount(int ... c) throws OutOfRangeException {\n        if (c.length != dimension) {\n            throw new DimensionMismatchException(c.length, dimension);\n        }\n        int count = 0;\n        for (int i = 0; i < dimension; i++) {\n            final int index = c[i];\n            if (index < 0 ||\n                index >= size[i]) {\n                throw new OutOfRangeException(index, 0, size[i] - 1);\n            }\n            count += uniCounterOffset[i] * c[i];\n        }\n        return count + c[last];\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6774193548387096,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 0.0,
+        "literal_count": 5.0,
+        "source_tokens": 132.0,
+        "l0_tokens": 49.0,
+        "l1_tokens": 135.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 0,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.hasNext()",
+      "source": "public boolean hasNext() {\n            for (int i = 0; i < dimension; i++) {\n                if (counter[i] != size[i] - 1) {\n                    return true;\n                }\n            }\n            return false;\n        }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.hasNext()\nSIGNATURE: public boolean hasNext()",
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.hasNext()\nSIGNATURE: public boolean hasNext()\nSTRUCTURE (lossy):\nfor (int i = 0; i < dimension; i++)\nint i = 0;\ni++\nif (counter[i] != size[i] - 1)\nreturn true;\nreturn false;",
+        "public boolean hasNext() {\n            for (int i = 0; i < dimension; i++) {\n                if (counter[i] != size[i] - 1) {\n                    return true;\n                }\n            }\n            return false;\n        }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8181818181818182,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 0.0,
+        "literal_count": 2.0,
+        "source_tokens": 57.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 72.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 0,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.getCount(int dim)",
+      "source": "public int getCount(int dim) {\n            return counter[dim];\n        }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.getCount(int dim)\nSIGNATURE: public int getCount(int dim)",
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.getCount(int dim)\nSIGNATURE: public int getCount(int dim)\nSTRUCTURE (lossy):\nreturn counter[dim];",
+        "public int getCount(int dim) {\n            return counter[dim];\n        }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.9411764705882353,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 19.0,
+        "l0_tokens": 43.0,
+        "l1_tokens": 53.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.next()",
+      "source": "public Integer next() {\n            for (int i = last; i >= 0; i--) {\n                if (counter[i] == size[i] - 1) {\n                    counter[i] = 0;\n                } else {\n                    ++counter[i];\n                    break;\n                }\n            }\n\n            return ++count;\n        }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.next()\nSIGNATURE: public Integer next()",
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.next()\nSIGNATURE: public Integer next()\nSTRUCTURE (lossy):\nfor (int i = last; i >= 0; i--)\nint i = last;\ni--\nif (counter[i] == size[i] - 1)\ncounter[i] = 0\n++counter[i]\nreturn ++count;\n++count",
+        "public Integer next() {\n            for (int i = last; i >= 0; i--) {\n                if (counter[i] == size[i] - 1) {\n                    counter[i] = 0;\n                } else {\n                    ++counter[i];\n                    break;\n                }\n            }\n\n            return ++count;\n        }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7727272727272727,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 0.0,
+        "literal_count": 3.0,
+        "source_tokens": 78.0,
+        "l0_tokens": 39.0,
+        "l1_tokens": 77.0,
+        "compression_ratio": 0.9871794871794872,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 0,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/ode/nonstiff/GraggBulirschStoerIntegrator.java::GraggBulirschStoerIntegrator.integrate(final FirstOrderDifferentialEquations equations,\n                          final double t0, final double[] y0, final double t, final double[] y)",
+      "source": "@Override\n  public double integrate(final FirstOrderDifferentialEquations equations,\n                          final double t0, final double[] y0, final double t, final double[] y)\n      throws MathUserException, IntegratorException {\n\n    sanityChecks(equations, t0, y0, t, y);\n    setEquations(equations);\n    resetEvaluations();\n    final boolean forward = t > t0;\n\n    // create some internal working arrays\n    final double[] yDot0   = new double[y0.length];\n    final double[] y1      = new double[y0.length];\n    final double[] yTmp    = new double[y0.length];\n    final double[] yTmpDot = new double[y0.length];\n\n    final double[][] diagonal = new double[sequence.length-1][];\n    final double[][] y1Diag = new double[sequence.length-1][];\n    for (int k = 0; k < sequence.length-1; ++k) {\n      diagonal[k] = new double[y0.length];\n      y1Diag[k] = new double[y0.length];\n    }\n\n    final double[][][] fk  = new double[sequence.length][][];\n    for (int k = 0; k < sequence.length; ++k) {\n\n      fk[k]    = new double[sequence[k] + 1][];\n\n      // all substeps start at the same point, so share the first array\n      fk[k][0] = yDot0;\n\n      for (int l = 0; l < sequence[k]; ++l) {\n        fk[k][l+1] = new double[y0.length];\n      }\n\n    }\n\n    if (y != y0) {\n      System.arraycopy(y0, 0, y, 0, y0.length);\n    }\n\n    double[] yDot1      = new double[y0.length];\n    double[][] yMidDots = null;\n    final boolean denseOutput = requiresDenseOutput();\n    if (denseOutput) {\n      yMidDots = new double[1 + 2 * sequence.length][];\n      for (int j = 0; j < yMidDots.length; ++j) {\n        yMidDots[j] = new double[y0.length];\n      }\n    } else {\n      yMidDots    = new double[1][];\n      yMidDots[0] = new double[y0.length];\n    }\n\n    // initial scaling\n    final double[] scale = new double[mainSetDimension];\n    rescale(y, y, scale);\n\n    // initial order selection\n    final double tol =\n        (vecRelativeTolerance == null) ? scalRelativeTolerance : vecRelativeTolerance[0];\n    final double log10R = FastMath.log10(FastMath.max(1.0e-10, tol));\n    int targetIter = FastMath.max(1,\n                              FastMath.min(sequence.length - 2,\n                                       (int) FastMath.floor(0.5 - 0.6 * log10R)));\n\n    // set up an interpolator sharing the integrator arrays\n    AbstractStepInterpolator interpolator = null;\n    if (denseOutput) {\n      interpolator = new GraggBulirschStoerStepInterpolator(y, yDot0,\n                                                            y1, yDot1,\n                                                            yMidDots, forward);\n    } else {\n      interpolator = new DummyStepInterpolator(y, yDot1, forward);\n    }\n    interpolator.storeTime(t0);\n\n    stepStart = t0;\n    double  hNew             = 0;\n    double  maxError         = Double.MAX_VALUE;\n    boolean previousRejected = false;\n    boolean firstTime        = true;\n    boolean newStep          = true;\n    boolean firstStepAlreadyComputed = false;\n    for (StepHandler handler : stepHandlers) {\n        handler.reset();\n    }\n    setStateInitialized(false);\n    costPerTimeUnit[0] = 0;\n    isLastStep = false;\n    do {\n\n      double error;\n      boolean reject = false;\n\n      if (newStep) {\n\n        interpolator.shift();\n\n        // first evaluation, at the beginning of the step\n        if (! firstStepAlreadyComputed) {\n          computeDerivatives(stepStart, y, yDot0);\n        }\n\n        if (firstTime) {\n          hNew = initializeStep(equations, forward,\n                                2 * targetIter + 1, scale,\n                                stepStart, y, yDot0, yTmp, yTmpDot);\n        }\n\n        newStep = false;\n\n      }\n\n      stepSize = hNew;\n\n      // step adjustment near bounds\n      if ((forward && (stepStart + stepSize > t)) ||\n          ((! forward) && (stepStart + stepSize < t))) {\n        stepSize = t - stepStart;\n      }\n      final double nextT = stepStart + stepSize;\n      isLastStep = forward ? (nextT >= t) : (nextT <= t);\n\n      // iterate over several substep sizes\n      int k = -1;\n      for (boolean loop = true; loop; ) {\n\n        ++k;\n\n        // modified midpoint integration with the current substep\n        if ( ! tryStep(stepStart, y, stepSize, k, scale, fk[k],\n                       (k == 0) ? yMidDots[0] : diagonal[k-1],\n                       (k == 0) ? y1 : y1Diag[k-1],\n                       yTmp)) {\n\n          // the stability check failed, we reduce the global step\n          hNew   = FastMath.abs(filterStep(stepSize * stabilityReduction, forward, false));\n          reject = true;\n          loop   = false;\n\n        } else {\n\n          // the substep was computed successfully\n          if (k > 0) {\n\n            // extrapolate the state at the end of the step\n            // using last iteration data\n            extrapolate(0, k, y1Diag, y1);\n            rescale(y, y1, scale);\n\n            // estimate the error at the end of the step.\n            error = 0;\n            for (int j = 0; j < mainSetDimension; ++j) {\n              final double e = FastMath.abs(y1[j] - y1Diag[0][j]) / scale[j];\n              error += e * e;\n            }\n            error = FastMath.sqrt(error / mainSetDimension);\n\n            if ((error > 1.0e15) || ((k > 1) && (error > maxError))) {\n              // error is too big, we reduce the global step\n              hNew   = FastMath.abs(filterStep(stepSize * stabilityReduction, forward, false));\n              reject = true;\n              loop   = false;\n            } else {\n\n              maxError = FastMath.max(4 * error, 1.0);\n\n              // compute optimal stepsize for this order\n              final double exp = 1.0 / (2 * k + 1);\n              double fac = stepControl2 / FastMath.pow(error / stepControl1, exp);\n              final double pow = FastMath.pow(stepControl3, exp);\n              fac = FastMath.max(pow / stepControl4, FastMath.min(1 / pow, fac));\n              optimalStep[k]     = FastMath.abs(filterStep(stepSize * fac, forward, true));\n              costPerTimeUnit[k] = costPerStep[k] / optimalStep[k];\n\n              // check convergence\n              switch (k - targetIter) {\n\n              case -1 :\n                if ((targetIter > 1) && ! previousRejected) {\n\n                  // check if we can stop iterations now\n                  if (error <= 1.0) {\n                    // convergence have been reached just before targetIter\n                    loop = false;\n                  } else {\n                    // estimate if there is a chance convergence will\n                    // be reached on next iteration, using the\n                    // asymptotic evolution of error\n                    final double ratio = ((double) sequence [targetIter] * sequence[targetIter + 1]) /\n                                         (sequence[0] * sequence[0]);\n                    if (error > ratio * ratio) {\n                      // we don't expect to converge on next iteration\n                      // we reject the step immediately and reduce order\n                      reject = true;\n                      loop   = false;\n                      targetIter = k;\n                      if ((targetIter > 1) &&\n                          (costPerTimeUnit[targetIter-1] <\n                           orderControl1 * costPerTimeUnit[targetIter])) {\n                        --targetIter;\n                      }\n                      hNew = optimalStep[targetIter];\n                    }\n                  }\n                }\n                break;\n\n              case 0:\n                if (error <= 1.0) {\n                  // convergence has been reached exactly at targetIter\n                  loop = false;\n                } else {\n                  // estimate if there is a chance convergence will\n                  // be reached on next iteration, using the\n                  // asymptotic evolution of error\n                  final double ratio = ((double) sequence[k+1]) / sequence[0];\n                  if (error > ratio * ratio) {\n                    // we don't expect to converge on next iteration\n                    // we reject the step immediately\n                    reject = true;\n                    loop = false;\n                    if ((targetIter > 1) &&\n                        (costPerTimeUnit[targetIter-1] <\n                         orderControl1 * costPerTimeUnit[targetIter])) {\n                      --targetIter;\n                    }\n                    hNew = optimalStep[targetIter];\n                  }\n                }\n                break;\n\n              case 1 :\n                if (error > 1.0) {\n                  reject = true;\n                  if ((targetIter > 1) &&\n                      (costPerTimeUnit[targetIter-1] <\n                       orderControl1 * costPerTimeUnit[targetIter])) {\n                    --targetIter;\n                  }\n                  hNew = optimalStep[targetIter];\n                }\n                loop = false;\n                break;\n\n              default :\n                if ((firstTime || isLastStep) && (error <= 1.0)) {\n                  loop = false;\n                }\n                break;\n\n              }\n\n            }\n          }\n        }\n      }\n\n      if (! reject) {\n          // derivatives at end of step\n          computeDerivatives(stepStart + stepSize, y1, yDot1);\n      }\n\n      // dense output handling\n      double hInt = getMaxStep();\n      if (denseOutput && ! reject) {\n\n        // extrapolate state at middle point of the step\n        for (int j = 1; j <= k; ++j) {\n          extrapolate(0, j, diagonal, yMidDots[0]);\n        }\n\n        final int mu = 2 * k - mudif + 3;\n\n        for (int l = 0; l < mu; ++l) {\n\n          // derivative at middle point of the step\n          final int l2 = l / 2;\n          double factor = FastMath.pow(0.5 * sequence[l2], l);\n          int middleIndex = fk[l2].length / 2;\n          for (int i = 0; i < y0.length; ++i) {\n            yMidDots[l+1][i] = factor * fk[l2][middleIndex + l][i];\n          }\n          for (int j = 1; j <= k - l2; ++j) {\n            factor = FastMath.pow(0.5 * sequence[j + l2], l);\n            middleIndex = fk[l2+j].length / 2;\n            for (int i = 0; i < y0.length; ++i) {\n              diagonal[j-1][i] = factor * fk[l2+j][middleIndex+l][i];\n            }\n            extrapolate(l2, j, diagonal, yMidDots[l+1]);\n          }\n          for (int i = 0; i < y0.length; ++i) {\n            yMidDots[l+1][i] *= stepSize;\n          }\n\n          // compute centered differences to evaluate next derivatives\n          for (int j = (l + 1) / 2; j <= k; ++j) {\n            for (int m = fk[j].length - 1; m >= 2 * (l + 1); --m) {\n              for (int i = 0; i < y0.length; ++i) {\n                fk[j][m][i] -= fk[j][m-2][i];\n              }\n            }\n          }\n\n        }\n\n        if (mu >= 0) {\n\n          // estimate the dense output coefficients\n          final GraggBulirschStoerStepInterpolator gbsInterpolator\n            = (GraggBulirschStoerStepInterpolator) interpolator;\n          gbsInterpolator.computeCoefficients(mu, stepSize);\n\n          if (useInterpolationError) {\n            // use the interpolation error to limit stepsize\n            final double interpError = gbsInterpolator.estimateError(scale);\n            hInt = FastMath.abs(stepSize / FastMath.max(FastMath.pow(interpError, 1.0 / (mu+4)),\n                                                0.01));\n            if (interpError > 10.0) {\n              hNew = hInt;\n              reject = true;\n            }\n          }\n\n        }\n\n      }\n\n      if (! reject) {\n\n        // Discrete events handling\n        interpolator.storeTime(stepStart + stepSize);\n        stepStart = acceptStep(interpolator, y1, yDot1, t);\n\n        // prepare next step\n        interpolator.storeTime(stepStart);\n        System.arraycopy(y1, 0, y, 0, y0.length);\n        System.arraycopy(yDot1, 0, yDot0, 0, y0.length);\n        firstStepAlreadyComputed = true;\n\n        int optimalIter;\n        if (k == 1) {\n          optimalIter = 2;\n          if (previousRejected) {\n            optimalIter = 1;\n          }\n        } else if (k <= targetIter) {\n          optimalIter = k;\n          if (costPerTimeUnit[k-1] < orderControl1 * costPerTimeUnit[k]) {\n            optimalIter = k-1;\n          } else if (costPerTimeUnit[k] < orderControl2 * costPerTimeUnit[k-1]) {\n            optimalIter = FastMath.min(k+1, sequence.length - 2);\n          }\n        } else {\n          optimalIter = k - 1;\n          if ((k > 2) &&\n              (costPerTimeUnit[k-2] < orderControl1 * costPerTimeUnit[k-1])) {\n            optimalIter = k - 2;\n          }\n          if (costPerTimeUnit[k] < orderControl2 * costPerTimeUnit[optimalIter]) {\n            optimalIter = FastMath.min(k, sequence.length - 2);\n          }\n        }\n\n        if (previousRejected) {\n          // after a rejected step neither order nor stepsize\n          // should increase\n          targetIter = FastMath.min(optimalIter, k);\n          hNew = FastMath.min(FastMath.abs(stepSize), optimalStep[targetIter]);\n        } else {\n          // stepsize control\n          if (optimalIter <= k) {\n            hNew = optimalStep[optimalIter];\n          } else {\n            if ((k < targetIter) &&\n                (costPerTimeUnit[k] < orderControl2 * costPerTimeUnit[k-1])) {\n              hNew = filterStep(optimalStep[k] * costPerStep[optimalIter+1] / costPerStep[k],\n                               forward, false);\n            } else {\n              hNew = filterStep(optimalStep[k] * costPerStep[optimalIter] / costPerStep[k],\n                                forward, false);\n            }\n          }\n\n          targetIter = optimalIter;\n\n        }\n\n        newStep = true;\n\n      }\n\n      hNew = FastMath.min(hNew, hInt);\n      if (! forward) {\n        hNew = -hNew;\n      }\n\n      firstTime = false;\n\n      if (reject) {\n        isLastStep = false;\n        previousRejected = true;\n      } else {\n        previousRejected = false;\n      }\n\n    } while (!isLastStep);\n\n    final double stopTime = stepStart;\n    resetInternalState();\n    return stopTime;\n\n  }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/ode/nonstiff/GraggBulirschStoerIntegrator.java::GraggBulirschStoerIntegrator.integrate(final FirstOrderDifferentialEquations equations,\n                          final double t0, final double[] y0, final double t, final double[] y)\nSIGNATURE: @Override\n  public double integrate(final FirstOrderDifferentialEquations equations,\n                          final double t0, final double[] y0, final double t, final double[] y)\n      throws MathUserException, IntegratorException",
+        "METHOD: src/main/java/org/apache/commons/math/ode/nonstiff/GraggBulirschStoerIntegrator.java::GraggBulirschStoerIntegrator.integrate(final FirstOrderDifferentialEquations equations,\n                          final double t0, final double[] y0, final double t, final double[] y)\nSIGNATURE: @Override\n  public double integrate(final FirstOrderDifferentialEquations equations,\n                          final double t0, final double[] y0, final double t, final double[] y)\n      throws MathUserException, IntegratorException\nSTRUCTURE (lossy):\nCALL sanityChecks(equations, t0, y0, t, y)\nCALL setEquations(equations)\nCALL resetEvaluations()\nfinal boolean forward = t > t0;\nfinal double[] yDot0 = new double[y0.length];\nfinal double[] y1 = new double[y0.length];\nfinal double[] yTmp = new double[y0.length];\nfinal double[] yTmpDot = new double[y0.length];\nfinal double[][] diagonal = new double[sequence.length-1][];\nfinal double[][] y1Diag = new double[sequence.length-1][];\nfor (int k = 0; k < sequence.length-1; ++k)\nint k = 0;\n++k\ndiagonal[k] = new double[y0.length]\ny1Diag[k] = new double[y0.length]\nfinal double[][][] fk = new double[sequence.length][][];\nfor (int k = 0; k < sequence.length; ++k)\nfk[k] = new double[sequence[k] + 1][]\nfk[k][0] = yDot0\nfor (int l = 0; l < sequence[k]; ++l)\nint l = 0;\n++l\nfk[k][l+1] = new double[y0.length]\nif (y != y0)\nCALL System.arraycopy(y0, 0, y, 0, y0.length)\ndouble[] yDot1 = new double[y0.length];\ndouble[][] yMidDots = null;\nfinal boolean denseOutput = requiresDenseOutput();\nCALL requiresDenseOutput()\nif (denseOutput)\nyMidDots = new double[1 + 2 * sequence.length][]\nfor (int j = 0; j < yMidDots.length; ++j)\nint j = 0;\n++j\nyMidDots[j] = new double[y0.length]\nyMidDots = new double[1][]\nyMidDots[0] = new double[y0.length]\nfinal double[] scale = new double[mainSetDimension];\nCALL rescale(y, y, scale)\nfinal double tol = (vecRelativeTolerance == null) ? scalRelativeTolerance : vecRelativeTolerance[0];\nfinal double log10R = FastMath.log10(FastMath.max(1.0e-10, tol));\nCALL FastMath.log10(FastMath.max(1.0e-10, tol))\nCALL FastMath.max(1.0e-10, tol)\nint targetIter = FastMath.max(1, FastMath.min(sequence.length - 2, (int) FastMath.floor(0.5 - 0.6 * log10\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "@Override\n  public double integrate(final FirstOrderDifferentialEquations equations,\n                          final double t0, final double[] y0, final double t, final double[] y)\n      throws MathUserException, IntegratorException {\n\n    sanityChecks(equations, t0, y0, t, y);\n    setEquations(equations);\n    resetEvaluations();\n    final boolean forward = t > t0;\n\n    // create some internal working arrays\n    final double[] yDot0   = new double[y0.length];\n    final double[] y1      = new double[y0.length];\n    final double[] yTmp    = new double[y0.length];\n    final double[] yTmpDot = new double[y0.length];\n\n    final double[][] diagonal = new double[sequence.length-1][];\n    final double[][] y1Diag = new double[sequence.length-1][];\n    for (int k = 0; k < sequence.length-1; ++k) {\n      diagonal[k] = new double[y0.length];\n      y1Diag[k] = new double[y0.length];\n    }\n\n    final double[][][] fk  = new double[sequence.length][][];\n    for (int k = 0; k < sequence.length; ++k) {\n\n      fk[k]    = new double[sequence[k] + 1][];\n\n      // all substeps start at the same point, so share the first array\n      fk[k][0] = yDot0;\n\n      for (int l = 0; l < sequence[k]; ++l) {\n        fk[k][l+1] = new double[y0.length];\n      }\n\n    }\n\n    if (y != y0) {\n      System.arraycopy(y0, 0, y, 0, y0.length);\n    }\n\n    double[] yDot1      = new double[y0.length];\n    double[][] yMidDots = null;\n    final boolean denseOutput = requiresDenseOutput();\n    if (denseOutput) {\n      yMidDots = new double[1 + 2 * sequence.length][];\n      for (int j = 0; j < yMidDots.length; ++j) {\n        yMidDots[j] = new double[y0.length];\n      }\n    } else {\n      yMidDots    = new double[1][];\n      yMidDots[0] = new double[y0.length];\n    }\n\n    // initial scaling\n    final double[] scale = new double[mainSetDimension];\n    rescale(y, y, scale);\n\n    // initial order selection\n    final double tol =\n        (vecRelativeTolerance == null) ? scalRelativeTolerance : vecRelativeTolerance[0];\n    final double log10R = FastMath.log10(FastMath.max(1.0e-10, tol));\n    int targetIter = FastMath.max(1,\n                              FastMath.min(sequence.length - 2,\n                                       (int) FastMath.floor(0.5 - 0.6 * log10R)));\n\n    // set up an interpolator sharing the integrator arrays\n    AbstractStepInterpolator interpolator = null;\n    if (denseOutput) {\n      interpolator = new GraggBulirschStoerStepInterpolator(y, yDot0,\n                                                            y1, yDot1,\n                                                            yMidDots, forward);\n    } else {\n      interpolator = new DummyStepInterpolator(y, yDot1, forward);\n    }\n    interpolator.storeTime(t0);\n\n    stepStart = t0;\n    double  hNew             = 0;\n    double  maxError         = Double.MAX_VALUE;\n    boolean previousRejected = false;\n    boolean firstTime        = true;\n    boolean newStep          = true;\n    boolean firstStepAlreadyComputed = false;\n    for (StepHandler handler : stepHandlers) {\n        handler.reset();\n    }\n    setStateInitialized(false);\n    costPerTimeUnit[0] = 0;\n    isLastStep = false;\n    do {\n\n      double error;\n      boolean reject = false;\n\n      if (newStep) {\n\n        interpolator.shift();\n\n        // first evaluation, at the beginning of the step\n        if (! firstStepAlreadyComputed) {\n          computeDerivatives(stepStart, y, yDot0);\n        }\n\n        if (firstTime) {\n          hNew = initializeStep(equations, forward,\n                                2 * targetIter + 1, scale,\n                                stepStart, y, yDot0, yTmp, yTmpDot);\n        }\n\n        newStep = false;\n\n      }\n\n      stepSize = hNew;\n\n      // step adjustment near bounds\n      if ((forward && (stepStart + stepSize > t)) ||\n          ((! forward) && (stepStart + stepSize < t))) {\n        stepSize = t - stepStart;\n      }\n      final double nextT = stepStart + stepSize;\n      isLastStep = forward ? (nextT >= t) : (nextT <= t);\n\n      // iterate over several substep sizes\n      int k = -1;\n      for (boolean loop = true; loop; ) {\n\n        ++k;\n\n        // modified midpoint integration with the current substep\n        if ( ! tryStep(stepStart, y, stepSize, k, scale, fk[k],\n                       (k == 0) ? yMidDots[0] : diagonal[k-1],\n                       (k == 0) ? y1 : y1Diag[k-1],\n                       yTmp)) {\n\n          // the stability check failed, we reduce the global step\n          hNew   = FastMath.abs(filterStep(stepSize * stabilityReduction, forward, false));\n          reject = true;\n          loop   = false;\n\n        } else {\n\n          // the substep was computed successfully\n          if (k > 0) {\n\n            // extrapolate the state at the end of the step\n            // using last iteration data\n            extrapolate(0, k, y1Diag, y1);\n            rescale(y, y1, scale);\n\n            // estimate the error at the end of the step.\n            error = 0;\n            for (int j = 0; j < mainSetDimension; ++j) {\n              final double e = FastMath.abs(y1[j] - y1Diag[0][j]) / scale[j];\n              error += e * e;\n            }\n            error = FastMath.sqrt(error / mainSetDimension);\n\n            if ((error > 1.0e15) || ((k > 1) && (error > maxError))) {\n              // error is too big, we reduce the global step\n              hNew   = FastMath.abs(filterStep(stepSize * stabilityReduction, forward, false));\n              reject = true;\n              loop   = false;\n            } else {\n\n              maxError = FastMath.max(4 * error, 1.0);\n\n              // compute optimal stepsize for this order\n              final double exp = 1.0 / (2 * k + 1);\n              double fac = stepControl2 / FastMath.pow(error / stepControl1, exp);\n              final double pow = FastMath.pow(stepControl3, exp);\n              fac = FastMath.max(pow / stepControl4, FastMath.min(1 / pow, fac));\n              optimalStep[k]     = FastMath.abs(filterStep(stepSize * fac, forward, true));\n              costPerTimeUnit[k] = costPerStep[k] / optimalStep[k];\n\n              // check convergence\n              switch (k - targetIter) {\n\n              case -1 :\n                if ((targetIter > 1) && ! previousRejected) {\n\n                  // check if we can stop iterations now\n                  if (error <= 1.0) {\n                    // convergence have been reached just before targetIter\n                    loop = false;\n                  } else {\n                    // estimate if there is a chance convergence will\n                    // be reached on next iteration, using the\n                    // asymptotic evolution of error\n                    final double ratio = ((double) sequence [targetIter] * sequence[targetIter + 1]) /\n                                         (sequence[0] * sequence[0]);\n                    if (error > ratio * ratio) {\n                      // we don't expect to converge on next iteration\n                      // we reject the step immediately and reduce order\n                      reject = true;\n                      loop   = false;\n                      targetIter = k;\n                      if ((targetIter > 1) &&\n                          (costPerTimeUnit[targetIter-1] <\n                           orderControl1 * costPerTimeUnit[targetIter])) {\n                        --targetIter;\n                      }\n                      hNew = optimalStep[targetIter];\n                    }\n                  }\n                }\n                break;\n\n              case 0:\n                if (error <= 1.0) {\n                  // convergence has been reached exactly at targetIter\n                  loop = false;\n                } else {\n                  // estimate if there is a chance convergence will\n                  // be reached on next iteration, using the\n                  // asymptotic evolution of error\n                  final double ratio = ((double) sequence[k+1]) / sequence[0];\n                  if (error > ratio * ratio) {\n                    // we don't expect to converge on next iteration\n                    // we reject the step immediately\n                    reject = true;\n                    loop = false;\n                    if ((targetIter > 1) &&\n                        (costPerTimeUnit[targetIter-1] <\n                         orderControl1 * costPerTimeUnit[targetIter])) {\n                      --targetIter;\n                    }\n                    hNew = optimalStep[targetIter];\n                  }\n                }\n                break;\n\n              case 1 :\n                if (error > 1.0) {\n                  reject = true;\n                  if ((targetIter > 1) &&\n                      (costPerTimeUnit[targetIter-1] <\n                       orderControl1 * costPerTimeUnit[targetIter])) {\n                    --targetIter;\n                  }\n                  hNew = optimalStep[targetIter];\n                }\n                loop = false;\n                break;\n\n              default :\n                if ((firstTime || isLastStep) && (error <= 1.0)) {\n                  loop = false;\n                }\n                break;\n\n              }\n\n            }\n          }\n        }\n      }\n\n      if (! reject) {\n          // derivatives at end of step\n          computeDerivatives(stepStart + stepSize, y1, yDot1);\n      }\n\n      // dense output handling\n      double hInt = getMaxStep();\n      if (denseOutput && ! reject) {\n\n        // extrapolate state at middle point of the step\n        for (int j = 1; j <= k; ++j) {\n          extrapolate(0, j, diagonal, yMidDots[0]);\n        }\n\n        final int mu = 2 * k - mudif + 3;\n\n        for (int l = 0; l < mu; ++l) {\n\n          // derivative at middle point of the step\n          final int l2 = l / 2;\n          double factor = FastMath.pow(0.5 * sequence[l2], l);\n          int middleIndex = fk[l2].length / 2;\n          for (int i = 0; i < y0.length; ++i) {\n            yMidDots[l+1][i] = factor * fk[l2][middleIndex + l][i];\n          }\n          for (int j = 1; j <= k - l2; ++j) {\n            factor = FastMath.pow(0.5 * sequence[j + l2], l);\n            middleIndex = fk[l2+j].length / 2;\n            for (int i = 0; i < y0.length; ++i) {\n              diagonal[j-1][i] = factor * fk[l2+j][middleIndex+l][i];\n            }\n            extrapolate(l2, j, diagonal, yMidDots[l+1]);\n          }\n          for (int i = 0; i < y0.length; ++i) {\n            yMidDots[l+1][i] *= stepSize;\n          }\n\n          // compute centered differences to evaluate next derivatives\n          for (int j = (l + 1) / 2; j <= k; ++j) {\n            for (int m = fk[j].length - 1; m >= 2 * (l + 1); --m) {\n              for (int i = 0; i < y0.length; ++i) {\n                fk[j][m][i] -= fk[j][m-2][i];\n              }\n            }\n          }\n\n        }\n\n        if (mu >= 0) {\n\n          // estimate the dense output coefficients\n          final GraggBulirschStoerStepInterpolator gbsInterpolator\n            = (GraggBulirschStoerStepInterpolator) interpolator;\n          gbsInterpolator.computeCoefficients(mu, stepSize);\n\n          if (useInterpolationError) {\n            // use the interpolation error to limit stepsize\n            final double interpError = gbsInterpolator.estimateError(scale);\n            hInt = FastMath.abs(stepSize / FastMath.max(FastMath.pow(interpError, 1.0 / (mu+4)),\n                                                0.01));\n            if (interpError > 10.0) {\n              hNew = hInt;\n              reject = true;\n            }\n          }\n\n        }\n\n      }\n\n      if (! reject) {\n\n        // Discrete events handling\n        interpolator.storeTime(stepStart + stepSize);\n        stepStart = acceptStep(interpolator, y1, yDot1, t);\n\n        // prepare next step\n        interpolator.storeTime(stepStart);\n        System.arraycopy(y1, 0, y, 0, y0.length);\n        System.arraycopy(yDot1, 0, yDot0, 0, y0.length);\n        firstStepAlreadyComputed = true;\n\n        int optimalIter;\n        if (k == 1) {\n          optimalIter = 2;\n          if (previousRejected) {\n            optimalIter = 1;\n          }\n        } else if (k <= targetIter) {\n          optimalIter = k;\n          if (costPerTimeUnit[k-1] < orderControl1 * costPerTimeUnit[k]) {\n            optimalIter = k-1;\n          } else if (costPerTimeUnit[k] < orderControl2 * costPerTimeUnit[k-1]) {\n            optimalIter = FastMath.min(k+1, sequence.length - 2);\n          }\n        } else {\n          optimalIter = k - 1;\n          if ((k > 2) &&\n              (costPerTimeUnit[k-2] < orderControl1 * costPerTimeUnit[k-1])) {\n            optimalIter = k - 2;\n          }\n          if (costPerTimeUnit[k] < orderControl2 * costPerTimeUnit[optimalIter]) {\n            optimalIter = FastMath.min(k, sequence.length - 2);\n          }\n        }\n\n        if (previousRejected) {\n          // after a rejected step neither order nor stepsize\n          // should increase\n          targetIter = FastMath.min(optimalIter, k);\n          hNew = FastMath.min(FastMath.abs(stepSize), optimalStep[targetIter]);\n        } else {\n          // stepsize control\n          if (optimalIter <= k) {\n            hNew = optimalStep[optimalIter];\n          } else {\n            if ((k < targetIter) &&\n                (costPerTimeUnit[k] < orderControl2 * costPerTimeUnit[k-1])) {\n              hNew = filterStep(optimalStep[k] * costPerStep[optimalIter+1] / costPerStep[k],\n                               forward, false);\n            } else {\n              hNew = filterStep(optimalStep[k] * costPerStep[optimalIter] / costPerStep[k],\n                                forward, false);\n            }\n          }\n\n          targetIter = optimalIter;\n\n        }\n\n        newStep = true;\n\n      }\n\n      hNew = FastMath.min(hNew, hInt);\n      if (! forward) {\n        hNew = -hNew;\n      }\n\n      firstTime = false;\n\n      if (reject) {\n        isLastStep = false;\n        previousRejected = true;\n      } else {\n        previousRejected = false;\n      }\n\n    } while (!isLastStep);\n\n    final double stopTime = stepStart;\n    resetInternalState();\n    return stopTime;\n\n  }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.1388888888888889,
+        "trace_match": 0.0,
+        "complexity": 57.0,
+        "call_count": 58.0,
+        "literal_count": 119.0,
+        "source_tokens": 3523.0,
+        "l0_tokens": 131.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.16151007663922792,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 57,
+        "call_count": 58,
+        "literal_count": 119
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.getCounts()",
+      "source": "public int[] getCounts() {\n            return MathUtils.copyOf(counter);\n        }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.getCounts()\nSIGNATURE: public int[] getCounts()",
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.getCounts()\nSIGNATURE: public int[] getCounts()\nSTRUCTURE (lossy):\nreturn MathUtils.copyOf(counter);\nCALL MathUtils.copyOf(counter)",
+        "public int[] getCounts() {\n            return MathUtils.copyOf(counter);\n        }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8888888888888888,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 21.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 62.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/util/CompositeFormat.java::CompositeFormat.parseFixedstring(final String source,\n                                           final String expected,\n                                           final ParsePosition pos)",
+      "source": "public static boolean parseFixedstring(final String source,\n                                           final String expected,\n                                           final ParsePosition pos) {\n\n        final int startIndex = pos.getIndex();\n        final int endIndex = startIndex + expected.length();\n        if ((startIndex >= source.length()) ||\n            (endIndex > source.length()) ||\n            (source.substring(startIndex, endIndex).compareTo(expected) != 0)) {\n            // set index back to start, error index should be the start index\n            pos.setIndex(startIndex);\n            pos.setErrorIndex(startIndex);\n            return false;\n        }\n\n        // the string was here\n        pos.setIndex(endIndex);\n        return true;\n    }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/util/CompositeFormat.java::CompositeFormat.parseFixedstring(final String source,\n                                           final String expected,\n                                           final ParsePosition pos)\nSIGNATURE: public static boolean parseFixedstring(final String source,\n                                           final String expected,\n                                           final ParsePosition pos)",
+        "METHOD: src/main/java/org/apache/commons/math/util/CompositeFormat.java::CompositeFormat.parseFixedstring(final String source,\n                                           final String expected,\n                                           final ParsePosition pos)\nSIGNATURE: public static boolean parseFixedstring(final String source,\n                                           final String expected,\n                                           final ParsePosition pos)\nSTRUCTURE (lossy):\nfinal int startIndex = pos.getIndex();\nCALL pos.getIndex()\nfinal int endIndex = startIndex + expected.length();\nCALL expected.length()\nif ((startIndex >= source.length()) || (endIndex > source.length()) || (source.substring(startIndex, endIndex).compareTo(expected) != 0))\nCALL source.length()\nCALL source.substring(startIndex, endIndex).compareTo(expected)\nCALL source.substring(startIndex, endIndex)\nCALL pos.setIndex(startIndex)\nCALL pos.setErrorIndex(startIndex)\nreturn false;\nCALL pos.setIndex(endIndex)\nreturn true;",
+        "public static boolean parseFixedstring(final String source,\n                                           final String expected,\n                                           final ParsePosition pos) {\n\n        final int startIndex = pos.getIndex();\n        final int endIndex = startIndex + expected.length();\n        if ((startIndex >= source.length()) ||\n            (endIndex > source.length()) ||\n            (source.substring(startIndex, endIndex).compareTo(expected) != 0)) {\n            // set index back to start, error index should be the start index\n            pos.setIndex(startIndex);\n            pos.setErrorIndex(startIndex);\n            return false;\n        }\n\n        // the string was here\n        pos.setIndex(endIndex);\n        return true;\n    }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.46153846153846156,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 9.0,
+        "literal_count": 1.0,
+        "source_tokens": 191.0,
+        "l0_tokens": 117.0,
+        "l1_tokens": 252.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 9,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquare(long[][] counts)",
+      "source": "public double chiSquare(long[][] counts) {\n        checkArray(counts);\n        int nRows = counts.length;\n        int nCols = counts[0].length;\n\n        // compute row, column and total sums\n        double[] rowSum = new double[nRows];\n        double[] colSum = new double[nCols];\n        double total = 0.0d;\n        for (int row = 0; row < nRows; row++) {\n            for (int col = 0; col < nCols; col++) {\n                rowSum[row] += counts[row][col];\n                colSum[col] += counts[row][col];\n                total += counts[row][col];\n            }\n        }\n\n        // compute expected counts and chi-square\n        double sumSq = 0.0d;\n        double expected = 0.0d;\n        for (int row = 0; row < nRows; row++) {\n            for (int col = 0; col < nCols; col++) {\n                expected = (rowSum[row] * colSum[col]) / total;\n                sumSq += ((counts[row][col] - expected) *\n                        (counts[row][col] - expected)) / expected;\n            }\n        }\n        return sumSq;\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquare(long[][] counts)\nSIGNATURE: public double chiSquare(long[][] counts)",
+        "METHOD: src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquare(long[][] counts)\nSIGNATURE: public double chiSquare(long[][] counts)\nSTRUCTURE (lossy):\nCALL checkArray(counts)\nint nRows = counts.length;\nint nCols = counts[0].length;\ndouble[] rowSum = new double[nRows];\ndouble[] colSum = new double[nCols];\ndouble total = 0.0d;\nfor (int row = 0; row < nRows; row++)\nint row = 0;\nrow++\nfor (int col = 0; col < nCols; col++)\nint col = 0;\ncol++\nrowSum[row] += counts[row][col]\ncolSum[col] += counts[row][col]\ntotal += counts[row][col]\ndouble sumSq = 0.0d;\ndouble expected = 0.0d;\nexpected = (rowSum[row] * colSum[col]) / total\nsumSq += ((counts[row][col] - expected) * (counts[row][col] - expected)) / expected\nreturn sumSq;",
+        "public double chiSquare(long[][] counts) {\n        checkArray(counts);\n        int nRows = counts.length;\n        int nCols = counts[0].length;\n\n        // compute row, column and total sums\n        double[] rowSum = new double[nRows];\n        double[] colSum = new double[nCols];\n        double total = 0.0d;\n        for (int row = 0; row < nRows; row++) {\n            for (int col = 0; col < nCols; col++) {\n                rowSum[row] += counts[row][col];\n                colSum[col] += counts[row][col];\n                total += counts[row][col];\n            }\n        }\n\n        // compute expected counts and chi-square\n        double sumSq = 0.0d;\n        double expected = 0.0d;\n        for (int row = 0; row < nRows; row++) {\n            for (int col = 0; col < nCols; col++) {\n                expected = (rowSum[row] * colSum[col]) / total;\n                sumSq += ((counts[row][col] - expected) *\n                        (counts[row][col] - expected)) / expected;\n            }\n        }\n        return sumSq;\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4857142857142857,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 1.0,
+        "literal_count": 8.0,
+        "source_tokens": 257.0,
+        "l0_tokens": 46.0,
+        "l1_tokens": 193.0,
+        "compression_ratio": 0.7509727626459144,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 1,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.getSize()",
+      "source": "public int getSize() {\n        return totalSize;\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.getSize()\nSIGNATURE: public int getSize()",
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.getSize()\nSIGNATURE: public int getSize()\nSTRUCTURE (lossy):\nreturn totalSize;",
+        "public int getSize() {\n        return totalSize;\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.9375,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 14.0,
+        "l0_tokens": 37.0,
+        "l1_tokens": 46.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/linear/MatrixDimensionMismatchException.java::MatrixDimensionMismatchException.MatrixDimensionMismatchException(int wrongRowDim,\n                                            int wrongColDim,\n                                            int expectedRowDim,\n                                            int expectedColDim)",
+      "source": "public MatrixDimensionMismatchException(int wrongRowDim,\n                                            int wrongColDim,\n                                            int expectedRowDim,\n                                            int expectedColDim) {\n        super(LocalizedFormats.DIMENSIONS_MISMATCH_2x2,\n              new Integer[] { wrongRowDim, wrongColDim },\n              new Integer[] { expectedRowDim, expectedColDim });\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/linear/MatrixDimensionMismatchException.java::MatrixDimensionMismatchException.MatrixDimensionMismatchException(int wrongRowDim,\n                                            int wrongColDim,\n                                            int expectedRowDim,\n                                            int expectedColDim)\nSIGNATURE: public MatrixDimensionMismatchException(int wrongRowDim,\n                                            int wrongColDim,\n                                            int expectedRowDim,\n                                            int expectedColDim)",
+        "METHOD: src/main/java/org/apache/commons/math/linear/MatrixDimensionMismatchException.java::MatrixDimensionMismatchException.MatrixDimensionMismatchException(int wrongRowDim,\n                                            int wrongColDim,\n                                            int expectedRowDim,\n                                            int expectedColDim)\nSIGNATURE: public MatrixDimensionMismatchException(int wrongRowDim,\n                                            int wrongColDim,\n                                            int expectedRowDim,\n                                            int expectedColDim)\nSTRUCTURE (lossy):\n",
+        "public MatrixDimensionMismatchException(int wrongRowDim,\n                                            int wrongColDim,\n                                            int expectedRowDim,\n                                            int expectedColDim) {\n        super(LocalizedFormats.DIMENSIONS_MISMATCH_2x2,\n              new Integer[] { wrongRowDim, wrongColDim },\n              new Integer[] { expectedRowDim, expectedColDim });\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.56,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 108.0,
+        "l0_tokens": 155.0,
+        "l1_tokens": 160.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/linear/OpenMapRealVector.java::OpenMapRealVector.equals(Object obj)",
+      "source": "@Override\n    public boolean equals(Object obj) {\n        if (this == obj) {\n            return true;\n        }\n        if (!(obj instanceof OpenMapRealVector)) {\n            return false;\n        }\n        OpenMapRealVector other = (OpenMapRealVector) obj;\n        if (virtualSize != other.virtualSize) {\n            return false;\n        }\n        if (Double.doubleToLongBits(epsilon) !=\n            Double.doubleToLongBits(other.epsilon)) {\n            return false;\n        }\n        Iterator iter = entries.iterator();\n        while (iter.hasNext()) {\n            iter.advance();\n            double test = other.getEntry(iter.key());\n            if (Double.doubleToLongBits(test) != Double.doubleToLongBits(iter.value())) {\n                return false;\n            }\n        }\n        iter = other.getEntries().iterator();\n        while (iter.hasNext()) {\n            iter.advance();\n            double test = iter.value();\n            if (Double.doubleToLongBits(test) != Double.doubleToLongBits(getEntry(iter.key()))) {\n                return false;\n            }\n        }\n        return true;\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/linear/OpenMapRealVector.java::OpenMapRealVector.equals(Object obj)\nSIGNATURE: @Override\n    public boolean equals(Object obj)",
+        "METHOD: src/main/java/org/apache/commons/math/linear/OpenMapRealVector.java::OpenMapRealVector.equals(Object obj)\nSIGNATURE: @Override\n    public boolean equals(Object obj)\nSTRUCTURE (lossy):\nif (this == obj)\nreturn true;\nif (!(obj instanceof OpenMapRealVector))\nreturn false;\nOpenMapRealVector other = (OpenMapRealVector) obj;\nif (virtualSize != other.virtualSize)\nif (Double.doubleToLongBits(epsilon) != Double.doubleToLongBits(other.epsilon))\nCALL Double.doubleToLongBits(epsilon)\nCALL Double.doubleToLongBits(other.epsilon)\nIterator iter = entries.iterator();\nCALL entries.iterator()\nwhile (iter.hasNext())\nCALL iter.hasNext()\nCALL iter.advance()\ndouble test = other.getEntry(iter.key());\nCALL other.getEntry(iter.key())\nCALL iter.key()\nif (Double.doubleToLongBits(test) != Double.doubleToLongBits(iter.value()))\nCALL Double.doubleToLongBits(test)\nCALL Double.doubleToLongBits(iter.value())\nCALL iter.value()\niter = other.getEntries().iterator()\nCALL other.getEntries().iterator()\nCALL other.getEntries()\ndouble test = iter.value();\nif (Double.doubleToLongBits(test) != Double.doubleToLongBits(getEntry(iter.key())))\nCALL Double.doubleToLongBits(getEntry(iter.key()))\nCALL getEntry(iter.key())",
+        "@Override\n    public boolean equals(Object obj) {\n        if (this == obj) {\n            return true;\n        }\n        if (!(obj instanceof OpenMapRealVector)) {\n            return false;\n        }\n        OpenMapRealVector other = (OpenMapRealVector) obj;\n        if (virtualSize != other.virtualSize) {\n            return false;\n        }\n        if (Double.doubleToLongBits(epsilon) !=\n            Double.doubleToLongBits(other.epsilon)) {\n            return false;\n        }\n        Iterator iter = entries.iterator();\n        while (iter.hasNext()) {\n            iter.advance();\n            double test = other.getEntry(iter.key());\n            if (Double.doubleToLongBits(test) != Double.doubleToLongBits(iter.value())) {\n                return false;\n            }\n        }\n        iter = other.getEntries().iterator();\n        while (iter.hasNext()) {\n            iter.advance();\n            double test = iter.value();\n            if (Double.doubleToLongBits(test) != Double.doubleToLongBits(getEntry(iter.key()))) {\n                return false;\n            }\n        }\n        return true;\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.40476190476190477,
+        "trace_match": 0.0,
+        "complexity": 9.0,
+        "call_count": 19.0,
+        "literal_count": 0.0,
+        "source_tokens": 277.0,
+        "l0_tokens": 43.0,
+        "l1_tokens": 300.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 9,
+        "call_count": 19,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.getCount()",
+      "source": "public int getCount() {\n            return count;\n        }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.getCount()\nSIGNATURE: public int getCount()",
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.getCount()\nSIGNATURE: public int getCount()\nSTRUCTURE (lossy):\nreturn count;",
+        "public int getCount() {\n            return count;\n        }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.9375,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 15.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 48.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquare(double[] expected, long[] observed)",
+      "source": "public double chiSquare(double[] expected, long[] observed) {\n        if (expected.length < 2) {\n            throw new DimensionMismatchException(expected.length, 2);\n        }\n        if (expected.length != observed.length) {\n            throw new DimensionMismatchException(expected.length, observed.length);\n        }\n        checkPositive(expected);\n        checkNonNegative(observed);\n        double sumExpected = 0d;\n        double sumObserved = 0d;\n        for (int i = 0; i < observed.length; i++) {\n            sumExpected += expected[i];\n            sumObserved += observed[i];\n        }\n        double ratio = 1.0d;\n        boolean rescale = false;\n        if (FastMath.abs(sumExpected - sumObserved) > 10E-6) {\n            ratio = sumObserved / sumExpected;\n            rescale = true;\n        }\n        double sumSq = 0.0d;\n        for (int i = 0; i < observed.length; i++) {\n            if (rescale) {\n                final double dev = observed[i] - ratio * expected[i];\n                sumSq += dev * dev / (ratio * expected[i]);\n            } else {\n                final double dev = observed[i] - expected[i];\n                sumSq += dev * dev / expected[i];\n            }\n        }\n        return sumSq;\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquare(double[] expected, long[] observed)\nSIGNATURE: public double chiSquare(double[] expected, long[] observed)",
+        "METHOD: src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquare(double[] expected, long[] observed)\nSIGNATURE: public double chiSquare(double[] expected, long[] observed)\nSTRUCTURE (lossy):\nif (expected.length < 2)\nthrow new DimensionMismatchException(expected.length, 2);\nif (expected.length != observed.length)\nthrow new DimensionMismatchException(expected.length, observed.length);\nCALL checkPositive(expected)\nCALL checkNonNegative(observed)\ndouble sumExpected = 0d;\ndouble sumObserved = 0d;\nfor (int i = 0; i < observed.length; i++)\nint i = 0;\ni++\nsumExpected += expected[i]\nsumObserved += observed[i]\ndouble ratio = 1.0d;\nboolean rescale = false;\nif (FastMath.abs(sumExpected - sumObserved) > 10E-6)\nCALL FastMath.abs(sumExpected - sumObserved)\nratio = sumObserved / sumExpected\nrescale = true\ndouble sumSq = 0.0d;\nif (rescale)\nfinal double dev = observed[i] - ratio * expected[i];\nsumSq += dev * dev / (ratio * expected[i])\nfinal double dev = observed[i] - expected[i];\nsumSq += dev * dev / expected[i]\nreturn sumSq;",
+        "public double chiSquare(double[] expected, long[] observed) {\n        if (expected.length < 2) {\n            throw new DimensionMismatchException(expected.length, 2);\n        }\n        if (expected.length != observed.length) {\n            throw new DimensionMismatchException(expected.length, observed.length);\n        }\n        checkPositive(expected);\n        checkNonNegative(observed);\n        double sumExpected = 0d;\n        double sumObserved = 0d;\n        for (int i = 0; i < observed.length; i++) {\n            sumExpected += expected[i];\n            sumObserved += observed[i];\n        }\n        double ratio = 1.0d;\n        boolean rescale = false;\n        if (FastMath.abs(sumExpected - sumObserved) > 10E-6) {\n            ratio = sumObserved / sumExpected;\n            rescale = true;\n        }\n        double sumSq = 0.0d;\n        for (int i = 0; i < observed.length; i++) {\n            if (rescale) {\n                final double dev = observed[i] - ratio * expected[i];\n                sumSq += dev * dev / (ratio * expected[i]);\n            } else {\n                final double dev = observed[i] - expected[i];\n                sumSq += dev * dev / expected[i];\n            }\n        }\n        return sumSq;\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.42857142857142855,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 3.0,
+        "literal_count": 9.0,
+        "source_tokens": 308.0,
+        "l0_tokens": 55.0,
+        "l1_tokens": 268.0,
+        "compression_ratio": 0.8701298701298701,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 3,
+        "literal_count": 9
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/linear/AbstractRealVector.java::AbstractRealVector.iterator()",
+      "source": "public Iterator<Entry> iterator() {\n        final int dim = getDimension();\n        return new Iterator<Entry>() {\n\n            /** Current index. */\n            private int i = 0;\n\n            /** Current entry. */\n            private EntryImpl e = new EntryImpl();\n\n            /** {@inheritDoc} */\n            public boolean hasNext() {\n                return i < dim;\n            }\n\n            /** {@inheritDoc} */\n            public Entry next() {\n                e.setIndex(i++);\n                return e;\n            }\n\n            /** {@inheritDoc} */\n            public void remove() {\n                throw new MathUnsupportedOperationException();\n            }\n        };\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/linear/AbstractRealVector.java::AbstractRealVector.iterator()\nSIGNATURE: public Iterator<Entry> iterator()",
+        "METHOD: src/main/java/org/apache/commons/math/linear/AbstractRealVector.java::AbstractRealVector.iterator()\nSIGNATURE: public Iterator<Entry> iterator()\nSTRUCTURE (lossy):\nfinal int dim = getDimension();\nCALL getDimension()\nreturn new Iterator<Entry>() { /** Current index. */ private int i = 0; /** Current entry. */ private EntryImpl e = new EntryImpl(); /** {@inheritDoc} */ public boolean hasNext() { return i < dim; } /** {@inheritDoc} */ public Entry next() { e.setIndex(i++); return e; } /** {@inheritDoc} */ public void remove() { throw new MathUnsupportedOperationException(); } };\nreturn i < dim;\nCALL e.setIndex(i++)\ni++\nreturn e;\nthrow new MathUnsupportedOperationException();",
+        "public Iterator<Entry> iterator() {\n        final int dim = getDimension();\n        return new Iterator<Entry>() {\n\n            /** Current index. */\n            private int i = 0;\n\n            /** Current entry. */\n            private EntryImpl e = new EntryImpl();\n\n            /** {@inheritDoc} */\n            public boolean hasNext() {\n                return i < dim;\n            }\n\n            /** {@inheritDoc} */\n            public Entry next() {\n                e.setIndex(i++);\n                return e;\n            }\n\n            /** {@inheritDoc} */\n            public void remove() {\n                throw new MathUnsupportedOperationException();\n            }\n        };\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5405405405405406,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 173.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 172.0,
+        "compression_ratio": 0.9942196531791907,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/linear/SparseFieldVector.java::SparseFieldVector.equals(Object obj)",
+      "source": "@Override\n    public boolean equals(Object obj) {\n\n        if (this == obj) {\n            return true;\n        }\n\n        if (!(obj instanceof SparseFieldVector<?>)) {\n            return false;\n        }\n\n        @SuppressWarnings(\"unchecked\") // OK, because \"else if\" check below ensures that\n                                       // other must be the same type as this\n        SparseFieldVector<T> other = (SparseFieldVector<T>) obj;\n        if (field == null) {\n            if (other.field != null) {\n                return false;\n            }\n        } else if (!field.equals(other.field)) {\n            return false;\n        }\n        if (virtualSize != other.virtualSize) {\n            return false;\n        }\n\n        OpenIntToFieldHashMap<T>.Iterator iter = entries.iterator();\n        while (iter.hasNext()) {\n            iter.advance();\n            T test = other.getEntry(iter.key());\n            if (!test.equals(iter.value())) {\n                return false;\n            }\n        }\n        iter = other.getEntries().iterator();\n        while (iter.hasNext()) {\n            iter.advance();\n            T test = iter.value();\n            if (!test.equals(getEntry(iter.key()))) {\n                return false;\n            }\n        }\n        return true;\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/linear/SparseFieldVector.java::SparseFieldVector.equals(Object obj)\nSIGNATURE: @Override\n    public boolean equals(Object obj)",
+        "METHOD: src/main/java/org/apache/commons/math/linear/SparseFieldVector.java::SparseFieldVector.equals(Object obj)\nSIGNATURE: @Override\n    public boolean equals(Object obj)\nSTRUCTURE (lossy):\nif (this == obj)\nreturn true;\nif (!(obj instanceof SparseFieldVector<?>))\nreturn false;\n@SuppressWarnings(\"unchecked\") // OK, because \"else if\" check below ensures that // other must be the same type as this SparseFieldVector<T> other = (SparseFieldVector<T>) obj;\nif (field == null)\nif (other.field != null)\nif (!field.equals(other.field))\nCALL field.equals(other.field)\nif (virtualSize != other.virtualSize)\nOpenIntToFieldHashMap<T>.Iterator iter = entries.iterator();\nCALL entries.iterator()\nwhile (iter.hasNext())\nCALL iter.hasNext()\nCALL iter.advance()\nT test = other.getEntry(iter.key());\nCALL other.getEntry(iter.key())\nCALL iter.key()\nif (!test.equals(iter.value()))\nCALL test.equals(iter.value())\nCALL iter.value()\niter = other.getEntries().iterator()\nCALL other.getEntries().iterator()\nCALL other.getEntries()\nT test = iter.value();\nif (!test.equals(getEntry(iter.key())))\nCALL test.equals(getEntry(iter.key()))\nCALL getEntry(iter.key())",
+        "@Override\n    public boolean equals(Object obj) {\n\n        if (this == obj) {\n            return true;\n        }\n\n        if (!(obj instanceof SparseFieldVector<?>)) {\n            return false;\n        }\n\n        @SuppressWarnings(\"unchecked\") // OK, because \"else if\" check below ensures that\n                                       // other must be the same type as this\n        SparseFieldVector<T> other = (SparseFieldVector<T>) obj;\n        if (field == null) {\n            if (other.field != null) {\n                return false;\n            }\n        } else if (!field.equals(other.field)) {\n            return false;\n        }\n        if (virtualSize != other.virtualSize) {\n            return false;\n        }\n\n        OpenIntToFieldHashMap<T>.Iterator iter = entries.iterator();\n        while (iter.hasNext()) {\n            iter.advance();\n            T test = other.getEntry(iter.key());\n            if (!test.equals(iter.value())) {\n                return false;\n            }\n        }\n        iter = other.getEntries().iterator();\n        while (iter.hasNext()) {\n            iter.advance();\n            T test = iter.value();\n            if (!test.equals(getEntry(iter.key()))) {\n                return false;\n            }\n        }\n        return true;\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3090909090909091,
+        "trace_match": 0.0,
+        "complexity": 11.0,
+        "call_count": 16.0,
+        "literal_count": 3.0,
+        "source_tokens": 319.0,
+        "l0_tokens": 43.0,
+        "l1_tokens": 285.0,
+        "compression_ratio": 0.8934169278996865,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 11,
+        "call_count": 16,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/linear/OpenMapRealVector.java::OpenMapRealVector.add(OpenMapRealVector v)",
+      "source": "public OpenMapRealVector add(OpenMapRealVector v) {\n        checkVectorDimensions(v.getDimension());\n        boolean copyThis = entries.size() > v.entries.size();\n        OpenMapRealVector res = copyThis ? this.copy() : v.copy();\n        Iterator iter = copyThis ? v.entries.iterator() : entries.iterator();\n        OpenIntToDoubleHashMap randomAccess = copyThis ? entries : v.entries;\n        while (iter.hasNext()) {\n            iter.advance();\n            int key = iter.key();\n            if (randomAccess.containsKey(key)) {\n                res.setEntry(key, randomAccess.get(key) + iter.value());\n            } else {\n                res.setEntry(key, iter.value());\n            }\n        }\n        return res;\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/linear/OpenMapRealVector.java::OpenMapRealVector.add(OpenMapRealVector v)\nSIGNATURE: public OpenMapRealVector add(OpenMapRealVector v)",
+        "METHOD: src/main/java/org/apache/commons/math/linear/OpenMapRealVector.java::OpenMapRealVector.add(OpenMapRealVector v)\nSIGNATURE: public OpenMapRealVector add(OpenMapRealVector v)\nSTRUCTURE (lossy):\nCALL checkVectorDimensions(v.getDimension())\nCALL v.getDimension()\nboolean copyThis = entries.size() > v.entries.size();\nCALL entries.size()\nCALL v.entries.size()\nOpenMapRealVector res = copyThis ? this.copy() : v.copy();\nCALL this.copy()\nCALL v.copy()\nIterator iter = copyThis ? v.entries.iterator() : entries.iterator();\nCALL v.entries.iterator()\nCALL entries.iterator()\nOpenIntToDoubleHashMap randomAccess = copyThis ? entries : v.entries;\nwhile (iter.hasNext())\nCALL iter.hasNext()\nCALL iter.advance()\nint key = iter.key();\nCALL iter.key()\nif (randomAccess.containsKey(key))\nCALL randomAccess.containsKey(key)\nCALL res.setEntry(key, randomAccess.get(key) + iter.value())\nCALL randomAccess.get(key)\nCALL iter.value()\nCALL res.setEntry(key, iter.value())\nreturn res;",
+        "public OpenMapRealVector add(OpenMapRealVector v) {\n        checkVectorDimensions(v.getDimension());\n        boolean copyThis = entries.size() > v.entries.size();\n        OpenMapRealVector res = copyThis ? this.copy() : v.copy();\n        Iterator iter = copyThis ? v.entries.iterator() : entries.iterator();\n        OpenIntToDoubleHashMap randomAccess = copyThis ? entries : v.entries;\n        while (iter.hasNext()) {\n            iter.advance();\n            int key = iter.key();\n            if (randomAccess.containsKey(key)) {\n                res.setEntry(key, randomAccess.get(key) + iter.value());\n            } else {\n                res.setEntry(key, iter.value());\n            }\n        }\n        return res;\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.40476190476190477,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 17.0,
+        "literal_count": 0.0,
+        "source_tokens": 181.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 242.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 17,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/genetics/RandomKey.java::RandomKey.decodeGeneric(List<S> sequence, List<Double> representation, List<Double> sortedRepr)",
+      "source": "private static <S> List<S> decodeGeneric(List<S> sequence, List<Double> representation, List<Double> sortedRepr) {\n        int l = sequence.size();\n\n        if (representation.size() != l) {\n            throw new IllegalArgumentException(String.format(\"Length of sequence for decoding (%s) has to be equal to the length of the RandomKey (%s)\", l, representation.size()));\n        }\n        if (representation.size() != sortedRepr.size()) {\n            throw new IllegalArgumentException(String.format(\"Representation and sortedRepr must have same sizes, %d != %d\", representation.size(), sortedRepr.size()));\n        }\n\n        List<Double> reprCopy = new ArrayList<Double> (representation);// do not modify the orig. representation\n\n        // now find the indices in the original repr and use them for permuting\n        List<S> res = new ArrayList<S> (l);\n        for (int i=0; i<l; i++) {\n            int index = reprCopy.indexOf(sortedRepr.get(i));\n            res.add(sequence.get(index));\n            reprCopy.set(index, null);\n        }\n        return res;\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/genetics/RandomKey.java::RandomKey.decodeGeneric(List<S> sequence, List<Double> representation, List<Double> sortedRepr)\nSIGNATURE: private static <S> List<S> decodeGeneric(List<S> sequence, List<Double> representation, List<Double> sortedRepr)",
+        "METHOD: src/main/java/org/apache/commons/math/genetics/RandomKey.java::RandomKey.decodeGeneric(List<S> sequence, List<Double> representation, List<Double> sortedRepr)\nSIGNATURE: private static <S> List<S> decodeGeneric(List<S> sequence, List<Double> representation, List<Double> sortedRepr)\nSTRUCTURE (lossy):\nint l = sequence.size();\nCALL sequence.size()\nif (representation.size() != l)\nCALL representation.size()\nthrow new IllegalArgumentException(String.format(\"Length of sequence for decoding (%s) has to be equal to the length of the RandomKey (%s)\", l, representation.size()));\nCALL String.format(\"Length of sequence for decoding (%s) has to be equal to the length of the RandomKey (%s)\", l, representation.size())\nif (representation.size() != sortedRepr.size())\nCALL sortedRepr.size()\nthrow new IllegalArgumentException(String.format(\"Representation and sortedRepr must have same sizes, %d != %d\", representation.size(), sortedRepr.size()));\nCALL String.format(\"Representation and sortedRepr must have same sizes, %d != %d\", representation.size(), sortedRepr.size())\nList<Double> reprCopy = new ArrayList<Double> (representation);\nList<S> res = new ArrayList<S> (l);\nfor (int i=0; i<l; i++)\nint i=0;\ni++\nint index = reprCopy.indexOf(sortedRepr.get(i));\nCALL reprCopy.indexOf(sortedRepr.get(i))\nCALL sortedRepr.get(i)\nCALL res.add(sequence.get(index))\nCALL sequence.get(index)\nCALL reprCopy.set(index, null)\nreturn res;",
+        "private static <S> List<S> decodeGeneric(List<S> sequence, List<Double> representation, List<Double> sortedRepr) {\n        int l = sequence.size();\n\n        if (representation.size() != l) {\n            throw new IllegalArgumentException(String.format(\"Length of sequence for decoding (%s) has to be equal to the length of the RandomKey (%s)\", l, representation.size()));\n        }\n        if (representation.size() != sortedRepr.size()) {\n            throw new IllegalArgumentException(String.format(\"Representation and sortedRepr must have same sizes, %d != %d\", representation.size(), sortedRepr.size()));\n        }\n\n        List<Double> reprCopy = new ArrayList<Double> (representation);// do not modify the orig. representation\n\n        // now find the indices in the original repr and use them for permuting\n        List<S> res = new ArrayList<S> (l);\n        for (int i=0; i<l; i++) {\n            int index = reprCopy.indexOf(sortedRepr.get(i));\n            res.add(sequence.get(index));\n            reprCopy.set(index, null);\n        }\n        return res;\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.288135593220339,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 14.0,
+        "literal_count": 4.0,
+        "source_tokens": 268.0,
+        "l0_tokens": 73.0,
+        "l1_tokens": 357.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 14,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.toString()",
+      "source": "@Override\n    public String toString() {\n        final StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < dimension; i++) {\n            sb.append(\"[\").append(getCount(i)).append(\"]\");\n        }\n        return sb.toString();\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.toString()\nSIGNATURE: @Override\n    public String toString()",
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.toString()\nSIGNATURE: @Override\n    public String toString()\nSTRUCTURE (lossy):\nfinal StringBuilder sb = new StringBuilder();\nfor (int i = 0; i < dimension; i++)\nint i = 0;\ni++\nCALL sb.append(\"[\").append(getCount(i)).append(\"]\")\nCALL sb.append(\"[\").append(getCount(i))\nCALL sb.append(\"[\")\nCALL getCount(i)\nreturn sb.toString();\nCALL sb.toString()",
+        "@Override\n    public String toString() {\n        final StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < dimension; i++) {\n            sb.append(\"[\").append(getCount(i)).append(\"]\");\n        }\n        return sb.toString();\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.782608695652174,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 5.0,
+        "literal_count": 3.0,
+        "source_tokens": 62.0,
+        "l0_tokens": 42.0,
+        "l1_tokens": 113.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 5,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/fraction/BigFractionFormat.java::BigFractionFormat.parseNextBigInteger(final String source,\n                                             final ParsePosition pos)",
+      "source": "protected BigInteger parseNextBigInteger(final String source,\n                                             final ParsePosition pos) {\n\n        final int start = pos.getIndex();\n         int end = (source.charAt(start) == '-') ? (start + 1) : start;\n         while((end < source.length()) &&\n               Character.isDigit(source.charAt(end))) {\n             ++end;\n         }\n\n         try {\n             BigInteger n = new BigInteger(source.substring(start, end));\n             pos.setIndex(end);\n             return n;\n         } catch (NumberFormatException nfe) {\n             pos.setErrorIndex(start);\n             return null;\n         }\n\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/fraction/BigFractionFormat.java::BigFractionFormat.parseNextBigInteger(final String source,\n                                             final ParsePosition pos)\nSIGNATURE: protected BigInteger parseNextBigInteger(final String source,\n                                             final ParsePosition pos)",
+        "METHOD: src/main/java/org/apache/commons/math/fraction/BigFractionFormat.java::BigFractionFormat.parseNextBigInteger(final String source,\n                                             final ParsePosition pos)\nSIGNATURE: protected BigInteger parseNextBigInteger(final String source,\n                                             final ParsePosition pos)\nSTRUCTURE (lossy):\nfinal int start = pos.getIndex();\nCALL pos.getIndex()\nint end = (source.charAt(start) == '-') ? (start + 1) : start;\nCALL source.charAt(start)\nwhile((end < source.length()) && Character.isDigit(source.charAt(end)))\nCALL source.length()\nCALL Character.isDigit(source.charAt(end))\nCALL source.charAt(end)\n++end\nBigInteger n = new BigInteger(source.substring(start, end));\nCALL source.substring(start, end)\nCALL pos.setIndex(end)\nreturn n;\ncatch (NumberFormatException nfe)\nCALL pos.setErrorIndex(start)\nreturn null;",
+        "protected BigInteger parseNextBigInteger(final String source,\n                                             final ParsePosition pos) {\n\n        final int start = pos.getIndex();\n         int end = (source.charAt(start) == '-') ? (start + 1) : start;\n         while((end < source.length()) &&\n               Character.isDigit(source.charAt(end))) {\n             ++end;\n         }\n\n         try {\n             BigInteger n = new BigInteger(source.substring(start, end));\n             pos.setIndex(end);\n             return n;\n         } catch (NumberFormatException nfe) {\n             pos.setErrorIndex(start);\n             return null;\n         }\n\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 8.0,
+        "literal_count": 3.0,
+        "source_tokens": 163.0,
+        "l0_tokens": 88.0,
+        "l1_tokens": 221.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 8,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.iterator()",
+      "source": "public Iterator iterator() {\n        return new Iterator();\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.iterator()\nSIGNATURE: public Iterator iterator()",
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.iterator()\nSIGNATURE: public Iterator iterator()\nSTRUCTURE (lossy):\nreturn new Iterator();",
+        "public Iterator iterator() {\n        return new Iterator();\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.9285714285714286,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 17.0,
+        "l0_tokens": 39.0,
+        "l1_tokens": 49.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.getSizes()",
+      "source": "public int[] getSizes() {\n        return MathUtils.copyOf(size);\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.getSizes()\nSIGNATURE: public int[] getSizes()",
+        "METHOD: src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.getSizes()\nSIGNATURE: public int[] getSizes()\nSTRUCTURE (lossy):\nreturn MathUtils.copyOf(size);\nCALL MathUtils.copyOf(size)",
+        "public int[] getSizes() {\n        return MathUtils.copyOf(size);\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8333333333333334,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 18.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 57.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquareTest(double[] expected, long[] observed)",
+      "source": "public double chiSquareTest(double[] expected, long[] observed)\n        throws MathException {\n        distribution = new ChiSquaredDistributionImpl(expected.length - 1.0);\n        return 1.0 - distribution.cumulativeProbability(\n            chiSquare(expected, observed));\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquareTest(double[] expected, long[] observed)\nSIGNATURE: public double chiSquareTest(double[] expected, long[] observed)\n        throws MathException",
+        "METHOD: src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquareTest(double[] expected, long[] observed)\nSIGNATURE: public double chiSquareTest(double[] expected, long[] observed)\n        throws MathException\nSTRUCTURE (lossy):\ndistribution = new ChiSquaredDistributionImpl(expected.length - 1.0)\nreturn 1.0 - distribution.cumulativeProbability( chiSquare(expected, observed));\nCALL distribution.cumulativeProbability( chiSquare(expected, observed))\nCALL chiSquare(expected, observed)",
+        "public double chiSquareTest(double[] expected, long[] observed)\n        throws MathException {\n        distribution = new ChiSquaredDistributionImpl(expected.length - 1.0);\n        return 1.0 - distribution.cumulativeProbability(\n            chiSquare(expected, observed));\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5185185185185185,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 70.0,
+        "l0_tokens": 64.0,
+        "l1_tokens": 133.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.getCounts(int index)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.MultidimensionalCounter(int ... size)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.getCount(int ... c)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.hasNext()": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.getCount(int dim)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.next()": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/ode/nonstiff/GraggBulirschStoerIntegrator.java::GraggBulirschStoerIntegrator.integrate(final FirstOrderDifferentialEquations equations,\n                          final double t0, final double[] y0, final double t, final double[] y)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.getCounts()": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/util/CompositeFormat.java::CompositeFormat.parseFixedstring(final String source,\n                                           final String expected,\n                                           final ParsePosition pos)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquare(long[][] counts)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.getSize()": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/linear/MatrixDimensionMismatchException.java::MatrixDimensionMismatchException.MatrixDimensionMismatchException(int wrongRowDim,\n                                            int wrongColDim,\n                                            int expectedRowDim,\n                                            int expectedColDim)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/linear/OpenMapRealVector.java::OpenMapRealVector.equals(Object obj)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.Iterator.getCount()": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquare(double[] expected, long[] observed)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/linear/AbstractRealVector.java::AbstractRealVector.iterator()": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/linear/SparseFieldVector.java::SparseFieldVector.equals(Object obj)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/linear/OpenMapRealVector.java::OpenMapRealVector.add(OpenMapRealVector v)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/genetics/RandomKey.java::RandomKey.decodeGeneric(List<S> sequence, List<Double> representation, List<Double> sortedRepr)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.toString()": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/fraction/BigFractionFormat.java::BigFractionFormat.parseNextBigInteger(final String source,\n                                             final ParsePosition pos)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.iterator()": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/util/MultidimensionalCounter.java::MultidimensionalCounter.getSizes()": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java::ChiSquareTestImpl.chiSquareTest(double[] expected, long[] observed)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 4734,
+    "retrieved_unique_entities": 24,
+    "deduplication": "highest_bm25_or_lexical_score_per_entity_id",
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "670ad3e99efabf16b6d3f9f6d581bdfbfdea5397aab74c6671a0b125e1b01bd0",
+  "evidence_sha256": "ffa1f5c915a0997e814bd57f9ce99a2090077d744f3a409e2e6acdea00dba36a"
+}

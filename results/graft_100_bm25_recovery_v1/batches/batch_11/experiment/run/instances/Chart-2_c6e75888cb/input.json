@@ -1,0 +1,1320 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Chart-2",
+    "repository": "Chart",
+    "language": "java",
+    "revision": "0736998415ca28087ddf546663445e142f053887",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_11/prepared/checkouts/Chart-2",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Chart-2\nEXECUTED BUGGY TEST: org.jfree.data.general.junit.DatasetUtilitiesTests::testBug2849731_2\nTEST SOURCE: tests/org/jfree/data/general/junit/DatasetUtilitiesTests.java\nTEST SOURCE SHA256: 9c51d1dc8fc1dd6e41418f471904eb7bc66ff567760b2d23c854654fee78aeff\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testBug2849731_2() {\n        XYIntervalSeriesCollection d = new XYIntervalSeriesCollection();\n        XYIntervalSeries s = new XYIntervalSeries(\"S1\");\n        s.add(1.0, Double.NaN, Double.NaN, Double.NaN, 1.5, Double.NaN);\n        d.addSeries(s);\n        Range r = DatasetUtilities.iterateDomainBounds(d);\n        assertEquals(1.0, r.getLowerBound(), EPSILON);\n        assertEquals(1.0, r.getUpperBound(), EPSILON);\n\n        s.add(1.0, 1.5, Double.NaN, Double.NaN, 1.5, Double.NaN);\n        r = DatasetUtilities.iterateDomainBounds(d);\n        assertEquals(1.0, r.getLowerBound(), EPSILON);\n        assertEquals(1.5, r.getUpperBound(), EPSILON);\n\n        s.add(1.0, Double.NaN, 0.5, Double.NaN, 1.5, Double.NaN);\n        r = DatasetUtilities.iterateDomainBounds(d);\n        assertEquals(0.5, r.getLowerBound(), EPSILON);\n        assertEquals(1.5, r.getUpperBound(), EPSILON);\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.jfree.data.general.junit.DatasetUtilitiesTests::testBug2849731_2\njava.lang.NullPointerException\n\tat org.jfree.data.general.junit.DatasetUtilitiesTests.testBug2849731_2(DatasetUtilitiesTests.java:1276)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_11/prepared/evidence/Chart-2.txt",
+      "sha256": "458507485d5b30799722c15fdeb629a47ddab578d7bd45fd6ed0d4a95f5ad57d"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "source",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Chart-2",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "source/org/jfree/data/time/TimeSeriesCollection.java::TimeSeriesCollection.getDomainLowerBound(boolean includeInterval)",
+      "path": "source/org/jfree/data/time/TimeSeriesCollection.java",
+      "start_line": 617,
+      "end_line": 624,
+      "source": "public double getDomainLowerBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getLowerBound();\n        }\n        return result;\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 47.26122280354794
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/TimeSeriesCollection.java::TimeSeriesCollection.getDomainUpperBound(boolean includeInterval)",
+      "path": "source/org/jfree/data/time/TimeSeriesCollection.java",
+      "start_line": 634,
+      "end_line": 641,
+      "source": "public double getDomainUpperBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getUpperBound();\n        }\n        return result;\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 47.15800538579789
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/TimePeriodValuesCollection.java::TimePeriodValuesCollection.getDomainLowerBound(boolean includeInterval)",
+      "path": "source/org/jfree/data/time/TimePeriodValuesCollection.java",
+      "start_line": 346,
+      "end_line": 353,
+      "source": "public double getDomainLowerBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getLowerBound();\n        }\n        return result;\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 44.126906723523845
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/TimePeriodValuesCollection.java::TimePeriodValuesCollection.getDomainUpperBound(boolean includeInterval)",
+      "path": "source/org/jfree/data/time/TimePeriodValuesCollection.java",
+      "start_line": 363,
+      "end_line": 370,
+      "source": "public double getDomainUpperBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getUpperBound();\n        }\n        return result;\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 44.02461859415503
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/jdbc/JDBCPieDataset.java::JDBCPieDataset.executeQuery(Connection con, String query)",
+      "path": "source/org/jfree/data/jdbc/JDBCPieDataset.java",
+      "start_line": 167,
+      "end_line": 238,
+      "source": "public void executeQuery(Connection con, String query) throws SQLException {\n\n        Statement statement = null;\n        ResultSet resultSet = null;\n\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int columnCount = metaData.getColumnCount();\n            if (columnCount != 2) {\n                throw new SQLException(\n                    \"Invalid sql generated.  PieDataSet requires 2 columns only\"\n                );\n            }\n\n            int columnType = metaData.getColumnType(2);\n            double value = Double.NaN;\n            while (resultSet.next()) {\n                Comparable key = resultSet.getString(1);\n                switch (columnType) {\n                    case Types.NUMERIC:\n                    case Types.REAL:\n                    case Types.INTEGER:\n                    case Types.DOUBLE:\n                    case Types.FLOAT:\n                    case Types.DECIMAL:\n                    case Types.BIGINT:\n                        value = resultSet.getDouble(2);\n                        setValue(key, value);\n                        break;\n\n                    case Types.DATE:\n                    case Types.TIME:\n                    case Types.TIMESTAMP:\n                        Timestamp date = resultSet.getTimestamp(2);\n                        value = date.getTime();\n                        setValue(key, value);\n                        break;\n\n                    default:\n                        System.err.println(\n                            \"JDBCPieDataset - unknown data type\"\n                        );\n                        break;\n                }\n            }\n\n            fireDatasetChanged(new DatasetChangeInfo());\n            //TODO: fill in real change info\n\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    System.err.println(\"JDBCPieDataset: swallowing exception.\");\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    System.err.println(\"JDBCPieDataset: swallowing exception.\");\n                }\n            }\n        }\n    }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 43.479401280856884
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/xy/XYSeriesCollection.java::XYSeriesCollection.getDomainBounds(boolean includeInterval)",
+      "path": "source/org/jfree/data/xy/XYSeriesCollection.java",
+      "start_line": 592,
+      "end_line": 618,
+      "source": "public Range getDomainBounds(boolean includeInterval) {\n        if (includeInterval) {\n            return this.intervalDelegate.getDomainBounds(includeInterval);\n        }\n        else {\n            double lower = Double.POSITIVE_INFINITY;\n            double upper = Double.NEGATIVE_INFINITY;\n            int seriesCount = getSeriesCount();\n            for (int s = 0; s < seriesCount; s++) {\n                XYSeries series = getSeries(s);\n                double minX = series.getMinX();\n                if (!Double.isNaN(minX)) {\n                    lower = Math.min(lower, minX);\n                }\n                double maxX = series.getMaxX();\n                if (!Double.isNaN(maxX)) {\n                    upper = Math.max(upper, maxX);\n                }\n            }\n            if (lower > upper) {\n                return null;\n            }\n            else {\n                return new Range(lower, upper);\n            }\n        }\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.472885343293825
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/renderer/xy/XYShapeRenderer.java::XYShapeRenderer.findDomainBounds(XYDataset dataset)",
+      "path": "source/org/jfree/chart/renderer/xy/XYShapeRenderer.java",
+      "start_line": 347,
+      "end_line": 357,
+      "source": "public Range findDomainBounds(XYDataset dataset) {\n        if (dataset != null) {\n            Range r = DatasetUtilities.findDomainBounds(dataset, false);\n            double offset = 0; // TODO getSeriesShape(n).getBounds().width / 2;\n            return new Range(r.getLowerBound() + offset,\n                             r.getUpperBound() + offset);\n        }\n        else {\n            return null;\n        }\n    }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.89546623153972
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/gantt/XYTaskDataset.java::XYTaskDataset.XYTaskDataset(TaskSeriesCollection tasks)",
+      "path": "source/org/jfree/data/gantt/XYTaskDataset.java",
+      "start_line": 81,
+      "end_line": 88,
+      "source": "public XYTaskDataset(TaskSeriesCollection tasks) {\n        if (tasks == null) {\n            throw new IllegalArgumentException(\"Null 'tasks' argument.\");\n        }\n        this.underlying = tasks;\n        this.seriesWidth = 0.8;\n        this.underlying.addChangeListener(this);\n    }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.30119527996124
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/xy/IntervalXYDelegate.java::IntervalXYDelegate.getDomainLowerBound(boolean includeInterval)",
+      "path": "source/org/jfree/data/xy/IntervalXYDelegate.java",
+      "start_line": 329,
+      "end_line": 336,
+      "source": "public double getDomainLowerBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getLowerBound();\n        }\n        return result;\n    }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.7334981278334
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/general/DatasetUtilities.java::DatasetUtilities.findDomainBounds(XYDataset dataset,\n            List visibleSeriesKeys, boolean includeInterval)",
+      "path": "source/org/jfree/data/general/DatasetUtilities.java",
+      "start_line": 698,
+      "end_line": 713,
+      "source": "public static Range findDomainBounds(XYDataset dataset,\n            List visibleSeriesKeys, boolean includeInterval) {\n        if (dataset == null) {\n            throw new IllegalArgumentException(\"Null 'dataset' argument.\");\n        }\n        Range result = null;\n        if (dataset instanceof XYDomainInfo) {\n            XYDomainInfo info = (XYDomainInfo) dataset;\n            result = info.getDomainBounds(visibleSeriesKeys, includeInterval);\n        }\n        else {\n            result = iterateToFindDomainBounds(dataset, visibleSeriesKeys,\n                    includeInterval);\n        }\n        return result;\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.693489918579985
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/xy/IntervalXYDelegate.java::IntervalXYDelegate.getDomainUpperBound(boolean includeInterval)",
+      "path": "source/org/jfree/data/xy/IntervalXYDelegate.java",
+      "start_line": 346,
+      "end_line": 353,
+      "source": "public double getDomainUpperBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getUpperBound();\n        }\n        return result;\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.62933438171061
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/xy/IntervalXYDelegate.java::IntervalXYDelegate.getDomainBounds(boolean includeInterval)",
+      "path": "source/org/jfree/data/xy/IntervalXYDelegate.java",
+      "start_line": 364,
+      "end_line": 375,
+      "source": "public Range getDomainBounds(boolean includeInterval) {\n        // first get the range without the interval, then expand it for the\n        // interval width\n        Range range = DatasetUtilities.findDomainBounds(this.dataset, false);\n        if (includeInterval && range != null) {\n            double lowerAdj = getIntervalWidth() * getIntervalPositionFactor();\n            double upperAdj = getIntervalWidth() - lowerAdj;\n            range = new Range(range.getLowerBound() - lowerAdj,\n                range.getUpperBound() + upperAdj);\n        }\n        return range;\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.599892779308746
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.OptionalLibraryHolder.loadLibrary(String classname)",
+      "path": "source/org/jfree/chart/ui/BasicProjectInfo.java",
+      "start_line": 109,
+      "end_line": 130,
+      "source": "protected Library loadLibrary(String classname) {\n            if (classname == null) {\n                return null;\n            }\n            try {\n                Class c = ObjectUtilities.getClassLoader(\n                        getClass()).loadClass(classname);\n                try {\n                    Method m = c.getMethod(\"getInstance\", (Class[]) null);\n                    return (Library) m.invoke(null, (Object[]) null);\n                }\n                catch(Exception e) {\n                    // ok, fall back ...\n                }\n                return (Library) c.newInstance();\n            }\n            catch (Exception e) {\n                // ok, this library has no 'getInstance()' method. Check the\n                // default constructor ...\n                return null;\n            }\n        }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.54567279934744
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/xy/XYSeriesCollection.java::XYSeriesCollection.getRangeBounds(boolean includeInterval)",
+      "path": "source/org/jfree/data/xy/XYSeriesCollection.java",
+      "start_line": 696,
+      "end_line": 717,
+      "source": "public Range getRangeBounds(boolean includeInterval) {\n        double lower = Double.POSITIVE_INFINITY;\n        double upper = Double.NEGATIVE_INFINITY;\n        int seriesCount = getSeriesCount();\n        for (int s = 0; s < seriesCount; s++) {\n            XYSeries series = getSeries(s);\n            double minY = series.getMinY();\n            if (!Double.isNaN(minY)) {\n                lower = Math.min(lower, minY);\n            }\n            double maxY = series.getMaxY();\n            if (!Double.isNaN(maxY)) {\n                upper = Math.max(upper, maxY);\n            }\n        }\n        if (lower > upper) {\n            return null;\n        }\n        else {\n            return new Range(lower, upper);\n        }\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.363931641477386
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/TimeTableXYDataset.java::TimeTableXYDataset.getDomainLowerBound(boolean includeInterval)",
+      "path": "source/org/jfree/data/time/TimeTableXYDataset.java",
+      "start_line": 506,
+      "end_line": 513,
+      "source": "public double getDomainLowerBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getLowerBound();\n        }\n        return result;\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.25392056517605
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/TimeTableXYDataset.java::TimeTableXYDataset.getDomainUpperBound(boolean includeInterval)",
+      "path": "source/org/jfree/data/time/TimeTableXYDataset.java",
+      "start_line": 523,
+      "end_line": 530,
+      "source": "public double getDomainUpperBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getUpperBound();\n        }\n        return result;\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.150703147426015
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/general/DatasetUtilities.java::DatasetUtilities.findDomainBounds(XYDataset dataset,\n                                         boolean includeInterval)",
+      "path": "source/org/jfree/data/general/DatasetUtilities.java",
+      "start_line": 663,
+      "end_line": 681,
+      "source": "public static Range findDomainBounds(XYDataset dataset,\n                                         boolean includeInterval) {\n\n        if (dataset == null) {\n            throw new IllegalArgumentException(\"Null 'dataset' argument.\");\n        }\n\n        Range result = null;\n        // if the dataset implements DomainInfo, life is easier\n        if (dataset instanceof DomainInfo) {\n            DomainInfo info = (DomainInfo) dataset;\n            result = info.getDomainBounds(includeInterval);\n        }\n        else {\n            result = iterateDomainBounds(dataset, includeInterval);\n        }\n        return result;\n\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.02953630841712
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/general/DatasetUtilities.java::DatasetUtilities.iterateDomainBounds(XYDataset dataset)",
+      "path": "source/org/jfree/data/general/DatasetUtilities.java",
+      "start_line": 725,
+      "end_line": 727,
+      "source": "public static Range iterateDomainBounds(XYDataset dataset) {\n        return iterateDomainBounds(dataset, true);\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.671517932540354
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)",
+      "path": "source/org/jfree/data/jdbc/JDBCXYDataset.java",
+      "start_line": 229,
+      "end_line": 413,
+      "source": "public void executeQuery(Connection con, String query)\n        throws SQLException {\n\n        if (con == null) {\n            throw new SQLException(\n                \"There is no database to execute the query.\"\n            );\n        }\n\n        ResultSet resultSet = null;\n        Statement statement = null;\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int numberOfColumns = metaData.getColumnCount();\n            int numberOfValidColumns = 0;\n            int [] columnTypes = new int[numberOfColumns];\n            for (int column = 0; column < numberOfColumns; column++) {\n                try {\n                    int type = metaData.getColumnType(column + 1);\n                    switch (type) {\n\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIT:\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            ++numberOfValidColumns;\n                            columnTypes[column] = type;\n                            break;\n                        default:\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                catch (SQLException e) {\n                    columnTypes[column] = Types.NULL;\n                    throw e;\n                }\n            }\n\n\n            if (numberOfValidColumns <= 1) {\n                throw new SQLException(\n                    \"Not enough valid columns where generated by query.\"\n                );\n            }\n\n            /// First column is X data\n            this.columnNames = new String[numberOfValidColumns - 1];\n            /// Get the column names and cache them.\n            int currentColumn = 0;\n            for (int column = 1; column < numberOfColumns; column++) {\n                if (columnTypes[column] != Types.NULL) {\n                    this.columnNames[currentColumn]\n                        = metaData.getColumnLabel(column + 1);\n                    ++currentColumn;\n                }\n            }\n\n            // Might need to add, to free memory from any previous result sets\n            if (this.rows != null) {\n                for (int column = 0; column < this.rows.size(); column++) {\n                    ArrayList row = (ArrayList) this.rows.get(column);\n                    row.clear();\n                }\n                this.rows.clear();\n            }\n\n            // Are we working with a time series.\n            switch (columnTypes[0]) {\n                case Types.DATE:\n                case Types.TIME:\n                case Types.TIMESTAMP:\n                    this.isTimeSeries = true;\n                    break;\n                default :\n                    this.isTimeSeries = false;\n                    break;\n            }\n\n            // Get all rows.\n            // rows = new ArrayList();\n            while (resultSet.next()) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    Object xObject = resultSet.getObject(column + 1);\n                    switch (columnTypes[column]) {\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            newRow.add(xObject);\n                            break;\n\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                            newRow.add(new Long(((Date) xObject).getTime()));\n                            break;\n                        case Types.NULL:\n                            break;\n                        default:\n                            System.err.println(\"Unknown data\");\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// a kludge to make everything work when no rows returned\n            if (this.rows.size() == 0) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    if (columnTypes[column] != Types.NULL) {\n                        newRow.add(new Integer(0));\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// Determine max and min values.\n            if (this.rows.size() < 1) {\n                this.maxValue = 0.0;\n                this.minValue = 0.0;\n            }\n            else {\n                ArrayList row = (ArrayList) this.rows.get(0);\n                this.maxValue = Double.NEGATIVE_INFINITY;\n                this.minValue = Double.POSITIVE_INFINITY;\n                for (int rowNum = 0; rowNum < this.rows.size(); ++rowNum) {\n                    row = (ArrayList) this.rows.get(rowNum);\n                    for (int column = 1; column < numberOfColumns; column++) {\n                        Object testValue = row.get(column);\n                        if (testValue != null) {\n                            double test = ((Number) testValue).doubleValue();\n\n                            if (test < this.minValue) {\n                                this.minValue = test;\n                            }\n                            if (test > this.maxValue) {\n                                this.maxValue = test;\n                            }\n                        }\n                    }\n                }\n            }\n\n            fireDatasetChanged(new DatasetChangeInfo());\n            //TODO: fill in real change info\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n        }\n\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 38.99509386831986
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/xy/XYSeriesCollection.java::XYSeriesCollection.getDomainLowerBound(boolean includeInterval)",
+      "path": "source/org/jfree/data/xy/XYSeriesCollection.java",
+      "start_line": 529,
+      "end_line": 550,
+      "source": "public double getDomainLowerBound(boolean includeInterval) {\n        if (includeInterval) {\n            return this.intervalDelegate.getDomainLowerBound(includeInterval);\n        }\n        else {\n            double result = Double.NaN;\n            int seriesCount = getSeriesCount();\n            for (int s = 0; s < seriesCount; s++) {\n                XYSeries series = getSeries(s);\n                double lowX = series.getMinX();\n                if (Double.isNaN(result)) {\n                    result = lowX;\n                }\n                else {\n                    if (!Double.isNaN(lowX)) {\n                        result = Math.min(result, lowX);\n                    }\n                }\n            }\n            return result;\n        }\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 38.4893381004116
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/gantt/TaskSeriesCollection.java::TaskSeriesCollection.add(TaskSeries series)",
+      "path": "source/org/jfree/data/gantt/TaskSeriesCollection.java",
+      "start_line": 251,
+      "end_line": 270,
+      "source": "public void add(TaskSeries series) {\n        if (series == null) {\n            throw new IllegalArgumentException(\"Null 'series' argument.\");\n        }\n        this.data.add(series);\n        series.addChangeListener(this);\n\n        // look for any keys that we don't already know about...\n        Iterator iterator = series.getTasks().iterator();\n        while (iterator.hasNext()) {\n            Task task = (Task) iterator.next();\n            String key = task.getDescription();\n            int index = this.keys.indexOf(key);\n            if (index < 0) {\n                this.keys.add(key);\n            }\n        }\n        fireDatasetChanged(new DatasetChangeInfo());\n        //TODO: fill in real change info\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 38.45880998449357
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/xy/XYSeriesCollection.java::XYSeriesCollection.getDomainUpperBound(boolean includeInterval)",
+      "path": "source/org/jfree/data/xy/XYSeriesCollection.java",
+      "start_line": 560,
+      "end_line": 581,
+      "source": "public double getDomainUpperBound(boolean includeInterval) {\n        if (includeInterval) {\n            return this.intervalDelegate.getDomainUpperBound(includeInterval);\n        }\n        else {\n            double result = Double.NaN;\n            int seriesCount = getSeriesCount();\n            for (int s = 0; s < seriesCount; s++) {\n                XYSeries series = getSeries(s);\n                double hiX = series.getMaxX();\n                if (Double.isNaN(result)) {\n                    result = hiX;\n                }\n                else {\n                    if (!Double.isNaN(hiX)) {\n                        result = Math.max(result, hiX);\n                    }\n                }\n            }\n            return result;\n        }\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 38.40097251852468
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/renderer/xy/XYBlockRenderer.java::XYBlockRenderer.findDomainBounds(XYDataset dataset)",
+      "path": "source/org/jfree/chart/renderer/xy/XYBlockRenderer.java",
+      "start_line": 291,
+      "end_line": 305,
+      "source": "public Range findDomainBounds(XYDataset dataset) {\n        if (dataset != null) {\n            Range r = DatasetUtilities.findDomainBounds(dataset, false);\n            if (r == null) {\n                return null;\n            }\n            else {\n                return new Range(r.getLowerBound() + this.xOffset,\n                        r.getUpperBound() + this.blockWidth + this.xOffset);\n            }\n        }\n        else {\n            return null;\n        }\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 38.10943350616356
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.addOptionalLibrary(Library library)",
+      "path": "source/org/jfree/chart/ui/BasicProjectInfo.java",
+      "start_line": 298,
+      "end_line": 303,
+      "source": "public void addOptionalLibrary(Library library) {\n      if (library == null) {\n          throw new NullPointerException(\"Library must be given.\");\n      }\n      this.optionalLibraries.add(new OptionalLibraryHolder(library));\n  }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 38.010808797646625
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "source/org/jfree/data/time/TimeSeriesCollection.java::TimeSeriesCollection.getDomainLowerBound(boolean includeInterval)",
+      "source": "public double getDomainLowerBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getLowerBound();\n        }\n        return result;\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/TimeSeriesCollection.java::TimeSeriesCollection.getDomainLowerBound(boolean includeInterval)\nSIGNATURE: public double getDomainLowerBound(boolean includeInterval)",
+        "METHOD: source/org/jfree/data/time/TimeSeriesCollection.java::TimeSeriesCollection.getDomainLowerBound(boolean includeInterval)\nSIGNATURE: public double getDomainLowerBound(boolean includeInterval)\nSTRUCTURE (lossy):\ndouble result = Double.NaN;\nRange r = getDomainBounds(includeInterval);\nCALL getDomainBounds(includeInterval)\nif (r != null)\nresult = r.getLowerBound()\nCALL r.getLowerBound()\nreturn result;",
+        "public double getDomainLowerBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getLowerBound();\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7727272727272727,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 63.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 102.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/TimeSeriesCollection.java::TimeSeriesCollection.getDomainUpperBound(boolean includeInterval)",
+      "source": "public double getDomainUpperBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getUpperBound();\n        }\n        return result;\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/TimeSeriesCollection.java::TimeSeriesCollection.getDomainUpperBound(boolean includeInterval)\nSIGNATURE: public double getDomainUpperBound(boolean includeInterval)",
+        "METHOD: source/org/jfree/data/time/TimeSeriesCollection.java::TimeSeriesCollection.getDomainUpperBound(boolean includeInterval)\nSIGNATURE: public double getDomainUpperBound(boolean includeInterval)\nSTRUCTURE (lossy):\ndouble result = Double.NaN;\nRange r = getDomainBounds(includeInterval);\nCALL getDomainBounds(includeInterval)\nif (r != null)\nresult = r.getUpperBound()\nCALL r.getUpperBound()\nreturn result;",
+        "public double getDomainUpperBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getUpperBound();\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7727272727272727,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 63.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 102.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/TimePeriodValuesCollection.java::TimePeriodValuesCollection.getDomainLowerBound(boolean includeInterval)",
+      "source": "public double getDomainLowerBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getLowerBound();\n        }\n        return result;\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/TimePeriodValuesCollection.java::TimePeriodValuesCollection.getDomainLowerBound(boolean includeInterval)\nSIGNATURE: public double getDomainLowerBound(boolean includeInterval)",
+        "METHOD: source/org/jfree/data/time/TimePeriodValuesCollection.java::TimePeriodValuesCollection.getDomainLowerBound(boolean includeInterval)\nSIGNATURE: public double getDomainLowerBound(boolean includeInterval)\nSTRUCTURE (lossy):\ndouble result = Double.NaN;\nRange r = getDomainBounds(includeInterval);\nCALL getDomainBounds(includeInterval)\nif (r != null)\nresult = r.getLowerBound()\nCALL r.getLowerBound()\nreturn result;",
+        "public double getDomainLowerBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getLowerBound();\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6956521739130435,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 63.0,
+        "l0_tokens": 53.0,
+        "l1_tokens": 105.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/TimePeriodValuesCollection.java::TimePeriodValuesCollection.getDomainUpperBound(boolean includeInterval)",
+      "source": "public double getDomainUpperBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getUpperBound();\n        }\n        return result;\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/TimePeriodValuesCollection.java::TimePeriodValuesCollection.getDomainUpperBound(boolean includeInterval)\nSIGNATURE: public double getDomainUpperBound(boolean includeInterval)",
+        "METHOD: source/org/jfree/data/time/TimePeriodValuesCollection.java::TimePeriodValuesCollection.getDomainUpperBound(boolean includeInterval)\nSIGNATURE: public double getDomainUpperBound(boolean includeInterval)\nSTRUCTURE (lossy):\ndouble result = Double.NaN;\nRange r = getDomainBounds(includeInterval);\nCALL getDomainBounds(includeInterval)\nif (r != null)\nresult = r.getUpperBound()\nCALL r.getUpperBound()\nreturn result;",
+        "public double getDomainUpperBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getUpperBound();\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6956521739130435,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 63.0,
+        "l0_tokens": 53.0,
+        "l1_tokens": 105.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/jdbc/JDBCPieDataset.java::JDBCPieDataset.executeQuery(Connection con, String query)",
+      "source": "public void executeQuery(Connection con, String query) throws SQLException {\n\n        Statement statement = null;\n        ResultSet resultSet = null;\n\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int columnCount = metaData.getColumnCount();\n            if (columnCount != 2) {\n                throw new SQLException(\n                    \"Invalid sql generated.  PieDataSet requires 2 columns only\"\n                );\n            }\n\n            int columnType = metaData.getColumnType(2);\n            double value = Double.NaN;\n            while (resultSet.next()) {\n                Comparable key = resultSet.getString(1);\n                switch (columnType) {\n                    case Types.NUMERIC:\n                    case Types.REAL:\n                    case Types.INTEGER:\n                    case Types.DOUBLE:\n                    case Types.FLOAT:\n                    case Types.DECIMAL:\n                    case Types.BIGINT:\n                        value = resultSet.getDouble(2);\n                        setValue(key, value);\n                        break;\n\n                    case Types.DATE:\n                    case Types.TIME:\n                    case Types.TIMESTAMP:\n                        Timestamp date = resultSet.getTimestamp(2);\n                        value = date.getTime();\n                        setValue(key, value);\n                        break;\n\n                    default:\n                        System.err.println(\n                            \"JDBCPieDataset - unknown data type\"\n                        );\n                        break;\n                }\n            }\n\n            fireDatasetChanged(new DatasetChangeInfo());\n            //TODO: fill in real change info\n\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    System.err.println(\"JDBCPieDataset: swallowing exception.\");\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    System.err.println(\"JDBCPieDataset: swallowing exception.\");\n                }\n            }\n        }\n    }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: source/org/jfree/data/jdbc/JDBCPieDataset.java::JDBCPieDataset.executeQuery(Connection con, String query)\nSIGNATURE: public void executeQuery(Connection con, String query) throws SQLException",
+        "METHOD: source/org/jfree/data/jdbc/JDBCPieDataset.java::JDBCPieDataset.executeQuery(Connection con, String query)\nSIGNATURE: public void executeQuery(Connection con, String query) throws SQLException\nSTRUCTURE (lossy):\nStatement statement = null;\nResultSet resultSet = null;\nstatement = con.createStatement()\nCALL con.createStatement()\nresultSet = statement.executeQuery(query)\nCALL statement.executeQuery(query)\nResultSetMetaData metaData = resultSet.getMetaData();\nCALL resultSet.getMetaData()\nint columnCount = metaData.getColumnCount();\nCALL metaData.getColumnCount()\nif (columnCount != 2)\nthrow new SQLException( \"Invalid sql generated. PieDataSet requires 2 columns only\" );\nint columnType = metaData.getColumnType(2);\nCALL metaData.getColumnType(2)\ndouble value = Double.NaN;\nwhile (resultSet.next())\nCALL resultSet.next()\nComparable key = resultSet.getString(1);\nCALL resultSet.getString(1)\nswitch (columnType) { case Types.NUMERIC: case Types.REAL: case Types.INTEGER: case Types.DOUBLE: case Types.FLOAT: case Types.DECIMAL: case Types.BIGINT: value = resultSet.getDouble(2); setValue(key, value); break; case Types.DATE: case Types.TIME: case Types.TIMESTAMP: Timestamp date = resultSet.getTimestamp(2); value = date.getTime(); setValue(key, value); break; default: System.err.println( \"JDBCPieDataset - unknown data type\" ); break; }\nvalue = resultSet.getDouble(2)\nCALL resultSet.getDouble(2)\nCALL setValue(key, value)\nTimestamp date = resultSet.getTimestamp(2);\nCALL resultSet.getTimestamp(2)\nvalue = date.getTime()\nCALL date.getTime()\nCALL System.err.println( \"JDBCPieDataset - unknown data type\" )\nCALL fireDatasetChanged(new DatasetChangeInfo())\nif (resultSet != null)\nCALL resultSet.close()\ncatch (Exception e)\nCALL System.err.println(\"JDBCPieDataset: swallowing exception.\")\nif (statement != null)\nCALL statement.close()",
+        "public void executeQuery(Connection con, String query) throws SQLException {\n\n        Statement statement = null;\n        ResultSet resultSet = null;\n\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int columnCount = metaData.getColumnCount();\n            if (columnCount != 2) {\n                throw new SQLException(\n                    \"Invalid sql generated.  PieDataSet requires 2 columns only\"\n                );\n            }\n\n            int columnType = metaData.getColumnType(2);\n            double value = Double.NaN;\n            while (resultSet.next()) {\n                Comparable key = resultSet.getString(1);\n                switch (columnType) {\n                    case Types.NUMERIC:\n                    case Types.REAL:\n                    case Types.INTEGER:\n                    case Types.DOUBLE:\n                    case Types.FLOAT:\n                    case Types.DECIMAL:\n                    case Types.BIGINT:\n                        value = resultSet.getDouble(2);\n                        setValue(key, value);\n                        break;\n\n                    case Types.DATE:\n                    case Types.TIME:\n                    case Types.TIMESTAMP:\n                        Timestamp date = resultSet.getTimestamp(2);\n                        value = date.getTime();\n                        setValue(key, value);\n                        break;\n\n                    default:\n                        System.err.println(\n                            \"JDBCPieDataset - unknown data type\"\n                        );\n                        break;\n                }\n            }\n\n            fireDatasetChanged(new DatasetChangeInfo());\n            //TODO: fill in real change info\n\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    System.err.println(\"JDBCPieDataset: swallowing exception.\");\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    System.err.println(\"JDBCPieDataset: swallowing exception.\");\n                }\n            }\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2602739726027397,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 18.0,
+        "literal_count": 13.0,
+        "source_tokens": 610.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 460.0,
+        "compression_ratio": 0.7540983606557377,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 18,
+        "literal_count": 13
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/xy/XYSeriesCollection.java::XYSeriesCollection.getDomainBounds(boolean includeInterval)",
+      "source": "public Range getDomainBounds(boolean includeInterval) {\n        if (includeInterval) {\n            return this.intervalDelegate.getDomainBounds(includeInterval);\n        }\n        else {\n            double lower = Double.POSITIVE_INFINITY;\n            double upper = Double.NEGATIVE_INFINITY;\n            int seriesCount = getSeriesCount();\n            for (int s = 0; s < seriesCount; s++) {\n                XYSeries series = getSeries(s);\n                double minX = series.getMinX();\n                if (!Double.isNaN(minX)) {\n                    lower = Math.min(lower, minX);\n                }\n                double maxX = series.getMaxX();\n                if (!Double.isNaN(maxX)) {\n                    upper = Math.max(upper, maxX);\n                }\n            }\n            if (lower > upper) {\n                return null;\n            }\n            else {\n                return new Range(lower, upper);\n            }\n        }\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: source/org/jfree/data/xy/XYSeriesCollection.java::XYSeriesCollection.getDomainBounds(boolean includeInterval)\nSIGNATURE: public Range getDomainBounds(boolean includeInterval)",
+        "METHOD: source/org/jfree/data/xy/XYSeriesCollection.java::XYSeriesCollection.getDomainBounds(boolean includeInterval)\nSIGNATURE: public Range getDomainBounds(boolean includeInterval)\nSTRUCTURE (lossy):\nif (includeInterval)\nreturn this.intervalDelegate.getDomainBounds(includeInterval);\nCALL this.intervalDelegate.getDomainBounds(includeInterval)\ndouble lower = Double.POSITIVE_INFINITY;\ndouble upper = Double.NEGATIVE_INFINITY;\nint seriesCount = getSeriesCount();\nCALL getSeriesCount()\nfor (int s = 0; s < seriesCount; s++)\nint s = 0;\ns++\nXYSeries series = getSeries(s);\nCALL getSeries(s)\ndouble minX = series.getMinX();\nCALL series.getMinX()\nif (!Double.isNaN(minX))\nCALL Double.isNaN(minX)\nlower = Math.min(lower, minX)\nCALL Math.min(lower, minX)\ndouble maxX = series.getMaxX();\nCALL series.getMaxX()\nif (!Double.isNaN(maxX))\nCALL Double.isNaN(maxX)\nupper = Math.max(upper, maxX)\nCALL Math.max(upper, maxX)\nif (lower > upper)\nreturn null;\nreturn new Range(lower, upper);",
+        "public Range getDomainBounds(boolean includeInterval) {\n        if (includeInterval) {\n            return this.intervalDelegate.getDomainBounds(includeInterval);\n        }\n        else {\n            double lower = Double.POSITIVE_INFINITY;\n            double upper = Double.NEGATIVE_INFINITY;\n            int seriesCount = getSeriesCount();\n            for (int s = 0; s < seriesCount; s++) {\n                XYSeries series = getSeries(s);\n                double minX = series.getMinX();\n                if (!Double.isNaN(minX)) {\n                    lower = Math.min(lower, minX);\n                }\n                double maxX = series.getMaxX();\n                if (!Double.isNaN(maxX)) {\n                    upper = Math.max(upper, maxX);\n                }\n            }\n            if (lower > upper) {\n                return null;\n            }\n            else {\n                return new Range(lower, upper);\n            }\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 9.0,
+        "literal_count": 2.0,
+        "source_tokens": 237.0,
+        "l0_tokens": 46.0,
+        "l1_tokens": 243.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 9,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/renderer/xy/XYShapeRenderer.java::XYShapeRenderer.findDomainBounds(XYDataset dataset)",
+      "source": "public Range findDomainBounds(XYDataset dataset) {\n        if (dataset != null) {\n            Range r = DatasetUtilities.findDomainBounds(dataset, false);\n            double offset = 0; // TODO getSeriesShape(n).getBounds().width / 2;\n            return new Range(r.getLowerBound() + offset,\n                             r.getUpperBound() + offset);\n        }\n        else {\n            return null;\n        }\n    }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: source/org/jfree/chart/renderer/xy/XYShapeRenderer.java::XYShapeRenderer.findDomainBounds(XYDataset dataset)\nSIGNATURE: public Range findDomainBounds(XYDataset dataset)",
+        "METHOD: source/org/jfree/chart/renderer/xy/XYShapeRenderer.java::XYShapeRenderer.findDomainBounds(XYDataset dataset)\nSIGNATURE: public Range findDomainBounds(XYDataset dataset)\nSTRUCTURE (lossy):\nif (dataset != null)\nRange r = DatasetUtilities.findDomainBounds(dataset, false);\nCALL DatasetUtilities.findDomainBounds(dataset, false)\ndouble offset = 0;\nreturn new Range(r.getLowerBound() + offset, r.getUpperBound() + offset);\nCALL r.getLowerBound()\nCALL r.getUpperBound()\nreturn null;",
+        "public Range findDomainBounds(XYDataset dataset) {\n        if (dataset != null) {\n            Range r = DatasetUtilities.findDomainBounds(dataset, false);\n            double offset = 0; // TODO getSeriesShape(n).getBounds().width / 2;\n            return new Range(r.getLowerBound() + offset,\n                             r.getUpperBound() + offset);\n        }\n        else {\n            return null;\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6333333333333333,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 3.0,
+        "literal_count": 3.0,
+        "source_tokens": 104.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 121.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 3,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/gantt/XYTaskDataset.java::XYTaskDataset.XYTaskDataset(TaskSeriesCollection tasks)",
+      "source": "public XYTaskDataset(TaskSeriesCollection tasks) {\n        if (tasks == null) {\n            throw new IllegalArgumentException(\"Null 'tasks' argument.\");\n        }\n        this.underlying = tasks;\n        this.seriesWidth = 0.8;\n        this.underlying.addChangeListener(this);\n    }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: source/org/jfree/data/gantt/XYTaskDataset.java::XYTaskDataset.XYTaskDataset(TaskSeriesCollection tasks)\nSIGNATURE: public XYTaskDataset(TaskSeriesCollection tasks)",
+        "METHOD: source/org/jfree/data/gantt/XYTaskDataset.java::XYTaskDataset.XYTaskDataset(TaskSeriesCollection tasks)\nSIGNATURE: public XYTaskDataset(TaskSeriesCollection tasks)\nSTRUCTURE (lossy):\nif (tasks == null)\nthrow new IllegalArgumentException(\"Null 'tasks' argument.\");\nthis.underlying = tasks\nthis.seriesWidth = 0.8\nCALL this.underlying.addChangeListener(this)",
+        "public XYTaskDataset(TaskSeriesCollection tasks) {\n        if (tasks == null) {\n            throw new IllegalArgumentException(\"Null 'tasks' argument.\");\n        }\n        this.underlying = tasks;\n        this.seriesWidth = 0.8;\n        this.underlying.addChangeListener(this);\n    }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 3.0,
+        "source_tokens": 71.0,
+        "l0_tokens": 43.0,
+        "l1_tokens": 91.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/xy/IntervalXYDelegate.java::IntervalXYDelegate.getDomainLowerBound(boolean includeInterval)",
+      "source": "public double getDomainLowerBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getLowerBound();\n        }\n        return result;\n    }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: source/org/jfree/data/xy/IntervalXYDelegate.java::IntervalXYDelegate.getDomainLowerBound(boolean includeInterval)\nSIGNATURE: public double getDomainLowerBound(boolean includeInterval)",
+        "METHOD: source/org/jfree/data/xy/IntervalXYDelegate.java::IntervalXYDelegate.getDomainLowerBound(boolean includeInterval)\nSIGNATURE: public double getDomainLowerBound(boolean includeInterval)\nSTRUCTURE (lossy):\ndouble result = Double.NaN;\nRange r = getDomainBounds(includeInterval);\nCALL getDomainBounds(includeInterval)\nif (r != null)\nresult = r.getLowerBound()\nCALL r.getLowerBound()\nreturn result;",
+        "public double getDomainLowerBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getLowerBound();\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.75,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 63.0,
+        "l0_tokens": 48.0,
+        "l1_tokens": 100.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/general/DatasetUtilities.java::DatasetUtilities.findDomainBounds(XYDataset dataset,\n            List visibleSeriesKeys, boolean includeInterval)",
+      "source": "public static Range findDomainBounds(XYDataset dataset,\n            List visibleSeriesKeys, boolean includeInterval) {\n        if (dataset == null) {\n            throw new IllegalArgumentException(\"Null 'dataset' argument.\");\n        }\n        Range result = null;\n        if (dataset instanceof XYDomainInfo) {\n            XYDomainInfo info = (XYDomainInfo) dataset;\n            result = info.getDomainBounds(visibleSeriesKeys, includeInterval);\n        }\n        else {\n            result = iterateToFindDomainBounds(dataset, visibleSeriesKeys,\n                    includeInterval);\n        }\n        return result;\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: source/org/jfree/data/general/DatasetUtilities.java::DatasetUtilities.findDomainBounds(XYDataset dataset,\n            List visibleSeriesKeys, boolean includeInterval)\nSIGNATURE: public static Range findDomainBounds(XYDataset dataset,\n            List visibleSeriesKeys, boolean includeInterval)",
+        "METHOD: source/org/jfree/data/general/DatasetUtilities.java::DatasetUtilities.findDomainBounds(XYDataset dataset,\n            List visibleSeriesKeys, boolean includeInterval)\nSIGNATURE: public static Range findDomainBounds(XYDataset dataset,\n            List visibleSeriesKeys, boolean includeInterval)\nSTRUCTURE (lossy):\nif (dataset == null)\nthrow new IllegalArgumentException(\"Null 'dataset' argument.\");\nRange result = null;\nif (dataset instanceof XYDomainInfo)\nXYDomainInfo info = (XYDomainInfo) dataset;\nresult = info.getDomainBounds(visibleSeriesKeys, includeInterval)\nCALL info.getDomainBounds(visibleSeriesKeys, includeInterval)\nresult = iterateToFindDomainBounds(dataset, visibleSeriesKeys, includeInterval)\nCALL iterateToFindDomainBounds(dataset, visibleSeriesKeys, includeInterval)\nreturn result;",
+        "public static Range findDomainBounds(XYDataset dataset,\n            List visibleSeriesKeys, boolean includeInterval) {\n        if (dataset == null) {\n            throw new IllegalArgumentException(\"Null 'dataset' argument.\");\n        }\n        Range result = null;\n        if (dataset instanceof XYDomainInfo) {\n            XYDomainInfo info = (XYDomainInfo) dataset;\n            result = info.getDomainBounds(visibleSeriesKeys, includeInterval);\n        }\n        else {\n            result = iterateToFindDomainBounds(dataset, visibleSeriesKeys,\n                    includeInterval);\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5277777777777778,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 2.0,
+        "literal_count": 3.0,
+        "source_tokens": 156.0,
+        "l0_tokens": 76.0,
+        "l1_tokens": 202.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 2,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/xy/IntervalXYDelegate.java::IntervalXYDelegate.getDomainUpperBound(boolean includeInterval)",
+      "source": "public double getDomainUpperBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getUpperBound();\n        }\n        return result;\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: source/org/jfree/data/xy/IntervalXYDelegate.java::IntervalXYDelegate.getDomainUpperBound(boolean includeInterval)\nSIGNATURE: public double getDomainUpperBound(boolean includeInterval)",
+        "METHOD: source/org/jfree/data/xy/IntervalXYDelegate.java::IntervalXYDelegate.getDomainUpperBound(boolean includeInterval)\nSIGNATURE: public double getDomainUpperBound(boolean includeInterval)\nSTRUCTURE (lossy):\ndouble result = Double.NaN;\nRange r = getDomainBounds(includeInterval);\nCALL getDomainBounds(includeInterval)\nif (r != null)\nresult = r.getUpperBound()\nCALL r.getUpperBound()\nreturn result;",
+        "public double getDomainUpperBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getUpperBound();\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.75,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 63.0,
+        "l0_tokens": 48.0,
+        "l1_tokens": 100.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/xy/IntervalXYDelegate.java::IntervalXYDelegate.getDomainBounds(boolean includeInterval)",
+      "source": "public Range getDomainBounds(boolean includeInterval) {\n        // first get the range without the interval, then expand it for the\n        // interval width\n        Range range = DatasetUtilities.findDomainBounds(this.dataset, false);\n        if (includeInterval && range != null) {\n            double lowerAdj = getIntervalWidth() * getIntervalPositionFactor();\n            double upperAdj = getIntervalWidth() - lowerAdj;\n            range = new Range(range.getLowerBound() - lowerAdj,\n                range.getUpperBound() + upperAdj);\n        }\n        return range;\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: source/org/jfree/data/xy/IntervalXYDelegate.java::IntervalXYDelegate.getDomainBounds(boolean includeInterval)\nSIGNATURE: public Range getDomainBounds(boolean includeInterval)",
+        "METHOD: source/org/jfree/data/xy/IntervalXYDelegate.java::IntervalXYDelegate.getDomainBounds(boolean includeInterval)\nSIGNATURE: public Range getDomainBounds(boolean includeInterval)\nSTRUCTURE (lossy):\nRange range = DatasetUtilities.findDomainBounds(this.dataset, false);\nCALL DatasetUtilities.findDomainBounds(this.dataset, false)\nif (includeInterval && range != null)\ndouble lowerAdj = getIntervalWidth() * getIntervalPositionFactor();\nCALL getIntervalWidth()\nCALL getIntervalPositionFactor()\ndouble upperAdj = getIntervalWidth() - lowerAdj;\nrange = new Range(range.getLowerBound() - lowerAdj, range.getUpperBound() + upperAdj)\nCALL range.getLowerBound()\nCALL range.getUpperBound()\nreturn range;",
+        "public Range getDomainBounds(boolean includeInterval) {\n        // first get the range without the interval, then expand it for the\n        // interval width\n        Range range = DatasetUtilities.findDomainBounds(this.dataset, false);\n        if (includeInterval && range != null) {\n            double lowerAdj = getIntervalWidth() * getIntervalPositionFactor();\n            double upperAdj = getIntervalWidth() - lowerAdj;\n            range = new Range(range.getLowerBound() - lowerAdj,\n                range.getUpperBound() + upperAdj);\n        }\n        return range;\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 6.0,
+        "literal_count": 1.0,
+        "source_tokens": 145.0,
+        "l0_tokens": 46.0,
+        "l1_tokens": 175.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 6,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.OptionalLibraryHolder.loadLibrary(String classname)",
+      "source": "protected Library loadLibrary(String classname) {\n            if (classname == null) {\n                return null;\n            }\n            try {\n                Class c = ObjectUtilities.getClassLoader(\n                        getClass()).loadClass(classname);\n                try {\n                    Method m = c.getMethod(\"getInstance\", (Class[]) null);\n                    return (Library) m.invoke(null, (Object[]) null);\n                }\n                catch(Exception e) {\n                    // ok, fall back ...\n                }\n                return (Library) c.newInstance();\n            }\n            catch (Exception e) {\n                // ok, this library has no 'getInstance()' method. Check the\n                // default constructor ...\n                return null;\n            }\n        }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.OptionalLibraryHolder.loadLibrary(String classname)\nSIGNATURE: protected Library loadLibrary(String classname)",
+        "METHOD: source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.OptionalLibraryHolder.loadLibrary(String classname)\nSIGNATURE: protected Library loadLibrary(String classname)\nSTRUCTURE (lossy):\nif (classname == null)\nreturn null;\nClass c = ObjectUtilities.getClassLoader( getClass()).loadClass(classname);\nCALL ObjectUtilities.getClassLoader( getClass()).loadClass(classname)\nCALL ObjectUtilities.getClassLoader( getClass())\nCALL getClass()\nMethod m = c.getMethod(\"getInstance\", (Class[]) null);\nCALL c.getMethod(\"getInstance\", (Class[]) null)\nreturn (Library) m.invoke(null, (Object[]) null);\nCALL m.invoke(null, (Object[]) null)\ncatch(Exception e)\nreturn (Library) c.newInstance();\nCALL c.newInstance()\ncatch (Exception e)",
+        "protected Library loadLibrary(String classname) {\n            if (classname == null) {\n                return null;\n            }\n            try {\n                Class c = ObjectUtilities.getClassLoader(\n                        getClass()).loadClass(classname);\n                try {\n                    Method m = c.getMethod(\"getInstance\", (Class[]) null);\n                    return (Library) m.invoke(null, (Object[]) null);\n                }\n                catch(Exception e) {\n                    // ok, fall back ...\n                }\n                return (Library) c.newInstance();\n            }\n            catch (Exception e) {\n                // ok, this library has no 'getInstance()' method. Check the\n                // default constructor ...\n                return null;\n            }\n        }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.43243243243243246,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 6.0,
+        "literal_count": 7.0,
+        "source_tokens": 204.0,
+        "l0_tokens": 46.0,
+        "l1_tokens": 184.0,
+        "compression_ratio": 0.9019607843137255,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 6,
+        "literal_count": 7
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/xy/XYSeriesCollection.java::XYSeriesCollection.getRangeBounds(boolean includeInterval)",
+      "source": "public Range getRangeBounds(boolean includeInterval) {\n        double lower = Double.POSITIVE_INFINITY;\n        double upper = Double.NEGATIVE_INFINITY;\n        int seriesCount = getSeriesCount();\n        for (int s = 0; s < seriesCount; s++) {\n            XYSeries series = getSeries(s);\n            double minY = series.getMinY();\n            if (!Double.isNaN(minY)) {\n                lower = Math.min(lower, minY);\n            }\n            double maxY = series.getMaxY();\n            if (!Double.isNaN(maxY)) {\n                upper = Math.max(upper, maxY);\n            }\n        }\n        if (lower > upper) {\n            return null;\n        }\n        else {\n            return new Range(lower, upper);\n        }\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: source/org/jfree/data/xy/XYSeriesCollection.java::XYSeriesCollection.getRangeBounds(boolean includeInterval)\nSIGNATURE: public Range getRangeBounds(boolean includeInterval)",
+        "METHOD: source/org/jfree/data/xy/XYSeriesCollection.java::XYSeriesCollection.getRangeBounds(boolean includeInterval)\nSIGNATURE: public Range getRangeBounds(boolean includeInterval)\nSTRUCTURE (lossy):\ndouble lower = Double.POSITIVE_INFINITY;\ndouble upper = Double.NEGATIVE_INFINITY;\nint seriesCount = getSeriesCount();\nCALL getSeriesCount()\nfor (int s = 0; s < seriesCount; s++)\nint s = 0;\ns++\nXYSeries series = getSeries(s);\nCALL getSeries(s)\ndouble minY = series.getMinY();\nCALL series.getMinY()\nif (!Double.isNaN(minY))\nCALL Double.isNaN(minY)\nlower = Math.min(lower, minY)\nCALL Math.min(lower, minY)\ndouble maxY = series.getMaxY();\nCALL series.getMaxY()\nif (!Double.isNaN(maxY))\nCALL Double.isNaN(maxY)\nupper = Math.max(upper, maxY)\nCALL Math.max(upper, maxY)\nif (lower > upper)\nreturn null;\nreturn new Range(lower, upper);",
+        "public Range getRangeBounds(boolean includeInterval) {\n        double lower = Double.POSITIVE_INFINITY;\n        double upper = Double.NEGATIVE_INFINITY;\n        int seriesCount = getSeriesCount();\n        for (int s = 0; s < seriesCount; s++) {\n            XYSeries series = getSeries(s);\n            double minY = series.getMinY();\n            if (!Double.isNaN(minY)) {\n                lower = Math.min(lower, minY);\n            }\n            double maxY = series.getMaxY();\n            if (!Double.isNaN(maxY)) {\n                upper = Math.max(upper, maxY);\n            }\n        }\n        if (lower > upper) {\n            return null;\n        }\n        else {\n            return new Range(lower, upper);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5161290322580645,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 8.0,
+        "literal_count": 2.0,
+        "source_tokens": 182.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 207.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 8,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/TimeTableXYDataset.java::TimeTableXYDataset.getDomainLowerBound(boolean includeInterval)",
+      "source": "public double getDomainLowerBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getLowerBound();\n        }\n        return result;\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/TimeTableXYDataset.java::TimeTableXYDataset.getDomainLowerBound(boolean includeInterval)\nSIGNATURE: public double getDomainLowerBound(boolean includeInterval)",
+        "METHOD: source/org/jfree/data/time/TimeTableXYDataset.java::TimeTableXYDataset.getDomainLowerBound(boolean includeInterval)\nSIGNATURE: public double getDomainLowerBound(boolean includeInterval)\nSTRUCTURE (lossy):\ndouble result = Double.NaN;\nRange r = getDomainBounds(includeInterval);\nCALL getDomainBounds(includeInterval)\nif (r != null)\nresult = r.getLowerBound()\nCALL r.getLowerBound()\nreturn result;",
+        "public double getDomainLowerBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getLowerBound();\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6818181818181818,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 63.0,
+        "l0_tokens": 49.0,
+        "l1_tokens": 101.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/TimeTableXYDataset.java::TimeTableXYDataset.getDomainUpperBound(boolean includeInterval)",
+      "source": "public double getDomainUpperBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getUpperBound();\n        }\n        return result;\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/TimeTableXYDataset.java::TimeTableXYDataset.getDomainUpperBound(boolean includeInterval)\nSIGNATURE: public double getDomainUpperBound(boolean includeInterval)",
+        "METHOD: source/org/jfree/data/time/TimeTableXYDataset.java::TimeTableXYDataset.getDomainUpperBound(boolean includeInterval)\nSIGNATURE: public double getDomainUpperBound(boolean includeInterval)\nSTRUCTURE (lossy):\ndouble result = Double.NaN;\nRange r = getDomainBounds(includeInterval);\nCALL getDomainBounds(includeInterval)\nif (r != null)\nresult = r.getUpperBound()\nCALL r.getUpperBound()\nreturn result;",
+        "public double getDomainUpperBound(boolean includeInterval) {\n        double result = Double.NaN;\n        Range r = getDomainBounds(includeInterval);\n        if (r != null) {\n            result = r.getUpperBound();\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6818181818181818,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 63.0,
+        "l0_tokens": 49.0,
+        "l1_tokens": 101.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/general/DatasetUtilities.java::DatasetUtilities.findDomainBounds(XYDataset dataset,\n                                         boolean includeInterval)",
+      "source": "public static Range findDomainBounds(XYDataset dataset,\n                                         boolean includeInterval) {\n\n        if (dataset == null) {\n            throw new IllegalArgumentException(\"Null 'dataset' argument.\");\n        }\n\n        Range result = null;\n        // if the dataset implements DomainInfo, life is easier\n        if (dataset instanceof DomainInfo) {\n            DomainInfo info = (DomainInfo) dataset;\n            result = info.getDomainBounds(includeInterval);\n        }\n        else {\n            result = iterateDomainBounds(dataset, includeInterval);\n        }\n        return result;\n\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: source/org/jfree/data/general/DatasetUtilities.java::DatasetUtilities.findDomainBounds(XYDataset dataset,\n                                         boolean includeInterval)\nSIGNATURE: public static Range findDomainBounds(XYDataset dataset,\n                                         boolean includeInterval)",
+        "METHOD: source/org/jfree/data/general/DatasetUtilities.java::DatasetUtilities.findDomainBounds(XYDataset dataset,\n                                         boolean includeInterval)\nSIGNATURE: public static Range findDomainBounds(XYDataset dataset,\n                                         boolean includeInterval)\nSTRUCTURE (lossy):\nif (dataset == null)\nthrow new IllegalArgumentException(\"Null 'dataset' argument.\");\nRange result = null;\nif (dataset instanceof DomainInfo)\nDomainInfo info = (DomainInfo) dataset;\nresult = info.getDomainBounds(includeInterval)\nCALL info.getDomainBounds(includeInterval)\nresult = iterateDomainBounds(dataset, includeInterval)\nCALL iterateDomainBounds(dataset, includeInterval)\nreturn result;",
+        "public static Range findDomainBounds(XYDataset dataset,\n                                         boolean includeInterval) {\n\n        if (dataset == null) {\n            throw new IllegalArgumentException(\"Null 'dataset' argument.\");\n        }\n\n        Range result = null;\n        // if the dataset implements DomainInfo, life is easier\n        if (dataset instanceof DomainInfo) {\n            DomainInfo info = (DomainInfo) dataset;\n            result = info.getDomainBounds(includeInterval);\n        }\n        else {\n            result = iterateDomainBounds(dataset, includeInterval);\n        }\n        return result;\n\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5142857142857142,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 2.0,
+        "literal_count": 3.0,
+        "source_tokens": 157.0,
+        "l0_tokens": 78.0,
+        "l1_tokens": 181.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 2,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/general/DatasetUtilities.java::DatasetUtilities.iterateDomainBounds(XYDataset dataset)",
+      "source": "public static Range iterateDomainBounds(XYDataset dataset) {\n        return iterateDomainBounds(dataset, true);\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: source/org/jfree/data/general/DatasetUtilities.java::DatasetUtilities.iterateDomainBounds(XYDataset dataset)\nSIGNATURE: public static Range iterateDomainBounds(XYDataset dataset)",
+        "METHOD: source/org/jfree/data/general/DatasetUtilities.java::DatasetUtilities.iterateDomainBounds(XYDataset dataset)\nSIGNATURE: public static Range iterateDomainBounds(XYDataset dataset)\nSTRUCTURE (lossy):\nreturn iterateDomainBounds(dataset, true);\nCALL iterateDomainBounds(dataset, true)",
+        "public static Range iterateDomainBounds(XYDataset dataset) {\n        return iterateDomainBounds(dataset, true);\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7647058823529411,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 30.0,
+        "l0_tokens": 47.0,
+        "l1_tokens": 72.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)",
+      "source": "public void executeQuery(Connection con, String query)\n        throws SQLException {\n\n        if (con == null) {\n            throw new SQLException(\n                \"There is no database to execute the query.\"\n            );\n        }\n\n        ResultSet resultSet = null;\n        Statement statement = null;\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int numberOfColumns = metaData.getColumnCount();\n            int numberOfValidColumns = 0;\n            int [] columnTypes = new int[numberOfColumns];\n            for (int column = 0; column < numberOfColumns; column++) {\n                try {\n                    int type = metaData.getColumnType(column + 1);\n                    switch (type) {\n\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIT:\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            ++numberOfValidColumns;\n                            columnTypes[column] = type;\n                            break;\n                        default:\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                catch (SQLException e) {\n                    columnTypes[column] = Types.NULL;\n                    throw e;\n                }\n            }\n\n\n            if (numberOfValidColumns <= 1) {\n                throw new SQLException(\n                    \"Not enough valid columns where generated by query.\"\n                );\n            }\n\n            /// First column is X data\n            this.columnNames = new String[numberOfValidColumns - 1];\n            /// Get the column names and cache them.\n            int currentColumn = 0;\n            for (int column = 1; column < numberOfColumns; column++) {\n                if (columnTypes[column] != Types.NULL) {\n                    this.columnNames[currentColumn]\n                        = metaData.getColumnLabel(column + 1);\n                    ++currentColumn;\n                }\n            }\n\n            // Might need to add, to free memory from any previous result sets\n            if (this.rows != null) {\n                for (int column = 0; column < this.rows.size(); column++) {\n                    ArrayList row = (ArrayList) this.rows.get(column);\n                    row.clear();\n                }\n                this.rows.clear();\n            }\n\n            // Are we working with a time series.\n            switch (columnTypes[0]) {\n                case Types.DATE:\n                case Types.TIME:\n                case Types.TIMESTAMP:\n                    this.isTimeSeries = true;\n                    break;\n                default :\n                    this.isTimeSeries = false;\n                    break;\n            }\n\n            // Get all rows.\n            // rows = new ArrayList();\n            while (resultSet.next()) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    Object xObject = resultSet.getObject(column + 1);\n                    switch (columnTypes[column]) {\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            newRow.add(xObject);\n                            break;\n\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                            newRow.add(new Long(((Date) xObject).getTime()));\n                            break;\n                        case Types.NULL:\n                            break;\n                        default:\n                            System.err.println(\"Unknown data\");\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// a kludge to make everything work when no rows returned\n            if (this.rows.size() == 0) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    if (columnTypes[column] != Types.NULL) {\n                        newRow.add(new Integer(0));\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// Determine max and min values.\n            if (this.rows.size() < 1) {\n                this.maxValue = 0.0;\n                this.minValue = 0.0;\n            }\n            else {\n                ArrayList row = (ArrayList) this.rows.get(0);\n                this.maxValue = Double.NEGATIVE_INFINITY;\n                this.minValue = Double.POSITIVE_INFINITY;\n                for (int rowNum = 0; rowNum < this.rows.size(); ++rowNum) {\n                    row = (ArrayList) this.rows.get(rowNum);\n                    for (int column = 1; column < numberOfColumns; column++) {\n                        Object testValue = row.get(column);\n                        if (testValue != null) {\n                            double test = ((Number) testValue).doubleValue();\n\n                            if (test < this.minValue) {\n                                this.minValue = test;\n                            }\n                            if (test > this.maxValue) {\n                                this.maxValue = test;\n                            }\n                        }\n                    }\n                }\n            }\n\n            fireDatasetChanged(new DatasetChangeInfo());\n            //TODO: fill in real change info\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n        }\n\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)\nSIGNATURE: public void executeQuery(Connection con, String query)\n        throws SQLException",
+        "METHOD: source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)\nSIGNATURE: public void executeQuery(Connection con, String query)\n        throws SQLException\nSTRUCTURE (lossy):\nif (con == null)\nthrow new SQLException( \"There is no database to execute the query.\" );\nResultSet resultSet = null;\nStatement statement = null;\nstatement = con.createStatement()\nCALL con.createStatement()\nresultSet = statement.executeQuery(query)\nCALL statement.executeQuery(query)\nResultSetMetaData metaData = resultSet.getMetaData();\nCALL resultSet.getMetaData()\nint numberOfColumns = metaData.getColumnCount();\nCALL metaData.getColumnCount()\nint numberOfValidColumns = 0;\nint [] columnTypes = new int[numberOfColumns];\nfor (int column = 0; column < numberOfColumns; column++)\nint column = 0;\ncolumn++\nint type = metaData.getColumnType(column + 1);\nCALL metaData.getColumnType(column + 1)\nswitch (type) { case Types.NUMERIC: case Types.REAL: case Types.INTEGER: case Types.DOUBLE: case Types.FLOAT: case Types.DECIMAL: case Types.BIT: case Types.DATE: case Types.TIME: case Types.TIMESTAMP: case Types.BIGINT: case Types.SMALLINT: ++numberOfValidColumns; columnTypes[column] = type; break; default: columnTypes[column] = Types.NULL; break; }\n++numberOfValidColumns\ncolumnTypes[column] = type\ncolumnTypes[column] = Types.NULL\ncatch (SQLException e)\nthrow e;\nif (numberOfValidColumns <= 1)\nthrow new SQLException( \"Not enough valid columns where generated by query.\" );\nthis.columnNames = new String[numberOfValidColumns - 1]\nint currentColumn = 0;\nfor (int column = 1; column < numberOfColumns; column++)\nint column = 1;\nif (columnTypes[column] != Types.NULL)\nthis.columnNames[currentColumn] = metaData.getColumnLabel(column + 1)\nCALL metaData.getColumnLabel(column + 1)\n++currentColumn\nif (this.rows != null)\nfor (int column = 0; column < this.rows.size(); column++)\nCALL this.rows.size()\nArrayList row = (ArrayList) this.rows.get(column);\nCALL this.rows.get(column)\nCALL row.clear()\nCALL this.rows.clear()\nswitch (columnTypes[0]) { case Types.DATE: case Types.TIME: case Types.TIMESTAMP: this.isTimeSeries = true; break; default : this.isTimeSeries = false; break; }\nthis\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public void executeQuery(Connection con, String query)\n        throws SQLException {\n\n        if (con == null) {\n            throw new SQLException(\n                \"There is no database to execute the query.\"\n            );\n        }\n\n        ResultSet resultSet = null;\n        Statement statement = null;\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int numberOfColumns = metaData.getColumnCount();\n            int numberOfValidColumns = 0;\n            int [] columnTypes = new int[numberOfColumns];\n            for (int column = 0; column < numberOfColumns; column++) {\n                try {\n                    int type = metaData.getColumnType(column + 1);\n                    switch (type) {\n\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIT:\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            ++numberOfValidColumns;\n                            columnTypes[column] = type;\n                            break;\n                        default:\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                catch (SQLException e) {\n                    columnTypes[column] = Types.NULL;\n                    throw e;\n                }\n            }\n\n\n            if (numberOfValidColumns <= 1) {\n                throw new SQLException(\n                    \"Not enough valid columns where generated by query.\"\n                );\n            }\n\n            /// First column is X data\n            this.columnNames = new String[numberOfValidColumns - 1];\n            /// Get the column names and cache them.\n            int currentColumn = 0;\n            for (int column = 1; column < numberOfColumns; column++) {\n                if (columnTypes[column] != Types.NULL) {\n                    this.columnNames[currentColumn]\n                        = metaData.getColumnLabel(column + 1);\n                    ++currentColumn;\n                }\n            }\n\n            // Might need to add, to free memory from any previous result sets\n            if (this.rows != null) {\n                for (int column = 0; column < this.rows.size(); column++) {\n                    ArrayList row = (ArrayList) this.rows.get(column);\n                    row.clear();\n                }\n                this.rows.clear();\n            }\n\n            // Are we working with a time series.\n            switch (columnTypes[0]) {\n                case Types.DATE:\n                case Types.TIME:\n                case Types.TIMESTAMP:\n                    this.isTimeSeries = true;\n                    break;\n                default :\n                    this.isTimeSeries = false;\n                    break;\n            }\n\n            // Get all rows.\n            // rows = new ArrayList();\n            while (resultSet.next()) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    Object xObject = resultSet.getObject(column + 1);\n                    switch (columnTypes[column]) {\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            newRow.add(xObject);\n                            break;\n\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                            newRow.add(new Long(((Date) xObject).getTime()));\n                            break;\n                        case Types.NULL:\n                            break;\n                        default:\n                            System.err.println(\"Unknown data\");\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// a kludge to make everything work when no rows returned\n            if (this.rows.size() == 0) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    if (columnTypes[column] != Types.NULL) {\n                        newRow.add(new Integer(0));\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// Determine max and min values.\n            if (this.rows.size() < 1) {\n                this.maxValue = 0.0;\n                this.minValue = 0.0;\n            }\n            else {\n                ArrayList row = (ArrayList) this.rows.get(0);\n                this.maxValue = Double.NEGATIVE_INFINITY;\n                this.minValue = Double.POSITIVE_INFINITY;\n                for (int rowNum = 0; rowNum < this.rows.size(); ++rowNum) {\n                    row = (ArrayList) this.rows.get(rowNum);\n                    for (int column = 1; column < numberOfColumns; column++) {\n                        Object testValue = row.get(column);\n                        if (testValue != null) {\n                            double test = ((Number) testValue).doubleValue();\n\n                            if (test < this.minValue) {\n                                this.minValue = test;\n                            }\n                            if (test > this.maxValue) {\n                                this.maxValue = test;\n                            }\n                        }\n                    }\n                }\n            }\n\n            fireDatasetChanged(new DatasetChangeInfo());\n            //TODO: fill in real change info\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n        }\n\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.1746031746031746,
+        "trace_match": 0.0,
+        "complexity": 27.0,
+        "call_count": 29.0,
+        "literal_count": 31.0,
+        "source_tokens": 1718.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.3311990686845169,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 27,
+        "call_count": 29,
+        "literal_count": 31
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/xy/XYSeriesCollection.java::XYSeriesCollection.getDomainLowerBound(boolean includeInterval)",
+      "source": "public double getDomainLowerBound(boolean includeInterval) {\n        if (includeInterval) {\n            return this.intervalDelegate.getDomainLowerBound(includeInterval);\n        }\n        else {\n            double result = Double.NaN;\n            int seriesCount = getSeriesCount();\n            for (int s = 0; s < seriesCount; s++) {\n                XYSeries series = getSeries(s);\n                double lowX = series.getMinX();\n                if (Double.isNaN(result)) {\n                    result = lowX;\n                }\n                else {\n                    if (!Double.isNaN(lowX)) {\n                        result = Math.min(result, lowX);\n                    }\n                }\n            }\n            return result;\n        }\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: source/org/jfree/data/xy/XYSeriesCollection.java::XYSeriesCollection.getDomainLowerBound(boolean includeInterval)\nSIGNATURE: public double getDomainLowerBound(boolean includeInterval)",
+        "METHOD: source/org/jfree/data/xy/XYSeriesCollection.java::XYSeriesCollection.getDomainLowerBound(boolean includeInterval)\nSIGNATURE: public double getDomainLowerBound(boolean includeInterval)\nSTRUCTURE (lossy):\nif (includeInterval)\nreturn this.intervalDelegate.getDomainLowerBound(includeInterval);\nCALL this.intervalDelegate.getDomainLowerBound(includeInterval)\ndouble result = Double.NaN;\nint seriesCount = getSeriesCount();\nCALL getSeriesCount()\nfor (int s = 0; s < seriesCount; s++)\nint s = 0;\ns++\nXYSeries series = getSeries(s);\nCALL getSeries(s)\ndouble lowX = series.getMinX();\nCALL series.getMinX()\nif (Double.isNaN(result))\nCALL Double.isNaN(result)\nresult = lowX\nif (!Double.isNaN(lowX))\nCALL Double.isNaN(lowX)\nresult = Math.min(result, lowX)\nCALL Math.min(result, lowX)\nreturn result;",
+        "public double getDomainLowerBound(boolean includeInterval) {\n        if (includeInterval) {\n            return this.intervalDelegate.getDomainLowerBound(includeInterval);\n        }\n        else {\n            double result = Double.NaN;\n            int seriesCount = getSeriesCount();\n            for (int s = 0; s < seriesCount; s++) {\n                XYSeries series = getSeries(s);\n                double lowX = series.getMinX();\n                if (Double.isNaN(result)) {\n                    result = lowX;\n                }\n                else {\n                    if (!Double.isNaN(lowX)) {\n                        result = Math.min(result, lowX);\n                    }\n                }\n            }\n            return result;\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 7.0,
+        "literal_count": 1.0,
+        "source_tokens": 188.0,
+        "l0_tokens": 48.0,
+        "l1_tokens": 199.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 7,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/gantt/TaskSeriesCollection.java::TaskSeriesCollection.add(TaskSeries series)",
+      "source": "public void add(TaskSeries series) {\n        if (series == null) {\n            throw new IllegalArgumentException(\"Null 'series' argument.\");\n        }\n        this.data.add(series);\n        series.addChangeListener(this);\n\n        // look for any keys that we don't already know about...\n        Iterator iterator = series.getTasks().iterator();\n        while (iterator.hasNext()) {\n            Task task = (Task) iterator.next();\n            String key = task.getDescription();\n            int index = this.keys.indexOf(key);\n            if (index < 0) {\n                this.keys.add(key);\n            }\n        }\n        fireDatasetChanged(new DatasetChangeInfo());\n        //TODO: fill in real change info\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: source/org/jfree/data/gantt/TaskSeriesCollection.java::TaskSeriesCollection.add(TaskSeries series)\nSIGNATURE: public void add(TaskSeries series)",
+        "METHOD: source/org/jfree/data/gantt/TaskSeriesCollection.java::TaskSeriesCollection.add(TaskSeries series)\nSIGNATURE: public void add(TaskSeries series)\nSTRUCTURE (lossy):\nif (series == null)\nthrow new IllegalArgumentException(\"Null 'series' argument.\");\nCALL this.data.add(series)\nCALL series.addChangeListener(this)\nIterator iterator = series.getTasks().iterator();\nCALL series.getTasks().iterator()\nCALL series.getTasks()\nwhile (iterator.hasNext())\nCALL iterator.hasNext()\nTask task = (Task) iterator.next();\nCALL iterator.next()\nString key = task.getDescription();\nCALL task.getDescription()\nint index = this.keys.indexOf(key);\nCALL this.keys.indexOf(key)\nif (index < 0)\nCALL this.keys.add(key)\nCALL fireDatasetChanged(new DatasetChangeInfo())",
+        "public void add(TaskSeries series) {\n        if (series == null) {\n            throw new IllegalArgumentException(\"Null 'series' argument.\");\n        }\n        this.data.add(series);\n        series.addChangeListener(this);\n\n        // look for any keys that we don't already know about...\n        Iterator iterator = series.getTasks().iterator();\n        while (iterator.hasNext()) {\n            Task task = (Task) iterator.next();\n            String key = task.getDescription();\n            int index = this.keys.indexOf(key);\n            if (index < 0) {\n                this.keys.add(key);\n            }\n        }\n        fireDatasetChanged(new DatasetChangeInfo());\n        //TODO: fill in real change info\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3541666666666667,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 10.0,
+        "literal_count": 3.0,
+        "source_tokens": 179.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 187.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 10,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/xy/XYSeriesCollection.java::XYSeriesCollection.getDomainUpperBound(boolean includeInterval)",
+      "source": "public double getDomainUpperBound(boolean includeInterval) {\n        if (includeInterval) {\n            return this.intervalDelegate.getDomainUpperBound(includeInterval);\n        }\n        else {\n            double result = Double.NaN;\n            int seriesCount = getSeriesCount();\n            for (int s = 0; s < seriesCount; s++) {\n                XYSeries series = getSeries(s);\n                double hiX = series.getMaxX();\n                if (Double.isNaN(result)) {\n                    result = hiX;\n                }\n                else {\n                    if (!Double.isNaN(hiX)) {\n                        result = Math.max(result, hiX);\n                    }\n                }\n            }\n            return result;\n        }\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: source/org/jfree/data/xy/XYSeriesCollection.java::XYSeriesCollection.getDomainUpperBound(boolean includeInterval)\nSIGNATURE: public double getDomainUpperBound(boolean includeInterval)",
+        "METHOD: source/org/jfree/data/xy/XYSeriesCollection.java::XYSeriesCollection.getDomainUpperBound(boolean includeInterval)\nSIGNATURE: public double getDomainUpperBound(boolean includeInterval)\nSTRUCTURE (lossy):\nif (includeInterval)\nreturn this.intervalDelegate.getDomainUpperBound(includeInterval);\nCALL this.intervalDelegate.getDomainUpperBound(includeInterval)\ndouble result = Double.NaN;\nint seriesCount = getSeriesCount();\nCALL getSeriesCount()\nfor (int s = 0; s < seriesCount; s++)\nint s = 0;\ns++\nXYSeries series = getSeries(s);\nCALL getSeries(s)\ndouble hiX = series.getMaxX();\nCALL series.getMaxX()\nif (Double.isNaN(result))\nCALL Double.isNaN(result)\nresult = hiX\nif (!Double.isNaN(hiX))\nCALL Double.isNaN(hiX)\nresult = Math.max(result, hiX)\nCALL Math.max(result, hiX)\nreturn result;",
+        "public double getDomainUpperBound(boolean includeInterval) {\n        if (includeInterval) {\n            return this.intervalDelegate.getDomainUpperBound(includeInterval);\n        }\n        else {\n            double result = Double.NaN;\n            int seriesCount = getSeriesCount();\n            for (int s = 0; s < seriesCount; s++) {\n                XYSeries series = getSeries(s);\n                double hiX = series.getMaxX();\n                if (Double.isNaN(result)) {\n                    result = hiX;\n                }\n                else {\n                    if (!Double.isNaN(hiX)) {\n                        result = Math.max(result, hiX);\n                    }\n                }\n            }\n            return result;\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5185185185185185,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 7.0,
+        "literal_count": 1.0,
+        "source_tokens": 187.0,
+        "l0_tokens": 48.0,
+        "l1_tokens": 198.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 7,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/renderer/xy/XYBlockRenderer.java::XYBlockRenderer.findDomainBounds(XYDataset dataset)",
+      "source": "public Range findDomainBounds(XYDataset dataset) {\n        if (dataset != null) {\n            Range r = DatasetUtilities.findDomainBounds(dataset, false);\n            if (r == null) {\n                return null;\n            }\n            else {\n                return new Range(r.getLowerBound() + this.xOffset,\n                        r.getUpperBound() + this.blockWidth + this.xOffset);\n            }\n        }\n        else {\n            return null;\n        }\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: source/org/jfree/chart/renderer/xy/XYBlockRenderer.java::XYBlockRenderer.findDomainBounds(XYDataset dataset)\nSIGNATURE: public Range findDomainBounds(XYDataset dataset)",
+        "METHOD: source/org/jfree/chart/renderer/xy/XYBlockRenderer.java::XYBlockRenderer.findDomainBounds(XYDataset dataset)\nSIGNATURE: public Range findDomainBounds(XYDataset dataset)\nSTRUCTURE (lossy):\nif (dataset != null)\nRange r = DatasetUtilities.findDomainBounds(dataset, false);\nCALL DatasetUtilities.findDomainBounds(dataset, false)\nif (r == null)\nreturn null;\nreturn new Range(r.getLowerBound() + this.xOffset, r.getUpperBound() + this.blockWidth + this.xOffset);\nCALL r.getLowerBound()\nCALL r.getUpperBound()",
+        "public Range findDomainBounds(XYDataset dataset) {\n        if (dataset != null) {\n            Range r = DatasetUtilities.findDomainBounds(dataset, false);\n            if (r == null) {\n                return null;\n            }\n            else {\n                return new Range(r.getLowerBound() + this.xOffset,\n                        r.getUpperBound() + this.blockWidth + this.xOffset);\n            }\n        }\n        else {\n            return null;\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6071428571428571,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 3.0,
+        "literal_count": 4.0,
+        "source_tokens": 118.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 128.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 3,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.addOptionalLibrary(Library library)",
+      "source": "public void addOptionalLibrary(Library library) {\n      if (library == null) {\n          throw new NullPointerException(\"Library must be given.\");\n      }\n      this.optionalLibraries.add(new OptionalLibraryHolder(library));\n  }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.addOptionalLibrary(Library library)\nSIGNATURE: public void addOptionalLibrary(Library library)",
+        "METHOD: source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.addOptionalLibrary(Library library)\nSIGNATURE: public void addOptionalLibrary(Library library)\nSTRUCTURE (lossy):\nif (library == null)\nthrow new NullPointerException(\"Library must be given.\");\nCALL this.optionalLibraries.add(new OptionalLibraryHolder(library))",
+        "public void addOptionalLibrary(Library library) {\n      if (library == null) {\n          throw new NullPointerException(\"Library must be given.\");\n      }\n      this.optionalLibraries.add(new OptionalLibraryHolder(library));\n  }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6086956521739131,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 2.0,
+        "source_tokens": 57.0,
+        "l0_tokens": 42.0,
+        "l1_tokens": 84.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 2
+      }
+    }
+  ],
+  "rank_metadata": {
+    "source/org/jfree/data/time/TimeSeriesCollection.java::TimeSeriesCollection.getDomainLowerBound(boolean includeInterval)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/TimeSeriesCollection.java::TimeSeriesCollection.getDomainUpperBound(boolean includeInterval)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/TimePeriodValuesCollection.java::TimePeriodValuesCollection.getDomainLowerBound(boolean includeInterval)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/TimePeriodValuesCollection.java::TimePeriodValuesCollection.getDomainUpperBound(boolean includeInterval)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/jdbc/JDBCPieDataset.java::JDBCPieDataset.executeQuery(Connection con, String query)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/xy/XYSeriesCollection.java::XYSeriesCollection.getDomainBounds(boolean includeInterval)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/renderer/xy/XYShapeRenderer.java::XYShapeRenderer.findDomainBounds(XYDataset dataset)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/gantt/XYTaskDataset.java::XYTaskDataset.XYTaskDataset(TaskSeriesCollection tasks)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/xy/IntervalXYDelegate.java::IntervalXYDelegate.getDomainLowerBound(boolean includeInterval)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/general/DatasetUtilities.java::DatasetUtilities.findDomainBounds(XYDataset dataset,\n            List visibleSeriesKeys, boolean includeInterval)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/xy/IntervalXYDelegate.java::IntervalXYDelegate.getDomainUpperBound(boolean includeInterval)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/xy/IntervalXYDelegate.java::IntervalXYDelegate.getDomainBounds(boolean includeInterval)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.OptionalLibraryHolder.loadLibrary(String classname)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/xy/XYSeriesCollection.java::XYSeriesCollection.getRangeBounds(boolean includeInterval)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/TimeTableXYDataset.java::TimeTableXYDataset.getDomainLowerBound(boolean includeInterval)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/TimeTableXYDataset.java::TimeTableXYDataset.getDomainUpperBound(boolean includeInterval)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/general/DatasetUtilities.java::DatasetUtilities.findDomainBounds(XYDataset dataset,\n                                         boolean includeInterval)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/general/DatasetUtilities.java::DatasetUtilities.iterateDomainBounds(XYDataset dataset)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/xy/XYSeriesCollection.java::XYSeriesCollection.getDomainLowerBound(boolean includeInterval)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/gantt/TaskSeriesCollection.java::TaskSeriesCollection.add(TaskSeries series)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/xy/XYSeriesCollection.java::XYSeriesCollection.getDomainUpperBound(boolean includeInterval)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/renderer/xy/XYBlockRenderer.java::XYBlockRenderer.findDomainBounds(XYDataset dataset)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.addOptionalLibrary(Library library)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 8942,
+    "retrieved_unique_entities": 24,
+    "deduplication": "highest_bm25_or_lexical_score_per_entity_id",
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "d14d36c4597099fad69e4883cac9ee78facad9695be1f11f52bf4a194e97e11a",
+  "evidence_sha256": "458507485d5b30799722c15fdeb629a47ddab578d7bd45fd6ed0d4a95f5ad57d"
+}

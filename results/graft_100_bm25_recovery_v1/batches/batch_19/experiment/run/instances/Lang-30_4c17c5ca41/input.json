@@ -1,0 +1,1320 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Lang-30",
+    "repository": "Lang",
+    "language": "java",
+    "revision": "a7dc4b5a461fa756a27e2a23951d4b56d73ce78d",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_19/prepared/checkouts/Lang-30",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Lang-30\nEXECUTED BUGGY TEST: org.apache.commons.lang3.StringUtilsEqualsIndexOfTest::testContainsNone_CharArrayWithSupplementaryChars\nTEST SOURCE: src/test/java/org/apache/commons/lang3/StringUtilsEqualsIndexOfTest.java\nTEST SOURCE SHA256: 0eac14efb3d9125894aca33dc394754b3cbc0e72b94ebe50923a982e53937e16\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testContainsNone_CharArrayWithSupplementaryChars() {\n        assertEquals(false, StringUtils.containsNone(CharU20000 + CharU20001, CharU20000.toCharArray()));\n        assertEquals(false, StringUtils.containsNone(CharU20000 + CharU20001, CharU20001.toCharArray()));\n        assertEquals(false, StringUtils.containsNone(CharU20000, CharU20000.toCharArray()));\n        // Sanity check:\n        assertEquals(-1, CharU20000.indexOf(CharU20001));\n        assertEquals(0, CharU20000.indexOf(CharU20001.charAt(0)));\n        assertEquals(-1, CharU20000.indexOf(CharU20001.charAt(1)));\n        // Test:\n        assertEquals(true, StringUtils.containsNone(CharU20000, CharU20001.toCharArray()));\n        assertEquals(true, StringUtils.containsNone(CharU20001, CharU20000.toCharArray()));\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.apache.commons.lang3.StringUtilsEqualsIndexOfTest::testContainsNone_CharArrayWithSupplementaryChars\njunit.framework.AssertionFailedError: expected:<true> but was:<false>\n\tat junit.framework.Assert.fail(Assert.java:57)\n\tat junit.framework.Assert.failNotEquals(Assert.java:329)\n\tat junit.framework.Assert.assertEquals(Assert.java:78)\n\tat junit.framework.Assert.assertEquals(Assert.java:174)\n\tat junit.framework.Assert.assertEquals(Assert.java:181)\n\tat junit.framework.TestCase.assertEquals(TestCase.java:341)\n\tat org.apache.commons.lang3.StringUtilsEqualsIndexOfTest.testContainsNone_CharArrayWithSupplementaryChars(StringUtilsEqualsIndexOfTest.java:327)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_19/prepared/evidence/Lang-30.txt",
+      "sha256": "bc4c8f8235dcbb5362282c87aaf327664001444a3d0e29faba217bfc2866f185"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src/main/java",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Lang-30",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.containsNone(CharSequence cs, char[] searchChars)",
+      "path": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "start_line": 1673,
+      "end_line": 1690,
+      "source": "public static boolean containsNone(CharSequence cs, char[] searchChars) {\n        if (cs == null || searchChars == null) {\n            return true;\n        }\n        int csLen = cs.length();\n        int searchLen = searchChars.length;\n        for (int i = 0; i < csLen; i++) {\n            char ch = cs.charAt(i);\n            for (int j = 0; j < searchLen; j++) {\n                if (searchChars[j] == ch) {\n                            // missing low surrogate, fine, like String.indexOf(String)\n                        // ch is in the Basic Multilingual Plane\n                        return false;\n                }\n            }\n        }\n        return true;\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.40228612308795
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java::ExtendedMessageFormat.readArgumentIndex(String pattern, ParsePosition pos)",
+      "path": "src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java",
+      "start_line": 276,
+      "end_line": 309,
+      "source": "private int readArgumentIndex(String pattern, ParsePosition pos) {\n        int start = pos.getIndex();\n        seekNonWs(pattern, pos);\n        StringBuffer result = new StringBuffer();\n        boolean error = false;\n        for (; !error && pos.getIndex() < pattern.length(); next(pos)) {\n            char c = pattern.charAt(pos.getIndex());\n            if (Character.isWhitespace(c)) {\n                seekNonWs(pattern, pos);\n                c = pattern.charAt(pos.getIndex());\n                if (c != START_FMT && c != END_FE) {\n                    error = true;\n                    continue;\n                }\n            }\n            if ((c == START_FMT || c == END_FE) && result.length() > 0) {\n                try {\n                    return Integer.parseInt(result.toString());\n                } catch (NumberFormatException e) {\n                    // we've already ensured only digits, so unless something\n                    // outlandishly large was specified we should be okay.\n                }\n            }\n            error = !Character.isDigit(c);\n            result.append(c);\n        }\n        if (error) {\n            throw new IllegalArgumentException(\n                    \"Invalid format argument index at position \" + start + \": \"\n                            + pattern.substring(start, pos.getIndex()));\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated format element at position \" + start);\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.98228433973327
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.containsNone(CharSequence cs, String invalidChars)",
+      "path": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "start_line": 1714,
+      "end_line": 1719,
+      "source": "public static boolean containsNone(CharSequence cs, String invalidChars) {\n        if (cs == null || invalidChars == null) {\n            return true;\n        }\n        return containsNone(cs, invalidChars.toCharArray());\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.89302570676638
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)",
+      "path": "src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java",
+      "start_line": 252,
+      "end_line": 299,
+      "source": "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf \n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars, \n        // then a subclass can test equals to a superclass.\n        Class<?> lhsClass = lhs.getClass();\n        Class<?> rhsClass = rhs.getClass();\n        Class<?> testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and \n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.23621321278529
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.isNumber(String str)",
+      "path": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java",
+      "start_line": 1316,
+      "end_line": 1418,
+      "source": "public static boolean isNumber(String str) {\n        if (StringUtils.isEmpty(str)) {\n            return false;\n        }\n        char[] chars = str.toCharArray();\n        int sz = chars.length;\n        boolean hasExp = false;\n        boolean hasDecPoint = false;\n        boolean allowSigns = false;\n        boolean foundDigit = false;\n        // deal with any possible sign up front\n        int start = (chars[0] == '-') ? 1 : 0;\n        if (sz > start + 1) {\n            if (chars[start] == '0' && chars[start + 1] == 'x') {\n                int i = start + 2;\n                if (i == sz) {\n                    return false; // str == \"0x\"\n                }\n                // checking hex (it can't be anything else)\n                for (; i < chars.length; i++) {\n                    if ((chars[i] < '0' || chars[i] > '9')\n                        && (chars[i] < 'a' || chars[i] > 'f')\n                        && (chars[i] < 'A' || chars[i] > 'F')) {\n                        return false;\n                    }\n                }\n                return true;\n            }\n        }\n        sz--; // don't want to loop to the last char, check it afterwords\n              // for type qualifiers\n        int i = start;\n        // loop to the next to last char or to the last char if we need another digit to\n        // make a valid number (e.g. chars[0..5] = \"1234E\")\n        while (i < sz || (i < sz + 1 && allowSigns && !foundDigit)) {\n            if (chars[i] >= '0' && chars[i] <= '9') {\n                foundDigit = true;\n                allowSigns = false;\n\n            } else if (chars[i] == '.') {\n                if (hasDecPoint || hasExp) {\n                    // two decimal points or dec in exponent   \n                    return false;\n                }\n                hasDecPoint = true;\n            } else if (chars[i] == 'e' || chars[i] == 'E') {\n                // we've already taken care of hex.\n                if (hasExp) {\n                    // two E's\n                    return false;\n                }\n                if (!foundDigit) {\n                    return false;\n                }\n                hasExp = true;\n                allowSigns = true;\n            } else if (chars[i] == '+' || chars[i] == '-') {\n                if (!allowSigns) {\n                    return false;\n                }\n                allowSigns = false;\n                foundDigit = false; // we need a digit after the E\n            } else {\n                return false;\n            }\n            i++;\n        }\n        if (i < chars.length) {\n            if (chars[i] >= '0' && chars[i] <= '9') {\n                // no type qualifier, OK\n                return true;\n            }\n            if (chars[i] == 'e' || chars[i] == 'E') {\n                // can't have an E at the last byte\n                return false;\n            }\n            if (chars[i] == '.') {\n                if (hasDecPoint || hasExp) {\n                    // two decimal points or dec in exponent\n                    return false;\n                }\n                // single trailing decimal point after non-exponent is ok\n                return foundDigit;\n            }\n            if (!allowSigns\n                && (chars[i] == 'd'\n                    || chars[i] == 'D'\n                    || chars[i] == 'f'\n                    || chars[i] == 'F')) {\n                return foundDigit;\n            }\n            if (chars[i] == 'l'\n                || chars[i] == 'L') {\n                // not allowing L with an exponent\n                return foundDigit && !hasExp;\n            }\n            // last character is illegal\n            return false;\n        }\n        // allowSigns is true iff the val ends in 'E'\n        // found digit it to make sure weird stuff like '.' and '1E-' doesn't pass\n        return !allowSigns && foundDigit;\n    }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 30.807777904186867
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.shutdown()",
+      "path": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java",
+      "start_line": 253,
+      "end_line": 267,
+      "source": "public synchronized void shutdown() {\n        if (!shutdown) {\n\n            if (ownExecutor) {\n                // if the executor was created by this instance, it has\n                // to be shutdown\n                getExecutorService().shutdownNow();\n            }\n            if (task != null) {\n                task.cancel(false);\n            }\n\n            shutdown = true;\n        }\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 28.840811044320624
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.toBoolean(String str)",
+      "path": "src/main/java/org/apache/commons/lang3/BooleanUtils.java",
+      "start_line": 633,
+      "end_line": 685,
+      "source": "public static boolean toBoolean(String str) {\n        // Previously used equalsIgnoreCase, which was fast for interned 'true'.\n        // Non interned 'true' matched 15 times slower.\n        // \n        // Optimisation provides same performance as before for interned 'true'.\n        // Similar performance for null, 'false', and other strings not length 2/3/4.\n        // 'true'/'TRUE' match 4 times slower, 'tRUE'/'True' 7 times slower.\n        if (str == \"true\") {\n            return true;\n        }\n        if (str == null) {\n            return false;\n        }\n        switch (str.length()) {\n            case 2: {\n                char ch0 = str.charAt(0);\n                char ch1 = str.charAt(1);\n                return \n                    (ch0 == 'o' || ch0 == 'O') &&\n                    (ch1 == 'n' || ch1 == 'N');\n            }\n            case 3: {\n                char ch = str.charAt(0);\n                if (ch == 'y') {\n                    return \n                        (str.charAt(1) == 'e' || str.charAt(1) == 'E') &&\n                        (str.charAt(2) == 's' || str.charAt(2) == 'S');\n                }\n                if (ch == 'Y') {\n                    return \n                        (str.charAt(1) == 'E' || str.charAt(1) == 'e') &&\n                        (str.charAt(2) == 'S' || str.charAt(2) == 's');\n                }\n                return false;\n            }\n            case 4: {\n                char ch = str.charAt(0);\n                if (ch == 't') {\n                    return \n                        (str.charAt(1) == 'r' || str.charAt(1) == 'R') &&\n                        (str.charAt(2) == 'u' || str.charAt(2) == 'U') &&\n                        (str.charAt(3) == 'e' || str.charAt(3) == 'E');\n                }\n                if (ch == 'T') {\n                    return \n                        (str.charAt(1) == 'R' || str.charAt(1) == 'r') &&\n                        (str.charAt(2) == 'U' || str.charAt(2) == 'u') &&\n                        (str.charAt(3) == 'E' || str.charAt(3) == 'e');\n                }\n            }\n        }\n        return false;\n    }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 27.8436541826088
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.containsAny(CharSequence cs, char[] searchChars)",
+      "path": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "start_line": 1443,
+      "end_line": 1468,
+      "source": "public static boolean containsAny(CharSequence cs, char[] searchChars) {\n        if (isEmpty(cs) || ArrayUtils.isEmpty(searchChars)) {\n            return false;\n        }\n        int csLength = cs.length();\n        int searchLength = searchChars.length;\n        int csLast = csLength - 1;\n        int searchLast = searchLength - 1;\n        for (int i = 0; i < csLength; i++) {\n            char ch = cs.charAt(i);\n            for (int j = 0; j < searchLength; j++) {\n                if (searchChars[j] == ch) {\n                    if (i < csLast && j < searchLast && ch >= Character.MIN_HIGH_SURROGATE && ch <= Character.MAX_HIGH_SURROGATE) {\n                            // missing low surrogate, fine, like String.indexOf(String)\n                        if (searchChars[j + 1] == cs.charAt(i + 1)) {\n                            return true;\n                        }\n                    } else {\n                        // ch is in the Basic Multilingual Plane\n                        return true;\n                    }\n                }\n            }\n        }\n        return false;\n    }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 27.383544240454064
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.containsOnly(CharSequence cs, char[] valid)",
+      "path": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "start_line": 1606,
+      "end_line": 1618,
+      "source": "public static boolean containsOnly(CharSequence cs, char[] valid) {\n        // All these pre-checks are to maintain API with an older version\n        if (valid == null || cs == null) {\n            return false;\n        }\n        if (cs.length() == 0) {\n            return true;\n        }\n        if (valid.length == 0) {\n            return false;\n        }\n        return indexOfAnyBut(cs, valid) == INDEX_NOT_FOUND;\n    }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 27.23694840547694
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.stripAccents(String input)",
+      "path": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "start_line": 629,
+      "end_line": 675,
+      "source": "public static String stripAccents(String input) {\n        if(input == null) {\n            return null;\n        }\n        if(SystemUtils.isJavaVersionAtLeast(1.6f)) {\n\n            // String decomposed = Normalizer.normalize(input, Normalizer.Form.NFD);\n\n            // START of 1.5 reflection - in 1.6 use the line commented out above\n            try {\n                // get java.text.Normalizer.Form class\n                Class<?> normalizerFormClass = ClassUtils.getClass(\"java.text.Normalizer$Form\", false);\n\n                // get Normlizer class\n                Class<?> normalizerClass = ClassUtils.getClass(\"java.text.Normalizer\", false);\n\n                // get static method on Normalizer\n                java.lang.reflect.Method method = normalizerClass.getMethod(\"normalize\", CharSequence.class, normalizerFormClass );\n\n                // get Normalizer.NFD field\n                java.lang.reflect.Field nfd = normalizerFormClass.getField(\"NFD\");\n\n                // invoke method\n                String decomposed = (String) method.invoke( null, input, nfd.get(null) );\n                // END of 1.5 reflection\n\n                java.util.regex.Pattern accentPattern = java.util.regex.Pattern.compile(\"\\\\p{InCombiningDiacriticalMarks}+\");\n                return accentPattern.matcher(decomposed).replaceAll(\"\");\n            } catch(ClassNotFoundException cnfe) {\n                throw new RuntimeException(\"ClassNotFoundException occurred during 1.6 backcompat code\", cnfe);\n            } catch(NoSuchMethodException nsme) {\n                throw new RuntimeException(\"NoSuchMethodException occurred during 1.6 backcompat code\", nsme);\n            } catch(NoSuchFieldException nsfe) {\n                throw new RuntimeException(\"NoSuchFieldException occurred during 1.6 backcompat code\", nsfe);\n            } catch(IllegalAccessException iae) {\n                throw new RuntimeException(\"IllegalAccessException occurred during 1.6 backcompat code\", iae);\n            } catch(IllegalArgumentException iae) {\n                throw new RuntimeException(\"IllegalArgumentException occurred during 1.6 backcompat code\", iae);\n            } catch(java.lang.reflect.InvocationTargetException ite) {\n                throw new RuntimeException(\"InvocationTargetException occurred during 1.6 backcompat code\", ite);\n            } catch(SecurityException se) {\n                throw new RuntimeException(\"SecurityException occurred during 1.6 backcompat code\", se);\n            }\n        } else {\n            throw new UnsupportedOperationException(\"The stripAccents(String) method is not supported until Java 1.6\");\n        }\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 27.03079525511091
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.splitWorker(String str, String separatorChars, int max, boolean preserveAllTokens)",
+      "path": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "start_line": 2856,
+      "end_line": 2939,
+      "source": "private static String[] splitWorker(String str, String separatorChars, int max, boolean preserveAllTokens) {\n        // Performance tuned for 2.0 (JDK1.4)\n        // Direct code is quicker than StringTokenizer.\n        // Also, StringTokenizer uses isSpace() not isWhitespace()\n\n        if (str == null) {\n            return null;\n        }\n        int len = str.length();\n        if (len == 0) {\n            return ArrayUtils.EMPTY_STRING_ARRAY;\n        }\n        List<String> list = new ArrayList<String>();\n        int sizePlus1 = 1;\n        int i = 0, start = 0;\n        boolean match = false;\n        boolean lastMatch = false;\n        if (separatorChars == null) {\n            // Null separator means use whitespace\n            while (i < len) {\n                if (Character.isWhitespace(str.charAt(i))) {\n                    if (match || preserveAllTokens) {\n                        lastMatch = true;\n                        if (sizePlus1++ == max) {\n                            i = len;\n                            lastMatch = false;\n                        }\n                        list.add(str.substring(start, i));\n                        match = false;\n                    }\n                    start = ++i;\n                    continue;\n                }\n                lastMatch = false;\n                match = true;\n                i++;\n            }\n        } else if (separatorChars.length() == 1) {\n            // Optimise 1 character case\n            char sep = separatorChars.charAt(0);\n            while (i < len) {\n                if (str.charAt(i) == sep) {\n                    if (match || preserveAllTokens) {\n                        lastMatch = true;\n                        if (sizePlus1++ == max) {\n                            i = len;\n                            lastMatch = false;\n                        }\n                        list.add(str.substring(start, i));\n                        match = false;\n                    }\n                    start = ++i;\n                    continue;\n                }\n                lastMatch = false;\n                match = true;\n                i++;\n            }\n        } else {\n            // standard case\n            while (i < len) {\n                if (separatorChars.indexOf(str.charAt(i)) >= 0) {\n                    if (match || preserveAllTokens) {\n                        lastMatch = true;\n                        if (sizePlus1++ == max) {\n                            i = len;\n                            lastMatch = false;\n                        }\n                        list.add(str.substring(start, i));\n                        match = false;\n                    }\n                    start = ++i;\n                    continue;\n                }\n                lastMatch = false;\n                match = true;\n                i++;\n            }\n        }\n        if (match || (preserveAllTokens && lastMatch)) {\n            list.add(str.substring(start, i));\n        }\n        return list.toArray(new String[list.size()]);\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 26.8101589965653
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.startTimer()",
+      "path": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java",
+      "start_line": 400,
+      "end_line": 406,
+      "source": "protected ScheduledFuture<?> startTimer() {\n        return getExecutorService().scheduleAtFixedRate(new Runnable() {\n            public void run() {\n                endOfPeriod();\n            }\n        }, getPeriod(), getPeriod(), getUnit());\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 26.28196049666442
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.indexOfAnyBut(String str, String searchChars)",
+      "path": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "start_line": 1569,
+      "end_line": 1581,
+      "source": "public static int indexOfAnyBut(String str, String searchChars) {\n        if (isEmpty(str) || isEmpty(searchChars)) {\n            return INDEX_NOT_FOUND;\n        }\n        int strLen = str.length();\n        for (int i = 0; i < strLen; i++) {\n            char ch = str.charAt(i);\n            if (searchChars.indexOf(ch) < 0) {\n                    return i;\n            }\n        }\n        return INDEX_NOT_FOUND;\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 26.2653363889365
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/ObjectUtils.java::ObjectUtils.clone(final T o)",
+      "path": "src/main/java/org/apache/commons/lang3/ObjectUtils.java",
+      "start_line": 327,
+      "end_line": 344,
+      "source": "public static <T> T clone(final T o) {\n        if (o instanceof Cloneable) {\n            try {\n                final Method clone = o.getClass().getMethod(\"clone\", (Class[])null);\n                @SuppressWarnings(\"unchecked\")\n                final T result = (T)clone.invoke(o, (Object[])null);\n                return result;\n            } catch (final NoSuchMethodException e) {\n                throw new CloneFailedException(\"Cloneable type has no clone method\", e);\n            } catch (final IllegalAccessException e) {\n                throw new CloneFailedException(\"Cannot clone Cloneable type\", e);\n            } catch (final InvocationTargetException e) {\n                throw new CloneFailedException(\"Exception cloning Cloneable type\", e.getCause());\n            }\n        }\n\n        return null;\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 26.225945872039446
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.indexOfAnyBut(CharSequence cs, char[] searchChars)",
+      "path": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "start_line": 1528,
+      "end_line": 1545,
+      "source": "public static int indexOfAnyBut(CharSequence cs, char[] searchChars) {\n        if (isEmpty(cs) || ArrayUtils.isEmpty(searchChars)) {\n            return INDEX_NOT_FOUND;\n        }\n        int csLen = cs.length();\n        int searchLen = searchChars.length;\n        outer:\n        for (int i = 0; i < csLen; i++) {\n            char ch = cs.charAt(i);\n            for (int j = 0; j < searchLen; j++) {\n                if (searchChars[j] == ch) {\n                        continue outer;\n                }\n            }\n            return i;\n        }\n        return INDEX_NOT_FOUND;\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.8788231316328
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)",
+      "path": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java",
+      "start_line": 199,
+      "end_line": 221,
+      "source": "public TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit) {\n        if (timePeriod <= 0) {\n            throw new IllegalArgumentException(\"Time period must be greater 0!\");\n        }\n\n        period = timePeriod;\n        unit = timeUnit;\n\n        if (service != null) {\n            executorService = service;\n            ownExecutor = false;\n        } else {\n            ScheduledThreadPoolExecutor s = new ScheduledThreadPoolExecutor(\n                    THREAD_POOL_SIZE);\n            s.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);\n            s.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);\n            executorService = s;\n            ownExecutor = true;\n        }\n\n        setLimit(limit);\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.50763233104088
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.indexOfAny(CharSequence cs, char[] searchChars)",
+      "path": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "start_line": 1371,
+      "end_line": 1387,
+      "source": "public static int indexOfAny(CharSequence cs, char[] searchChars) {\n        if (isEmpty(cs) || ArrayUtils.isEmpty(searchChars)) {\n            return INDEX_NOT_FOUND;\n        }\n        int csLen = cs.length();\n        int searchLen = searchChars.length;\n        for (int i = 0; i < csLen; i++) {\n            char ch = cs.charAt(i);\n            for (int j = 0; j < searchLen; j++) {\n                if (searchChars[j] == ch) {\n                        // ch is a supplementary character\n                        return i;\n                }\n            }\n        }\n        return INDEX_NOT_FOUND;\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.471829512578285
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object arg)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 92,
+      "end_line": 96,
+      "source": "public static Object invokeMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeMethod(object, methodName, new Object[] { arg });\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.43035692130313
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/time/FastDateFormat.java::FastDateFormat.parseToken(String pattern, int[] indexRef)",
+      "path": "src/main/java/org/apache/commons/lang3/time/FastDateFormat.java",
+      "start_line": 707,
+      "end_line": 757,
+      "source": "protected String parseToken(String pattern, int[] indexRef) {\n        StringBuilder buf = new StringBuilder();\n\n        int i = indexRef[0];\n        int length = pattern.length();\n\n        char c = pattern.charAt(i);\n        if (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z') {\n            // Scan a run of the same character, which indicates a time\n            // pattern.\n            buf.append(c);\n\n            while (i + 1 < length) {\n                char peek = pattern.charAt(i + 1);\n                if (peek == c) {\n                    buf.append(c);\n                    i++;\n                } else {\n                    break;\n                }\n            }\n        } else {\n            // This will identify token as text.\n            buf.append('\\'');\n\n            boolean inLiteral = false;\n\n            for (; i < length; i++) {\n                c = pattern.charAt(i);\n\n                if (c == '\\'') {\n                    if (i + 1 < length && pattern.charAt(i + 1) == '\\'') {\n                        // '' is treated as escaped '\n                        i++;\n                        buf.append(c);\n                    } else {\n                        inLiteral = !inLiteral;\n                    }\n                } else if (!inLiteral &&\n                         (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z')) {\n                    i--;\n                    break;\n                } else {\n                    buf.append(c);\n                }\n            }\n        }\n\n        indexRef[0] = i;\n        return buf.toString();\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.160691539434946
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/concurrent/BackgroundInitializer.java::BackgroundInitializer.start()",
+      "path": "src/main/java/org/apache/commons/lang3/concurrent/BackgroundInitializer.java",
+      "start_line": 171,
+      "end_line": 191,
+      "source": "public synchronized boolean start() {\n        // Not yet started?\n        if (!isStarted()) {\n\n            // Determine the executor to use and whether a temporary one has to\n            // be created\n            ExecutorService tempExec;\n            executor = getExternalExecutor();\n            if (executor == null) {\n                executor = tempExec = createExecutor();\n            } else {\n                tempExec = null;\n            }\n\n            future = executor.submit(createTask(tempExec));\n\n            return true;\n        }\n\n        return false;\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.07982875402083
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object arg)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 192,
+      "end_line": 196,
+      "source": "public static Object invokeExactMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeExactMethod(object, methodName, new Object[] { arg });\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.041218352667293
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object arg)",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "start_line": 330,
+      "end_line": 334,
+      "source": "public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeStaticMethod(cls, methodName, new Object[] { arg });\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.041218352667293
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/time/DurationFormatUtils.java::DurationFormatUtils.formatPeriod(long startMillis, long endMillis, String format, boolean padWithZeros, \n            TimeZone timezone)",
+      "path": "src/main/java/org/apache/commons/lang3/time/DurationFormatUtils.java",
+      "start_line": 274,
+      "end_line": 404,
+      "source": "public static String formatPeriod(long startMillis, long endMillis, String format, boolean padWithZeros, \n            TimeZone timezone) {\n\n        // Used to optimise for differences under 28 days and \n        // called formatDuration(millis, format); however this did not work \n        // over leap years. \n        // TODO: Compare performance to see if anything was lost by \n        // losing this optimisation. \n        \n        Token[] tokens = lexx(format);\n\n        // timezones get funky around 0, so normalizing everything to GMT \n        // stops the hours being off\n        Calendar start = Calendar.getInstance(timezone);\n        start.setTime(new Date(startMillis));\n        Calendar end = Calendar.getInstance(timezone);\n        end.setTime(new Date(endMillis));\n\n        // initial estimates\n        int milliseconds = end.get(Calendar.MILLISECOND) - start.get(Calendar.MILLISECOND);\n        int seconds = end.get(Calendar.SECOND) - start.get(Calendar.SECOND);\n        int minutes = end.get(Calendar.MINUTE) - start.get(Calendar.MINUTE);\n        int hours = end.get(Calendar.HOUR_OF_DAY) - start.get(Calendar.HOUR_OF_DAY);\n        int days = end.get(Calendar.DAY_OF_MONTH) - start.get(Calendar.DAY_OF_MONTH);\n        int months = end.get(Calendar.MONTH) - start.get(Calendar.MONTH);\n        int years = end.get(Calendar.YEAR) - start.get(Calendar.YEAR);\n\n        // each initial estimate is adjusted in case it is under 0\n        while (milliseconds < 0) {\n            milliseconds += 1000;\n            seconds -= 1;\n        }\n        while (seconds < 0) {\n            seconds += 60;\n            minutes -= 1;\n        }\n        while (minutes < 0) {\n            minutes += 60;\n            hours -= 1;\n        }\n        while (hours < 0) {\n            hours += 24;\n            days -= 1;\n        }\n       \n        if (Token.containsTokenWithValue(tokens, M)) {\n            while (days < 0) {\n                days += start.getActualMaximum(Calendar.DAY_OF_MONTH);\n                months -= 1;\n                start.add(Calendar.MONTH, 1);\n            }\n\n            while (months < 0) {\n                months += 12;\n                years -= 1;\n            }\n\n            if (!Token.containsTokenWithValue(tokens, y) && years != 0) {\n                while (years != 0) {\n                    months += 12 * years;\n                    years = 0;\n                }\n            }\n        } else {\n            // there are no M's in the format string\n\n            if( !Token.containsTokenWithValue(tokens, y) ) {\n                int target = end.get(Calendar.YEAR);\n                if (months < 0) {\n                    // target is end-year -1\n                    target -= 1;\n                }\n                \n                while ( (start.get(Calendar.YEAR) != target)) {\n                    days += start.getActualMaximum(Calendar.DAY_OF_YEAR) - start.get(Calendar.DAY_OF_YEAR);\n                    \n                    // Not sure I grok why this is needed, but the brutal tests show it is\n                    if(start instanceof GregorianCalendar) {\n                        if( (start.get(Calendar.MONTH) == Calendar.FEBRUARY) &&\n                            (start.get(Calendar.DAY_OF_MONTH) == 29 ) )\n                        {\n                            days += 1;\n                        }\n                    }\n                    \n                    start.add(Calendar.YEAR, 1);\n                    \n                    days += start.get(Calendar.DAY_OF_YEAR);\n                }\n                \n                years = 0;\n            }\n            \n            while( start.get(Calendar.MONTH) != end.get(Calendar.MONTH) ) {\n                days += start.getActualMaximum(Calendar.DAY_OF_MONTH);\n                start.add(Calendar.MONTH, 1);\n            }\n            \n            months = 0;            \n\n            while (days < 0) {\n                days += start.getActualMaximum(Calendar.DAY_OF_MONTH);\n                months -= 1;\n                start.add(Calendar.MONTH, 1);\n            }\n            \n        }\n\n        // The rest of this code adds in values that \n        // aren't requested. This allows the user to ask for the \n        // number of months and get the real count and not just 0->11.\n\n        if (!Token.containsTokenWithValue(tokens, d)) {\n            hours += 24 * days;\n            days = 0;\n        }\n        if (!Token.containsTokenWithValue(tokens, H)) {\n            minutes += 60 * hours;\n            hours = 0;\n        }\n        if (!Token.containsTokenWithValue(tokens, m)) {\n            seconds += 60 * minutes;\n            minutes = 0;\n        }\n        if (!Token.containsTokenWithValue(tokens, s)) {\n            milliseconds += 1000 * seconds;\n            seconds = 0;\n        }\n\n        return format(tokens, years, months, days, hours, minutes, seconds, milliseconds, padWithZeros);\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.016099605633876
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java::NumericEntityUnescaper.translate(CharSequence input, int index, Writer out)",
+      "path": "src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java",
+      "start_line": 34,
+      "end_line": 68,
+      "source": "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        // TODO: Protect from ArrayIndexOutOfBounds\n        if(input.charAt(index) == '&' && input.charAt(index + 1) == '#') {\n            int start = index + 2;\n            boolean isHex = false;\n\n            char firstChar = input.charAt(start);\n            if(firstChar == 'x' || firstChar == 'X') {\n                start++;\n                isHex = true;\n            }\n\n            int end = start;\n            while(input.charAt(end) != ';') {\n                end++;\n            }\n\n            int entityValue;\n            try {\n                if(isHex) {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 16);\n                } else {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 10);\n                }\n            } catch(NumberFormatException nfe) {\n                return 0;\n            }\n\n            // TODO: if(entityValue > 0xFFFF) {\n            out.write(entityValue);\n            return 2 + (end - start) + (isHex ? 1 : 0) + 1;\n        }\n        return 0;\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 24.890632762457926
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.containsNone(CharSequence cs, char[] searchChars)",
+      "source": "public static boolean containsNone(CharSequence cs, char[] searchChars) {\n        if (cs == null || searchChars == null) {\n            return true;\n        }\n        int csLen = cs.length();\n        int searchLen = searchChars.length;\n        for (int i = 0; i < csLen; i++) {\n            char ch = cs.charAt(i);\n            for (int j = 0; j < searchLen; j++) {\n                if (searchChars[j] == ch) {\n                            // missing low surrogate, fine, like String.indexOf(String)\n                        // ch is in the Basic Multilingual Plane\n                        return false;\n                }\n            }\n        }\n        return true;\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.containsNone(CharSequence cs, char[] searchChars)\nSIGNATURE: public static boolean containsNone(CharSequence cs, char[] searchChars)",
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.containsNone(CharSequence cs, char[] searchChars)\nSIGNATURE: public static boolean containsNone(CharSequence cs, char[] searchChars)\nSTRUCTURE (lossy):\nif (cs == null || searchChars == null)\nreturn true;\nint csLen = cs.length();\nCALL cs.length()\nint searchLen = searchChars.length;\nfor (int i = 0; i < csLen; i++)\nint i = 0;\ni++\nchar ch = cs.charAt(i);\nCALL cs.charAt(i)\nfor (int j = 0; j < searchLen; j++)\nint j = 0;\nj++\nif (searchChars[j] == ch)\nreturn false;",
+        "public static boolean containsNone(CharSequence cs, char[] searchChars) {\n        if (cs == null || searchChars == null) {\n            return true;\n        }\n        int csLen = cs.length();\n        int searchLen = searchChars.length;\n        for (int i = 0; i < csLen; i++) {\n            char ch = cs.charAt(i);\n            for (int j = 0; j < searchLen; j++) {\n                if (searchChars[j] == ch) {\n                            // missing low surrogate, fine, like String.indexOf(String)\n                        // ch is in the Basic Multilingual Plane\n                        return false;\n                }\n            }\n        }\n        return true;\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4722222222222222,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 2.0,
+        "literal_count": 4.0,
+        "source_tokens": 167.0,
+        "l0_tokens": 53.0,
+        "l1_tokens": 135.0,
+        "compression_ratio": 0.8083832335329342,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 2,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java::ExtendedMessageFormat.readArgumentIndex(String pattern, ParsePosition pos)",
+      "source": "private int readArgumentIndex(String pattern, ParsePosition pos) {\n        int start = pos.getIndex();\n        seekNonWs(pattern, pos);\n        StringBuffer result = new StringBuffer();\n        boolean error = false;\n        for (; !error && pos.getIndex() < pattern.length(); next(pos)) {\n            char c = pattern.charAt(pos.getIndex());\n            if (Character.isWhitespace(c)) {\n                seekNonWs(pattern, pos);\n                c = pattern.charAt(pos.getIndex());\n                if (c != START_FMT && c != END_FE) {\n                    error = true;\n                    continue;\n                }\n            }\n            if ((c == START_FMT || c == END_FE) && result.length() > 0) {\n                try {\n                    return Integer.parseInt(result.toString());\n                } catch (NumberFormatException e) {\n                    // we've already ensured only digits, so unless something\n                    // outlandishly large was specified we should be okay.\n                }\n            }\n            error = !Character.isDigit(c);\n            result.append(c);\n        }\n        if (error) {\n            throw new IllegalArgumentException(\n                    \"Invalid format argument index at position \" + start + \": \"\n                            + pattern.substring(start, pos.getIndex()));\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated format element at position \" + start);\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java::ExtendedMessageFormat.readArgumentIndex(String pattern, ParsePosition pos)\nSIGNATURE: private int readArgumentIndex(String pattern, ParsePosition pos)",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java::ExtendedMessageFormat.readArgumentIndex(String pattern, ParsePosition pos)\nSIGNATURE: private int readArgumentIndex(String pattern, ParsePosition pos)\nSTRUCTURE (lossy):\nint start = pos.getIndex();\nCALL pos.getIndex()\nCALL seekNonWs(pattern, pos)\nStringBuffer result = new StringBuffer();\nboolean error = false;\nfor (; !error && pos.getIndex() < pattern.length(); next(pos))\nCALL pattern.length()\nCALL next(pos)\nchar c = pattern.charAt(pos.getIndex());\nCALL pattern.charAt(pos.getIndex())\nif (Character.isWhitespace(c))\nCALL Character.isWhitespace(c)\nc = pattern.charAt(pos.getIndex())\nif (c != START_FMT && c != END_FE)\nerror = true\nif ((c == START_FMT || c == END_FE) && result.length() > 0)\nCALL result.length()\nreturn Integer.parseInt(result.toString());\nCALL Integer.parseInt(result.toString())\nCALL result.toString()\ncatch (NumberFormatException e)\nerror = !Character.isDigit(c)\nCALL Character.isDigit(c)\nCALL result.append(c)\nif (error)\nthrow new IllegalArgumentException( \"Invalid format argument index at position \" + start + \": \" + pattern.substring(start, pos.getIndex()));\nCALL pattern.substring(start, pos.getIndex())\nthrow new IllegalArgumentException( \"Unterminated format element at position \" + start);",
+        "private int readArgumentIndex(String pattern, ParsePosition pos) {\n        int start = pos.getIndex();\n        seekNonWs(pattern, pos);\n        StringBuffer result = new StringBuffer();\n        boolean error = false;\n        for (; !error && pos.getIndex() < pattern.length(); next(pos)) {\n            char c = pattern.charAt(pos.getIndex());\n            if (Character.isWhitespace(c)) {\n                seekNonWs(pattern, pos);\n                c = pattern.charAt(pos.getIndex());\n                if (c != START_FMT && c != END_FE) {\n                    error = true;\n                    continue;\n                }\n            }\n            if ((c == START_FMT || c == END_FE) && result.length() > 0) {\n                try {\n                    return Integer.parseInt(result.toString());\n                } catch (NumberFormatException e) {\n                    // we've already ensured only digits, so unless something\n                    // outlandishly large was specified we should be okay.\n                }\n            }\n            error = !Character.isDigit(c);\n            result.append(c);\n        }\n        if (error) {\n            throw new IllegalArgumentException(\n                    \"Invalid format argument index at position \" + start + \": \"\n                            + pattern.substring(start, pos.getIndex()));\n        }\n        throw new IllegalArgumentException(\n                \"Unterminated format element at position \" + start);\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2537313432835821,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 18.0,
+        "literal_count": 4.0,
+        "source_tokens": 365.0,
+        "l0_tokens": 58.0,
+        "l1_tokens": 325.0,
+        "compression_ratio": 0.8904109589041096,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 18,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.containsNone(CharSequence cs, String invalidChars)",
+      "source": "public static boolean containsNone(CharSequence cs, String invalidChars) {\n        if (cs == null || invalidChars == null) {\n            return true;\n        }\n        return containsNone(cs, invalidChars.toCharArray());\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.containsNone(CharSequence cs, String invalidChars)\nSIGNATURE: public static boolean containsNone(CharSequence cs, String invalidChars)",
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.containsNone(CharSequence cs, String invalidChars)\nSIGNATURE: public static boolean containsNone(CharSequence cs, String invalidChars)\nSTRUCTURE (lossy):\nif (cs == null || invalidChars == null)\nreturn true;\nreturn containsNone(cs, invalidChars.toCharArray());\nCALL containsNone(cs, invalidChars.toCharArray())\nCALL invalidChars.toCharArray()",
+        "public static boolean containsNone(CharSequence cs, String invalidChars) {\n        if (cs == null || invalidChars == null) {\n            return true;\n        }\n        return containsNone(cs, invalidChars.toCharArray());\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7272727272727273,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 57.0,
+        "l0_tokens": 53.0,
+        "l1_tokens": 105.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)",
+      "source": "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf \n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars, \n        // then a subclass can test equals to a superclass.\n        Class<?> lhsClass = lhs.getClass();\n        Class<?> rhsClass = rhs.getClass();\n        Class<?> testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and \n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)\nSIGNATURE: public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)",
+        "METHOD: src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)\nSIGNATURE: public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)\nSTRUCTURE (lossy):\nif (lhs == rhs)\nreturn true;\nif (lhs == null || rhs == null)\nreturn false;\nClass<?> lhsClass = lhs.getClass();\nCALL lhs.getClass()\nClass<?> rhsClass = rhs.getClass();\nCALL rhs.getClass()\nClass<?> testClass;\nif (lhsClass.isInstance(rhs))\nCALL lhsClass.isInstance(rhs)\ntestClass = lhsClass\nif (!rhsClass.isInstance(lhs))\nCALL rhsClass.isInstance(lhs)\ntestClass = rhsClass\nif (rhsClass.isInstance(lhs))\nif (!lhsClass.isInstance(rhs))\nEqualsBuilder equalsBuilder = new EqualsBuilder();\nCALL reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields)\nwhile (testClass.getSuperclass() != null && testClass != reflectUpToClass)\nCALL testClass.getSuperclass()\ntestClass = testClass.getSuperclass()\ncatch (IllegalArgumentException e)\nreturn equalsBuilder.isEquals();\nCALL equalsBuilder.isEquals()",
+        "public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields) {\n        if (lhs == rhs) {\n            return true;\n        }\n        if (lhs == null || rhs == null) {\n            return false;\n        }\n        // Find the leaf class since there may be transients in the leaf \n        // class or in classes between the leaf and root.\n        // If we are not testing transients or a subclass has no ivars, \n        // then a subclass can test equals to a superclass.\n        Class<?> lhsClass = lhs.getClass();\n        Class<?> rhsClass = rhs.getClass();\n        Class<?> testClass;\n        if (lhsClass.isInstance(rhs)) {\n            testClass = lhsClass;\n            if (!rhsClass.isInstance(lhs)) {\n                // rhsClass is a subclass of lhsClass\n                testClass = rhsClass;\n            }\n        } else if (rhsClass.isInstance(lhs)) {\n            testClass = rhsClass;\n            if (!lhsClass.isInstance(rhs)) {\n                // lhsClass is a subclass of rhsClass\n                testClass = lhsClass;\n            }\n        } else {\n            // The two classes are not related.\n            return false;\n        }\n        EqualsBuilder equalsBuilder = new EqualsBuilder();\n        try {\n            reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            while (testClass.getSuperclass() != null && testClass != reflectUpToClass) {\n                testClass = testClass.getSuperclass();\n                reflectionAppend(lhs, rhs, testClass, equalsBuilder, testTransients, excludeFields);\n            }\n        } catch (IllegalArgumentException e) {\n            // In this case, we tried to test a subclass vs. a superclass and\n            // the subclass has ivars or the ivars are transient and \n            // we are testing transients.\n            // If a subclass has ivars that we are trying to test them, we get an\n            // exception and we know that the objects are not equal.\n            return false;\n        }\n        return equalsBuilder.isEquals();\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2318840579710145,
+        "trace_match": 0.0,
+        "complexity": 9.0,
+        "call_count": 11.0,
+        "literal_count": 3.0,
+        "source_tokens": 533.0,
+        "l0_tokens": 95.0,
+        "l1_tokens": 303.0,
+        "compression_ratio": 0.5684803001876173,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 9,
+        "call_count": 11,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.isNumber(String str)",
+      "source": "public static boolean isNumber(String str) {\n        if (StringUtils.isEmpty(str)) {\n            return false;\n        }\n        char[] chars = str.toCharArray();\n        int sz = chars.length;\n        boolean hasExp = false;\n        boolean hasDecPoint = false;\n        boolean allowSigns = false;\n        boolean foundDigit = false;\n        // deal with any possible sign up front\n        int start = (chars[0] == '-') ? 1 : 0;\n        if (sz > start + 1) {\n            if (chars[start] == '0' && chars[start + 1] == 'x') {\n                int i = start + 2;\n                if (i == sz) {\n                    return false; // str == \"0x\"\n                }\n                // checking hex (it can't be anything else)\n                for (; i < chars.length; i++) {\n                    if ((chars[i] < '0' || chars[i] > '9')\n                        && (chars[i] < 'a' || chars[i] > 'f')\n                        && (chars[i] < 'A' || chars[i] > 'F')) {\n                        return false;\n                    }\n                }\n                return true;\n            }\n        }\n        sz--; // don't want to loop to the last char, check it afterwords\n              // for type qualifiers\n        int i = start;\n        // loop to the next to last char or to the last char if we need another digit to\n        // make a valid number (e.g. chars[0..5] = \"1234E\")\n        while (i < sz || (i < sz + 1 && allowSigns && !foundDigit)) {\n            if (chars[i] >= '0' && chars[i] <= '9') {\n                foundDigit = true;\n                allowSigns = false;\n\n            } else if (chars[i] == '.') {\n                if (hasDecPoint || hasExp) {\n                    // two decimal points or dec in exponent   \n                    return false;\n                }\n                hasDecPoint = true;\n            } else if (chars[i] == 'e' || chars[i] == 'E') {\n                // we've already taken care of hex.\n                if (hasExp) {\n                    // two E's\n                    return false;\n                }\n                if (!foundDigit) {\n                    return false;\n                }\n                hasExp = true;\n                allowSigns = true;\n            } else if (chars[i] == '+' || chars[i] == '-') {\n                if (!allowSigns) {\n                    return false;\n                }\n                allowSigns = false;\n                foundDigit = false; // we need a digit after the E\n            } else {\n                return false;\n            }\n            i++;\n        }\n        if (i < chars.length) {\n            if (chars[i] >= '0' && chars[i] <= '9') {\n                // no type qualifier, OK\n                return true;\n            }\n            if (chars[i] == 'e' || chars[i] == 'E') {\n                // can't have an E at the last byte\n                return false;\n            }\n            if (chars[i] == '.') {\n                if (hasDecPoint || hasExp) {\n                    // two decimal points or dec in exponent\n                    return false;\n                }\n                // single trailing decimal point after non-exponent is ok\n                return foundDigit;\n            }\n            if (!allowSigns\n                && (chars[i] == 'd'\n                    || chars[i] == 'D'\n                    || chars[i] == 'f'\n                    || chars[i] == 'F')) {\n                return foundDigit;\n            }\n            if (chars[i] == 'l'\n                || chars[i] == 'L') {\n                // not allowing L with an exponent\n                return foundDigit && !hasExp;\n            }\n            // last character is illegal\n            return false;\n        }\n        // allowSigns is true iff the val ends in 'E'\n        // found digit it to make sure weird stuff like '.' and '1E-' doesn't pass\n        return !allowSigns && foundDigit;\n    }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.isNumber(String str)\nSIGNATURE: public static boolean isNumber(String str)",
+        "METHOD: src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.isNumber(String str)\nSIGNATURE: public static boolean isNumber(String str)\nSTRUCTURE (lossy):\nif (StringUtils.isEmpty(str))\nCALL StringUtils.isEmpty(str)\nreturn false;\nchar[] chars = str.toCharArray();\nCALL str.toCharArray()\nint sz = chars.length;\nboolean hasExp = false;\nboolean hasDecPoint = false;\nboolean allowSigns = false;\nboolean foundDigit = false;\nint start = (chars[0] == '-') ? 1 : 0;\nif (sz > start + 1)\nif (chars[start] == '0' && chars[start + 1] == 'x')\nint i = start + 2;\nif (i == sz)\nfor (; i < chars.length; i++)\ni++\nif ((chars[i] < '0' || chars[i] > '9') && (chars[i] < 'a' || chars[i] > 'f') && (chars[i] < 'A' || chars[i] > 'F'))\nreturn true;\nsz--\nint i = start;\nwhile (i < sz || (i < sz + 1 && allowSigns && !foundDigit))\nif (chars[i] >= '0' && chars[i] <= '9')\nfoundDigit = true\nallowSigns = false\nif (chars[i] == '.')\nif (hasDecPoint || hasExp)\nhasDecPoint = true\nif (chars[i] == 'e' || chars[i] == 'E')\nif (hasExp)\nif (!foundDigit)\nhasExp = true\nallowSigns = true\nif (chars[i] == '+' || chars[i] == '-')\nif (!allowSigns)\nfoundDigit = false\nif (i < chars.length)\nreturn foundDigit;\nif (!allowSigns && (chars[i] == 'd' || chars[i] == 'D' || chars[i] == 'f' || chars[i] == 'F'))\nif (chars[i] == 'l' || chars[i] == 'L')\nreturn foundDigit && !hasExp;\nreturn !allowSigns && foundDigit;",
+        "public static boolean isNumber(String str) {\n        if (StringUtils.isEmpty(str)) {\n            return false;\n        }\n        char[] chars = str.toCharArray();\n        int sz = chars.length;\n        boolean hasExp = false;\n        boolean hasDecPoint = false;\n        boolean allowSigns = false;\n        boolean foundDigit = false;\n        // deal with any possible sign up front\n        int start = (chars[0] == '-') ? 1 : 0;\n        if (sz > start + 1) {\n            if (chars[start] == '0' && chars[start + 1] == 'x') {\n                int i = start + 2;\n                if (i == sz) {\n                    return false; // str == \"0x\"\n                }\n                // checking hex (it can't be anything else)\n                for (; i < chars.length; i++) {\n                    if ((chars[i] < '0' || chars[i] > '9')\n                        && (chars[i] < 'a' || chars[i] > 'f')\n                        && (chars[i] < 'A' || chars[i] > 'F')) {\n                        return false;\n                    }\n                }\n                return true;\n            }\n        }\n        sz--; // don't want to loop to the last char, check it afterwords\n              // for type qualifiers\n        int i = start;\n        // loop to the next to last char or to the last char if we need another digit to\n        // make a valid number (e.g. chars[0..5] = \"1234E\")\n        while (i < sz || (i < sz + 1 && allowSigns && !foundDigit)) {\n            if (chars[i] >= '0' && chars[i] <= '9') {\n                foundDigit = true;\n                allowSigns = false;\n\n            } else if (chars[i] == '.') {\n                if (hasDecPoint || hasExp) {\n                    // two decimal points or dec in exponent   \n                    return false;\n                }\n                hasDecPoint = true;\n            } else if (chars[i] == 'e' || chars[i] == 'E') {\n                // we've already taken care of hex.\n                if (hasExp) {\n                    // two E's\n                    return false;\n                }\n                if (!foundDigit) {\n                    return false;\n                }\n                hasExp = true;\n                allowSigns = true;\n            } else if (chars[i] == '+' || chars[i] == '-') {\n                if (!allowSigns) {\n                    return false;\n                }\n                allowSigns = false;\n                foundDigit = false; // we need a digit after the E\n            } else {\n                return false;\n            }\n            i++;\n        }\n        if (i < chars.length) {\n            if (chars[i] >= '0' && chars[i] <= '9') {\n                // no type qualifier, OK\n                return true;\n            }\n            if (chars[i] == 'e' || chars[i] == 'E') {\n                // can't have an E at the last byte\n                return false;\n            }\n            if (chars[i] == '.') {\n                if (hasDecPoint || hasExp) {\n                    // two decimal points or dec in exponent\n                    return false;\n                }\n                // single trailing decimal point after non-exponent is ok\n                return foundDigit;\n            }\n            if (!allowSigns\n                && (chars[i] == 'd'\n                    || chars[i] == 'D'\n                    || chars[i] == 'f'\n                    || chars[i] == 'F')) {\n                return foundDigit;\n            }\n            if (chars[i] == 'l'\n                || chars[i] == 'L') {\n                // not allowing L with an exponent\n                return foundDigit && !hasExp;\n            }\n            // last character is illegal\n            return false;\n        }\n        // allowSigns is true iff the val ends in 'E'\n        // found digit it to make sure weird stuff like '.' and '1E-' doesn't pass\n        return !allowSigns && foundDigit;\n    }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2159090909090909,
+        "trace_match": 0.0,
+        "complexity": 23.0,
+        "call_count": 2.0,
+        "literal_count": 34.0,
+        "source_tokens": 959.0,
+        "l0_tokens": 39.0,
+        "l1_tokens": 347.0,
+        "compression_ratio": 0.3618352450469239,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 23,
+        "call_count": 2,
+        "literal_count": 34
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.shutdown()",
+      "source": "public synchronized void shutdown() {\n        if (!shutdown) {\n\n            if (ownExecutor) {\n                // if the executor was created by this instance, it has\n                // to be shutdown\n                getExecutorService().shutdownNow();\n            }\n            if (task != null) {\n                task.cancel(false);\n            }\n\n            shutdown = true;\n        }\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.shutdown()\nSIGNATURE: public synchronized void shutdown()",
+        "METHOD: src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.shutdown()\nSIGNATURE: public synchronized void shutdown()\nSTRUCTURE (lossy):\nif (!shutdown)\nif (ownExecutor)\nCALL getExecutorService().shutdownNow()\nCALL getExecutorService()\nif (task != null)\nCALL task.cancel(false)\nshutdown = true",
+        "public synchronized void shutdown() {\n        if (!shutdown) {\n\n            if (ownExecutor) {\n                // if the executor was created by this instance, it has\n                // to be shutdown\n                getExecutorService().shutdownNow();\n            }\n            if (task != null) {\n                task.cancel(false);\n            }\n\n            shutdown = true;\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4666666666666667,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 3.0,
+        "literal_count": 1.0,
+        "source_tokens": 99.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 82.0,
+        "compression_ratio": 0.8282828282828283,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 3,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.toBoolean(String str)",
+      "source": "public static boolean toBoolean(String str) {\n        // Previously used equalsIgnoreCase, which was fast for interned 'true'.\n        // Non interned 'true' matched 15 times slower.\n        // \n        // Optimisation provides same performance as before for interned 'true'.\n        // Similar performance for null, 'false', and other strings not length 2/3/4.\n        // 'true'/'TRUE' match 4 times slower, 'tRUE'/'True' 7 times slower.\n        if (str == \"true\") {\n            return true;\n        }\n        if (str == null) {\n            return false;\n        }\n        switch (str.length()) {\n            case 2: {\n                char ch0 = str.charAt(0);\n                char ch1 = str.charAt(1);\n                return \n                    (ch0 == 'o' || ch0 == 'O') &&\n                    (ch1 == 'n' || ch1 == 'N');\n            }\n            case 3: {\n                char ch = str.charAt(0);\n                if (ch == 'y') {\n                    return \n                        (str.charAt(1) == 'e' || str.charAt(1) == 'E') &&\n                        (str.charAt(2) == 's' || str.charAt(2) == 'S');\n                }\n                if (ch == 'Y') {\n                    return \n                        (str.charAt(1) == 'E' || str.charAt(1) == 'e') &&\n                        (str.charAt(2) == 'S' || str.charAt(2) == 's');\n                }\n                return false;\n            }\n            case 4: {\n                char ch = str.charAt(0);\n                if (ch == 't') {\n                    return \n                        (str.charAt(1) == 'r' || str.charAt(1) == 'R') &&\n                        (str.charAt(2) == 'u' || str.charAt(2) == 'U') &&\n                        (str.charAt(3) == 'e' || str.charAt(3) == 'E');\n                }\n                if (ch == 'T') {\n                    return \n                        (str.charAt(1) == 'R' || str.charAt(1) == 'r') &&\n                        (str.charAt(2) == 'U' || str.charAt(2) == 'u') &&\n                        (str.charAt(3) == 'E' || str.charAt(3) == 'e');\n                }\n            }\n        }\n        return false;\n    }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.toBoolean(String str)\nSIGNATURE: public static boolean toBoolean(String str)",
+        "METHOD: src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.toBoolean(String str)\nSIGNATURE: public static boolean toBoolean(String str)\nSTRUCTURE (lossy):\nif (str == \"true\")\nreturn true;\nif (str == null)\nreturn false;\nswitch (str.length()) { case 2: { char ch0 = str.charAt(0); char ch1 = str.charAt(1); return (ch0 == 'o' || ch0 == 'O') && (ch1 == 'n' || ch1 == 'N'); } case 3: { char ch = str.charAt(0); if (ch == 'y') { return (str.charAt(1) == 'e' || str.charAt(1) == 'E') && (str.charAt(2) == 's' || str.charAt(2) == 'S'); } if (ch == 'Y') { return (str.charAt(1) == 'E' || str.charAt(1) == 'e') && (str.charAt(2) == 'S' || str.charAt(2) == 's'); } return false; } case 4: { char ch = str.charAt(0); if (ch == 't') { return (str.charAt(1) == 'r' || str.charAt(1) == 'R') && (str.charAt(2) == 'u' || str.charAt(2) == 'U') && (str.charAt(3) == 'e' || str.charAt(3) == 'E'); } if (ch == 'T') { return (str.charAt(1) == 'R' || str.charAt(1) == 'r') && (str.charAt(2) == 'U' || str.charAt(2) == 'u') && (str.charAt(3) == 'E' || str.charAt(3) == 'e'); } } }\nCALL str.length()\nchar ch0 = str.charAt(0);\nCALL str.charAt(0)\nchar ch1 = str.charAt(1);\nCALL str.charAt(1)\nreturn (ch0 == 'o' || ch0 == 'O') && (ch1 == 'n' || ch1 == 'N');\nchar ch = str.charAt(0);\nif (ch == 'y')\nreturn (str.charAt(1) == 'e' || str.charAt(1) == 'E') && (str.charAt(2) == 's' || str.charAt(2) == 'S');\nCALL str.charAt(2)\nif (ch == 'Y')\nreturn (str.charAt(1) == 'E' || str.charAt(1) == 'e') && (str.charAt(2) == 'S' || str.charAt(2) == 's');\nif (ch == 't')\nreturn (str.charAt(1) == 'r' || str.charAt(1) == 'R') && (str.charAt(2) == 'u' || str.charAt(2) == 'U') && (str.charAt(3) == 'e' || str.charAt(3) == 'E');\nCALL str.charAt(3)\nif (ch == 'T')\nreturn (str.charAt(1) == 'R' || str.charAt(1) == 'r') && (str.charAt(2) == 'U' || str.charAt(2) == 'u') && (str.charAt(3) == 'E' || str.charAt(3) == 'e');",
+        "public static boolean toBoolean(String str) {\n        // Previously used equalsIgnoreCase, which was fast for interned 'true'.\n        // Non interned 'true' matched 15 times slower.\n        // \n        // Optimisation provides same performance as before for interned 'true'.\n        // Similar performance for null, 'false', and other strings not length 2/3/4.\n        // 'true'/'TRUE' match 4 times slower, 'tRUE'/'True' 7 times slower.\n        if (str == \"true\") {\n            return true;\n        }\n        if (str == null) {\n            return false;\n        }\n        switch (str.length()) {\n            case 2: {\n                char ch0 = str.charAt(0);\n                char ch1 = str.charAt(1);\n                return \n                    (ch0 == 'o' || ch0 == 'O') &&\n                    (ch1 == 'n' || ch1 == 'N');\n            }\n            case 3: {\n                char ch = str.charAt(0);\n                if (ch == 'y') {\n                    return \n                        (str.charAt(1) == 'e' || str.charAt(1) == 'E') &&\n                        (str.charAt(2) == 's' || str.charAt(2) == 'S');\n                }\n                if (ch == 'Y') {\n                    return \n                        (str.charAt(1) == 'E' || str.charAt(1) == 'e') &&\n                        (str.charAt(2) == 'S' || str.charAt(2) == 's');\n                }\n                return false;\n            }\n            case 4: {\n                char ch = str.charAt(0);\n                if (ch == 't') {\n                    return \n                        (str.charAt(1) == 'r' || str.charAt(1) == 'R') &&\n                        (str.charAt(2) == 'u' || str.charAt(2) == 'U') &&\n                        (str.charAt(3) == 'e' || str.charAt(3) == 'E');\n                }\n                if (ch == 'T') {\n                    return \n                        (str.charAt(1) == 'R' || str.charAt(1) == 'r') &&\n                        (str.charAt(2) == 'U' || str.charAt(2) == 'u') &&\n                        (str.charAt(3) == 'E' || str.charAt(3) == 'e');\n                }\n            }\n        }\n        return false;\n    }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3541666666666667,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 25.0,
+        "literal_count": 57.0,
+        "source_tokens": 528.0,
+        "l0_tokens": 39.0,
+        "l1_tokens": 473.0,
+        "compression_ratio": 0.8958333333333334,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 25,
+        "literal_count": 57
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.containsAny(CharSequence cs, char[] searchChars)",
+      "source": "public static boolean containsAny(CharSequence cs, char[] searchChars) {\n        if (isEmpty(cs) || ArrayUtils.isEmpty(searchChars)) {\n            return false;\n        }\n        int csLength = cs.length();\n        int searchLength = searchChars.length;\n        int csLast = csLength - 1;\n        int searchLast = searchLength - 1;\n        for (int i = 0; i < csLength; i++) {\n            char ch = cs.charAt(i);\n            for (int j = 0; j < searchLength; j++) {\n                if (searchChars[j] == ch) {\n                    if (i < csLast && j < searchLast && ch >= Character.MIN_HIGH_SURROGATE && ch <= Character.MAX_HIGH_SURROGATE) {\n                            // missing low surrogate, fine, like String.indexOf(String)\n                        if (searchChars[j + 1] == cs.charAt(i + 1)) {\n                            return true;\n                        }\n                    } else {\n                        // ch is in the Basic Multilingual Plane\n                        return true;\n                    }\n                }\n            }\n        }\n        return false;\n    }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.containsAny(CharSequence cs, char[] searchChars)\nSIGNATURE: public static boolean containsAny(CharSequence cs, char[] searchChars)",
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.containsAny(CharSequence cs, char[] searchChars)\nSIGNATURE: public static boolean containsAny(CharSequence cs, char[] searchChars)\nSTRUCTURE (lossy):\nif (isEmpty(cs) || ArrayUtils.isEmpty(searchChars))\nCALL isEmpty(cs)\nCALL ArrayUtils.isEmpty(searchChars)\nreturn false;\nint csLength = cs.length();\nCALL cs.length()\nint searchLength = searchChars.length;\nint csLast = csLength - 1;\nint searchLast = searchLength - 1;\nfor (int i = 0; i < csLength; i++)\nint i = 0;\ni++\nchar ch = cs.charAt(i);\nCALL cs.charAt(i)\nfor (int j = 0; j < searchLength; j++)\nint j = 0;\nj++\nif (searchChars[j] == ch)\nif (i < csLast && j < searchLast && ch >= Character.MIN_HIGH_SURROGATE && ch <= Character.MAX_HIGH_SURROGATE)\nif (searchChars[j + 1] == cs.charAt(i + 1))\nCALL cs.charAt(i + 1)\nreturn true;",
+        "public static boolean containsAny(CharSequence cs, char[] searchChars) {\n        if (isEmpty(cs) || ArrayUtils.isEmpty(searchChars)) {\n            return false;\n        }\n        int csLength = cs.length();\n        int searchLength = searchChars.length;\n        int csLast = csLength - 1;\n        int searchLast = searchLength - 1;\n        for (int i = 0; i < csLength; i++) {\n            char ch = cs.charAt(i);\n            for (int j = 0; j < searchLength; j++) {\n                if (searchChars[j] == ch) {\n                    if (i < csLast && j < searchLast && ch >= Character.MIN_HIGH_SURROGATE && ch <= Character.MAX_HIGH_SURROGATE) {\n                            // missing low surrogate, fine, like String.indexOf(String)\n                        if (searchChars[j + 1] == cs.charAt(i + 1)) {\n                            return true;\n                        }\n                    } else {\n                        // ch is in the Basic Multilingual Plane\n                        return true;\n                    }\n                }\n            }\n        }\n        return false;\n    }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.40476190476190477,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 5.0,
+        "literal_count": 6.0,
+        "source_tokens": 273.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 214.0,
+        "compression_ratio": 0.7838827838827839,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 5,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.containsOnly(CharSequence cs, char[] valid)",
+      "source": "public static boolean containsOnly(CharSequence cs, char[] valid) {\n        // All these pre-checks are to maintain API with an older version\n        if (valid == null || cs == null) {\n            return false;\n        }\n        if (cs.length() == 0) {\n            return true;\n        }\n        if (valid.length == 0) {\n            return false;\n        }\n        return indexOfAnyBut(cs, valid) == INDEX_NOT_FOUND;\n    }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.containsOnly(CharSequence cs, char[] valid)\nSIGNATURE: public static boolean containsOnly(CharSequence cs, char[] valid)",
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.containsOnly(CharSequence cs, char[] valid)\nSIGNATURE: public static boolean containsOnly(CharSequence cs, char[] valid)\nSTRUCTURE (lossy):\nif (valid == null || cs == null)\nreturn false;\nif (cs.length() == 0)\nCALL cs.length()\nreturn true;\nif (valid.length == 0)\nreturn indexOfAnyBut(cs, valid) == INDEX_NOT_FOUND;\nCALL indexOfAnyBut(cs, valid)",
+        "public static boolean containsOnly(CharSequence cs, char[] valid) {\n        // All these pre-checks are to maintain API with an older version\n        if (valid == null || cs == null) {\n            return false;\n        }\n        if (cs.length() == 0) {\n            return true;\n        }\n        if (valid.length == 0) {\n            return false;\n        }\n        return indexOfAnyBut(cs, valid) == INDEX_NOT_FOUND;\n    }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4864864864864865,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 2.0,
+        "literal_count": 4.0,
+        "source_tokens": 106.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 105.0,
+        "compression_ratio": 0.9905660377358491,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 2,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.stripAccents(String input)",
+      "source": "public static String stripAccents(String input) {\n        if(input == null) {\n            return null;\n        }\n        if(SystemUtils.isJavaVersionAtLeast(1.6f)) {\n\n            // String decomposed = Normalizer.normalize(input, Normalizer.Form.NFD);\n\n            // START of 1.5 reflection - in 1.6 use the line commented out above\n            try {\n                // get java.text.Normalizer.Form class\n                Class<?> normalizerFormClass = ClassUtils.getClass(\"java.text.Normalizer$Form\", false);\n\n                // get Normlizer class\n                Class<?> normalizerClass = ClassUtils.getClass(\"java.text.Normalizer\", false);\n\n                // get static method on Normalizer\n                java.lang.reflect.Method method = normalizerClass.getMethod(\"normalize\", CharSequence.class, normalizerFormClass );\n\n                // get Normalizer.NFD field\n                java.lang.reflect.Field nfd = normalizerFormClass.getField(\"NFD\");\n\n                // invoke method\n                String decomposed = (String) method.invoke( null, input, nfd.get(null) );\n                // END of 1.5 reflection\n\n                java.util.regex.Pattern accentPattern = java.util.regex.Pattern.compile(\"\\\\p{InCombiningDiacriticalMarks}+\");\n                return accentPattern.matcher(decomposed).replaceAll(\"\");\n            } catch(ClassNotFoundException cnfe) {\n                throw new RuntimeException(\"ClassNotFoundException occurred during 1.6 backcompat code\", cnfe);\n            } catch(NoSuchMethodException nsme) {\n                throw new RuntimeException(\"NoSuchMethodException occurred during 1.6 backcompat code\", nsme);\n            } catch(NoSuchFieldException nsfe) {\n                throw new RuntimeException(\"NoSuchFieldException occurred during 1.6 backcompat code\", nsfe);\n            } catch(IllegalAccessException iae) {\n                throw new RuntimeException(\"IllegalAccessException occurred during 1.6 backcompat code\", iae);\n            } catch(IllegalArgumentException iae) {\n                throw new RuntimeException(\"IllegalArgumentException occurred during 1.6 backcompat code\", iae);\n            } catch(java.lang.reflect.InvocationTargetException ite) {\n                throw new RuntimeException(\"InvocationTargetException occurred during 1.6 backcompat code\", ite);\n            } catch(SecurityException se) {\n                throw new RuntimeException(\"SecurityException occurred during 1.6 backcompat code\", se);\n            }\n        } else {\n            throw new UnsupportedOperationException(\"The stripAccents(String) method is not supported until Java 1.6\");\n        }\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.stripAccents(String input)\nSIGNATURE: public static String stripAccents(String input)",
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.stripAccents(String input)\nSIGNATURE: public static String stripAccents(String input)\nSTRUCTURE (lossy):\nif(input == null)\nreturn null;\nif(SystemUtils.isJavaVersionAtLeast(1.6f))\nCALL SystemUtils.isJavaVersionAtLeast(1.6f)\nClass<?> normalizerFormClass = ClassUtils.getClass(\"java.text.Normalizer$Form\", false);\nCALL ClassUtils.getClass(\"java.text.Normalizer$Form\", false)\nClass<?> normalizerClass = ClassUtils.getClass(\"java.text.Normalizer\", false);\nCALL ClassUtils.getClass(\"java.text.Normalizer\", false)\njava.lang.reflect.Method method = normalizerClass.getMethod(\"normalize\", CharSequence.class, normalizerFormClass );\nCALL normalizerClass.getMethod(\"normalize\", CharSequence.class, normalizerFormClass )\njava.lang.reflect.Field nfd = normalizerFormClass.getField(\"NFD\");\nCALL normalizerFormClass.getField(\"NFD\")\nString decomposed = (String) method.invoke( null, input, nfd.get(null) );\nCALL method.invoke( null, input, nfd.get(null) )\nCALL nfd.get(null)\njava.util.regex.Pattern accentPattern = java.util.regex.Pattern.compile(\"\\\\p{InCombiningDiacriticalMarks}+\");\nCALL java.util.regex.Pattern.compile(\"\\\\p{InCombiningDiacriticalMarks}+\")\nreturn accentPattern.matcher(decomposed).replaceAll(\"\");\nCALL accentPattern.matcher(decomposed).replaceAll(\"\")\nCALL accentPattern.matcher(decomposed)\ncatch(ClassNotFoundException cnfe)\nthrow new RuntimeException(\"ClassNotFoundException occurred during 1.6 backcompat code\", cnfe);\ncatch(NoSuchMethodException nsme)\nthrow new RuntimeException(\"NoSuchMethodException occurred during 1.6 backcompat code\", nsme);\ncatch(NoSuchFieldException nsfe)\nthrow new RuntimeException(\"NoSuchFieldException occurred during 1.6 backcompat code\", nsfe);\ncatch(IllegalAccessException iae)\nthrow new RuntimeException(\"IllegalAccessException occurred during 1.6 backcompat code\", iae);\ncatch(IllegalArgumentException iae)\nthrow new RuntimeException(\"IllegalArgumentException occurred during 1.6 backcompat code\", iae);\ncatch(java.lang.reflect.InvocationTargetException ite)\nthrow new RuntimeException(\"InvocationTargetException occurred during 1.6 backcompat code\", ite);\ncatch(SecurityException se)\n\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public static String stripAccents(String input) {\n        if(input == null) {\n            return null;\n        }\n        if(SystemUtils.isJavaVersionAtLeast(1.6f)) {\n\n            // String decomposed = Normalizer.normalize(input, Normalizer.Form.NFD);\n\n            // START of 1.5 reflection - in 1.6 use the line commented out above\n            try {\n                // get java.text.Normalizer.Form class\n                Class<?> normalizerFormClass = ClassUtils.getClass(\"java.text.Normalizer$Form\", false);\n\n                // get Normlizer class\n                Class<?> normalizerClass = ClassUtils.getClass(\"java.text.Normalizer\", false);\n\n                // get static method on Normalizer\n                java.lang.reflect.Method method = normalizerClass.getMethod(\"normalize\", CharSequence.class, normalizerFormClass );\n\n                // get Normalizer.NFD field\n                java.lang.reflect.Field nfd = normalizerFormClass.getField(\"NFD\");\n\n                // invoke method\n                String decomposed = (String) method.invoke( null, input, nfd.get(null) );\n                // END of 1.5 reflection\n\n                java.util.regex.Pattern accentPattern = java.util.regex.Pattern.compile(\"\\\\p{InCombiningDiacriticalMarks}+\");\n                return accentPattern.matcher(decomposed).replaceAll(\"\");\n            } catch(ClassNotFoundException cnfe) {\n                throw new RuntimeException(\"ClassNotFoundException occurred during 1.6 backcompat code\", cnfe);\n            } catch(NoSuchMethodException nsme) {\n                throw new RuntimeException(\"NoSuchMethodException occurred during 1.6 backcompat code\", nsme);\n            } catch(NoSuchFieldException nsfe) {\n                throw new RuntimeException(\"NoSuchFieldException occurred during 1.6 backcompat code\", nsfe);\n            } catch(IllegalAccessException iae) {\n                throw new RuntimeException(\"IllegalAccessException occurred during 1.6 backcompat code\", iae);\n            } catch(IllegalArgumentException iae) {\n                throw new RuntimeException(\"IllegalArgumentException occurred during 1.6 backcompat code\", iae);\n            } catch(java.lang.reflect.InvocationTargetException ite) {\n                throw new RuntimeException(\"InvocationTargetException occurred during 1.6 backcompat code\", ite);\n            } catch(SecurityException se) {\n                throw new RuntimeException(\"SecurityException occurred during 1.6 backcompat code\", se);\n            }\n        } else {\n            throw new UnsupportedOperationException(\"The stripAccents(String) method is not supported until Java 1.6\");\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2235294117647059,
+        "trace_match": 0.0,
+        "complexity": 10.0,
+        "call_count": 10.0,
+        "literal_count": 20.0,
+        "source_tokens": 658.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.8647416413373861,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 10,
+        "call_count": 10,
+        "literal_count": 20
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.splitWorker(String str, String separatorChars, int max, boolean preserveAllTokens)",
+      "source": "private static String[] splitWorker(String str, String separatorChars, int max, boolean preserveAllTokens) {\n        // Performance tuned for 2.0 (JDK1.4)\n        // Direct code is quicker than StringTokenizer.\n        // Also, StringTokenizer uses isSpace() not isWhitespace()\n\n        if (str == null) {\n            return null;\n        }\n        int len = str.length();\n        if (len == 0) {\n            return ArrayUtils.EMPTY_STRING_ARRAY;\n        }\n        List<String> list = new ArrayList<String>();\n        int sizePlus1 = 1;\n        int i = 0, start = 0;\n        boolean match = false;\n        boolean lastMatch = false;\n        if (separatorChars == null) {\n            // Null separator means use whitespace\n            while (i < len) {\n                if (Character.isWhitespace(str.charAt(i))) {\n                    if (match || preserveAllTokens) {\n                        lastMatch = true;\n                        if (sizePlus1++ == max) {\n                            i = len;\n                            lastMatch = false;\n                        }\n                        list.add(str.substring(start, i));\n                        match = false;\n                    }\n                    start = ++i;\n                    continue;\n                }\n                lastMatch = false;\n                match = true;\n                i++;\n            }\n        } else if (separatorChars.length() == 1) {\n            // Optimise 1 character case\n            char sep = separatorChars.charAt(0);\n            while (i < len) {\n                if (str.charAt(i) == sep) {\n                    if (match || preserveAllTokens) {\n                        lastMatch = true;\n                        if (sizePlus1++ == max) {\n                            i = len;\n                            lastMatch = false;\n                        }\n                        list.add(str.substring(start, i));\n                        match = false;\n                    }\n                    start = ++i;\n                    continue;\n                }\n                lastMatch = false;\n                match = true;\n                i++;\n            }\n        } else {\n            // standard case\n            while (i < len) {\n                if (separatorChars.indexOf(str.charAt(i)) >= 0) {\n                    if (match || preserveAllTokens) {\n                        lastMatch = true;\n                        if (sizePlus1++ == max) {\n                            i = len;\n                            lastMatch = false;\n                        }\n                        list.add(str.substring(start, i));\n                        match = false;\n                    }\n                    start = ++i;\n                    continue;\n                }\n                lastMatch = false;\n                match = true;\n                i++;\n            }\n        }\n        if (match || (preserveAllTokens && lastMatch)) {\n            list.add(str.substring(start, i));\n        }\n        return list.toArray(new String[list.size()]);\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.splitWorker(String str, String separatorChars, int max, boolean preserveAllTokens)\nSIGNATURE: private static String[] splitWorker(String str, String separatorChars, int max, boolean preserveAllTokens)",
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.splitWorker(String str, String separatorChars, int max, boolean preserveAllTokens)\nSIGNATURE: private static String[] splitWorker(String str, String separatorChars, int max, boolean preserveAllTokens)\nSTRUCTURE (lossy):\nif (str == null)\nreturn null;\nint len = str.length();\nCALL str.length()\nif (len == 0)\nreturn ArrayUtils.EMPTY_STRING_ARRAY;\nList<String> list = new ArrayList<String>();\nint sizePlus1 = 1;\nint i = 0, start = 0;\nboolean match = false;\nboolean lastMatch = false;\nif (separatorChars == null)\nwhile (i < len)\nif (Character.isWhitespace(str.charAt(i)))\nCALL Character.isWhitespace(str.charAt(i))\nCALL str.charAt(i)\nif (match || preserveAllTokens)\nlastMatch = true\nif (sizePlus1++ == max)\nsizePlus1++\ni = len\nlastMatch = false\nCALL list.add(str.substring(start, i))\nCALL str.substring(start, i)\nmatch = false\nstart = ++i\n++i\nmatch = true\ni++\nif (separatorChars.length() == 1)\nCALL separatorChars.length()\nchar sep = separatorChars.charAt(0);\nCALL separatorChars.charAt(0)\nif (str.charAt(i) == sep)\nif (separatorChars.indexOf(str.charAt(i)) >= 0)\nCALL separatorChars.indexOf(str.charAt(i))\nif (match || (preserveAllTokens && lastMatch))\nreturn list.toArray(new String[list.size()]);\nCALL list.toArray(new String[list.size()])\nCALL list.size()",
+        "private static String[] splitWorker(String str, String separatorChars, int max, boolean preserveAllTokens) {\n        // Performance tuned for 2.0 (JDK1.4)\n        // Direct code is quicker than StringTokenizer.\n        // Also, StringTokenizer uses isSpace() not isWhitespace()\n\n        if (str == null) {\n            return null;\n        }\n        int len = str.length();\n        if (len == 0) {\n            return ArrayUtils.EMPTY_STRING_ARRAY;\n        }\n        List<String> list = new ArrayList<String>();\n        int sizePlus1 = 1;\n        int i = 0, start = 0;\n        boolean match = false;\n        boolean lastMatch = false;\n        if (separatorChars == null) {\n            // Null separator means use whitespace\n            while (i < len) {\n                if (Character.isWhitespace(str.charAt(i))) {\n                    if (match || preserveAllTokens) {\n                        lastMatch = true;\n                        if (sizePlus1++ == max) {\n                            i = len;\n                            lastMatch = false;\n                        }\n                        list.add(str.substring(start, i));\n                        match = false;\n                    }\n                    start = ++i;\n                    continue;\n                }\n                lastMatch = false;\n                match = true;\n                i++;\n            }\n        } else if (separatorChars.length() == 1) {\n            // Optimise 1 character case\n            char sep = separatorChars.charAt(0);\n            while (i < len) {\n                if (str.charAt(i) == sep) {\n                    if (match || preserveAllTokens) {\n                        lastMatch = true;\n                        if (sizePlus1++ == max) {\n                            i = len;\n                            lastMatch = false;\n                        }\n                        list.add(str.substring(start, i));\n                        match = false;\n                    }\n                    start = ++i;\n                    continue;\n                }\n                lastMatch = false;\n                match = true;\n                i++;\n            }\n        } else {\n            // standard case\n            while (i < len) {\n                if (separatorChars.indexOf(str.charAt(i)) >= 0) {\n                    if (match || preserveAllTokens) {\n                        lastMatch = true;\n                        if (sizePlus1++ == max) {\n                            i = len;\n                            lastMatch = false;\n                        }\n                        list.add(str.substring(start, i));\n                        match = false;\n                    }\n                    start = ++i;\n                    continue;\n                }\n                lastMatch = false;\n                match = true;\n                i++;\n            }\n        }\n        if (match || (preserveAllTokens && lastMatch)) {\n            list.add(str.substring(start, i));\n        }\n        return list.toArray(new String[list.size()]);\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.27692307692307694,
+        "trace_match": 0.0,
+        "complexity": 18.0,
+        "call_count": 18.0,
+        "literal_count": 10.0,
+        "source_tokens": 756.0,
+        "l0_tokens": 70.0,
+        "l1_tokens": 333.0,
+        "compression_ratio": 0.44047619047619047,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 18,
+        "call_count": 18,
+        "literal_count": 10
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.startTimer()",
+      "source": "protected ScheduledFuture<?> startTimer() {\n        return getExecutorService().scheduleAtFixedRate(new Runnable() {\n            public void run() {\n                endOfPeriod();\n            }\n        }, getPeriod(), getPeriod(), getUnit());\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.startTimer()\nSIGNATURE: protected ScheduledFuture<?> startTimer()",
+        "METHOD: src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.startTimer()\nSIGNATURE: protected ScheduledFuture<?> startTimer()\nSTRUCTURE (lossy):\nreturn getExecutorService().scheduleAtFixedRate(new Runnable() { public void run() { endOfPeriod(); } }, getPeriod(), getPeriod(), getUnit());\nCALL getExecutorService().scheduleAtFixedRate(new Runnable() { public void run() { endOfPeriod(); } }, getPeriod(), getPeriod(), getUnit())\nCALL getExecutorService()\nCALL endOfPeriod()\nCALL getPeriod()\nCALL getUnit()",
+        "protected ScheduledFuture<?> startTimer() {\n        return getExecutorService().scheduleAtFixedRate(new Runnable() {\n            public void run() {\n                endOfPeriod();\n            }\n        }, getPeriod(), getPeriod(), getUnit());\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.43333333333333335,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 6.0,
+        "literal_count": 0.0,
+        "source_tokens": 62.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 135.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 6,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.indexOfAnyBut(String str, String searchChars)",
+      "source": "public static int indexOfAnyBut(String str, String searchChars) {\n        if (isEmpty(str) || isEmpty(searchChars)) {\n            return INDEX_NOT_FOUND;\n        }\n        int strLen = str.length();\n        for (int i = 0; i < strLen; i++) {\n            char ch = str.charAt(i);\n            if (searchChars.indexOf(ch) < 0) {\n                    return i;\n            }\n        }\n        return INDEX_NOT_FOUND;\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.indexOfAnyBut(String str, String searchChars)\nSIGNATURE: public static int indexOfAnyBut(String str, String searchChars)",
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.indexOfAnyBut(String str, String searchChars)\nSIGNATURE: public static int indexOfAnyBut(String str, String searchChars)\nSTRUCTURE (lossy):\nif (isEmpty(str) || isEmpty(searchChars))\nCALL isEmpty(str)\nCALL isEmpty(searchChars)\nreturn INDEX_NOT_FOUND;\nint strLen = str.length();\nCALL str.length()\nfor (int i = 0; i < strLen; i++)\nint i = 0;\ni++\nchar ch = str.charAt(i);\nCALL str.charAt(i)\nif (searchChars.indexOf(ch) < 0)\nCALL searchChars.indexOf(ch)\nreturn i;",
+        "public static int indexOfAnyBut(String str, String searchChars) {\n        if (isEmpty(str) || isEmpty(searchChars)) {\n            return INDEX_NOT_FOUND;\n        }\n        int strLen = str.length();\n        for (int i = 0; i < strLen; i++) {\n            char ch = str.charAt(i);\n            if (searchChars.indexOf(ch) < 0) {\n                    return i;\n            }\n        }\n        return INDEX_NOT_FOUND;\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5769230769230769,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 5.0,
+        "literal_count": 2.0,
+        "source_tokens": 105.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 134.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 5,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/ObjectUtils.java::ObjectUtils.clone(final T o)",
+      "source": "public static <T> T clone(final T o) {\n        if (o instanceof Cloneable) {\n            try {\n                final Method clone = o.getClass().getMethod(\"clone\", (Class[])null);\n                @SuppressWarnings(\"unchecked\")\n                final T result = (T)clone.invoke(o, (Object[])null);\n                return result;\n            } catch (final NoSuchMethodException e) {\n                throw new CloneFailedException(\"Cloneable type has no clone method\", e);\n            } catch (final IllegalAccessException e) {\n                throw new CloneFailedException(\"Cannot clone Cloneable type\", e);\n            } catch (final InvocationTargetException e) {\n                throw new CloneFailedException(\"Exception cloning Cloneable type\", e.getCause());\n            }\n        }\n\n        return null;\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/ObjectUtils.java::ObjectUtils.clone(final T o)\nSIGNATURE: public static <T> T clone(final T o)",
+        "METHOD: src/main/java/org/apache/commons/lang3/ObjectUtils.java::ObjectUtils.clone(final T o)\nSIGNATURE: public static <T> T clone(final T o)\nSTRUCTURE (lossy):\nif (o instanceof Cloneable)\nfinal Method clone = o.getClass().getMethod(\"clone\", (Class[])null);\nCALL o.getClass().getMethod(\"clone\", (Class[])null)\nCALL o.getClass()\n@SuppressWarnings(\"unchecked\") final T result = (T)clone.invoke(o, (Object[])null);\nCALL clone.invoke(o, (Object[])null)\nreturn result;\ncatch (final NoSuchMethodException e)\nthrow new CloneFailedException(\"Cloneable type has no clone method\", e);\ncatch (final IllegalAccessException e)\nthrow new CloneFailedException(\"Cannot clone Cloneable type\", e);\ncatch (final InvocationTargetException e)\nthrow new CloneFailedException(\"Exception cloning Cloneable type\", e.getCause());\nCALL e.getCause()\nreturn null;",
+        "public static <T> T clone(final T o) {\n        if (o instanceof Cloneable) {\n            try {\n                final Method clone = o.getClass().getMethod(\"clone\", (Class[])null);\n                @SuppressWarnings(\"unchecked\")\n                final T result = (T)clone.invoke(o, (Object[])null);\n                return result;\n            } catch (final NoSuchMethodException e) {\n                throw new CloneFailedException(\"Cloneable type has no clone method\", e);\n            } catch (final IllegalAccessException e) {\n                throw new CloneFailedException(\"Cannot clone Cloneable type\", e);\n            } catch (final InvocationTargetException e) {\n                throw new CloneFailedException(\"Exception cloning Cloneable type\", e.getCause());\n            }\n        }\n\n        return null;\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.34146341463414637,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 4.0,
+        "literal_count": 8.0,
+        "source_tokens": 204.0,
+        "l0_tokens": 36.0,
+        "l1_tokens": 209.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 4,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.indexOfAnyBut(CharSequence cs, char[] searchChars)",
+      "source": "public static int indexOfAnyBut(CharSequence cs, char[] searchChars) {\n        if (isEmpty(cs) || ArrayUtils.isEmpty(searchChars)) {\n            return INDEX_NOT_FOUND;\n        }\n        int csLen = cs.length();\n        int searchLen = searchChars.length;\n        outer:\n        for (int i = 0; i < csLen; i++) {\n            char ch = cs.charAt(i);\n            for (int j = 0; j < searchLen; j++) {\n                if (searchChars[j] == ch) {\n                        continue outer;\n                }\n            }\n            return i;\n        }\n        return INDEX_NOT_FOUND;\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.indexOfAnyBut(CharSequence cs, char[] searchChars)\nSIGNATURE: public static int indexOfAnyBut(CharSequence cs, char[] searchChars)",
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.indexOfAnyBut(CharSequence cs, char[] searchChars)\nSIGNATURE: public static int indexOfAnyBut(CharSequence cs, char[] searchChars)\nSTRUCTURE (lossy):\nif (isEmpty(cs) || ArrayUtils.isEmpty(searchChars))\nCALL isEmpty(cs)\nCALL ArrayUtils.isEmpty(searchChars)\nreturn INDEX_NOT_FOUND;\nint csLen = cs.length();\nCALL cs.length()\nint searchLen = searchChars.length;\nfor (int i = 0; i < csLen; i++)\nint i = 0;\ni++\nchar ch = cs.charAt(i);\nCALL cs.charAt(i)\nfor (int j = 0; j < searchLen; j++)\nint j = 0;\nj++\nif (searchChars[j] == ch)\nreturn i;",
+        "public static int indexOfAnyBut(CharSequence cs, char[] searchChars) {\n        if (isEmpty(cs) || ArrayUtils.isEmpty(searchChars)) {\n            return INDEX_NOT_FOUND;\n        }\n        int csLen = cs.length();\n        int searchLen = searchChars.length;\n        outer:\n        for (int i = 0; i < csLen; i++) {\n            char ch = cs.charAt(i);\n            for (int j = 0; j < searchLen; j++) {\n                if (searchChars[j] == ch) {\n                        continue outer;\n                }\n            }\n            return i;\n        }\n        return INDEX_NOT_FOUND;\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5517241379310345,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 4.0,
+        "literal_count": 2.0,
+        "source_tokens": 146.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 153.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 4,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)",
+      "source": "public TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit) {\n        if (timePeriod <= 0) {\n            throw new IllegalArgumentException(\"Time period must be greater 0!\");\n        }\n\n        period = timePeriod;\n        unit = timeUnit;\n\n        if (service != null) {\n            executorService = service;\n            ownExecutor = false;\n        } else {\n            ScheduledThreadPoolExecutor s = new ScheduledThreadPoolExecutor(\n                    THREAD_POOL_SIZE);\n            s.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);\n            s.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);\n            executorService = s;\n            ownExecutor = true;\n        }\n\n        setLimit(limit);\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)\nSIGNATURE: public TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)",
+        "METHOD: src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)\nSIGNATURE: public TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)\nSTRUCTURE (lossy):\nif (timePeriod <= 0)\nthrow new IllegalArgumentException(\"Time period must be greater 0!\");\nperiod = timePeriod\nunit = timeUnit\nif (service != null)\nexecutorService = service\nownExecutor = false\nScheduledThreadPoolExecutor s = new ScheduledThreadPoolExecutor( THREAD_POOL_SIZE);\nCALL s.setContinueExistingPeriodicTasksAfterShutdownPolicy(false)\nCALL s.setExecuteExistingDelayedTasksAfterShutdownPolicy(false)\nexecutorService = s\nownExecutor = true\nCALL setLimit(limit)",
+        "public TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit) {\n        if (timePeriod <= 0) {\n            throw new IllegalArgumentException(\"Time period must be greater 0!\");\n        }\n\n        period = timePeriod;\n        unit = timeUnit;\n\n        if (service != null) {\n            executorService = service;\n            ownExecutor = false;\n        } else {\n            ScheduledThreadPoolExecutor s = new ScheduledThreadPoolExecutor(\n                    THREAD_POOL_SIZE);\n            s.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);\n            s.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);\n            executorService = s;\n            ownExecutor = true;\n        }\n\n        setLimit(limit);\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.28888888888888886,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 3.0,
+        "literal_count": 3.0,
+        "source_tokens": 196.0,
+        "l0_tokens": 82.0,
+        "l1_tokens": 204.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 3,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.indexOfAny(CharSequence cs, char[] searchChars)",
+      "source": "public static int indexOfAny(CharSequence cs, char[] searchChars) {\n        if (isEmpty(cs) || ArrayUtils.isEmpty(searchChars)) {\n            return INDEX_NOT_FOUND;\n        }\n        int csLen = cs.length();\n        int searchLen = searchChars.length;\n        for (int i = 0; i < csLen; i++) {\n            char ch = cs.charAt(i);\n            for (int j = 0; j < searchLen; j++) {\n                if (searchChars[j] == ch) {\n                        // ch is a supplementary character\n                        return i;\n                }\n            }\n        }\n        return INDEX_NOT_FOUND;\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.indexOfAny(CharSequence cs, char[] searchChars)\nSIGNATURE: public static int indexOfAny(CharSequence cs, char[] searchChars)",
+        "METHOD: src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.indexOfAny(CharSequence cs, char[] searchChars)\nSIGNATURE: public static int indexOfAny(CharSequence cs, char[] searchChars)\nSTRUCTURE (lossy):\nif (isEmpty(cs) || ArrayUtils.isEmpty(searchChars))\nCALL isEmpty(cs)\nCALL ArrayUtils.isEmpty(searchChars)\nreturn INDEX_NOT_FOUND;\nint csLen = cs.length();\nCALL cs.length()\nint searchLen = searchChars.length;\nfor (int i = 0; i < csLen; i++)\nint i = 0;\ni++\nchar ch = cs.charAt(i);\nCALL cs.charAt(i)\nfor (int j = 0; j < searchLen; j++)\nint j = 0;\nj++\nif (searchChars[j] == ch)\nreturn i;",
+        "public static int indexOfAny(CharSequence cs, char[] searchChars) {\n        if (isEmpty(cs) || ArrayUtils.isEmpty(searchChars)) {\n            return INDEX_NOT_FOUND;\n        }\n        int csLen = cs.length();\n        int searchLen = searchChars.length;\n        for (int i = 0; i < csLen; i++) {\n            char ch = cs.charAt(i);\n            for (int j = 0; j < searchLen; j++) {\n                if (searchChars[j] == ch) {\n                        // ch is a supplementary character\n                        return i;\n                }\n            }\n        }\n        return INDEX_NOT_FOUND;\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5714285714285714,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 4.0,
+        "literal_count": 2.0,
+        "source_tokens": 150.0,
+        "l0_tokens": 51.0,
+        "l1_tokens": 151.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 4,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object arg)",
+      "source": "public static Object invokeMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeMethod(object, methodName, new Object[] { arg });\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException\nSTRUCTURE (lossy):\nreturn invokeMethod(object, methodName, new Object[] { arg });\nCALL invokeMethod(object, methodName, new Object[] { arg })",
+        "public static Object invokeMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeMethod(object, methodName, new Object[] { arg });\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5384615384615384,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 66.0,
+        "l0_tokens": 88.0,
+        "l1_tokens": 123.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/time/FastDateFormat.java::FastDateFormat.parseToken(String pattern, int[] indexRef)",
+      "source": "protected String parseToken(String pattern, int[] indexRef) {\n        StringBuilder buf = new StringBuilder();\n\n        int i = indexRef[0];\n        int length = pattern.length();\n\n        char c = pattern.charAt(i);\n        if (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z') {\n            // Scan a run of the same character, which indicates a time\n            // pattern.\n            buf.append(c);\n\n            while (i + 1 < length) {\n                char peek = pattern.charAt(i + 1);\n                if (peek == c) {\n                    buf.append(c);\n                    i++;\n                } else {\n                    break;\n                }\n            }\n        } else {\n            // This will identify token as text.\n            buf.append('\\'');\n\n            boolean inLiteral = false;\n\n            for (; i < length; i++) {\n                c = pattern.charAt(i);\n\n                if (c == '\\'') {\n                    if (i + 1 < length && pattern.charAt(i + 1) == '\\'') {\n                        // '' is treated as escaped '\n                        i++;\n                        buf.append(c);\n                    } else {\n                        inLiteral = !inLiteral;\n                    }\n                } else if (!inLiteral &&\n                         (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z')) {\n                    i--;\n                    break;\n                } else {\n                    buf.append(c);\n                }\n            }\n        }\n\n        indexRef[0] = i;\n        return buf.toString();\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/time/FastDateFormat.java::FastDateFormat.parseToken(String pattern, int[] indexRef)\nSIGNATURE: protected String parseToken(String pattern, int[] indexRef)",
+        "METHOD: src/main/java/org/apache/commons/lang3/time/FastDateFormat.java::FastDateFormat.parseToken(String pattern, int[] indexRef)\nSIGNATURE: protected String parseToken(String pattern, int[] indexRef)\nSTRUCTURE (lossy):\nStringBuilder buf = new StringBuilder();\nint i = indexRef[0];\nint length = pattern.length();\nCALL pattern.length()\nchar c = pattern.charAt(i);\nCALL pattern.charAt(i)\nif (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z')\nCALL buf.append(c)\nwhile (i + 1 < length)\nchar peek = pattern.charAt(i + 1);\nCALL pattern.charAt(i + 1)\nif (peek == c)\ni++\nCALL buf.append('\\'')\nboolean inLiteral = false;\nfor (; i < length; i++)\nc = pattern.charAt(i)\nif (c == '\\'')\nif (i + 1 < length && pattern.charAt(i + 1) == '\\'')\ninLiteral = !inLiteral\nif (!inLiteral && (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z'))\ni--\nindexRef[0] = i\nreturn buf.toString();\nCALL buf.toString()",
+        "protected String parseToken(String pattern, int[] indexRef) {\n        StringBuilder buf = new StringBuilder();\n\n        int i = indexRef[0];\n        int length = pattern.length();\n\n        char c = pattern.charAt(i);\n        if (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z') {\n            // Scan a run of the same character, which indicates a time\n            // pattern.\n            buf.append(c);\n\n            while (i + 1 < length) {\n                char peek = pattern.charAt(i + 1);\n                if (peek == c) {\n                    buf.append(c);\n                    i++;\n                } else {\n                    break;\n                }\n            }\n        } else {\n            // This will identify token as text.\n            buf.append('\\'');\n\n            boolean inLiteral = false;\n\n            for (; i < length; i++) {\n                c = pattern.charAt(i);\n\n                if (c == '\\'') {\n                    if (i + 1 < length && pattern.charAt(i + 1) == '\\'') {\n                        // '' is treated as escaped '\n                        i++;\n                        buf.append(c);\n                    } else {\n                        inLiteral = !inLiteral;\n                    }\n                } else if (!inLiteral &&\n                         (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z')) {\n                    i--;\n                    break;\n                } else {\n                    buf.append(c);\n                }\n            }\n        }\n\n        indexRef[0] = i;\n        return buf.toString();\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2765957446808511,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 11.0,
+        "literal_count": 17.0,
+        "source_tokens": 386.0,
+        "l0_tokens": 51.0,
+        "l1_tokens": 219.0,
+        "compression_ratio": 0.5673575129533679,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 11,
+        "literal_count": 17
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/concurrent/BackgroundInitializer.java::BackgroundInitializer.start()",
+      "source": "public synchronized boolean start() {\n        // Not yet started?\n        if (!isStarted()) {\n\n            // Determine the executor to use and whether a temporary one has to\n            // be created\n            ExecutorService tempExec;\n            executor = getExternalExecutor();\n            if (executor == null) {\n                executor = tempExec = createExecutor();\n            } else {\n                tempExec = null;\n            }\n\n            future = executor.submit(createTask(tempExec));\n\n            return true;\n        }\n\n        return false;\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/concurrent/BackgroundInitializer.java::BackgroundInitializer.start()\nSIGNATURE: public synchronized boolean start()",
+        "METHOD: src/main/java/org/apache/commons/lang3/concurrent/BackgroundInitializer.java::BackgroundInitializer.start()\nSIGNATURE: public synchronized boolean start()\nSTRUCTURE (lossy):\nif (!isStarted())\nCALL isStarted()\nExecutorService tempExec;\nexecutor = getExternalExecutor()\nCALL getExternalExecutor()\nif (executor == null)\nexecutor = tempExec = createExecutor()\ntempExec = createExecutor()\nCALL createExecutor()\ntempExec = null\nfuture = executor.submit(createTask(tempExec))\nCALL executor.submit(createTask(tempExec))\nCALL createTask(tempExec)\nreturn true;\nreturn false;",
+        "public synchronized boolean start() {\n        // Not yet started?\n        if (!isStarted()) {\n\n            // Determine the executor to use and whether a temporary one has to\n            // be created\n            ExecutorService tempExec;\n            executor = getExternalExecutor();\n            if (executor == null) {\n                executor = tempExec = createExecutor();\n            } else {\n                tempExec = null;\n            }\n\n            future = executor.submit(createTask(tempExec));\n\n            return true;\n        }\n\n        return false;\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.34146341463414637,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 5.0,
+        "literal_count": 2.0,
+        "source_tokens": 143.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 143.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 5,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object arg)",
+      "source": "public static Object invokeExactMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeExactMethod(object, methodName, new Object[] { arg });\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeExactMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeExactMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException\nSTRUCTURE (lossy):\nreturn invokeExactMethod(object, methodName, new Object[] { arg });\nCALL invokeExactMethod(object, methodName, new Object[] { arg })",
+        "public static Object invokeExactMethod(Object object, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeExactMethod(object, methodName, new Object[] { arg });\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5185185185185185,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 68.0,
+        "l0_tokens": 90.0,
+        "l1_tokens": 128.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object arg)",
+      "source": "public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeStaticMethod(cls, methodName, new Object[] { arg });\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException",
+        "METHOD: src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object arg)\nSIGNATURE: public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException\nSTRUCTURE (lossy):\nreturn invokeStaticMethod(cls, methodName, new Object[] { arg });\nCALL invokeStaticMethod(cls, methodName, new Object[] { arg })",
+        "public static Object invokeStaticMethod(Class<?> cls, String methodName,\n            Object arg) throws NoSuchMethodException, IllegalAccessException,\n            InvocationTargetException {\n        return invokeStaticMethod(cls, methodName, new Object[] { arg });\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 68.0,
+        "l0_tokens": 90.0,
+        "l1_tokens": 127.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/time/DurationFormatUtils.java::DurationFormatUtils.formatPeriod(long startMillis, long endMillis, String format, boolean padWithZeros, \n            TimeZone timezone)",
+      "source": "public static String formatPeriod(long startMillis, long endMillis, String format, boolean padWithZeros, \n            TimeZone timezone) {\n\n        // Used to optimise for differences under 28 days and \n        // called formatDuration(millis, format); however this did not work \n        // over leap years. \n        // TODO: Compare performance to see if anything was lost by \n        // losing this optimisation. \n        \n        Token[] tokens = lexx(format);\n\n        // timezones get funky around 0, so normalizing everything to GMT \n        // stops the hours being off\n        Calendar start = Calendar.getInstance(timezone);\n        start.setTime(new Date(startMillis));\n        Calendar end = Calendar.getInstance(timezone);\n        end.setTime(new Date(endMillis));\n\n        // initial estimates\n        int milliseconds = end.get(Calendar.MILLISECOND) - start.get(Calendar.MILLISECOND);\n        int seconds = end.get(Calendar.SECOND) - start.get(Calendar.SECOND);\n        int minutes = end.get(Calendar.MINUTE) - start.get(Calendar.MINUTE);\n        int hours = end.get(Calendar.HOUR_OF_DAY) - start.get(Calendar.HOUR_OF_DAY);\n        int days = end.get(Calendar.DAY_OF_MONTH) - start.get(Calendar.DAY_OF_MONTH);\n        int months = end.get(Calendar.MONTH) - start.get(Calendar.MONTH);\n        int years = end.get(Calendar.YEAR) - start.get(Calendar.YEAR);\n\n        // each initial estimate is adjusted in case it is under 0\n        while (milliseconds < 0) {\n            milliseconds += 1000;\n            seconds -= 1;\n        }\n        while (seconds < 0) {\n            seconds += 60;\n            minutes -= 1;\n        }\n        while (minutes < 0) {\n            minutes += 60;\n            hours -= 1;\n        }\n        while (hours < 0) {\n            hours += 24;\n            days -= 1;\n        }\n       \n        if (Token.containsTokenWithValue(tokens, M)) {\n            while (days < 0) {\n                days += start.getActualMaximum(Calendar.DAY_OF_MONTH);\n                months -= 1;\n                start.add(Calendar.MONTH, 1);\n            }\n\n            while (months < 0) {\n                months += 12;\n                years -= 1;\n            }\n\n            if (!Token.containsTokenWithValue(tokens, y) && years != 0) {\n                while (years != 0) {\n                    months += 12 * years;\n                    years = 0;\n                }\n            }\n        } else {\n            // there are no M's in the format string\n\n            if( !Token.containsTokenWithValue(tokens, y) ) {\n                int target = end.get(Calendar.YEAR);\n                if (months < 0) {\n                    // target is end-year -1\n                    target -= 1;\n                }\n                \n                while ( (start.get(Calendar.YEAR) != target)) {\n                    days += start.getActualMaximum(Calendar.DAY_OF_YEAR) - start.get(Calendar.DAY_OF_YEAR);\n                    \n                    // Not sure I grok why this is needed, but the brutal tests show it is\n                    if(start instanceof GregorianCalendar) {\n                        if( (start.get(Calendar.MONTH) == Calendar.FEBRUARY) &&\n                            (start.get(Calendar.DAY_OF_MONTH) == 29 ) )\n                        {\n                            days += 1;\n                        }\n                    }\n                    \n                    start.add(Calendar.YEAR, 1);\n                    \n                    days += start.get(Calendar.DAY_OF_YEAR);\n                }\n                \n                years = 0;\n            }\n            \n            while( start.get(Calendar.MONTH) != end.get(Calendar.MONTH) ) {\n                days += start.getActualMaximum(Calendar.DAY_OF_MONTH);\n                start.add(Calendar.MONTH, 1);\n            }\n            \n            months = 0;            \n\n            while (days < 0) {\n                days += start.getActualMaximum(Calendar.DAY_OF_MONTH);\n                months -= 1;\n                start.add(Calendar.MONTH, 1);\n            }\n            \n        }\n\n        // The rest of this code adds in values that \n        // aren't requested. This allows the user to ask for the \n        // number of months and get the real count and not just 0->11.\n\n        if (!Token.containsTokenWithValue(tokens, d)) {\n            hours += 24 * days;\n            days = 0;\n        }\n        if (!Token.containsTokenWithValue(tokens, H)) {\n            minutes += 60 * hours;\n            hours = 0;\n        }\n        if (!Token.containsTokenWithValue(tokens, m)) {\n            seconds += 60 * minutes;\n            minutes = 0;\n        }\n        if (!Token.containsTokenWithValue(tokens, s)) {\n            milliseconds += 1000 * seconds;\n            seconds = 0;\n        }\n\n        return format(tokens, years, months, days, hours, minutes, seconds, milliseconds, padWithZeros);\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/time/DurationFormatUtils.java::DurationFormatUtils.formatPeriod(long startMillis, long endMillis, String format, boolean padWithZeros, \n            TimeZone timezone)\nSIGNATURE: public static String formatPeriod(long startMillis, long endMillis, String format, boolean padWithZeros, \n            TimeZone timezone)",
+        "METHOD: src/main/java/org/apache/commons/lang3/time/DurationFormatUtils.java::DurationFormatUtils.formatPeriod(long startMillis, long endMillis, String format, boolean padWithZeros, \n            TimeZone timezone)\nSIGNATURE: public static String formatPeriod(long startMillis, long endMillis, String format, boolean padWithZeros, \n            TimeZone timezone)\nSTRUCTURE (lossy):\nToken[] tokens = lexx(format);\nCALL lexx(format)\nCalendar start = Calendar.getInstance(timezone);\nCALL Calendar.getInstance(timezone)\nCALL start.setTime(new Date(startMillis))\nCalendar end = Calendar.getInstance(timezone);\nCALL end.setTime(new Date(endMillis))\nint milliseconds = end.get(Calendar.MILLISECOND) - start.get(Calendar.MILLISECOND);\nCALL end.get(Calendar.MILLISECOND)\nCALL start.get(Calendar.MILLISECOND)\nint seconds = end.get(Calendar.SECOND) - start.get(Calendar.SECOND);\nCALL end.get(Calendar.SECOND)\nCALL start.get(Calendar.SECOND)\nint minutes = end.get(Calendar.MINUTE) - start.get(Calendar.MINUTE);\nCALL end.get(Calendar.MINUTE)\nCALL start.get(Calendar.MINUTE)\nint hours = end.get(Calendar.HOUR_OF_DAY) - start.get(Calendar.HOUR_OF_DAY);\nCALL end.get(Calendar.HOUR_OF_DAY)\nCALL start.get(Calendar.HOUR_OF_DAY)\nint days = end.get(Calendar.DAY_OF_MONTH) - start.get(Calendar.DAY_OF_MONTH);\nCALL end.get(Calendar.DAY_OF_MONTH)\nCALL start.get(Calendar.DAY_OF_MONTH)\nint months = end.get(Calendar.MONTH) - start.get(Calendar.MONTH);\nCALL end.get(Calendar.MONTH)\nCALL start.get(Calendar.MONTH)\nint years = end.get(Calendar.YEAR) - start.get(Calendar.YEAR);\nCALL end.get(Calendar.YEAR)\nCALL start.get(Calendar.YEAR)\nwhile (milliseconds < 0)\nmilliseconds += 1000\nseconds -= 1\nwhile (seconds < 0)\nseconds += 60\nminutes -= 1\nwhile (minutes < 0)\nminutes += 60\nhours -= 1\nwhile (hours < 0)\nhours += 24\ndays -= 1\nif (Token.containsTokenWithValue(tokens, M))\nCALL Token.containsTokenWithValue(tokens, M)\nwhile (days < 0)\ndays += start.getActualMaximum(Calendar.DAY_OF_MONTH)\nCALL start.getActualMaximum(Calendar.DAY_OF_MONTH)\nmonths -= 1\nCALL start.add(Calendar.MONTH, 1)\nwhile (months < 0)\nmonths += 12\nyears -= 1\nif (!Token.containsTokenWithValue(tokens, y) && years != 0)\nCALL Token.containsTokenWithValue(tokens\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public static String formatPeriod(long startMillis, long endMillis, String format, boolean padWithZeros, \n            TimeZone timezone) {\n\n        // Used to optimise for differences under 28 days and \n        // called formatDuration(millis, format); however this did not work \n        // over leap years. \n        // TODO: Compare performance to see if anything was lost by \n        // losing this optimisation. \n        \n        Token[] tokens = lexx(format);\n\n        // timezones get funky around 0, so normalizing everything to GMT \n        // stops the hours being off\n        Calendar start = Calendar.getInstance(timezone);\n        start.setTime(new Date(startMillis));\n        Calendar end = Calendar.getInstance(timezone);\n        end.setTime(new Date(endMillis));\n\n        // initial estimates\n        int milliseconds = end.get(Calendar.MILLISECOND) - start.get(Calendar.MILLISECOND);\n        int seconds = end.get(Calendar.SECOND) - start.get(Calendar.SECOND);\n        int minutes = end.get(Calendar.MINUTE) - start.get(Calendar.MINUTE);\n        int hours = end.get(Calendar.HOUR_OF_DAY) - start.get(Calendar.HOUR_OF_DAY);\n        int days = end.get(Calendar.DAY_OF_MONTH) - start.get(Calendar.DAY_OF_MONTH);\n        int months = end.get(Calendar.MONTH) - start.get(Calendar.MONTH);\n        int years = end.get(Calendar.YEAR) - start.get(Calendar.YEAR);\n\n        // each initial estimate is adjusted in case it is under 0\n        while (milliseconds < 0) {\n            milliseconds += 1000;\n            seconds -= 1;\n        }\n        while (seconds < 0) {\n            seconds += 60;\n            minutes -= 1;\n        }\n        while (minutes < 0) {\n            minutes += 60;\n            hours -= 1;\n        }\n        while (hours < 0) {\n            hours += 24;\n            days -= 1;\n        }\n       \n        if (Token.containsTokenWithValue(tokens, M)) {\n            while (days < 0) {\n                days += start.getActualMaximum(Calendar.DAY_OF_MONTH);\n                months -= 1;\n                start.add(Calendar.MONTH, 1);\n            }\n\n            while (months < 0) {\n                months += 12;\n                years -= 1;\n            }\n\n            if (!Token.containsTokenWithValue(tokens, y) && years != 0) {\n                while (years != 0) {\n                    months += 12 * years;\n                    years = 0;\n                }\n            }\n        } else {\n            // there are no M's in the format string\n\n            if( !Token.containsTokenWithValue(tokens, y) ) {\n                int target = end.get(Calendar.YEAR);\n                if (months < 0) {\n                    // target is end-year -1\n                    target -= 1;\n                }\n                \n                while ( (start.get(Calendar.YEAR) != target)) {\n                    days += start.getActualMaximum(Calendar.DAY_OF_YEAR) - start.get(Calendar.DAY_OF_YEAR);\n                    \n                    // Not sure I grok why this is needed, but the brutal tests show it is\n                    if(start instanceof GregorianCalendar) {\n                        if( (start.get(Calendar.MONTH) == Calendar.FEBRUARY) &&\n                            (start.get(Calendar.DAY_OF_MONTH) == 29 ) )\n                        {\n                            days += 1;\n                        }\n                    }\n                    \n                    start.add(Calendar.YEAR, 1);\n                    \n                    days += start.get(Calendar.DAY_OF_YEAR);\n                }\n                \n                years = 0;\n            }\n            \n            while( start.get(Calendar.MONTH) != end.get(Calendar.MONTH) ) {\n                days += start.getActualMaximum(Calendar.DAY_OF_MONTH);\n                start.add(Calendar.MONTH, 1);\n            }\n            \n            months = 0;            \n\n            while (days < 0) {\n                days += start.getActualMaximum(Calendar.DAY_OF_MONTH);\n                months -= 1;\n                start.add(Calendar.MONTH, 1);\n            }\n            \n        }\n\n        // The rest of this code adds in values that \n        // aren't requested. This allows the user to ask for the \n        // number of months and get the real count and not just 0->11.\n\n        if (!Token.containsTokenWithValue(tokens, d)) {\n            hours += 24 * days;\n            days = 0;\n        }\n        if (!Token.containsTokenWithValue(tokens, H)) {\n            minutes += 60 * hours;\n            hours = 0;\n        }\n        if (!Token.containsTokenWithValue(tokens, m)) {\n            seconds += 60 * minutes;\n            minutes = 0;\n        }\n        if (!Token.containsTokenWithValue(tokens, s)) {\n            milliseconds += 1000 * seconds;\n            seconds = 0;\n        }\n\n        return format(tokens, years, months, days, hours, minutes, seconds, milliseconds, padWithZeros);\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.1532258064516129,
+        "trace_match": 0.0,
+        "complexity": 21.0,
+        "call_count": 43.0,
+        "literal_count": 41.0,
+        "source_tokens": 1214.0,
+        "l0_tokens": 91.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.4686985172981878,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 21,
+        "call_count": 43,
+        "literal_count": 41
+      }
+    },
+    {
+      "function_id": "src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java::NumericEntityUnescaper.translate(CharSequence input, int index, Writer out)",
+      "source": "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        // TODO: Protect from ArrayIndexOutOfBounds\n        if(input.charAt(index) == '&' && input.charAt(index + 1) == '#') {\n            int start = index + 2;\n            boolean isHex = false;\n\n            char firstChar = input.charAt(start);\n            if(firstChar == 'x' || firstChar == 'X') {\n                start++;\n                isHex = true;\n            }\n\n            int end = start;\n            while(input.charAt(end) != ';') {\n                end++;\n            }\n\n            int entityValue;\n            try {\n                if(isHex) {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 16);\n                } else {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 10);\n                }\n            } catch(NumberFormatException nfe) {\n                return 0;\n            }\n\n            // TODO: if(entityValue > 0xFFFF) {\n            out.write(entityValue);\n            return 2 + (end - start) + (isHex ? 1 : 0) + 1;\n        }\n        return 0;\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java::NumericEntityUnescaper.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException",
+        "METHOD: src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java::NumericEntityUnescaper.translate(CharSequence input, int index, Writer out)\nSIGNATURE: @Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException\nSTRUCTURE (lossy):\nif(input.charAt(index) == '&' && input.charAt(index + 1) == '#')\nCALL input.charAt(index)\nCALL input.charAt(index + 1)\nint start = index + 2;\nboolean isHex = false;\nchar firstChar = input.charAt(start);\nCALL input.charAt(start)\nif(firstChar == 'x' || firstChar == 'X')\nstart++\nisHex = true\nint end = start;\nwhile(input.charAt(end) != ';')\nCALL input.charAt(end)\nend++\nint entityValue;\nif(isHex)\nentityValue = Integer.parseInt(input.subSequence(start, end).toString(), 16)\nCALL Integer.parseInt(input.subSequence(start, end).toString(), 16)\nCALL input.subSequence(start, end).toString()\nCALL input.subSequence(start, end)\nentityValue = Integer.parseInt(input.subSequence(start, end).toString(), 10)\nCALL Integer.parseInt(input.subSequence(start, end).toString(), 10)\ncatch(NumberFormatException nfe)\nreturn 0;\nCALL out.write(entityValue)\nreturn 2 + (end - start) + (isHex ? 1 : 0) + 1;",
+        "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        // TODO: Protect from ArrayIndexOutOfBounds\n        if(input.charAt(index) == '&' && input.charAt(index + 1) == '#') {\n            int start = index + 2;\n            boolean isHex = false;\n\n            char firstChar = input.charAt(start);\n            if(firstChar == 'x' || firstChar == 'X') {\n                start++;\n                isHex = true;\n            }\n\n            int end = start;\n            while(input.charAt(end) != ';') {\n                end++;\n            }\n\n            int entityValue;\n            try {\n                if(isHex) {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 16);\n                } else {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 10);\n                }\n            } catch(NumberFormatException nfe) {\n                return 0;\n            }\n\n            // TODO: if(entityValue > 0xFFFF) {\n            out.write(entityValue);\n            return 2 + (end - start) + (isHex ? 1 : 0) + 1;\n        }\n        return 0;\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3137254901960784,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 11.0,
+        "literal_count": 15.0,
+        "source_tokens": 292.0,
+        "l0_tokens": 69.0,
+        "l1_tokens": 295.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 11,
+        "literal_count": 15
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.containsNone(CharSequence cs, char[] searchChars)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java::ExtendedMessageFormat.readArgumentIndex(String pattern, ParsePosition pos)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.containsNone(CharSequence cs, String invalidChars)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/builder/EqualsBuilder.java::EqualsBuilder.reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,\n            String[] excludeFields)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/math/NumberUtils.java::NumberUtils.isNumber(String str)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.shutdown()": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/BooleanUtils.java::BooleanUtils.toBoolean(String str)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.containsAny(CharSequence cs, char[] searchChars)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.containsOnly(CharSequence cs, char[] valid)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.stripAccents(String input)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.splitWorker(String str, String separatorChars, int max, boolean preserveAllTokens)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.startTimer()": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.indexOfAnyBut(String str, String searchChars)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/ObjectUtils.java::ObjectUtils.clone(final T o)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.indexOfAnyBut(CharSequence cs, char[] searchChars)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/concurrent/TimedSemaphore.java::TimedSemaphore.TimedSemaphore(ScheduledExecutorService service, long timePeriod,\n            TimeUnit timeUnit, int limit)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/StringUtils.java::StringUtils.indexOfAny(CharSequence cs, char[] searchChars)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeMethod(Object object, String methodName,\n            Object arg)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/time/FastDateFormat.java::FastDateFormat.parseToken(String pattern, int[] indexRef)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/concurrent/BackgroundInitializer.java::BackgroundInitializer.start()": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeExactMethod(Object object, String methodName,\n            Object arg)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java::MethodUtils.invokeStaticMethod(Class<?> cls, String methodName,\n            Object arg)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/time/DurationFormatUtils.java::DurationFormatUtils.formatPeriod(long startMillis, long endMillis, String format, boolean padWithZeros, \n            TimeZone timezone)": {
+      "ranks": {}
+    },
+    "src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java::NumericEntityUnescaper.translate(CharSequence input, int index, Writer out)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 2063,
+    "retrieved_unique_entities": 24,
+    "deduplication": "highest_bm25_or_lexical_score_per_entity_id",
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "6b6c00fd41ef8194daf13bf47485890c5a728c8af5d2e43b4995abe791bddf10",
+  "evidence_sha256": "bc4c8f8235dcbb5362282c87aaf327664001444a3d0e29faba217bfc2866f185"
+}

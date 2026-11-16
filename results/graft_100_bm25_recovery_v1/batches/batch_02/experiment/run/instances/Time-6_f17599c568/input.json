@@ -1,0 +1,1320 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Time-6",
+    "repository": "Time",
+    "language": "java",
+    "revision": "d0d549ff2686e0d95fa456ca177fbc330316d740",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_02/prepared/checkouts/Time-6",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Time-6\nEXECUTED BUGGY TEST: org.joda.time.chrono.TestGJDate::test_cutoverPreZero\nTEST SOURCE: src/test/java/org/joda/time/chrono/TestGJDate.java\nTEST SOURCE SHA256: 739bb61c6ba70725c4cb0a5b18fa83536007501b53bfc5095260e3228a0f32ce\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void test_cutoverPreZero() {\n        DateTime cutover = new LocalDate(-2, 6, 30, ISOChronology.getInstanceUTC()).toDateTimeAtStartOfDay(DateTimeZone.UTC);\n        try {\n            GJChronology.getInstance(DateTimeZone.UTC, cutover);\n            fail();\n        } catch (IllegalArgumentException ex) {\n            // expected\n        }\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.joda.time.chrono.TestGJDate::test_cutoverPreZero\njunit.framework.AssertionFailedError\n\tat junit.framework.Assert.fail(Assert.java:55)\n\tat junit.framework.Assert.fail(Assert.java:64)\n\tat junit.framework.TestCase.fail(TestCase.java:235)\n\tat org.joda.time.chrono.TestGJDate.test_cutoverPreZero(TestGJDate.java:132)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_02/prepared/evidence/Time-6.txt",
+      "sha256": "0a4291d612df069c02e1a38442d8418995da2ec7d09009647f48b7f9908e2d4d"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src/main/java",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Time-6",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/main/java/org/joda/time/DateTimeUtils.java::DateTimeUtils.getDateFormatSymbols(Locale locale)",
+      "path": "src/main/java/org/joda/time/DateTimeUtils.java",
+      "start_line": 393,
+      "end_line": 400,
+      "source": "public static final DateFormatSymbols getDateFormatSymbols(Locale locale) {\n        try {\n            Method method = DateFormatSymbols.class.getMethod(\"getInstance\", new Class[] {Locale.class});\n            return (DateFormatSymbols) method.invoke(null, new Object[] {locale});\n        } catch (Exception ex) {\n            return new DateFormatSymbols(locale);\n        }\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 40.085622935857174
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/MutableDateTime.java::MutableDateTime.clone()",
+      "path": "src/main/java/org/joda/time/MutableDateTime.java",
+      "start_line": 1215,
+      "end_line": 1221,
+      "source": "public Object clone() {\n        try {\n            return super.clone();\n        } catch (CloneNotSupportedException ex) {\n            throw new InternalError(\"Clone error\");\n        }\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.6333660961292
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/MutableInterval.java::MutableInterval.clone()",
+      "path": "src/main/java/org/joda/time/MutableInterval.java",
+      "start_line": 406,
+      "end_line": 412,
+      "source": "public Object clone() {\n        try {\n            return super.clone();\n        } catch (CloneNotSupportedException ex) {\n            throw new InternalError(\"Clone error\");\n        }\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.57450144447467
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.clone()",
+      "path": "src/main/java/org/joda/time/MutablePeriod.java",
+      "start_line": 1005,
+      "end_line": 1011,
+      "source": "public Object clone() {\n        try {\n            return super.clone();\n        } catch (CloneNotSupportedException ex) {\n            throw new InternalError(\"Clone error\");\n        }\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.57450144447467
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)",
+      "path": "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java",
+      "start_line": 89,
+      "end_line": 107,
+      "source": "protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance) {\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start.size() != end.size()) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n        }\n        for (int i = 0, isize = start.size(); i < isize; i++) {\n            if (start.getFieldType(i) != end.getFieldType(i)) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n        }\n        if (DateTimeUtils.isContiguous(start) == false) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n        }\n        Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n        int[] values = chrono.get(zeroInstance, chrono.set(start, START_1972), chrono.set(end, START_1972));\n        return values[0];\n    }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.16316882809097
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/chrono/GJChronology.java::GJChronology.getInstance(\n            DateTimeZone zone,\n            ReadableInstant gregorianCutover,\n            int minDaysInFirstWeek)",
+      "path": "src/main/java/org/joda/time/chrono/GJChronology.java",
+      "start_line": 185,
+      "end_line": 230,
+      "source": "public static synchronized GJChronology getInstance(\n            DateTimeZone zone,\n            ReadableInstant gregorianCutover,\n            int minDaysInFirstWeek) {\n        \n        zone = DateTimeUtils.getZone(zone);\n        Instant cutoverInstant;\n        if (gregorianCutover == null) {\n            cutoverInstant = DEFAULT_CUTOVER;\n        } else {\n            cutoverInstant = gregorianCutover.toInstant();\n        }\n\n        GJChronology chrono;\n        synchronized (cCache) {\n            ArrayList<GJChronology> chronos = cCache.get(zone);\n            if (chronos == null) {\n                chronos = new ArrayList<GJChronology>(2);\n                cCache.put(zone, chronos);\n            } else {\n                for (int i = chronos.size(); --i >= 0;) {\n                    chrono = chronos.get(i);\n                    if (minDaysInFirstWeek == chrono.getMinimumDaysInFirstWeek() &&\n                        cutoverInstant.equals(chrono.getGregorianCutover())) {\n                        \n                        return chrono;\n                    }\n                }\n            }\n            if (zone == DateTimeZone.UTC) {\n                chrono = new GJChronology\n                    (JulianChronology.getInstance(zone, minDaysInFirstWeek),\n                     GregorianChronology.getInstance(zone, minDaysInFirstWeek),\n                     cutoverInstant);\n            } else {\n                chrono = getInstance(DateTimeZone.UTC, cutoverInstant, minDaysInFirstWeek);\n                chrono = new GJChronology\n                    (ZonedChronology.getInstance(chrono, zone),\n                     chrono.iJulianChronology,\n                     chrono.iGregorianChronology,\n                     chrono.iCutoverInstant);\n            }\n            chronos.add(chrono);\n        }\n        return chrono;\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.15906382157292
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/chrono/ZonedChronology.java::ZonedChronology.ZonedDateTimeField.set(long instant, int value)",
+      "path": "src/main/java/org/joda/time/chrono/ZonedChronology.java",
+      "start_line": 461,
+      "end_line": 472,
+      "source": "public long set(long instant, int value) {\n            long localInstant = iZone.convertUTCToLocal(instant);\n            localInstant = iField.set(localInstant, value);\n            long result = iZone.convertLocalToUTC(localInstant, false, instant);\n            if (get(result) != value) {\n                IllegalInstantException cause = new IllegalInstantException(localInstant,  iZone.getID());\n                IllegalFieldValueException ex = new IllegalFieldValueException(iField.getType(), Integer.valueOf(value), cause.getMessage());\n                ex.initCause(cause);\n                throw ex;\n            }\n            return result;\n        }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.88107881738039
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.getDefault()",
+      "path": "src/main/java/org/joda/time/DateTimeZone.java",
+      "start_line": 133,
+      "end_line": 163,
+      "source": "public static DateTimeZone getDefault() {\n        DateTimeZone zone = cDefault;\n        if (zone == null) {\n            synchronized(DateTimeZone.class) {\n                zone = cDefault;\n                if (zone == null) {\n                    DateTimeZone temp = null;\n                    try {\n                        try {\n                            String id = System.getProperty(\"user.timezone\");\n                            if (id != null) {  // null check avoids stack overflow\n                                temp = forID(id);\n                            }\n                        } catch (RuntimeException ex) {\n                            // ignored\n                        }\n                        if (temp == null) {\n                            temp = forTimeZone(TimeZone.getDefault());\n                        }\n                    } catch (IllegalArgumentException ex) {\n                        // ignored\n                    }\n                    if (temp == null) {\n                        temp = UTC;\n                    }\n                    cDefault = zone = temp;\n                }\n            }\n        }\n        return zone;\n    }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.4064608451345
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/tz/DateTimeZoneBuilder.java::DateTimeZoneBuilder.DSTZone.previousTransition(long instant)",
+      "path": "src/main/java/org/joda/time/tz/DateTimeZoneBuilder.java",
+      "start_line": 1238,
+      "end_line": 1280,
+      "source": "public long previousTransition(long instant) {\n            // Increment in order to handle the case where instant is exactly at\n            // a transition.\n            instant++;\n\n            int standardOffset = iStandardOffset;\n            Recurrence startRecurrence = iStartRecurrence;\n            Recurrence endRecurrence = iEndRecurrence;\n\n            long start, end;\n\n            try {\n                start = startRecurrence.previous\n                    (instant, standardOffset, endRecurrence.getSaveMillis());\n                if (instant < 0 && start > 0) {\n                    // Overflowed.\n                    start = instant;\n                }\n            } catch (IllegalArgumentException e) {\n                // Overflowed.\n                start = instant;\n            } catch (ArithmeticException e) {\n                // Overflowed.\n                start = instant;\n            }\n\n            try {\n                end = endRecurrence.previous\n                    (instant, standardOffset, startRecurrence.getSaveMillis());\n                if (instant < 0 && end > 0) {\n                    // Overflowed.\n                    end = instant;\n                }\n            } catch (IllegalArgumentException e) {\n                // Overflowed.\n                end = instant;\n            } catch (ArithmeticException e) {\n                // Overflowed.\n                end = instant;\n            }\n\n            return ((start > end) ? start : end) - 1;\n        }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.92024949222299
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.getDefaultProvider()",
+      "path": "src/main/java/org/joda/time/DateTimeZone.java",
+      "start_line": 470,
+      "end_line": 502,
+      "source": "private static Provider getDefaultProvider() {\n        Provider provider = null;\n\n        try {\n            String providerClass =\n                System.getProperty(\"org.joda.time.DateTimeZone.Provider\");\n            if (providerClass != null) {\n                try {\n                    provider = (Provider) Class.forName(providerClass).newInstance();\n                } catch (Exception ex) {\n                    Thread thread = Thread.currentThread();\n                    thread.getThreadGroup().uncaughtException(thread, ex);\n                }\n            }\n        } catch (SecurityException ex) {\n            // ignored\n        }\n\n        if (provider == null) {\n            try {\n                provider = new ZoneInfoProvider(\"org/joda/time/tz/data\");\n            } catch (Exception ex) {\n                Thread thread = Thread.currentThread();\n                thread.getThreadGroup().uncaughtException(thread, ex);\n            }\n        }\n\n        if (provider == null) {\n            provider = new UTCProvider();\n        }\n\n        return provider;\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.9429019145639
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/LocalDate.java::LocalDate.toDateTimeAtStartOfDay(DateTimeZone zone)",
+      "path": "src/main/java/org/joda/time/LocalDate.java",
+      "start_line": 727,
+      "end_line": 734,
+      "source": "public DateTime toDateTimeAtStartOfDay(DateTimeZone zone) {\n        zone = DateTimeUtils.getZone(zone);\n        Chronology chrono = getChronology().withZone(zone);\n        long localMillis = getLocalMillis() + 6L * DateTimeConstants.MILLIS_PER_HOUR;\n        long instant = zone.convertLocalToUTC(localMillis, false);\n        instant = chrono.dayOfMonth().roundFloor(instant);\n        return new DateTime(instant, chrono);\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.382651319394995
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/chrono/GregorianChronology.java::GregorianChronology.getInstance(DateTimeZone zone, int minDaysInFirstWeek)",
+      "path": "src/main/java/org/joda/time/chrono/GregorianChronology.java",
+      "start_line": 110,
+      "end_line": 139,
+      "source": "public static GregorianChronology getInstance(DateTimeZone zone, int minDaysInFirstWeek) {\n        if (zone == null) {\n            zone = DateTimeZone.getDefault();\n        }\n        GregorianChronology chrono;\n        synchronized (cCache) {\n            GregorianChronology[] chronos = cCache.get(zone);\n            if (chronos == null) {\n                chronos = new GregorianChronology[7];\n                cCache.put(zone, chronos);\n            }\n            try {\n                chrono = chronos[minDaysInFirstWeek - 1];\n            } catch (ArrayIndexOutOfBoundsException e) {\n                throw new IllegalArgumentException\n                    (\"Invalid min days in first week: \" + minDaysInFirstWeek);\n            }\n            if (chrono == null) {\n                if (zone == DateTimeZone.UTC) {\n                    chrono = new GregorianChronology(null, null, minDaysInFirstWeek);\n                } else {\n                    chrono = getInstance(DateTimeZone.UTC, minDaysInFirstWeek);\n                    chrono = new GregorianChronology\n                        (ZonedChronology.getInstance(chrono, zone), null, minDaysInFirstWeek);\n                }\n                chronos[minDaysInFirstWeek - 1] = chrono;\n            }\n        }\n        return chrono;\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.3010885698551
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/chrono/JulianChronology.java::JulianChronology.getInstance(DateTimeZone zone, int minDaysInFirstWeek)",
+      "path": "src/main/java/org/joda/time/chrono/JulianChronology.java",
+      "start_line": 124,
+      "end_line": 153,
+      "source": "public static JulianChronology getInstance(DateTimeZone zone, int minDaysInFirstWeek) {\n        if (zone == null) {\n            zone = DateTimeZone.getDefault();\n        }\n        JulianChronology chrono;\n        synchronized (cCache) {\n            JulianChronology[] chronos = cCache.get(zone);\n            if (chronos == null) {\n                chronos = new JulianChronology[7];\n                cCache.put(zone, chronos);\n            }\n            try {\n                chrono = chronos[minDaysInFirstWeek - 1];\n            } catch (ArrayIndexOutOfBoundsException e) {\n                throw new IllegalArgumentException\n                    (\"Invalid min days in first week: \" + minDaysInFirstWeek);\n            }\n            if (chrono == null) {\n                if (zone == DateTimeZone.UTC) {\n                    chrono = new JulianChronology(null, null, minDaysInFirstWeek);\n                } else {\n                    chrono = getInstance(DateTimeZone.UTC, minDaysInFirstWeek);\n                    chrono = new JulianChronology\n                        (ZonedChronology.getInstance(chrono, zone), null, minDaysInFirstWeek);\n                }\n                chronos[minDaysInFirstWeek - 1] = chrono;\n            }\n        }\n        return chrono;\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.3010885698551
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/chrono/GJChronology.java::GJChronology.getDateTimeMillis(int year, int monthOfYear, int dayOfMonth,\n                                  int hourOfDay, int minuteOfHour,\n                                  int secondOfMinute, int millisOfSecond)",
+      "path": "src/main/java/org/joda/time/chrono/GJChronology.java",
+      "start_line": 349,
+      "end_line": 389,
+      "source": "public long getDateTimeMillis(int year, int monthOfYear, int dayOfMonth,\n                                  int hourOfDay, int minuteOfHour,\n                                  int secondOfMinute, int millisOfSecond)\n        throws IllegalArgumentException\n    {\n        Chronology base;\n        if ((base = getBase()) != null) {\n            return base.getDateTimeMillis\n                (year, monthOfYear, dayOfMonth,\n                 hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);\n        }\n\n        // Assume date is Gregorian.\n        long instant;\n        try {\n            instant = iGregorianChronology.getDateTimeMillis\n                (year, monthOfYear, dayOfMonth,\n                 hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);\n        } catch (IllegalFieldValueException ex) {\n            if (monthOfYear != 2 || dayOfMonth != 29) {\n                throw ex;\n            }\n            instant = iGregorianChronology.getDateTimeMillis\n                (year, monthOfYear, 28,\n                 hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);\n            if (instant >= iCutoverMillis) {\n                throw ex;\n            }\n        }\n        if (instant < iCutoverMillis) {\n            // Maybe it's Julian.\n            instant = iJulianChronology.getDateTimeMillis\n                (year, monthOfYear, dayOfMonth,\n                 hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);\n            if (instant >= iCutoverMillis) {\n                // Okay, it's in the illegal cutover gap.\n                throw new IllegalArgumentException(\"Specified date does not exist\");\n            }\n        }\n        return instant;\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.676228290307144
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/tz/ZoneInfoCompiler.java::ZoneInfoCompiler.test(String id, DateTimeZone tz)",
+      "path": "src/main/java/org/joda/time/tz/ZoneInfoCompiler.java",
+      "start_line": 269,
+      "end_line": 344,
+      "source": "static boolean test(String id, DateTimeZone tz) {\n        if (!id.equals(tz.getID())) {\n            return true;\n        }\n\n        // Test to ensure that reported transitions are not duplicated.\n\n        long millis = ISOChronology.getInstanceUTC().year().set(0, 1850);\n        long end = ISOChronology.getInstanceUTC().year().set(0, 2050);\n\n        int offset = tz.getOffset(millis);\n        String key = tz.getNameKey(millis);\n\n        List<Long> transitions = new ArrayList<Long>();\n\n        while (true) {\n            long next = tz.nextTransition(millis);\n            if (next == millis || next > end) {\n                break;\n            }\n\n            millis = next;\n\n            int nextOffset = tz.getOffset(millis);\n            String nextKey = tz.getNameKey(millis);\n\n            if (offset == nextOffset\n                && key.equals(nextKey)) {\n                System.out.println(\"*d* Error in \" + tz.getID() + \" \"\n                                   + new DateTime(millis,\n                                                  ISOChronology.getInstanceUTC()));\n                return false;\n            }\n\n            if (nextKey == null || (nextKey.length() < 3 && !\"??\".equals(nextKey))) {\n                System.out.println(\"*s* Error in \" + tz.getID() + \" \"\n                                   + new DateTime(millis,\n                                                  ISOChronology.getInstanceUTC())\n                                   + \", nameKey=\" + nextKey);\n                return false;\n            }\n\n            transitions.add(Long.valueOf(millis));\n\n            offset = nextOffset;\n            key = nextKey;\n        }\n\n        // Now verify that reverse transitions match up.\n\n        millis = ISOChronology.getInstanceUTC().year().set(0, 2050);\n        end = ISOChronology.getInstanceUTC().year().set(0, 1850);\n\n        for (int i=transitions.size(); --i>= 0; ) {\n            long prev = tz.previousTransition(millis);\n            if (prev == millis || prev < end) {\n                break;\n            }\n\n            millis = prev;\n\n            long trans = transitions.get(i).longValue();\n            \n            if (trans - 1 != millis) {\n                System.out.println(\"*r* Error in \" + tz.getID() + \" \"\n                                   + new DateTime(millis,\n                                                  ISOChronology.getInstanceUTC()) + \" != \"\n                                   + new DateTime(trans - 1,\n                                                  ISOChronology.getInstanceUTC()));\n                                   \n                return false;\n            }\n        }\n\n        return true;\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.978573802152653
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.getDefaultNameProvider()",
+      "path": "src/main/java/org/joda/time/DateTimeZone.java",
+      "start_line": 556,
+      "end_line": 577,
+      "source": "private static NameProvider getDefaultNameProvider() {\n        NameProvider nameProvider = null;\n        try {\n            String providerClass = System.getProperty(\"org.joda.time.DateTimeZone.NameProvider\");\n            if (providerClass != null) {\n                try {\n                    nameProvider = (NameProvider) Class.forName(providerClass).newInstance();\n                } catch (Exception ex) {\n                    Thread thread = Thread.currentThread();\n                    thread.getThreadGroup().uncaughtException(thread, ex);\n                }\n            }\n        } catch (SecurityException ex) {\n            // ignore\n        }\n\n        if (nameProvider == null) {\n            nameProvider = new DefaultNameProvider();\n        }\n\n        return nameProvider;\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.84671748157953
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/chrono/ZonedChronology.java::ZonedChronology.getInstance(Chronology base, DateTimeZone zone)",
+      "path": "src/main/java/org/joda/time/chrono/ZonedChronology.java",
+      "start_line": 54,
+      "end_line": 66,
+      "source": "public static ZonedChronology getInstance(Chronology base, DateTimeZone zone) {\n        if (base == null) {\n            throw new IllegalArgumentException(\"Must supply a chronology\");\n        }\n        base = base.withUTC();\n        if (base == null) {\n            throw new IllegalArgumentException(\"UTC chronology must not be null\");\n        }\n        if (zone == null) {\n            throw new IllegalArgumentException(\"DateTimeZone must not be null\");\n        }\n        return new ZonedChronology(base, zone);\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.747710990395657
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)",
+      "path": "src/main/java/org/joda/time/base/BasePeriod.java",
+      "start_line": 154,
+      "end_line": 184,
+      "source": "protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type) {\n        super();\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start instanceof BaseLocal && end instanceof BaseLocal && start.getClass() == end.getClass()) {\n            // for performance\n            type = checkPeriodType(type);\n            long startMillis = ((BaseLocal) start).getLocalMillis();\n            long endMillis = ((BaseLocal) end).getLocalMillis();\n            Chronology chrono = start.getChronology();\n            chrono = DateTimeUtils.getChronology(chrono);\n            iType = type;\n            iValues = chrono.get(this, startMillis, endMillis);\n        } else {\n            if (start.size() != end.size()) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n            for (int i = 0, isize = start.size(); i < isize; i++) {\n                if (start.getFieldType(i) != end.getFieldType(i)) {\n                    throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n                }\n            }\n            if (DateTimeUtils.isContiguous(start) == false) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n            }\n            iType = checkPeriodType(type);\n            Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n            iValues = chrono.get(this, chrono.set(start, 0L), chrono.set(end, 0L));\n        }\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.654968138330148
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/chrono/CopticChronology.java::CopticChronology.getInstance(DateTimeZone zone, int minDaysInFirstWeek)",
+      "path": "src/main/java/org/joda/time/chrono/CopticChronology.java",
+      "start_line": 118,
+      "end_line": 153,
+      "source": "public static CopticChronology getInstance(DateTimeZone zone, int minDaysInFirstWeek) {\n        if (zone == null) {\n            zone = DateTimeZone.getDefault();\n        }\n        CopticChronology chrono;\n        synchronized (cCache) {\n            CopticChronology[] chronos = cCache.get(zone);\n            if (chronos == null) {\n                chronos = new CopticChronology[7];\n                cCache.put(zone, chronos);\n            }\n            try {\n                chrono = chronos[minDaysInFirstWeek - 1];\n            } catch (ArrayIndexOutOfBoundsException e) {\n                throw new IllegalArgumentException\n                    (\"Invalid min days in first week: \" + minDaysInFirstWeek);\n            }\n            if (chrono == null) {\n                if (zone == DateTimeZone.UTC) {\n                    // First create without a lower limit.\n                    chrono = new CopticChronology(null, null, minDaysInFirstWeek);\n                    // Impose lower limit and make another CopticChronology.\n                    DateTime lowerLimit = new DateTime(1, 1, 1, 0, 0, 0, 0, chrono);\n                    chrono = new CopticChronology\n                        (LimitChronology.getInstance(chrono, lowerLimit, null),\n                         null, minDaysInFirstWeek);\n                } else {\n                    chrono = getInstance(DateTimeZone.UTC, minDaysInFirstWeek);\n                    chrono = new CopticChronology\n                        (ZonedChronology.getInstance(chrono, zone), null, minDaysInFirstWeek);\n                }\n                chronos[minDaysInFirstWeek - 1] = chrono;\n            }\n        }\n        return chrono;\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.199572388601652
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/chrono/EthiopicChronology.java::EthiopicChronology.getInstance(DateTimeZone zone, int minDaysInFirstWeek)",
+      "path": "src/main/java/org/joda/time/chrono/EthiopicChronology.java",
+      "start_line": 118,
+      "end_line": 153,
+      "source": "public static EthiopicChronology getInstance(DateTimeZone zone, int minDaysInFirstWeek) {\n        if (zone == null) {\n            zone = DateTimeZone.getDefault();\n        }\n        EthiopicChronology chrono;\n        synchronized (cCache) {\n            EthiopicChronology[] chronos = cCache.get(zone);\n            if (chronos == null) {\n                chronos = new EthiopicChronology[7];\n                cCache.put(zone, chronos);\n            }\n            try {\n                chrono = chronos[minDaysInFirstWeek - 1];\n            } catch (ArrayIndexOutOfBoundsException e) {\n                throw new IllegalArgumentException\n                    (\"Invalid min days in first week: \" + minDaysInFirstWeek);\n            }\n            if (chrono == null) {\n                if (zone == DateTimeZone.UTC) {\n                    // First create without a lower limit.\n                    chrono = new EthiopicChronology(null, null, minDaysInFirstWeek);\n                    // Impose lower limit and make another EthiopicChronology.\n                    DateTime lowerLimit = new DateTime(1, 1, 1, 0, 0, 0, 0, chrono);\n                    chrono = new EthiopicChronology\n                        (LimitChronology.getInstance(chrono, lowerLimit, null),\n                         null, minDaysInFirstWeek);\n                } else {\n                    chrono = getInstance(DateTimeZone.UTC, minDaysInFirstWeek);\n                    chrono = new EthiopicChronology\n                        (ZonedChronology.getInstance(chrono, zone), null, minDaysInFirstWeek);\n                }\n                chronos[minDaysInFirstWeek - 1] = chrono;\n            }\n        }\n        return chrono;\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.199572388601652
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/LocalDate.java::LocalDate.toInterval(DateTimeZone zone)",
+      "path": "src/main/java/org/joda/time/LocalDate.java",
+      "start_line": 978,
+      "end_line": 983,
+      "source": "public Interval toInterval(DateTimeZone zone) {\n        zone = DateTimeUtils.getZone(zone);\n        DateTime start = toDateTimeAtStartOfDay(zone);\n        DateTime end = plusDays(1).toDateTimeAtStartOfDay(zone);\n        return new Interval(start, end);\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.018330036739194
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.forOffsetHoursMinutes(int hoursOffset, int minutesOffset)",
+      "path": "src/main/java/org/joda/time/DateTimeZone.java",
+      "start_line": 272,
+      "end_line": 298,
+      "source": "public static DateTimeZone forOffsetHoursMinutes(int hoursOffset, int minutesOffset) throws IllegalArgumentException {\n        if (hoursOffset == 0 && minutesOffset == 0) {\n            return DateTimeZone.UTC;\n        }\n        if (hoursOffset < -23 || hoursOffset > 23) {\n            throw new IllegalArgumentException(\"Hours out of range: \" + hoursOffset);\n        }\n        if (minutesOffset < -59 || minutesOffset > 59) {\n            throw new IllegalArgumentException(\"Minutes out of range: \" + minutesOffset);\n        }\n        if (hoursOffset > 0 && minutesOffset < 0) {\n            throw new IllegalArgumentException(\"Positive hours must not have negative minutes: \" + minutesOffset);\n        }\n        int offset = 0;\n        try {\n            int hoursInMinutes = hoursOffset * 60;\n            if (hoursInMinutes < 0) {\n                minutesOffset = hoursInMinutes - Math.abs(minutesOffset);\n            } else {\n                minutesOffset = hoursInMinutes + minutesOffset;\n            }\n            offset = FieldUtils.safeMultiply(minutesOffset, DateTimeConstants.MILLIS_PER_MINUTE);\n        } catch (ArithmeticException ex) {\n            throw new IllegalArgumentException(\"Offset is too large\");\n        }\n        return forOffsetMillis(offset);\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 30.922329334475812
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/chrono/GJChronology.java::GJChronology.getInstance(\n            DateTimeZone zone,\n            long gregorianCutover,\n            int minDaysInFirstWeek)",
+      "path": "src/main/java/org/joda/time/chrono/GJChronology.java",
+      "start_line": 240,
+      "end_line": 252,
+      "source": "public static GJChronology getInstance(\n            DateTimeZone zone,\n            long gregorianCutover,\n            int minDaysInFirstWeek) {\n        \n        Instant cutoverInstant;\n        if (gregorianCutover == DEFAULT_CUTOVER.getMillis()) {\n            cutoverInstant = null;\n        } else {\n            cutoverInstant = new Instant(gregorianCutover);\n        }\n        return getInstance(zone, cutoverInstant, minDaysInFirstWeek);\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 30.88620668988569
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/AbstractInterval.java::AbstractInterval.checkInterval(long start, long end)",
+      "path": "src/main/java/org/joda/time/base/AbstractInterval.java",
+      "start_line": 61,
+      "end_line": 65,
+      "source": "protected void checkInterval(long start, long end) {\n        if (end < start) {\n            throw new IllegalArgumentException(\"The end instant must be greater or equal to the start\");\n        }\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 30.63680305590809
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/main/java/org/joda/time/DateTimeUtils.java::DateTimeUtils.getDateFormatSymbols(Locale locale)",
+      "source": "public static final DateFormatSymbols getDateFormatSymbols(Locale locale) {\n        try {\n            Method method = DateFormatSymbols.class.getMethod(\"getInstance\", new Class[] {Locale.class});\n            return (DateFormatSymbols) method.invoke(null, new Object[] {locale});\n        } catch (Exception ex) {\n            return new DateFormatSymbols(locale);\n        }\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/DateTimeUtils.java::DateTimeUtils.getDateFormatSymbols(Locale locale)\nSIGNATURE: public static final DateFormatSymbols getDateFormatSymbols(Locale locale)",
+        "METHOD: src/main/java/org/joda/time/DateTimeUtils.java::DateTimeUtils.getDateFormatSymbols(Locale locale)\nSIGNATURE: public static final DateFormatSymbols getDateFormatSymbols(Locale locale)\nSTRUCTURE (lossy):\nMethod method = DateFormatSymbols.class.getMethod(\"getInstance\", new Class[] {Locale.class});\nCALL DateFormatSymbols.class.getMethod(\"getInstance\", new Class[] {Locale.class})\nreturn (DateFormatSymbols) method.invoke(null, new Object[] {locale});\nCALL method.invoke(null, new Object[] {locale})\ncatch (Exception ex)\nreturn new DateFormatSymbols(locale);",
+        "public static final DateFormatSymbols getDateFormatSymbols(Locale locale) {\n        try {\n            Method method = DateFormatSymbols.class.getMethod(\"getInstance\", new Class[] {Locale.class});\n            return (DateFormatSymbols) method.invoke(null, new Object[] {locale});\n        } catch (Exception ex) {\n            return new DateFormatSymbols(locale);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6538461538461539,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 4.0,
+        "source_tokens": 95.0,
+        "l0_tokens": 48.0,
+        "l1_tokens": 141.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/MutableDateTime.java::MutableDateTime.clone()",
+      "source": "public Object clone() {\n        try {\n            return super.clone();\n        } catch (CloneNotSupportedException ex) {\n            throw new InternalError(\"Clone error\");\n        }\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/MutableDateTime.java::MutableDateTime.clone()\nSIGNATURE: public Object clone()",
+        "METHOD: src/main/java/org/joda/time/MutableDateTime.java::MutableDateTime.clone()\nSIGNATURE: public Object clone()\nSTRUCTURE (lossy):\nreturn super.clone();\nCALL super.clone()\ncatch (CloneNotSupportedException ex)\nthrow new InternalError(\"Clone error\");",
+        "public Object clone() {\n        try {\n            return super.clone();\n        } catch (CloneNotSupportedException ex) {\n            throw new InternalError(\"Clone error\");\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6363636363636364,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 48.0,
+        "l0_tokens": 29.0,
+        "l1_tokens": 63.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/MutableInterval.java::MutableInterval.clone()",
+      "source": "public Object clone() {\n        try {\n            return super.clone();\n        } catch (CloneNotSupportedException ex) {\n            throw new InternalError(\"Clone error\");\n        }\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/MutableInterval.java::MutableInterval.clone()\nSIGNATURE: public Object clone()",
+        "METHOD: src/main/java/org/joda/time/MutableInterval.java::MutableInterval.clone()\nSIGNATURE: public Object clone()\nSTRUCTURE (lossy):\nreturn super.clone();\nCALL super.clone()\ncatch (CloneNotSupportedException ex)\nthrow new InternalError(\"Clone error\");",
+        "public Object clone() {\n        try {\n            return super.clone();\n        } catch (CloneNotSupportedException ex) {\n            throw new InternalError(\"Clone error\");\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5909090909090909,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 48.0,
+        "l0_tokens": 29.0,
+        "l1_tokens": 63.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.clone()",
+      "source": "public Object clone() {\n        try {\n            return super.clone();\n        } catch (CloneNotSupportedException ex) {\n            throw new InternalError(\"Clone error\");\n        }\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.clone()\nSIGNATURE: public Object clone()",
+        "METHOD: src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.clone()\nSIGNATURE: public Object clone()\nSTRUCTURE (lossy):\nreturn super.clone();\nCALL super.clone()\ncatch (CloneNotSupportedException ex)\nthrow new InternalError(\"Clone error\");",
+        "public Object clone() {\n        try {\n            return super.clone();\n        } catch (CloneNotSupportedException ex) {\n            throw new InternalError(\"Clone error\");\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5909090909090909,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 48.0,
+        "l0_tokens": 28.0,
+        "l1_tokens": 62.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)",
+      "source": "protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance) {\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start.size() != end.size()) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n        }\n        for (int i = 0, isize = start.size(); i < isize; i++) {\n            if (start.getFieldType(i) != end.getFieldType(i)) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n        }\n        if (DateTimeUtils.isContiguous(start) == false) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n        }\n        Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n        int[] values = chrono.get(zeroInstance, chrono.set(start, START_1972), chrono.set(end, START_1972));\n        return values[0];\n    }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)\nSIGNATURE: protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)",
+        "METHOD: src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)\nSIGNATURE: protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)\nSTRUCTURE (lossy):\nif (start == null || end == null)\nthrow new IllegalArgumentException(\"ReadablePartial objects must not be null\");\nif (start.size() != end.size())\nCALL start.size()\nCALL end.size()\nthrow new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\nfor (int i = 0, isize = start.size(); i < isize; i++)\nint i = 0, isize = start.size();\ni++\nif (start.getFieldType(i) != end.getFieldType(i))\nCALL start.getFieldType(i)\nCALL end.getFieldType(i)\nif (DateTimeUtils.isContiguous(start) == false)\nCALL DateTimeUtils.isContiguous(start)\nthrow new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\nChronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\nCALL DateTimeUtils.getChronology(start.getChronology()).withUTC()\nCALL DateTimeUtils.getChronology(start.getChronology())\nCALL start.getChronology()\nint[] values = chrono.get(zeroInstance, chrono.set(start, START_1972), chrono.set(end, START_1972));\nCALL chrono.get(zeroInstance, chrono.set(start, START_1972), chrono.set(end, START_1972))\nCALL chrono.set(start, START_1972)\nCALL chrono.set(end, START_1972)\nreturn values[0];",
+        "protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance) {\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start.size() != end.size()) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n        }\n        for (int i = 0, isize = start.size(); i < isize; i++) {\n            if (start.getFieldType(i) != end.getFieldType(i)) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n        }\n        if (DateTimeUtils.isContiguous(start) == false) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n        }\n        Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n        int[] values = chrono.get(zeroInstance, chrono.set(start, START_1972), chrono.set(end, START_1972));\n        return values[0];\n    }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.40816326530612246,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 12.0,
+        "literal_count": 8.0,
+        "source_tokens": 267.0,
+        "l0_tokens": 71.0,
+        "l1_tokens": 363.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 12,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/chrono/GJChronology.java::GJChronology.getInstance(\n            DateTimeZone zone,\n            ReadableInstant gregorianCutover,\n            int minDaysInFirstWeek)",
+      "source": "public static synchronized GJChronology getInstance(\n            DateTimeZone zone,\n            ReadableInstant gregorianCutover,\n            int minDaysInFirstWeek) {\n        \n        zone = DateTimeUtils.getZone(zone);\n        Instant cutoverInstant;\n        if (gregorianCutover == null) {\n            cutoverInstant = DEFAULT_CUTOVER;\n        } else {\n            cutoverInstant = gregorianCutover.toInstant();\n        }\n\n        GJChronology chrono;\n        synchronized (cCache) {\n            ArrayList<GJChronology> chronos = cCache.get(zone);\n            if (chronos == null) {\n                chronos = new ArrayList<GJChronology>(2);\n                cCache.put(zone, chronos);\n            } else {\n                for (int i = chronos.size(); --i >= 0;) {\n                    chrono = chronos.get(i);\n                    if (minDaysInFirstWeek == chrono.getMinimumDaysInFirstWeek() &&\n                        cutoverInstant.equals(chrono.getGregorianCutover())) {\n                        \n                        return chrono;\n                    }\n                }\n            }\n            if (zone == DateTimeZone.UTC) {\n                chrono = new GJChronology\n                    (JulianChronology.getInstance(zone, minDaysInFirstWeek),\n                     GregorianChronology.getInstance(zone, minDaysInFirstWeek),\n                     cutoverInstant);\n            } else {\n                chrono = getInstance(DateTimeZone.UTC, cutoverInstant, minDaysInFirstWeek);\n                chrono = new GJChronology\n                    (ZonedChronology.getInstance(chrono, zone),\n                     chrono.iJulianChronology,\n                     chrono.iGregorianChronology,\n                     chrono.iCutoverInstant);\n            }\n            chronos.add(chrono);\n        }\n        return chrono;\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/chrono/GJChronology.java::GJChronology.getInstance(\n            DateTimeZone zone,\n            ReadableInstant gregorianCutover,\n            int minDaysInFirstWeek)\nSIGNATURE: public static synchronized GJChronology getInstance(\n            DateTimeZone zone,\n            ReadableInstant gregorianCutover,\n            int minDaysInFirstWeek)",
+        "METHOD: src/main/java/org/joda/time/chrono/GJChronology.java::GJChronology.getInstance(\n            DateTimeZone zone,\n            ReadableInstant gregorianCutover,\n            int minDaysInFirstWeek)\nSIGNATURE: public static synchronized GJChronology getInstance(\n            DateTimeZone zone,\n            ReadableInstant gregorianCutover,\n            int minDaysInFirstWeek)\nSTRUCTURE (lossy):\nzone = DateTimeUtils.getZone(zone)\nCALL DateTimeUtils.getZone(zone)\nInstant cutoverInstant;\nif (gregorianCutover == null)\ncutoverInstant = DEFAULT_CUTOVER\ncutoverInstant = gregorianCutover.toInstant()\nCALL gregorianCutover.toInstant()\nGJChronology chrono;\nArrayList<GJChronology> chronos = cCache.get(zone);\nCALL cCache.get(zone)\nif (chronos == null)\nchronos = new ArrayList<GJChronology>(2)\nCALL cCache.put(zone, chronos)\nfor (int i = chronos.size(); --i >= 0;)\nint i = chronos.size();\nCALL chronos.size()\n--i\nchrono = chronos.get(i)\nCALL chronos.get(i)\nif (minDaysInFirstWeek == chrono.getMinimumDaysInFirstWeek() && cutoverInstant.equals(chrono.getGregorianCutover()))\nCALL chrono.getMinimumDaysInFirstWeek()\nCALL cutoverInstant.equals(chrono.getGregorianCutover())\nCALL chrono.getGregorianCutover()\nreturn chrono;\nif (zone == DateTimeZone.UTC)\nchrono = new GJChronology (JulianChronology.getInstance(zone, minDaysInFirstWeek), GregorianChronology.getInstance(zone, minDaysInFirstWeek), cutoverInstant)\nCALL JulianChronology.getInstance(zone, minDaysInFirstWeek)\nCALL GregorianChronology.getInstance(zone, minDaysInFirstWeek)\nchrono = getInstance(DateTimeZone.UTC, cutoverInstant, minDaysInFirstWeek)\nCALL getInstance(DateTimeZone.UTC, cutoverInstant, minDaysInFirstWeek)\nchrono = new GJChronology (ZonedChronology.getInstance(chrono, zone), chrono.iJulianChronology, chrono.iGregorianChronology, chrono.iCutoverInstant)\nCALL ZonedChronology.getInstance(chrono, zone)\nCALL chronos.add(chrono)",
+        "public static synchronized GJChronology getInstance(\n            DateTimeZone zone,\n            ReadableInstant gregorianCutover,\n            int minDaysInFirstWeek) {\n        \n        zone = DateTimeUtils.getZone(zone);\n        Instant cutoverInstant;\n        if (gregorianCutover == null) {\n            cutoverInstant = DEFAULT_CUTOVER;\n        } else {\n            cutoverInstant = gregorianCutover.toInstant();\n        }\n\n        GJChronology chrono;\n        synchronized (cCache) {\n            ArrayList<GJChronology> chronos = cCache.get(zone);\n            if (chronos == null) {\n                chronos = new ArrayList<GJChronology>(2);\n                cCache.put(zone, chronos);\n            } else {\n                for (int i = chronos.size(); --i >= 0;) {\n                    chrono = chronos.get(i);\n                    if (minDaysInFirstWeek == chrono.getMinimumDaysInFirstWeek() &&\n                        cutoverInstant.equals(chrono.getGregorianCutover())) {\n                        \n                        return chrono;\n                    }\n                }\n            }\n            if (zone == DateTimeZone.UTC) {\n                chrono = new GJChronology\n                    (JulianChronology.getInstance(zone, minDaysInFirstWeek),\n                     GregorianChronology.getInstance(zone, minDaysInFirstWeek),\n                     cutoverInstant);\n            } else {\n                chrono = getInstance(DateTimeZone.UTC, cutoverInstant, minDaysInFirstWeek);\n                chrono = new GJChronology\n                    (ZonedChronology.getInstance(chrono, zone),\n                     chrono.iJulianChronology,\n                     chrono.iGregorianChronology,\n                     chrono.iCutoverInstant);\n            }\n            chronos.add(chrono);\n        }\n        return chrono;\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4090909090909091,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 14.0,
+        "literal_count": 4.0,
+        "source_tokens": 455.0,
+        "l0_tokens": 95.0,
+        "l1_tokens": 473.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 14,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/chrono/ZonedChronology.java::ZonedChronology.ZonedDateTimeField.set(long instant, int value)",
+      "source": "public long set(long instant, int value) {\n            long localInstant = iZone.convertUTCToLocal(instant);\n            localInstant = iField.set(localInstant, value);\n            long result = iZone.convertLocalToUTC(localInstant, false, instant);\n            if (get(result) != value) {\n                IllegalInstantException cause = new IllegalInstantException(localInstant,  iZone.getID());\n                IllegalFieldValueException ex = new IllegalFieldValueException(iField.getType(), Integer.valueOf(value), cause.getMessage());\n                ex.initCause(cause);\n                throw ex;\n            }\n            return result;\n        }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/chrono/ZonedChronology.java::ZonedChronology.ZonedDateTimeField.set(long instant, int value)\nSIGNATURE: public long set(long instant, int value)",
+        "METHOD: src/main/java/org/joda/time/chrono/ZonedChronology.java::ZonedChronology.ZonedDateTimeField.set(long instant, int value)\nSIGNATURE: public long set(long instant, int value)\nSTRUCTURE (lossy):\nlong localInstant = iZone.convertUTCToLocal(instant);\nCALL iZone.convertUTCToLocal(instant)\nlocalInstant = iField.set(localInstant, value)\nCALL iField.set(localInstant, value)\nlong result = iZone.convertLocalToUTC(localInstant, false, instant);\nCALL iZone.convertLocalToUTC(localInstant, false, instant)\nif (get(result) != value)\nCALL get(result)\nIllegalInstantException cause = new IllegalInstantException(localInstant, iZone.getID());\nCALL iZone.getID()\nIllegalFieldValueException ex = new IllegalFieldValueException(iField.getType(), Integer.valueOf(value), cause.getMessage());\nCALL iField.getType()\nCALL Integer.valueOf(value)\nCALL cause.getMessage()\nCALL ex.initCause(cause)\nthrow ex;\nreturn result;",
+        "public long set(long instant, int value) {\n            long localInstant = iZone.convertUTCToLocal(instant);\n            localInstant = iField.set(localInstant, value);\n            long result = iZone.convertLocalToUTC(localInstant, false, instant);\n            if (get(result) != value) {\n                IllegalInstantException cause = new IllegalInstantException(localInstant,  iZone.getID());\n                IllegalFieldValueException ex = new IllegalFieldValueException(iField.getType(), Integer.valueOf(value), cause.getMessage());\n                ex.initCause(cause);\n                throw ex;\n            }\n            return result;\n        }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4857142857142857,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 9.0,
+        "literal_count": 0.0,
+        "source_tokens": 163.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 227.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 9,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.getDefault()",
+      "source": "public static DateTimeZone getDefault() {\n        DateTimeZone zone = cDefault;\n        if (zone == null) {\n            synchronized(DateTimeZone.class) {\n                zone = cDefault;\n                if (zone == null) {\n                    DateTimeZone temp = null;\n                    try {\n                        try {\n                            String id = System.getProperty(\"user.timezone\");\n                            if (id != null) {  // null check avoids stack overflow\n                                temp = forID(id);\n                            }\n                        } catch (RuntimeException ex) {\n                            // ignored\n                        }\n                        if (temp == null) {\n                            temp = forTimeZone(TimeZone.getDefault());\n                        }\n                    } catch (IllegalArgumentException ex) {\n                        // ignored\n                    }\n                    if (temp == null) {\n                        temp = UTC;\n                    }\n                    cDefault = zone = temp;\n                }\n            }\n        }\n        return zone;\n    }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.getDefault()\nSIGNATURE: public static DateTimeZone getDefault()",
+        "METHOD: src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.getDefault()\nSIGNATURE: public static DateTimeZone getDefault()\nSTRUCTURE (lossy):\nDateTimeZone zone = cDefault;\nif (zone == null)\nzone = cDefault\nDateTimeZone temp = null;\nString id = System.getProperty(\"user.timezone\");\nCALL System.getProperty(\"user.timezone\")\nif (id != null)\ntemp = forID(id)\nCALL forID(id)\ncatch (RuntimeException ex)\nif (temp == null)\ntemp = forTimeZone(TimeZone.getDefault())\nCALL forTimeZone(TimeZone.getDefault())\nCALL TimeZone.getDefault()\ncatch (IllegalArgumentException ex)\ntemp = UTC\ncDefault = zone = temp\nzone = temp\nreturn zone;",
+        "public static DateTimeZone getDefault() {\n        DateTimeZone zone = cDefault;\n        if (zone == null) {\n            synchronized(DateTimeZone.class) {\n                zone = cDefault;\n                if (zone == null) {\n                    DateTimeZone temp = null;\n                    try {\n                        try {\n                            String id = System.getProperty(\"user.timezone\");\n                            if (id != null) {  // null check avoids stack overflow\n                                temp = forID(id);\n                            }\n                        } catch (RuntimeException ex) {\n                            // ignored\n                        }\n                        if (temp == null) {\n                            temp = forTimeZone(TimeZone.getDefault());\n                        }\n                    } catch (IllegalArgumentException ex) {\n                        // ignored\n                    }\n                    if (temp == null) {\n                        temp = UTC;\n                    }\n                    cDefault = zone = temp;\n                }\n            }\n        }\n        return zone;\n    }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4857142857142857,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 4.0,
+        "literal_count": 8.0,
+        "source_tokens": 289.0,
+        "l0_tokens": 33.0,
+        "l1_tokens": 157.0,
+        "compression_ratio": 0.5432525951557093,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 4,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/tz/DateTimeZoneBuilder.java::DateTimeZoneBuilder.DSTZone.previousTransition(long instant)",
+      "source": "public long previousTransition(long instant) {\n            // Increment in order to handle the case where instant is exactly at\n            // a transition.\n            instant++;\n\n            int standardOffset = iStandardOffset;\n            Recurrence startRecurrence = iStartRecurrence;\n            Recurrence endRecurrence = iEndRecurrence;\n\n            long start, end;\n\n            try {\n                start = startRecurrence.previous\n                    (instant, standardOffset, endRecurrence.getSaveMillis());\n                if (instant < 0 && start > 0) {\n                    // Overflowed.\n                    start = instant;\n                }\n            } catch (IllegalArgumentException e) {\n                // Overflowed.\n                start = instant;\n            } catch (ArithmeticException e) {\n                // Overflowed.\n                start = instant;\n            }\n\n            try {\n                end = endRecurrence.previous\n                    (instant, standardOffset, startRecurrence.getSaveMillis());\n                if (instant < 0 && end > 0) {\n                    // Overflowed.\n                    end = instant;\n                }\n            } catch (IllegalArgumentException e) {\n                // Overflowed.\n                end = instant;\n            } catch (ArithmeticException e) {\n                // Overflowed.\n                end = instant;\n            }\n\n            return ((start > end) ? start : end) - 1;\n        }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/tz/DateTimeZoneBuilder.java::DateTimeZoneBuilder.DSTZone.previousTransition(long instant)\nSIGNATURE: public long previousTransition(long instant)",
+        "METHOD: src/main/java/org/joda/time/tz/DateTimeZoneBuilder.java::DateTimeZoneBuilder.DSTZone.previousTransition(long instant)\nSIGNATURE: public long previousTransition(long instant)\nSTRUCTURE (lossy):\ninstant++\nint standardOffset = iStandardOffset;\nRecurrence startRecurrence = iStartRecurrence;\nRecurrence endRecurrence = iEndRecurrence;\nlong start, end;\nstart = startRecurrence.previous (instant, standardOffset, endRecurrence.getSaveMillis())\nCALL startRecurrence.previous (instant, standardOffset, endRecurrence.getSaveMillis())\nCALL endRecurrence.getSaveMillis()\nif (instant < 0 && start > 0)\nstart = instant\ncatch (IllegalArgumentException e)\ncatch (ArithmeticException e)\nend = endRecurrence.previous (instant, standardOffset, startRecurrence.getSaveMillis())\nCALL endRecurrence.previous (instant, standardOffset, startRecurrence.getSaveMillis())\nCALL startRecurrence.getSaveMillis()\nif (instant < 0 && end > 0)\nend = instant\nreturn ((start > end) ? start : end) - 1;",
+        "public long previousTransition(long instant) {\n            // Increment in order to handle the case where instant is exactly at\n            // a transition.\n            instant++;\n\n            int standardOffset = iStandardOffset;\n            Recurrence startRecurrence = iStartRecurrence;\n            Recurrence endRecurrence = iEndRecurrence;\n\n            long start, end;\n\n            try {\n                start = startRecurrence.previous\n                    (instant, standardOffset, endRecurrence.getSaveMillis());\n                if (instant < 0 && start > 0) {\n                    // Overflowed.\n                    start = instant;\n                }\n            } catch (IllegalArgumentException e) {\n                // Overflowed.\n                start = instant;\n            } catch (ArithmeticException e) {\n                // Overflowed.\n                start = instant;\n            }\n\n            try {\n                end = endRecurrence.previous\n                    (instant, standardOffset, startRecurrence.getSaveMillis());\n                if (instant < 0 && end > 0) {\n                    // Overflowed.\n                    end = instant;\n                }\n            } catch (IllegalArgumentException e) {\n                // Overflowed.\n                end = instant;\n            } catch (ArithmeticException e) {\n                // Overflowed.\n                end = instant;\n            }\n\n            return ((start > end) ? start : end) - 1;\n        }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4358974358974359,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 4.0,
+        "literal_count": 5.0,
+        "source_tokens": 369.0,
+        "l0_tokens": 46.0,
+        "l1_tokens": 244.0,
+        "compression_ratio": 0.6612466124661247,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 4,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.getDefaultProvider()",
+      "source": "private static Provider getDefaultProvider() {\n        Provider provider = null;\n\n        try {\n            String providerClass =\n                System.getProperty(\"org.joda.time.DateTimeZone.Provider\");\n            if (providerClass != null) {\n                try {\n                    provider = (Provider) Class.forName(providerClass).newInstance();\n                } catch (Exception ex) {\n                    Thread thread = Thread.currentThread();\n                    thread.getThreadGroup().uncaughtException(thread, ex);\n                }\n            }\n        } catch (SecurityException ex) {\n            // ignored\n        }\n\n        if (provider == null) {\n            try {\n                provider = new ZoneInfoProvider(\"org/joda/time/tz/data\");\n            } catch (Exception ex) {\n                Thread thread = Thread.currentThread();\n                thread.getThreadGroup().uncaughtException(thread, ex);\n            }\n        }\n\n        if (provider == null) {\n            provider = new UTCProvider();\n        }\n\n        return provider;\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.getDefaultProvider()\nSIGNATURE: private static Provider getDefaultProvider()",
+        "METHOD: src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.getDefaultProvider()\nSIGNATURE: private static Provider getDefaultProvider()\nSTRUCTURE (lossy):\nProvider provider = null;\nString providerClass = System.getProperty(\"org.joda.time.DateTimeZone.Provider\");\nCALL System.getProperty(\"org.joda.time.DateTimeZone.Provider\")\nif (providerClass != null)\nprovider = (Provider) Class.forName(providerClass).newInstance()\nCALL Class.forName(providerClass).newInstance()\nCALL Class.forName(providerClass)\ncatch (Exception ex)\nThread thread = Thread.currentThread();\nCALL Thread.currentThread()\nCALL thread.getThreadGroup().uncaughtException(thread, ex)\nCALL thread.getThreadGroup()\ncatch (SecurityException ex)\nif (provider == null)\nprovider = new ZoneInfoProvider(\"org/joda/time/tz/data\")\nprovider = new UTCProvider()\nreturn provider;",
+        "private static Provider getDefaultProvider() {\n        Provider provider = null;\n\n        try {\n            String providerClass =\n                System.getProperty(\"org.joda.time.DateTimeZone.Provider\");\n            if (providerClass != null) {\n                try {\n                    provider = (Provider) Class.forName(providerClass).newInstance();\n                } catch (Exception ex) {\n                    Thread thread = Thread.currentThread();\n                    thread.getThreadGroup().uncaughtException(thread, ex);\n                }\n            }\n        } catch (SecurityException ex) {\n            // ignored\n        }\n\n        if (provider == null) {\n            try {\n                provider = new ZoneInfoProvider(\"org/joda/time/tz/data\");\n            } catch (Exception ex) {\n                Thread thread = Thread.currentThread();\n                thread.getThreadGroup().uncaughtException(thread, ex);\n            }\n        }\n\n        if (provider == null) {\n            provider = new UTCProvider();\n        }\n\n        return provider;\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.42857142857142855,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 9.0,
+        "literal_count": 6.0,
+        "source_tokens": 267.0,
+        "l0_tokens": 36.0,
+        "l1_tokens": 210.0,
+        "compression_ratio": 0.7865168539325843,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 9,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/LocalDate.java::LocalDate.toDateTimeAtStartOfDay(DateTimeZone zone)",
+      "source": "public DateTime toDateTimeAtStartOfDay(DateTimeZone zone) {\n        zone = DateTimeUtils.getZone(zone);\n        Chronology chrono = getChronology().withZone(zone);\n        long localMillis = getLocalMillis() + 6L * DateTimeConstants.MILLIS_PER_HOUR;\n        long instant = zone.convertLocalToUTC(localMillis, false);\n        instant = chrono.dayOfMonth().roundFloor(instant);\n        return new DateTime(instant, chrono);\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/LocalDate.java::LocalDate.toDateTimeAtStartOfDay(DateTimeZone zone)\nSIGNATURE: public DateTime toDateTimeAtStartOfDay(DateTimeZone zone)",
+        "METHOD: src/main/java/org/joda/time/LocalDate.java::LocalDate.toDateTimeAtStartOfDay(DateTimeZone zone)\nSIGNATURE: public DateTime toDateTimeAtStartOfDay(DateTimeZone zone)\nSTRUCTURE (lossy):\nzone = DateTimeUtils.getZone(zone)\nCALL DateTimeUtils.getZone(zone)\nChronology chrono = getChronology().withZone(zone);\nCALL getChronology().withZone(zone)\nCALL getChronology()\nlong localMillis = getLocalMillis() + 6L * DateTimeConstants.MILLIS_PER_HOUR;\nCALL getLocalMillis()\nlong instant = zone.convertLocalToUTC(localMillis, false);\nCALL zone.convertLocalToUTC(localMillis, false)\ninstant = chrono.dayOfMonth().roundFloor(instant)\nCALL chrono.dayOfMonth().roundFloor(instant)\nCALL chrono.dayOfMonth()\nreturn new DateTime(instant, chrono);",
+        "public DateTime toDateTimeAtStartOfDay(DateTimeZone zone) {\n        zone = DateTimeUtils.getZone(zone);\n        Chronology chrono = getChronology().withZone(zone);\n        long localMillis = getLocalMillis() + 6L * DateTimeConstants.MILLIS_PER_HOUR;\n        long instant = zone.convertLocalToUTC(localMillis, false);\n        instant = chrono.dayOfMonth().roundFloor(instant);\n        return new DateTime(instant, chrono);\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5483870967741935,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 7.0,
+        "literal_count": 1.0,
+        "source_tokens": 107.0,
+        "l0_tokens": 43.0,
+        "l1_tokens": 184.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 7,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/chrono/GregorianChronology.java::GregorianChronology.getInstance(DateTimeZone zone, int minDaysInFirstWeek)",
+      "source": "public static GregorianChronology getInstance(DateTimeZone zone, int minDaysInFirstWeek) {\n        if (zone == null) {\n            zone = DateTimeZone.getDefault();\n        }\n        GregorianChronology chrono;\n        synchronized (cCache) {\n            GregorianChronology[] chronos = cCache.get(zone);\n            if (chronos == null) {\n                chronos = new GregorianChronology[7];\n                cCache.put(zone, chronos);\n            }\n            try {\n                chrono = chronos[minDaysInFirstWeek - 1];\n            } catch (ArrayIndexOutOfBoundsException e) {\n                throw new IllegalArgumentException\n                    (\"Invalid min days in first week: \" + minDaysInFirstWeek);\n            }\n            if (chrono == null) {\n                if (zone == DateTimeZone.UTC) {\n                    chrono = new GregorianChronology(null, null, minDaysInFirstWeek);\n                } else {\n                    chrono = getInstance(DateTimeZone.UTC, minDaysInFirstWeek);\n                    chrono = new GregorianChronology\n                        (ZonedChronology.getInstance(chrono, zone), null, minDaysInFirstWeek);\n                }\n                chronos[minDaysInFirstWeek - 1] = chrono;\n            }\n        }\n        return chrono;\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/chrono/GregorianChronology.java::GregorianChronology.getInstance(DateTimeZone zone, int minDaysInFirstWeek)\nSIGNATURE: public static GregorianChronology getInstance(DateTimeZone zone, int minDaysInFirstWeek)",
+        "METHOD: src/main/java/org/joda/time/chrono/GregorianChronology.java::GregorianChronology.getInstance(DateTimeZone zone, int minDaysInFirstWeek)\nSIGNATURE: public static GregorianChronology getInstance(DateTimeZone zone, int minDaysInFirstWeek)\nSTRUCTURE (lossy):\nif (zone == null)\nzone = DateTimeZone.getDefault()\nCALL DateTimeZone.getDefault()\nGregorianChronology chrono;\nGregorianChronology[] chronos = cCache.get(zone);\nCALL cCache.get(zone)\nif (chronos == null)\nchronos = new GregorianChronology[7]\nCALL cCache.put(zone, chronos)\nchrono = chronos[minDaysInFirstWeek - 1]\ncatch (ArrayIndexOutOfBoundsException e)\nthrow new IllegalArgumentException (\"Invalid min days in first week: \" + minDaysInFirstWeek);\nif (chrono == null)\nif (zone == DateTimeZone.UTC)\nchrono = new GregorianChronology(null, null, minDaysInFirstWeek)\nchrono = getInstance(DateTimeZone.UTC, minDaysInFirstWeek)\nCALL getInstance(DateTimeZone.UTC, minDaysInFirstWeek)\nchrono = new GregorianChronology (ZonedChronology.getInstance(chrono, zone), null, minDaysInFirstWeek)\nCALL ZonedChronology.getInstance(chrono, zone)\nchronos[minDaysInFirstWeek - 1] = chrono\nreturn chrono;",
+        "public static GregorianChronology getInstance(DateTimeZone zone, int minDaysInFirstWeek) {\n        if (zone == null) {\n            zone = DateTimeZone.getDefault();\n        }\n        GregorianChronology chrono;\n        synchronized (cCache) {\n            GregorianChronology[] chronos = cCache.get(zone);\n            if (chronos == null) {\n                chronos = new GregorianChronology[7];\n                cCache.put(zone, chronos);\n            }\n            try {\n                chrono = chronos[minDaysInFirstWeek - 1];\n            } catch (ArrayIndexOutOfBoundsException e) {\n                throw new IllegalArgumentException\n                    (\"Invalid min days in first week: \" + minDaysInFirstWeek);\n            }\n            if (chrono == null) {\n                if (zone == DateTimeZone.UTC) {\n                    chrono = new GregorianChronology(null, null, minDaysInFirstWeek);\n                } else {\n                    chrono = getInstance(DateTimeZone.UTC, minDaysInFirstWeek);\n                    chrono = new GregorianChronology\n                        (ZonedChronology.getInstance(chrono, zone), null, minDaysInFirstWeek);\n                }\n                chronos[minDaysInFirstWeek - 1] = chrono;\n            }\n        }\n        return chrono;\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.47619047619047616,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 5.0,
+        "literal_count": 10.0,
+        "source_tokens": 320.0,
+        "l0_tokens": 61.0,
+        "l1_tokens": 286.0,
+        "compression_ratio": 0.89375,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 5,
+        "literal_count": 10
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/chrono/JulianChronology.java::JulianChronology.getInstance(DateTimeZone zone, int minDaysInFirstWeek)",
+      "source": "public static JulianChronology getInstance(DateTimeZone zone, int minDaysInFirstWeek) {\n        if (zone == null) {\n            zone = DateTimeZone.getDefault();\n        }\n        JulianChronology chrono;\n        synchronized (cCache) {\n            JulianChronology[] chronos = cCache.get(zone);\n            if (chronos == null) {\n                chronos = new JulianChronology[7];\n                cCache.put(zone, chronos);\n            }\n            try {\n                chrono = chronos[minDaysInFirstWeek - 1];\n            } catch (ArrayIndexOutOfBoundsException e) {\n                throw new IllegalArgumentException\n                    (\"Invalid min days in first week: \" + minDaysInFirstWeek);\n            }\n            if (chrono == null) {\n                if (zone == DateTimeZone.UTC) {\n                    chrono = new JulianChronology(null, null, minDaysInFirstWeek);\n                } else {\n                    chrono = getInstance(DateTimeZone.UTC, minDaysInFirstWeek);\n                    chrono = new JulianChronology\n                        (ZonedChronology.getInstance(chrono, zone), null, minDaysInFirstWeek);\n                }\n                chronos[minDaysInFirstWeek - 1] = chrono;\n            }\n        }\n        return chrono;\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/chrono/JulianChronology.java::JulianChronology.getInstance(DateTimeZone zone, int minDaysInFirstWeek)\nSIGNATURE: public static JulianChronology getInstance(DateTimeZone zone, int minDaysInFirstWeek)",
+        "METHOD: src/main/java/org/joda/time/chrono/JulianChronology.java::JulianChronology.getInstance(DateTimeZone zone, int minDaysInFirstWeek)\nSIGNATURE: public static JulianChronology getInstance(DateTimeZone zone, int minDaysInFirstWeek)\nSTRUCTURE (lossy):\nif (zone == null)\nzone = DateTimeZone.getDefault()\nCALL DateTimeZone.getDefault()\nJulianChronology chrono;\nJulianChronology[] chronos = cCache.get(zone);\nCALL cCache.get(zone)\nif (chronos == null)\nchronos = new JulianChronology[7]\nCALL cCache.put(zone, chronos)\nchrono = chronos[minDaysInFirstWeek - 1]\ncatch (ArrayIndexOutOfBoundsException e)\nthrow new IllegalArgumentException (\"Invalid min days in first week: \" + minDaysInFirstWeek);\nif (chrono == null)\nif (zone == DateTimeZone.UTC)\nchrono = new JulianChronology(null, null, minDaysInFirstWeek)\nchrono = getInstance(DateTimeZone.UTC, minDaysInFirstWeek)\nCALL getInstance(DateTimeZone.UTC, minDaysInFirstWeek)\nchrono = new JulianChronology (ZonedChronology.getInstance(chrono, zone), null, minDaysInFirstWeek)\nCALL ZonedChronology.getInstance(chrono, zone)\nchronos[minDaysInFirstWeek - 1] = chrono\nreturn chrono;",
+        "public static JulianChronology getInstance(DateTimeZone zone, int minDaysInFirstWeek) {\n        if (zone == null) {\n            zone = DateTimeZone.getDefault();\n        }\n        JulianChronology chrono;\n        synchronized (cCache) {\n            JulianChronology[] chronos = cCache.get(zone);\n            if (chronos == null) {\n                chronos = new JulianChronology[7];\n                cCache.put(zone, chronos);\n            }\n            try {\n                chrono = chronos[minDaysInFirstWeek - 1];\n            } catch (ArrayIndexOutOfBoundsException e) {\n                throw new IllegalArgumentException\n                    (\"Invalid min days in first week: \" + minDaysInFirstWeek);\n            }\n            if (chrono == null) {\n                if (zone == DateTimeZone.UTC) {\n                    chrono = new JulianChronology(null, null, minDaysInFirstWeek);\n                } else {\n                    chrono = getInstance(DateTimeZone.UTC, minDaysInFirstWeek);\n                    chrono = new JulianChronology\n                        (ZonedChronology.getInstance(chrono, zone), null, minDaysInFirstWeek);\n                }\n                chronos[minDaysInFirstWeek - 1] = chrono;\n            }\n        }\n        return chrono;\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.47619047619047616,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 5.0,
+        "literal_count": 10.0,
+        "source_tokens": 315.0,
+        "l0_tokens": 59.0,
+        "l1_tokens": 280.0,
+        "compression_ratio": 0.8888888888888888,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 5,
+        "literal_count": 10
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/chrono/GJChronology.java::GJChronology.getDateTimeMillis(int year, int monthOfYear, int dayOfMonth,\n                                  int hourOfDay, int minuteOfHour,\n                                  int secondOfMinute, int millisOfSecond)",
+      "source": "public long getDateTimeMillis(int year, int monthOfYear, int dayOfMonth,\n                                  int hourOfDay, int minuteOfHour,\n                                  int secondOfMinute, int millisOfSecond)\n        throws IllegalArgumentException\n    {\n        Chronology base;\n        if ((base = getBase()) != null) {\n            return base.getDateTimeMillis\n                (year, monthOfYear, dayOfMonth,\n                 hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);\n        }\n\n        // Assume date is Gregorian.\n        long instant;\n        try {\n            instant = iGregorianChronology.getDateTimeMillis\n                (year, monthOfYear, dayOfMonth,\n                 hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);\n        } catch (IllegalFieldValueException ex) {\n            if (monthOfYear != 2 || dayOfMonth != 29) {\n                throw ex;\n            }\n            instant = iGregorianChronology.getDateTimeMillis\n                (year, monthOfYear, 28,\n                 hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);\n            if (instant >= iCutoverMillis) {\n                throw ex;\n            }\n        }\n        if (instant < iCutoverMillis) {\n            // Maybe it's Julian.\n            instant = iJulianChronology.getDateTimeMillis\n                (year, monthOfYear, dayOfMonth,\n                 hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);\n            if (instant >= iCutoverMillis) {\n                // Okay, it's in the illegal cutover gap.\n                throw new IllegalArgumentException(\"Specified date does not exist\");\n            }\n        }\n        return instant;\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/chrono/GJChronology.java::GJChronology.getDateTimeMillis(int year, int monthOfYear, int dayOfMonth,\n                                  int hourOfDay, int minuteOfHour,\n                                  int secondOfMinute, int millisOfSecond)\nSIGNATURE: public long getDateTimeMillis(int year, int monthOfYear, int dayOfMonth,\n                                  int hourOfDay, int minuteOfHour,\n                                  int secondOfMinute, int millisOfSecond)\n        throws IllegalArgumentException",
+        "METHOD: src/main/java/org/joda/time/chrono/GJChronology.java::GJChronology.getDateTimeMillis(int year, int monthOfYear, int dayOfMonth,\n                                  int hourOfDay, int minuteOfHour,\n                                  int secondOfMinute, int millisOfSecond)\nSIGNATURE: public long getDateTimeMillis(int year, int monthOfYear, int dayOfMonth,\n                                  int hourOfDay, int minuteOfHour,\n                                  int secondOfMinute, int millisOfSecond)\n        throws IllegalArgumentException\nSTRUCTURE (lossy):\nChronology base;\nif ((base = getBase()) != null)\nbase = getBase()\nCALL getBase()\nreturn base.getDateTimeMillis (year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);\nCALL base.getDateTimeMillis (year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond)\nlong instant;\ninstant = iGregorianChronology.getDateTimeMillis (year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond)\nCALL iGregorianChronology.getDateTimeMillis (year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond)\ncatch (IllegalFieldValueException ex)\nif (monthOfYear != 2 || dayOfMonth != 29)\nthrow ex;\ninstant = iGregorianChronology.getDateTimeMillis (year, monthOfYear, 28, hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond)\nCALL iGregorianChronology.getDateTimeMillis (year, monthOfYear, 28, hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond)\nif (instant >= iCutoverMillis)\nif (instant < iCutoverMillis)\ninstant = iJulianChronology.getDateTimeMillis (year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond)\nCALL iJulianChronology.getDateTimeMillis (year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond)\nthrow new IllegalArgumentException(\"Specified date does not exist\");\nreturn instant;",
+        "public long getDateTimeMillis(int year, int monthOfYear, int dayOfMonth,\n                                  int hourOfDay, int minuteOfHour,\n                                  int secondOfMinute, int millisOfSecond)\n        throws IllegalArgumentException\n    {\n        Chronology base;\n        if ((base = getBase()) != null) {\n            return base.getDateTimeMillis\n                (year, monthOfYear, dayOfMonth,\n                 hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);\n        }\n\n        // Assume date is Gregorian.\n        long instant;\n        try {\n            instant = iGregorianChronology.getDateTimeMillis\n                (year, monthOfYear, dayOfMonth,\n                 hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);\n        } catch (IllegalFieldValueException ex) {\n            if (monthOfYear != 2 || dayOfMonth != 29) {\n                throw ex;\n            }\n            instant = iGregorianChronology.getDateTimeMillis\n                (year, monthOfYear, 28,\n                 hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);\n            if (instant >= iCutoverMillis) {\n                throw ex;\n            }\n        }\n        if (instant < iCutoverMillis) {\n            // Maybe it's Julian.\n            instant = iJulianChronology.getDateTimeMillis\n                (year, monthOfYear, dayOfMonth,\n                 hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);\n            if (instant >= iCutoverMillis) {\n                // Okay, it's in the illegal cutover gap.\n                throw new IllegalArgumentException(\"Specified date does not exist\");\n            }\n        }\n        return instant;\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.425531914893617,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 5.0,
+        "literal_count": 5.0,
+        "source_tokens": 419.0,
+        "l0_tokens": 136.0,
+        "l1_tokens": 480.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 5,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/tz/ZoneInfoCompiler.java::ZoneInfoCompiler.test(String id, DateTimeZone tz)",
+      "source": "static boolean test(String id, DateTimeZone tz) {\n        if (!id.equals(tz.getID())) {\n            return true;\n        }\n\n        // Test to ensure that reported transitions are not duplicated.\n\n        long millis = ISOChronology.getInstanceUTC().year().set(0, 1850);\n        long end = ISOChronology.getInstanceUTC().year().set(0, 2050);\n\n        int offset = tz.getOffset(millis);\n        String key = tz.getNameKey(millis);\n\n        List<Long> transitions = new ArrayList<Long>();\n\n        while (true) {\n            long next = tz.nextTransition(millis);\n            if (next == millis || next > end) {\n                break;\n            }\n\n            millis = next;\n\n            int nextOffset = tz.getOffset(millis);\n            String nextKey = tz.getNameKey(millis);\n\n            if (offset == nextOffset\n                && key.equals(nextKey)) {\n                System.out.println(\"*d* Error in \" + tz.getID() + \" \"\n                                   + new DateTime(millis,\n                                                  ISOChronology.getInstanceUTC()));\n                return false;\n            }\n\n            if (nextKey == null || (nextKey.length() < 3 && !\"??\".equals(nextKey))) {\n                System.out.println(\"*s* Error in \" + tz.getID() + \" \"\n                                   + new DateTime(millis,\n                                                  ISOChronology.getInstanceUTC())\n                                   + \", nameKey=\" + nextKey);\n                return false;\n            }\n\n            transitions.add(Long.valueOf(millis));\n\n            offset = nextOffset;\n            key = nextKey;\n        }\n\n        // Now verify that reverse transitions match up.\n\n        millis = ISOChronology.getInstanceUTC().year().set(0, 2050);\n        end = ISOChronology.getInstanceUTC().year().set(0, 1850);\n\n        for (int i=transitions.size(); --i>= 0; ) {\n            long prev = tz.previousTransition(millis);\n            if (prev == millis || prev < end) {\n                break;\n            }\n\n            millis = prev;\n\n            long trans = transitions.get(i).longValue();\n            \n            if (trans - 1 != millis) {\n                System.out.println(\"*r* Error in \" + tz.getID() + \" \"\n                                   + new DateTime(millis,\n                                                  ISOChronology.getInstanceUTC()) + \" != \"\n                                   + new DateTime(trans - 1,\n                                                  ISOChronology.getInstanceUTC()));\n                                   \n                return false;\n            }\n        }\n\n        return true;\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/tz/ZoneInfoCompiler.java::ZoneInfoCompiler.test(String id, DateTimeZone tz)\nSIGNATURE: static boolean test(String id, DateTimeZone tz)",
+        "METHOD: src/main/java/org/joda/time/tz/ZoneInfoCompiler.java::ZoneInfoCompiler.test(String id, DateTimeZone tz)\nSIGNATURE: static boolean test(String id, DateTimeZone tz)\nSTRUCTURE (lossy):\nif (!id.equals(tz.getID()))\nCALL id.equals(tz.getID())\nCALL tz.getID()\nreturn true;\nlong millis = ISOChronology.getInstanceUTC().year().set(0, 1850);\nCALL ISOChronology.getInstanceUTC().year().set(0, 1850)\nCALL ISOChronology.getInstanceUTC().year()\nCALL ISOChronology.getInstanceUTC()\nlong end = ISOChronology.getInstanceUTC().year().set(0, 2050);\nCALL ISOChronology.getInstanceUTC().year().set(0, 2050)\nint offset = tz.getOffset(millis);\nCALL tz.getOffset(millis)\nString key = tz.getNameKey(millis);\nCALL tz.getNameKey(millis)\nList<Long> transitions = new ArrayList<Long>();\nwhile (true)\nlong next = tz.nextTransition(millis);\nCALL tz.nextTransition(millis)\nif (next == millis || next > end)\nmillis = next\nint nextOffset = tz.getOffset(millis);\nString nextKey = tz.getNameKey(millis);\nif (offset == nextOffset && key.equals(nextKey))\nCALL key.equals(nextKey)\nCALL System.out.println(\"*d* Error in \" + tz.getID() + \" \" + new DateTime(millis, ISOChronology.getInstanceUTC()))\nreturn false;\nif (nextKey == null || (nextKey.length() < 3 && !\"??\".equals(nextKey)))\nCALL nextKey.length()\nCALL \"??\".equals(nextKey)\nCALL System.out.println(\"*s* Error in \" + tz.getID() + \" \" + new DateTime(millis, ISOChronology.getInstanceUTC()) + \", nameKey=\" + nextKey)\nCALL transitions.add(Long.valueOf(millis))\nCALL Long.valueOf(millis)\noffset = nextOffset\nkey = nextKey\nmillis = ISOChronology.getInstanceUTC().year().set(0, 2050)\nend = ISOChronology.getInstanceUTC().year().set(0, 1850)\nfor (int i=transitions.size(); --i>= 0; )\nint i=transitions.size();\nCALL transitions.size()\n--i\nlong prev = tz.previousTransition(millis);\nCALL tz.previousTransition(millis)\nif (prev == millis || prev < end)\nmillis = prev\nlong trans = transitions.get(i).longValue();\nCALL transitions.get(i).longValue()\nCALL transitions.get(i)\nif (trans - 1 != millis)\nCALL System.out.println(\"*r* Error in \" + tz.getID() + \" \" + new DateTime(millis, ISOChronology.getInstanceUTC()) + \" != \" + new DateTime(trans - 1, ISOChronology.getInstanceUTC()))",
+        "static boolean test(String id, DateTimeZone tz) {\n        if (!id.equals(tz.getID())) {\n            return true;\n        }\n\n        // Test to ensure that reported transitions are not duplicated.\n\n        long millis = ISOChronology.getInstanceUTC().year().set(0, 1850);\n        long end = ISOChronology.getInstanceUTC().year().set(0, 2050);\n\n        int offset = tz.getOffset(millis);\n        String key = tz.getNameKey(millis);\n\n        List<Long> transitions = new ArrayList<Long>();\n\n        while (true) {\n            long next = tz.nextTransition(millis);\n            if (next == millis || next > end) {\n                break;\n            }\n\n            millis = next;\n\n            int nextOffset = tz.getOffset(millis);\n            String nextKey = tz.getNameKey(millis);\n\n            if (offset == nextOffset\n                && key.equals(nextKey)) {\n                System.out.println(\"*d* Error in \" + tz.getID() + \" \"\n                                   + new DateTime(millis,\n                                                  ISOChronology.getInstanceUTC()));\n                return false;\n            }\n\n            if (nextKey == null || (nextKey.length() < 3 && !\"??\".equals(nextKey))) {\n                System.out.println(\"*s* Error in \" + tz.getID() + \" \"\n                                   + new DateTime(millis,\n                                                  ISOChronology.getInstanceUTC())\n                                   + \", nameKey=\" + nextKey);\n                return false;\n            }\n\n            transitions.add(Long.valueOf(millis));\n\n            offset = nextOffset;\n            key = nextKey;\n        }\n\n        // Now verify that reverse transitions match up.\n\n        millis = ISOChronology.getInstanceUTC().year().set(0, 2050);\n        end = ISOChronology.getInstanceUTC().year().set(0, 1850);\n\n        for (int i=transitions.size(); --i>= 0; ) {\n            long prev = tz.previousTransition(millis);\n            if (prev == millis || prev < end) {\n                break;\n            }\n\n            millis = prev;\n\n            long trans = transitions.get(i).longValue();\n            \n            if (trans - 1 != millis) {\n                System.out.println(\"*r* Error in \" + tz.getID() + \" \"\n                                   + new DateTime(millis,\n                                                  ISOChronology.getInstanceUTC()) + \" != \"\n                                   + new DateTime(trans - 1,\n                                                  ISOChronology.getInstanceUTC()));\n                                   \n                return false;\n            }\n        }\n\n        return true;\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.24193548387096775,
+        "trace_match": 0.0,
+        "complexity": 9.0,
+        "call_count": 38.0,
+        "literal_count": 22.0,
+        "source_tokens": 662.0,
+        "l0_tokens": 43.0,
+        "l1_tokens": 548.0,
+        "compression_ratio": 0.8277945619335347,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 9,
+        "call_count": 38,
+        "literal_count": 22
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.getDefaultNameProvider()",
+      "source": "private static NameProvider getDefaultNameProvider() {\n        NameProvider nameProvider = null;\n        try {\n            String providerClass = System.getProperty(\"org.joda.time.DateTimeZone.NameProvider\");\n            if (providerClass != null) {\n                try {\n                    nameProvider = (NameProvider) Class.forName(providerClass).newInstance();\n                } catch (Exception ex) {\n                    Thread thread = Thread.currentThread();\n                    thread.getThreadGroup().uncaughtException(thread, ex);\n                }\n            }\n        } catch (SecurityException ex) {\n            // ignore\n        }\n\n        if (nameProvider == null) {\n            nameProvider = new DefaultNameProvider();\n        }\n\n        return nameProvider;\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.getDefaultNameProvider()\nSIGNATURE: private static NameProvider getDefaultNameProvider()",
+        "METHOD: src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.getDefaultNameProvider()\nSIGNATURE: private static NameProvider getDefaultNameProvider()\nSTRUCTURE (lossy):\nNameProvider nameProvider = null;\nString providerClass = System.getProperty(\"org.joda.time.DateTimeZone.NameProvider\");\nCALL System.getProperty(\"org.joda.time.DateTimeZone.NameProvider\")\nif (providerClass != null)\nnameProvider = (NameProvider) Class.forName(providerClass).newInstance()\nCALL Class.forName(providerClass).newInstance()\nCALL Class.forName(providerClass)\ncatch (Exception ex)\nThread thread = Thread.currentThread();\nCALL Thread.currentThread()\nCALL thread.getThreadGroup().uncaughtException(thread, ex)\nCALL thread.getThreadGroup()\ncatch (SecurityException ex)\nif (nameProvider == null)\nnameProvider = new DefaultNameProvider()\nreturn nameProvider;",
+        "private static NameProvider getDefaultNameProvider() {\n        NameProvider nameProvider = null;\n        try {\n            String providerClass = System.getProperty(\"org.joda.time.DateTimeZone.NameProvider\");\n            if (providerClass != null) {\n                try {\n                    nameProvider = (NameProvider) Class.forName(providerClass).newInstance();\n                } catch (Exception ex) {\n                    Thread thread = Thread.currentThread();\n                    thread.getThreadGroup().uncaughtException(thread, ex);\n                }\n            }\n        } catch (SecurityException ex) {\n            // ignore\n        }\n\n        if (nameProvider == null) {\n            nameProvider = new DefaultNameProvider();\n        }\n\n        return nameProvider;\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.46875,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 6.0,
+        "literal_count": 4.0,
+        "source_tokens": 196.0,
+        "l0_tokens": 39.0,
+        "l1_tokens": 210.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 6,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/chrono/ZonedChronology.java::ZonedChronology.getInstance(Chronology base, DateTimeZone zone)",
+      "source": "public static ZonedChronology getInstance(Chronology base, DateTimeZone zone) {\n        if (base == null) {\n            throw new IllegalArgumentException(\"Must supply a chronology\");\n        }\n        base = base.withUTC();\n        if (base == null) {\n            throw new IllegalArgumentException(\"UTC chronology must not be null\");\n        }\n        if (zone == null) {\n            throw new IllegalArgumentException(\"DateTimeZone must not be null\");\n        }\n        return new ZonedChronology(base, zone);\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/chrono/ZonedChronology.java::ZonedChronology.getInstance(Chronology base, DateTimeZone zone)\nSIGNATURE: public static ZonedChronology getInstance(Chronology base, DateTimeZone zone)",
+        "METHOD: src/main/java/org/joda/time/chrono/ZonedChronology.java::ZonedChronology.getInstance(Chronology base, DateTimeZone zone)\nSIGNATURE: public static ZonedChronology getInstance(Chronology base, DateTimeZone zone)\nSTRUCTURE (lossy):\nif (base == null)\nthrow new IllegalArgumentException(\"Must supply a chronology\");\nbase = base.withUTC()\nCALL base.withUTC()\nthrow new IllegalArgumentException(\"UTC chronology must not be null\");\nif (zone == null)\nthrow new IllegalArgumentException(\"DateTimeZone must not be null\");\nreturn new ZonedChronology(base, zone);",
+        "public static ZonedChronology getInstance(Chronology base, DateTimeZone zone) {\n        if (base == null) {\n            throw new IllegalArgumentException(\"Must supply a chronology\");\n        }\n        base = base.withUTC();\n        if (base == null) {\n            throw new IllegalArgumentException(\"UTC chronology must not be null\");\n        }\n        if (zone == null) {\n            throw new IllegalArgumentException(\"DateTimeZone must not be null\");\n        }\n        return new ZonedChronology(base, zone);\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6428571428571429,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 1.0,
+        "literal_count": 6.0,
+        "source_tokens": 130.0,
+        "l0_tokens": 55.0,
+        "l1_tokens": 140.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 1,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)",
+      "source": "protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type) {\n        super();\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start instanceof BaseLocal && end instanceof BaseLocal && start.getClass() == end.getClass()) {\n            // for performance\n            type = checkPeriodType(type);\n            long startMillis = ((BaseLocal) start).getLocalMillis();\n            long endMillis = ((BaseLocal) end).getLocalMillis();\n            Chronology chrono = start.getChronology();\n            chrono = DateTimeUtils.getChronology(chrono);\n            iType = type;\n            iValues = chrono.get(this, startMillis, endMillis);\n        } else {\n            if (start.size() != end.size()) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n            for (int i = 0, isize = start.size(); i < isize; i++) {\n                if (start.getFieldType(i) != end.getFieldType(i)) {\n                    throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n                }\n            }\n            if (DateTimeUtils.isContiguous(start) == false) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n            }\n            iType = checkPeriodType(type);\n            Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n            iValues = chrono.get(this, chrono.set(start, 0L), chrono.set(end, 0L));\n        }\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)\nSIGNATURE: protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)",
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)\nSIGNATURE: protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)\nSTRUCTURE (lossy):\nif (start == null || end == null)\nthrow new IllegalArgumentException(\"ReadablePartial objects must not be null\");\nif (start instanceof BaseLocal && end instanceof BaseLocal && start.getClass() == end.getClass())\nCALL start.getClass()\nCALL end.getClass()\ntype = checkPeriodType(type)\nCALL checkPeriodType(type)\nlong startMillis = ((BaseLocal) start).getLocalMillis();\nCALL ((BaseLocal) start).getLocalMillis()\nlong endMillis = ((BaseLocal) end).getLocalMillis();\nCALL ((BaseLocal) end).getLocalMillis()\nChronology chrono = start.getChronology();\nCALL start.getChronology()\nchrono = DateTimeUtils.getChronology(chrono)\nCALL DateTimeUtils.getChronology(chrono)\niType = type\niValues = chrono.get(this, startMillis, endMillis)\nCALL chrono.get(this, startMillis, endMillis)\nif (start.size() != end.size())\nCALL start.size()\nCALL end.size()\nthrow new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\nfor (int i = 0, isize = start.size(); i < isize; i++)\nint i = 0, isize = start.size();\ni++\nif (start.getFieldType(i) != end.getFieldType(i))\nCALL start.getFieldType(i)\nCALL end.getFieldType(i)\nif (DateTimeUtils.isContiguous(start) == false)\nCALL DateTimeUtils.isContiguous(start)\nthrow new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\niType = checkPeriodType(type)\nChronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\nCALL DateTimeUtils.getChronology(start.getChronology()).withUTC()\nCALL DateTimeUtils.getChronology(start.getChronology())\niValues = chrono.get(this, chrono.set(start, 0L), chrono.set(end, 0L))\nCALL chrono.get(this, chrono.set(start, 0L), chrono.set(end, 0L))\nCALL chrono.set(start, 0L)\nCALL chrono.set(end, 0L)",
+        "protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type) {\n        super();\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start instanceof BaseLocal && end instanceof BaseLocal && start.getClass() == end.getClass()) {\n            // for performance\n            type = checkPeriodType(type);\n            long startMillis = ((BaseLocal) start).getLocalMillis();\n            long endMillis = ((BaseLocal) end).getLocalMillis();\n            Chronology chrono = start.getChronology();\n            chrono = DateTimeUtils.getChronology(chrono);\n            iType = type;\n            iValues = chrono.get(this, startMillis, endMillis);\n        } else {\n            if (start.size() != end.size()) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n            for (int i = 0, isize = start.size(); i < isize; i++) {\n                if (start.getFieldType(i) != end.getFieldType(i)) {\n                    throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n                }\n            }\n            if (DateTimeUtils.isContiguous(start) == false) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n            }\n            iType = checkPeriodType(type);\n            Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n            iValues = chrono.get(this, chrono.set(start, 0L), chrono.set(end, 0L));\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3584905660377358,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 21.0,
+        "literal_count": 9.0,
+        "source_tokens": 412.0,
+        "l0_tokens": 59.0,
+        "l1_tokens": 492.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 21,
+        "literal_count": 9
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/chrono/CopticChronology.java::CopticChronology.getInstance(DateTimeZone zone, int minDaysInFirstWeek)",
+      "source": "public static CopticChronology getInstance(DateTimeZone zone, int minDaysInFirstWeek) {\n        if (zone == null) {\n            zone = DateTimeZone.getDefault();\n        }\n        CopticChronology chrono;\n        synchronized (cCache) {\n            CopticChronology[] chronos = cCache.get(zone);\n            if (chronos == null) {\n                chronos = new CopticChronology[7];\n                cCache.put(zone, chronos);\n            }\n            try {\n                chrono = chronos[minDaysInFirstWeek - 1];\n            } catch (ArrayIndexOutOfBoundsException e) {\n                throw new IllegalArgumentException\n                    (\"Invalid min days in first week: \" + minDaysInFirstWeek);\n            }\n            if (chrono == null) {\n                if (zone == DateTimeZone.UTC) {\n                    // First create without a lower limit.\n                    chrono = new CopticChronology(null, null, minDaysInFirstWeek);\n                    // Impose lower limit and make another CopticChronology.\n                    DateTime lowerLimit = new DateTime(1, 1, 1, 0, 0, 0, 0, chrono);\n                    chrono = new CopticChronology\n                        (LimitChronology.getInstance(chrono, lowerLimit, null),\n                         null, minDaysInFirstWeek);\n                } else {\n                    chrono = getInstance(DateTimeZone.UTC, minDaysInFirstWeek);\n                    chrono = new CopticChronology\n                        (ZonedChronology.getInstance(chrono, zone), null, minDaysInFirstWeek);\n                }\n                chronos[minDaysInFirstWeek - 1] = chrono;\n            }\n        }\n        return chrono;\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/chrono/CopticChronology.java::CopticChronology.getInstance(DateTimeZone zone, int minDaysInFirstWeek)\nSIGNATURE: public static CopticChronology getInstance(DateTimeZone zone, int minDaysInFirstWeek)",
+        "METHOD: src/main/java/org/joda/time/chrono/CopticChronology.java::CopticChronology.getInstance(DateTimeZone zone, int minDaysInFirstWeek)\nSIGNATURE: public static CopticChronology getInstance(DateTimeZone zone, int minDaysInFirstWeek)\nSTRUCTURE (lossy):\nif (zone == null)\nzone = DateTimeZone.getDefault()\nCALL DateTimeZone.getDefault()\nCopticChronology chrono;\nCopticChronology[] chronos = cCache.get(zone);\nCALL cCache.get(zone)\nif (chronos == null)\nchronos = new CopticChronology[7]\nCALL cCache.put(zone, chronos)\nchrono = chronos[minDaysInFirstWeek - 1]\ncatch (ArrayIndexOutOfBoundsException e)\nthrow new IllegalArgumentException (\"Invalid min days in first week: \" + minDaysInFirstWeek);\nif (chrono == null)\nif (zone == DateTimeZone.UTC)\nchrono = new CopticChronology(null, null, minDaysInFirstWeek)\nDateTime lowerLimit = new DateTime(1, 1, 1, 0, 0, 0, 0, chrono);\nchrono = new CopticChronology (LimitChronology.getInstance(chrono, lowerLimit, null), null, minDaysInFirstWeek)\nCALL LimitChronology.getInstance(chrono, lowerLimit, null)\nchrono = getInstance(DateTimeZone.UTC, minDaysInFirstWeek)\nCALL getInstance(DateTimeZone.UTC, minDaysInFirstWeek)\nchrono = new CopticChronology (ZonedChronology.getInstance(chrono, zone), null, minDaysInFirstWeek)\nCALL ZonedChronology.getInstance(chrono, zone)\nchronos[minDaysInFirstWeek - 1] = chrono\nreturn chrono;",
+        "public static CopticChronology getInstance(DateTimeZone zone, int minDaysInFirstWeek) {\n        if (zone == null) {\n            zone = DateTimeZone.getDefault();\n        }\n        CopticChronology chrono;\n        synchronized (cCache) {\n            CopticChronology[] chronos = cCache.get(zone);\n            if (chronos == null) {\n                chronos = new CopticChronology[7];\n                cCache.put(zone, chronos);\n            }\n            try {\n                chrono = chronos[minDaysInFirstWeek - 1];\n            } catch (ArrayIndexOutOfBoundsException e) {\n                throw new IllegalArgumentException\n                    (\"Invalid min days in first week: \" + minDaysInFirstWeek);\n            }\n            if (chrono == null) {\n                if (zone == DateTimeZone.UTC) {\n                    // First create without a lower limit.\n                    chrono = new CopticChronology(null, null, minDaysInFirstWeek);\n                    // Impose lower limit and make another CopticChronology.\n                    DateTime lowerLimit = new DateTime(1, 1, 1, 0, 0, 0, 0, chrono);\n                    chrono = new CopticChronology\n                        (LimitChronology.getInstance(chrono, lowerLimit, null),\n                         null, minDaysInFirstWeek);\n                } else {\n                    chrono = getInstance(DateTimeZone.UTC, minDaysInFirstWeek);\n                    chrono = new CopticChronology\n                        (ZonedChronology.getInstance(chrono, zone), null, minDaysInFirstWeek);\n                }\n                chronos[minDaysInFirstWeek - 1] = chrono;\n            }\n        }\n        return chrono;\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 6.0,
+        "literal_count": 19.0,
+        "source_tokens": 416.0,
+        "l0_tokens": 59.0,
+        "l1_tokens": 339.0,
+        "compression_ratio": 0.8149038461538461,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 6,
+        "literal_count": 19
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/chrono/EthiopicChronology.java::EthiopicChronology.getInstance(DateTimeZone zone, int minDaysInFirstWeek)",
+      "source": "public static EthiopicChronology getInstance(DateTimeZone zone, int minDaysInFirstWeek) {\n        if (zone == null) {\n            zone = DateTimeZone.getDefault();\n        }\n        EthiopicChronology chrono;\n        synchronized (cCache) {\n            EthiopicChronology[] chronos = cCache.get(zone);\n            if (chronos == null) {\n                chronos = new EthiopicChronology[7];\n                cCache.put(zone, chronos);\n            }\n            try {\n                chrono = chronos[minDaysInFirstWeek - 1];\n            } catch (ArrayIndexOutOfBoundsException e) {\n                throw new IllegalArgumentException\n                    (\"Invalid min days in first week: \" + minDaysInFirstWeek);\n            }\n            if (chrono == null) {\n                if (zone == DateTimeZone.UTC) {\n                    // First create without a lower limit.\n                    chrono = new EthiopicChronology(null, null, minDaysInFirstWeek);\n                    // Impose lower limit and make another EthiopicChronology.\n                    DateTime lowerLimit = new DateTime(1, 1, 1, 0, 0, 0, 0, chrono);\n                    chrono = new EthiopicChronology\n                        (LimitChronology.getInstance(chrono, lowerLimit, null),\n                         null, minDaysInFirstWeek);\n                } else {\n                    chrono = getInstance(DateTimeZone.UTC, minDaysInFirstWeek);\n                    chrono = new EthiopicChronology\n                        (ZonedChronology.getInstance(chrono, zone), null, minDaysInFirstWeek);\n                }\n                chronos[minDaysInFirstWeek - 1] = chrono;\n            }\n        }\n        return chrono;\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/chrono/EthiopicChronology.java::EthiopicChronology.getInstance(DateTimeZone zone, int minDaysInFirstWeek)\nSIGNATURE: public static EthiopicChronology getInstance(DateTimeZone zone, int minDaysInFirstWeek)",
+        "METHOD: src/main/java/org/joda/time/chrono/EthiopicChronology.java::EthiopicChronology.getInstance(DateTimeZone zone, int minDaysInFirstWeek)\nSIGNATURE: public static EthiopicChronology getInstance(DateTimeZone zone, int minDaysInFirstWeek)\nSTRUCTURE (lossy):\nif (zone == null)\nzone = DateTimeZone.getDefault()\nCALL DateTimeZone.getDefault()\nEthiopicChronology chrono;\nEthiopicChronology[] chronos = cCache.get(zone);\nCALL cCache.get(zone)\nif (chronos == null)\nchronos = new EthiopicChronology[7]\nCALL cCache.put(zone, chronos)\nchrono = chronos[minDaysInFirstWeek - 1]\ncatch (ArrayIndexOutOfBoundsException e)\nthrow new IllegalArgumentException (\"Invalid min days in first week: \" + minDaysInFirstWeek);\nif (chrono == null)\nif (zone == DateTimeZone.UTC)\nchrono = new EthiopicChronology(null, null, minDaysInFirstWeek)\nDateTime lowerLimit = new DateTime(1, 1, 1, 0, 0, 0, 0, chrono);\nchrono = new EthiopicChronology (LimitChronology.getInstance(chrono, lowerLimit, null), null, minDaysInFirstWeek)\nCALL LimitChronology.getInstance(chrono, lowerLimit, null)\nchrono = getInstance(DateTimeZone.UTC, minDaysInFirstWeek)\nCALL getInstance(DateTimeZone.UTC, minDaysInFirstWeek)\nchrono = new EthiopicChronology (ZonedChronology.getInstance(chrono, zone), null, minDaysInFirstWeek)\nCALL ZonedChronology.getInstance(chrono, zone)\nchronos[minDaysInFirstWeek - 1] = chrono\nreturn chrono;",
+        "public static EthiopicChronology getInstance(DateTimeZone zone, int minDaysInFirstWeek) {\n        if (zone == null) {\n            zone = DateTimeZone.getDefault();\n        }\n        EthiopicChronology chrono;\n        synchronized (cCache) {\n            EthiopicChronology[] chronos = cCache.get(zone);\n            if (chronos == null) {\n                chronos = new EthiopicChronology[7];\n                cCache.put(zone, chronos);\n            }\n            try {\n                chrono = chronos[minDaysInFirstWeek - 1];\n            } catch (ArrayIndexOutOfBoundsException e) {\n                throw new IllegalArgumentException\n                    (\"Invalid min days in first week: \" + minDaysInFirstWeek);\n            }\n            if (chrono == null) {\n                if (zone == DateTimeZone.UTC) {\n                    // First create without a lower limit.\n                    chrono = new EthiopicChronology(null, null, minDaysInFirstWeek);\n                    // Impose lower limit and make another EthiopicChronology.\n                    DateTime lowerLimit = new DateTime(1, 1, 1, 0, 0, 0, 0, chrono);\n                    chrono = new EthiopicChronology\n                        (LimitChronology.getInstance(chrono, lowerLimit, null),\n                         null, minDaysInFirstWeek);\n                } else {\n                    chrono = getInstance(DateTimeZone.UTC, minDaysInFirstWeek);\n                    chrono = new EthiopicChronology\n                        (ZonedChronology.getInstance(chrono, zone), null, minDaysInFirstWeek);\n                }\n                chronos[minDaysInFirstWeek - 1] = chrono;\n            }\n        }\n        return chrono;\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 6.0,
+        "literal_count": 19.0,
+        "source_tokens": 420.0,
+        "l0_tokens": 60.0,
+        "l1_tokens": 344.0,
+        "compression_ratio": 0.819047619047619,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 6,
+        "literal_count": 19
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/LocalDate.java::LocalDate.toInterval(DateTimeZone zone)",
+      "source": "public Interval toInterval(DateTimeZone zone) {\n        zone = DateTimeUtils.getZone(zone);\n        DateTime start = toDateTimeAtStartOfDay(zone);\n        DateTime end = plusDays(1).toDateTimeAtStartOfDay(zone);\n        return new Interval(start, end);\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/LocalDate.java::LocalDate.toInterval(DateTimeZone zone)\nSIGNATURE: public Interval toInterval(DateTimeZone zone)",
+        "METHOD: src/main/java/org/joda/time/LocalDate.java::LocalDate.toInterval(DateTimeZone zone)\nSIGNATURE: public Interval toInterval(DateTimeZone zone)\nSTRUCTURE (lossy):\nzone = DateTimeUtils.getZone(zone)\nCALL DateTimeUtils.getZone(zone)\nDateTime start = toDateTimeAtStartOfDay(zone);\nCALL toDateTimeAtStartOfDay(zone)\nDateTime end = plusDays(1).toDateTimeAtStartOfDay(zone);\nCALL plusDays(1).toDateTimeAtStartOfDay(zone)\nCALL plusDays(1)\nreturn new Interval(start, end);",
+        "public Interval toInterval(DateTimeZone zone) {\n        zone = DateTimeUtils.getZone(zone);\n        DateTime start = toDateTimeAtStartOfDay(zone);\n        DateTime end = plusDays(1).toDateTimeAtStartOfDay(zone);\n        return new Interval(start, end);\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.75,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 4.0,
+        "literal_count": 1.0,
+        "source_tokens": 65.0,
+        "l0_tokens": 37.0,
+        "l1_tokens": 118.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 4,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.forOffsetHoursMinutes(int hoursOffset, int minutesOffset)",
+      "source": "public static DateTimeZone forOffsetHoursMinutes(int hoursOffset, int minutesOffset) throws IllegalArgumentException {\n        if (hoursOffset == 0 && minutesOffset == 0) {\n            return DateTimeZone.UTC;\n        }\n        if (hoursOffset < -23 || hoursOffset > 23) {\n            throw new IllegalArgumentException(\"Hours out of range: \" + hoursOffset);\n        }\n        if (minutesOffset < -59 || minutesOffset > 59) {\n            throw new IllegalArgumentException(\"Minutes out of range: \" + minutesOffset);\n        }\n        if (hoursOffset > 0 && minutesOffset < 0) {\n            throw new IllegalArgumentException(\"Positive hours must not have negative minutes: \" + minutesOffset);\n        }\n        int offset = 0;\n        try {\n            int hoursInMinutes = hoursOffset * 60;\n            if (hoursInMinutes < 0) {\n                minutesOffset = hoursInMinutes - Math.abs(minutesOffset);\n            } else {\n                minutesOffset = hoursInMinutes + minutesOffset;\n            }\n            offset = FieldUtils.safeMultiply(minutesOffset, DateTimeConstants.MILLIS_PER_MINUTE);\n        } catch (ArithmeticException ex) {\n            throw new IllegalArgumentException(\"Offset is too large\");\n        }\n        return forOffsetMillis(offset);\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.forOffsetHoursMinutes(int hoursOffset, int minutesOffset)\nSIGNATURE: public static DateTimeZone forOffsetHoursMinutes(int hoursOffset, int minutesOffset) throws IllegalArgumentException",
+        "METHOD: src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.forOffsetHoursMinutes(int hoursOffset, int minutesOffset)\nSIGNATURE: public static DateTimeZone forOffsetHoursMinutes(int hoursOffset, int minutesOffset) throws IllegalArgumentException\nSTRUCTURE (lossy):\nif (hoursOffset == 0 && minutesOffset == 0)\nreturn DateTimeZone.UTC;\nif (hoursOffset < -23 || hoursOffset > 23)\nthrow new IllegalArgumentException(\"Hours out of range: \" + hoursOffset);\nif (minutesOffset < -59 || minutesOffset > 59)\nthrow new IllegalArgumentException(\"Minutes out of range: \" + minutesOffset);\nif (hoursOffset > 0 && minutesOffset < 0)\nthrow new IllegalArgumentException(\"Positive hours must not have negative minutes: \" + minutesOffset);\nint offset = 0;\nint hoursInMinutes = hoursOffset * 60;\nif (hoursInMinutes < 0)\nminutesOffset = hoursInMinutes - Math.abs(minutesOffset)\nCALL Math.abs(minutesOffset)\nminutesOffset = hoursInMinutes + minutesOffset\noffset = FieldUtils.safeMultiply(minutesOffset, DateTimeConstants.MILLIS_PER_MINUTE)\nCALL FieldUtils.safeMultiply(minutesOffset, DateTimeConstants.MILLIS_PER_MINUTE)\ncatch (ArithmeticException ex)\nthrow new IllegalArgumentException(\"Offset is too large\");\nreturn forOffsetMillis(offset);\nCALL forOffsetMillis(offset)",
+        "public static DateTimeZone forOffsetHoursMinutes(int hoursOffset, int minutesOffset) throws IllegalArgumentException {\n        if (hoursOffset == 0 && minutesOffset == 0) {\n            return DateTimeZone.UTC;\n        }\n        if (hoursOffset < -23 || hoursOffset > 23) {\n            throw new IllegalArgumentException(\"Hours out of range: \" + hoursOffset);\n        }\n        if (minutesOffset < -59 || minutesOffset > 59) {\n            throw new IllegalArgumentException(\"Minutes out of range: \" + minutesOffset);\n        }\n        if (hoursOffset > 0 && minutesOffset < 0) {\n            throw new IllegalArgumentException(\"Positive hours must not have negative minutes: \" + minutesOffset);\n        }\n        int offset = 0;\n        try {\n            int hoursInMinutes = hoursOffset * 60;\n            if (hoursInMinutes < 0) {\n                minutesOffset = hoursInMinutes - Math.abs(minutesOffset);\n            } else {\n                minutesOffset = hoursInMinutes + minutesOffset;\n            }\n            offset = FieldUtils.safeMultiply(minutesOffset, DateTimeConstants.MILLIS_PER_MINUTE);\n        } catch (ArithmeticException ex) {\n            throw new IllegalArgumentException(\"Offset is too large\");\n        }\n        return forOffsetMillis(offset);\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3695652173913043,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 3.0,
+        "literal_count": 15.0,
+        "source_tokens": 318.0,
+        "l0_tokens": 64.0,
+        "l1_tokens": 315.0,
+        "compression_ratio": 0.9905660377358491,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 3,
+        "literal_count": 15
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/chrono/GJChronology.java::GJChronology.getInstance(\n            DateTimeZone zone,\n            long gregorianCutover,\n            int minDaysInFirstWeek)",
+      "source": "public static GJChronology getInstance(\n            DateTimeZone zone,\n            long gregorianCutover,\n            int minDaysInFirstWeek) {\n        \n        Instant cutoverInstant;\n        if (gregorianCutover == DEFAULT_CUTOVER.getMillis()) {\n            cutoverInstant = null;\n        } else {\n            cutoverInstant = new Instant(gregorianCutover);\n        }\n        return getInstance(zone, cutoverInstant, minDaysInFirstWeek);\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/chrono/GJChronology.java::GJChronology.getInstance(\n            DateTimeZone zone,\n            long gregorianCutover,\n            int minDaysInFirstWeek)\nSIGNATURE: public static GJChronology getInstance(\n            DateTimeZone zone,\n            long gregorianCutover,\n            int minDaysInFirstWeek)",
+        "METHOD: src/main/java/org/joda/time/chrono/GJChronology.java::GJChronology.getInstance(\n            DateTimeZone zone,\n            long gregorianCutover,\n            int minDaysInFirstWeek)\nSIGNATURE: public static GJChronology getInstance(\n            DateTimeZone zone,\n            long gregorianCutover,\n            int minDaysInFirstWeek)\nSTRUCTURE (lossy):\nInstant cutoverInstant;\nif (gregorianCutover == DEFAULT_CUTOVER.getMillis())\nCALL DEFAULT_CUTOVER.getMillis()\ncutoverInstant = null\ncutoverInstant = new Instant(gregorianCutover)\nreturn getInstance(zone, cutoverInstant, minDaysInFirstWeek);\nCALL getInstance(zone, cutoverInstant, minDaysInFirstWeek)",
+        "public static GJChronology getInstance(\n            DateTimeZone zone,\n            long gregorianCutover,\n            int minDaysInFirstWeek) {\n        \n        Instant cutoverInstant;\n        if (gregorianCutover == DEFAULT_CUTOVER.getMillis()) {\n            cutoverInstant = null;\n        } else {\n            cutoverInstant = new Instant(gregorianCutover);\n        }\n        return getInstance(zone, cutoverInstant, minDaysInFirstWeek);\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5517241379310345,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 1.0,
+        "source_tokens": 112.0,
+        "l0_tokens": 86.0,
+        "l1_tokens": 166.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/AbstractInterval.java::AbstractInterval.checkInterval(long start, long end)",
+      "source": "protected void checkInterval(long start, long end) {\n        if (end < start) {\n            throw new IllegalArgumentException(\"The end instant must be greater or equal to the start\");\n        }\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/AbstractInterval.java::AbstractInterval.checkInterval(long start, long end)\nSIGNATURE: protected void checkInterval(long start, long end)",
+        "METHOD: src/main/java/org/joda/time/base/AbstractInterval.java::AbstractInterval.checkInterval(long start, long end)\nSIGNATURE: protected void checkInterval(long start, long end)\nSTRUCTURE (lossy):\nif (end < start)\nthrow new IllegalArgumentException(\"The end instant must be greater or equal to the start\");",
+        "protected void checkInterval(long start, long end) {\n        if (end < start) {\n            throw new IllegalArgumentException(\"The end instant must be greater or equal to the start\");\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.56,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 0.0,
+        "literal_count": 1.0,
+        "source_tokens": 50.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 77.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 0,
+        "literal_count": 1
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/main/java/org/joda/time/DateTimeUtils.java::DateTimeUtils.getDateFormatSymbols(Locale locale)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/MutableDateTime.java::MutableDateTime.clone()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/MutableInterval.java::MutableInterval.clone()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.clone()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java::BaseSingleFieldPeriod.between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/chrono/GJChronology.java::GJChronology.getInstance(\n            DateTimeZone zone,\n            ReadableInstant gregorianCutover,\n            int minDaysInFirstWeek)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/chrono/ZonedChronology.java::ZonedChronology.ZonedDateTimeField.set(long instant, int value)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.getDefault()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/tz/DateTimeZoneBuilder.java::DateTimeZoneBuilder.DSTZone.previousTransition(long instant)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.getDefaultProvider()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/LocalDate.java::LocalDate.toDateTimeAtStartOfDay(DateTimeZone zone)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/chrono/GregorianChronology.java::GregorianChronology.getInstance(DateTimeZone zone, int minDaysInFirstWeek)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/chrono/JulianChronology.java::JulianChronology.getInstance(DateTimeZone zone, int minDaysInFirstWeek)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/chrono/GJChronology.java::GJChronology.getDateTimeMillis(int year, int monthOfYear, int dayOfMonth,\n                                  int hourOfDay, int minuteOfHour,\n                                  int secondOfMinute, int millisOfSecond)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/tz/ZoneInfoCompiler.java::ZoneInfoCompiler.test(String id, DateTimeZone tz)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.getDefaultNameProvider()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/chrono/ZonedChronology.java::ZonedChronology.getInstance(Chronology base, DateTimeZone zone)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/chrono/CopticChronology.java::CopticChronology.getInstance(DateTimeZone zone, int minDaysInFirstWeek)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/chrono/EthiopicChronology.java::EthiopicChronology.getInstance(DateTimeZone zone, int minDaysInFirstWeek)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/LocalDate.java::LocalDate.toInterval(DateTimeZone zone)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.forOffsetHoursMinutes(int hoursOffset, int minutesOffset)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/chrono/GJChronology.java::GJChronology.getInstance(\n            DateTimeZone zone,\n            long gregorianCutover,\n            int minDaysInFirstWeek)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/AbstractInterval.java::AbstractInterval.checkInterval(long start, long end)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 4146,
+    "retrieved_unique_entities": 24,
+    "deduplication": "highest_bm25_or_lexical_score_per_entity_id",
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "59e439e864a12e11f1501865859a7ab6e21ac1e49363c4ef69ebb9198b2e7125",
+  "evidence_sha256": "0a4291d612df069c02e1a38442d8418995da2ec7d09009647f48b7f9908e2d4d"
+}

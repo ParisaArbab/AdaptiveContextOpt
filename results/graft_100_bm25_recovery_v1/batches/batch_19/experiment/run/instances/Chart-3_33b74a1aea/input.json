@@ -1,0 +1,1320 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Chart-3",
+    "repository": "Chart",
+    "language": "java",
+    "revision": "1299dc5a52e8522ac741ba4fe34ccabcbf831eb6",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_19/prepared/checkouts/Chart-3",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Chart-3\nEXECUTED BUGGY TEST: org.jfree.data.time.junit.TimeSeriesTests::testCreateCopy3\nTEST SOURCE: tests/org/jfree/data/time/junit/TimeSeriesTests.java\nTEST SOURCE SHA256: c753075589ec189b990360e8c1fc22332e8ce4a289f3711403ab0bef11d5224d\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testCreateCopy3() throws CloneNotSupportedException {\n        TimeSeries s1 = new TimeSeries(\"S1\");\n        s1.add(new Year(2009), 100.0);\n        s1.add(new Year(2010), 101.0);\n        s1.add(new Year(2011), 102.0);\n        assertEquals(100.0, s1.getMinY(), EPSILON);\n        assertEquals(102.0, s1.getMaxY(), EPSILON);\n\n        TimeSeries s2 = s1.createCopy(0, 1);\n        assertEquals(100.0, s2.getMinY(), EPSILON);\n        assertEquals(101.0, s2.getMaxY(), EPSILON);\n\n        TimeSeries s3 = s1.createCopy(1, 2);\n        assertEquals(101.0, s3.getMinY(), EPSILON);\n        assertEquals(102.0, s3.getMaxY(), EPSILON);\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.jfree.data.time.junit.TimeSeriesTests::testCreateCopy3\njunit.framework.AssertionFailedError: expected:<101.0> but was:<102.0>\n\tat junit.framework.Assert.fail(Assert.java:57)\n\tat junit.framework.Assert.failNotEquals(Assert.java:329)\n\tat junit.framework.Assert.assertEquals(Assert.java:120)\n\tat junit.framework.Assert.assertEquals(Assert.java:129)\n\tat junit.framework.TestCase.assertEquals(TestCase.java:288)\n\tat org.jfree.data.time.junit.TimeSeriesTests.testCreateCopy3(TimeSeriesTests.java:607)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_19/prepared/evidence/Chart-3.txt",
+      "sha256": "d7c4a6577b01d0433f81d33cdd0e710245855e8f0afd6dd968c482e26241dac5"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "source",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Chart-3",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "source/org/jfree/data/time/TimePeriodValues.java::TimePeriodValues.createCopy(int start, int end)",
+      "path": "source/org/jfree/data/time/TimePeriodValues.java",
+      "start_line": 495,
+      "end_line": 515,
+      "source": "public TimePeriodValues createCopy(int start, int end) \n        throws CloneNotSupportedException {\n\n        TimePeriodValues copy = (TimePeriodValues) super.clone();\n\n        copy.data = new ArrayList();\n        if (this.data.size() > 0) {\n            for (int index = start; index <= end; index++) {\n                TimePeriodValue item = (TimePeriodValue) this.data.get(index);\n                TimePeriodValue clone = (TimePeriodValue) item.clone();\n                try {\n                    copy.add(clone);\n                }\n                catch (SeriesException e) {\n                    System.err.println(\"Failed to add cloned item.\");\n                }\n            }\n        }\n        return copy;\n\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 54.92848920190967
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/TimeSeries.java::TimeSeries.createCopy(int start, int end)",
+      "path": "source/org/jfree/data/time/TimeSeries.java",
+      "start_line": 1048,
+      "end_line": 1072,
+      "source": "public TimeSeries createCopy(int start, int end)\n            throws CloneNotSupportedException {\n        if (start < 0) {\n            throw new IllegalArgumentException(\"Requires start >= 0.\");\n        }\n        if (end < start) {\n            throw new IllegalArgumentException(\"Requires start <= end.\");\n        }\n        TimeSeries copy = (TimeSeries) super.clone();\n        copy.data = new java.util.ArrayList();\n        if (this.data.size() > 0) {\n            for (int index = start; index <= end; index++) {\n                TimeSeriesDataItem item\n                        = (TimeSeriesDataItem) this.data.get(index);\n                TimeSeriesDataItem clone = (TimeSeriesDataItem) item.clone();\n                try {\n                    copy.add(clone);\n                }\n                catch (SeriesException e) {\n                    e.printStackTrace();\n                }\n            }\n        }\n        return copy;\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 50.87377059693789
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.clone(final Object object)",
+      "path": "source/org/jfree/chart/util/ObjectUtilities.java",
+      "start_line": 160,
+      "end_line": 188,
+      "source": "public static Object clone(final Object object)\n        throws CloneNotSupportedException {\n        if (object == null) {\n            throw new IllegalArgumentException(\"Null 'object' argument.\");\n        }\n        if (object instanceof PublicCloneable) {\n            final PublicCloneable pc = (PublicCloneable) object;\n            return pc.clone();\n        }\n        else {\n            try {\n                final Method method = object.getClass().getMethod(\"clone\",\n                        (Class[]) null);\n                if (Modifier.isPublic(method.getModifiers())) {\n                    return method.invoke(object, (Object[]) null);\n                }\n            }\n            catch (NoSuchMethodException e) {\n                e.printStackTrace();\n            }\n            catch (IllegalAccessException e) {\n                e.printStackTrace();\n            }\n            catch (InvocationTargetException e) {\n                e.printStackTrace();\n            }\n        }\n        throw new CloneNotSupportedException(\"Failed to clone.\");\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 46.90058524151467
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/gantt/TaskSeries.java::TaskSeries.clone()",
+      "path": "source/org/jfree/data/gantt/TaskSeries.java",
+      "start_line": 193,
+      "end_line": 197,
+      "source": "public Object clone() throws CloneNotSupportedException {\n        TaskSeries clone = (TaskSeries) super.clone();\n        clone.tasks = (List) ObjectUtilities.deepClone(this.tasks);\n        return clone;\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 45.99094179555219
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/xy/XYSeries.java::XYSeries.createCopy(int start, int end)",
+      "path": "source/org/jfree/data/xy/XYSeries.java",
+      "start_line": 923,
+      "end_line": 942,
+      "source": "public XYSeries createCopy(int start, int end)\n            throws CloneNotSupportedException {\n\n        XYSeries copy = (XYSeries) super.clone();\n        copy.data = new java.util.ArrayList();\n        if (this.data.size() > 0) {\n            for (int index = start; index <= end; index++) {\n                XYDataItem item = (XYDataItem) this.data.get(index);\n                XYDataItem clone = (XYDataItem) item.clone();\n                try {\n                    copy.add(clone);\n                }\n                catch (SeriesException e) {\n                    System.err.println(\"Unable to add cloned data item.\");\n                }\n            }\n        }\n        return copy;\n\n    }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 45.91635703245074
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/demo/TimeSeriesChartDemo1.java::TimeSeriesChartDemo1.createDataset()",
+      "path": "source/org/jfree/chart/demo/TimeSeriesChartDemo1.java",
+      "start_line": 128,
+      "end_line": 184,
+      "source": "private static XYDataset createDataset() {\n\n        TimeSeries s1 = new TimeSeries(\"L&G European Index Trust\");\n        s1.add(new Month(2, 2001), 181.8);\n        s1.add(new Month(3, 2001), 167.3);\n        s1.add(new Month(4, 2001), 153.8);\n        s1.add(new Month(5, 2001), 167.6);\n        s1.add(new Month(6, 2001), 158.8);\n        s1.add(new Month(7, 2001), 148.3);\n        s1.add(new Month(8, 2001), 153.9);\n        s1.add(new Month(9, 2001), 142.7);\n        s1.add(new Month(10, 2001), 123.2);\n        s1.add(new Month(11, 2001), 131.8);\n        s1.add(new Month(12, 2001), 139.6);\n        s1.add(new Month(1, 2002), 142.9);\n        s1.add(new Month(2, 2002), 138.7);\n        s1.add(new Month(3, 2002), 137.3);\n        s1.add(new Month(4, 2002), 143.9);\n        s1.add(new Month(5, 2002), 139.8);\n        s1.add(new Month(6, 2002), 137.0);\n        s1.add(new Month(7, 2002), 132.8);\n\n        TimeSeries s2 = new TimeSeries(\"L&G UK Index Trust\");\n        s2.add(new Month(2, 2001), 129.6);\n        s2.add(new Month(3, 2001), 123.2);\n        s2.add(new Month(4, 2001), 117.2);\n        s2.add(new Month(5, 2001), 124.1);\n        s2.add(new Month(6, 2001), 122.6);\n        s2.add(new Month(7, 2001), 119.2);\n        s2.add(new Month(8, 2001), 116.5);\n        s2.add(new Month(9, 2001), 112.7);\n        s2.add(new Month(10, 2001), 101.5);\n        s2.add(new Month(11, 2001), 106.1);\n        s2.add(new Month(12, 2001), 110.3);\n        s2.add(new Month(1, 2002), 111.7);\n        s2.add(new Month(2, 2002), 111.0);\n        s2.add(new Month(3, 2002), 109.6);\n        s2.add(new Month(4, 2002), 113.2);\n        s2.add(new Month(5, 2002), 111.6);\n        s2.add(new Month(6, 2002), 108.8);\n        s2.add(new Month(7, 2002), 101.6);\n\n        // ******************************************************************\n        //  More than 150 demo applications are included with the JFreeChart\n        //  Developer Guide...for more information, see:\n        //\n        //  >   http://www.object-refinery.com/jfreechart/guide.html\n        //\n        // ******************************************************************\n\n        TimeSeriesCollection dataset = new TimeSeriesCollection();\n        dataset.addSeries(s1);\n        dataset.addSeries(s2);\n\n        return dataset;\n\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 45.1851678508962
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/TimeSeries.java::TimeSeries.createCopy(RegularTimePeriod start, RegularTimePeriod end)",
+      "path": "source/org/jfree/data/time/TimeSeries.java",
+      "start_line": 1088,
+      "end_line": 1126,
+      "source": "public TimeSeries createCopy(RegularTimePeriod start, RegularTimePeriod end)\n        throws CloneNotSupportedException {\n\n        if (start == null) {\n            throw new IllegalArgumentException(\"Null 'start' argument.\");\n        }\n        if (end == null) {\n            throw new IllegalArgumentException(\"Null 'end' argument.\");\n        }\n        if (start.compareTo(end) > 0) {\n            throw new IllegalArgumentException(\n                    \"Requires start on or before end.\");\n        }\n        boolean emptyRange = false;\n        int startIndex = getIndex(start);\n        if (startIndex < 0) {\n            startIndex = -(startIndex + 1);\n            if (startIndex == this.data.size()) {\n                emptyRange = true;  // start is after last data item\n            }\n        }\n        int endIndex = getIndex(end);\n        if (endIndex < 0) {             // end period is not in original series\n            endIndex = -(endIndex + 1); // this is first item AFTER end period\n            endIndex = endIndex - 1;    // so this is last item BEFORE end\n        }\n        if ((endIndex < 0)  || (endIndex < startIndex)) {\n            emptyRange = true;\n        }\n        if (emptyRange) {\n            TimeSeries copy = (TimeSeries) super.clone();\n            copy.data = new java.util.ArrayList();\n            return copy;\n        }\n        else {\n            return createCopy(startIndex, endIndex);\n        }\n\n    }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 45.13707631260821
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)",
+      "path": "source/org/jfree/data/jdbc/JDBCXYDataset.java",
+      "start_line": 229,
+      "end_line": 413,
+      "source": "public void executeQuery(Connection con, String query)\n        throws SQLException {\n\n        if (con == null) {\n            throw new SQLException(\n                \"There is no database to execute the query.\"\n            );\n        }\n\n        ResultSet resultSet = null;\n        Statement statement = null;\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int numberOfColumns = metaData.getColumnCount();\n            int numberOfValidColumns = 0;\n            int [] columnTypes = new int[numberOfColumns];\n            for (int column = 0; column < numberOfColumns; column++) {\n                try {\n                    int type = metaData.getColumnType(column + 1);\n                    switch (type) {\n\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIT:\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            ++numberOfValidColumns;\n                            columnTypes[column] = type;\n                            break;\n                        default:\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                catch (SQLException e) {\n                    columnTypes[column] = Types.NULL;\n                    throw e;\n                }\n            }\n\n\n            if (numberOfValidColumns <= 1) {\n                throw new SQLException(\n                    \"Not enough valid columns where generated by query.\"\n                );\n            }\n\n            /// First column is X data\n            this.columnNames = new String[numberOfValidColumns - 1];\n            /// Get the column names and cache them.\n            int currentColumn = 0;\n            for (int column = 1; column < numberOfColumns; column++) {\n                if (columnTypes[column] != Types.NULL) {\n                    this.columnNames[currentColumn]\n                        = metaData.getColumnLabel(column + 1);\n                    ++currentColumn;\n                }\n            }\n\n            // Might need to add, to free memory from any previous result sets\n            if (this.rows != null) {\n                for (int column = 0; column < this.rows.size(); column++) {\n                    ArrayList row = (ArrayList) this.rows.get(column);\n                    row.clear();\n                }\n                this.rows.clear();\n            }\n\n            // Are we working with a time series.\n            switch (columnTypes[0]) {\n                case Types.DATE:\n                case Types.TIME:\n                case Types.TIMESTAMP:\n                    this.isTimeSeries = true;\n                    break;\n                default :\n                    this.isTimeSeries = false;\n                    break;\n            }\n\n            // Get all rows.\n            // rows = new ArrayList();\n            while (resultSet.next()) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    Object xObject = resultSet.getObject(column + 1);\n                    switch (columnTypes[column]) {\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            newRow.add(xObject);\n                            break;\n\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                            newRow.add(new Long(((Date) xObject).getTime()));\n                            break;\n                        case Types.NULL:\n                            break;\n                        default:\n                            System.err.println(\"Unknown data\");\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// a kludge to make everything work when no rows returned\n            if (this.rows.size() == 0) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    if (columnTypes[column] != Types.NULL) {\n                        newRow.add(new Integer(0));\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// Determine max and min values.\n            if (this.rows.size() < 1) {\n                this.maxValue = 0.0;\n                this.minValue = 0.0;\n            }\n            else {\n                ArrayList row = (ArrayList) this.rows.get(0);\n                this.maxValue = Double.NEGATIVE_INFINITY;\n                this.minValue = Double.POSITIVE_INFINITY;\n                for (int rowNum = 0; rowNum < this.rows.size(); ++rowNum) {\n                    row = (ArrayList) this.rows.get(rowNum);\n                    for (int column = 1; column < numberOfColumns; column++) {\n                        Object testValue = row.get(column);\n                        if (testValue != null) {\n                            double test = ((Number) testValue).doubleValue();\n\n                            if (test < this.minValue) {\n                                this.minValue = test;\n                            }\n                            if (test > this.maxValue) {\n                                this.maxValue = test;\n                            }\n                        }\n                    }\n                }\n            }\n\n            fireDatasetChanged(new DatasetChangeInfo());\n            //TODO: fill in real change info\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n        }\n\n    }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 43.86199987694485
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/TimePeriodValuesCollection.java::TimePeriodValuesCollection.getDomainBounds(boolean includeInterval)",
+      "path": "source/org/jfree/data/time/TimePeriodValuesCollection.java",
+      "start_line": 380,
+      "end_line": 425,
+      "source": "public Range getDomainBounds(boolean includeInterval) {\n        Range result = null;\n        Range temp = null;\n        Iterator iterator = this.data.iterator();\n        while (iterator.hasNext()) {\n            TimePeriodValues series = (TimePeriodValues) iterator.next();\n            int count = series.getItemCount();\n            if (count > 0) {\n                TimePeriod start = series.getTimePeriod(\n                        series.getMinStartIndex());\n                TimePeriod end = series.getTimePeriod(series.getMaxEndIndex());\n                if (!includeInterval) {\n                    if (this.xPosition == TimePeriodAnchor.START) {\n                        TimePeriod maxStart = series.getTimePeriod(\n                                series.getMaxStartIndex());\n                        temp = new Range(start.getStart().getTime(),\n                                maxStart.getStart().getTime());\n                    }\n                    else if (this.xPosition == TimePeriodAnchor.MIDDLE) {\n                        TimePeriod minMiddle = series.getTimePeriod(\n                                series.getMinMiddleIndex());\n                        long s1 = minMiddle.getStart().getTime();\n                        long e1 = minMiddle.getEnd().getTime();\n                        TimePeriod maxMiddle = series.getTimePeriod(\n                                series.getMaxMiddleIndex());\n                        long s2 = maxMiddle.getStart().getTime();\n                        long e2 = maxMiddle.getEnd().getTime();\n                        temp = new Range(s1 + (e1 - s1) / 2,\n                                s2 + (e2 - s2) / 2);\n                    }\n                    else if (this.xPosition == TimePeriodAnchor.END) {\n                        TimePeriod minEnd = series.getTimePeriod(\n                                series.getMinEndIndex());\n                        temp = new Range(minEnd.getEnd().getTime(),\n                                end.getEnd().getTime());\n                    }\n                }\n                else {\n                    temp = new Range(start.getStart().getTime(),\n                            end.getEnd().getTime());\n                }\n                result = Range.combine(result, temp);\n            }\n        }\n        return result;\n    }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.37172136340876
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/Month.java::Month.parseMonth(String s)",
+      "path": "source/org/jfree/data/time/Month.java",
+      "start_line": 447,
+      "end_line": 500,
+      "source": "public static Month parseMonth(String s) {\n        Month result = null;\n        if (s == null) {\n            return result;\n        }\n        // trim whitespace from either end of the string\n        s = s.trim();\n        int i = Month.findSeparator(s);\n        String s1, s2;\n        boolean yearIsFirst;\n        // if there is no separator, we assume the first four characters\n        // are YYYY\n        if (i == -1) {\n            yearIsFirst = true;\n            s1 = s.substring(0, 5);\n            s2 = s.substring(5);\n        }\n        else {\n            s1 = s.substring(0, i).trim();\n            s2 = s.substring(i + 1, s.length()).trim();\n            // now it is trickier to determine if the month or year is first\n            Year y1 = Month.evaluateAsYear(s1);\n            if (y1 == null) {\n                yearIsFirst = false;\n            }\n            else {\n                Year y2 = Month.evaluateAsYear(s2);\n                if (y2 == null) {\n                    yearIsFirst = true;\n                }\n                else {\n                    yearIsFirst = (s1.length() > s2.length());\n                }\n            }\n        }\n        Year year;\n        int month;\n        if (yearIsFirst) {\n            year = Month.evaluateAsYear(s1);\n            month = SerialDate.stringToMonthCode(s2);\n        }\n        else {\n            year = Month.evaluateAsYear(s2);\n            month = SerialDate.stringToMonthCode(s1);\n        }\n        if (month == -1) {\n            throw new TimePeriodFormatException(\"Can't evaluate the month.\");\n        }\n        if (year == null) {\n            throw new TimePeriodFormatException(\"Can't evaluate the year.\");\n        }\n        result = new Month(month, year);\n        return result;\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.241277409076964
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/TimePeriodValues.java::TimePeriodValues.clone()",
+      "path": "source/org/jfree/data/time/TimePeriodValues.java",
+      "start_line": 479,
+      "end_line": 482,
+      "source": "public Object clone() throws CloneNotSupportedException {\n        Object clone = createCopy(0, getItemCount() - 1);\n        return clone;\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.22100375393255
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/jdbc/JDBCPieDataset.java::JDBCPieDataset.executeQuery(Connection con, String query)",
+      "path": "source/org/jfree/data/jdbc/JDBCPieDataset.java",
+      "start_line": 167,
+      "end_line": 238,
+      "source": "public void executeQuery(Connection con, String query) throws SQLException {\n\n        Statement statement = null;\n        ResultSet resultSet = null;\n\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int columnCount = metaData.getColumnCount();\n            if (columnCount != 2) {\n                throw new SQLException(\n                    \"Invalid sql generated.  PieDataSet requires 2 columns only\"\n                );\n            }\n\n            int columnType = metaData.getColumnType(2);\n            double value = Double.NaN;\n            while (resultSet.next()) {\n                Comparable key = resultSet.getString(1);\n                switch (columnType) {\n                    case Types.NUMERIC:\n                    case Types.REAL:\n                    case Types.INTEGER:\n                    case Types.DOUBLE:\n                    case Types.FLOAT:\n                    case Types.DECIMAL:\n                    case Types.BIGINT:\n                        value = resultSet.getDouble(2);\n                        setValue(key, value);\n                        break;\n\n                    case Types.DATE:\n                    case Types.TIME:\n                    case Types.TIMESTAMP:\n                        Timestamp date = resultSet.getTimestamp(2);\n                        value = date.getTime();\n                        setValue(key, value);\n                        break;\n\n                    default:\n                        System.err.println(\n                            \"JDBCPieDataset - unknown data type\"\n                        );\n                        break;\n                }\n            }\n\n            fireDatasetChanged(new DatasetChangeInfo());\n            //TODO: fill in real change info\n\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    System.err.println(\"JDBCPieDataset: swallowing exception.\");\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    System.err.println(\"JDBCPieDataset: swallowing exception.\");\n                }\n            }\n        }\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.70405053949313
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/needle/LongNeedle.java::LongNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea,\n                              Point2D rotate, double angle)",
+      "path": "source/org/jfree/chart/needle/LongNeedle.java",
+      "start_line": 80,
+      "end_line": 147,
+      "source": "protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea,\n                              Point2D rotate, double angle) {\n\n        GeneralPath shape1 = new GeneralPath();\n        GeneralPath shape2 = new GeneralPath();\n        GeneralPath shape3 = new GeneralPath();\n\n        float minX = (float) plotArea.getMinX();\n        float minY = (float) plotArea.getMinY();\n        float maxX = (float) plotArea.getMaxX();\n        float maxY = (float) plotArea.getMaxY();\n        //float midX = (float) (minX + (plotArea.getWidth() * getRotateX()));\n        //float midY = (float) (minY + (plotArea.getHeight() * getRotateY()));\n        float midX = (float) (minX + (plotArea.getWidth() * 0.5));\n        float midY = (float) (minY + (plotArea.getHeight() * 0.8));\n        float y = maxY - (2 * (maxY - midY));\n        if (y < minY) {\n            y = minY;\n        }\n        shape1.moveTo(minX, midY);\n        shape1.lineTo(midX, minY);\n        shape1.lineTo(midX, y);\n        shape1.closePath();\n\n        shape2.moveTo(maxX, midY);\n        shape2.lineTo(midX, minY);\n        shape2.lineTo(midX, y);\n        shape2.closePath();\n\n        shape3.moveTo(minX, midY);\n        shape3.lineTo(midX, maxY);\n        shape3.lineTo(maxX, midY);\n        shape3.lineTo(midX, y);\n        shape3.closePath();\n\n        Shape s1 = shape1;\n        Shape s2 = shape2;\n        Shape s3 = shape3;\n\n        if ((rotate != null) && (angle != 0)) {\n            /// we have rotation huston, please spin me\n            getTransform().setToRotation(angle, rotate.getX(), rotate.getY());\n            s1 = shape1.createTransformedShape(transform);\n            s2 = shape2.createTransformedShape(transform);\n            s3 = shape3.createTransformedShape(transform);\n        }\n\n\n        if (getHighlightPaint() != null) {\n            g2.setPaint(getHighlightPaint());\n            g2.fill(s3);\n        }\n\n        if (getFillPaint() != null) {\n            g2.setPaint(getFillPaint());\n            g2.fill(s1);\n            g2.fill(s2);\n        }\n\n\n        if (getOutlinePaint() != null) {\n            g2.setStroke(getOutlineStroke());\n            g2.setPaint(getOutlinePaint());\n            g2.draw(s1);\n            g2.draw(s2);\n            g2.draw(s3);\n        }\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.40441258098714
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/Week.java::Week.parseWeek(String s)",
+      "path": "source/org/jfree/data/time/Week.java",
+      "start_line": 532,
+      "end_line": 580,
+      "source": "public static Week parseWeek(String s) {\n\n        Week result = null;\n        if (s != null) {\n\n            // trim whitespace from either end of the string\n            s = s.trim();\n\n            int i = Week.findSeparator(s);\n            if (i != -1) {\n                String s1 = s.substring(0, i).trim();\n                String s2 = s.substring(i + 1, s.length()).trim();\n\n                Year y = Week.evaluateAsYear(s1);\n                int w;\n                if (y != null) {\n                    w = Week.stringToWeek(s2);\n                    if (w == -1) {\n                        throw new TimePeriodFormatException(\n                                \"Can't evaluate the week.\");\n                    }\n                    result = new Week(w, y);\n                }\n                else {\n                    y = Week.evaluateAsYear(s2);\n                    if (y != null) {\n                        w = Week.stringToWeek(s1);\n                        if (w == -1) {\n                            throw new TimePeriodFormatException(\n                                    \"Can't evaluate the week.\");\n                        }\n                        result = new Week(w, y);\n                    }\n                    else {\n                        throw new TimePeriodFormatException(\n                                \"Can't evaluate the year.\");\n                    }\n                }\n\n            }\n            else {\n                throw new TimePeriodFormatException(\n                        \"Could not find separator.\");\n            }\n\n        }\n        return result;\n\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 39.06701580511006
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/AttributedStringUtilities.java::AttributedStringUtilities.equal(AttributedString s1, AttributedString s2)",
+      "path": "source/org/jfree/chart/util/AttributedStringUtilities.java",
+      "start_line": 70,
+      "end_line": 105,
+      "source": "public static boolean equal(AttributedString s1, AttributedString s2) {\n        if (s1 == null) {\n            return (s2 == null);\n        }\n        if (s2 == null) {\n            return false;\n        }\n        AttributedCharacterIterator it1 = s1.getIterator();\n        AttributedCharacterIterator it2 = s2.getIterator();\n        char c1 = it1.first();\n        char c2 = it2.first();\n        int start = 0;\n        while (c1 != CharacterIterator.DONE) {\n            int limit1 = it1.getRunLimit();\n            int limit2 = it2.getRunLimit();\n            if (limit1 != limit2) {\n                return false;\n            }\n            // if maps aren't equivalent, return false\n            Map m1 = it1.getAttributes();\n            Map m2 = it2.getAttributes();\n            if (!m1.equals(m2)) {\n                return false;\n            }\n            // now check characters in the run are the same\n            for (int i = start; i < limit1; i++) {\n                if (c1 != c2) {\n                    return false;\n                }\n                c1 = it1.next();\n                c2 = it2.next();\n            }\n            start = limit1;\n        }\n        return c2 == CharacterIterator.DONE;\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 38.318147954708536
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getCenterPoint()",
+      "path": "source/org/jfree/chart/util/RefineryUtilities.java",
+      "start_line": 108,
+      "end_line": 124,
+      "source": "public static Point getCenterPoint ()\n    {\n      GraphicsEnvironment localGraphicsEnvironment\n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\"getCenterPoint\",\n                  (Class[]) null);\n          return (Point) method.invoke(localGraphicsEnvironment,\n                  (Object[]) null);\n      }\n      catch (Exception e) {\n        // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Point (s.width / 2, s.height / 2);\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 37.45570905699958
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getMaximumWindowBounds()",
+      "path": "source/org/jfree/chart/util/RefineryUtilities.java",
+      "start_line": 133,
+      "end_line": 148,
+      "source": "public static Rectangle getMaximumWindowBounds() {\n      GraphicsEnvironment localGraphicsEnvironment\n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\n                  \"getMaximumWindowBounds\", (Class[]) null);\n          return (Rectangle) method.invoke(localGraphicsEnvironment,\n                  (Object[]) null);\n      }\n      catch (Exception e) {\n          // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Rectangle (0, 0, s.width, s.height);\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.81502625261447
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/DefaultKeyedValues2D.java::DefaultKeyedValues2D.clone()",
+      "path": "source/org/jfree/data/DefaultKeyedValues2D.java",
+      "start_line": 570,
+      "end_line": 580,
+      "source": "public Object clone() throws CloneNotSupportedException {\n        DefaultKeyedValues2D clone = (DefaultKeyedValues2D) super.clone();\n        // for the keys, a shallow copy should be fine because keys\n        // should be immutable...\n        clone.columnKeys = new java.util.ArrayList(this.columnKeys);\n        clone.rowKeys = new java.util.ArrayList(this.rowKeys);\n\n        // but the row data requires a deep copy\n        clone.rows = (List) ObjectUtilities.deepClone(this.rows);\n        return clone;\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 36.16744807123912
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.OptionalLibraryHolder.loadLibrary(String classname)",
+      "path": "source/org/jfree/chart/ui/BasicProjectInfo.java",
+      "start_line": 109,
+      "end_line": 130,
+      "source": "protected Library loadLibrary(String classname) {\n            if (classname == null) {\n                return null;\n            }\n            try {\n                Class c = ObjectUtilities.getClassLoader(\n                        getClass()).loadClass(classname);\n                try {\n                    Method m = c.getMethod(\"getInstance\", (Class[]) null);\n                    return (Library) m.invoke(null, (Object[]) null);\n                }\n                catch(Exception e) {\n                    // ok, fall back ...\n                }\n                return (Library) c.newInstance();\n            }\n            catch (Exception e) {\n                // ok, this library has no 'getInstance()' method. Check the\n                // default constructor ...\n                return null;\n            }\n        }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.81558259039957
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/gantt/TaskSeriesCollection.java::TaskSeriesCollection.clone()",
+      "path": "source/org/jfree/data/gantt/TaskSeriesCollection.java",
+      "start_line": 680,
+      "end_line": 685,
+      "source": "public Object clone() throws CloneNotSupportedException {\n        TaskSeriesCollection clone = (TaskSeriesCollection) super.clone();\n        clone.data = (List) ObjectUtilities.deepClone(this.data);\n        clone.keys = new java.util.ArrayList(this.keys);\n        return clone;\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.685781405580386
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/SpreadsheetDate.java::SpreadsheetDate.isInRange(final SerialDate d1, final SerialDate d2,\n                             final int include)",
+      "path": "source/org/jfree/data/time/SpreadsheetDate.java",
+      "start_line": 415,
+      "end_line": 435,
+      "source": "public boolean isInRange(final SerialDate d1, final SerialDate d2,\n                             final int include) {\n        final int s1 = d1.toSerial();\n        final int s2 = d2.toSerial();\n        final int start = Math.min(s1, s2);\n        final int end = Math.max(s1, s2);\n\n        final int s = toSerial();\n        if (include == SerialDate.INCLUDE_BOTH) {\n            return (s >= start && s <= end);\n        }\n        else if (include == SerialDate.INCLUDE_FIRST) {\n            return (s >= start && s < end);\n        }\n        else if (include == SerialDate.INCLUDE_SECOND) {\n            return (s > start && s <= end);\n        }\n        else {\n            return (s > start && s < end);\n        }\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.491864046219035
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/gantt/Task.java::Task.clone()",
+      "path": "source/org/jfree/data/gantt/Task.java",
+      "start_line": 252,
+      "end_line": 255,
+      "source": "public Object clone() throws CloneNotSupportedException {\n        Task clone = (Task) super.clone();\n        return clone;\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 34.987504794739266
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.deepClone(final Collection collection)",
+      "path": "source/org/jfree/chart/util/ObjectUtilities.java",
+      "start_line": 200,
+      "end_line": 223,
+      "source": "public static Collection deepClone(final Collection collection)\n        throws CloneNotSupportedException {\n\n        if (collection == null) {\n            throw new IllegalArgumentException(\"Null 'collection' argument.\");\n        }\n        // all JDK-Collections are cloneable ...\n        // and if the collection is not clonable, then we should throw\n        // a CloneNotSupportedException anyway ...\n        final Collection result\n            = (Collection) ObjectUtilities.clone(collection);\n        result.clear();\n        final Iterator iterator = collection.iterator();\n        while (iterator.hasNext()) {\n            final Object item = iterator.next();\n            if (item != null) {\n                result.add(clone(item));\n            }\n            else {\n                result.add(null);\n            }\n        }\n        return result;\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.71042451243523
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/gantt/TaskSeries.java::TaskSeries.add(Task task)",
+      "path": "source/org/jfree/data/gantt/TaskSeries.java",
+      "start_line": 82,
+      "end_line": 88,
+      "source": "public void add(Task task) {\n        if (task == null) {\n            throw new IllegalArgumentException(\"Null 'task' argument.\");\n        }\n        this.tasks.add(task);\n        fireSeriesChanged();\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 33.436286983291836
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "source/org/jfree/data/time/TimePeriodValues.java::TimePeriodValues.createCopy(int start, int end)",
+      "source": "public TimePeriodValues createCopy(int start, int end) \n        throws CloneNotSupportedException {\n\n        TimePeriodValues copy = (TimePeriodValues) super.clone();\n\n        copy.data = new ArrayList();\n        if (this.data.size() > 0) {\n            for (int index = start; index <= end; index++) {\n                TimePeriodValue item = (TimePeriodValue) this.data.get(index);\n                TimePeriodValue clone = (TimePeriodValue) item.clone();\n                try {\n                    copy.add(clone);\n                }\n                catch (SeriesException e) {\n                    System.err.println(\"Failed to add cloned item.\");\n                }\n            }\n        }\n        return copy;\n\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/TimePeriodValues.java::TimePeriodValues.createCopy(int start, int end)\nSIGNATURE: public TimePeriodValues createCopy(int start, int end) \n        throws CloneNotSupportedException",
+        "METHOD: source/org/jfree/data/time/TimePeriodValues.java::TimePeriodValues.createCopy(int start, int end)\nSIGNATURE: public TimePeriodValues createCopy(int start, int end) \n        throws CloneNotSupportedException\nSTRUCTURE (lossy):\nTimePeriodValues copy = (TimePeriodValues) super.clone();\nCALL super.clone()\ncopy.data = new ArrayList()\nif (this.data.size() > 0)\nCALL this.data.size()\nfor (int index = start; index <= end; index++)\nint index = start;\nindex++\nTimePeriodValue item = (TimePeriodValue) this.data.get(index);\nCALL this.data.get(index)\nTimePeriodValue clone = (TimePeriodValue) item.clone();\nCALL item.clone()\nCALL copy.add(clone)\ncatch (SeriesException e)\nCALL System.err.println(\"Failed to add cloned item.\")\nreturn copy;",
+        "public TimePeriodValues createCopy(int start, int end) \n        throws CloneNotSupportedException {\n\n        TimePeriodValues copy = (TimePeriodValues) super.clone();\n\n        copy.data = new ArrayList();\n        if (this.data.size() > 0) {\n            for (int index = start; index <= end; index++) {\n                TimePeriodValue item = (TimePeriodValue) this.data.get(index);\n                TimePeriodValue clone = (TimePeriodValue) item.clone();\n                try {\n                    copy.add(clone);\n                }\n                catch (SeriesException e) {\n                    System.err.println(\"Failed to add cloned item.\");\n                }\n            }\n        }\n        return copy;\n\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 6.0,
+        "literal_count": 2.0,
+        "source_tokens": 179.0,
+        "l0_tokens": 54.0,
+        "l1_tokens": 185.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 6,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/TimeSeries.java::TimeSeries.createCopy(int start, int end)",
+      "source": "public TimeSeries createCopy(int start, int end)\n            throws CloneNotSupportedException {\n        if (start < 0) {\n            throw new IllegalArgumentException(\"Requires start >= 0.\");\n        }\n        if (end < start) {\n            throw new IllegalArgumentException(\"Requires start <= end.\");\n        }\n        TimeSeries copy = (TimeSeries) super.clone();\n        copy.data = new java.util.ArrayList();\n        if (this.data.size() > 0) {\n            for (int index = start; index <= end; index++) {\n                TimeSeriesDataItem item\n                        = (TimeSeriesDataItem) this.data.get(index);\n                TimeSeriesDataItem clone = (TimeSeriesDataItem) item.clone();\n                try {\n                    copy.add(clone);\n                }\n                catch (SeriesException e) {\n                    e.printStackTrace();\n                }\n            }\n        }\n        return copy;\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/TimeSeries.java::TimeSeries.createCopy(int start, int end)\nSIGNATURE: public TimeSeries createCopy(int start, int end)\n            throws CloneNotSupportedException",
+        "METHOD: source/org/jfree/data/time/TimeSeries.java::TimeSeries.createCopy(int start, int end)\nSIGNATURE: public TimeSeries createCopy(int start, int end)\n            throws CloneNotSupportedException\nSTRUCTURE (lossy):\nif (start < 0)\nthrow new IllegalArgumentException(\"Requires start >= 0.\");\nif (end < start)\nthrow new IllegalArgumentException(\"Requires start <= end.\");\nTimeSeries copy = (TimeSeries) super.clone();\nCALL super.clone()\ncopy.data = new java.util.ArrayList()\nif (this.data.size() > 0)\nCALL this.data.size()\nfor (int index = start; index <= end; index++)\nint index = start;\nindex++\nTimeSeriesDataItem item = (TimeSeriesDataItem) this.data.get(index);\nCALL this.data.get(index)\nTimeSeriesDataItem clone = (TimeSeriesDataItem) item.clone();\nCALL item.clone()\nCALL copy.add(clone)\ncatch (SeriesException e)\nCALL e.printStackTrace()\nreturn copy;",
+        "public TimeSeries createCopy(int start, int end)\n            throws CloneNotSupportedException {\n        if (start < 0) {\n            throw new IllegalArgumentException(\"Requires start >= 0.\");\n        }\n        if (end < start) {\n            throw new IllegalArgumentException(\"Requires start <= end.\");\n        }\n        TimeSeries copy = (TimeSeries) super.clone();\n        copy.data = new java.util.ArrayList();\n        if (this.data.size() > 0) {\n            for (int index = start; index <= end; index++) {\n                TimeSeriesDataItem item\n                        = (TimeSeriesDataItem) this.data.get(index);\n                TimeSeriesDataItem clone = (TimeSeriesDataItem) item.clone();\n                try {\n                    copy.add(clone);\n                }\n                catch (SeriesException e) {\n                    e.printStackTrace();\n                }\n            }\n        }\n        return copy;\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.475,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 6.0,
+        "literal_count": 4.0,
+        "source_tokens": 233.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 215.0,
+        "compression_ratio": 0.9227467811158798,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 6,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.clone(final Object object)",
+      "source": "public static Object clone(final Object object)\n        throws CloneNotSupportedException {\n        if (object == null) {\n            throw new IllegalArgumentException(\"Null 'object' argument.\");\n        }\n        if (object instanceof PublicCloneable) {\n            final PublicCloneable pc = (PublicCloneable) object;\n            return pc.clone();\n        }\n        else {\n            try {\n                final Method method = object.getClass().getMethod(\"clone\",\n                        (Class[]) null);\n                if (Modifier.isPublic(method.getModifiers())) {\n                    return method.invoke(object, (Object[]) null);\n                }\n            }\n            catch (NoSuchMethodException e) {\n                e.printStackTrace();\n            }\n            catch (IllegalAccessException e) {\n                e.printStackTrace();\n            }\n            catch (InvocationTargetException e) {\n                e.printStackTrace();\n            }\n        }\n        throw new CloneNotSupportedException(\"Failed to clone.\");\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.clone(final Object object)\nSIGNATURE: public static Object clone(final Object object)\n        throws CloneNotSupportedException",
+        "METHOD: source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.clone(final Object object)\nSIGNATURE: public static Object clone(final Object object)\n        throws CloneNotSupportedException\nSTRUCTURE (lossy):\nif (object == null)\nthrow new IllegalArgumentException(\"Null 'object' argument.\");\nif (object instanceof PublicCloneable)\nfinal PublicCloneable pc = (PublicCloneable) object;\nreturn pc.clone();\nCALL pc.clone()\nfinal Method method = object.getClass().getMethod(\"clone\", (Class[]) null);\nCALL object.getClass().getMethod(\"clone\", (Class[]) null)\nCALL object.getClass()\nif (Modifier.isPublic(method.getModifiers()))\nCALL Modifier.isPublic(method.getModifiers())\nCALL method.getModifiers()\nreturn method.invoke(object, (Object[]) null);\nCALL method.invoke(object, (Object[]) null)\ncatch (NoSuchMethodException e)\nCALL e.printStackTrace()\ncatch (IllegalAccessException e)\ncatch (InvocationTargetException e)\nthrow new CloneNotSupportedException(\"Failed to clone.\");",
+        "public static Object clone(final Object object)\n        throws CloneNotSupportedException {\n        if (object == null) {\n            throw new IllegalArgumentException(\"Null 'object' argument.\");\n        }\n        if (object instanceof PublicCloneable) {\n            final PublicCloneable pc = (PublicCloneable) object;\n            return pc.clone();\n        }\n        else {\n            try {\n                final Method method = object.getClass().getMethod(\"clone\",\n                        (Class[]) null);\n                if (Modifier.isPublic(method.getModifiers())) {\n                    return method.invoke(object, (Object[]) null);\n                }\n            }\n            catch (NoSuchMethodException e) {\n                e.printStackTrace();\n            }\n            catch (IllegalAccessException e) {\n                e.printStackTrace();\n            }\n            catch (InvocationTargetException e) {\n                e.printStackTrace();\n            }\n        }\n        throw new CloneNotSupportedException(\"Failed to clone.\");\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4146341463414634,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 9.0,
+        "literal_count": 6.0,
+        "source_tokens": 263.0,
+        "l0_tokens": 51.0,
+        "l1_tokens": 246.0,
+        "compression_ratio": 0.935361216730038,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 9,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/gantt/TaskSeries.java::TaskSeries.clone()",
+      "source": "public Object clone() throws CloneNotSupportedException {\n        TaskSeries clone = (TaskSeries) super.clone();\n        clone.tasks = (List) ObjectUtilities.deepClone(this.tasks);\n        return clone;\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: source/org/jfree/data/gantt/TaskSeries.java::TaskSeries.clone()\nSIGNATURE: public Object clone() throws CloneNotSupportedException",
+        "METHOD: source/org/jfree/data/gantt/TaskSeries.java::TaskSeries.clone()\nSIGNATURE: public Object clone() throws CloneNotSupportedException\nSTRUCTURE (lossy):\nTaskSeries clone = (TaskSeries) super.clone();\nCALL super.clone()\nclone.tasks = (List) ObjectUtilities.deepClone(this.tasks)\nCALL ObjectUtilities.deepClone(this.tasks)\nreturn clone;",
+        "public Object clone() throws CloneNotSupportedException {\n        TaskSeries clone = (TaskSeries) super.clone();\n        clone.tasks = (List) ObjectUtilities.deepClone(this.tasks);\n        return clone;\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6363636363636364,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 52.0,
+        "l0_tokens": 35.0,
+        "l1_tokens": 85.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/xy/XYSeries.java::XYSeries.createCopy(int start, int end)",
+      "source": "public XYSeries createCopy(int start, int end)\n            throws CloneNotSupportedException {\n\n        XYSeries copy = (XYSeries) super.clone();\n        copy.data = new java.util.ArrayList();\n        if (this.data.size() > 0) {\n            for (int index = start; index <= end; index++) {\n                XYDataItem item = (XYDataItem) this.data.get(index);\n                XYDataItem clone = (XYDataItem) item.clone();\n                try {\n                    copy.add(clone);\n                }\n                catch (SeriesException e) {\n                    System.err.println(\"Unable to add cloned data item.\");\n                }\n            }\n        }\n        return copy;\n\n    }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: source/org/jfree/data/xy/XYSeries.java::XYSeries.createCopy(int start, int end)\nSIGNATURE: public XYSeries createCopy(int start, int end)\n            throws CloneNotSupportedException",
+        "METHOD: source/org/jfree/data/xy/XYSeries.java::XYSeries.createCopy(int start, int end)\nSIGNATURE: public XYSeries createCopy(int start, int end)\n            throws CloneNotSupportedException\nSTRUCTURE (lossy):\nXYSeries copy = (XYSeries) super.clone();\nCALL super.clone()\ncopy.data = new java.util.ArrayList()\nif (this.data.size() > 0)\nCALL this.data.size()\nfor (int index = start; index <= end; index++)\nint index = start;\nindex++\nXYDataItem item = (XYDataItem) this.data.get(index);\nCALL this.data.get(index)\nXYDataItem clone = (XYDataItem) item.clone();\nCALL item.clone()\nCALL copy.add(clone)\ncatch (SeriesException e)\nCALL System.err.println(\"Unable to add cloned data item.\")\nreturn copy;",
+        "public XYSeries createCopy(int start, int end)\n            throws CloneNotSupportedException {\n\n        XYSeries copy = (XYSeries) super.clone();\n        copy.data = new java.util.ArrayList();\n        if (this.data.size() > 0) {\n            for (int index = start; index <= end; index++) {\n                XYDataItem item = (XYDataItem) this.data.get(index);\n                XYDataItem clone = (XYDataItem) item.clone();\n                try {\n                    copy.add(clone);\n                }\n                catch (SeriesException e) {\n                    System.err.println(\"Unable to add cloned data item.\");\n                }\n            }\n        }\n        return copy;\n\n    }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.46153846153846156,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 6.0,
+        "literal_count": 2.0,
+        "source_tokens": 172.0,
+        "l0_tokens": 48.0,
+        "l1_tokens": 174.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 6,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/demo/TimeSeriesChartDemo1.java::TimeSeriesChartDemo1.createDataset()",
+      "source": "private static XYDataset createDataset() {\n\n        TimeSeries s1 = new TimeSeries(\"L&G European Index Trust\");\n        s1.add(new Month(2, 2001), 181.8);\n        s1.add(new Month(3, 2001), 167.3);\n        s1.add(new Month(4, 2001), 153.8);\n        s1.add(new Month(5, 2001), 167.6);\n        s1.add(new Month(6, 2001), 158.8);\n        s1.add(new Month(7, 2001), 148.3);\n        s1.add(new Month(8, 2001), 153.9);\n        s1.add(new Month(9, 2001), 142.7);\n        s1.add(new Month(10, 2001), 123.2);\n        s1.add(new Month(11, 2001), 131.8);\n        s1.add(new Month(12, 2001), 139.6);\n        s1.add(new Month(1, 2002), 142.9);\n        s1.add(new Month(2, 2002), 138.7);\n        s1.add(new Month(3, 2002), 137.3);\n        s1.add(new Month(4, 2002), 143.9);\n        s1.add(new Month(5, 2002), 139.8);\n        s1.add(new Month(6, 2002), 137.0);\n        s1.add(new Month(7, 2002), 132.8);\n\n        TimeSeries s2 = new TimeSeries(\"L&G UK Index Trust\");\n        s2.add(new Month(2, 2001), 129.6);\n        s2.add(new Month(3, 2001), 123.2);\n        s2.add(new Month(4, 2001), 117.2);\n        s2.add(new Month(5, 2001), 124.1);\n        s2.add(new Month(6, 2001), 122.6);\n        s2.add(new Month(7, 2001), 119.2);\n        s2.add(new Month(8, 2001), 116.5);\n        s2.add(new Month(9, 2001), 112.7);\n        s2.add(new Month(10, 2001), 101.5);\n        s2.add(new Month(11, 2001), 106.1);\n        s2.add(new Month(12, 2001), 110.3);\n        s2.add(new Month(1, 2002), 111.7);\n        s2.add(new Month(2, 2002), 111.0);\n        s2.add(new Month(3, 2002), 109.6);\n        s2.add(new Month(4, 2002), 113.2);\n        s2.add(new Month(5, 2002), 111.6);\n        s2.add(new Month(6, 2002), 108.8);\n        s2.add(new Month(7, 2002), 101.6);\n\n        // ******************************************************************\n        //  More than 150 demo applications are included with the JFreeChart\n        //  Developer Guide...for more information, see:\n        //\n        //  >   http://www.object-refinery.com/jfreechart/guide.html\n        //\n        // ******************************************************************\n\n        TimeSeriesCollection dataset = new TimeSeriesCollection();\n        dataset.addSeries(s1);\n        dataset.addSeries(s2);\n\n        return dataset;\n\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: source/org/jfree/chart/demo/TimeSeriesChartDemo1.java::TimeSeriesChartDemo1.createDataset()\nSIGNATURE: private static XYDataset createDataset()",
+        "METHOD: source/org/jfree/chart/demo/TimeSeriesChartDemo1.java::TimeSeriesChartDemo1.createDataset()\nSIGNATURE: private static XYDataset createDataset()\nSTRUCTURE (lossy):\nTimeSeries s1 = new TimeSeries(\"L&G European Index Trust\");\nCALL s1.add(new Month(2, 2001), 181.8)\nCALL s1.add(new Month(3, 2001), 167.3)\nCALL s1.add(new Month(4, 2001), 153.8)\nCALL s1.add(new Month(5, 2001), 167.6)\nCALL s1.add(new Month(6, 2001), 158.8)\nCALL s1.add(new Month(7, 2001), 148.3)\nCALL s1.add(new Month(8, 2001), 153.9)\nCALL s1.add(new Month(9, 2001), 142.7)\nCALL s1.add(new Month(10, 2001), 123.2)\nCALL s1.add(new Month(11, 2001), 131.8)\nCALL s1.add(new Month(12, 2001), 139.6)\nCALL s1.add(new Month(1, 2002), 142.9)\nCALL s1.add(new Month(2, 2002), 138.7)\nCALL s1.add(new Month(3, 2002), 137.3)\nCALL s1.add(new Month(4, 2002), 143.9)\nCALL s1.add(new Month(5, 2002), 139.8)\nCALL s1.add(new Month(6, 2002), 137.0)\nCALL s1.add(new Month(7, 2002), 132.8)\nTimeSeries s2 = new TimeSeries(\"L&G UK Index Trust\");\nCALL s2.add(new Month(2, 2001), 129.6)\nCALL s2.add(new Month(3, 2001), 123.2)\nCALL s2.add(new Month(4, 2001), 117.2)\nCALL s2.add(new Month(5, 2001), 124.1)\nCALL s2.add(new Month(6, 2001), 122.6)\nCALL s2.add(new Month(7, 2001), 119.2)\nCALL s2.add(new Month(8, 2001), 116.5)\nCALL s2.add(new Month(9, 2001), 112.7)\nCALL s2.add(new Month(10, 2001), 101.5)\nCALL s2.add(new Month(11, 2001), 106.1)\nCALL s2.add(new Month(12, 2001), 110.3)\nCALL s2.add(new Month(1, 2002), 111.7)\nCALL s2.add(new Month(2, 2002), 111.0)\nCALL s2.add(new Month(3, 2002), 109.6)\nCALL s2.add(new Month(4, 2002), 113.2)\nCALL s2.add(new Month(5, 2002), 111.6)\nCALL s2.add(new Month(6, 2002), 108.8)\nCALL s2.add(new Month(7, 2002), 101.6)\nTimeSeriesCollection dataset = new TimeSeriesCollection();\nCALL dataset.addSeries(s1)\nCALL dataset.addSeries(s2)\nreturn dataset;",
+        "private static XYDataset createDataset() {\n\n        TimeSeries s1 = new TimeSeries(\"L&G European Index Trust\");\n        s1.add(new Month(2, 2001), 181.8);\n        s1.add(new Month(3, 2001), 167.3);\n        s1.add(new Month(4, 2001), 153.8);\n        s1.add(new Month(5, 2001), 167.6);\n        s1.add(new Month(6, 2001), 158.8);\n        s1.add(new Month(7, 2001), 148.3);\n        s1.add(new Month(8, 2001), 153.9);\n        s1.add(new Month(9, 2001), 142.7);\n        s1.add(new Month(10, 2001), 123.2);\n        s1.add(new Month(11, 2001), 131.8);\n        s1.add(new Month(12, 2001), 139.6);\n        s1.add(new Month(1, 2002), 142.9);\n        s1.add(new Month(2, 2002), 138.7);\n        s1.add(new Month(3, 2002), 137.3);\n        s1.add(new Month(4, 2002), 143.9);\n        s1.add(new Month(5, 2002), 139.8);\n        s1.add(new Month(6, 2002), 137.0);\n        s1.add(new Month(7, 2002), 132.8);\n\n        TimeSeries s2 = new TimeSeries(\"L&G UK Index Trust\");\n        s2.add(new Month(2, 2001), 129.6);\n        s2.add(new Month(3, 2001), 123.2);\n        s2.add(new Month(4, 2001), 117.2);\n        s2.add(new Month(5, 2001), 124.1);\n        s2.add(new Month(6, 2001), 122.6);\n        s2.add(new Month(7, 2001), 119.2);\n        s2.add(new Month(8, 2001), 116.5);\n        s2.add(new Month(9, 2001), 112.7);\n        s2.add(new Month(10, 2001), 101.5);\n        s2.add(new Month(11, 2001), 106.1);\n        s2.add(new Month(12, 2001), 110.3);\n        s2.add(new Month(1, 2002), 111.7);\n        s2.add(new Month(2, 2002), 111.0);\n        s2.add(new Month(3, 2002), 109.6);\n        s2.add(new Month(4, 2002), 113.2);\n        s2.add(new Month(5, 2002), 111.6);\n        s2.add(new Month(6, 2002), 108.8);\n        s2.add(new Month(7, 2002), 101.6);\n\n        // ******************************************************************\n        //  More than 150 demo applications are included with the JFreeChart\n        //  Developer Guide...for more information, see:\n        //\n        //  >   http://www.object-refinery.com/jfreechart/guide.html\n        //\n        // ******************************************************************\n\n        TimeSeriesCollection dataset = new TimeSeriesCollection();\n        dataset.addSeries(s1);\n        dataset.addSeries(s2);\n\n        return dataset;\n\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.24390243902439024,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 38.0,
+        "literal_count": 110.0,
+        "source_tokens": 568.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 456.0,
+        "compression_ratio": 0.8028169014084507,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 38,
+        "literal_count": 110
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/TimeSeries.java::TimeSeries.createCopy(RegularTimePeriod start, RegularTimePeriod end)",
+      "source": "public TimeSeries createCopy(RegularTimePeriod start, RegularTimePeriod end)\n        throws CloneNotSupportedException {\n\n        if (start == null) {\n            throw new IllegalArgumentException(\"Null 'start' argument.\");\n        }\n        if (end == null) {\n            throw new IllegalArgumentException(\"Null 'end' argument.\");\n        }\n        if (start.compareTo(end) > 0) {\n            throw new IllegalArgumentException(\n                    \"Requires start on or before end.\");\n        }\n        boolean emptyRange = false;\n        int startIndex = getIndex(start);\n        if (startIndex < 0) {\n            startIndex = -(startIndex + 1);\n            if (startIndex == this.data.size()) {\n                emptyRange = true;  // start is after last data item\n            }\n        }\n        int endIndex = getIndex(end);\n        if (endIndex < 0) {             // end period is not in original series\n            endIndex = -(endIndex + 1); // this is first item AFTER end period\n            endIndex = endIndex - 1;    // so this is last item BEFORE end\n        }\n        if ((endIndex < 0)  || (endIndex < startIndex)) {\n            emptyRange = true;\n        }\n        if (emptyRange) {\n            TimeSeries copy = (TimeSeries) super.clone();\n            copy.data = new java.util.ArrayList();\n            return copy;\n        }\n        else {\n            return createCopy(startIndex, endIndex);\n        }\n\n    }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/TimeSeries.java::TimeSeries.createCopy(RegularTimePeriod start, RegularTimePeriod end)\nSIGNATURE: public TimeSeries createCopy(RegularTimePeriod start, RegularTimePeriod end)\n        throws CloneNotSupportedException",
+        "METHOD: source/org/jfree/data/time/TimeSeries.java::TimeSeries.createCopy(RegularTimePeriod start, RegularTimePeriod end)\nSIGNATURE: public TimeSeries createCopy(RegularTimePeriod start, RegularTimePeriod end)\n        throws CloneNotSupportedException\nSTRUCTURE (lossy):\nif (start == null)\nthrow new IllegalArgumentException(\"Null 'start' argument.\");\nif (end == null)\nthrow new IllegalArgumentException(\"Null 'end' argument.\");\nif (start.compareTo(end) > 0)\nCALL start.compareTo(end)\nthrow new IllegalArgumentException( \"Requires start on or before end.\");\nboolean emptyRange = false;\nint startIndex = getIndex(start);\nCALL getIndex(start)\nif (startIndex < 0)\nstartIndex = -(startIndex + 1)\nif (startIndex == this.data.size())\nCALL this.data.size()\nemptyRange = true\nint endIndex = getIndex(end);\nCALL getIndex(end)\nif (endIndex < 0)\nendIndex = -(endIndex + 1)\nendIndex = endIndex - 1\nif ((endIndex < 0) || (endIndex < startIndex))\nif (emptyRange)\nTimeSeries copy = (TimeSeries) super.clone();\nCALL super.clone()\ncopy.data = new java.util.ArrayList()\nreturn copy;\nreturn createCopy(startIndex, endIndex);\nCALL createCopy(startIndex, endIndex)",
+        "public TimeSeries createCopy(RegularTimePeriod start, RegularTimePeriod end)\n        throws CloneNotSupportedException {\n\n        if (start == null) {\n            throw new IllegalArgumentException(\"Null 'start' argument.\");\n        }\n        if (end == null) {\n            throw new IllegalArgumentException(\"Null 'end' argument.\");\n        }\n        if (start.compareTo(end) > 0) {\n            throw new IllegalArgumentException(\n                    \"Requires start on or before end.\");\n        }\n        boolean emptyRange = false;\n        int startIndex = getIndex(start);\n        if (startIndex < 0) {\n            startIndex = -(startIndex + 1);\n            if (startIndex == this.data.size()) {\n                emptyRange = true;  // start is after last data item\n            }\n        }\n        int endIndex = getIndex(end);\n        if (endIndex < 0) {             // end period is not in original series\n            endIndex = -(endIndex + 1); // this is first item AFTER end period\n            endIndex = endIndex - 1;    // so this is last item BEFORE end\n        }\n        if ((endIndex < 0)  || (endIndex < startIndex)) {\n            emptyRange = true;\n        }\n        if (emptyRange) {\n            TimeSeries copy = (TimeSeries) super.clone();\n            copy.data = new java.util.ArrayList();\n            return copy;\n        }\n        else {\n            return createCopy(startIndex, endIndex);\n        }\n\n    }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.375,
+        "trace_match": 0.0,
+        "complexity": 9.0,
+        "call_count": 6.0,
+        "literal_count": 12.0,
+        "source_tokens": 358.0,
+        "l0_tokens": 63.0,
+        "l1_tokens": 286.0,
+        "compression_ratio": 0.7988826815642458,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 9,
+        "call_count": 6,
+        "literal_count": 12
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)",
+      "source": "public void executeQuery(Connection con, String query)\n        throws SQLException {\n\n        if (con == null) {\n            throw new SQLException(\n                \"There is no database to execute the query.\"\n            );\n        }\n\n        ResultSet resultSet = null;\n        Statement statement = null;\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int numberOfColumns = metaData.getColumnCount();\n            int numberOfValidColumns = 0;\n            int [] columnTypes = new int[numberOfColumns];\n            for (int column = 0; column < numberOfColumns; column++) {\n                try {\n                    int type = metaData.getColumnType(column + 1);\n                    switch (type) {\n\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIT:\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            ++numberOfValidColumns;\n                            columnTypes[column] = type;\n                            break;\n                        default:\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                catch (SQLException e) {\n                    columnTypes[column] = Types.NULL;\n                    throw e;\n                }\n            }\n\n\n            if (numberOfValidColumns <= 1) {\n                throw new SQLException(\n                    \"Not enough valid columns where generated by query.\"\n                );\n            }\n\n            /// First column is X data\n            this.columnNames = new String[numberOfValidColumns - 1];\n            /// Get the column names and cache them.\n            int currentColumn = 0;\n            for (int column = 1; column < numberOfColumns; column++) {\n                if (columnTypes[column] != Types.NULL) {\n                    this.columnNames[currentColumn]\n                        = metaData.getColumnLabel(column + 1);\n                    ++currentColumn;\n                }\n            }\n\n            // Might need to add, to free memory from any previous result sets\n            if (this.rows != null) {\n                for (int column = 0; column < this.rows.size(); column++) {\n                    ArrayList row = (ArrayList) this.rows.get(column);\n                    row.clear();\n                }\n                this.rows.clear();\n            }\n\n            // Are we working with a time series.\n            switch (columnTypes[0]) {\n                case Types.DATE:\n                case Types.TIME:\n                case Types.TIMESTAMP:\n                    this.isTimeSeries = true;\n                    break;\n                default :\n                    this.isTimeSeries = false;\n                    break;\n            }\n\n            // Get all rows.\n            // rows = new ArrayList();\n            while (resultSet.next()) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    Object xObject = resultSet.getObject(column + 1);\n                    switch (columnTypes[column]) {\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            newRow.add(xObject);\n                            break;\n\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                            newRow.add(new Long(((Date) xObject).getTime()));\n                            break;\n                        case Types.NULL:\n                            break;\n                        default:\n                            System.err.println(\"Unknown data\");\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// a kludge to make everything work when no rows returned\n            if (this.rows.size() == 0) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    if (columnTypes[column] != Types.NULL) {\n                        newRow.add(new Integer(0));\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// Determine max and min values.\n            if (this.rows.size() < 1) {\n                this.maxValue = 0.0;\n                this.minValue = 0.0;\n            }\n            else {\n                ArrayList row = (ArrayList) this.rows.get(0);\n                this.maxValue = Double.NEGATIVE_INFINITY;\n                this.minValue = Double.POSITIVE_INFINITY;\n                for (int rowNum = 0; rowNum < this.rows.size(); ++rowNum) {\n                    row = (ArrayList) this.rows.get(rowNum);\n                    for (int column = 1; column < numberOfColumns; column++) {\n                        Object testValue = row.get(column);\n                        if (testValue != null) {\n                            double test = ((Number) testValue).doubleValue();\n\n                            if (test < this.minValue) {\n                                this.minValue = test;\n                            }\n                            if (test > this.maxValue) {\n                                this.maxValue = test;\n                            }\n                        }\n                    }\n                }\n            }\n\n            fireDatasetChanged(new DatasetChangeInfo());\n            //TODO: fill in real change info\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n        }\n\n    }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)\nSIGNATURE: public void executeQuery(Connection con, String query)\n        throws SQLException",
+        "METHOD: source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)\nSIGNATURE: public void executeQuery(Connection con, String query)\n        throws SQLException\nSTRUCTURE (lossy):\nif (con == null)\nthrow new SQLException( \"There is no database to execute the query.\" );\nResultSet resultSet = null;\nStatement statement = null;\nstatement = con.createStatement()\nCALL con.createStatement()\nresultSet = statement.executeQuery(query)\nCALL statement.executeQuery(query)\nResultSetMetaData metaData = resultSet.getMetaData();\nCALL resultSet.getMetaData()\nint numberOfColumns = metaData.getColumnCount();\nCALL metaData.getColumnCount()\nint numberOfValidColumns = 0;\nint [] columnTypes = new int[numberOfColumns];\nfor (int column = 0; column < numberOfColumns; column++)\nint column = 0;\ncolumn++\nint type = metaData.getColumnType(column + 1);\nCALL metaData.getColumnType(column + 1)\nswitch (type) { case Types.NUMERIC: case Types.REAL: case Types.INTEGER: case Types.DOUBLE: case Types.FLOAT: case Types.DECIMAL: case Types.BIT: case Types.DATE: case Types.TIME: case Types.TIMESTAMP: case Types.BIGINT: case Types.SMALLINT: ++numberOfValidColumns; columnTypes[column] = type; break; default: columnTypes[column] = Types.NULL; break; }\n++numberOfValidColumns\ncolumnTypes[column] = type\ncolumnTypes[column] = Types.NULL\ncatch (SQLException e)\nthrow e;\nif (numberOfValidColumns <= 1)\nthrow new SQLException( \"Not enough valid columns where generated by query.\" );\nthis.columnNames = new String[numberOfValidColumns - 1]\nint currentColumn = 0;\nfor (int column = 1; column < numberOfColumns; column++)\nint column = 1;\nif (columnTypes[column] != Types.NULL)\nthis.columnNames[currentColumn] = metaData.getColumnLabel(column + 1)\nCALL metaData.getColumnLabel(column + 1)\n++currentColumn\nif (this.rows != null)\nfor (int column = 0; column < this.rows.size(); column++)\nCALL this.rows.size()\nArrayList row = (ArrayList) this.rows.get(column);\nCALL this.rows.get(column)\nCALL row.clear()\nCALL this.rows.clear()\nswitch (columnTypes[0]) { case Types.DATE: case Types.TIME: case Types.TIMESTAMP: this.isTimeSeries = true; break; default : this.isTimeSeries = false; break; }\nthis\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public void executeQuery(Connection con, String query)\n        throws SQLException {\n\n        if (con == null) {\n            throw new SQLException(\n                \"There is no database to execute the query.\"\n            );\n        }\n\n        ResultSet resultSet = null;\n        Statement statement = null;\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int numberOfColumns = metaData.getColumnCount();\n            int numberOfValidColumns = 0;\n            int [] columnTypes = new int[numberOfColumns];\n            for (int column = 0; column < numberOfColumns; column++) {\n                try {\n                    int type = metaData.getColumnType(column + 1);\n                    switch (type) {\n\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIT:\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            ++numberOfValidColumns;\n                            columnTypes[column] = type;\n                            break;\n                        default:\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                catch (SQLException e) {\n                    columnTypes[column] = Types.NULL;\n                    throw e;\n                }\n            }\n\n\n            if (numberOfValidColumns <= 1) {\n                throw new SQLException(\n                    \"Not enough valid columns where generated by query.\"\n                );\n            }\n\n            /// First column is X data\n            this.columnNames = new String[numberOfValidColumns - 1];\n            /// Get the column names and cache them.\n            int currentColumn = 0;\n            for (int column = 1; column < numberOfColumns; column++) {\n                if (columnTypes[column] != Types.NULL) {\n                    this.columnNames[currentColumn]\n                        = metaData.getColumnLabel(column + 1);\n                    ++currentColumn;\n                }\n            }\n\n            // Might need to add, to free memory from any previous result sets\n            if (this.rows != null) {\n                for (int column = 0; column < this.rows.size(); column++) {\n                    ArrayList row = (ArrayList) this.rows.get(column);\n                    row.clear();\n                }\n                this.rows.clear();\n            }\n\n            // Are we working with a time series.\n            switch (columnTypes[0]) {\n                case Types.DATE:\n                case Types.TIME:\n                case Types.TIMESTAMP:\n                    this.isTimeSeries = true;\n                    break;\n                default :\n                    this.isTimeSeries = false;\n                    break;\n            }\n\n            // Get all rows.\n            // rows = new ArrayList();\n            while (resultSet.next()) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    Object xObject = resultSet.getObject(column + 1);\n                    switch (columnTypes[column]) {\n                        case Types.NUMERIC:\n                        case Types.REAL:\n                        case Types.INTEGER:\n                        case Types.DOUBLE:\n                        case Types.FLOAT:\n                        case Types.DECIMAL:\n                        case Types.BIGINT:\n                        case Types.SMALLINT:\n                            newRow.add(xObject);\n                            break;\n\n                        case Types.DATE:\n                        case Types.TIME:\n                        case Types.TIMESTAMP:\n                            newRow.add(new Long(((Date) xObject).getTime()));\n                            break;\n                        case Types.NULL:\n                            break;\n                        default:\n                            System.err.println(\"Unknown data\");\n                            columnTypes[column] = Types.NULL;\n                            break;\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// a kludge to make everything work when no rows returned\n            if (this.rows.size() == 0) {\n                ArrayList newRow = new ArrayList();\n                for (int column = 0; column < numberOfColumns; column++) {\n                    if (columnTypes[column] != Types.NULL) {\n                        newRow.add(new Integer(0));\n                    }\n                }\n                this.rows.add(newRow);\n            }\n\n            /// Determine max and min values.\n            if (this.rows.size() < 1) {\n                this.maxValue = 0.0;\n                this.minValue = 0.0;\n            }\n            else {\n                ArrayList row = (ArrayList) this.rows.get(0);\n                this.maxValue = Double.NEGATIVE_INFINITY;\n                this.minValue = Double.POSITIVE_INFINITY;\n                for (int rowNum = 0; rowNum < this.rows.size(); ++rowNum) {\n                    row = (ArrayList) this.rows.get(rowNum);\n                    for (int column = 1; column < numberOfColumns; column++) {\n                        Object testValue = row.get(column);\n                        if (testValue != null) {\n                            double test = ((Number) testValue).doubleValue();\n\n                            if (test < this.minValue) {\n                                this.minValue = test;\n                            }\n                            if (test > this.maxValue) {\n                                this.maxValue = test;\n                            }\n                        }\n                    }\n                }\n            }\n\n            fireDatasetChanged(new DatasetChangeInfo());\n            //TODO: fill in real change info\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    // TODO: is this a good idea?\n                }\n            }\n        }\n\n    }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.1984126984126984,
+        "trace_match": 0.0,
+        "complexity": 27.0,
+        "call_count": 29.0,
+        "literal_count": 31.0,
+        "source_tokens": 1718.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.3311990686845169,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 27,
+        "call_count": 29,
+        "literal_count": 31
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/TimePeriodValuesCollection.java::TimePeriodValuesCollection.getDomainBounds(boolean includeInterval)",
+      "source": "public Range getDomainBounds(boolean includeInterval) {\n        Range result = null;\n        Range temp = null;\n        Iterator iterator = this.data.iterator();\n        while (iterator.hasNext()) {\n            TimePeriodValues series = (TimePeriodValues) iterator.next();\n            int count = series.getItemCount();\n            if (count > 0) {\n                TimePeriod start = series.getTimePeriod(\n                        series.getMinStartIndex());\n                TimePeriod end = series.getTimePeriod(series.getMaxEndIndex());\n                if (!includeInterval) {\n                    if (this.xPosition == TimePeriodAnchor.START) {\n                        TimePeriod maxStart = series.getTimePeriod(\n                                series.getMaxStartIndex());\n                        temp = new Range(start.getStart().getTime(),\n                                maxStart.getStart().getTime());\n                    }\n                    else if (this.xPosition == TimePeriodAnchor.MIDDLE) {\n                        TimePeriod minMiddle = series.getTimePeriod(\n                                series.getMinMiddleIndex());\n                        long s1 = minMiddle.getStart().getTime();\n                        long e1 = minMiddle.getEnd().getTime();\n                        TimePeriod maxMiddle = series.getTimePeriod(\n                                series.getMaxMiddleIndex());\n                        long s2 = maxMiddle.getStart().getTime();\n                        long e2 = maxMiddle.getEnd().getTime();\n                        temp = new Range(s1 + (e1 - s1) / 2,\n                                s2 + (e2 - s2) / 2);\n                    }\n                    else if (this.xPosition == TimePeriodAnchor.END) {\n                        TimePeriod minEnd = series.getTimePeriod(\n                                series.getMinEndIndex());\n                        temp = new Range(minEnd.getEnd().getTime(),\n                                end.getEnd().getTime());\n                    }\n                }\n                else {\n                    temp = new Range(start.getStart().getTime(),\n                            end.getEnd().getTime());\n                }\n                result = Range.combine(result, temp);\n            }\n        }\n        return result;\n    }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/TimePeriodValuesCollection.java::TimePeriodValuesCollection.getDomainBounds(boolean includeInterval)\nSIGNATURE: public Range getDomainBounds(boolean includeInterval)",
+        "METHOD: source/org/jfree/data/time/TimePeriodValuesCollection.java::TimePeriodValuesCollection.getDomainBounds(boolean includeInterval)\nSIGNATURE: public Range getDomainBounds(boolean includeInterval)\nSTRUCTURE (lossy):\nRange result = null;\nRange temp = null;\nIterator iterator = this.data.iterator();\nCALL this.data.iterator()\nwhile (iterator.hasNext())\nCALL iterator.hasNext()\nTimePeriodValues series = (TimePeriodValues) iterator.next();\nCALL iterator.next()\nint count = series.getItemCount();\nCALL series.getItemCount()\nif (count > 0)\nTimePeriod start = series.getTimePeriod( series.getMinStartIndex());\nCALL series.getTimePeriod( series.getMinStartIndex())\nCALL series.getMinStartIndex()\nTimePeriod end = series.getTimePeriod(series.getMaxEndIndex());\nCALL series.getTimePeriod(series.getMaxEndIndex())\nCALL series.getMaxEndIndex()\nif (!includeInterval)\nif (this.xPosition == TimePeriodAnchor.START)\nTimePeriod maxStart = series.getTimePeriod( series.getMaxStartIndex());\nCALL series.getTimePeriod( series.getMaxStartIndex())\nCALL series.getMaxStartIndex()\ntemp = new Range(start.getStart().getTime(), maxStart.getStart().getTime())\nCALL start.getStart().getTime()\nCALL start.getStart()\nCALL maxStart.getStart().getTime()\nCALL maxStart.getStart()\nif (this.xPosition == TimePeriodAnchor.MIDDLE)\nTimePeriod minMiddle = series.getTimePeriod( series.getMinMiddleIndex());\nCALL series.getTimePeriod( series.getMinMiddleIndex())\nCALL series.getMinMiddleIndex()\nlong s1 = minMiddle.getStart().getTime();\nCALL minMiddle.getStart().getTime()\nCALL minMiddle.getStart()\nlong e1 = minMiddle.getEnd().getTime();\nCALL minMiddle.getEnd().getTime()\nCALL minMiddle.getEnd()\nTimePeriod maxMiddle = series.getTimePeriod( series.getMaxMiddleIndex());\nCALL series.getTimePeriod( series.getMaxMiddleIndex())\nCALL series.getMaxMiddleIndex()\nlong s2 = maxMiddle.getStart().getTime();\nCALL maxMiddle.getStart().getTime()\nCALL maxMiddle.getStart()\nlong e2 = maxMiddle.getEnd().getTime();\nCALL maxMiddle.getEnd().getTime()\nCALL maxMiddle.getEnd()\ntemp = new Range(s1 + (e1 - s1) / 2, s2 + (e2 - s2) / 2)\nif (this.xPosition == TimePeriodAnchor.END)\nTimePeriod minEnd = series.getTimePeriod( series.getMinEndIndex());\nCALL s\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public Range getDomainBounds(boolean includeInterval) {\n        Range result = null;\n        Range temp = null;\n        Iterator iterator = this.data.iterator();\n        while (iterator.hasNext()) {\n            TimePeriodValues series = (TimePeriodValues) iterator.next();\n            int count = series.getItemCount();\n            if (count > 0) {\n                TimePeriod start = series.getTimePeriod(\n                        series.getMinStartIndex());\n                TimePeriod end = series.getTimePeriod(series.getMaxEndIndex());\n                if (!includeInterval) {\n                    if (this.xPosition == TimePeriodAnchor.START) {\n                        TimePeriod maxStart = series.getTimePeriod(\n                                series.getMaxStartIndex());\n                        temp = new Range(start.getStart().getTime(),\n                                maxStart.getStart().getTime());\n                    }\n                    else if (this.xPosition == TimePeriodAnchor.MIDDLE) {\n                        TimePeriod minMiddle = series.getTimePeriod(\n                                series.getMinMiddleIndex());\n                        long s1 = minMiddle.getStart().getTime();\n                        long e1 = minMiddle.getEnd().getTime();\n                        TimePeriod maxMiddle = series.getTimePeriod(\n                                series.getMaxMiddleIndex());\n                        long s2 = maxMiddle.getStart().getTime();\n                        long e2 = maxMiddle.getEnd().getTime();\n                        temp = new Range(s1 + (e1 - s1) / 2,\n                                s2 + (e2 - s2) / 2);\n                    }\n                    else if (this.xPosition == TimePeriodAnchor.END) {\n                        TimePeriod minEnd = series.getTimePeriod(\n                                series.getMinEndIndex());\n                        temp = new Range(minEnd.getEnd().getTime(),\n                                end.getEnd().getTime());\n                    }\n                }\n                else {\n                    temp = new Range(start.getStart().getTime(),\n                            end.getEnd().getTime());\n                }\n                result = Range.combine(result, temp);\n            }\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3333333333333333,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 37.0,
+        "literal_count": 5.0,
+        "source_tokens": 571.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.9964973730297724,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 7,
+        "call_count": 37,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/Month.java::Month.parseMonth(String s)",
+      "source": "public static Month parseMonth(String s) {\n        Month result = null;\n        if (s == null) {\n            return result;\n        }\n        // trim whitespace from either end of the string\n        s = s.trim();\n        int i = Month.findSeparator(s);\n        String s1, s2;\n        boolean yearIsFirst;\n        // if there is no separator, we assume the first four characters\n        // are YYYY\n        if (i == -1) {\n            yearIsFirst = true;\n            s1 = s.substring(0, 5);\n            s2 = s.substring(5);\n        }\n        else {\n            s1 = s.substring(0, i).trim();\n            s2 = s.substring(i + 1, s.length()).trim();\n            // now it is trickier to determine if the month or year is first\n            Year y1 = Month.evaluateAsYear(s1);\n            if (y1 == null) {\n                yearIsFirst = false;\n            }\n            else {\n                Year y2 = Month.evaluateAsYear(s2);\n                if (y2 == null) {\n                    yearIsFirst = true;\n                }\n                else {\n                    yearIsFirst = (s1.length() > s2.length());\n                }\n            }\n        }\n        Year year;\n        int month;\n        if (yearIsFirst) {\n            year = Month.evaluateAsYear(s1);\n            month = SerialDate.stringToMonthCode(s2);\n        }\n        else {\n            year = Month.evaluateAsYear(s2);\n            month = SerialDate.stringToMonthCode(s1);\n        }\n        if (month == -1) {\n            throw new TimePeriodFormatException(\"Can't evaluate the month.\");\n        }\n        if (year == null) {\n            throw new TimePeriodFormatException(\"Can't evaluate the year.\");\n        }\n        result = new Month(month, year);\n        return result;\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/Month.java::Month.parseMonth(String s)\nSIGNATURE: public static Month parseMonth(String s)",
+        "METHOD: source/org/jfree/data/time/Month.java::Month.parseMonth(String s)\nSIGNATURE: public static Month parseMonth(String s)\nSTRUCTURE (lossy):\nMonth result = null;\nif (s == null)\nreturn result;\ns = s.trim()\nCALL s.trim()\nint i = Month.findSeparator(s);\nCALL Month.findSeparator(s)\nString s1, s2;\nboolean yearIsFirst;\nif (i == -1)\nyearIsFirst = true\ns1 = s.substring(0, 5)\nCALL s.substring(0, 5)\ns2 = s.substring(5)\nCALL s.substring(5)\ns1 = s.substring(0, i).trim()\nCALL s.substring(0, i).trim()\nCALL s.substring(0, i)\ns2 = s.substring(i + 1, s.length()).trim()\nCALL s.substring(i + 1, s.length()).trim()\nCALL s.substring(i + 1, s.length())\nCALL s.length()\nYear y1 = Month.evaluateAsYear(s1);\nCALL Month.evaluateAsYear(s1)\nif (y1 == null)\nyearIsFirst = false\nYear y2 = Month.evaluateAsYear(s2);\nCALL Month.evaluateAsYear(s2)\nif (y2 == null)\nyearIsFirst = (s1.length() > s2.length())\nCALL s1.length()\nCALL s2.length()\nYear year;\nint month;\nif (yearIsFirst)\nyear = Month.evaluateAsYear(s1)\nmonth = SerialDate.stringToMonthCode(s2)\nCALL SerialDate.stringToMonthCode(s2)\nyear = Month.evaluateAsYear(s2)\nmonth = SerialDate.stringToMonthCode(s1)\nCALL SerialDate.stringToMonthCode(s1)\nif (month == -1)\nthrow new TimePeriodFormatException(\"Can't evaluate the month.\");\nif (year == null)\nthrow new TimePeriodFormatException(\"Can't evaluate the year.\");\nresult = new Month(month, year)",
+        "public static Month parseMonth(String s) {\n        Month result = null;\n        if (s == null) {\n            return result;\n        }\n        // trim whitespace from either end of the string\n        s = s.trim();\n        int i = Month.findSeparator(s);\n        String s1, s2;\n        boolean yearIsFirst;\n        // if there is no separator, we assume the first four characters\n        // are YYYY\n        if (i == -1) {\n            yearIsFirst = true;\n            s1 = s.substring(0, 5);\n            s2 = s.substring(5);\n        }\n        else {\n            s1 = s.substring(0, i).trim();\n            s2 = s.substring(i + 1, s.length()).trim();\n            // now it is trickier to determine if the month or year is first\n            Year y1 = Month.evaluateAsYear(s1);\n            if (y1 == null) {\n                yearIsFirst = false;\n            }\n            else {\n                Year y2 = Month.evaluateAsYear(s2);\n                if (y2 == null) {\n                    yearIsFirst = true;\n                }\n                else {\n                    yearIsFirst = (s1.length() > s2.length());\n                }\n            }\n        }\n        Year year;\n        int month;\n        if (yearIsFirst) {\n            year = Month.evaluateAsYear(s1);\n            month = SerialDate.stringToMonthCode(s2);\n        }\n        else {\n            year = Month.evaluateAsYear(s2);\n            month = SerialDate.stringToMonthCode(s1);\n        }\n        if (month == -1) {\n            throw new TimePeriodFormatException(\"Can't evaluate the month.\");\n        }\n        if (year == null) {\n            throw new TimePeriodFormatException(\"Can't evaluate the year.\");\n        }\n        result = new Month(month, year);\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.22,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 17.0,
+        "literal_count": 14.0,
+        "source_tokens": 435.0,
+        "l0_tokens": 32.0,
+        "l1_tokens": 344.0,
+        "compression_ratio": 0.7908045977011494,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 17,
+        "literal_count": 14
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/TimePeriodValues.java::TimePeriodValues.clone()",
+      "source": "public Object clone() throws CloneNotSupportedException {\n        Object clone = createCopy(0, getItemCount() - 1);\n        return clone;\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/TimePeriodValues.java::TimePeriodValues.clone()\nSIGNATURE: public Object clone() throws CloneNotSupportedException",
+        "METHOD: source/org/jfree/data/time/TimePeriodValues.java::TimePeriodValues.clone()\nSIGNATURE: public Object clone() throws CloneNotSupportedException\nSTRUCTURE (lossy):\nObject clone = createCopy(0, getItemCount() - 1);\nCALL createCopy(0, getItemCount() - 1)\nCALL getItemCount()\nreturn clone;",
+        "public Object clone() throws CloneNotSupportedException {\n        Object clone = createCopy(0, getItemCount() - 1);\n        return clone;\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7142857142857143,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 36.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 73.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/jdbc/JDBCPieDataset.java::JDBCPieDataset.executeQuery(Connection con, String query)",
+      "source": "public void executeQuery(Connection con, String query) throws SQLException {\n\n        Statement statement = null;\n        ResultSet resultSet = null;\n\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int columnCount = metaData.getColumnCount();\n            if (columnCount != 2) {\n                throw new SQLException(\n                    \"Invalid sql generated.  PieDataSet requires 2 columns only\"\n                );\n            }\n\n            int columnType = metaData.getColumnType(2);\n            double value = Double.NaN;\n            while (resultSet.next()) {\n                Comparable key = resultSet.getString(1);\n                switch (columnType) {\n                    case Types.NUMERIC:\n                    case Types.REAL:\n                    case Types.INTEGER:\n                    case Types.DOUBLE:\n                    case Types.FLOAT:\n                    case Types.DECIMAL:\n                    case Types.BIGINT:\n                        value = resultSet.getDouble(2);\n                        setValue(key, value);\n                        break;\n\n                    case Types.DATE:\n                    case Types.TIME:\n                    case Types.TIMESTAMP:\n                        Timestamp date = resultSet.getTimestamp(2);\n                        value = date.getTime();\n                        setValue(key, value);\n                        break;\n\n                    default:\n                        System.err.println(\n                            \"JDBCPieDataset - unknown data type\"\n                        );\n                        break;\n                }\n            }\n\n            fireDatasetChanged(new DatasetChangeInfo());\n            //TODO: fill in real change info\n\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    System.err.println(\"JDBCPieDataset: swallowing exception.\");\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    System.err.println(\"JDBCPieDataset: swallowing exception.\");\n                }\n            }\n        }\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: source/org/jfree/data/jdbc/JDBCPieDataset.java::JDBCPieDataset.executeQuery(Connection con, String query)\nSIGNATURE: public void executeQuery(Connection con, String query) throws SQLException",
+        "METHOD: source/org/jfree/data/jdbc/JDBCPieDataset.java::JDBCPieDataset.executeQuery(Connection con, String query)\nSIGNATURE: public void executeQuery(Connection con, String query) throws SQLException\nSTRUCTURE (lossy):\nStatement statement = null;\nResultSet resultSet = null;\nstatement = con.createStatement()\nCALL con.createStatement()\nresultSet = statement.executeQuery(query)\nCALL statement.executeQuery(query)\nResultSetMetaData metaData = resultSet.getMetaData();\nCALL resultSet.getMetaData()\nint columnCount = metaData.getColumnCount();\nCALL metaData.getColumnCount()\nif (columnCount != 2)\nthrow new SQLException( \"Invalid sql generated. PieDataSet requires 2 columns only\" );\nint columnType = metaData.getColumnType(2);\nCALL metaData.getColumnType(2)\ndouble value = Double.NaN;\nwhile (resultSet.next())\nCALL resultSet.next()\nComparable key = resultSet.getString(1);\nCALL resultSet.getString(1)\nswitch (columnType) { case Types.NUMERIC: case Types.REAL: case Types.INTEGER: case Types.DOUBLE: case Types.FLOAT: case Types.DECIMAL: case Types.BIGINT: value = resultSet.getDouble(2); setValue(key, value); break; case Types.DATE: case Types.TIME: case Types.TIMESTAMP: Timestamp date = resultSet.getTimestamp(2); value = date.getTime(); setValue(key, value); break; default: System.err.println( \"JDBCPieDataset - unknown data type\" ); break; }\nvalue = resultSet.getDouble(2)\nCALL resultSet.getDouble(2)\nCALL setValue(key, value)\nTimestamp date = resultSet.getTimestamp(2);\nCALL resultSet.getTimestamp(2)\nvalue = date.getTime()\nCALL date.getTime()\nCALL System.err.println( \"JDBCPieDataset - unknown data type\" )\nCALL fireDatasetChanged(new DatasetChangeInfo())\nif (resultSet != null)\nCALL resultSet.close()\ncatch (Exception e)\nCALL System.err.println(\"JDBCPieDataset: swallowing exception.\")\nif (statement != null)\nCALL statement.close()",
+        "public void executeQuery(Connection con, String query) throws SQLException {\n\n        Statement statement = null;\n        ResultSet resultSet = null;\n\n        try {\n            statement = con.createStatement();\n            resultSet = statement.executeQuery(query);\n            ResultSetMetaData metaData = resultSet.getMetaData();\n\n            int columnCount = metaData.getColumnCount();\n            if (columnCount != 2) {\n                throw new SQLException(\n                    \"Invalid sql generated.  PieDataSet requires 2 columns only\"\n                );\n            }\n\n            int columnType = metaData.getColumnType(2);\n            double value = Double.NaN;\n            while (resultSet.next()) {\n                Comparable key = resultSet.getString(1);\n                switch (columnType) {\n                    case Types.NUMERIC:\n                    case Types.REAL:\n                    case Types.INTEGER:\n                    case Types.DOUBLE:\n                    case Types.FLOAT:\n                    case Types.DECIMAL:\n                    case Types.BIGINT:\n                        value = resultSet.getDouble(2);\n                        setValue(key, value);\n                        break;\n\n                    case Types.DATE:\n                    case Types.TIME:\n                    case Types.TIMESTAMP:\n                        Timestamp date = resultSet.getTimestamp(2);\n                        value = date.getTime();\n                        setValue(key, value);\n                        break;\n\n                    default:\n                        System.err.println(\n                            \"JDBCPieDataset - unknown data type\"\n                        );\n                        break;\n                }\n            }\n\n            fireDatasetChanged(new DatasetChangeInfo());\n            //TODO: fill in real change info\n\n        }\n        finally {\n            if (resultSet != null) {\n                try {\n                    resultSet.close();\n                }\n                catch (Exception e) {\n                    System.err.println(\"JDBCPieDataset: swallowing exception.\");\n                }\n            }\n            if (statement != null) {\n                try {\n                    statement.close();\n                }\n                catch (Exception e) {\n                    System.err.println(\"JDBCPieDataset: swallowing exception.\");\n                }\n            }\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2602739726027397,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 18.0,
+        "literal_count": 13.0,
+        "source_tokens": 610.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 460.0,
+        "compression_ratio": 0.7540983606557377,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 18,
+        "literal_count": 13
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/needle/LongNeedle.java::LongNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea,\n                              Point2D rotate, double angle)",
+      "source": "protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea,\n                              Point2D rotate, double angle) {\n\n        GeneralPath shape1 = new GeneralPath();\n        GeneralPath shape2 = new GeneralPath();\n        GeneralPath shape3 = new GeneralPath();\n\n        float minX = (float) plotArea.getMinX();\n        float minY = (float) plotArea.getMinY();\n        float maxX = (float) plotArea.getMaxX();\n        float maxY = (float) plotArea.getMaxY();\n        //float midX = (float) (minX + (plotArea.getWidth() * getRotateX()));\n        //float midY = (float) (minY + (plotArea.getHeight() * getRotateY()));\n        float midX = (float) (minX + (plotArea.getWidth() * 0.5));\n        float midY = (float) (minY + (plotArea.getHeight() * 0.8));\n        float y = maxY - (2 * (maxY - midY));\n        if (y < minY) {\n            y = minY;\n        }\n        shape1.moveTo(minX, midY);\n        shape1.lineTo(midX, minY);\n        shape1.lineTo(midX, y);\n        shape1.closePath();\n\n        shape2.moveTo(maxX, midY);\n        shape2.lineTo(midX, minY);\n        shape2.lineTo(midX, y);\n        shape2.closePath();\n\n        shape3.moveTo(minX, midY);\n        shape3.lineTo(midX, maxY);\n        shape3.lineTo(maxX, midY);\n        shape3.lineTo(midX, y);\n        shape3.closePath();\n\n        Shape s1 = shape1;\n        Shape s2 = shape2;\n        Shape s3 = shape3;\n\n        if ((rotate != null) && (angle != 0)) {\n            /// we have rotation huston, please spin me\n            getTransform().setToRotation(angle, rotate.getX(), rotate.getY());\n            s1 = shape1.createTransformedShape(transform);\n            s2 = shape2.createTransformedShape(transform);\n            s3 = shape3.createTransformedShape(transform);\n        }\n\n\n        if (getHighlightPaint() != null) {\n            g2.setPaint(getHighlightPaint());\n            g2.fill(s3);\n        }\n\n        if (getFillPaint() != null) {\n            g2.setPaint(getFillPaint());\n            g2.fill(s1);\n            g2.fill(s2);\n        }\n\n\n        if (getOutlinePaint() != null) {\n            g2.setStroke(getOutlineStroke());\n            g2.setPaint(getOutlinePaint());\n            g2.draw(s1);\n            g2.draw(s2);\n            g2.draw(s3);\n        }\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: source/org/jfree/chart/needle/LongNeedle.java::LongNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea,\n                              Point2D rotate, double angle)\nSIGNATURE: protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea,\n                              Point2D rotate, double angle)",
+        "METHOD: source/org/jfree/chart/needle/LongNeedle.java::LongNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea,\n                              Point2D rotate, double angle)\nSIGNATURE: protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea,\n                              Point2D rotate, double angle)\nSTRUCTURE (lossy):\nGeneralPath shape1 = new GeneralPath();\nGeneralPath shape2 = new GeneralPath();\nGeneralPath shape3 = new GeneralPath();\nfloat minX = (float) plotArea.getMinX();\nCALL plotArea.getMinX()\nfloat minY = (float) plotArea.getMinY();\nCALL plotArea.getMinY()\nfloat maxX = (float) plotArea.getMaxX();\nCALL plotArea.getMaxX()\nfloat maxY = (float) plotArea.getMaxY();\nCALL plotArea.getMaxY()\nfloat midX = (float) (minX + (plotArea.getWidth() * 0.5));\nCALL plotArea.getWidth()\nfloat midY = (float) (minY + (plotArea.getHeight() * 0.8));\nCALL plotArea.getHeight()\nfloat y = maxY - (2 * (maxY - midY));\nif (y < minY)\ny = minY\nCALL shape1.moveTo(minX, midY)\nCALL shape1.lineTo(midX, minY)\nCALL shape1.lineTo(midX, y)\nCALL shape1.closePath()\nCALL shape2.moveTo(maxX, midY)\nCALL shape2.lineTo(midX, minY)\nCALL shape2.lineTo(midX, y)\nCALL shape2.closePath()\nCALL shape3.moveTo(minX, midY)\nCALL shape3.lineTo(midX, maxY)\nCALL shape3.lineTo(maxX, midY)\nCALL shape3.lineTo(midX, y)\nCALL shape3.closePath()\nShape s1 = shape1;\nShape s2 = shape2;\nShape s3 = shape3;\nif ((rotate != null) && (angle != 0))\nCALL getTransform().setToRotation(angle, rotate.getX(), rotate.getY())\nCALL getTransform()\nCALL rotate.getX()\nCALL rotate.getY()\ns1 = shape1.createTransformedShape(transform)\nCALL shape1.createTransformedShape(transform)\ns2 = shape2.createTransformedShape(transform)\nCALL shape2.createTransformedShape(transform)\ns3 = shape3.createTransformedShape(transform)\nCALL shape3.createTransformedShape(transform)\nif (getHighlightPaint() != null)\nCALL getHighlightPaint()\nCALL g2.setPaint(getHighlightPaint())\nCALL g2.fill(s3)\nif (getFillPaint() != null)\nCALL getFillPaint()\nCALL g2.setPaint(getFillPaint())\nCALL g2.fill(s1)\nCALL g2.fill(s2)\nif (getOutlinePaint() != null)\nCALL getOutlinePaint()\nCALL g2.setStroke(getOutlineStroke())\nCALL getOutlineStroke()\nCALL g2.setPaint(getOutlinePaint())\nCALL g2.d\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea,\n                              Point2D rotate, double angle) {\n\n        GeneralPath shape1 = new GeneralPath();\n        GeneralPath shape2 = new GeneralPath();\n        GeneralPath shape3 = new GeneralPath();\n\n        float minX = (float) plotArea.getMinX();\n        float minY = (float) plotArea.getMinY();\n        float maxX = (float) plotArea.getMaxX();\n        float maxY = (float) plotArea.getMaxY();\n        //float midX = (float) (minX + (plotArea.getWidth() * getRotateX()));\n        //float midY = (float) (minY + (plotArea.getHeight() * getRotateY()));\n        float midX = (float) (minX + (plotArea.getWidth() * 0.5));\n        float midY = (float) (minY + (plotArea.getHeight() * 0.8));\n        float y = maxY - (2 * (maxY - midY));\n        if (y < minY) {\n            y = minY;\n        }\n        shape1.moveTo(minX, midY);\n        shape1.lineTo(midX, minY);\n        shape1.lineTo(midX, y);\n        shape1.closePath();\n\n        shape2.moveTo(maxX, midY);\n        shape2.lineTo(midX, minY);\n        shape2.lineTo(midX, y);\n        shape2.closePath();\n\n        shape3.moveTo(minX, midY);\n        shape3.lineTo(midX, maxY);\n        shape3.lineTo(maxX, midY);\n        shape3.lineTo(midX, y);\n        shape3.closePath();\n\n        Shape s1 = shape1;\n        Shape s2 = shape2;\n        Shape s3 = shape3;\n\n        if ((rotate != null) && (angle != 0)) {\n            /// we have rotation huston, please spin me\n            getTransform().setToRotation(angle, rotate.getX(), rotate.getY());\n            s1 = shape1.createTransformedShape(transform);\n            s2 = shape2.createTransformedShape(transform);\n            s3 = shape3.createTransformedShape(transform);\n        }\n\n\n        if (getHighlightPaint() != null) {\n            g2.setPaint(getHighlightPaint());\n            g2.fill(s3);\n        }\n\n        if (getFillPaint() != null) {\n            g2.setPaint(getFillPaint());\n            g2.fill(s1);\n            g2.fill(s2);\n        }\n\n\n        if (getOutlinePaint() != null) {\n            g2.setStroke(getOutlineStroke());\n            g2.setPaint(getOutlinePaint());\n            g2.draw(s1);\n            g2.draw(s2);\n            g2.draw(s3);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.24,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 43.0,
+        "literal_count": 8.0,
+        "source_tokens": 558.0,
+        "l0_tokens": 77.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 6,
+        "call_count": 43,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/Week.java::Week.parseWeek(String s)",
+      "source": "public static Week parseWeek(String s) {\n\n        Week result = null;\n        if (s != null) {\n\n            // trim whitespace from either end of the string\n            s = s.trim();\n\n            int i = Week.findSeparator(s);\n            if (i != -1) {\n                String s1 = s.substring(0, i).trim();\n                String s2 = s.substring(i + 1, s.length()).trim();\n\n                Year y = Week.evaluateAsYear(s1);\n                int w;\n                if (y != null) {\n                    w = Week.stringToWeek(s2);\n                    if (w == -1) {\n                        throw new TimePeriodFormatException(\n                                \"Can't evaluate the week.\");\n                    }\n                    result = new Week(w, y);\n                }\n                else {\n                    y = Week.evaluateAsYear(s2);\n                    if (y != null) {\n                        w = Week.stringToWeek(s1);\n                        if (w == -1) {\n                            throw new TimePeriodFormatException(\n                                    \"Can't evaluate the week.\");\n                        }\n                        result = new Week(w, y);\n                    }\n                    else {\n                        throw new TimePeriodFormatException(\n                                \"Can't evaluate the year.\");\n                    }\n                }\n\n            }\n            else {\n                throw new TimePeriodFormatException(\n                        \"Could not find separator.\");\n            }\n\n        }\n        return result;\n\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/Week.java::Week.parseWeek(String s)\nSIGNATURE: public static Week parseWeek(String s)",
+        "METHOD: source/org/jfree/data/time/Week.java::Week.parseWeek(String s)\nSIGNATURE: public static Week parseWeek(String s)\nSTRUCTURE (lossy):\nWeek result = null;\nif (s != null)\ns = s.trim()\nCALL s.trim()\nint i = Week.findSeparator(s);\nCALL Week.findSeparator(s)\nif (i != -1)\nString s1 = s.substring(0, i).trim();\nCALL s.substring(0, i).trim()\nCALL s.substring(0, i)\nString s2 = s.substring(i + 1, s.length()).trim();\nCALL s.substring(i + 1, s.length()).trim()\nCALL s.substring(i + 1, s.length())\nCALL s.length()\nYear y = Week.evaluateAsYear(s1);\nCALL Week.evaluateAsYear(s1)\nint w;\nif (y != null)\nw = Week.stringToWeek(s2)\nCALL Week.stringToWeek(s2)\nif (w == -1)\nthrow new TimePeriodFormatException( \"Can't evaluate the week.\");\nresult = new Week(w, y)\ny = Week.evaluateAsYear(s2)\nCALL Week.evaluateAsYear(s2)\nw = Week.stringToWeek(s1)\nCALL Week.stringToWeek(s1)\nthrow new TimePeriodFormatException( \"Can't evaluate the year.\");\nthrow new TimePeriodFormatException( \"Could not find separator.\");\nreturn result;",
+        "public static Week parseWeek(String s) {\n\n        Week result = null;\n        if (s != null) {\n\n            // trim whitespace from either end of the string\n            s = s.trim();\n\n            int i = Week.findSeparator(s);\n            if (i != -1) {\n                String s1 = s.substring(0, i).trim();\n                String s2 = s.substring(i + 1, s.length()).trim();\n\n                Year y = Week.evaluateAsYear(s1);\n                int w;\n                if (y != null) {\n                    w = Week.stringToWeek(s2);\n                    if (w == -1) {\n                        throw new TimePeriodFormatException(\n                                \"Can't evaluate the week.\");\n                    }\n                    result = new Week(w, y);\n                }\n                else {\n                    y = Week.evaluateAsYear(s2);\n                    if (y != null) {\n                        w = Week.stringToWeek(s1);\n                        if (w == -1) {\n                            throw new TimePeriodFormatException(\n                                    \"Can't evaluate the week.\");\n                        }\n                        result = new Week(w, y);\n                    }\n                    else {\n                        throw new TimePeriodFormatException(\n                                \"Can't evaluate the year.\");\n                    }\n                }\n\n            }\n            else {\n                throw new TimePeriodFormatException(\n                        \"Could not find separator.\");\n            }\n\n        }\n        return result;\n\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3333333333333333,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 11.0,
+        "literal_count": 13.0,
+        "source_tokens": 396.0,
+        "l0_tokens": 30.0,
+        "l1_tokens": 252.0,
+        "compression_ratio": 0.6363636363636364,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 11,
+        "literal_count": 13
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/AttributedStringUtilities.java::AttributedStringUtilities.equal(AttributedString s1, AttributedString s2)",
+      "source": "public static boolean equal(AttributedString s1, AttributedString s2) {\n        if (s1 == null) {\n            return (s2 == null);\n        }\n        if (s2 == null) {\n            return false;\n        }\n        AttributedCharacterIterator it1 = s1.getIterator();\n        AttributedCharacterIterator it2 = s2.getIterator();\n        char c1 = it1.first();\n        char c2 = it2.first();\n        int start = 0;\n        while (c1 != CharacterIterator.DONE) {\n            int limit1 = it1.getRunLimit();\n            int limit2 = it2.getRunLimit();\n            if (limit1 != limit2) {\n                return false;\n            }\n            // if maps aren't equivalent, return false\n            Map m1 = it1.getAttributes();\n            Map m2 = it2.getAttributes();\n            if (!m1.equals(m2)) {\n                return false;\n            }\n            // now check characters in the run are the same\n            for (int i = start; i < limit1; i++) {\n                if (c1 != c2) {\n                    return false;\n                }\n                c1 = it1.next();\n                c2 = it2.next();\n            }\n            start = limit1;\n        }\n        return c2 == CharacterIterator.DONE;\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/AttributedStringUtilities.java::AttributedStringUtilities.equal(AttributedString s1, AttributedString s2)\nSIGNATURE: public static boolean equal(AttributedString s1, AttributedString s2)",
+        "METHOD: source/org/jfree/chart/util/AttributedStringUtilities.java::AttributedStringUtilities.equal(AttributedString s1, AttributedString s2)\nSIGNATURE: public static boolean equal(AttributedString s1, AttributedString s2)\nSTRUCTURE (lossy):\nif (s1 == null)\nreturn (s2 == null);\nif (s2 == null)\nreturn false;\nAttributedCharacterIterator it1 = s1.getIterator();\nCALL s1.getIterator()\nAttributedCharacterIterator it2 = s2.getIterator();\nCALL s2.getIterator()\nchar c1 = it1.first();\nCALL it1.first()\nchar c2 = it2.first();\nCALL it2.first()\nint start = 0;\nwhile (c1 != CharacterIterator.DONE)\nint limit1 = it1.getRunLimit();\nCALL it1.getRunLimit()\nint limit2 = it2.getRunLimit();\nCALL it2.getRunLimit()\nif (limit1 != limit2)\nMap m1 = it1.getAttributes();\nCALL it1.getAttributes()\nMap m2 = it2.getAttributes();\nCALL it2.getAttributes()\nif (!m1.equals(m2))\nCALL m1.equals(m2)\nfor (int i = start; i < limit1; i++)\nint i = start;\ni++\nif (c1 != c2)\nc1 = it1.next()\nCALL it1.next()\nc2 = it2.next()\nCALL it2.next()\nstart = limit1\nreturn c2 == CharacterIterator.DONE;",
+        "public static boolean equal(AttributedString s1, AttributedString s2) {\n        if (s1 == null) {\n            return (s2 == null);\n        }\n        if (s2 == null) {\n            return false;\n        }\n        AttributedCharacterIterator it1 = s1.getIterator();\n        AttributedCharacterIterator it2 = s2.getIterator();\n        char c1 = it1.first();\n        char c2 = it2.first();\n        int start = 0;\n        while (c1 != CharacterIterator.DONE) {\n            int limit1 = it1.getRunLimit();\n            int limit2 = it2.getRunLimit();\n            if (limit1 != limit2) {\n                return false;\n            }\n            // if maps aren't equivalent, return false\n            Map m1 = it1.getAttributes();\n            Map m2 = it2.getAttributes();\n            if (!m1.equals(m2)) {\n                return false;\n            }\n            // now check characters in the run are the same\n            for (int i = start; i < limit1; i++) {\n                if (c1 != c2) {\n                    return false;\n                }\n                c1 = it1.next();\n                c2 = it2.next();\n            }\n            start = limit1;\n        }\n        return c2 == CharacterIterator.DONE;\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2222222222222222,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 11.0,
+        "literal_count": 4.0,
+        "source_tokens": 301.0,
+        "l0_tokens": 56.0,
+        "l1_tokens": 264.0,
+        "compression_ratio": 0.8770764119601329,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 11,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getCenterPoint()",
+      "source": "public static Point getCenterPoint ()\n    {\n      GraphicsEnvironment localGraphicsEnvironment\n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\"getCenterPoint\",\n                  (Class[]) null);\n          return (Point) method.invoke(localGraphicsEnvironment,\n                  (Object[]) null);\n      }\n      catch (Exception e) {\n        // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Point (s.width / 2, s.height / 2);\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getCenterPoint()\nSIGNATURE: public static Point getCenterPoint ()",
+        "METHOD: source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getCenterPoint()\nSIGNATURE: public static Point getCenterPoint ()\nSTRUCTURE (lossy):\nGraphicsEnvironment localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();\nCALL GraphicsEnvironment.getLocalGraphicsEnvironment()\nMethod method = GraphicsEnvironment.class.getMethod(\"getCenterPoint\", (Class[]) null);\nCALL GraphicsEnvironment.class.getMethod(\"getCenterPoint\", (Class[]) null)\nreturn (Point) method.invoke(localGraphicsEnvironment, (Object[]) null);\nCALL method.invoke(localGraphicsEnvironment, (Object[]) null)\ncatch (Exception e)\nDimension s = Toolkit.getDefaultToolkit().getScreenSize();\nCALL Toolkit.getDefaultToolkit().getScreenSize()\nCALL Toolkit.getDefaultToolkit()\nreturn new Point (s.width / 2, s.height / 2);",
+        "public static Point getCenterPoint ()\n    {\n      GraphicsEnvironment localGraphicsEnvironment\n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\"getCenterPoint\",\n                  (Class[]) null);\n          return (Point) method.invoke(localGraphicsEnvironment,\n                  (Object[]) null);\n      }\n      catch (Exception e) {\n        // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Point (s.width / 2, s.height / 2);\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.38461538461538464,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 5.0,
+        "literal_count": 6.0,
+        "source_tokens": 155.0,
+        "l0_tokens": 36.0,
+        "l1_tokens": 205.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 5,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getMaximumWindowBounds()",
+      "source": "public static Rectangle getMaximumWindowBounds() {\n      GraphicsEnvironment localGraphicsEnvironment\n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\n                  \"getMaximumWindowBounds\", (Class[]) null);\n          return (Rectangle) method.invoke(localGraphicsEnvironment,\n                  (Object[]) null);\n      }\n      catch (Exception e) {\n          // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Rectangle (0, 0, s.width, s.height);\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getMaximumWindowBounds()\nSIGNATURE: public static Rectangle getMaximumWindowBounds()",
+        "METHOD: source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getMaximumWindowBounds()\nSIGNATURE: public static Rectangle getMaximumWindowBounds()\nSTRUCTURE (lossy):\nGraphicsEnvironment localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();\nCALL GraphicsEnvironment.getLocalGraphicsEnvironment()\nMethod method = GraphicsEnvironment.class.getMethod( \"getMaximumWindowBounds\", (Class[]) null);\nCALL GraphicsEnvironment.class.getMethod( \"getMaximumWindowBounds\", (Class[]) null)\nreturn (Rectangle) method.invoke(localGraphicsEnvironment, (Object[]) null);\nCALL method.invoke(localGraphicsEnvironment, (Object[]) null)\ncatch (Exception e)\nDimension s = Toolkit.getDefaultToolkit().getScreenSize();\nCALL Toolkit.getDefaultToolkit().getScreenSize()\nCALL Toolkit.getDefaultToolkit()\nreturn new Rectangle (0, 0, s.width, s.height);",
+        "public static Rectangle getMaximumWindowBounds() {\n      GraphicsEnvironment localGraphicsEnvironment\n              = GraphicsEnvironment.getLocalGraphicsEnvironment();\n      try {\n          Method method = GraphicsEnvironment.class.getMethod(\n                  \"getMaximumWindowBounds\", (Class[]) null);\n          return (Rectangle) method.invoke(localGraphicsEnvironment,\n                  (Object[]) null);\n      }\n      catch (Exception e) {\n          // ignore ... will fail if this is not a JDK 1.4 ..\n      }\n\n      Dimension s = Toolkit.getDefaultToolkit().getScreenSize();\n      return new Rectangle (0, 0, s.width, s.height);\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.36585365853658536,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 5.0,
+        "literal_count": 6.0,
+        "source_tokens": 161.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 216.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 5,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/DefaultKeyedValues2D.java::DefaultKeyedValues2D.clone()",
+      "source": "public Object clone() throws CloneNotSupportedException {\n        DefaultKeyedValues2D clone = (DefaultKeyedValues2D) super.clone();\n        // for the keys, a shallow copy should be fine because keys\n        // should be immutable...\n        clone.columnKeys = new java.util.ArrayList(this.columnKeys);\n        clone.rowKeys = new java.util.ArrayList(this.rowKeys);\n\n        // but the row data requires a deep copy\n        clone.rows = (List) ObjectUtilities.deepClone(this.rows);\n        return clone;\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: source/org/jfree/data/DefaultKeyedValues2D.java::DefaultKeyedValues2D.clone()\nSIGNATURE: public Object clone() throws CloneNotSupportedException",
+        "METHOD: source/org/jfree/data/DefaultKeyedValues2D.java::DefaultKeyedValues2D.clone()\nSIGNATURE: public Object clone() throws CloneNotSupportedException\nSTRUCTURE (lossy):\nDefaultKeyedValues2D clone = (DefaultKeyedValues2D) super.clone();\nCALL super.clone()\nclone.columnKeys = new java.util.ArrayList(this.columnKeys)\nclone.rowKeys = new java.util.ArrayList(this.rowKeys)\nclone.rows = (List) ObjectUtilities.deepClone(this.rows)\nCALL ObjectUtilities.deepClone(this.rows)\nreturn clone;",
+        "public Object clone() throws CloneNotSupportedException {\n        DefaultKeyedValues2D clone = (DefaultKeyedValues2D) super.clone();\n        // for the keys, a shallow copy should be fine because keys\n        // should be immutable...\n        clone.columnKeys = new java.util.ArrayList(this.columnKeys);\n        clone.rowKeys = new java.util.ArrayList(this.rowKeys);\n\n        // but the row data requires a deep copy\n        clone.rows = (List) ObjectUtilities.deepClone(this.rows);\n        return clone;\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.39473684210526316,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 128.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 121.0,
+        "compression_ratio": 0.9453125,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.OptionalLibraryHolder.loadLibrary(String classname)",
+      "source": "protected Library loadLibrary(String classname) {\n            if (classname == null) {\n                return null;\n            }\n            try {\n                Class c = ObjectUtilities.getClassLoader(\n                        getClass()).loadClass(classname);\n                try {\n                    Method m = c.getMethod(\"getInstance\", (Class[]) null);\n                    return (Library) m.invoke(null, (Object[]) null);\n                }\n                catch(Exception e) {\n                    // ok, fall back ...\n                }\n                return (Library) c.newInstance();\n            }\n            catch (Exception e) {\n                // ok, this library has no 'getInstance()' method. Check the\n                // default constructor ...\n                return null;\n            }\n        }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.OptionalLibraryHolder.loadLibrary(String classname)\nSIGNATURE: protected Library loadLibrary(String classname)",
+        "METHOD: source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.OptionalLibraryHolder.loadLibrary(String classname)\nSIGNATURE: protected Library loadLibrary(String classname)\nSTRUCTURE (lossy):\nif (classname == null)\nreturn null;\nClass c = ObjectUtilities.getClassLoader( getClass()).loadClass(classname);\nCALL ObjectUtilities.getClassLoader( getClass()).loadClass(classname)\nCALL ObjectUtilities.getClassLoader( getClass())\nCALL getClass()\nMethod m = c.getMethod(\"getInstance\", (Class[]) null);\nCALL c.getMethod(\"getInstance\", (Class[]) null)\nreturn (Library) m.invoke(null, (Object[]) null);\nCALL m.invoke(null, (Object[]) null)\ncatch(Exception e)\nreturn (Library) c.newInstance();\nCALL c.newInstance()\ncatch (Exception e)",
+        "protected Library loadLibrary(String classname) {\n            if (classname == null) {\n                return null;\n            }\n            try {\n                Class c = ObjectUtilities.getClassLoader(\n                        getClass()).loadClass(classname);\n                try {\n                    Method m = c.getMethod(\"getInstance\", (Class[]) null);\n                    return (Library) m.invoke(null, (Object[]) null);\n                }\n                catch(Exception e) {\n                    // ok, fall back ...\n                }\n                return (Library) c.newInstance();\n            }\n            catch (Exception e) {\n                // ok, this library has no 'getInstance()' method. Check the\n                // default constructor ...\n                return null;\n            }\n        }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3783783783783784,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 6.0,
+        "literal_count": 7.0,
+        "source_tokens": 204.0,
+        "l0_tokens": 46.0,
+        "l1_tokens": 184.0,
+        "compression_ratio": 0.9019607843137255,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 6,
+        "literal_count": 7
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/gantt/TaskSeriesCollection.java::TaskSeriesCollection.clone()",
+      "source": "public Object clone() throws CloneNotSupportedException {\n        TaskSeriesCollection clone = (TaskSeriesCollection) super.clone();\n        clone.data = (List) ObjectUtilities.deepClone(this.data);\n        clone.keys = new java.util.ArrayList(this.keys);\n        return clone;\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: source/org/jfree/data/gantt/TaskSeriesCollection.java::TaskSeriesCollection.clone()\nSIGNATURE: public Object clone() throws CloneNotSupportedException",
+        "METHOD: source/org/jfree/data/gantt/TaskSeriesCollection.java::TaskSeriesCollection.clone()\nSIGNATURE: public Object clone() throws CloneNotSupportedException\nSTRUCTURE (lossy):\nTaskSeriesCollection clone = (TaskSeriesCollection) super.clone();\nCALL super.clone()\nclone.data = (List) ObjectUtilities.deepClone(this.data)\nCALL ObjectUtilities.deepClone(this.data)\nclone.keys = new java.util.ArrayList(this.keys)\nreturn clone;",
+        "public Object clone() throws CloneNotSupportedException {\n        TaskSeriesCollection clone = (TaskSeriesCollection) super.clone();\n        clone.data = (List) ObjectUtilities.deepClone(this.data);\n        clone.keys = new java.util.ArrayList(this.keys);\n        return clone;\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5384615384615384,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 71.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 106.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/SpreadsheetDate.java::SpreadsheetDate.isInRange(final SerialDate d1, final SerialDate d2,\n                             final int include)",
+      "source": "public boolean isInRange(final SerialDate d1, final SerialDate d2,\n                             final int include) {\n        final int s1 = d1.toSerial();\n        final int s2 = d2.toSerial();\n        final int start = Math.min(s1, s2);\n        final int end = Math.max(s1, s2);\n\n        final int s = toSerial();\n        if (include == SerialDate.INCLUDE_BOTH) {\n            return (s >= start && s <= end);\n        }\n        else if (include == SerialDate.INCLUDE_FIRST) {\n            return (s >= start && s < end);\n        }\n        else if (include == SerialDate.INCLUDE_SECOND) {\n            return (s > start && s <= end);\n        }\n        else {\n            return (s > start && s < end);\n        }\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/SpreadsheetDate.java::SpreadsheetDate.isInRange(final SerialDate d1, final SerialDate d2,\n                             final int include)\nSIGNATURE: public boolean isInRange(final SerialDate d1, final SerialDate d2,\n                             final int include)",
+        "METHOD: source/org/jfree/data/time/SpreadsheetDate.java::SpreadsheetDate.isInRange(final SerialDate d1, final SerialDate d2,\n                             final int include)\nSIGNATURE: public boolean isInRange(final SerialDate d1, final SerialDate d2,\n                             final int include)\nSTRUCTURE (lossy):\nfinal int s1 = d1.toSerial();\nCALL d1.toSerial()\nfinal int s2 = d2.toSerial();\nCALL d2.toSerial()\nfinal int start = Math.min(s1, s2);\nCALL Math.min(s1, s2)\nfinal int end = Math.max(s1, s2);\nCALL Math.max(s1, s2)\nfinal int s = toSerial();\nCALL toSerial()\nif (include == SerialDate.INCLUDE_BOTH)\nreturn (s >= start && s <= end);\nif (include == SerialDate.INCLUDE_FIRST)\nreturn (s >= start && s < end);\nif (include == SerialDate.INCLUDE_SECOND)\nreturn (s > start && s <= end);\nreturn (s > start && s < end);",
+        "public boolean isInRange(final SerialDate d1, final SerialDate d2,\n                             final int include) {\n        final int s1 = d1.toSerial();\n        final int s2 = d2.toSerial();\n        final int start = Math.min(s1, s2);\n        final int end = Math.max(s1, s2);\n\n        final int s = toSerial();\n        if (include == SerialDate.INCLUDE_BOTH) {\n            return (s >= start && s <= end);\n        }\n        else if (include == SerialDate.INCLUDE_FIRST) {\n            return (s >= start && s < end);\n        }\n        else if (include == SerialDate.INCLUDE_SECOND) {\n            return (s > start && s <= end);\n        }\n        else {\n            return (s > start && s < end);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 5.0,
+        "literal_count": 0.0,
+        "source_tokens": 179.0,
+        "l0_tokens": 75.0,
+        "l1_tokens": 206.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 5,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/gantt/Task.java::Task.clone()",
+      "source": "public Object clone() throws CloneNotSupportedException {\n        Task clone = (Task) super.clone();\n        return clone;\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: source/org/jfree/data/gantt/Task.java::Task.clone()\nSIGNATURE: public Object clone() throws CloneNotSupportedException",
+        "METHOD: source/org/jfree/data/gantt/Task.java::Task.clone()\nSIGNATURE: public Object clone() throws CloneNotSupportedException\nSTRUCTURE (lossy):\nTask clone = (Task) super.clone();\nCALL super.clone()\nreturn clone;",
+        "public Object clone() throws CloneNotSupportedException {\n        Task clone = (Task) super.clone();\n        return clone;\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.75,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 32.0,
+        "l0_tokens": 32.0,
+        "l1_tokens": 54.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.deepClone(final Collection collection)",
+      "source": "public static Collection deepClone(final Collection collection)\n        throws CloneNotSupportedException {\n\n        if (collection == null) {\n            throw new IllegalArgumentException(\"Null 'collection' argument.\");\n        }\n        // all JDK-Collections are cloneable ...\n        // and if the collection is not clonable, then we should throw\n        // a CloneNotSupportedException anyway ...\n        final Collection result\n            = (Collection) ObjectUtilities.clone(collection);\n        result.clear();\n        final Iterator iterator = collection.iterator();\n        while (iterator.hasNext()) {\n            final Object item = iterator.next();\n            if (item != null) {\n                result.add(clone(item));\n            }\n            else {\n                result.add(null);\n            }\n        }\n        return result;\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.deepClone(final Collection collection)\nSIGNATURE: public static Collection deepClone(final Collection collection)\n        throws CloneNotSupportedException",
+        "METHOD: source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.deepClone(final Collection collection)\nSIGNATURE: public static Collection deepClone(final Collection collection)\n        throws CloneNotSupportedException\nSTRUCTURE (lossy):\nif (collection == null)\nthrow new IllegalArgumentException(\"Null 'collection' argument.\");\nfinal Collection result = (Collection) ObjectUtilities.clone(collection);\nCALL ObjectUtilities.clone(collection)\nCALL result.clear()\nfinal Iterator iterator = collection.iterator();\nCALL collection.iterator()\nwhile (iterator.hasNext())\nCALL iterator.hasNext()\nfinal Object item = iterator.next();\nCALL iterator.next()\nif (item != null)\nCALL result.add(clone(item))\nCALL clone(item)\nCALL result.add(null)\nreturn result;",
+        "public static Collection deepClone(final Collection collection)\n        throws CloneNotSupportedException {\n\n        if (collection == null) {\n            throw new IllegalArgumentException(\"Null 'collection' argument.\");\n        }\n        // all JDK-Collections are cloneable ...\n        // and if the collection is not clonable, then we should throw\n        // a CloneNotSupportedException anyway ...\n        final Collection result\n            = (Collection) ObjectUtilities.clone(collection);\n        result.clear();\n        final Iterator iterator = collection.iterator();\n        while (iterator.hasNext()) {\n            final Object item = iterator.next();\n            if (item != null) {\n                result.add(clone(item));\n            }\n            else {\n                result.add(null);\n            }\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3409090909090909,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 8.0,
+        "literal_count": 4.0,
+        "source_tokens": 214.0,
+        "l0_tokens": 58.0,
+        "l1_tokens": 190.0,
+        "compression_ratio": 0.8878504672897196,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 8,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/gantt/TaskSeries.java::TaskSeries.add(Task task)",
+      "source": "public void add(Task task) {\n        if (task == null) {\n            throw new IllegalArgumentException(\"Null 'task' argument.\");\n        }\n        this.tasks.add(task);\n        fireSeriesChanged();\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: source/org/jfree/data/gantt/TaskSeries.java::TaskSeries.add(Task task)\nSIGNATURE: public void add(Task task)",
+        "METHOD: source/org/jfree/data/gantt/TaskSeries.java::TaskSeries.add(Task task)\nSIGNATURE: public void add(Task task)\nSTRUCTURE (lossy):\nif (task == null)\nthrow new IllegalArgumentException(\"Null 'task' argument.\");\nCALL this.tasks.add(task)\nCALL fireSeriesChanged()",
+        "public void add(Task task) {\n        if (task == null) {\n            throw new IllegalArgumentException(\"Null 'task' argument.\");\n        }\n        this.tasks.add(task);\n        fireSeriesChanged();\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6190476190476191,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 2.0,
+        "source_tokens": 51.0,
+        "l0_tokens": 29.0,
+        "l1_tokens": 67.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 2
+      }
+    }
+  ],
+  "rank_metadata": {
+    "source/org/jfree/data/time/TimePeriodValues.java::TimePeriodValues.createCopy(int start, int end)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/TimeSeries.java::TimeSeries.createCopy(int start, int end)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.clone(final Object object)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/gantt/TaskSeries.java::TaskSeries.clone()": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/xy/XYSeries.java::XYSeries.createCopy(int start, int end)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/demo/TimeSeriesChartDemo1.java::TimeSeriesChartDemo1.createDataset()": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/TimeSeries.java::TimeSeries.createCopy(RegularTimePeriod start, RegularTimePeriod end)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/jdbc/JDBCXYDataset.java::JDBCXYDataset.executeQuery(Connection con, String query)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/TimePeriodValuesCollection.java::TimePeriodValuesCollection.getDomainBounds(boolean includeInterval)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/Month.java::Month.parseMonth(String s)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/TimePeriodValues.java::TimePeriodValues.clone()": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/jdbc/JDBCPieDataset.java::JDBCPieDataset.executeQuery(Connection con, String query)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/needle/LongNeedle.java::LongNeedle.drawNeedle(Graphics2D g2, Rectangle2D plotArea,\n                              Point2D rotate, double angle)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/Week.java::Week.parseWeek(String s)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/AttributedStringUtilities.java::AttributedStringUtilities.equal(AttributedString s1, AttributedString s2)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getCenterPoint()": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/RefineryUtilities.java::RefineryUtilities.getMaximumWindowBounds()": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/DefaultKeyedValues2D.java::DefaultKeyedValues2D.clone()": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/ui/BasicProjectInfo.java::BasicProjectInfo.OptionalLibraryHolder.loadLibrary(String classname)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/gantt/TaskSeriesCollection.java::TaskSeriesCollection.clone()": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/SpreadsheetDate.java::SpreadsheetDate.isInRange(final SerialDate d1, final SerialDate d2,\n                             final int include)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/gantt/Task.java::Task.clone()": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/ObjectUtilities.java::ObjectUtilities.deepClone(final Collection collection)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/gantt/TaskSeries.java::TaskSeries.add(Task task)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 8941,
+    "retrieved_unique_entities": 24,
+    "deduplication": "highest_bm25_or_lexical_score_per_entity_id",
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "32268291c3c2a36f049d68f1498a9b8165fff1194f20c7877483642906d14aff",
+  "evidence_sha256": "d7c4a6577b01d0433f81d33cdd0e710245855e8f0afd6dd968c482e26241dac5"
+}

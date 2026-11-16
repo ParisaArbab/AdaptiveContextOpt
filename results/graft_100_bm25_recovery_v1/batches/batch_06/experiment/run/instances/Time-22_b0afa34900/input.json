@@ -1,0 +1,1320 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Time-22",
+    "repository": "Time",
+    "language": "java",
+    "revision": "50d5166ec7c03917040e8b16586b357ed5aa780c",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_06/prepared/checkouts/Time-22",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Time-22\nEXECUTED BUGGY TEST: org.joda.time.TestDuration_Basics::testToPeriod_fixedZone\nTEST SOURCE: src/test/java/org/joda/time/TestDuration_Basics.java\nTEST SOURCE SHA256: 674b1ad085e63869de537b333033a12dd4cc1ba05a0bee534fa2e305e25b6f0a\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testToPeriod_fixedZone() throws Throwable {\n        DateTimeZone zone = DateTimeZone.getDefault();\n        try {\n            DateTimeZone.setDefault(DateTimeZone.forOffsetHours(2));\n            long length =\n                (4L + (3L * 7L) + (2L * 30L) + 365L) * DateTimeConstants.MILLIS_PER_DAY +\n                5L * DateTimeConstants.MILLIS_PER_HOUR +\n                6L * DateTimeConstants.MILLIS_PER_MINUTE +\n                7L * DateTimeConstants.MILLIS_PER_SECOND + 8L;\n            Duration dur = new Duration(length);\n            Period test = dur.toPeriod();\n            assertEquals(0, test.getYears());  // (4 + (3 * 7) + (2 * 30) + 365) == 450\n            assertEquals(0, test.getMonths());\n            assertEquals(0, test.getWeeks());\n            assertEquals(0, test.getDays());\n            assertEquals((450 * 24) + 5, test.getHours());\n            assertEquals(6, test.getMinutes());\n            assertEquals(7, test.getSeconds());\n            assertEquals(8, test.getMillis());\n        } finally {\n            DateTimeZone.setDefault(zone);\n        }\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.joda.time.TestDuration_Basics::testToPeriod_fixedZone\njunit.framework.AssertionFailedError: expected:<0> but was:<64>\n\tat junit.framework.Assert.fail(Assert.java:57)\n\tat junit.framework.Assert.failNotEquals(Assert.java:329)\n\tat junit.framework.Assert.assertEquals(Assert.java:78)\n\tat junit.framework.Assert.assertEquals(Assert.java:234)\n\tat junit.framework.Assert.assertEquals(Assert.java:241)\n\tat junit.framework.TestCase.assertEquals(TestCase.java:409)\n\tat org.joda.time.TestDuration_Basics.testToPeriod_fixedZone(TestDuration_Basics.java:483)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_06/prepared/evidence/Time-22.txt",
+      "sha256": "ddcaf5bb6b92afe673d4203135c1f5e043f8e18daaa1a7d4427aac738d07281a"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src/main/java",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Time-22",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)",
+      "path": "src/main/java/org/joda/time/base/BasePeriod.java",
+      "start_line": 78,
+      "end_line": 85,
+      "source": "protected BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type) {\n        super();\n        type = checkPeriodType(type);\n        iType = type;\n        setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis); // internal method\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 60.205291388393675
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Period.java::Period.normalizedStandard(PeriodType type)",
+      "path": "src/main/java/org/joda/time/Period.java",
+      "start_line": 1551,
+      "end_line": 1572,
+      "source": "public Period normalizedStandard(PeriodType type) {\n        long millis = getMillis();  // no overflow can happen, even with Integer.MAX_VALUEs\n        millis += (((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND));\n        millis += (((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE));\n        millis += (((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR));\n        millis += (((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY));\n        millis += (((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK));\n        Period result = new Period(millis, DateTimeUtils.getPeriodType(type), ISOChronology.getInstanceUTC());\n        int years = getYears();\n        int months = getMonths();\n        if (years != 0 || months != 0) {\n            years = FieldUtils.safeAdd(years, months / 12);\n            months = months % 12;\n            if (years != 0) {\n                result = result.withYears(years);\n            }\n            if (months != 0) {\n                result = result.withMonths(months);\n            }\n        }\n        return result;\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 60.072021021471016
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)",
+      "path": "src/main/java/org/joda/time/base/BasePeriod.java",
+      "start_line": 448,
+      "end_line": 451,
+      "source": "protected void setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis) {\n        setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis);\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 59.550045661045466
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Period.java::Period.toStandardWeeks()",
+      "path": "src/main/java/org/joda/time/Period.java",
+      "start_line": 1310,
+      "end_line": 1319,
+      "source": "public Weeks toStandardWeeks() {\n        checkYearsAndMonths(\"Weeks\");\n        long millis = getMillis();  // assign to a long\n        millis += ((long) getSeconds()) * DateTimeConstants.MILLIS_PER_SECOND;\n        millis += ((long) getMinutes()) * DateTimeConstants.MILLIS_PER_MINUTE;\n        millis += ((long) getHours()) * DateTimeConstants.MILLIS_PER_HOUR;\n        millis += ((long) getDays()) * DateTimeConstants.MILLIS_PER_DAY;\n        long weeks = ((long) getWeeks()) + millis / DateTimeConstants.MILLIS_PER_WEEK;\n        return Weeks.weeks(FieldUtils.safeToInt(weeks));\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 59.127880888816314
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Period.java::Period.toStandardDays()",
+      "path": "src/main/java/org/joda/time/Period.java",
+      "start_line": 1340,
+      "end_line": 1350,
+      "source": "public Days toStandardDays() {\n        checkYearsAndMonths(\"Days\");\n        long millis = getMillis();  // assign to a long\n        millis += ((long) getSeconds()) * DateTimeConstants.MILLIS_PER_SECOND;\n        millis += ((long) getMinutes()) * DateTimeConstants.MILLIS_PER_MINUTE;\n        millis += ((long) getHours()) * DateTimeConstants.MILLIS_PER_HOUR;\n        long days = millis / DateTimeConstants.MILLIS_PER_DAY;\n        days = FieldUtils.safeAdd(days, getDays());\n        days = FieldUtils.safeAdd(days, ((long) getWeeks()) * ((long) DateTimeConstants.DAYS_PER_WEEK));\n        return Days.days(FieldUtils.safeToInt(days));\n    }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 56.92060481334516
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Period.java::Period.toStandardDuration()",
+      "path": "src/main/java/org/joda/time/Period.java",
+      "start_line": 1463,
+      "end_line": 1472,
+      "source": "public Duration toStandardDuration() {\n        checkYearsAndMonths(\"Duration\");\n        long millis = getMillis();  // no overflow can happen, even with Integer.MAX_VALUEs\n        millis += (((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND));\n        millis += (((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE));\n        millis += (((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR));\n        millis += (((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY));\n        millis += (((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK));\n        return new Duration(millis);\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 55.6174489407185
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Period.java::Period.toStandardHours()",
+      "path": "src/main/java/org/joda/time/Period.java",
+      "start_line": 1371,
+      "end_line": 1381,
+      "source": "public Hours toStandardHours() {\n        checkYearsAndMonths(\"Hours\");\n        long millis = getMillis();  // assign to a long\n        millis += ((long) getSeconds()) * DateTimeConstants.MILLIS_PER_SECOND;\n        millis += ((long) getMinutes()) * DateTimeConstants.MILLIS_PER_MINUTE;\n        long hours = millis / DateTimeConstants.MILLIS_PER_HOUR;\n        hours = FieldUtils.safeAdd(hours, getHours());\n        hours = FieldUtils.safeAdd(hours, ((long) getDays()) * ((long) DateTimeConstants.HOURS_PER_DAY));\n        hours = FieldUtils.safeAdd(hours, ((long) getWeeks()) * ((long) DateTimeConstants.HOURS_PER_WEEK));\n        return Hours.hours(FieldUtils.safeToInt(hours));\n    }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 53.202334991077585
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)",
+      "path": "src/main/java/org/joda/time/base/BasePeriod.java",
+      "start_line": 456,
+      "end_line": 468,
+      "source": "private void setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis) {\n        int[] newValues = new int[size()];\n        checkAndUpdate(DurationFieldType.years(), newValues, years);\n        checkAndUpdate(DurationFieldType.months(), newValues, months);\n        checkAndUpdate(DurationFieldType.weeks(), newValues, weeks);\n        checkAndUpdate(DurationFieldType.days(), newValues, days);\n        checkAndUpdate(DurationFieldType.hours(), newValues, hours);\n        checkAndUpdate(DurationFieldType.minutes(), newValues, minutes);\n        checkAndUpdate(DurationFieldType.seconds(), newValues, seconds);\n        checkAndUpdate(DurationFieldType.millis(), newValues, millis);\n        iValues = newValues;\n    }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 51.66711515087891
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/DurationFieldType.java::DurationFieldType.StandardDurationFieldType.getField(Chronology chronology)",
+      "path": "src/main/java/org/joda/time/DurationFieldType.java",
+      "start_line": 263,
+      "end_line": 295,
+      "source": "public DurationField getField(Chronology chronology) {\n            chronology = DateTimeUtils.getChronology(chronology);\n            \n            switch (iOrdinal) {\n                case ERAS:\n                    return chronology.eras();\n                case CENTURIES:\n                    return chronology.centuries();\n                case WEEKYEARS:\n                    return chronology.weekyears();\n                case YEARS:\n                    return chronology.years();\n                case MONTHS:\n                    return chronology.months();\n                case WEEKS:\n                    return chronology.weeks();\n                case DAYS:\n                    return chronology.days();\n                case HALFDAYS:\n                    return chronology.halfdays();\n                case HOURS:\n                    return chronology.hours();\n                case MINUTES:\n                    return chronology.minutes();\n                case SECONDS:\n                    return chronology.seconds();\n                case MILLIS:\n                    return chronology.millis();\n                default:\n                    // Shouldn't happen.\n                    throw new InternalError();\n            }\n        }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 50.419608228692866
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.setPeriod(int years, int months, int weeks, int days,\n                          int hours, int minutes, int seconds, int millis)",
+      "path": "src/main/java/org/joda/time/MutablePeriod.java",
+      "start_line": 484,
+      "end_line": 487,
+      "source": "public void setPeriod(int years, int months, int weeks, int days,\n                          int hours, int minutes, int seconds, int millis) {\n        super.setPeriod(years, months, weeks, days, hours, minutes, seconds, millis);\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 48.809477754390784
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Period.java::Period.toStandardMinutes()",
+      "path": "src/main/java/org/joda/time/Period.java",
+      "start_line": 1402,
+      "end_line": 1412,
+      "source": "public Minutes toStandardMinutes() {\n        checkYearsAndMonths(\"Minutes\");\n        long millis = getMillis();  // assign to a long\n        millis += ((long) getSeconds()) * DateTimeConstants.MILLIS_PER_SECOND;\n        long minutes = millis / DateTimeConstants.MILLIS_PER_MINUTE;\n        minutes = FieldUtils.safeAdd(minutes, getMinutes());\n        minutes = FieldUtils.safeAdd(minutes, ((long) getHours()) * ((long) DateTimeConstants.MINUTES_PER_HOUR));\n        minutes = FieldUtils.safeAdd(minutes, ((long) getDays()) * ((long) DateTimeConstants.MINUTES_PER_DAY));\n        minutes = FieldUtils.safeAdd(minutes, ((long) getWeeks()) * ((long) DateTimeConstants.MINUTES_PER_WEEK));\n        return Minutes.minutes(FieldUtils.safeToInt(minutes));\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 48.652521116980296
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.printOffset(int offset)",
+      "path": "src/main/java/org/joda/time/DateTimeZone.java",
+      "start_line": 630,
+      "end_line": 662,
+      "source": "private static String printOffset(int offset) {\n        StringBuffer buf = new StringBuffer();\n        if (offset >= 0) {\n            buf.append('+');\n        } else {\n            buf.append('-');\n            offset = -offset;\n        }\n\n        int hours = offset / DateTimeConstants.MILLIS_PER_HOUR;\n        FormatUtils.appendPaddedInteger(buf, hours, 2);\n        offset -= hours * (int) DateTimeConstants.MILLIS_PER_HOUR;\n\n        int minutes = offset / DateTimeConstants.MILLIS_PER_MINUTE;\n        buf.append(':');\n        FormatUtils.appendPaddedInteger(buf, minutes, 2);\n        offset -= minutes * DateTimeConstants.MILLIS_PER_MINUTE;\n        if (offset == 0) {\n            return buf.toString();\n        }\n\n        int seconds = offset / DateTimeConstants.MILLIS_PER_SECOND;\n        buf.append(':');\n        FormatUtils.appendPaddedInteger(buf, seconds, 2);\n        offset -= seconds * DateTimeConstants.MILLIS_PER_SECOND;\n        if (offset == 0) {\n            return buf.toString();\n        }\n\n        buf.append('.');\n        FormatUtils.appendPaddedInteger(buf, offset, 3);\n        return buf.toString();\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 47.99448542886961
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.add(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)",
+      "path": "src/main/java/org/joda/time/MutablePeriod.java",
+      "start_line": 655,
+      "end_line": 667,
+      "source": "public void add(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis) {\n        setPeriod(\n            FieldUtils.safeAdd(getYears(), years),\n            FieldUtils.safeAdd(getMonths(), months),\n            FieldUtils.safeAdd(getWeeks(), weeks),\n            FieldUtils.safeAdd(getDays(), days),\n            FieldUtils.safeAdd(getHours(), hours),\n            FieldUtils.safeAdd(getMinutes(), minutes),\n            FieldUtils.safeAdd(getSeconds(), seconds),\n            FieldUtils.safeAdd(getMillis(), millis)\n        );\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 47.69586746412775
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.setFieldValue(ReadWritablePeriod period, int field, int value)",
+      "path": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java",
+      "start_line": 1499,
+      "end_line": 1528,
+      "source": "void setFieldValue(ReadWritablePeriod period, int field, int value) {\n            switch (field) {\n            default:\n                break;\n            case YEARS:\n                period.setYears(value);\n                break;\n            case MONTHS:\n                period.setMonths(value);\n                break;\n            case WEEKS:\n                period.setWeeks(value);\n                break;\n            case DAYS:\n                period.setDays(value);\n                break;\n            case HOURS:\n                period.setHours(value);\n                break;\n            case MINUTES:\n                period.setMinutes(value);\n                break;\n            case SECONDS:\n                period.setSeconds(value);\n                break;\n            case MILLIS:\n                period.setMillis(value);\n                break;\n            }\n        }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 46.73835690042372
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.forOffsetHoursMinutes(int hoursOffset, int minutesOffset)",
+      "path": "src/main/java/org/joda/time/DateTimeZone.java",
+      "start_line": 253,
+      "end_line": 273,
+      "source": "public static DateTimeZone forOffsetHoursMinutes(int hoursOffset, int minutesOffset) throws IllegalArgumentException {\n        if (hoursOffset == 0 && minutesOffset == 0) {\n            return DateTimeZone.UTC;\n        }\n        if (minutesOffset < 0 || minutesOffset > 59) {\n            throw new IllegalArgumentException(\"Minutes out of range: \" + minutesOffset);\n        }\n        int offset = 0;\n        try {\n            int hoursInMinutes = FieldUtils.safeMultiply(hoursOffset, 60);\n            if (hoursInMinutes < 0) {\n                minutesOffset = FieldUtils.safeAdd(hoursInMinutes, -minutesOffset);\n            } else {\n                minutesOffset = FieldUtils.safeAdd(hoursInMinutes, minutesOffset);\n            }\n            offset = FieldUtils.safeMultiply(minutesOffset, DateTimeConstants.MILLIS_PER_MINUTE);\n        } catch (ArithmeticException ex) {\n            throw new IllegalArgumentException(\"Offset is too large\");\n        }\n        return forOffsetMillis(offset);\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 45.71298276287408
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Period.java::Period.Period(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)",
+      "path": "src/main/java/org/joda/time/Period.java",
+      "start_line": 327,
+      "end_line": 330,
+      "source": "public Period(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, PeriodType.standard());\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 44.46551718887825
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/ReadWritablePeriod.java::ReadWritablePeriod.setPeriod(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)",
+      "path": "src/main/java/org/joda/time/ReadWritablePeriod.java",
+      "start_line": 76,
+      "end_line": 77,
+      "source": "void setPeriod(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis);",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 44.29652104056507
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Period.java::Period.toStandardSeconds()",
+      "path": "src/main/java/org/joda/time/Period.java",
+      "start_line": 1433,
+      "end_line": 1442,
+      "source": "public Seconds toStandardSeconds() {\n        checkYearsAndMonths(\"Seconds\");\n        long seconds = getMillis() / DateTimeConstants.MILLIS_PER_SECOND;\n        seconds = FieldUtils.safeAdd(seconds, getSeconds());\n        seconds = FieldUtils.safeAdd(seconds, ((long) getMinutes()) * ((long) DateTimeConstants.SECONDS_PER_MINUTE));\n        seconds = FieldUtils.safeAdd(seconds, ((long) getHours()) * ((long) DateTimeConstants.SECONDS_PER_HOUR));\n        seconds = FieldUtils.safeAdd(seconds, ((long) getDays()) * ((long) DateTimeConstants.SECONDS_PER_DAY));\n        seconds = FieldUtils.safeAdd(seconds, ((long) getWeeks()) * ((long) DateTimeConstants.SECONDS_PER_WEEK));\n        return Seconds.seconds(FieldUtils.safeToInt(seconds));\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 43.91327238572003
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/Period.java::Period.Period(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)",
+      "path": "src/main/java/org/joda/time/Period.java",
+      "start_line": 350,
+      "end_line": 353,
+      "source": "public Period(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, type);\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 43.75450241173294
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.MutablePeriod(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)",
+      "path": "src/main/java/org/joda/time/MutablePeriod.java",
+      "start_line": 129,
+      "end_line": 132,
+      "source": "public MutablePeriod(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, PeriodType.standard());\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 43.58535764120359
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.getFieldValue(ReadablePeriod period)",
+      "path": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java",
+      "start_line": 1380,
+      "end_line": 1461,
+      "source": "long getFieldValue(ReadablePeriod period) {\n            PeriodType type;\n            if (iPrintZeroSetting == PRINT_ZERO_ALWAYS) {\n                type = null; // Don't need to check if supported.\n            } else {\n                type = period.getPeriodType();\n            }\n            if (type != null && isSupported(type, iFieldType) == false) {\n                return Long.MAX_VALUE;\n            }\n\n            long value;\n\n            switch (iFieldType) {\n            default:\n                return Long.MAX_VALUE;\n            case YEARS:\n                value = period.get(DurationFieldType.years());\n                break;\n            case MONTHS:\n                value = period.get(DurationFieldType.months());\n                break;\n            case WEEKS:\n                value = period.get(DurationFieldType.weeks());\n                break;\n            case DAYS:\n                value = period.get(DurationFieldType.days());\n                break;\n            case HOURS:\n                value = period.get(DurationFieldType.hours());\n                break;\n            case MINUTES:\n                value = period.get(DurationFieldType.minutes());\n                break;\n            case SECONDS:\n                value = period.get(DurationFieldType.seconds());\n                break;\n            case MILLIS:\n                value = period.get(DurationFieldType.millis());\n                break;\n            case SECONDS_MILLIS: // drop through\n            case SECONDS_OPTIONAL_MILLIS:\n                int seconds = period.get(DurationFieldType.seconds());\n                int millis = period.get(DurationFieldType.millis());\n                value = (seconds * (long) DateTimeConstants.MILLIS_PER_SECOND) + millis;\n                break;\n            }\n\n            // determine if period is zero and this is the last field\n            if (value == 0) {\n                switch (iPrintZeroSetting) {\n                case PRINT_ZERO_NEVER:\n                    return Long.MAX_VALUE;\n                case PRINT_ZERO_RARELY_LAST:\n                    if (isZero(period) && iFieldFormatters[iFieldType] == this) {\n                        for (int i = iFieldType + 1; i <= MAX_FIELD; i++) {\n                            if (isSupported(type, i) && iFieldFormatters[i] != null) {\n                                return Long.MAX_VALUE;\n                            }\n                        }\n                    } else {\n                        return Long.MAX_VALUE;\n                    }\n                    break;\n                case PRINT_ZERO_RARELY_FIRST:\n                    if (isZero(period) && iFieldFormatters[iFieldType] == this) {\n                        int i = Math.min(iFieldType, 8);  // line split out for IBM JDK\n                        i--;                              // see bug 1660490\n                        for (; i >= 0 && i <= MAX_FIELD; i--) {\n                            if (isSupported(type, i) && iFieldFormatters[i] != null) {\n                                return Long.MAX_VALUE;\n                            }\n                        }\n                    } else {\n                        return Long.MAX_VALUE;\n                    }\n                    break;\n                }\n            }\n\n            return value;\n        }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 43.34308014705075
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.MutablePeriod(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)",
+      "path": "src/main/java/org/joda/time/MutablePeriod.java",
+      "start_line": 148,
+      "end_line": 151,
+      "source": "public MutablePeriod(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, type);\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 42.913124037822605
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java::DateTimeFormatterBuilder.TimeZoneOffset.printTo(\n                Writer out, long instant, Chronology chrono,\n                int displayOffset, DateTimeZone displayZone, Locale locale)",
+      "path": "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java",
+      "start_line": 2139,
+      "end_line": 2196,
+      "source": "public void printTo(\n                Writer out, long instant, Chronology chrono,\n                int displayOffset, DateTimeZone displayZone, Locale locale) throws IOException {\n            if (displayZone == null) {\n                return;  // no zone\n            }\n            if (displayOffset == 0 && iZeroOffsetPrintText != null) {\n                out.write(iZeroOffsetPrintText);\n                return;\n            }\n            if (displayOffset >= 0) {\n                out.write('+');\n            } else {\n                out.write('-');\n                displayOffset = -displayOffset;\n            }\n\n            int hours = displayOffset / DateTimeConstants.MILLIS_PER_HOUR;\n            FormatUtils.writePaddedInteger(out, hours, 2);\n            if (iMaxFields == 1) {\n                return;\n            }\n            displayOffset -= hours * (int)DateTimeConstants.MILLIS_PER_HOUR;\n            if (displayOffset == 0 && iMinFields == 1) {\n                return;\n            }\n\n            int minutes = displayOffset / DateTimeConstants.MILLIS_PER_MINUTE;\n            if (iShowSeparators) {\n                out.write(':');\n            }\n            FormatUtils.writePaddedInteger(out, minutes, 2);\n            if (iMaxFields == 2) {\n                return;\n            }\n            displayOffset -= minutes * DateTimeConstants.MILLIS_PER_MINUTE;\n            if (displayOffset == 0 && iMinFields == 2) {\n                return;\n            }\n\n            int seconds = displayOffset / DateTimeConstants.MILLIS_PER_SECOND;\n            if (iShowSeparators) {\n                out.write(':');\n            }\n            FormatUtils.writePaddedInteger(out, seconds, 2);\n            if (iMaxFields == 3) {\n                return;\n            }\n            displayOffset -= seconds * DateTimeConstants.MILLIS_PER_SECOND;\n            if (displayOffset == 0 && iMinFields == 3) {\n                return;\n            }\n\n            if (iShowSeparators) {\n                out.write('.');\n            }\n            FormatUtils.writePaddedInteger(out, displayOffset, 3);\n        }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.34176553953119
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/ReadWritablePeriod.java::ReadWritablePeriod.add(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis)",
+      "path": "src/main/java/org/joda/time/ReadWritablePeriod.java",
+      "start_line": 124,
+      "end_line": 125,
+      "source": "void add(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis);",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 41.212321745157944
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)",
+      "source": "protected BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type) {\n        super();\n        type = checkPeriodType(type);\n        iType = type;\n        setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis); // internal method\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)\nSIGNATURE: protected BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)",
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)\nSIGNATURE: protected BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)\nSTRUCTURE (lossy):\ntype = checkPeriodType(type)\nCALL checkPeriodType(type)\niType = type\nCALL setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis)",
+        "protected BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type) {\n        super();\n        type = checkPeriodType(type);\n        iType = type;\n        setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis); // internal method\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8333333333333334,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 2.0,
+        "literal_count": 0.0,
+        "source_tokens": 93.0,
+        "l0_tokens": 108.0,
+        "l1_tokens": 151.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 2,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Period.java::Period.normalizedStandard(PeriodType type)",
+      "source": "public Period normalizedStandard(PeriodType type) {\n        long millis = getMillis();  // no overflow can happen, even with Integer.MAX_VALUEs\n        millis += (((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND));\n        millis += (((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE));\n        millis += (((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR));\n        millis += (((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY));\n        millis += (((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK));\n        Period result = new Period(millis, DateTimeUtils.getPeriodType(type), ISOChronology.getInstanceUTC());\n        int years = getYears();\n        int months = getMonths();\n        if (years != 0 || months != 0) {\n            years = FieldUtils.safeAdd(years, months / 12);\n            months = months % 12;\n            if (years != 0) {\n                result = result.withYears(years);\n            }\n            if (months != 0) {\n                result = result.withMonths(months);\n            }\n        }\n        return result;\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.normalizedStandard(PeriodType type)\nSIGNATURE: public Period normalizedStandard(PeriodType type)",
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.normalizedStandard(PeriodType type)\nSIGNATURE: public Period normalizedStandard(PeriodType type)\nSTRUCTURE (lossy):\nlong millis = getMillis();\nCALL getMillis()\nmillis += (((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND))\nCALL getSeconds()\nmillis += (((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE))\nCALL getMinutes()\nmillis += (((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR))\nCALL getHours()\nmillis += (((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY))\nCALL getDays()\nmillis += (((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK))\nCALL getWeeks()\nPeriod result = new Period(millis, DateTimeUtils.getPeriodType(type), ISOChronology.getInstanceUTC());\nCALL DateTimeUtils.getPeriodType(type)\nCALL ISOChronology.getInstanceUTC()\nint years = getYears();\nCALL getYears()\nint months = getMonths();\nCALL getMonths()\nif (years != 0 || months != 0)\nyears = FieldUtils.safeAdd(years, months / 12)\nCALL FieldUtils.safeAdd(years, months / 12)\nmonths = months % 12\nif (years != 0)\nresult = result.withYears(years)\nCALL result.withYears(years)\nif (months != 0)\nresult = result.withMonths(months)\nCALL result.withMonths(months)\nreturn result;",
+        "public Period normalizedStandard(PeriodType type) {\n        long millis = getMillis();  // no overflow can happen, even with Integer.MAX_VALUEs\n        millis += (((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND));\n        millis += (((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE));\n        millis += (((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR));\n        millis += (((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY));\n        millis += (((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK));\n        Period result = new Period(millis, DateTimeUtils.getPeriodType(type), ISOChronology.getInstanceUTC());\n        int years = getYears();\n        int months = getMonths();\n        if (years != 0 || months != 0) {\n            years = FieldUtils.safeAdd(years, months / 12);\n            months = months % 12;\n            if (years != 0) {\n                result = result.withYears(years);\n            }\n            if (months != 0) {\n                result = result.withMonths(months);\n            }\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5833333333333334,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 13.0,
+        "literal_count": 6.0,
+        "source_tokens": 281.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 318.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 13,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)",
+      "source": "protected void setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis) {\n        setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis);\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)\nSIGNATURE: protected void setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)",
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)\nSIGNATURE: protected void setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)\nSTRUCTURE (lossy):\nCALL setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis)",
+        "protected void setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis) {\n        setPeriodInternal(years, months, weeks, days, hours, minutes, seconds, millis);\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.9523809523809523,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 61.0,
+        "l0_tokens": 90.0,
+        "l1_tokens": 116.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Period.java::Period.toStandardWeeks()",
+      "source": "public Weeks toStandardWeeks() {\n        checkYearsAndMonths(\"Weeks\");\n        long millis = getMillis();  // assign to a long\n        millis += ((long) getSeconds()) * DateTimeConstants.MILLIS_PER_SECOND;\n        millis += ((long) getMinutes()) * DateTimeConstants.MILLIS_PER_MINUTE;\n        millis += ((long) getHours()) * DateTimeConstants.MILLIS_PER_HOUR;\n        millis += ((long) getDays()) * DateTimeConstants.MILLIS_PER_DAY;\n        long weeks = ((long) getWeeks()) + millis / DateTimeConstants.MILLIS_PER_WEEK;\n        return Weeks.weeks(FieldUtils.safeToInt(weeks));\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.toStandardWeeks()\nSIGNATURE: public Weeks toStandardWeeks()",
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.toStandardWeeks()\nSIGNATURE: public Weeks toStandardWeeks()\nSTRUCTURE (lossy):\nCALL checkYearsAndMonths(\"Weeks\")\nlong millis = getMillis();\nCALL getMillis()\nmillis += ((long) getSeconds()) * DateTimeConstants.MILLIS_PER_SECOND\nCALL getSeconds()\nmillis += ((long) getMinutes()) * DateTimeConstants.MILLIS_PER_MINUTE\nCALL getMinutes()\nmillis += ((long) getHours()) * DateTimeConstants.MILLIS_PER_HOUR\nCALL getHours()\nmillis += ((long) getDays()) * DateTimeConstants.MILLIS_PER_DAY\nCALL getDays()\nlong weeks = ((long) getWeeks()) + millis / DateTimeConstants.MILLIS_PER_WEEK;\nCALL getWeeks()\nreturn Weeks.weeks(FieldUtils.safeToInt(weeks));\nCALL Weeks.weeks(FieldUtils.safeToInt(weeks))\nCALL FieldUtils.safeToInt(weeks)",
+        "public Weeks toStandardWeeks() {\n        checkYearsAndMonths(\"Weeks\");\n        long millis = getMillis();  // assign to a long\n        millis += ((long) getSeconds()) * DateTimeConstants.MILLIS_PER_SECOND;\n        millis += ((long) getMinutes()) * DateTimeConstants.MILLIS_PER_MINUTE;\n        millis += ((long) getHours()) * DateTimeConstants.MILLIS_PER_HOUR;\n        millis += ((long) getDays()) * DateTimeConstants.MILLIS_PER_DAY;\n        long weeks = ((long) getWeeks()) + millis / DateTimeConstants.MILLIS_PER_WEEK;\n        return Weeks.weeks(FieldUtils.safeToInt(weeks));\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7428571428571429,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 9.0,
+        "literal_count": 1.0,
+        "source_tokens": 146.0,
+        "l0_tokens": 29.0,
+        "l1_tokens": 193.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 9,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Period.java::Period.toStandardDays()",
+      "source": "public Days toStandardDays() {\n        checkYearsAndMonths(\"Days\");\n        long millis = getMillis();  // assign to a long\n        millis += ((long) getSeconds()) * DateTimeConstants.MILLIS_PER_SECOND;\n        millis += ((long) getMinutes()) * DateTimeConstants.MILLIS_PER_MINUTE;\n        millis += ((long) getHours()) * DateTimeConstants.MILLIS_PER_HOUR;\n        long days = millis / DateTimeConstants.MILLIS_PER_DAY;\n        days = FieldUtils.safeAdd(days, getDays());\n        days = FieldUtils.safeAdd(days, ((long) getWeeks()) * ((long) DateTimeConstants.DAYS_PER_WEEK));\n        return Days.days(FieldUtils.safeToInt(days));\n    }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.toStandardDays()\nSIGNATURE: public Days toStandardDays()",
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.toStandardDays()\nSIGNATURE: public Days toStandardDays()\nSTRUCTURE (lossy):\nCALL checkYearsAndMonths(\"Days\")\nlong millis = getMillis();\nCALL getMillis()\nmillis += ((long) getSeconds()) * DateTimeConstants.MILLIS_PER_SECOND\nCALL getSeconds()\nmillis += ((long) getMinutes()) * DateTimeConstants.MILLIS_PER_MINUTE\nCALL getMinutes()\nmillis += ((long) getHours()) * DateTimeConstants.MILLIS_PER_HOUR\nCALL getHours()\nlong days = millis / DateTimeConstants.MILLIS_PER_DAY;\ndays = FieldUtils.safeAdd(days, getDays())\nCALL FieldUtils.safeAdd(days, getDays())\nCALL getDays()\ndays = FieldUtils.safeAdd(days, ((long) getWeeks()) * ((long) DateTimeConstants.DAYS_PER_WEEK))\nCALL FieldUtils.safeAdd(days, ((long) getWeeks()) * ((long) DateTimeConstants.DAYS_PER_WEEK))\nCALL getWeeks()\nreturn Days.days(FieldUtils.safeToInt(days));\nCALL Days.days(FieldUtils.safeToInt(days))\nCALL FieldUtils.safeToInt(days)",
+        "public Days toStandardDays() {\n        checkYearsAndMonths(\"Days\");\n        long millis = getMillis();  // assign to a long\n        millis += ((long) getSeconds()) * DateTimeConstants.MILLIS_PER_SECOND;\n        millis += ((long) getMinutes()) * DateTimeConstants.MILLIS_PER_MINUTE;\n        millis += ((long) getHours()) * DateTimeConstants.MILLIS_PER_HOUR;\n        long days = millis / DateTimeConstants.MILLIS_PER_DAY;\n        days = FieldUtils.safeAdd(days, getDays());\n        days = FieldUtils.safeAdd(days, ((long) getWeeks()) * ((long) DateTimeConstants.DAYS_PER_WEEK));\n        return Days.days(FieldUtils.safeToInt(days));\n    }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7222222222222222,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 11.0,
+        "literal_count": 1.0,
+        "source_tokens": 159.0,
+        "l0_tokens": 28.0,
+        "l1_tokens": 237.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 11,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Period.java::Period.toStandardDuration()",
+      "source": "public Duration toStandardDuration() {\n        checkYearsAndMonths(\"Duration\");\n        long millis = getMillis();  // no overflow can happen, even with Integer.MAX_VALUEs\n        millis += (((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND));\n        millis += (((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE));\n        millis += (((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR));\n        millis += (((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY));\n        millis += (((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK));\n        return new Duration(millis);\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.toStandardDuration()\nSIGNATURE: public Duration toStandardDuration()",
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.toStandardDuration()\nSIGNATURE: public Duration toStandardDuration()\nSTRUCTURE (lossy):\nCALL checkYearsAndMonths(\"Duration\")\nlong millis = getMillis();\nCALL getMillis()\nmillis += (((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND))\nCALL getSeconds()\nmillis += (((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE))\nCALL getMinutes()\nmillis += (((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR))\nCALL getHours()\nmillis += (((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY))\nCALL getDays()\nmillis += (((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK))\nCALL getWeeks()\nreturn new Duration(millis);",
+        "public Duration toStandardDuration() {\n        checkYearsAndMonths(\"Duration\");\n        long millis = getMillis();  // no overflow can happen, even with Integer.MAX_VALUEs\n        millis += (((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND));\n        millis += (((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE));\n        millis += (((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR));\n        millis += (((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY));\n        millis += (((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK));\n        return new Duration(millis);\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.675,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 7.0,
+        "literal_count": 1.0,
+        "source_tokens": 163.0,
+        "l0_tokens": 31.0,
+        "l1_tokens": 182.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 7,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Period.java::Period.toStandardHours()",
+      "source": "public Hours toStandardHours() {\n        checkYearsAndMonths(\"Hours\");\n        long millis = getMillis();  // assign to a long\n        millis += ((long) getSeconds()) * DateTimeConstants.MILLIS_PER_SECOND;\n        millis += ((long) getMinutes()) * DateTimeConstants.MILLIS_PER_MINUTE;\n        long hours = millis / DateTimeConstants.MILLIS_PER_HOUR;\n        hours = FieldUtils.safeAdd(hours, getHours());\n        hours = FieldUtils.safeAdd(hours, ((long) getDays()) * ((long) DateTimeConstants.HOURS_PER_DAY));\n        hours = FieldUtils.safeAdd(hours, ((long) getWeeks()) * ((long) DateTimeConstants.HOURS_PER_WEEK));\n        return Hours.hours(FieldUtils.safeToInt(hours));\n    }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.toStandardHours()\nSIGNATURE: public Hours toStandardHours()",
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.toStandardHours()\nSIGNATURE: public Hours toStandardHours()\nSTRUCTURE (lossy):\nCALL checkYearsAndMonths(\"Hours\")\nlong millis = getMillis();\nCALL getMillis()\nmillis += ((long) getSeconds()) * DateTimeConstants.MILLIS_PER_SECOND\nCALL getSeconds()\nmillis += ((long) getMinutes()) * DateTimeConstants.MILLIS_PER_MINUTE\nCALL getMinutes()\nlong hours = millis / DateTimeConstants.MILLIS_PER_HOUR;\nhours = FieldUtils.safeAdd(hours, getHours())\nCALL FieldUtils.safeAdd(hours, getHours())\nCALL getHours()\nhours = FieldUtils.safeAdd(hours, ((long) getDays()) * ((long) DateTimeConstants.HOURS_PER_DAY))\nCALL FieldUtils.safeAdd(hours, ((long) getDays()) * ((long) DateTimeConstants.HOURS_PER_DAY))\nCALL getDays()\nhours = FieldUtils.safeAdd(hours, ((long) getWeeks()) * ((long) DateTimeConstants.HOURS_PER_WEEK))\nCALL FieldUtils.safeAdd(hours, ((long) getWeeks()) * ((long) DateTimeConstants.HOURS_PER_WEEK))\nCALL getWeeks()\nreturn Hours.hours(FieldUtils.safeToInt(hours));\nCALL Hours.hours(FieldUtils.safeToInt(hours))\nCALL FieldUtils.safeToInt(hours)",
+        "public Hours toStandardHours() {\n        checkYearsAndMonths(\"Hours\");\n        long millis = getMillis();  // assign to a long\n        millis += ((long) getSeconds()) * DateTimeConstants.MILLIS_PER_SECOND;\n        millis += ((long) getMinutes()) * DateTimeConstants.MILLIS_PER_MINUTE;\n        long hours = millis / DateTimeConstants.MILLIS_PER_HOUR;\n        hours = FieldUtils.safeAdd(hours, getHours());\n        hours = FieldUtils.safeAdd(hours, ((long) getDays()) * ((long) DateTimeConstants.HOURS_PER_DAY));\n        hours = FieldUtils.safeAdd(hours, ((long) getWeeks()) * ((long) DateTimeConstants.HOURS_PER_WEEK));\n        return Hours.hours(FieldUtils.safeToInt(hours));\n    }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7222222222222222,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 12.0,
+        "literal_count": 1.0,
+        "source_tokens": 171.0,
+        "l0_tokens": 29.0,
+        "l1_tokens": 274.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 12,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)",
+      "source": "private void setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis) {\n        int[] newValues = new int[size()];\n        checkAndUpdate(DurationFieldType.years(), newValues, years);\n        checkAndUpdate(DurationFieldType.months(), newValues, months);\n        checkAndUpdate(DurationFieldType.weeks(), newValues, weeks);\n        checkAndUpdate(DurationFieldType.days(), newValues, days);\n        checkAndUpdate(DurationFieldType.hours(), newValues, hours);\n        checkAndUpdate(DurationFieldType.minutes(), newValues, minutes);\n        checkAndUpdate(DurationFieldType.seconds(), newValues, seconds);\n        checkAndUpdate(DurationFieldType.millis(), newValues, millis);\n        iValues = newValues;\n    }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)\nSIGNATURE: private void setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)",
+        "METHOD: src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)\nSIGNATURE: private void setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)\nSTRUCTURE (lossy):\nint[] newValues = new int[size()];\nCALL size()\nCALL checkAndUpdate(DurationFieldType.years(), newValues, years)\nCALL DurationFieldType.years()\nCALL checkAndUpdate(DurationFieldType.months(), newValues, months)\nCALL DurationFieldType.months()\nCALL checkAndUpdate(DurationFieldType.weeks(), newValues, weeks)\nCALL DurationFieldType.weeks()\nCALL checkAndUpdate(DurationFieldType.days(), newValues, days)\nCALL DurationFieldType.days()\nCALL checkAndUpdate(DurationFieldType.hours(), newValues, hours)\nCALL DurationFieldType.hours()\nCALL checkAndUpdate(DurationFieldType.minutes(), newValues, minutes)\nCALL DurationFieldType.minutes()\nCALL checkAndUpdate(DurationFieldType.seconds(), newValues, seconds)\nCALL DurationFieldType.seconds()\nCALL checkAndUpdate(DurationFieldType.millis(), newValues, millis)\nCALL DurationFieldType.millis()\niValues = newValues",
+        "private void setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis) {\n        int[] newValues = new int[size()];\n        checkAndUpdate(DurationFieldType.years(), newValues, years);\n        checkAndUpdate(DurationFieldType.months(), newValues, months);\n        checkAndUpdate(DurationFieldType.weeks(), newValues, weeks);\n        checkAndUpdate(DurationFieldType.days(), newValues, days);\n        checkAndUpdate(DurationFieldType.hours(), newValues, hours);\n        checkAndUpdate(DurationFieldType.minutes(), newValues, minutes);\n        checkAndUpdate(DurationFieldType.seconds(), newValues, seconds);\n        checkAndUpdate(DurationFieldType.millis(), newValues, millis);\n        iValues = newValues;\n    }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 17.0,
+        "literal_count": 0.0,
+        "source_tokens": 200.0,
+        "l0_tokens": 96.0,
+        "l1_tokens": 314.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 17,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/DurationFieldType.java::DurationFieldType.StandardDurationFieldType.getField(Chronology chronology)",
+      "source": "public DurationField getField(Chronology chronology) {\n            chronology = DateTimeUtils.getChronology(chronology);\n            \n            switch (iOrdinal) {\n                case ERAS:\n                    return chronology.eras();\n                case CENTURIES:\n                    return chronology.centuries();\n                case WEEKYEARS:\n                    return chronology.weekyears();\n                case YEARS:\n                    return chronology.years();\n                case MONTHS:\n                    return chronology.months();\n                case WEEKS:\n                    return chronology.weeks();\n                case DAYS:\n                    return chronology.days();\n                case HALFDAYS:\n                    return chronology.halfdays();\n                case HOURS:\n                    return chronology.hours();\n                case MINUTES:\n                    return chronology.minutes();\n                case SECONDS:\n                    return chronology.seconds();\n                case MILLIS:\n                    return chronology.millis();\n                default:\n                    // Shouldn't happen.\n                    throw new InternalError();\n            }\n        }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/DurationFieldType.java::DurationFieldType.StandardDurationFieldType.getField(Chronology chronology)\nSIGNATURE: public DurationField getField(Chronology chronology)",
+        "METHOD: src/main/java/org/joda/time/DurationFieldType.java::DurationFieldType.StandardDurationFieldType.getField(Chronology chronology)\nSIGNATURE: public DurationField getField(Chronology chronology)\nSTRUCTURE (lossy):\nchronology = DateTimeUtils.getChronology(chronology)\nCALL DateTimeUtils.getChronology(chronology)\nswitch (iOrdinal) { case ERAS: return chronology.eras(); case CENTURIES: return chronology.centuries(); case WEEKYEARS: return chronology.weekyears(); case YEARS: return chronology.years(); case MONTHS: return chronology.months(); case WEEKS: return chronology.weeks(); case DAYS: return chronology.days(); case HALFDAYS: return chronology.halfdays(); case HOURS: return chronology.hours(); case MINUTES: return chronology.minutes(); case SECONDS: return chronology.seconds(); case MILLIS: return chronology.millis(); default: // Shouldn't happen. throw new InternalError(); }\nreturn chronology.eras();\nCALL chronology.eras()\nreturn chronology.centuries();\nCALL chronology.centuries()\nreturn chronology.weekyears();\nCALL chronology.weekyears()\nreturn chronology.years();\nCALL chronology.years()\nreturn chronology.months();\nCALL chronology.months()\nreturn chronology.weeks();\nCALL chronology.weeks()\nreturn chronology.days();\nCALL chronology.days()\nreturn chronology.halfdays();\nCALL chronology.halfdays()\nreturn chronology.hours();\nCALL chronology.hours()\nreturn chronology.minutes();\nCALL chronology.minutes()\nreturn chronology.seconds();\nCALL chronology.seconds()\nreturn chronology.millis();\nCALL chronology.millis()\nthrow new InternalError();",
+        "public DurationField getField(Chronology chronology) {\n            chronology = DateTimeUtils.getChronology(chronology);\n            \n            switch (iOrdinal) {\n                case ERAS:\n                    return chronology.eras();\n                case CENTURIES:\n                    return chronology.centuries();\n                case WEEKYEARS:\n                    return chronology.weekyears();\n                case YEARS:\n                    return chronology.years();\n                case MONTHS:\n                    return chronology.months();\n                case WEEKS:\n                    return chronology.weeks();\n                case DAYS:\n                    return chronology.days();\n                case HALFDAYS:\n                    return chronology.halfdays();\n                case HOURS:\n                    return chronology.hours();\n                case MINUTES:\n                    return chronology.minutes();\n                case SECONDS:\n                    return chronology.seconds();\n                case MILLIS:\n                    return chronology.millis();\n                default:\n                    // Shouldn't happen.\n                    throw new InternalError();\n            }\n        }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.631578947368421,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 13.0,
+        "literal_count": 0.0,
+        "source_tokens": 308.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 391.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 13,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.setPeriod(int years, int months, int weeks, int days,\n                          int hours, int minutes, int seconds, int millis)",
+      "source": "public void setPeriod(int years, int months, int weeks, int days,\n                          int hours, int minutes, int seconds, int millis) {\n        super.setPeriod(years, months, weeks, days, hours, minutes, seconds, millis);\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.setPeriod(int years, int months, int weeks, int days,\n                          int hours, int minutes, int seconds, int millis)\nSIGNATURE: public void setPeriod(int years, int months, int weeks, int days,\n                          int hours, int minutes, int seconds, int millis)",
+        "METHOD: src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.setPeriod(int years, int months, int weeks, int days,\n                          int hours, int minutes, int seconds, int millis)\nSIGNATURE: public void setPeriod(int years, int months, int weeks, int days,\n                          int hours, int minutes, int seconds, int millis)\nSTRUCTURE (lossy):\nCALL super.setPeriod(years, months, weeks, days, hours, minutes, seconds, millis)",
+        "public void setPeriod(int years, int months, int weeks, int days,\n                          int hours, int minutes, int seconds, int millis) {\n        super.setPeriod(years, months, weeks, days, hours, minutes, seconds, millis);\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8571428571428571,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 59.0,
+        "l0_tokens": 88.0,
+        "l1_tokens": 113.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Period.java::Period.toStandardMinutes()",
+      "source": "public Minutes toStandardMinutes() {\n        checkYearsAndMonths(\"Minutes\");\n        long millis = getMillis();  // assign to a long\n        millis += ((long) getSeconds()) * DateTimeConstants.MILLIS_PER_SECOND;\n        long minutes = millis / DateTimeConstants.MILLIS_PER_MINUTE;\n        minutes = FieldUtils.safeAdd(minutes, getMinutes());\n        minutes = FieldUtils.safeAdd(minutes, ((long) getHours()) * ((long) DateTimeConstants.MINUTES_PER_HOUR));\n        minutes = FieldUtils.safeAdd(minutes, ((long) getDays()) * ((long) DateTimeConstants.MINUTES_PER_DAY));\n        minutes = FieldUtils.safeAdd(minutes, ((long) getWeeks()) * ((long) DateTimeConstants.MINUTES_PER_WEEK));\n        return Minutes.minutes(FieldUtils.safeToInt(minutes));\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.toStandardMinutes()\nSIGNATURE: public Minutes toStandardMinutes()",
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.toStandardMinutes()\nSIGNATURE: public Minutes toStandardMinutes()\nSTRUCTURE (lossy):\nCALL checkYearsAndMonths(\"Minutes\")\nlong millis = getMillis();\nCALL getMillis()\nmillis += ((long) getSeconds()) * DateTimeConstants.MILLIS_PER_SECOND\nCALL getSeconds()\nlong minutes = millis / DateTimeConstants.MILLIS_PER_MINUTE;\nminutes = FieldUtils.safeAdd(minutes, getMinutes())\nCALL FieldUtils.safeAdd(minutes, getMinutes())\nCALL getMinutes()\nminutes = FieldUtils.safeAdd(minutes, ((long) getHours()) * ((long) DateTimeConstants.MINUTES_PER_HOUR))\nCALL FieldUtils.safeAdd(minutes, ((long) getHours()) * ((long) DateTimeConstants.MINUTES_PER_HOUR))\nCALL getHours()\nminutes = FieldUtils.safeAdd(minutes, ((long) getDays()) * ((long) DateTimeConstants.MINUTES_PER_DAY))\nCALL FieldUtils.safeAdd(minutes, ((long) getDays()) * ((long) DateTimeConstants.MINUTES_PER_DAY))\nCALL getDays()\nminutes = FieldUtils.safeAdd(minutes, ((long) getWeeks()) * ((long) DateTimeConstants.MINUTES_PER_WEEK))\nCALL FieldUtils.safeAdd(minutes, ((long) getWeeks()) * ((long) DateTimeConstants.MINUTES_PER_WEEK))\nCALL getWeeks()\nreturn Minutes.minutes(FieldUtils.safeToInt(minutes));\nCALL Minutes.minutes(FieldUtils.safeToInt(minutes))\nCALL FieldUtils.safeToInt(minutes)",
+        "public Minutes toStandardMinutes() {\n        checkYearsAndMonths(\"Minutes\");\n        long millis = getMillis();  // assign to a long\n        millis += ((long) getSeconds()) * DateTimeConstants.MILLIS_PER_SECOND;\n        long minutes = millis / DateTimeConstants.MILLIS_PER_MINUTE;\n        minutes = FieldUtils.safeAdd(minutes, getMinutes());\n        minutes = FieldUtils.safeAdd(minutes, ((long) getHours()) * ((long) DateTimeConstants.MINUTES_PER_HOUR));\n        minutes = FieldUtils.safeAdd(minutes, ((long) getDays()) * ((long) DateTimeConstants.MINUTES_PER_DAY));\n        minutes = FieldUtils.safeAdd(minutes, ((long) getWeeks()) * ((long) DateTimeConstants.MINUTES_PER_WEEK));\n        return Minutes.minutes(FieldUtils.safeToInt(minutes));\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7222222222222222,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 13.0,
+        "literal_count": 1.0,
+        "source_tokens": 188.0,
+        "l0_tokens": 31.0,
+        "l1_tokens": 322.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 13,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.printOffset(int offset)",
+      "source": "private static String printOffset(int offset) {\n        StringBuffer buf = new StringBuffer();\n        if (offset >= 0) {\n            buf.append('+');\n        } else {\n            buf.append('-');\n            offset = -offset;\n        }\n\n        int hours = offset / DateTimeConstants.MILLIS_PER_HOUR;\n        FormatUtils.appendPaddedInteger(buf, hours, 2);\n        offset -= hours * (int) DateTimeConstants.MILLIS_PER_HOUR;\n\n        int minutes = offset / DateTimeConstants.MILLIS_PER_MINUTE;\n        buf.append(':');\n        FormatUtils.appendPaddedInteger(buf, minutes, 2);\n        offset -= minutes * DateTimeConstants.MILLIS_PER_MINUTE;\n        if (offset == 0) {\n            return buf.toString();\n        }\n\n        int seconds = offset / DateTimeConstants.MILLIS_PER_SECOND;\n        buf.append(':');\n        FormatUtils.appendPaddedInteger(buf, seconds, 2);\n        offset -= seconds * DateTimeConstants.MILLIS_PER_SECOND;\n        if (offset == 0) {\n            return buf.toString();\n        }\n\n        buf.append('.');\n        FormatUtils.appendPaddedInteger(buf, offset, 3);\n        return buf.toString();\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.printOffset(int offset)\nSIGNATURE: private static String printOffset(int offset)",
+        "METHOD: src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.printOffset(int offset)\nSIGNATURE: private static String printOffset(int offset)\nSTRUCTURE (lossy):\nStringBuffer buf = new StringBuffer();\nif (offset >= 0)\nCALL buf.append('+')\nCALL buf.append('-')\noffset = -offset\nint hours = offset / DateTimeConstants.MILLIS_PER_HOUR;\nCALL FormatUtils.appendPaddedInteger(buf, hours, 2)\noffset -= hours * (int) DateTimeConstants.MILLIS_PER_HOUR\nint minutes = offset / DateTimeConstants.MILLIS_PER_MINUTE;\nCALL buf.append(':')\nCALL FormatUtils.appendPaddedInteger(buf, minutes, 2)\noffset -= minutes * DateTimeConstants.MILLIS_PER_MINUTE\nif (offset == 0)\nreturn buf.toString();\nCALL buf.toString()\nint seconds = offset / DateTimeConstants.MILLIS_PER_SECOND;\nCALL FormatUtils.appendPaddedInteger(buf, seconds, 2)\noffset -= seconds * DateTimeConstants.MILLIS_PER_SECOND\nCALL buf.append('.')\nCALL FormatUtils.appendPaddedInteger(buf, offset, 3)",
+        "private static String printOffset(int offset) {\n        StringBuffer buf = new StringBuffer();\n        if (offset >= 0) {\n            buf.append('+');\n        } else {\n            buf.append('-');\n            offset = -offset;\n        }\n\n        int hours = offset / DateTimeConstants.MILLIS_PER_HOUR;\n        FormatUtils.appendPaddedInteger(buf, hours, 2);\n        offset -= hours * (int) DateTimeConstants.MILLIS_PER_HOUR;\n\n        int minutes = offset / DateTimeConstants.MILLIS_PER_MINUTE;\n        buf.append(':');\n        FormatUtils.appendPaddedInteger(buf, minutes, 2);\n        offset -= minutes * DateTimeConstants.MILLIS_PER_MINUTE;\n        if (offset == 0) {\n            return buf.toString();\n        }\n\n        int seconds = offset / DateTimeConstants.MILLIS_PER_SECOND;\n        buf.append(':');\n        FormatUtils.appendPaddedInteger(buf, seconds, 2);\n        offset -= seconds * DateTimeConstants.MILLIS_PER_SECOND;\n        if (offset == 0) {\n            return buf.toString();\n        }\n\n        buf.append('.');\n        FormatUtils.appendPaddedInteger(buf, offset, 3);\n        return buf.toString();\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6060606060606061,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 12.0,
+        "literal_count": 12.0,
+        "source_tokens": 281.0,
+        "l0_tokens": 37.0,
+        "l1_tokens": 236.0,
+        "compression_ratio": 0.8398576512455516,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 12,
+        "literal_count": 12
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.add(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)",
+      "source": "public void add(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis) {\n        setPeriod(\n            FieldUtils.safeAdd(getYears(), years),\n            FieldUtils.safeAdd(getMonths(), months),\n            FieldUtils.safeAdd(getWeeks(), weeks),\n            FieldUtils.safeAdd(getDays(), days),\n            FieldUtils.safeAdd(getHours(), hours),\n            FieldUtils.safeAdd(getMinutes(), minutes),\n            FieldUtils.safeAdd(getSeconds(), seconds),\n            FieldUtils.safeAdd(getMillis(), millis)\n        );\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.add(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)\nSIGNATURE: public void add(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)",
+        "METHOD: src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.add(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)\nSIGNATURE: public void add(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)\nSTRUCTURE (lossy):\nCALL setPeriod( FieldUtils.safeAdd(getYears(), years), FieldUtils.safeAdd(getMonths(), months), FieldUtils.safeAdd(getWeeks(), weeks), FieldUtils.safeAdd(getDays(), days), FieldUtils.safeAdd(getHours(), hours), FieldUtils.safeAdd(getMinutes(), minutes), FieldUtils.safeAdd(getSeconds(), seconds), FieldUtils.safeAdd(getMillis(), millis) )\nCALL FieldUtils.safeAdd(getYears(), years)\nCALL getYears()\nCALL FieldUtils.safeAdd(getMonths(), months)\nCALL getMonths()\nCALL FieldUtils.safeAdd(getWeeks(), weeks)\nCALL getWeeks()\nCALL FieldUtils.safeAdd(getDays(), days)\nCALL getDays()\nCALL FieldUtils.safeAdd(getHours(), hours)\nCALL getHours()\nCALL FieldUtils.safeAdd(getMinutes(), minutes)\nCALL getMinutes()\nCALL FieldUtils.safeAdd(getSeconds(), seconds)\nCALL getSeconds()\nCALL FieldUtils.safeAdd(getMillis(), millis)\nCALL getMillis()",
+        "public void add(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis) {\n        setPeriod(\n            FieldUtils.safeAdd(getYears(), years),\n            FieldUtils.safeAdd(getMonths(), months),\n            FieldUtils.safeAdd(getWeeks(), weeks),\n            FieldUtils.safeAdd(getDays(), days),\n            FieldUtils.safeAdd(getHours(), hours),\n            FieldUtils.safeAdd(getMinutes(), minutes),\n            FieldUtils.safeAdd(getSeconds(), seconds),\n            FieldUtils.safeAdd(getMillis(), millis)\n        );\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 17.0,
+        "literal_count": 0.0,
+        "source_tokens": 147.0,
+        "l0_tokens": 83.0,
+        "l1_tokens": 295.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 17,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.setFieldValue(ReadWritablePeriod period, int field, int value)",
+      "source": "void setFieldValue(ReadWritablePeriod period, int field, int value) {\n            switch (field) {\n            default:\n                break;\n            case YEARS:\n                period.setYears(value);\n                break;\n            case MONTHS:\n                period.setMonths(value);\n                break;\n            case WEEKS:\n                period.setWeeks(value);\n                break;\n            case DAYS:\n                period.setDays(value);\n                break;\n            case HOURS:\n                period.setHours(value);\n                break;\n            case MINUTES:\n                period.setMinutes(value);\n                break;\n            case SECONDS:\n                period.setSeconds(value);\n                break;\n            case MILLIS:\n                period.setMillis(value);\n                break;\n            }\n        }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.setFieldValue(ReadWritablePeriod period, int field, int value)\nSIGNATURE: void setFieldValue(ReadWritablePeriod period, int field, int value)",
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.setFieldValue(ReadWritablePeriod period, int field, int value)\nSIGNATURE: void setFieldValue(ReadWritablePeriod period, int field, int value)\nSTRUCTURE (lossy):\nswitch (field) { default: break; case YEARS: period.setYears(value); break; case MONTHS: period.setMonths(value); break; case WEEKS: period.setWeeks(value); break; case DAYS: period.setDays(value); break; case HOURS: period.setHours(value); break; case MINUTES: period.setMinutes(value); break; case SECONDS: period.setSeconds(value); break; case MILLIS: period.setMillis(value); break; }\nCALL period.setYears(value)\nCALL period.setMonths(value)\nCALL period.setWeeks(value)\nCALL period.setDays(value)\nCALL period.setHours(value)\nCALL period.setMinutes(value)\nCALL period.setSeconds(value)\nCALL period.setMillis(value)",
+        "void setFieldValue(ReadWritablePeriod period, int field, int value) {\n            switch (field) {\n            default:\n                break;\n            case YEARS:\n                period.setYears(value);\n                break;\n            case MONTHS:\n                period.setMonths(value);\n                break;\n            case WEEKS:\n                period.setWeeks(value);\n                break;\n            case DAYS:\n                period.setDays(value);\n                break;\n            case HOURS:\n                period.setHours(value);\n                break;\n            case MINUTES:\n                period.setMinutes(value);\n                break;\n            case SECONDS:\n                period.setSeconds(value);\n                break;\n            case MILLIS:\n                period.setMillis(value);\n                break;\n            }\n        }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6551724137931034,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 8.0,
+        "literal_count": 0.0,
+        "source_tokens": 218.0,
+        "l0_tokens": 63.0,
+        "l1_tokens": 222.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 8,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.forOffsetHoursMinutes(int hoursOffset, int minutesOffset)",
+      "source": "public static DateTimeZone forOffsetHoursMinutes(int hoursOffset, int minutesOffset) throws IllegalArgumentException {\n        if (hoursOffset == 0 && minutesOffset == 0) {\n            return DateTimeZone.UTC;\n        }\n        if (minutesOffset < 0 || minutesOffset > 59) {\n            throw new IllegalArgumentException(\"Minutes out of range: \" + minutesOffset);\n        }\n        int offset = 0;\n        try {\n            int hoursInMinutes = FieldUtils.safeMultiply(hoursOffset, 60);\n            if (hoursInMinutes < 0) {\n                minutesOffset = FieldUtils.safeAdd(hoursInMinutes, -minutesOffset);\n            } else {\n                minutesOffset = FieldUtils.safeAdd(hoursInMinutes, minutesOffset);\n            }\n            offset = FieldUtils.safeMultiply(minutesOffset, DateTimeConstants.MILLIS_PER_MINUTE);\n        } catch (ArithmeticException ex) {\n            throw new IllegalArgumentException(\"Offset is too large\");\n        }\n        return forOffsetMillis(offset);\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.forOffsetHoursMinutes(int hoursOffset, int minutesOffset)\nSIGNATURE: public static DateTimeZone forOffsetHoursMinutes(int hoursOffset, int minutesOffset) throws IllegalArgumentException",
+        "METHOD: src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.forOffsetHoursMinutes(int hoursOffset, int minutesOffset)\nSIGNATURE: public static DateTimeZone forOffsetHoursMinutes(int hoursOffset, int minutesOffset) throws IllegalArgumentException\nSTRUCTURE (lossy):\nif (hoursOffset == 0 && minutesOffset == 0)\nreturn DateTimeZone.UTC;\nif (minutesOffset < 0 || minutesOffset > 59)\nthrow new IllegalArgumentException(\"Minutes out of range: \" + minutesOffset);\nint offset = 0;\nint hoursInMinutes = FieldUtils.safeMultiply(hoursOffset, 60);\nCALL FieldUtils.safeMultiply(hoursOffset, 60)\nif (hoursInMinutes < 0)\nminutesOffset = FieldUtils.safeAdd(hoursInMinutes, -minutesOffset)\nCALL FieldUtils.safeAdd(hoursInMinutes, -minutesOffset)\nminutesOffset = FieldUtils.safeAdd(hoursInMinutes, minutesOffset)\nCALL FieldUtils.safeAdd(hoursInMinutes, minutesOffset)\noffset = FieldUtils.safeMultiply(minutesOffset, DateTimeConstants.MILLIS_PER_MINUTE)\nCALL FieldUtils.safeMultiply(minutesOffset, DateTimeConstants.MILLIS_PER_MINUTE)\ncatch (ArithmeticException ex)\nthrow new IllegalArgumentException(\"Offset is too large\");\nreturn forOffsetMillis(offset);\nCALL forOffsetMillis(offset)",
+        "public static DateTimeZone forOffsetHoursMinutes(int hoursOffset, int minutesOffset) throws IllegalArgumentException {\n        if (hoursOffset == 0 && minutesOffset == 0) {\n            return DateTimeZone.UTC;\n        }\n        if (minutesOffset < 0 || minutesOffset > 59) {\n            throw new IllegalArgumentException(\"Minutes out of range: \" + minutesOffset);\n        }\n        int offset = 0;\n        try {\n            int hoursInMinutes = FieldUtils.safeMultiply(hoursOffset, 60);\n            if (hoursInMinutes < 0) {\n                minutesOffset = FieldUtils.safeAdd(hoursInMinutes, -minutesOffset);\n            } else {\n                minutesOffset = FieldUtils.safeAdd(hoursInMinutes, minutesOffset);\n            }\n            offset = FieldUtils.safeMultiply(minutesOffset, DateTimeConstants.MILLIS_PER_MINUTE);\n        } catch (ArithmeticException ex) {\n            throw new IllegalArgumentException(\"Offset is too large\");\n        }\n        return forOffsetMillis(offset);\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.525,
+        "trace_match": 0.0,
+        "complexity": 5.0,
+        "call_count": 5.0,
+        "literal_count": 9.0,
+        "source_tokens": 249.0,
+        "l0_tokens": 64.0,
+        "l1_tokens": 294.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 5,
+        "call_count": 5,
+        "literal_count": 9
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Period.java::Period.Period(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)",
+      "source": "public Period(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, PeriodType.standard());\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.Period(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)\nSIGNATURE: public Period(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)",
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.Period(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)\nSIGNATURE: public Period(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)\nSTRUCTURE (lossy):\nCALL PeriodType.standard()",
+        "public Period(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, PeriodType.standard());\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 58.0,
+        "l0_tokens": 78.0,
+        "l1_tokens": 89.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/ReadWritablePeriod.java::ReadWritablePeriod.setPeriod(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)",
+      "source": "void setPeriod(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis);",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/ReadWritablePeriod.java::ReadWritablePeriod.setPeriod(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)\nSIGNATURE: src/main/java/org/joda/time/ReadWritablePeriod.java::ReadWritablePeriod.setPeriod(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)",
+        "METHOD: src/main/java/org/joda/time/ReadWritablePeriod.java::ReadWritablePeriod.setPeriod(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)\nSIGNATURE: src/main/java/org/joda/time/ReadWritablePeriod.java::ReadWritablePeriod.setPeriod(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)\nSTRUCTURE (lossy):\n",
+        "void setPeriod(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis);"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.85,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 33.0,
+        "l0_tokens": 104.0,
+        "l1_tokens": 109.0,
+        "compression_ratio": 1,
+        "parse_error": 1.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": true,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Period.java::Period.toStandardSeconds()",
+      "source": "public Seconds toStandardSeconds() {\n        checkYearsAndMonths(\"Seconds\");\n        long seconds = getMillis() / DateTimeConstants.MILLIS_PER_SECOND;\n        seconds = FieldUtils.safeAdd(seconds, getSeconds());\n        seconds = FieldUtils.safeAdd(seconds, ((long) getMinutes()) * ((long) DateTimeConstants.SECONDS_PER_MINUTE));\n        seconds = FieldUtils.safeAdd(seconds, ((long) getHours()) * ((long) DateTimeConstants.SECONDS_PER_HOUR));\n        seconds = FieldUtils.safeAdd(seconds, ((long) getDays()) * ((long) DateTimeConstants.SECONDS_PER_DAY));\n        seconds = FieldUtils.safeAdd(seconds, ((long) getWeeks()) * ((long) DateTimeConstants.SECONDS_PER_WEEK));\n        return Seconds.seconds(FieldUtils.safeToInt(seconds));\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.toStandardSeconds()\nSIGNATURE: public Seconds toStandardSeconds()",
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.toStandardSeconds()\nSIGNATURE: public Seconds toStandardSeconds()\nSTRUCTURE (lossy):\nCALL checkYearsAndMonths(\"Seconds\")\nlong seconds = getMillis() / DateTimeConstants.MILLIS_PER_SECOND;\nCALL getMillis()\nseconds = FieldUtils.safeAdd(seconds, getSeconds())\nCALL FieldUtils.safeAdd(seconds, getSeconds())\nCALL getSeconds()\nseconds = FieldUtils.safeAdd(seconds, ((long) getMinutes()) * ((long) DateTimeConstants.SECONDS_PER_MINUTE))\nCALL FieldUtils.safeAdd(seconds, ((long) getMinutes()) * ((long) DateTimeConstants.SECONDS_PER_MINUTE))\nCALL getMinutes()\nseconds = FieldUtils.safeAdd(seconds, ((long) getHours()) * ((long) DateTimeConstants.SECONDS_PER_HOUR))\nCALL FieldUtils.safeAdd(seconds, ((long) getHours()) * ((long) DateTimeConstants.SECONDS_PER_HOUR))\nCALL getHours()\nseconds = FieldUtils.safeAdd(seconds, ((long) getDays()) * ((long) DateTimeConstants.SECONDS_PER_DAY))\nCALL FieldUtils.safeAdd(seconds, ((long) getDays()) * ((long) DateTimeConstants.SECONDS_PER_DAY))\nCALL getDays()\nseconds = FieldUtils.safeAdd(seconds, ((long) getWeeks()) * ((long) DateTimeConstants.SECONDS_PER_WEEK))\nCALL FieldUtils.safeAdd(seconds, ((long) getWeeks()) * ((long) DateTimeConstants.SECONDS_PER_WEEK))\nCALL getWeeks()\nreturn Seconds.seconds(FieldUtils.safeToInt(seconds));\nCALL Seconds.seconds(FieldUtils.safeToInt(seconds))\nCALL FieldUtils.safeToInt(seconds)",
+        "public Seconds toStandardSeconds() {\n        checkYearsAndMonths(\"Seconds\");\n        long seconds = getMillis() / DateTimeConstants.MILLIS_PER_SECOND;\n        seconds = FieldUtils.safeAdd(seconds, getSeconds());\n        seconds = FieldUtils.safeAdd(seconds, ((long) getMinutes()) * ((long) DateTimeConstants.SECONDS_PER_MINUTE));\n        seconds = FieldUtils.safeAdd(seconds, ((long) getHours()) * ((long) DateTimeConstants.SECONDS_PER_HOUR));\n        seconds = FieldUtils.safeAdd(seconds, ((long) getDays()) * ((long) DateTimeConstants.SECONDS_PER_DAY));\n        seconds = FieldUtils.safeAdd(seconds, ((long) getWeeks()) * ((long) DateTimeConstants.SECONDS_PER_WEEK));\n        return Seconds.seconds(FieldUtils.safeToInt(seconds));\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7428571428571429,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 14.0,
+        "literal_count": 1.0,
+        "source_tokens": 185.0,
+        "l0_tokens": 31.0,
+        "l1_tokens": 352.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 14,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/Period.java::Period.Period(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)",
+      "source": "public Period(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, type);\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.Period(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)\nSIGNATURE: public Period(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)",
+        "METHOD: src/main/java/org/joda/time/Period.java::Period.Period(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)\nSIGNATURE: public Period(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)\nSTRUCTURE (lossy):\n",
+        "public Period(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, type);\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8421052631578947,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 59.0,
+        "l0_tokens": 87.0,
+        "l1_tokens": 92.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.MutablePeriod(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)",
+      "source": "public MutablePeriod(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, PeriodType.standard());\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.MutablePeriod(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)\nSIGNATURE: public MutablePeriod(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)",
+        "METHOD: src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.MutablePeriod(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)\nSIGNATURE: public MutablePeriod(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)\nSTRUCTURE (lossy):\nCALL PeriodType.standard()",
+        "public MutablePeriod(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, PeriodType.standard());\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7619047619047619,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 60.0,
+        "l0_tokens": 85.0,
+        "l1_tokens": 96.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.getFieldValue(ReadablePeriod period)",
+      "source": "long getFieldValue(ReadablePeriod period) {\n            PeriodType type;\n            if (iPrintZeroSetting == PRINT_ZERO_ALWAYS) {\n                type = null; // Don't need to check if supported.\n            } else {\n                type = period.getPeriodType();\n            }\n            if (type != null && isSupported(type, iFieldType) == false) {\n                return Long.MAX_VALUE;\n            }\n\n            long value;\n\n            switch (iFieldType) {\n            default:\n                return Long.MAX_VALUE;\n            case YEARS:\n                value = period.get(DurationFieldType.years());\n                break;\n            case MONTHS:\n                value = period.get(DurationFieldType.months());\n                break;\n            case WEEKS:\n                value = period.get(DurationFieldType.weeks());\n                break;\n            case DAYS:\n                value = period.get(DurationFieldType.days());\n                break;\n            case HOURS:\n                value = period.get(DurationFieldType.hours());\n                break;\n            case MINUTES:\n                value = period.get(DurationFieldType.minutes());\n                break;\n            case SECONDS:\n                value = period.get(DurationFieldType.seconds());\n                break;\n            case MILLIS:\n                value = period.get(DurationFieldType.millis());\n                break;\n            case SECONDS_MILLIS: // drop through\n            case SECONDS_OPTIONAL_MILLIS:\n                int seconds = period.get(DurationFieldType.seconds());\n                int millis = period.get(DurationFieldType.millis());\n                value = (seconds * (long) DateTimeConstants.MILLIS_PER_SECOND) + millis;\n                break;\n            }\n\n            // determine if period is zero and this is the last field\n            if (value == 0) {\n                switch (iPrintZeroSetting) {\n                case PRINT_ZERO_NEVER:\n                    return Long.MAX_VALUE;\n                case PRINT_ZERO_RARELY_LAST:\n                    if (isZero(period) && iFieldFormatters[iFieldType] == this) {\n                        for (int i = iFieldType + 1; i <= MAX_FIELD; i++) {\n                            if (isSupported(type, i) && iFieldFormatters[i] != null) {\n                                return Long.MAX_VALUE;\n                            }\n                        }\n                    } else {\n                        return Long.MAX_VALUE;\n                    }\n                    break;\n                case PRINT_ZERO_RARELY_FIRST:\n                    if (isZero(period) && iFieldFormatters[iFieldType] == this) {\n                        int i = Math.min(iFieldType, 8);  // line split out for IBM JDK\n                        i--;                              // see bug 1660490\n                        for (; i >= 0 && i <= MAX_FIELD; i--) {\n                            if (isSupported(type, i) && iFieldFormatters[i] != null) {\n                                return Long.MAX_VALUE;\n                            }\n                        }\n                    } else {\n                        return Long.MAX_VALUE;\n                    }\n                    break;\n                }\n            }\n\n            return value;\n        }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.getFieldValue(ReadablePeriod period)\nSIGNATURE: long getFieldValue(ReadablePeriod period)",
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.getFieldValue(ReadablePeriod period)\nSIGNATURE: long getFieldValue(ReadablePeriod period)\nSTRUCTURE (lossy):\nPeriodType type;\nif (iPrintZeroSetting == PRINT_ZERO_ALWAYS)\ntype = null\ntype = period.getPeriodType()\nCALL period.getPeriodType()\nif (type != null && isSupported(type, iFieldType) == false)\nCALL isSupported(type, iFieldType)\nreturn Long.MAX_VALUE;\nlong value;\nswitch (iFieldType) { default: return Long.MAX_VALUE; case YEARS: value = period.get(DurationFieldType.years()); break; case MONTHS: value = period.get(DurationFieldType.months()); break; case WEEKS: value = period.get(DurationFieldType.weeks()); break; case DAYS: value = period.get(DurationFieldType.days()); break; case HOURS: value = period.get(DurationFieldType.hours()); break; case MINUTES: value = period.get(DurationFieldType.minutes()); break; case SECONDS: value = period.get(DurationFieldType.seconds()); break; case MILLIS: value = period.get(DurationFieldType.millis()); break; case SECONDS_MILLIS: // drop through case SECONDS_OPTIONAL_MILLIS: int seconds = period.get(DurationFieldType.seconds()); int millis = period.get(DurationFieldType.millis()); value = (seconds * (long) DateTimeConstants.MILLIS_PER_SECOND) + millis; break; }\nvalue = period.get(DurationFieldType.years())\nCALL period.get(DurationFieldType.years())\nCALL DurationFieldType.years()\nvalue = period.get(DurationFieldType.months())\nCALL period.get(DurationFieldType.months())\nCALL DurationFieldType.months()\nvalue = period.get(DurationFieldType.weeks())\nCALL period.get(DurationFieldType.weeks())\nCALL DurationFieldType.weeks()\nvalue = period.get(DurationFieldType.days())\nCALL period.get(DurationFieldType.days())\nCALL DurationFieldType.days()\nvalue = period.get(DurationFieldType.hours())\nCALL period.get(DurationFieldType.hours())\nCALL DurationFieldType.hours()\nvalue = period.get(DurationFieldType.minutes())\nCALL period.get(DurationFieldType.minutes())\nCALL DurationFieldType.minutes()\nvalue = period.get(DurationFieldType.seconds())\nCALL period.get(DurationFieldType.seconds())\nCALL DurationFieldType.seconds()\nvalue = period.get(\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "long getFieldValue(ReadablePeriod period) {\n            PeriodType type;\n            if (iPrintZeroSetting == PRINT_ZERO_ALWAYS) {\n                type = null; // Don't need to check if supported.\n            } else {\n                type = period.getPeriodType();\n            }\n            if (type != null && isSupported(type, iFieldType) == false) {\n                return Long.MAX_VALUE;\n            }\n\n            long value;\n\n            switch (iFieldType) {\n            default:\n                return Long.MAX_VALUE;\n            case YEARS:\n                value = period.get(DurationFieldType.years());\n                break;\n            case MONTHS:\n                value = period.get(DurationFieldType.months());\n                break;\n            case WEEKS:\n                value = period.get(DurationFieldType.weeks());\n                break;\n            case DAYS:\n                value = period.get(DurationFieldType.days());\n                break;\n            case HOURS:\n                value = period.get(DurationFieldType.hours());\n                break;\n            case MINUTES:\n                value = period.get(DurationFieldType.minutes());\n                break;\n            case SECONDS:\n                value = period.get(DurationFieldType.seconds());\n                break;\n            case MILLIS:\n                value = period.get(DurationFieldType.millis());\n                break;\n            case SECONDS_MILLIS: // drop through\n            case SECONDS_OPTIONAL_MILLIS:\n                int seconds = period.get(DurationFieldType.seconds());\n                int millis = period.get(DurationFieldType.millis());\n                value = (seconds * (long) DateTimeConstants.MILLIS_PER_SECOND) + millis;\n                break;\n            }\n\n            // determine if period is zero and this is the last field\n            if (value == 0) {\n                switch (iPrintZeroSetting) {\n                case PRINT_ZERO_NEVER:\n                    return Long.MAX_VALUE;\n                case PRINT_ZERO_RARELY_LAST:\n                    if (isZero(period) && iFieldFormatters[iFieldType] == this) {\n                        for (int i = iFieldType + 1; i <= MAX_FIELD; i++) {\n                            if (isSupported(type, i) && iFieldFormatters[i] != null) {\n                                return Long.MAX_VALUE;\n                            }\n                        }\n                    } else {\n                        return Long.MAX_VALUE;\n                    }\n                    break;\n                case PRINT_ZERO_RARELY_FIRST:\n                    if (isZero(period) && iFieldFormatters[iFieldType] == this) {\n                        int i = Math.min(iFieldType, 8);  // line split out for IBM JDK\n                        i--;                              // see bug 1660490\n                        for (; i >= 0 && i <= MAX_FIELD; i--) {\n                            if (isSupported(type, i) && iFieldFormatters[i] != null) {\n                                return Long.MAX_VALUE;\n                            }\n                        }\n                    } else {\n                        return Long.MAX_VALUE;\n                    }\n                    break;\n                }\n            }\n\n            return value;\n        }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4057971014492754,
+        "trace_match": 0.0,
+        "complexity": 12.0,
+        "call_count": 27.0,
+        "literal_count": 8.0,
+        "source_tokens": 819.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.6947496947496947,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 12,
+        "call_count": 27,
+        "literal_count": 8
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.MutablePeriod(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)",
+      "source": "public MutablePeriod(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, type);\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.MutablePeriod(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)\nSIGNATURE: public MutablePeriod(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)",
+        "METHOD: src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.MutablePeriod(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)\nSIGNATURE: public MutablePeriod(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)\nSTRUCTURE (lossy):\n",
+        "public MutablePeriod(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type) {\n        super(years, months, weeks, days, hours, minutes, seconds, millis, type);\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 60.0,
+        "l0_tokens": 94.0,
+        "l1_tokens": 99.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java::DateTimeFormatterBuilder.TimeZoneOffset.printTo(\n                Writer out, long instant, Chronology chrono,\n                int displayOffset, DateTimeZone displayZone, Locale locale)",
+      "source": "public void printTo(\n                Writer out, long instant, Chronology chrono,\n                int displayOffset, DateTimeZone displayZone, Locale locale) throws IOException {\n            if (displayZone == null) {\n                return;  // no zone\n            }\n            if (displayOffset == 0 && iZeroOffsetPrintText != null) {\n                out.write(iZeroOffsetPrintText);\n                return;\n            }\n            if (displayOffset >= 0) {\n                out.write('+');\n            } else {\n                out.write('-');\n                displayOffset = -displayOffset;\n            }\n\n            int hours = displayOffset / DateTimeConstants.MILLIS_PER_HOUR;\n            FormatUtils.writePaddedInteger(out, hours, 2);\n            if (iMaxFields == 1) {\n                return;\n            }\n            displayOffset -= hours * (int)DateTimeConstants.MILLIS_PER_HOUR;\n            if (displayOffset == 0 && iMinFields == 1) {\n                return;\n            }\n\n            int minutes = displayOffset / DateTimeConstants.MILLIS_PER_MINUTE;\n            if (iShowSeparators) {\n                out.write(':');\n            }\n            FormatUtils.writePaddedInteger(out, minutes, 2);\n            if (iMaxFields == 2) {\n                return;\n            }\n            displayOffset -= minutes * DateTimeConstants.MILLIS_PER_MINUTE;\n            if (displayOffset == 0 && iMinFields == 2) {\n                return;\n            }\n\n            int seconds = displayOffset / DateTimeConstants.MILLIS_PER_SECOND;\n            if (iShowSeparators) {\n                out.write(':');\n            }\n            FormatUtils.writePaddedInteger(out, seconds, 2);\n            if (iMaxFields == 3) {\n                return;\n            }\n            displayOffset -= seconds * DateTimeConstants.MILLIS_PER_SECOND;\n            if (displayOffset == 0 && iMinFields == 3) {\n                return;\n            }\n\n            if (iShowSeparators) {\n                out.write('.');\n            }\n            FormatUtils.writePaddedInteger(out, displayOffset, 3);\n        }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java::DateTimeFormatterBuilder.TimeZoneOffset.printTo(\n                Writer out, long instant, Chronology chrono,\n                int displayOffset, DateTimeZone displayZone, Locale locale)\nSIGNATURE: public void printTo(\n                Writer out, long instant, Chronology chrono,\n                int displayOffset, DateTimeZone displayZone, Locale locale) throws IOException",
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java::DateTimeFormatterBuilder.TimeZoneOffset.printTo(\n                Writer out, long instant, Chronology chrono,\n                int displayOffset, DateTimeZone displayZone, Locale locale)\nSIGNATURE: public void printTo(\n                Writer out, long instant, Chronology chrono,\n                int displayOffset, DateTimeZone displayZone, Locale locale) throws IOException\nSTRUCTURE (lossy):\nif (displayZone == null)\nreturn;\nif (displayOffset == 0 && iZeroOffsetPrintText != null)\nCALL out.write(iZeroOffsetPrintText)\nif (displayOffset >= 0)\nCALL out.write('+')\nCALL out.write('-')\ndisplayOffset = -displayOffset\nint hours = displayOffset / DateTimeConstants.MILLIS_PER_HOUR;\nCALL FormatUtils.writePaddedInteger(out, hours, 2)\nif (iMaxFields == 1)\ndisplayOffset -= hours * (int)DateTimeConstants.MILLIS_PER_HOUR\nif (displayOffset == 0 && iMinFields == 1)\nint minutes = displayOffset / DateTimeConstants.MILLIS_PER_MINUTE;\nif (iShowSeparators)\nCALL out.write(':')\nCALL FormatUtils.writePaddedInteger(out, minutes, 2)\nif (iMaxFields == 2)\ndisplayOffset -= minutes * DateTimeConstants.MILLIS_PER_MINUTE\nif (displayOffset == 0 && iMinFields == 2)\nint seconds = displayOffset / DateTimeConstants.MILLIS_PER_SECOND;\nCALL FormatUtils.writePaddedInteger(out, seconds, 2)\nif (iMaxFields == 3)\ndisplayOffset -= seconds * DateTimeConstants.MILLIS_PER_SECOND\nif (displayOffset == 0 && iMinFields == 3)\nCALL out.write('.')\nCALL FormatUtils.writePaddedInteger(out, displayOffset, 3)",
+        "public void printTo(\n                Writer out, long instant, Chronology chrono,\n                int displayOffset, DateTimeZone displayZone, Locale locale) throws IOException {\n            if (displayZone == null) {\n                return;  // no zone\n            }\n            if (displayOffset == 0 && iZeroOffsetPrintText != null) {\n                out.write(iZeroOffsetPrintText);\n                return;\n            }\n            if (displayOffset >= 0) {\n                out.write('+');\n            } else {\n                out.write('-');\n                displayOffset = -displayOffset;\n            }\n\n            int hours = displayOffset / DateTimeConstants.MILLIS_PER_HOUR;\n            FormatUtils.writePaddedInteger(out, hours, 2);\n            if (iMaxFields == 1) {\n                return;\n            }\n            displayOffset -= hours * (int)DateTimeConstants.MILLIS_PER_HOUR;\n            if (displayOffset == 0 && iMinFields == 1) {\n                return;\n            }\n\n            int minutes = displayOffset / DateTimeConstants.MILLIS_PER_MINUTE;\n            if (iShowSeparators) {\n                out.write(':');\n            }\n            FormatUtils.writePaddedInteger(out, minutes, 2);\n            if (iMaxFields == 2) {\n                return;\n            }\n            displayOffset -= minutes * DateTimeConstants.MILLIS_PER_MINUTE;\n            if (displayOffset == 0 && iMinFields == 2) {\n                return;\n            }\n\n            int seconds = displayOffset / DateTimeConstants.MILLIS_PER_SECOND;\n            if (iShowSeparators) {\n                out.write(':');\n            }\n            FormatUtils.writePaddedInteger(out, seconds, 2);\n            if (iMaxFields == 3) {\n                return;\n            }\n            displayOffset -= seconds * DateTimeConstants.MILLIS_PER_SECOND;\n            if (displayOffset == 0 && iMinFields == 3) {\n                return;\n            }\n\n            if (iShowSeparators) {\n                out.write('.');\n            }\n            FormatUtils.writePaddedInteger(out, displayOffset, 3);\n        }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.46938775510204084,
+        "trace_match": 0.0,
+        "complexity": 13.0,
+        "call_count": 10.0,
+        "literal_count": 22.0,
+        "source_tokens": 520.0,
+        "l0_tokens": 112.0,
+        "l1_tokens": 386.0,
+        "compression_ratio": 0.7423076923076923,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 13,
+        "call_count": 10,
+        "literal_count": 22
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/ReadWritablePeriod.java::ReadWritablePeriod.add(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis)",
+      "source": "void add(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis);",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/ReadWritablePeriod.java::ReadWritablePeriod.add(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis)\nSIGNATURE: src/main/java/org/joda/time/ReadWritablePeriod.java::ReadWritablePeriod.add(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis)",
+        "METHOD: src/main/java/org/joda/time/ReadWritablePeriod.java::ReadWritablePeriod.add(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis)\nSIGNATURE: src/main/java/org/joda/time/ReadWritablePeriod.java::ReadWritablePeriod.add(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis)\nSTRUCTURE (lossy):\n",
+        "void add(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis);"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.8,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 31.0,
+        "l0_tokens": 99.0,
+        "l1_tokens": 104.0,
+        "compression_ratio": 1,
+        "parse_error": 1.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": true,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.BasePeriod(int years, int months, int weeks, int days,\n                         int hours, int minutes, int seconds, int millis,\n                         PeriodType type)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Period.java::Period.normalizedStandard(PeriodType type)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriod(int years, int months, int weeks, int days,\n                             int hours, int minutes, int seconds, int millis)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Period.java::Period.toStandardWeeks()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Period.java::Period.toStandardDays()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Period.java::Period.toStandardDuration()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Period.java::Period.toStandardHours()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BasePeriod.java::BasePeriod.setPeriodInternal(int years, int months, int weeks, int days,\n                                   int hours, int minutes, int seconds, int millis)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/DurationFieldType.java::DurationFieldType.StandardDurationFieldType.getField(Chronology chronology)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.setPeriod(int years, int months, int weeks, int days,\n                          int hours, int minutes, int seconds, int millis)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Period.java::Period.toStandardMinutes()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.printOffset(int offset)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.add(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.setFieldValue(ReadWritablePeriod period, int field, int value)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/DateTimeZone.java::DateTimeZone.forOffsetHoursMinutes(int hoursOffset, int minutesOffset)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Period.java::Period.Period(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/ReadWritablePeriod.java::ReadWritablePeriod.setPeriod(int years, int months, int weeks, int days,\n                       int hours, int minutes, int seconds, int millis)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Period.java::Period.toStandardSeconds()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/Period.java::Period.Period(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.MutablePeriod(int years, int months, int weeks, int days,\n                  int hours, int minutes, int seconds, int millis)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.FieldFormatter.getFieldValue(ReadablePeriod period)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.MutablePeriod(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis, PeriodType type)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java::DateTimeFormatterBuilder.TimeZoneOffset.printTo(\n                Writer out, long instant, Chronology chrono,\n                int displayOffset, DateTimeZone displayZone, Locale locale)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/ReadWritablePeriod.java::ReadWritablePeriod.add(int years, int months, int weeks, int days,\n                    int hours, int minutes, int seconds, int millis)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 4033,
+    "retrieved_unique_entities": 24,
+    "deduplication": "highest_bm25_or_lexical_score_per_entity_id",
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "f808f2fceebc908189af2861442f83894ed0583a53a6f0bc5fc23b9b11dbfea9",
+  "evidence_sha256": "ddcaf5bb6b92afe673d4203135c1f5e043f8e18daaa1a7d4427aac738d07281a"
+}

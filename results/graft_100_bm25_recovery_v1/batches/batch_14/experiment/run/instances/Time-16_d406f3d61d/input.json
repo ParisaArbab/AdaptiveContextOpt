@@ -1,0 +1,1320 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Time-16",
+    "repository": "Time",
+    "language": "java",
+    "revision": "afcd0f269540334f2c1fef256988c0c31ba6ea45",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_14/prepared/checkouts/Time-16",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Time-16\nEXECUTED BUGGY TEST: org.joda.time.format.TestDateTimeFormatter::testParseInto_monthOnly_baseStartYear\nTEST SOURCE: src/test/java/org/joda/time/format/TestDateTimeFormatter.java\nTEST SOURCE SHA256: 08a73d373ec32ff18073dd4c1c9b150fa8d7d977663ddef0e88d0f4f5dc51546\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testParseInto_monthOnly_baseStartYear() {\n        DateTimeFormatter f = DateTimeFormat.forPattern(\"M\").withLocale(Locale.UK);\n        MutableDateTime result = new MutableDateTime(2004, 1, 1, 12, 20, 30, 0, TOKYO);\n        assertEquals(1, f.parseInto(result, \"5\", 0));\n        assertEquals(new MutableDateTime(2004, 5, 1, 12, 20, 30, 0, TOKYO), result);\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.joda.time.format.TestDateTimeFormatter::testParseInto_monthOnly_baseStartYear\njunit.framework.AssertionFailedError: expected:<2004-05-01T12:20:30.000+09:00> but was:<2000-05-01T12:20:30.000+09:00>\n\tat junit.framework.Assert.fail(Assert.java:57)\n\tat junit.framework.Assert.failNotEquals(Assert.java:329)\n\tat junit.framework.Assert.assertEquals(Assert.java:78)\n\tat junit.framework.Assert.assertEquals(Assert.java:86)\n\tat junit.framework.TestCase.assertEquals(TestCase.java:253)\n\tat org.joda.time.format.TestDateTimeFormatter.testParseInto_monthOnly_baseStartYear(TestDateTimeFormatter.java:877)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_14/prepared/evidence/Time-16.txt",
+      "sha256": "92973c41b7388ecae28e52edd21ff51a7a8bab21481518528766b9f151978c31"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "src/main/java",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Time-16",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.patternForStyle(String style, Locale locale)",
+      "path": "src/main/java/org/joda/time/format/DateTimeFormat.java",
+      "start_line": 211,
+      "end_line": 218,
+      "source": "public static String patternForStyle(String style, Locale locale) {\n        DateTimeFormatter formatter = createFormatterForStyle(style);\n        if (locale == null) {\n            locale = Locale.getDefault();\n        }\n        // Not pretty, but it works.\n        return ((StyleFormatter) formatter.getPrinter()).getPattern(locale);\n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 35.54906132007724
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java::DateTimeFormatterBuilder.FixedNumber.parseInto(DateTimeParserBucket bucket, String text, int position)",
+      "path": "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java",
+      "start_line": 1487,
+      "end_line": 1509,
+      "source": "public int parseInto(DateTimeParserBucket bucket, String text, int position) {\n            int newPos = super.parseInto(bucket, text, position);\n            if (newPos < 0) {\n                return newPos;\n            }\n            int expectedPos = position + iMaxParsedDigits;\n            if (newPos != expectedPos) {\n                if (iSigned) {\n                    char c = text.charAt(position);\n                    if (c == '-' || c == '+') {\n                        expectedPos++;\n                    }\n                }\n                if (newPos > expectedPos) {\n                    // The failure is at the position of the first extra digit.\n                    return ~(expectedPos + 1);\n                } else if (newPos < expectedPos) {\n                    // The failure is at the position where the next digit should be.\n                    return ~newPos;\n                }\n            }\n            return newPos;\n        }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 32.644078419174654
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/DateTimeUtils.java::DateTimeUtils.getDateFormatSymbols(Locale locale)",
+      "path": "src/main/java/org/joda/time/DateTimeUtils.java",
+      "start_line": 363,
+      "end_line": 370,
+      "source": "public static final DateFormatSymbols getDateFormatSymbols(Locale locale) {\n        try {\n            Method method = DateFormatSymbols.class.getMethod(\"getInstance\", new Class[] {Locale.class});\n            return (DateFormatSymbols) method.invoke(null, new Object[] {locale});\n        } catch (Exception ex) {\n            return new DateFormatSymbols(locale);\n        }\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.997269563618737
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.parseToken(String pattern, int[] indexRef)",
+      "path": "src/main/java/org/joda/time/format/DateTimeFormat.java",
+      "start_line": 573,
+      "end_line": 623,
+      "source": "private static String parseToken(String pattern, int[] indexRef) {\n        StringBuffer buf = new StringBuffer();\n\n        int i = indexRef[0];\n        int length = pattern.length();\n\n        char c = pattern.charAt(i);\n        if (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z') {\n            // Scan a run of the same character, which indicates a time\n            // pattern.\n            buf.append(c);\n\n            while (i + 1 < length) {\n                char peek = pattern.charAt(i + 1);\n                if (peek == c) {\n                    buf.append(c);\n                    i++;\n                } else {\n                    break;\n                }\n            }\n        } else {\n            // This will identify token as text.\n            buf.append('\\'');\n\n            boolean inLiteral = false;\n\n            for (; i < length; i++) {\n                c = pattern.charAt(i);\n                \n                if (c == '\\'') {\n                    if (i + 1 < length && pattern.charAt(i + 1) == '\\'') {\n                        // '' is treated as escaped '\n                        i++;\n                        buf.append(c);\n                    } else {\n                        inLiteral = !inLiteral;\n                    }\n                } else if (!inLiteral &&\n                           (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z')) {\n                    i--;\n                    break;\n                } else {\n                    buf.append(c);\n                }\n            }\n        }\n\n        indexRef[0] = i;\n        return buf.toString();\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 31.515101480574927
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/PeriodFormatter.java::PeriodFormatter.parseMutablePeriod(String text)",
+      "path": "src/main/java/org/joda/time/format/PeriodFormatter.java",
+      "start_line": 314,
+      "end_line": 327,
+      "source": "public MutablePeriod parseMutablePeriod(String text) {\n        checkParser();\n        \n        MutablePeriod period = new MutablePeriod(0, iParseType);\n        int newPos = getParser().parseInto(period, text, 0, iLocale);\n        if (newPos >= 0) {\n            if (newPos >= text.length()) {\n                return period;\n            }\n        } else {\n            newPos = ~newPos;\n        }\n        throw new IllegalArgumentException(FormatUtils.createErrorMessage(text, newPos));\n    }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 30.724238170559698
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/ISODateTimeFormat.java::ISODateTimeFormat.dateOptionalTimeParser()",
+      "path": "src/main/java/org/joda/time/format/ISODateTimeFormat.java",
+      "start_line": 809,
+      "end_line": 822,
+      "source": "public static DateTimeFormatter dateOptionalTimeParser() {\n        if (dotp == null) {\n            DateTimeParser timeOrOffset = new DateTimeFormatterBuilder()\n                .appendLiteral('T')\n                .appendOptional(timeElementParser().getParser())\n                .appendOptional(offsetElement().getParser())\n                .toParser();\n            dotp = new DateTimeFormatterBuilder()\n                .append(dateElementParser())\n                .appendOptional(timeOrOffset)\n                .toFormatter();\n        }\n        return dotp;\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 30.34007896795771
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.parseMillis(String text)",
+      "path": "src/main/java/org/joda/time/format/DateTimeFormatter.java",
+      "start_line": 738,
+      "end_line": 752,
+      "source": "public long parseMillis(String text) {\n        DateTimeParser parser = requireParser();\n        \n        Chronology chrono = selectChronology(iChrono);\n        DateTimeParserBucket bucket = new DateTimeParserBucket(0, chrono, iLocale, iPivotYear, iDefaultYear);\n        int newPos = parser.parseInto(bucket, text, 0);\n        if (newPos >= 0) {\n            if (newPos >= text.length()) {\n                return bucket.computeMillis(true, text);\n            }\n        } else {\n            newPos = ~newPos;\n        }\n        throw new IllegalArgumentException(FormatUtils.createErrorMessage(text, newPos));\n    }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 28.07957418962561
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.StyleFormatter.getPattern(Locale locale)",
+      "path": "src/main/java/org/joda/time/format/DateTimeFormat.java",
+      "start_line": 832,
+      "end_line": 849,
+      "source": "String getPattern(Locale locale) {\n            DateFormat f = null;\n            switch (iType) {\n                case DATE:\n                    f = DateFormat.getDateInstance(iDateStyle, locale);\n                    break;\n                case TIME:\n                    f = DateFormat.getTimeInstance(iTimeStyle, locale);\n                    break;\n                case DATETIME:\n                    f = DateFormat.getDateTimeInstance(iDateStyle, iTimeStyle, locale);\n                    break;\n            }\n            if (f instanceof SimpleDateFormat == false) {\n                throw new IllegalArgumentException(\"No datetime pattern for locale: \" + locale);\n            }\n            return ((SimpleDateFormat) f).toPattern();\n        }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 27.798226354158032
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.SimpleAffix.scan(String periodStr, final int position)",
+      "path": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java",
+      "start_line": 884,
+      "end_line": 904,
+      "source": "public int scan(String periodStr, final int position) {\n            String text = iText;\n            int textLength = text.length();\n            int sourceLength = periodStr.length();\n            search:\n            for (int pos = position; pos < sourceLength; pos++) {\n                if (periodStr.regionMatches(true, pos, text, 0, textLength)) {\n                    return pos;\n                }\n                // Only allow number characters to be skipped in search of suffix.\n                switch (periodStr.charAt(pos)) {\n                case '0': case '1': case '2': case '3': case '4':\n                case '5': case '6': case '7': case '8': case '9':\n                case '.': case ',': case '+': case '-':\n                    break;\n                default:\n                    break search;\n                }\n            }\n            return ~position;\n        }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 27.462096452884573
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.parseMutableDateTime(String text)",
+      "path": "src/main/java/org/joda/time/format/DateTimeFormatter.java",
+      "start_line": 890,
+      "end_line": 916,
+      "source": "public MutableDateTime parseMutableDateTime(String text) {\n        DateTimeParser parser = requireParser();\n        \n        Chronology chrono = selectChronology(null);\n        DateTimeParserBucket bucket = new DateTimeParserBucket(0, chrono, iLocale, iPivotYear, iDefaultYear);\n        int newPos = parser.parseInto(bucket, text, 0);\n        if (newPos >= 0) {\n            if (newPos >= text.length()) {\n                long millis = bucket.computeMillis(true, text);\n                if (iOffsetParsed && bucket.getOffsetInteger() != null) {\n                    int parsedOffset = bucket.getOffsetInteger();\n                    DateTimeZone parsedZone = DateTimeZone.forOffsetMillis(parsedOffset);\n                    chrono = chrono.withZone(parsedZone);\n                } else if (bucket.getZone() != null) {\n                    chrono = chrono.withZone(bucket.getZone());\n                }\n                MutableDateTime dt = new MutableDateTime(millis, chrono);\n                if (iZone != null) {\n                    dt.setZone(iZone);\n                }\n                return dt;\n            }\n        } else {\n            newPos = ~newPos;\n        }\n        throw new IllegalArgumentException(FormatUtils.createErrorMessage(text, newPos));\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 27.38791648628516
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/ISODateTimeFormat.java::ISODateTimeFormat.dateElementParser()",
+      "path": "src/main/java/org/joda/time/format/ISODateTimeFormat.java",
+      "start_line": 612,
+      "end_line": 637,
+      "source": "public static DateTimeFormatter dateElementParser() {\n        if (dpe == null) {\n            dpe = new DateTimeFormatterBuilder()\n                .append(null, new DateTimeParser[] {\n                    new DateTimeFormatterBuilder()\n                    .append(yearElement())\n                    .appendOptional\n                    (new DateTimeFormatterBuilder()\n                     .append(monthElement())\n                     .appendOptional(dayOfMonthElement().getParser())\n                     .toParser())\n                    .toParser(),\n                    new DateTimeFormatterBuilder()\n                    .append(weekyearElement())\n                    .append(weekElement())\n                    .appendOptional(dayOfWeekElement().getParser())\n                    .toParser(),\n                    new DateTimeFormatterBuilder()\n                    .append(yearElement())\n                    .append(dayOfYearElement())\n                    .toParser()\n                })\n                .toFormatter();\n        }\n        return dpe;\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 26.770576680557692
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.withLocale(Locale locale)",
+      "path": "src/main/java/org/joda/time/format/DateTimeFormatter.java",
+      "start_line": 187,
+      "end_line": 193,
+      "source": "public DateTimeFormatter withLocale(Locale locale) {\n        if (locale == getLocale() || (locale != null && locale.equals(getLocale()))) {\n            return this;\n        }\n        return new DateTimeFormatter(iPrinter, iParser, locale,\n                iOffsetParsed, iChrono, iZone, iPivotYear, iDefaultYear);\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 26.649530523874006
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/MutableDateTime.java::MutableDateTime.clone()",
+      "path": "src/main/java/org/joda/time/MutableDateTime.java",
+      "start_line": 1209,
+      "end_line": 1215,
+      "source": "public Object clone() {\n        try {\n            return super.clone();\n        } catch (CloneNotSupportedException ex) {\n            throw new InternalError(\"Clone error\");\n        }\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 26.195226406635587
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.StyleFormatter.getFormatter(Locale locale)",
+      "path": "src/main/java/org/joda/time/format/DateTimeFormat.java",
+      "start_line": 817,
+      "end_line": 830,
+      "source": "private DateTimeFormatter getFormatter(Locale locale) {\n            locale = (locale == null ? Locale.getDefault() : locale);\n            String key = Integer.toString(iType + (iDateStyle << 4) + (iTimeStyle << 8)) + locale.toString();\n            DateTimeFormatter f = null;\n            synchronized (cCache) {\n                f = cCache.get(key);\n                if (f == null) {\n                    String pattern = getPattern(locale);\n                    f = DateTimeFormat.forPattern(pattern);\n                    cCache.put(key, f);\n                }\n            }\n            return f;\n        }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 26.136397690265436
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/MutableInterval.java::MutableInterval.clone()",
+      "path": "src/main/java/org/joda/time/MutableInterval.java",
+      "start_line": 406,
+      "end_line": 412,
+      "source": "public Object clone() {\n        try {\n            return super.clone();\n        } catch (CloneNotSupportedException ex) {\n            throw new InternalError(\"Clone error\");\n        }\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.851007298310666
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.clone()",
+      "path": "src/main/java/org/joda/time/MutablePeriod.java",
+      "start_line": 1005,
+      "end_line": 1011,
+      "source": "public Object clone() {\n        try {\n            return super.clone();\n        } catch (CloneNotSupportedException ex) {\n            throw new InternalError(\"Clone error\");\n        }\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.851007298310666
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/base/BasePartial.java::BasePartial.toString(String pattern, Locale locale)",
+      "path": "src/main/java/org/joda/time/base/BasePartial.java",
+      "start_line": 305,
+      "end_line": 310,
+      "source": "public String toString(String pattern, Locale locale) throws IllegalArgumentException {\n        if (pattern == null) {\n            return toString();\n        }\n        return DateTimeFormat.forPattern(pattern).withLocale(locale).print(this);\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.473417671030433
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java::DateTimeFormatterBuilder.TextField.parseInto(DateTimeParserBucket bucket, String text, int position)",
+      "path": "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java",
+      "start_line": 1787,
+      "end_line": 1845,
+      "source": "@SuppressWarnings(\"unchecked\")\n        public int parseInto(DateTimeParserBucket bucket, String text, int position) {\n            Locale locale = bucket.getLocale();\n            // handle languages which might have non ASCII A-Z or punctuation\n            // bug 1788282\n            Set<String> validValues = null;\n            int maxLength = 0;\n            synchronized (cParseCache) {\n                Map<DateTimeFieldType, Object[]> innerMap = cParseCache.get(locale);\n                if (innerMap == null) {\n                    innerMap = new HashMap<DateTimeFieldType, Object[]>();\n                    cParseCache.put(locale, innerMap);\n                }\n                Object[] array = innerMap.get(iFieldType);\n                if (array == null) {\n                    validValues = new HashSet<String>(32);\n                    MutableDateTime dt = new MutableDateTime(0L, DateTimeZone.UTC);\n                    Property property = dt.property(iFieldType);\n                    int min = property.getMinimumValueOverall();\n                    int max = property.getMaximumValueOverall();\n                    if (max - min > 32) {  // protect against invalid fields\n                        return ~position;\n                    }\n                    maxLength = property.getMaximumTextLength(locale);\n                    for (int i = min; i <= max; i++) {\n                        property.set(i);\n                        validValues.add(property.getAsShortText(locale));\n                        validValues.add(property.getAsShortText(locale).toLowerCase(locale));\n                        validValues.add(property.getAsShortText(locale).toUpperCase(locale));\n                        validValues.add(property.getAsText(locale));\n                        validValues.add(property.getAsText(locale).toLowerCase(locale));\n                        validValues.add(property.getAsText(locale).toUpperCase(locale));\n                    }\n                    if (\"en\".equals(locale.getLanguage()) && iFieldType == DateTimeFieldType.era()) {\n                        // hack to support for parsing \"BCE\" and \"CE\" if the language is English\n                        validValues.add(\"BCE\");\n                        validValues.add(\"bce\");\n                        validValues.add(\"CE\");\n                        validValues.add(\"ce\");\n                        maxLength = 3;\n                    }\n                    array = new Object[] {validValues, Integer.valueOf(maxLength)};\n                    innerMap.put(iFieldType, array);\n                } else {\n                    validValues = (Set<String>) array[0];\n                    maxLength = ((Integer) array[1]).intValue();\n                }\n            }\n            // match the longest string first using our knowledge of the max length\n            int limit = Math.min(text.length(), position + maxLength);\n            for (int i = limit; i > position; i--) {\n                String match = text.substring(position, i);\n                if (validValues.contains(match)) {\n                    bucket.saveField(iFieldType, match, locale);\n                    return i;\n                }\n            }\n            return ~position;\n        }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.32843213297951
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.withDefaultYear(int defaultYear)",
+      "path": "src/main/java/org/joda/time/format/DateTimeFormatter.java",
+      "start_line": 436,
+      "end_line": 439,
+      "source": "public DateTimeFormatter withDefaultYear(int defaultYear) {\n        return new DateTimeFormatter(iPrinter, iParser, iLocale,\n                iOffsetParsed, iChrono, iZone, iPivotYear, defaultYear);\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.17724849244963
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.createFormatterForPattern(String pattern)",
+      "path": "src/main/java/org/joda/time/format/DateTimeFormat.java",
+      "start_line": 673,
+      "end_line": 689,
+      "source": "private static DateTimeFormatter createFormatterForPattern(String pattern) {\n        if (pattern == null || pattern.length() == 0) {\n            throw new IllegalArgumentException(\"Invalid pattern specification\");\n        }\n        DateTimeFormatter formatter = null;\n        synchronized (cPatternedCache) {\n            formatter = cPatternedCache.get(pattern);\n            if (formatter == null) {\n                DateTimeFormatterBuilder builder = new DateTimeFormatterBuilder();\n                parsePatternTo(builder, pattern);\n                formatter = builder.toFormatter();\n\n                cPatternedCache.put(pattern, formatter);\n            }\n        }\n        return formatter;\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 25.09262062605058
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/YearMonth.java::YearMonth.toString(String pattern, Locale locale)",
+      "path": "src/main/java/org/joda/time/YearMonth.java",
+      "start_line": 820,
+      "end_line": 825,
+      "source": "public String toString(String pattern, Locale locale) throws IllegalArgumentException {\n        if (pattern == null) {\n            return toString();\n        }\n        return DateTimeFormat.forPattern(pattern).withLocale(locale).print(this);\n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 24.789656561272157
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/PeriodFormatter.java::PeriodFormatter.withLocale(Locale locale)",
+      "path": "src/main/java/org/joda/time/format/PeriodFormatter.java",
+      "start_line": 160,
+      "end_line": 165,
+      "source": "public PeriodFormatter withLocale(Locale locale) {\n        if (locale == getLocale() || (locale != null && locale.equals(getLocale()))) {\n            return this;\n        }\n        return new PeriodFormatter(iPrinter, iParser, locale, iParseType);\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 24.58626644351018
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.parsePatternTo(DateTimeFormatterBuilder builder, String pattern)",
+      "path": "src/main/java/org/joda/time/format/DateTimeFormat.java",
+      "start_line": 399,
+      "end_line": 563,
+      "source": "private static void parsePatternTo(DateTimeFormatterBuilder builder, String pattern) {\n        int length = pattern.length();\n        int[] indexRef = new int[1];\n\n        for (int i=0; i<length; i++) {\n            indexRef[0] = i;\n            String token = parseToken(pattern, indexRef);\n            i = indexRef[0];\n\n            int tokenLen = token.length();\n            if (tokenLen == 0) {\n                break;\n            }\n            char c = token.charAt(0);\n\n            switch (c) {\n            case 'G': // era designator (text)\n                builder.appendEraText();\n                break;\n            case 'C': // century of era (number)\n                builder.appendCenturyOfEra(tokenLen, tokenLen);\n                break;\n            case 'x': // weekyear (number)\n            case 'y': // year (number)\n            case 'Y': // year of era (number)\n                if (tokenLen == 2) {\n                    boolean lenientParse = true;\n\n                    // Peek ahead to next token.\n                    if (i + 1 < length) {\n                        indexRef[0]++;\n                        if (isNumericToken(parseToken(pattern, indexRef))) {\n                            // If next token is a number, cannot support\n                            // lenient parse, because it will consume digits\n                            // that it should not.\n                            lenientParse = false;\n                        }\n                        indexRef[0]--;\n                    }\n\n                    // Use pivots which are compatible with SimpleDateFormat.\n                    switch (c) {\n                    case 'x':\n                        builder.appendTwoDigitWeekyear\n                            (new DateTime().getWeekyear() - 30, lenientParse);\n                        break;\n                    case 'y':\n                    case 'Y':\n                    default:\n                        builder.appendTwoDigitYear(new DateTime().getYear() - 30, lenientParse);\n                        break;\n                    }\n                } else {\n                    // Try to support long year values.\n                    int maxDigits = 9;\n\n                    // Peek ahead to next token.\n                    if (i + 1 < length) {\n                        indexRef[0]++;\n                        if (isNumericToken(parseToken(pattern, indexRef))) {\n                            // If next token is a number, cannot support long years.\n                            maxDigits = tokenLen;\n                        }\n                        indexRef[0]--;\n                    }\n\n                    switch (c) {\n                    case 'x':\n                        builder.appendWeekyear(tokenLen, maxDigits);\n                        break;\n                    case 'y':\n                        builder.appendYear(tokenLen, maxDigits);\n                        break;\n                    case 'Y':\n                        builder.appendYearOfEra(tokenLen, maxDigits);\n                        break;\n                    }\n                }\n                break;\n            case 'M': // month of year (text and number)\n                if (tokenLen >= 3) {\n                    if (tokenLen >= 4) {\n                        builder.appendMonthOfYearText();\n                    } else {\n                        builder.appendMonthOfYearShortText();\n                    }\n                } else {\n                    builder.appendMonthOfYear(tokenLen);\n                }\n                break;\n            case 'd': // day of month (number)\n                builder.appendDayOfMonth(tokenLen);\n                break;\n            case 'a': // am/pm marker (text)\n                builder.appendHalfdayOfDayText();\n                break;\n            case 'h': // clockhour of halfday (number, 1..12)\n                builder.appendClockhourOfHalfday(tokenLen);\n                break;\n            case 'H': // hour of day (number, 0..23)\n                builder.appendHourOfDay(tokenLen);\n                break;\n            case 'k': // clockhour of day (1..24)\n                builder.appendClockhourOfDay(tokenLen);\n                break;\n            case 'K': // hour of halfday (0..11)\n                builder.appendHourOfHalfday(tokenLen);\n                break;\n            case 'm': // minute of hour (number)\n                builder.appendMinuteOfHour(tokenLen);\n                break;\n            case 's': // second of minute (number)\n                builder.appendSecondOfMinute(tokenLen);\n                break;\n            case 'S': // fraction of second (number)\n                builder.appendFractionOfSecond(tokenLen, tokenLen);\n                break;\n            case 'e': // day of week (number)\n                builder.appendDayOfWeek(tokenLen);\n                break;\n            case 'E': // dayOfWeek (text)\n                if (tokenLen >= 4) {\n                    builder.appendDayOfWeekText();\n                } else {\n                    builder.appendDayOfWeekShortText();\n                }\n                break;\n            case 'D': // day of year (number)\n                builder.appendDayOfYear(tokenLen);\n                break;\n            case 'w': // week of weekyear (number)\n                builder.appendWeekOfWeekyear(tokenLen);\n                break;\n            case 'z': // time zone (text)\n                if (tokenLen >= 4) {\n                    builder.appendTimeZoneName();\n                } else {\n                    builder.appendTimeZoneShortName();\n                }\n                break;\n            case 'Z': // time zone offset\n                if (tokenLen == 1) {\n                    builder.appendTimeZoneOffset(null, \"Z\", false, 2, 2);\n                } else if (tokenLen == 2) {\n                    builder.appendTimeZoneOffset(null, \"Z\", true, 2, 2);\n                } else {\n                    builder.appendTimeZoneId();\n                }\n                break;\n            case '\\'': // literal text\n                String sub = token.substring(1);\n                if (sub.length() == 1) {\n                    builder.appendLiteral(sub.charAt(0));\n                } else {\n                    // Create copy of sub since otherwise the temporary quoted\n                    // string would still be referenced internally.\n                    builder.appendLiteral(new String(sub));\n                }\n                break;\n            default:\n                throw new IllegalArgumentException\n                    (\"Illegal pattern component: \" + token);\n            }\n        }\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 24.4250475201308
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.parseDateTime(String text)",
+      "path": "src/main/java/org/joda/time/format/DateTimeFormatter.java",
+      "start_line": 845,
+      "end_line": 871,
+      "source": "public DateTime parseDateTime(String text) {\n        DateTimeParser parser = requireParser();\n        \n        Chronology chrono = selectChronology(null);\n        DateTimeParserBucket bucket = new DateTimeParserBucket(0, chrono, iLocale, iPivotYear, iDefaultYear);\n        int newPos = parser.parseInto(bucket, text, 0);\n        if (newPos >= 0) {\n            if (newPos >= text.length()) {\n                long millis = bucket.computeMillis(true, text);\n                if (iOffsetParsed && bucket.getOffsetInteger() != null) {\n                    int parsedOffset = bucket.getOffsetInteger();\n                    DateTimeZone parsedZone = DateTimeZone.forOffsetMillis(parsedOffset);\n                    chrono = chrono.withZone(parsedZone);\n                } else if (bucket.getZone() != null) {\n                    chrono = chrono.withZone(bucket.getZone());\n                }\n                DateTime dt = new DateTime(millis, chrono);\n                if (iZone != null) {\n                    dt = dt.withZone(iZone);\n                }\n                return dt;\n            }\n        } else {\n            newPos = ~newPos;\n        }\n        throw new IllegalArgumentException(FormatUtils.createErrorMessage(text, newPos));\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 24.364106642007833
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.patternForStyle(String style, Locale locale)",
+      "source": "public static String patternForStyle(String style, Locale locale) {\n        DateTimeFormatter formatter = createFormatterForStyle(style);\n        if (locale == null) {\n            locale = Locale.getDefault();\n        }\n        // Not pretty, but it works.\n        return ((StyleFormatter) formatter.getPrinter()).getPattern(locale);\n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.patternForStyle(String style, Locale locale)\nSIGNATURE: public static String patternForStyle(String style, Locale locale)",
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.patternForStyle(String style, Locale locale)\nSIGNATURE: public static String patternForStyle(String style, Locale locale)\nSTRUCTURE (lossy):\nDateTimeFormatter formatter = createFormatterForStyle(style);\nCALL createFormatterForStyle(style)\nif (locale == null)\nlocale = Locale.getDefault()\nCALL Locale.getDefault()\nreturn ((StyleFormatter) formatter.getPrinter()).getPattern(locale);\nCALL ((StyleFormatter) formatter.getPrinter()).getPattern(locale)\nCALL formatter.getPrinter()",
+        "public static String patternForStyle(String style, Locale locale) {\n        DateTimeFormatter formatter = createFormatterForStyle(style);\n        if (locale == null) {\n            locale = Locale.getDefault();\n        }\n        // Not pretty, but it works.\n        return ((StyleFormatter) formatter.getPrinter()).getPattern(locale);\n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6153846153846154,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 4.0,
+        "literal_count": 1.0,
+        "source_tokens": 85.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 139.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 4,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java::DateTimeFormatterBuilder.FixedNumber.parseInto(DateTimeParserBucket bucket, String text, int position)",
+      "source": "public int parseInto(DateTimeParserBucket bucket, String text, int position) {\n            int newPos = super.parseInto(bucket, text, position);\n            if (newPos < 0) {\n                return newPos;\n            }\n            int expectedPos = position + iMaxParsedDigits;\n            if (newPos != expectedPos) {\n                if (iSigned) {\n                    char c = text.charAt(position);\n                    if (c == '-' || c == '+') {\n                        expectedPos++;\n                    }\n                }\n                if (newPos > expectedPos) {\n                    // The failure is at the position of the first extra digit.\n                    return ~(expectedPos + 1);\n                } else if (newPos < expectedPos) {\n                    // The failure is at the position where the next digit should be.\n                    return ~newPos;\n                }\n            }\n            return newPos;\n        }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java::DateTimeFormatterBuilder.FixedNumber.parseInto(DateTimeParserBucket bucket, String text, int position)\nSIGNATURE: public int parseInto(DateTimeParserBucket bucket, String text, int position)",
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java::DateTimeFormatterBuilder.FixedNumber.parseInto(DateTimeParserBucket bucket, String text, int position)\nSIGNATURE: public int parseInto(DateTimeParserBucket bucket, String text, int position)\nSTRUCTURE (lossy):\nint newPos = super.parseInto(bucket, text, position);\nCALL super.parseInto(bucket, text, position)\nif (newPos < 0)\nreturn newPos;\nint expectedPos = position + iMaxParsedDigits;\nif (newPos != expectedPos)\nif (iSigned)\nchar c = text.charAt(position);\nCALL text.charAt(position)\nif (c == '-' || c == '+')\nexpectedPos++\nif (newPos > expectedPos)\nreturn ~(expectedPos + 1);\nif (newPos < expectedPos)\nreturn ~newPos;",
+        "public int parseInto(DateTimeParserBucket bucket, String text, int position) {\n            int newPos = super.parseInto(bucket, text, position);\n            if (newPos < 0) {\n                return newPos;\n            }\n            int expectedPos = position + iMaxParsedDigits;\n            if (newPos != expectedPos) {\n                if (iSigned) {\n                    char c = text.charAt(position);\n                    if (c == '-' || c == '+') {\n                        expectedPos++;\n                    }\n                }\n                if (newPos > expectedPos) {\n                    // The failure is at the position of the first extra digit.\n                    return ~(expectedPos + 1);\n                } else if (newPos < expectedPos) {\n                    // The failure is at the position where the next digit should be.\n                    return ~newPos;\n                }\n            }\n            return newPos;\n        }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.35,
+        "trace_match": 0.0,
+        "complexity": 7.0,
+        "call_count": 2.0,
+        "literal_count": 4.0,
+        "source_tokens": 236.0,
+        "l0_tokens": 66.0,
+        "l1_tokens": 174.0,
+        "compression_ratio": 0.7372881355932204,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 7,
+        "call_count": 2,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/DateTimeUtils.java::DateTimeUtils.getDateFormatSymbols(Locale locale)",
+      "source": "public static final DateFormatSymbols getDateFormatSymbols(Locale locale) {\n        try {\n            Method method = DateFormatSymbols.class.getMethod(\"getInstance\", new Class[] {Locale.class});\n            return (DateFormatSymbols) method.invoke(null, new Object[] {locale});\n        } catch (Exception ex) {\n            return new DateFormatSymbols(locale);\n        }\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/DateTimeUtils.java::DateTimeUtils.getDateFormatSymbols(Locale locale)\nSIGNATURE: public static final DateFormatSymbols getDateFormatSymbols(Locale locale)",
+        "METHOD: src/main/java/org/joda/time/DateTimeUtils.java::DateTimeUtils.getDateFormatSymbols(Locale locale)\nSIGNATURE: public static final DateFormatSymbols getDateFormatSymbols(Locale locale)\nSTRUCTURE (lossy):\nMethod method = DateFormatSymbols.class.getMethod(\"getInstance\", new Class[] {Locale.class});\nCALL DateFormatSymbols.class.getMethod(\"getInstance\", new Class[] {Locale.class})\nreturn (DateFormatSymbols) method.invoke(null, new Object[] {locale});\nCALL method.invoke(null, new Object[] {locale})\ncatch (Exception ex)\nreturn new DateFormatSymbols(locale);",
+        "public static final DateFormatSymbols getDateFormatSymbols(Locale locale) {\n        try {\n            Method method = DateFormatSymbols.class.getMethod(\"getInstance\", new Class[] {Locale.class});\n            return (DateFormatSymbols) method.invoke(null, new Object[] {locale});\n        } catch (Exception ex) {\n            return new DateFormatSymbols(locale);\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5384615384615384,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 4.0,
+        "source_tokens": 95.0,
+        "l0_tokens": 48.0,
+        "l1_tokens": 141.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.parseToken(String pattern, int[] indexRef)",
+      "source": "private static String parseToken(String pattern, int[] indexRef) {\n        StringBuffer buf = new StringBuffer();\n\n        int i = indexRef[0];\n        int length = pattern.length();\n\n        char c = pattern.charAt(i);\n        if (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z') {\n            // Scan a run of the same character, which indicates a time\n            // pattern.\n            buf.append(c);\n\n            while (i + 1 < length) {\n                char peek = pattern.charAt(i + 1);\n                if (peek == c) {\n                    buf.append(c);\n                    i++;\n                } else {\n                    break;\n                }\n            }\n        } else {\n            // This will identify token as text.\n            buf.append('\\'');\n\n            boolean inLiteral = false;\n\n            for (; i < length; i++) {\n                c = pattern.charAt(i);\n                \n                if (c == '\\'') {\n                    if (i + 1 < length && pattern.charAt(i + 1) == '\\'') {\n                        // '' is treated as escaped '\n                        i++;\n                        buf.append(c);\n                    } else {\n                        inLiteral = !inLiteral;\n                    }\n                } else if (!inLiteral &&\n                           (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z')) {\n                    i--;\n                    break;\n                } else {\n                    buf.append(c);\n                }\n            }\n        }\n\n        indexRef[0] = i;\n        return buf.toString();\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.parseToken(String pattern, int[] indexRef)\nSIGNATURE: private static String parseToken(String pattern, int[] indexRef)",
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.parseToken(String pattern, int[] indexRef)\nSIGNATURE: private static String parseToken(String pattern, int[] indexRef)\nSTRUCTURE (lossy):\nStringBuffer buf = new StringBuffer();\nint i = indexRef[0];\nint length = pattern.length();\nCALL pattern.length()\nchar c = pattern.charAt(i);\nCALL pattern.charAt(i)\nif (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z')\nCALL buf.append(c)\nwhile (i + 1 < length)\nchar peek = pattern.charAt(i + 1);\nCALL pattern.charAt(i + 1)\nif (peek == c)\ni++\nCALL buf.append('\\'')\nboolean inLiteral = false;\nfor (; i < length; i++)\nc = pattern.charAt(i)\nif (c == '\\'')\nif (i + 1 < length && pattern.charAt(i + 1) == '\\'')\ninLiteral = !inLiteral\nif (!inLiteral && (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z'))\ni--\nindexRef[0] = i\nreturn buf.toString();\nCALL buf.toString()",
+        "private static String parseToken(String pattern, int[] indexRef) {\n        StringBuffer buf = new StringBuffer();\n\n        int i = indexRef[0];\n        int length = pattern.length();\n\n        char c = pattern.charAt(i);\n        if (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z') {\n            // Scan a run of the same character, which indicates a time\n            // pattern.\n            buf.append(c);\n\n            while (i + 1 < length) {\n                char peek = pattern.charAt(i + 1);\n                if (peek == c) {\n                    buf.append(c);\n                    i++;\n                } else {\n                    break;\n                }\n            }\n        } else {\n            // This will identify token as text.\n            buf.append('\\'');\n\n            boolean inLiteral = false;\n\n            for (; i < length; i++) {\n                c = pattern.charAt(i);\n                \n                if (c == '\\'') {\n                    if (i + 1 < length && pattern.charAt(i + 1) == '\\'') {\n                        // '' is treated as escaped '\n                        i++;\n                        buf.append(c);\n                    } else {\n                        inLiteral = !inLiteral;\n                    }\n                } else if (!inLiteral &&\n                           (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z')) {\n                    i--;\n                    break;\n                } else {\n                    buf.append(c);\n                }\n            }\n        }\n\n        indexRef[0] = i;\n        return buf.toString();\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.28888888888888886,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 11.0,
+        "literal_count": 17.0,
+        "source_tokens": 391.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 217.0,
+        "compression_ratio": 0.5549872122762148,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 8,
+        "call_count": 11,
+        "literal_count": 17
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/PeriodFormatter.java::PeriodFormatter.parseMutablePeriod(String text)",
+      "source": "public MutablePeriod parseMutablePeriod(String text) {\n        checkParser();\n        \n        MutablePeriod period = new MutablePeriod(0, iParseType);\n        int newPos = getParser().parseInto(period, text, 0, iLocale);\n        if (newPos >= 0) {\n            if (newPos >= text.length()) {\n                return period;\n            }\n        } else {\n            newPos = ~newPos;\n        }\n        throw new IllegalArgumentException(FormatUtils.createErrorMessage(text, newPos));\n    }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatter.java::PeriodFormatter.parseMutablePeriod(String text)\nSIGNATURE: public MutablePeriod parseMutablePeriod(String text)",
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatter.java::PeriodFormatter.parseMutablePeriod(String text)\nSIGNATURE: public MutablePeriod parseMutablePeriod(String text)\nSTRUCTURE (lossy):\nCALL checkParser()\nMutablePeriod period = new MutablePeriod(0, iParseType);\nint newPos = getParser().parseInto(period, text, 0, iLocale);\nCALL getParser().parseInto(period, text, 0, iLocale)\nCALL getParser()\nif (newPos >= 0)\nif (newPos >= text.length())\nCALL text.length()\nreturn period;\nnewPos = ~newPos\nthrow new IllegalArgumentException(FormatUtils.createErrorMessage(text, newPos));\nCALL FormatUtils.createErrorMessage(text, newPos)",
+        "public MutablePeriod parseMutablePeriod(String text) {\n        checkParser();\n        \n        MutablePeriod period = new MutablePeriod(0, iParseType);\n        int newPos = getParser().parseInto(period, text, 0, iLocale);\n        if (newPos >= 0) {\n            if (newPos >= text.length()) {\n                return period;\n            }\n        } else {\n            newPos = ~newPos;\n        }\n        throw new IllegalArgumentException(FormatUtils.createErrorMessage(text, newPos));\n    }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.47058823529411764,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 5.0,
+        "literal_count": 3.0,
+        "source_tokens": 123.0,
+        "l0_tokens": 44.0,
+        "l1_tokens": 158.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 5,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/ISODateTimeFormat.java::ISODateTimeFormat.dateOptionalTimeParser()",
+      "source": "public static DateTimeFormatter dateOptionalTimeParser() {\n        if (dotp == null) {\n            DateTimeParser timeOrOffset = new DateTimeFormatterBuilder()\n                .appendLiteral('T')\n                .appendOptional(timeElementParser().getParser())\n                .appendOptional(offsetElement().getParser())\n                .toParser();\n            dotp = new DateTimeFormatterBuilder()\n                .append(dateElementParser())\n                .appendOptional(timeOrOffset)\n                .toFormatter();\n        }\n        return dotp;\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/ISODateTimeFormat.java::ISODateTimeFormat.dateOptionalTimeParser()\nSIGNATURE: public static DateTimeFormatter dateOptionalTimeParser()",
+        "METHOD: src/main/java/org/joda/time/format/ISODateTimeFormat.java::ISODateTimeFormat.dateOptionalTimeParser()\nSIGNATURE: public static DateTimeFormatter dateOptionalTimeParser()\nSTRUCTURE (lossy):\nif (dotp == null)\nDateTimeParser timeOrOffset = new DateTimeFormatterBuilder() .appendLiteral('T') .appendOptional(timeElementParser().getParser()) .appendOptional(offsetElement().getParser()) .toParser();\nCALL new DateTimeFormatterBuilder() .appendLiteral('T') .appendOptional(timeElementParser().getParser()) .appendOptional(offsetElement().getParser()) .toParser()\nCALL new DateTimeFormatterBuilder() .appendLiteral('T') .appendOptional(timeElementParser().getParser()) .appendOptional(offsetElement().getParser())\nCALL new DateTimeFormatterBuilder() .appendLiteral('T') .appendOptional(timeElementParser().getParser())\nCALL new DateTimeFormatterBuilder() .appendLiteral('T')\nCALL timeElementParser().getParser()\nCALL timeElementParser()\nCALL offsetElement().getParser()\nCALL offsetElement()\ndotp = new DateTimeFormatterBuilder() .append(dateElementParser()) .appendOptional(timeOrOffset) .toFormatter()\nCALL new DateTimeFormatterBuilder() .append(dateElementParser()) .appendOptional(timeOrOffset) .toFormatter()\nCALL new DateTimeFormatterBuilder() .append(dateElementParser()) .appendOptional(timeOrOffset)\nCALL new DateTimeFormatterBuilder() .append(dateElementParser())\nCALL dateElementParser()\nreturn dotp;",
+        "public static DateTimeFormatter dateOptionalTimeParser() {\n        if (dotp == null) {\n            DateTimeParser timeOrOffset = new DateTimeFormatterBuilder()\n                .appendLiteral('T')\n                .appendOptional(timeElementParser().getParser())\n                .appendOptional(offsetElement().getParser())\n                .toParser();\n            dotp = new DateTimeFormatterBuilder()\n                .append(dateElementParser())\n                .appendOptional(timeOrOffset)\n                .toFormatter();\n        }\n        return dotp;\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5416666666666666,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 12.0,
+        "literal_count": 2.0,
+        "source_tokens": 140.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 353.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 12,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.parseMillis(String text)",
+      "source": "public long parseMillis(String text) {\n        DateTimeParser parser = requireParser();\n        \n        Chronology chrono = selectChronology(iChrono);\n        DateTimeParserBucket bucket = new DateTimeParserBucket(0, chrono, iLocale, iPivotYear, iDefaultYear);\n        int newPos = parser.parseInto(bucket, text, 0);\n        if (newPos >= 0) {\n            if (newPos >= text.length()) {\n                return bucket.computeMillis(true, text);\n            }\n        } else {\n            newPos = ~newPos;\n        }\n        throw new IllegalArgumentException(FormatUtils.createErrorMessage(text, newPos));\n    }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.parseMillis(String text)\nSIGNATURE: public long parseMillis(String text)",
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.parseMillis(String text)\nSIGNATURE: public long parseMillis(String text)\nSTRUCTURE (lossy):\nDateTimeParser parser = requireParser();\nCALL requireParser()\nChronology chrono = selectChronology(iChrono);\nCALL selectChronology(iChrono)\nDateTimeParserBucket bucket = new DateTimeParserBucket(0, chrono, iLocale, iPivotYear, iDefaultYear);\nint newPos = parser.parseInto(bucket, text, 0);\nCALL parser.parseInto(bucket, text, 0)\nif (newPos >= 0)\nif (newPos >= text.length())\nCALL text.length()\nreturn bucket.computeMillis(true, text);\nCALL bucket.computeMillis(true, text)\nnewPos = ~newPos\nthrow new IllegalArgumentException(FormatUtils.createErrorMessage(text, newPos));\nCALL FormatUtils.createErrorMessage(text, newPos)",
+        "public long parseMillis(String text) {\n        DateTimeParser parser = requireParser();\n        \n        Chronology chrono = selectChronology(iChrono);\n        DateTimeParserBucket bucket = new DateTimeParserBucket(0, chrono, iLocale, iPivotYear, iDefaultYear);\n        int newPos = parser.parseInto(bucket, text, 0);\n        if (newPos >= 0) {\n            if (newPos >= text.length()) {\n                return bucket.computeMillis(true, text);\n            }\n        } else {\n            newPos = ~newPos;\n        }\n        throw new IllegalArgumentException(FormatUtils.createErrorMessage(text, newPos));\n    }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.42857142857142855,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 6.0,
+        "literal_count": 3.0,
+        "source_tokens": 153.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 200.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 6,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.StyleFormatter.getPattern(Locale locale)",
+      "source": "String getPattern(Locale locale) {\n            DateFormat f = null;\n            switch (iType) {\n                case DATE:\n                    f = DateFormat.getDateInstance(iDateStyle, locale);\n                    break;\n                case TIME:\n                    f = DateFormat.getTimeInstance(iTimeStyle, locale);\n                    break;\n                case DATETIME:\n                    f = DateFormat.getDateTimeInstance(iDateStyle, iTimeStyle, locale);\n                    break;\n            }\n            if (f instanceof SimpleDateFormat == false) {\n                throw new IllegalArgumentException(\"No datetime pattern for locale: \" + locale);\n            }\n            return ((SimpleDateFormat) f).toPattern();\n        }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.StyleFormatter.getPattern(Locale locale)\nSIGNATURE: String getPattern(Locale locale)",
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.StyleFormatter.getPattern(Locale locale)\nSIGNATURE: String getPattern(Locale locale)\nSTRUCTURE (lossy):\nDateFormat f = null;\nswitch (iType) { case DATE: f = DateFormat.getDateInstance(iDateStyle, locale); break; case TIME: f = DateFormat.getTimeInstance(iTimeStyle, locale); break; case DATETIME: f = DateFormat.getDateTimeInstance(iDateStyle, iTimeStyle, locale); break; }\nf = DateFormat.getDateInstance(iDateStyle, locale)\nCALL DateFormat.getDateInstance(iDateStyle, locale)\nf = DateFormat.getTimeInstance(iTimeStyle, locale)\nCALL DateFormat.getTimeInstance(iTimeStyle, locale)\nf = DateFormat.getDateTimeInstance(iDateStyle, iTimeStyle, locale)\nCALL DateFormat.getDateTimeInstance(iDateStyle, iTimeStyle, locale)\nif (f instanceof SimpleDateFormat == false)\nthrow new IllegalArgumentException(\"No datetime pattern for locale: \" + locale);\nreturn ((SimpleDateFormat) f).toPattern();\nCALL ((SimpleDateFormat) f).toPattern()",
+        "String getPattern(Locale locale) {\n            DateFormat f = null;\n            switch (iType) {\n                case DATE:\n                    f = DateFormat.getDateInstance(iDateStyle, locale);\n                    break;\n                case TIME:\n                    f = DateFormat.getTimeInstance(iTimeStyle, locale);\n                    break;\n                case DATETIME:\n                    f = DateFormat.getDateTimeInstance(iDateStyle, iTimeStyle, locale);\n                    break;\n            }\n            if (f instanceof SimpleDateFormat == false) {\n                throw new IllegalArgumentException(\"No datetime pattern for locale: \" + locale);\n            }\n            return ((SimpleDateFormat) f).toPattern();\n        }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.45161290322580644,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 4.0,
+        "literal_count": 2.0,
+        "source_tokens": 186.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 251.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 4,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.SimpleAffix.scan(String periodStr, final int position)",
+      "source": "public int scan(String periodStr, final int position) {\n            String text = iText;\n            int textLength = text.length();\n            int sourceLength = periodStr.length();\n            search:\n            for (int pos = position; pos < sourceLength; pos++) {\n                if (periodStr.regionMatches(true, pos, text, 0, textLength)) {\n                    return pos;\n                }\n                // Only allow number characters to be skipped in search of suffix.\n                switch (periodStr.charAt(pos)) {\n                case '0': case '1': case '2': case '3': case '4':\n                case '5': case '6': case '7': case '8': case '9':\n                case '.': case ',': case '+': case '-':\n                    break;\n                default:\n                    break search;\n                }\n            }\n            return ~position;\n        }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.SimpleAffix.scan(String periodStr, final int position)\nSIGNATURE: public int scan(String periodStr, final int position)",
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.SimpleAffix.scan(String periodStr, final int position)\nSIGNATURE: public int scan(String periodStr, final int position)\nSTRUCTURE (lossy):\nString text = iText;\nint textLength = text.length();\nCALL text.length()\nint sourceLength = periodStr.length();\nCALL periodStr.length()\nfor (int pos = position; pos < sourceLength; pos++)\nint pos = position;\npos++\nif (periodStr.regionMatches(true, pos, text, 0, textLength))\nCALL periodStr.regionMatches(true, pos, text, 0, textLength)\nreturn pos;\nswitch (periodStr.charAt(pos)) { case '0': case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9': case '.': case ',': case '+': case '-': break; default: break search; }\nCALL periodStr.charAt(pos)\nreturn ~position;",
+        "public int scan(String periodStr, final int position) {\n            String text = iText;\n            int textLength = text.length();\n            int sourceLength = periodStr.length();\n            search:\n            for (int pos = position; pos < sourceLength; pos++) {\n                if (periodStr.regionMatches(true, pos, text, 0, textLength)) {\n                    return pos;\n                }\n                // Only allow number characters to be skipped in search of suffix.\n                switch (periodStr.charAt(pos)) {\n                case '0': case '1': case '2': case '3': case '4':\n                case '5': case '6': case '7': case '8': case '9':\n                case '.': case ',': case '+': case '-':\n                    break;\n                default:\n                    break search;\n                }\n            }\n            return ~position;\n        }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.35,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 4.0,
+        "literal_count": 15.0,
+        "source_tokens": 219.0,
+        "l0_tokens": 54.0,
+        "l1_tokens": 208.0,
+        "compression_ratio": 0.9497716894977168,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 4,
+        "literal_count": 15
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.parseMutableDateTime(String text)",
+      "source": "public MutableDateTime parseMutableDateTime(String text) {\n        DateTimeParser parser = requireParser();\n        \n        Chronology chrono = selectChronology(null);\n        DateTimeParserBucket bucket = new DateTimeParserBucket(0, chrono, iLocale, iPivotYear, iDefaultYear);\n        int newPos = parser.parseInto(bucket, text, 0);\n        if (newPos >= 0) {\n            if (newPos >= text.length()) {\n                long millis = bucket.computeMillis(true, text);\n                if (iOffsetParsed && bucket.getOffsetInteger() != null) {\n                    int parsedOffset = bucket.getOffsetInteger();\n                    DateTimeZone parsedZone = DateTimeZone.forOffsetMillis(parsedOffset);\n                    chrono = chrono.withZone(parsedZone);\n                } else if (bucket.getZone() != null) {\n                    chrono = chrono.withZone(bucket.getZone());\n                }\n                MutableDateTime dt = new MutableDateTime(millis, chrono);\n                if (iZone != null) {\n                    dt.setZone(iZone);\n                }\n                return dt;\n            }\n        } else {\n            newPos = ~newPos;\n        }\n        throw new IllegalArgumentException(FormatUtils.createErrorMessage(text, newPos));\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.parseMutableDateTime(String text)\nSIGNATURE: public MutableDateTime parseMutableDateTime(String text)",
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.parseMutableDateTime(String text)\nSIGNATURE: public MutableDateTime parseMutableDateTime(String text)\nSTRUCTURE (lossy):\nDateTimeParser parser = requireParser();\nCALL requireParser()\nChronology chrono = selectChronology(null);\nCALL selectChronology(null)\nDateTimeParserBucket bucket = new DateTimeParserBucket(0, chrono, iLocale, iPivotYear, iDefaultYear);\nint newPos = parser.parseInto(bucket, text, 0);\nCALL parser.parseInto(bucket, text, 0)\nif (newPos >= 0)\nif (newPos >= text.length())\nCALL text.length()\nlong millis = bucket.computeMillis(true, text);\nCALL bucket.computeMillis(true, text)\nif (iOffsetParsed && bucket.getOffsetInteger() != null)\nCALL bucket.getOffsetInteger()\nint parsedOffset = bucket.getOffsetInteger();\nDateTimeZone parsedZone = DateTimeZone.forOffsetMillis(parsedOffset);\nCALL DateTimeZone.forOffsetMillis(parsedOffset)\nchrono = chrono.withZone(parsedZone)\nCALL chrono.withZone(parsedZone)\nif (bucket.getZone() != null)\nCALL bucket.getZone()\nchrono = chrono.withZone(bucket.getZone())\nCALL chrono.withZone(bucket.getZone())\nMutableDateTime dt = new MutableDateTime(millis, chrono);\nif (iZone != null)\nCALL dt.setZone(iZone)\nreturn dt;\nnewPos = ~newPos\nthrow new IllegalArgumentException(FormatUtils.createErrorMessage(text, newPos));\nCALL FormatUtils.createErrorMessage(text, newPos)",
+        "public MutableDateTime parseMutableDateTime(String text) {\n        DateTimeParser parser = requireParser();\n        \n        Chronology chrono = selectChronology(null);\n        DateTimeParserBucket bucket = new DateTimeParserBucket(0, chrono, iLocale, iPivotYear, iDefaultYear);\n        int newPos = parser.parseInto(bucket, text, 0);\n        if (newPos >= 0) {\n            if (newPos >= text.length()) {\n                long millis = bucket.computeMillis(true, text);\n                if (iOffsetParsed && bucket.getOffsetInteger() != null) {\n                    int parsedOffset = bucket.getOffsetInteger();\n                    DateTimeZone parsedZone = DateTimeZone.forOffsetMillis(parsedOffset);\n                    chrono = chrono.withZone(parsedZone);\n                } else if (bucket.getZone() != null) {\n                    chrono = chrono.withZone(bucket.getZone());\n                }\n                MutableDateTime dt = new MutableDateTime(millis, chrono);\n                if (iZone != null) {\n                    dt.setZone(iZone);\n                }\n                return dt;\n            }\n        } else {\n            newPos = ~newPos;\n        }\n        throw new IllegalArgumentException(FormatUtils.createErrorMessage(text, newPos));\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.40384615384615385,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 14.0,
+        "literal_count": 7.0,
+        "source_tokens": 314.0,
+        "l0_tokens": 47.0,
+        "l1_tokens": 349.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 14,
+        "literal_count": 7
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/ISODateTimeFormat.java::ISODateTimeFormat.dateElementParser()",
+      "source": "public static DateTimeFormatter dateElementParser() {\n        if (dpe == null) {\n            dpe = new DateTimeFormatterBuilder()\n                .append(null, new DateTimeParser[] {\n                    new DateTimeFormatterBuilder()\n                    .append(yearElement())\n                    .appendOptional\n                    (new DateTimeFormatterBuilder()\n                     .append(monthElement())\n                     .appendOptional(dayOfMonthElement().getParser())\n                     .toParser())\n                    .toParser(),\n                    new DateTimeFormatterBuilder()\n                    .append(weekyearElement())\n                    .append(weekElement())\n                    .appendOptional(dayOfWeekElement().getParser())\n                    .toParser(),\n                    new DateTimeFormatterBuilder()\n                    .append(yearElement())\n                    .append(dayOfYearElement())\n                    .toParser()\n                })\n                .toFormatter();\n        }\n        return dpe;\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/ISODateTimeFormat.java::ISODateTimeFormat.dateElementParser()\nSIGNATURE: public static DateTimeFormatter dateElementParser()",
+        "METHOD: src/main/java/org/joda/time/format/ISODateTimeFormat.java::ISODateTimeFormat.dateElementParser()\nSIGNATURE: public static DateTimeFormatter dateElementParser()\nSTRUCTURE (lossy):\nif (dpe == null)\ndpe = new DateTimeFormatterBuilder() .append(null, new DateTimeParser[] { new DateTimeFormatterBuilder() .append(yearElement()) .appendOptional (new DateTimeFormatterBuilder() .append(monthElement()) .appendOptional(dayOfMonthElement().getParser()) .toParser()) .toParser(), new DateTimeFormatterBuilder() .append(weekyearElement()) .append(weekElement()) .appendOptional(dayOfWeekElement().getParser()) .toParser(), new DateTimeFormatterBuilder() .append(yearElement()) .append(dayOfYearElement()) .toParser() }) .toFormatter()\nCALL new DateTimeFormatterBuilder() .append(null, new DateTimeParser[] { new DateTimeFormatterBuilder() .append(yearElement()) .appendOptional (new DateTimeFormatterBuilder() .append(monthElement()) .appendOptional(dayOfMonthElement().getParser()) .toParser()) .toParser(), new DateTimeFormatterBuilder() .append(weekyearElement()) .append(weekElement()) .appendOptional(dayOfWeekElement().getParser()) .toParser(), new DateTimeFormatterBuilder() .append(yearElement()) .append(dayOfYearElement()) .toParser() }) .toFormatter()\nCALL new DateTimeFormatterBuilder() .append(null, new DateTimeParser[] { new DateTimeFormatterBuilder() .append(yearElement()) .appendOptional (new DateTimeFormatterBuilder() .append(monthElement()) .appendOptional(dayOfMonthElement().getParser()) .toParser()) .toParser(), new DateTimeFormatterBuilder() .append(weekyearElement()) .append(weekElement()) .appendOptional(dayOfWeekElement().getParser()) .toParser(), new DateTimeFormatterBuilder() .append(yearElement()) .append(dayOfYearElement()) .toParser() })\nCALL new DateTimeFormatterBuilder() .append(yearElement()) .appendOptional (new DateTimeFormatterBuilder() .append(monthElement()) .appendOptional(dayOfMonthElement().getParser()) .toParser()) .toParser()\nCALL new DateTimeFormatterBuilder() .append(yearElement()) .appendOptional (new DateTimeFormatterBuilder() .append(monthElement()) .appendOptional(dayOfMonthElement().getParser()) .toParser())\nCALL new DateTimeFormatterBu\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "public static DateTimeFormatter dateElementParser() {\n        if (dpe == null) {\n            dpe = new DateTimeFormatterBuilder()\n                .append(null, new DateTimeParser[] {\n                    new DateTimeFormatterBuilder()\n                    .append(yearElement())\n                    .appendOptional\n                    (new DateTimeFormatterBuilder()\n                     .append(monthElement())\n                     .appendOptional(dayOfMonthElement().getParser())\n                     .toParser())\n                    .toParser(),\n                    new DateTimeFormatterBuilder()\n                    .append(weekyearElement())\n                    .append(weekElement())\n                    .appendOptional(dayOfWeekElement().getParser())\n                    .toParser(),\n                    new DateTimeFormatterBuilder()\n                    .append(yearElement())\n                    .append(dayOfYearElement())\n                    .toParser()\n                })\n                .toFormatter();\n        }\n        return dpe;\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5555555555555556,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 25.0,
+        "literal_count": 2.0,
+        "source_tokens": 263.0,
+        "l0_tokens": 42.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 2,
+        "call_count": 25,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.withLocale(Locale locale)",
+      "source": "public DateTimeFormatter withLocale(Locale locale) {\n        if (locale == getLocale() || (locale != null && locale.equals(getLocale()))) {\n            return this;\n        }\n        return new DateTimeFormatter(iPrinter, iParser, locale,\n                iOffsetParsed, iChrono, iZone, iPivotYear, iDefaultYear);\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.withLocale(Locale locale)\nSIGNATURE: public DateTimeFormatter withLocale(Locale locale)",
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.withLocale(Locale locale)\nSIGNATURE: public DateTimeFormatter withLocale(Locale locale)\nSTRUCTURE (lossy):\nif (locale == getLocale() || (locale != null && locale.equals(getLocale())))\nCALL getLocale()\nCALL locale.equals(getLocale())\nreturn this;\nreturn new DateTimeFormatter(iPrinter, iParser, locale, iOffsetParsed, iChrono, iZone, iPivotYear, iDefaultYear);",
+        "public DateTimeFormatter withLocale(Locale locale) {\n        if (locale == getLocale() || (locale != null && locale.equals(getLocale()))) {\n            return this;\n        }\n        return new DateTimeFormatter(iPrinter, iParser, locale,\n                iOffsetParsed, iChrono, iZone, iPivotYear, iDefaultYear);\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5925925925925926,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 3.0,
+        "literal_count": 1.0,
+        "source_tokens": 80.0,
+        "l0_tokens": 43.0,
+        "l1_tokens": 111.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 3,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/MutableDateTime.java::MutableDateTime.clone()",
+      "source": "public Object clone() {\n        try {\n            return super.clone();\n        } catch (CloneNotSupportedException ex) {\n            throw new InternalError(\"Clone error\");\n        }\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/MutableDateTime.java::MutableDateTime.clone()\nSIGNATURE: public Object clone()",
+        "METHOD: src/main/java/org/joda/time/MutableDateTime.java::MutableDateTime.clone()\nSIGNATURE: public Object clone()\nSTRUCTURE (lossy):\nreturn super.clone();\nCALL super.clone()\ncatch (CloneNotSupportedException ex)\nthrow new InternalError(\"Clone error\");",
+        "public Object clone() {\n        try {\n            return super.clone();\n        } catch (CloneNotSupportedException ex) {\n            throw new InternalError(\"Clone error\");\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5909090909090909,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 48.0,
+        "l0_tokens": 29.0,
+        "l1_tokens": 63.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.StyleFormatter.getFormatter(Locale locale)",
+      "source": "private DateTimeFormatter getFormatter(Locale locale) {\n            locale = (locale == null ? Locale.getDefault() : locale);\n            String key = Integer.toString(iType + (iDateStyle << 4) + (iTimeStyle << 8)) + locale.toString();\n            DateTimeFormatter f = null;\n            synchronized (cCache) {\n                f = cCache.get(key);\n                if (f == null) {\n                    String pattern = getPattern(locale);\n                    f = DateTimeFormat.forPattern(pattern);\n                    cCache.put(key, f);\n                }\n            }\n            return f;\n        }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.StyleFormatter.getFormatter(Locale locale)\nSIGNATURE: private DateTimeFormatter getFormatter(Locale locale)",
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.StyleFormatter.getFormatter(Locale locale)\nSIGNATURE: private DateTimeFormatter getFormatter(Locale locale)\nSTRUCTURE (lossy):\nlocale = (locale == null ? Locale.getDefault() : locale)\nCALL Locale.getDefault()\nString key = Integer.toString(iType + (iDateStyle << 4) + (iTimeStyle << 8)) + locale.toString();\nCALL Integer.toString(iType + (iDateStyle << 4) + (iTimeStyle << 8))\nCALL locale.toString()\nDateTimeFormatter f = null;\nf = cCache.get(key)\nCALL cCache.get(key)\nif (f == null)\nString pattern = getPattern(locale);\nCALL getPattern(locale)\nf = DateTimeFormat.forPattern(pattern)\nCALL DateTimeFormat.forPattern(pattern)\nCALL cCache.put(key, f)\nreturn f;",
+        "private DateTimeFormatter getFormatter(Locale locale) {\n            locale = (locale == null ? Locale.getDefault() : locale);\n            String key = Integer.toString(iType + (iDateStyle << 4) + (iTimeStyle << 8)) + locale.toString();\n            DateTimeFormatter f = null;\n            synchronized (cCache) {\n                f = cCache.get(key);\n                if (f == null) {\n                    String pattern = getPattern(locale);\n                    f = DateTimeFormat.forPattern(pattern);\n                    cCache.put(key, f);\n                }\n            }\n            return f;\n        }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.52,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 7.0,
+        "literal_count": 5.0,
+        "source_tokens": 151.0,
+        "l0_tokens": 47.0,
+        "l1_tokens": 184.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 7,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/MutableInterval.java::MutableInterval.clone()",
+      "source": "public Object clone() {\n        try {\n            return super.clone();\n        } catch (CloneNotSupportedException ex) {\n            throw new InternalError(\"Clone error\");\n        }\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/MutableInterval.java::MutableInterval.clone()\nSIGNATURE: public Object clone()",
+        "METHOD: src/main/java/org/joda/time/MutableInterval.java::MutableInterval.clone()\nSIGNATURE: public Object clone()\nSTRUCTURE (lossy):\nreturn super.clone();\nCALL super.clone()\ncatch (CloneNotSupportedException ex)\nthrow new InternalError(\"Clone error\");",
+        "public Object clone() {\n        try {\n            return super.clone();\n        } catch (CloneNotSupportedException ex) {\n            throw new InternalError(\"Clone error\");\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5454545454545454,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 48.0,
+        "l0_tokens": 29.0,
+        "l1_tokens": 63.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.clone()",
+      "source": "public Object clone() {\n        try {\n            return super.clone();\n        } catch (CloneNotSupportedException ex) {\n            throw new InternalError(\"Clone error\");\n        }\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.clone()\nSIGNATURE: public Object clone()",
+        "METHOD: src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.clone()\nSIGNATURE: public Object clone()\nSTRUCTURE (lossy):\nreturn super.clone();\nCALL super.clone()\ncatch (CloneNotSupportedException ex)\nthrow new InternalError(\"Clone error\");",
+        "public Object clone() {\n        try {\n            return super.clone();\n        } catch (CloneNotSupportedException ex) {\n            throw new InternalError(\"Clone error\");\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5454545454545454,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 1.0,
+        "source_tokens": 48.0,
+        "l0_tokens": 28.0,
+        "l1_tokens": 62.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/base/BasePartial.java::BasePartial.toString(String pattern, Locale locale)",
+      "source": "public String toString(String pattern, Locale locale) throws IllegalArgumentException {\n        if (pattern == null) {\n            return toString();\n        }\n        return DateTimeFormat.forPattern(pattern).withLocale(locale).print(this);\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/base/BasePartial.java::BasePartial.toString(String pattern, Locale locale)\nSIGNATURE: public String toString(String pattern, Locale locale) throws IllegalArgumentException",
+        "METHOD: src/main/java/org/joda/time/base/BasePartial.java::BasePartial.toString(String pattern, Locale locale)\nSIGNATURE: public String toString(String pattern, Locale locale) throws IllegalArgumentException\nSTRUCTURE (lossy):\nif (pattern == null)\nreturn toString();\nCALL toString()\nreturn DateTimeFormat.forPattern(pattern).withLocale(locale).print(this);\nCALL DateTimeFormat.forPattern(pattern).withLocale(locale).print(this)\nCALL DateTimeFormat.forPattern(pattern).withLocale(locale)\nCALL DateTimeFormat.forPattern(pattern)",
+        "public String toString(String pattern, Locale locale) throws IllegalArgumentException {\n        if (pattern == null) {\n            return toString();\n        }\n        return DateTimeFormat.forPattern(pattern).withLocale(locale).print(this);\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5833333333333334,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 4.0,
+        "literal_count": 1.0,
+        "source_tokens": 62.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 132.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 4,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java::DateTimeFormatterBuilder.TextField.parseInto(DateTimeParserBucket bucket, String text, int position)",
+      "source": "@SuppressWarnings(\"unchecked\")\n        public int parseInto(DateTimeParserBucket bucket, String text, int position) {\n            Locale locale = bucket.getLocale();\n            // handle languages which might have non ASCII A-Z or punctuation\n            // bug 1788282\n            Set<String> validValues = null;\n            int maxLength = 0;\n            synchronized (cParseCache) {\n                Map<DateTimeFieldType, Object[]> innerMap = cParseCache.get(locale);\n                if (innerMap == null) {\n                    innerMap = new HashMap<DateTimeFieldType, Object[]>();\n                    cParseCache.put(locale, innerMap);\n                }\n                Object[] array = innerMap.get(iFieldType);\n                if (array == null) {\n                    validValues = new HashSet<String>(32);\n                    MutableDateTime dt = new MutableDateTime(0L, DateTimeZone.UTC);\n                    Property property = dt.property(iFieldType);\n                    int min = property.getMinimumValueOverall();\n                    int max = property.getMaximumValueOverall();\n                    if (max - min > 32) {  // protect against invalid fields\n                        return ~position;\n                    }\n                    maxLength = property.getMaximumTextLength(locale);\n                    for (int i = min; i <= max; i++) {\n                        property.set(i);\n                        validValues.add(property.getAsShortText(locale));\n                        validValues.add(property.getAsShortText(locale).toLowerCase(locale));\n                        validValues.add(property.getAsShortText(locale).toUpperCase(locale));\n                        validValues.add(property.getAsText(locale));\n                        validValues.add(property.getAsText(locale).toLowerCase(locale));\n                        validValues.add(property.getAsText(locale).toUpperCase(locale));\n                    }\n                    if (\"en\".equals(locale.getLanguage()) && iFieldType == DateTimeFieldType.era()) {\n                        // hack to support for parsing \"BCE\" and \"CE\" if the language is English\n                        validValues.add(\"BCE\");\n                        validValues.add(\"bce\");\n                        validValues.add(\"CE\");\n                        validValues.add(\"ce\");\n                        maxLength = 3;\n                    }\n                    array = new Object[] {validValues, Integer.valueOf(maxLength)};\n                    innerMap.put(iFieldType, array);\n                } else {\n                    validValues = (Set<String>) array[0];\n                    maxLength = ((Integer) array[1]).intValue();\n                }\n            }\n            // match the longest string first using our knowledge of the max length\n            int limit = Math.min(text.length(), position + maxLength);\n            for (int i = limit; i > position; i--) {\n                String match = text.substring(position, i);\n                if (validValues.contains(match)) {\n                    bucket.saveField(iFieldType, match, locale);\n                    return i;\n                }\n            }\n            return ~position;\n        }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java::DateTimeFormatterBuilder.TextField.parseInto(DateTimeParserBucket bucket, String text, int position)\nSIGNATURE: @SuppressWarnings(\"unchecked\")\n        public int parseInto(DateTimeParserBucket bucket, String text, int position)",
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java::DateTimeFormatterBuilder.TextField.parseInto(DateTimeParserBucket bucket, String text, int position)\nSIGNATURE: @SuppressWarnings(\"unchecked\")\n        public int parseInto(DateTimeParserBucket bucket, String text, int position)\nSTRUCTURE (lossy):\nLocale locale = bucket.getLocale();\nCALL bucket.getLocale()\nSet<String> validValues = null;\nint maxLength = 0;\nMap<DateTimeFieldType, Object[]> innerMap = cParseCache.get(locale);\nCALL cParseCache.get(locale)\nif (innerMap == null)\ninnerMap = new HashMap<DateTimeFieldType, Object[]>()\nCALL cParseCache.put(locale, innerMap)\nObject[] array = innerMap.get(iFieldType);\nCALL innerMap.get(iFieldType)\nif (array == null)\nvalidValues = new HashSet<String>(32)\nMutableDateTime dt = new MutableDateTime(0L, DateTimeZone.UTC);\nProperty property = dt.property(iFieldType);\nCALL dt.property(iFieldType)\nint min = property.getMinimumValueOverall();\nCALL property.getMinimumValueOverall()\nint max = property.getMaximumValueOverall();\nCALL property.getMaximumValueOverall()\nif (max - min > 32)\nreturn ~position;\nmaxLength = property.getMaximumTextLength(locale)\nCALL property.getMaximumTextLength(locale)\nfor (int i = min; i <= max; i++)\nint i = min;\ni++\nCALL property.set(i)\nCALL validValues.add(property.getAsShortText(locale))\nCALL property.getAsShortText(locale)\nCALL validValues.add(property.getAsShortText(locale).toLowerCase(locale))\nCALL property.getAsShortText(locale).toLowerCase(locale)\nCALL validValues.add(property.getAsShortText(locale).toUpperCase(locale))\nCALL property.getAsShortText(locale).toUpperCase(locale)\nCALL validValues.add(property.getAsText(locale))\nCALL property.getAsText(locale)\nCALL validValues.add(property.getAsText(locale).toLowerCase(locale))\nCALL property.getAsText(locale).toLowerCase(locale)\nCALL validValues.add(property.getAsText(locale).toUpperCase(locale))\nCALL property.getAsText(locale).toUpperCase(locale)\nif (\"en\".equals(locale.getLanguage()) && iFieldType == DateTimeFieldType.era())\nCALL \"en\".equals(locale.getLanguage())\nCALL locale.getLanguage()\nCALL DateTimeFieldType.era()\nCALL validValues.add(\"BCE\")\nCALL validValues.add(\"bce\")\nCALL validV\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "@SuppressWarnings(\"unchecked\")\n        public int parseInto(DateTimeParserBucket bucket, String text, int position) {\n            Locale locale = bucket.getLocale();\n            // handle languages which might have non ASCII A-Z or punctuation\n            // bug 1788282\n            Set<String> validValues = null;\n            int maxLength = 0;\n            synchronized (cParseCache) {\n                Map<DateTimeFieldType, Object[]> innerMap = cParseCache.get(locale);\n                if (innerMap == null) {\n                    innerMap = new HashMap<DateTimeFieldType, Object[]>();\n                    cParseCache.put(locale, innerMap);\n                }\n                Object[] array = innerMap.get(iFieldType);\n                if (array == null) {\n                    validValues = new HashSet<String>(32);\n                    MutableDateTime dt = new MutableDateTime(0L, DateTimeZone.UTC);\n                    Property property = dt.property(iFieldType);\n                    int min = property.getMinimumValueOverall();\n                    int max = property.getMaximumValueOverall();\n                    if (max - min > 32) {  // protect against invalid fields\n                        return ~position;\n                    }\n                    maxLength = property.getMaximumTextLength(locale);\n                    for (int i = min; i <= max; i++) {\n                        property.set(i);\n                        validValues.add(property.getAsShortText(locale));\n                        validValues.add(property.getAsShortText(locale).toLowerCase(locale));\n                        validValues.add(property.getAsShortText(locale).toUpperCase(locale));\n                        validValues.add(property.getAsText(locale));\n                        validValues.add(property.getAsText(locale).toLowerCase(locale));\n                        validValues.add(property.getAsText(locale).toUpperCase(locale));\n                    }\n                    if (\"en\".equals(locale.getLanguage()) && iFieldType == DateTimeFieldType.era()) {\n                        // hack to support for parsing \"BCE\" and \"CE\" if the language is English\n                        validValues.add(\"BCE\");\n                        validValues.add(\"bce\");\n                        validValues.add(\"CE\");\n                        validValues.add(\"ce\");\n                        maxLength = 3;\n                    }\n                    array = new Object[] {validValues, Integer.valueOf(maxLength)};\n                    innerMap.put(iFieldType, array);\n                } else {\n                    validValues = (Set<String>) array[0];\n                    maxLength = ((Integer) array[1]).intValue();\n                }\n            }\n            // match the longest string first using our knowledge of the max length\n            int limit = Math.min(text.length(), position + maxLength);\n            for (int i = limit; i > position; i--) {\n                String match = text.substring(position, i);\n                if (validValues.contains(match)) {\n                    bucket.saveField(iFieldType, match, locale);\n                    return i;\n                }\n            }\n            return ~position;\n        }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.21505376344086022,
+        "trace_match": 0.0,
+        "complexity": 8.0,
+        "call_count": 40.0,
+        "literal_count": 15.0,
+        "source_tokens": 797.0,
+        "l0_tokens": 76.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.7139272271016311,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 8,
+        "call_count": 40,
+        "literal_count": 15
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.withDefaultYear(int defaultYear)",
+      "source": "public DateTimeFormatter withDefaultYear(int defaultYear) {\n        return new DateTimeFormatter(iPrinter, iParser, iLocale,\n                iOffsetParsed, iChrono, iZone, iPivotYear, defaultYear);\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.withDefaultYear(int defaultYear)\nSIGNATURE: public DateTimeFormatter withDefaultYear(int defaultYear)",
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.withDefaultYear(int defaultYear)\nSIGNATURE: public DateTimeFormatter withDefaultYear(int defaultYear)\nSTRUCTURE (lossy):\nreturn new DateTimeFormatter(iPrinter, iParser, iLocale, iOffsetParsed, iChrono, iZone, iPivotYear, defaultYear);",
+        "public DateTimeFormatter withDefaultYear(int defaultYear) {\n        return new DateTimeFormatter(iPrinter, iParser, iLocale,\n                iOffsetParsed, iChrono, iZone, iPivotYear, defaultYear);\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.625,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 0.0,
+        "literal_count": 0.0,
+        "source_tokens": 51.0,
+        "l0_tokens": 47.0,
+        "l1_tokens": 80.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 0,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.createFormatterForPattern(String pattern)",
+      "source": "private static DateTimeFormatter createFormatterForPattern(String pattern) {\n        if (pattern == null || pattern.length() == 0) {\n            throw new IllegalArgumentException(\"Invalid pattern specification\");\n        }\n        DateTimeFormatter formatter = null;\n        synchronized (cPatternedCache) {\n            formatter = cPatternedCache.get(pattern);\n            if (formatter == null) {\n                DateTimeFormatterBuilder builder = new DateTimeFormatterBuilder();\n                parsePatternTo(builder, pattern);\n                formatter = builder.toFormatter();\n\n                cPatternedCache.put(pattern, formatter);\n            }\n        }\n        return formatter;\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.createFormatterForPattern(String pattern)\nSIGNATURE: private static DateTimeFormatter createFormatterForPattern(String pattern)",
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.createFormatterForPattern(String pattern)\nSIGNATURE: private static DateTimeFormatter createFormatterForPattern(String pattern)\nSTRUCTURE (lossy):\nif (pattern == null || pattern.length() == 0)\nCALL pattern.length()\nthrow new IllegalArgumentException(\"Invalid pattern specification\");\nDateTimeFormatter formatter = null;\nformatter = cPatternedCache.get(pattern)\nCALL cPatternedCache.get(pattern)\nif (formatter == null)\nDateTimeFormatterBuilder builder = new DateTimeFormatterBuilder();\nCALL parsePatternTo(builder, pattern)\nformatter = builder.toFormatter()\nCALL builder.toFormatter()\nCALL cPatternedCache.put(pattern, formatter)\nreturn formatter;",
+        "private static DateTimeFormatter createFormatterForPattern(String pattern) {\n        if (pattern == null || pattern.length() == 0) {\n            throw new IllegalArgumentException(\"Invalid pattern specification\");\n        }\n        DateTimeFormatter formatter = null;\n        synchronized (cPatternedCache) {\n            formatter = cPatternedCache.get(pattern);\n            if (formatter == null) {\n                DateTimeFormatterBuilder builder = new DateTimeFormatterBuilder();\n                parsePatternTo(builder, pattern);\n                formatter = builder.toFormatter();\n\n                cPatternedCache.put(pattern, formatter);\n            }\n        }\n        return formatter;\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.40625,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 5.0,
+        "literal_count": 5.0,
+        "source_tokens": 175.0,
+        "l0_tokens": 52.0,
+        "l1_tokens": 182.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 5,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/YearMonth.java::YearMonth.toString(String pattern, Locale locale)",
+      "source": "public String toString(String pattern, Locale locale) throws IllegalArgumentException {\n        if (pattern == null) {\n            return toString();\n        }\n        return DateTimeFormat.forPattern(pattern).withLocale(locale).print(this);\n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/YearMonth.java::YearMonth.toString(String pattern, Locale locale)\nSIGNATURE: public String toString(String pattern, Locale locale) throws IllegalArgumentException",
+        "METHOD: src/main/java/org/joda/time/YearMonth.java::YearMonth.toString(String pattern, Locale locale)\nSIGNATURE: public String toString(String pattern, Locale locale) throws IllegalArgumentException\nSTRUCTURE (lossy):\nif (pattern == null)\nreturn toString();\nCALL toString()\nreturn DateTimeFormat.forPattern(pattern).withLocale(locale).print(this);\nCALL DateTimeFormat.forPattern(pattern).withLocale(locale).print(this)\nCALL DateTimeFormat.forPattern(pattern).withLocale(locale)\nCALL DateTimeFormat.forPattern(pattern)",
+        "public String toString(String pattern, Locale locale) throws IllegalArgumentException {\n        if (pattern == null) {\n            return toString();\n        }\n        return DateTimeFormat.forPattern(pattern).withLocale(locale).print(this);\n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.625,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 4.0,
+        "literal_count": 1.0,
+        "source_tokens": 62.0,
+        "l0_tokens": 50.0,
+        "l1_tokens": 130.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 4,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/PeriodFormatter.java::PeriodFormatter.withLocale(Locale locale)",
+      "source": "public PeriodFormatter withLocale(Locale locale) {\n        if (locale == getLocale() || (locale != null && locale.equals(getLocale()))) {\n            return this;\n        }\n        return new PeriodFormatter(iPrinter, iParser, locale, iParseType);\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatter.java::PeriodFormatter.withLocale(Locale locale)\nSIGNATURE: public PeriodFormatter withLocale(Locale locale)",
+        "METHOD: src/main/java/org/joda/time/format/PeriodFormatter.java::PeriodFormatter.withLocale(Locale locale)\nSIGNATURE: public PeriodFormatter withLocale(Locale locale)\nSTRUCTURE (lossy):\nif (locale == getLocale() || (locale != null && locale.equals(getLocale())))\nCALL getLocale()\nCALL locale.equals(getLocale())\nreturn this;\nreturn new PeriodFormatter(iPrinter, iParser, locale, iParseType);",
+        "public PeriodFormatter withLocale(Locale locale) {\n        if (locale == getLocale() || (locale != null && locale.equals(getLocale()))) {\n            return this;\n        }\n        return new PeriodFormatter(iPrinter, iParser, locale, iParseType);\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.6363636363636364,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 3.0,
+        "literal_count": 1.0,
+        "source_tokens": 64.0,
+        "l0_tokens": 42.0,
+        "l1_tokens": 98.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 3,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.parsePatternTo(DateTimeFormatterBuilder builder, String pattern)",
+      "source": "private static void parsePatternTo(DateTimeFormatterBuilder builder, String pattern) {\n        int length = pattern.length();\n        int[] indexRef = new int[1];\n\n        for (int i=0; i<length; i++) {\n            indexRef[0] = i;\n            String token = parseToken(pattern, indexRef);\n            i = indexRef[0];\n\n            int tokenLen = token.length();\n            if (tokenLen == 0) {\n                break;\n            }\n            char c = token.charAt(0);\n\n            switch (c) {\n            case 'G': // era designator (text)\n                builder.appendEraText();\n                break;\n            case 'C': // century of era (number)\n                builder.appendCenturyOfEra(tokenLen, tokenLen);\n                break;\n            case 'x': // weekyear (number)\n            case 'y': // year (number)\n            case 'Y': // year of era (number)\n                if (tokenLen == 2) {\n                    boolean lenientParse = true;\n\n                    // Peek ahead to next token.\n                    if (i + 1 < length) {\n                        indexRef[0]++;\n                        if (isNumericToken(parseToken(pattern, indexRef))) {\n                            // If next token is a number, cannot support\n                            // lenient parse, because it will consume digits\n                            // that it should not.\n                            lenientParse = false;\n                        }\n                        indexRef[0]--;\n                    }\n\n                    // Use pivots which are compatible with SimpleDateFormat.\n                    switch (c) {\n                    case 'x':\n                        builder.appendTwoDigitWeekyear\n                            (new DateTime().getWeekyear() - 30, lenientParse);\n                        break;\n                    case 'y':\n                    case 'Y':\n                    default:\n                        builder.appendTwoDigitYear(new DateTime().getYear() - 30, lenientParse);\n                        break;\n                    }\n                } else {\n                    // Try to support long year values.\n                    int maxDigits = 9;\n\n                    // Peek ahead to next token.\n                    if (i + 1 < length) {\n                        indexRef[0]++;\n                        if (isNumericToken(parseToken(pattern, indexRef))) {\n                            // If next token is a number, cannot support long years.\n                            maxDigits = tokenLen;\n                        }\n                        indexRef[0]--;\n                    }\n\n                    switch (c) {\n                    case 'x':\n                        builder.appendWeekyear(tokenLen, maxDigits);\n                        break;\n                    case 'y':\n                        builder.appendYear(tokenLen, maxDigits);\n                        break;\n                    case 'Y':\n                        builder.appendYearOfEra(tokenLen, maxDigits);\n                        break;\n                    }\n                }\n                break;\n            case 'M': // month of year (text and number)\n                if (tokenLen >= 3) {\n                    if (tokenLen >= 4) {\n                        builder.appendMonthOfYearText();\n                    } else {\n                        builder.appendMonthOfYearShortText();\n                    }\n                } else {\n                    builder.appendMonthOfYear(tokenLen);\n                }\n                break;\n            case 'd': // day of month (number)\n                builder.appendDayOfMonth(tokenLen);\n                break;\n            case 'a': // am/pm marker (text)\n                builder.appendHalfdayOfDayText();\n                break;\n            case 'h': // clockhour of halfday (number, 1..12)\n                builder.appendClockhourOfHalfday(tokenLen);\n                break;\n            case 'H': // hour of day (number, 0..23)\n                builder.appendHourOfDay(tokenLen);\n                break;\n            case 'k': // clockhour of day (1..24)\n                builder.appendClockhourOfDay(tokenLen);\n                break;\n            case 'K': // hour of halfday (0..11)\n                builder.appendHourOfHalfday(tokenLen);\n                break;\n            case 'm': // minute of hour (number)\n                builder.appendMinuteOfHour(tokenLen);\n                break;\n            case 's': // second of minute (number)\n                builder.appendSecondOfMinute(tokenLen);\n                break;\n            case 'S': // fraction of second (number)\n                builder.appendFractionOfSecond(tokenLen, tokenLen);\n                break;\n            case 'e': // day of week (number)\n                builder.appendDayOfWeek(tokenLen);\n                break;\n            case 'E': // dayOfWeek (text)\n                if (tokenLen >= 4) {\n                    builder.appendDayOfWeekText();\n                } else {\n                    builder.appendDayOfWeekShortText();\n                }\n                break;\n            case 'D': // day of year (number)\n                builder.appendDayOfYear(tokenLen);\n                break;\n            case 'w': // week of weekyear (number)\n                builder.appendWeekOfWeekyear(tokenLen);\n                break;\n            case 'z': // time zone (text)\n                if (tokenLen >= 4) {\n                    builder.appendTimeZoneName();\n                } else {\n                    builder.appendTimeZoneShortName();\n                }\n                break;\n            case 'Z': // time zone offset\n                if (tokenLen == 1) {\n                    builder.appendTimeZoneOffset(null, \"Z\", false, 2, 2);\n                } else if (tokenLen == 2) {\n                    builder.appendTimeZoneOffset(null, \"Z\", true, 2, 2);\n                } else {\n                    builder.appendTimeZoneId();\n                }\n                break;\n            case '\\'': // literal text\n                String sub = token.substring(1);\n                if (sub.length() == 1) {\n                    builder.appendLiteral(sub.charAt(0));\n                } else {\n                    // Create copy of sub since otherwise the temporary quoted\n                    // string would still be referenced internally.\n                    builder.appendLiteral(new String(sub));\n                }\n                break;\n            default:\n                throw new IllegalArgumentException\n                    (\"Illegal pattern component: \" + token);\n            }\n        }\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.parsePatternTo(DateTimeFormatterBuilder builder, String pattern)\nSIGNATURE: private static void parsePatternTo(DateTimeFormatterBuilder builder, String pattern)",
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.parsePatternTo(DateTimeFormatterBuilder builder, String pattern)\nSIGNATURE: private static void parsePatternTo(DateTimeFormatterBuilder builder, String pattern)\nSTRUCTURE (lossy):\nint length = pattern.length();\nCALL pattern.length()\nint[] indexRef = new int[1];\nfor (int i=0; i<length; i++)\nint i=0;\ni++\nindexRef[0] = i\nString token = parseToken(pattern, indexRef);\nCALL parseToken(pattern, indexRef)\ni = indexRef[0]\nint tokenLen = token.length();\nCALL token.length()\nif (tokenLen == 0)\nchar c = token.charAt(0);\nCALL token.charAt(0)\nswitch (c) { case 'G': // era designator (text) builder.appendEraText(); break; case 'C': // century of era (number) builder.appendCenturyOfEra(tokenLen, tokenLen); break; case 'x': // weekyear (number) case 'y': // year (number) case 'Y': // year of era (number) if (tokenLen == 2) { boolean lenientParse = true; // Peek ahead to next token. if (i + 1 < length) { indexRef[0]++; if (isNumericToken(parseToken(pattern, indexRef))) { // If next token is a number, cannot support // lenient parse, because it will consume digits // that it should not. lenientParse = false; } indexRef[0]--; } // Use pivots which are compatible with SimpleDateFormat. switch (c) { case 'x': builder.appendTwoDigitWeekyear (new DateTime().getWeekyear() - 30, lenientParse); break; case 'y': case 'Y': default: builder.appendTwoDigitYear(new DateTime().getYear() - 30, lenientParse); break; } } else { // Try to support long year values. int maxDigits = 9; // Peek ahead to next token. if (i + 1 < length) { indexRef[0]++; if (isNumericToken(parseToken(pattern, indexRef))) { // If next token is a number, cannot support long years. maxDigits = tokenLen; } indexRef[0]--; } switch (c) { case 'x': builder.appendWeekyear(tokenLen, maxDigits); break; case 'y': builder.appendYear(tokenLen, maxDigits); break; case 'Y': builder.appendYearOfEra(tokenLen, maxDigits); break; } } break; case 'M': // month of year (text and number) if (tokenLen >= 3) { if (tokenLen >= 4) { builder.appendMonthOfYearText(); } else { builder.appendMonthOfYearShortText(); } } else { builder.appendMonthOfYear(tokenLen); } break; cas\n[SKETCH TRUNCATED: unresolved code requires expansion or full verification]",
+        "private static void parsePatternTo(DateTimeFormatterBuilder builder, String pattern) {\n        int length = pattern.length();\n        int[] indexRef = new int[1];\n\n        for (int i=0; i<length; i++) {\n            indexRef[0] = i;\n            String token = parseToken(pattern, indexRef);\n            i = indexRef[0];\n\n            int tokenLen = token.length();\n            if (tokenLen == 0) {\n                break;\n            }\n            char c = token.charAt(0);\n\n            switch (c) {\n            case 'G': // era designator (text)\n                builder.appendEraText();\n                break;\n            case 'C': // century of era (number)\n                builder.appendCenturyOfEra(tokenLen, tokenLen);\n                break;\n            case 'x': // weekyear (number)\n            case 'y': // year (number)\n            case 'Y': // year of era (number)\n                if (tokenLen == 2) {\n                    boolean lenientParse = true;\n\n                    // Peek ahead to next token.\n                    if (i + 1 < length) {\n                        indexRef[0]++;\n                        if (isNumericToken(parseToken(pattern, indexRef))) {\n                            // If next token is a number, cannot support\n                            // lenient parse, because it will consume digits\n                            // that it should not.\n                            lenientParse = false;\n                        }\n                        indexRef[0]--;\n                    }\n\n                    // Use pivots which are compatible with SimpleDateFormat.\n                    switch (c) {\n                    case 'x':\n                        builder.appendTwoDigitWeekyear\n                            (new DateTime().getWeekyear() - 30, lenientParse);\n                        break;\n                    case 'y':\n                    case 'Y':\n                    default:\n                        builder.appendTwoDigitYear(new DateTime().getYear() - 30, lenientParse);\n                        break;\n                    }\n                } else {\n                    // Try to support long year values.\n                    int maxDigits = 9;\n\n                    // Peek ahead to next token.\n                    if (i + 1 < length) {\n                        indexRef[0]++;\n                        if (isNumericToken(parseToken(pattern, indexRef))) {\n                            // If next token is a number, cannot support long years.\n                            maxDigits = tokenLen;\n                        }\n                        indexRef[0]--;\n                    }\n\n                    switch (c) {\n                    case 'x':\n                        builder.appendWeekyear(tokenLen, maxDigits);\n                        break;\n                    case 'y':\n                        builder.appendYear(tokenLen, maxDigits);\n                        break;\n                    case 'Y':\n                        builder.appendYearOfEra(tokenLen, maxDigits);\n                        break;\n                    }\n                }\n                break;\n            case 'M': // month of year (text and number)\n                if (tokenLen >= 3) {\n                    if (tokenLen >= 4) {\n                        builder.appendMonthOfYearText();\n                    } else {\n                        builder.appendMonthOfYearShortText();\n                    }\n                } else {\n                    builder.appendMonthOfYear(tokenLen);\n                }\n                break;\n            case 'd': // day of month (number)\n                builder.appendDayOfMonth(tokenLen);\n                break;\n            case 'a': // am/pm marker (text)\n                builder.appendHalfdayOfDayText();\n                break;\n            case 'h': // clockhour of halfday (number, 1..12)\n                builder.appendClockhourOfHalfday(tokenLen);\n                break;\n            case 'H': // hour of day (number, 0..23)\n                builder.appendHourOfDay(tokenLen);\n                break;\n            case 'k': // clockhour of day (1..24)\n                builder.appendClockhourOfDay(tokenLen);\n                break;\n            case 'K': // hour of halfday (0..11)\n                builder.appendHourOfHalfday(tokenLen);\n                break;\n            case 'm': // minute of hour (number)\n                builder.appendMinuteOfHour(tokenLen);\n                break;\n            case 's': // second of minute (number)\n                builder.appendSecondOfMinute(tokenLen);\n                break;\n            case 'S': // fraction of second (number)\n                builder.appendFractionOfSecond(tokenLen, tokenLen);\n                break;\n            case 'e': // day of week (number)\n                builder.appendDayOfWeek(tokenLen);\n                break;\n            case 'E': // dayOfWeek (text)\n                if (tokenLen >= 4) {\n                    builder.appendDayOfWeekText();\n                } else {\n                    builder.appendDayOfWeekShortText();\n                }\n                break;\n            case 'D': // day of year (number)\n                builder.appendDayOfYear(tokenLen);\n                break;\n            case 'w': // week of weekyear (number)\n                builder.appendWeekOfWeekyear(tokenLen);\n                break;\n            case 'z': // time zone (text)\n                if (tokenLen >= 4) {\n                    builder.appendTimeZoneName();\n                } else {\n                    builder.appendTimeZoneShortName();\n                }\n                break;\n            case 'Z': // time zone offset\n                if (tokenLen == 1) {\n                    builder.appendTimeZoneOffset(null, \"Z\", false, 2, 2);\n                } else if (tokenLen == 2) {\n                    builder.appendTimeZoneOffset(null, \"Z\", true, 2, 2);\n                } else {\n                    builder.appendTimeZoneId();\n                }\n                break;\n            case '\\'': // literal text\n                String sub = token.substring(1);\n                if (sub.length() == 1) {\n                    builder.appendLiteral(sub.charAt(0));\n                } else {\n                    // Create copy of sub since otherwise the temporary quoted\n                    // string would still be referenced internally.\n                    builder.appendLiteral(new String(sub));\n                }\n                break;\n            default:\n                throw new IllegalArgumentException\n                    (\"Illegal pattern component: \" + token);\n            }\n        }\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.19047619047619047,
+        "trace_match": 0.0,
+        "complexity": 18.0,
+        "call_count": 44.0,
+        "literal_count": 62.0,
+        "source_tokens": 1640.0,
+        "l0_tokens": 60.0,
+        "l1_tokens": 569.0,
+        "compression_ratio": 0.3469512195121951,
+        "parse_error": 0.0,
+        "sketch_truncated": 1.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": true,
+        "complexity": 18,
+        "call_count": 44,
+        "literal_count": 62
+      }
+    },
+    {
+      "function_id": "src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.parseDateTime(String text)",
+      "source": "public DateTime parseDateTime(String text) {\n        DateTimeParser parser = requireParser();\n        \n        Chronology chrono = selectChronology(null);\n        DateTimeParserBucket bucket = new DateTimeParserBucket(0, chrono, iLocale, iPivotYear, iDefaultYear);\n        int newPos = parser.parseInto(bucket, text, 0);\n        if (newPos >= 0) {\n            if (newPos >= text.length()) {\n                long millis = bucket.computeMillis(true, text);\n                if (iOffsetParsed && bucket.getOffsetInteger() != null) {\n                    int parsedOffset = bucket.getOffsetInteger();\n                    DateTimeZone parsedZone = DateTimeZone.forOffsetMillis(parsedOffset);\n                    chrono = chrono.withZone(parsedZone);\n                } else if (bucket.getZone() != null) {\n                    chrono = chrono.withZone(bucket.getZone());\n                }\n                DateTime dt = new DateTime(millis, chrono);\n                if (iZone != null) {\n                    dt = dt.withZone(iZone);\n                }\n                return dt;\n            }\n        } else {\n            newPos = ~newPos;\n        }\n        throw new IllegalArgumentException(FormatUtils.createErrorMessage(text, newPos));\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.parseDateTime(String text)\nSIGNATURE: public DateTime parseDateTime(String text)",
+        "METHOD: src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.parseDateTime(String text)\nSIGNATURE: public DateTime parseDateTime(String text)\nSTRUCTURE (lossy):\nDateTimeParser parser = requireParser();\nCALL requireParser()\nChronology chrono = selectChronology(null);\nCALL selectChronology(null)\nDateTimeParserBucket bucket = new DateTimeParserBucket(0, chrono, iLocale, iPivotYear, iDefaultYear);\nint newPos = parser.parseInto(bucket, text, 0);\nCALL parser.parseInto(bucket, text, 0)\nif (newPos >= 0)\nif (newPos >= text.length())\nCALL text.length()\nlong millis = bucket.computeMillis(true, text);\nCALL bucket.computeMillis(true, text)\nif (iOffsetParsed && bucket.getOffsetInteger() != null)\nCALL bucket.getOffsetInteger()\nint parsedOffset = bucket.getOffsetInteger();\nDateTimeZone parsedZone = DateTimeZone.forOffsetMillis(parsedOffset);\nCALL DateTimeZone.forOffsetMillis(parsedOffset)\nchrono = chrono.withZone(parsedZone)\nCALL chrono.withZone(parsedZone)\nif (bucket.getZone() != null)\nCALL bucket.getZone()\nchrono = chrono.withZone(bucket.getZone())\nCALL chrono.withZone(bucket.getZone())\nDateTime dt = new DateTime(millis, chrono);\nif (iZone != null)\ndt = dt.withZone(iZone)\nCALL dt.withZone(iZone)\nreturn dt;\nnewPos = ~newPos\nthrow new IllegalArgumentException(FormatUtils.createErrorMessage(text, newPos));\nCALL FormatUtils.createErrorMessage(text, newPos)",
+        "public DateTime parseDateTime(String text) {\n        DateTimeParser parser = requireParser();\n        \n        Chronology chrono = selectChronology(null);\n        DateTimeParserBucket bucket = new DateTimeParserBucket(0, chrono, iLocale, iPivotYear, iDefaultYear);\n        int newPos = parser.parseInto(bucket, text, 0);\n        if (newPos >= 0) {\n            if (newPos >= text.length()) {\n                long millis = bucket.computeMillis(true, text);\n                if (iOffsetParsed && bucket.getOffsetInteger() != null) {\n                    int parsedOffset = bucket.getOffsetInteger();\n                    DateTimeZone parsedZone = DateTimeZone.forOffsetMillis(parsedOffset);\n                    chrono = chrono.withZone(parsedZone);\n                } else if (bucket.getZone() != null) {\n                    chrono = chrono.withZone(bucket.getZone());\n                }\n                DateTime dt = new DateTime(millis, chrono);\n                if (iZone != null) {\n                    dt = dt.withZone(iZone);\n                }\n                return dt;\n            }\n        } else {\n            newPos = ~newPos;\n        }\n        throw new IllegalArgumentException(FormatUtils.createErrorMessage(text, newPos));\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 14.0,
+        "literal_count": 7.0,
+        "source_tokens": 309.0,
+        "l0_tokens": 42.0,
+        "l1_tokens": 346.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 14,
+        "literal_count": 7
+      }
+    }
+  ],
+  "rank_metadata": {
+    "src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.patternForStyle(String style, Locale locale)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java::DateTimeFormatterBuilder.FixedNumber.parseInto(DateTimeParserBucket bucket, String text, int position)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/DateTimeUtils.java::DateTimeUtils.getDateFormatSymbols(Locale locale)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.parseToken(String pattern, int[] indexRef)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/PeriodFormatter.java::PeriodFormatter.parseMutablePeriod(String text)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/ISODateTimeFormat.java::ISODateTimeFormat.dateOptionalTimeParser()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.parseMillis(String text)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.StyleFormatter.getPattern(Locale locale)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java::PeriodFormatterBuilder.SimpleAffix.scan(String periodStr, final int position)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.parseMutableDateTime(String text)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/ISODateTimeFormat.java::ISODateTimeFormat.dateElementParser()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.withLocale(Locale locale)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/MutableDateTime.java::MutableDateTime.clone()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.StyleFormatter.getFormatter(Locale locale)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/MutableInterval.java::MutableInterval.clone()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/MutablePeriod.java::MutablePeriod.clone()": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/base/BasePartial.java::BasePartial.toString(String pattern, Locale locale)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java::DateTimeFormatterBuilder.TextField.parseInto(DateTimeParserBucket bucket, String text, int position)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.withDefaultYear(int defaultYear)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.createFormatterForPattern(String pattern)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/YearMonth.java::YearMonth.toString(String pattern, Locale locale)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/PeriodFormatter.java::PeriodFormatter.withLocale(Locale locale)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/DateTimeFormat.java::DateTimeFormat.parsePatternTo(DateTimeFormatterBuilder builder, String pattern)": {
+      "ranks": {}
+    },
+    "src/main/java/org/joda/time/format/DateTimeFormatter.java::DateTimeFormatter.parseDateTime(String text)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 4081,
+    "retrieved_unique_entities": 24,
+    "deduplication": "highest_bm25_or_lexical_score_per_entity_id",
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "5cf13ee30d0c1753aa6eea1b9652e0b7e7fcdc46b6d0cc695feca3baae4ad385",
+  "evidence_sha256": "92973c41b7388ecae28e52edd21ff51a7a8bab21481518528766b9f151978c31"
+}

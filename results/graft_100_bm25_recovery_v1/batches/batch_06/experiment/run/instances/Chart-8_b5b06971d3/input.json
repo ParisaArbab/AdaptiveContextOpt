@@ -1,0 +1,1320 @@
+{
+  "online": {
+    "dataset": "defects4j",
+    "version": "local-export",
+    "instance_id": "Chart-8",
+    "repository": "Chart",
+    "language": "java",
+    "revision": "1de2d1f6aac1d2cf05b2d022952ada15ade716a3",
+    "checkout": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_06/prepared/checkouts/Chart-8",
+    "issue": "",
+    "evidence": {
+      "kind": "observed_failure",
+      "text": "OFFICIAL DEFECTS4J BUG: Chart-8\nEXECUTED BUGGY TEST: org.jfree.data.time.junit.WeekTests::testConstructor\nTEST SOURCE: tests/org/jfree/data/time/junit/WeekTests.java\nTEST SOURCE SHA256: 7df46ae6bffe5a18caa6660d48b0b161aea2e809c96dc7817cab9c4bcc1a5272\nCOMPLETE EXECUTED TEST METHOD (verbatim):\npublic void testConstructor() {\n        Locale savedLocale = Locale.getDefault();\n        TimeZone savedZone = TimeZone.getDefault();\n        Locale.setDefault(new Locale(\"da\", \"DK\"));\n        TimeZone.setDefault(TimeZone.getTimeZone(\"Europe/Copenhagen\"));\n        GregorianCalendar cal = (GregorianCalendar) Calendar.getInstance(\n                TimeZone.getDefault(), Locale.getDefault());\n\n        // first day of week is monday\n        assertEquals(Calendar.MONDAY, cal.getFirstDayOfWeek());\n        cal.set(2007, Calendar.AUGUST, 26, 1, 0, 0);\n        cal.set(Calendar.MILLISECOND, 0);\n        Date t = cal.getTime();\n        Week w = new Week(t, TimeZone.getTimeZone(\"Europe/Copenhagen\"));\n        assertEquals(34, w.getWeek());\n\n        Locale.setDefault(Locale.US);\n        TimeZone.setDefault(TimeZone.getTimeZone(\"US/Detroit\"));\n        cal = (GregorianCalendar) Calendar.getInstance(TimeZone.getDefault());\n        // first day of week is Sunday\n        assertEquals(Calendar.SUNDAY, cal.getFirstDayOfWeek());\n        cal.set(2007, Calendar.AUGUST, 26, 1, 0, 0);\n        cal.set(Calendar.MILLISECOND, 0);\n\n        t = cal.getTime();\n        w = new Week(t, TimeZone.getTimeZone(\"Europe/Copenhagen\"));\n        assertEquals(35, w.getWeek());\n        w = new Week(t, TimeZone.getTimeZone(\"Europe/Copenhagen\"),\n                new Locale(\"da\", \"DK\"));\n        assertEquals(34, w.getWeek());\n\n        Locale.setDefault(savedLocale);\n        TimeZone.setDefault(savedZone);\n    }\nOBSERVED DEFECTS4J FAILING_TESTS OUTPUT (verbatim):\n--- org.jfree.data.time.junit.WeekTests::testConstructor\njunit.framework.AssertionFailedError: expected:<35> but was:<34>\n\tat junit.framework.Assert.fail(Assert.java:57)\n\tat junit.framework.Assert.failNotEquals(Assert.java:329)\n\tat junit.framework.Assert.assertEquals(Assert.java:78)\n\tat junit.framework.Assert.assertEquals(Assert.java:234)\n\tat junit.framework.Assert.assertEquals(Assert.java:241)\n\tat junit.framework.TestCase.assertEquals(TestCase.java:409)\n\tat org.jfree.data.time.junit.WeekTests.testConstructor(WeekTests.java:530)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat junit.framework.TestCase.runTest(TestCase.java:176)\n\tat junit.framework.TestCase.runBare(TestCase.java:141)\n\tat junit.framework.TestResult$1.protect(TestResult.java:122)\n\tat junit.framework.TestResult.runProtected(TestResult.java:142)\n\tat junit.framework.TestResult.run(TestResult.java:125)\n\tat junit.framework.TestCase.run(TestCase.java:129)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1980)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:830)\n\tat org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2287)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)\n\tat jdk.internal.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\tat org.apache.tools.ant.Task.perform(Task.java:348)\n\tat org.apache.tools.ant.Target.execute(Target.java:392)\n\tat org.apache.tools.ant.Target.performTasks(Target.java:413)\n\tat org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)\n\tat org.apache.tools.ant.Project.executeTarget(Project.java:1368)\n\tat org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)\n\tat org.apache.tools.ant.Project.executeTargets(Project.java:1251)\n\tat org.apache.tools.ant.Main.runBuild(Main.java:811)\n\tat org.apache.tools.ant.Main.startAnt(Main.java:217)\n\tat org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)\n\tat org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)\n",
+      "source": "/home/parbab/RAVE_FL_Research/GRAFT_FL_New_Run/data/graft_100_cohort_20261115/batches/batch_06/prepared/evidence/Chart-8.txt",
+      "sha256": "daaeafaea481f8e8c35d498d962c0decaaa64cd05cf26339d7a94bf53eccfe5d"
+    },
+    "candidate_file": "",
+    "flexfl_repo": "",
+    "source_root": "source",
+    "provenance": {
+      "schema_source": "official local Defects4J metadata",
+      "evidence_is_observed": true,
+      "independent_bug_id": "Chart-8",
+      "skip_reason": ""
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "source/org/jfree/chart/axis/SegmentedTimeline.java::SegmentedTimeline.firstMondayAfter1900()",
+      "path": "source/org/jfree/chart/axis/SegmentedTimeline.java",
+      "start_line": 353,
+      "end_line": 368,
+      "source": "public static long firstMondayAfter1900() {\n        int offset = TimeZone.getDefault().getRawOffset();\n        TimeZone z = new SimpleTimeZone(offset, \"UTC-\" + offset);        \n        \n        // calculate midnight of first monday after 1/1/1900 relative to \n        // current locale\n        Calendar cal = new GregorianCalendar(z);\n        cal.set(1900, 0, 1, 0, 0, 0);\n        cal.set(Calendar.MILLISECOND, 0);\n        while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {\n            cal.add(Calendar.DATE, 1);\n        }\n        //return cal.getTimeInMillis();\n        // preceding code won't work with JDK 1.3\n        return cal.getTime().getTime();  \n    }",
+      "prior": 1.0,
+      "ranks": {},
+      "scores": {
+        "bm25": 87.40320175490447
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/Week.java::Week.Week(Date time, TimeZone zone, Locale locale)",
+      "path": "source/org/jfree/data/time/Week.java",
+      "start_line": 188,
+      "end_line": 222,
+      "source": "public Week(Date time, TimeZone zone, Locale locale) {\n        if (time == null) {\n            throw new IllegalArgumentException(\"Null 'time' argument.\");\n        }\n        if (zone == null) {\n            throw new IllegalArgumentException(\"Null 'zone' argument.\");\n        }\n        if (locale == null) {\n            throw new IllegalArgumentException(\"Null 'locale' argument.\");\n        }\n        Calendar calendar = Calendar.getInstance(zone, locale);\n        calendar.setTime(time);\n\n        // sometimes the last few days of the year are considered to fall in\n        // the *first* week of the following year.  Refer to the Javadocs for\n        // GregorianCalendar.\n        int tempWeek = calendar.get(Calendar.WEEK_OF_YEAR);\n        if (tempWeek == 1\n                && calendar.get(Calendar.MONTH) == Calendar.DECEMBER) {\n            this.week = 1;\n            this.year = (short) (calendar.get(Calendar.YEAR) + 1);\n        }\n        else {\n            this.week = (byte) Math.min(tempWeek, LAST_WEEK_IN_YEAR);\n            int yyyy = calendar.get(Calendar.YEAR);\n            // alternatively, sometimes the first few days of the year are\n            // considered to fall in the *last* week of the previous year...\n            if (calendar.get(Calendar.MONTH) == Calendar.JANUARY\n                    && this.week >= 52) {\n                yyyy--;\n            }\n            this.year = (short) yyyy;\n        }\n        peg(calendar);\n    }",
+      "prior": 0.9583333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 63.08252053371003
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/Week.java::Week.getFirstMillisecond(Calendar calendar)",
+      "path": "source/org/jfree/data/time/Week.java",
+      "start_line": 379,
+      "end_line": 391,
+      "source": "public long getFirstMillisecond(Calendar calendar) {\n        Calendar c = (Calendar) calendar.clone();\n        c.clear();\n        c.set(Calendar.YEAR, this.year);\n        c.set(Calendar.WEEK_OF_YEAR, this.week);\n        c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());\n        c.set(Calendar.HOUR, 0);\n        c.set(Calendar.MINUTE, 0);\n        c.set(Calendar.SECOND, 0);\n        c.set(Calendar.MILLISECOND, 0);\n        //return c.getTimeInMillis();  // this won't work for JDK 1.3\n        return c.getTime().getTime();\n    }",
+      "prior": 0.9166666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 56.92116660612438
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/axis/DateTickUnit.java::DateTickUnit.addToDate(Date base, TimeZone zone)",
+      "path": "source/org/jfree/chart/axis/DateTickUnit.java",
+      "start_line": 251,
+      "end_line": 260,
+      "source": "public Date addToDate(Date base, TimeZone zone) {\n        // as far as I know, the Locale for the calendar only affects week\n    \t// number calculations, and since DateTickUnit doesn't do week\n    \t// arithmetic, the default locale (whatever it is) should be fine\n    \t// here...\n        Calendar calendar = Calendar.getInstance(zone);\n        calendar.setTime(base);\n        calendar.add(getCalendarField(this.unit), this.count);\n        return calendar.getTime();\n    }",
+      "prior": 0.875,
+      "ranks": {},
+      "scores": {
+        "bm25": 54.28054833692303
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/axis/DateTickUnit.java::DateTickUnit.rollDate(Date base, TimeZone zone)",
+      "path": "source/org/jfree/chart/axis/DateTickUnit.java",
+      "start_line": 287,
+      "end_line": 296,
+      "source": "public Date rollDate(Date base, TimeZone zone) {\n        // as far as I know, the Locale for the calendar only affects week\n    \t// number calculations, and since DateTickUnit doesn't do week\n    \t// arithmetic, the default locale (whatever it is) should be fine\n    \t// here...\n        Calendar calendar = Calendar.getInstance(zone);\n        calendar.setTime(base);\n        calendar.add(getCalendarField(this.rollUnit), this.rollCount);\n        return calendar.getTime();\n    }",
+      "prior": 0.8333333333333334,
+      "ranks": {},
+      "scores": {
+        "bm25": 54.28054833692303
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/Week.java::Week.getLastMillisecond(Calendar calendar)",
+      "path": "source/org/jfree/data/time/Week.java",
+      "start_line": 404,
+      "end_line": 416,
+      "source": "public long getLastMillisecond(Calendar calendar) {\n        Calendar c = (Calendar) calendar.clone();\n        c.clear();\n        c.set(Calendar.YEAR, this.year);\n        c.set(Calendar.WEEK_OF_YEAR, this.week + 1);\n        c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());\n        c.set(Calendar.HOUR, 0);\n        c.set(Calendar.MINUTE, 0);\n        c.set(Calendar.SECOND, 0);\n        c.set(Calendar.MILLISECOND, 0);\n        //return c.getTimeInMillis();  // this won't work for JDK 1.3\n        return c.getTime().getTime() - 1;\n    }",
+      "prior": 0.7916666666666666,
+      "ranks": {},
+      "scores": {
+        "bm25": 54.215215073574136
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/Day.java::Day.getFirstMillisecond(Calendar calendar)",
+      "path": "source/org/jfree/data/time/Day.java",
+      "start_line": 316,
+      "end_line": 325,
+      "source": "public long getFirstMillisecond(Calendar calendar) {\n        int year = this.serialDate.getYYYY();\n        int month = this.serialDate.getMonth();\n        int day = this.serialDate.getDayOfMonth();\n        calendar.clear();\n        calendar.set(year, month - 1, day, 0, 0, 0);\n        calendar.set(Calendar.MILLISECOND, 0);\n        //return calendar.getTimeInMillis();  // this won't work for JDK 1.3\n        return calendar.getTime().getTime();\n    }",
+      "prior": 0.75,
+      "ranks": {},
+      "scores": {
+        "bm25": 54.060362711005425
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/RegularTimePeriod.java::RegularTimePeriod.createInstance(Class c, Date millisecond,\n                                                   TimeZone zone)",
+      "path": "source/org/jfree/data/time/RegularTimePeriod.java",
+      "start_line": 83,
+      "end_line": 96,
+      "source": "public static RegularTimePeriod createInstance(Class c, Date millisecond,\n                                                   TimeZone zone) {\n        RegularTimePeriod result = null;\n        try {\n            Constructor constructor = c.getDeclaredConstructor(\n                    new Class[] {Date.class, TimeZone.class});\n            result = (RegularTimePeriod) constructor.newInstance(\n                    new Object[] {millisecond, zone});\n        }\n        catch (Exception e) {\n            // do nothing, so null is returned\n        }\n        return result;\n    }",
+      "prior": 0.7083333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 53.47571045094241
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/axis/QuarterDateFormat.java::QuarterDateFormat.QuarterDateFormat(TimeZone zone, String[] quarterSymbols,\n            boolean quarterFirst)",
+      "path": "source/org/jfree/chart/axis/QuarterDateFormat.java",
+      "start_line": 127,
+      "end_line": 141,
+      "source": "public QuarterDateFormat(TimeZone zone, String[] quarterSymbols,\n            boolean quarterFirst) {\n        if (zone == null) {\n            throw new IllegalArgumentException(\"Null 'zone' argument.\");   \n        }\n        this.calendar = new GregorianCalendar(zone);\n        this.quarters = quarterSymbols;\n        this.quarterFirst = quarterFirst;\n        \n        // the following is never used, but it seems that DateFormat requires\n        // it to be non-null.  It isn't well covered in the spec, refer to \n        // bug parade 5061189 for more info.\n        this.numberFormat = NumberFormat.getNumberInstance();\n        \n    }",
+      "prior": 0.6666666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 52.05323916215314
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/Millisecond.java::Millisecond.Millisecond(Date time, TimeZone zone)",
+      "path": "source/org/jfree/data/time/Millisecond.java",
+      "start_line": 152,
+      "end_line": 161,
+      "source": "public Millisecond(Date time, TimeZone zone) {\n        Calendar calendar = Calendar.getInstance(zone);\n        calendar.setTime(time);\n        this.millisecond = calendar.get(Calendar.MILLISECOND);\n        this.second = (byte) calendar.get(Calendar.SECOND);\n        this.minute = (byte) calendar.get(Calendar.MINUTE);\n        this.hour = (byte) calendar.get(Calendar.HOUR_OF_DAY);\n        this.day = new Day(time, zone);\n        peg(calendar);\n    }",
+      "prior": 0.625,
+      "ranks": {},
+      "scores": {
+        "bm25": 50.41919387564642
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/Millisecond.java::Millisecond.getFirstMillisecond(Calendar calendar)",
+      "path": "source/org/jfree/data/time/Millisecond.java",
+      "start_line": 392,
+      "end_line": 401,
+      "source": "public long getFirstMillisecond(Calendar calendar) {\n        int year = this.day.getYear();\n        int month = this.day.getMonth() - 1;\n        int day = this.day.getDayOfMonth();\n        calendar.clear();\n        calendar.set(year, month, day, this.hour, this.minute, this.second);\n        calendar.set(Calendar.MILLISECOND, this.millisecond);\n        //return calendar.getTimeInMillis();  // this won't work for JDK 1.3\n        return calendar.getTime().getTime();\n    }",
+      "prior": 0.5833333333333333,
+      "ranks": {},
+      "scores": {
+        "bm25": 50.087086152386725
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/Minute.java::Minute.getFirstMillisecond(Calendar calendar)",
+      "path": "source/org/jfree/data/time/Minute.java",
+      "start_line": 321,
+      "end_line": 334,
+      "source": "public long getFirstMillisecond(Calendar calendar) {\n\n        int year = this.day.getYear();\n        int month = this.day.getMonth() - 1;\n        int day = this.day.getDayOfMonth();\n\n        calendar.clear();\n        calendar.set(year, month, day, this.hour, this.minute, 0);\n        calendar.set(Calendar.MILLISECOND, 0);\n\n        //return calendar.getTimeInMillis();  // this won't work for JDK 1.3\n        return calendar.getTime().getTime();\n\n    }",
+      "prior": 0.5416666666666667,
+      "ranks": {},
+      "scores": {
+        "bm25": 49.43643721296805
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/Hour.java::Hour.getFirstMillisecond(Calendar calendar)",
+      "path": "source/org/jfree/data/time/Hour.java",
+      "start_line": 315,
+      "end_line": 323,
+      "source": "public long getFirstMillisecond(Calendar calendar) {\n        int year = this.day.getYear();\n        int month = this.day.getMonth() - 1;\n        int dom = this.day.getDayOfMonth();\n        calendar.set(year, month, dom, this.hour, 0, 0);\n        calendar.set(Calendar.MILLISECOND, 0);\n        //return calendar.getTimeInMillis();  // this won't work for JDK 1.3\n        return calendar.getTime().getTime();\n    }",
+      "prior": 0.5,
+      "ranks": {},
+      "scores": {
+        "bm25": 49.298541514249834
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/Second.java::Second.getFirstMillisecond(Calendar calendar)",
+      "path": "source/org/jfree/data/time/Second.java",
+      "start_line": 284,
+      "end_line": 293,
+      "source": "public long getFirstMillisecond(Calendar calendar) {\n        int year = this.day.getYear();\n        int month = this.day.getMonth() - 1;\n        int day = this.day.getDayOfMonth();\n        calendar.clear();\n        calendar.set(year, month, day, this.hour, this.minute, this.second);\n        calendar.set(Calendar.MILLISECOND, 0);\n        //return calendar.getTimeInMillis();  // this won't work for JDK 1.3\n        return calendar.getTime().getTime();\n    }",
+      "prior": 0.45833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 49.028702043525755
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/SerialDate.java::SerialDate.getFollowingDayOfWeek(final int targetWeekday,\n                                                   final SerialDate base)",
+      "path": "source/org/jfree/data/time/SerialDate.java",
+      "start_line": 667,
+      "end_line": 688,
+      "source": "public static SerialDate getFollowingDayOfWeek(final int targetWeekday,\n                                                   final SerialDate base) {\n\n        // check arguments...\n        if (!SerialDate.isValidWeekdayCode(targetWeekday)) {\n            throw new IllegalArgumentException(\n                \"Invalid day-of-the-week code.\"\n            );\n        }\n\n        // find the date...\n        final int adjust;\n        final int baseDOW = base.getDayOfWeek();\n        if (baseDOW > targetWeekday) {\n            adjust = 7 + Math.min(0, targetWeekday - baseDOW);\n        }\n        else {\n            adjust = Math.max(0, targetWeekday - baseDOW);\n        }\n\n        return SerialDate.addDays(adjust, base);\n    }",
+      "prior": 0.41666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 49.01430917019037
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/SerialDate.java::SerialDate.getPreviousDayOfWeek(final int targetWeekday,\n                                                  final SerialDate base)",
+      "path": "source/org/jfree/data/time/SerialDate.java",
+      "start_line": 633,
+      "end_line": 655,
+      "source": "public static SerialDate getPreviousDayOfWeek(final int targetWeekday,\n                                                  final SerialDate base) {\n\n        // check arguments...\n        if (!SerialDate.isValidWeekdayCode(targetWeekday)) {\n            throw new IllegalArgumentException(\n                \"Invalid day-of-the-week code.\"\n            );\n        }\n\n        // find the date...\n        final int adjust;\n        final int baseDOW = base.getDayOfWeek();\n        if (baseDOW > targetWeekday) {\n            adjust = Math.min(0, targetWeekday - baseDOW);\n        }\n        else {\n            adjust = -7 + Math.max(0, targetWeekday - baseDOW);\n        }\n\n        return SerialDate.addDays(adjust, base);\n\n    }",
+      "prior": 0.375,
+      "ranks": {},
+      "scores": {
+        "bm25": 49.01430917019037
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/Day.java::Day.getLastMillisecond(Calendar calendar)",
+      "path": "source/org/jfree/data/time/Day.java",
+      "start_line": 338,
+      "end_line": 347,
+      "source": "public long getLastMillisecond(Calendar calendar) {\n        int year = this.serialDate.getYYYY();\n        int month = this.serialDate.getMonth();\n        int day = this.serialDate.getDayOfMonth();\n        calendar.clear();\n        calendar.set(year, month - 1, day, 23, 59, 59);\n        calendar.set(Calendar.MILLISECOND, 999);\n        //return calendar.getTimeInMillis();  // this won't work for JDK 1.3\n        return calendar.getTime().getTime();\n    }",
+      "prior": 0.33333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 48.68508488132243
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/util/RelativeDateFormat.java::RelativeDateFormat.main(String[] args)",
+      "path": "source/org/jfree/chart/util/RelativeDateFormat.java",
+      "start_line": 529,
+      "end_line": 557,
+      "source": "public static void main(String[] args) {\n        GregorianCalendar c0 = new GregorianCalendar(2006, 10, 1, 0, 0, 0);\n        GregorianCalendar c1 = new GregorianCalendar(2006, 10, 1, 11, 37, 43);\n        c1.set(Calendar.MILLISECOND, 123);\n        \n        System.out.println(\"Default: \");\n        RelativeDateFormat rdf = new RelativeDateFormat(c0.getTimeInMillis());\n        System.out.println(rdf.format(c1.getTime()));\n        System.out.println();\n        \n        System.out.println(\"Hide milliseconds: \");\n        rdf.setSecondFormatter(new DecimalFormat(\"0\"));\n        System.out.println(rdf.format(c1.getTime()));        \n        System.out.println();\n\n        System.out.println(\"Show zero day output: \");\n        rdf.setShowZeroDays(true);\n        System.out.println(rdf.format(c1.getTime()));\n        System.out.println();\n        \n        System.out.println(\"Alternative suffixes: \");\n        rdf.setShowZeroDays(false);\n        rdf.setDaySuffix(\":\");\n        rdf.setHourSuffix(\":\");\n        rdf.setMinuteSuffix(\":\");\n        rdf.setSecondSuffix(\"\");\n        System.out.println(rdf.format(c1.getTime()));\n        System.out.println();\n    }",
+      "prior": 0.29166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 48.48331697438741
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/SerialDate.java::SerialDate.getNearestDayOfWeek(final int targetDOW,\n                                                 final SerialDate base)",
+      "path": "source/org/jfree/data/time/SerialDate.java",
+      "start_line": 700,
+      "end_line": 721,
+      "source": "public static SerialDate getNearestDayOfWeek(final int targetDOW,\n                                                 final SerialDate base) {\n\n        // check arguments...\n        if (!SerialDate.isValidWeekdayCode(targetDOW)) {\n            throw new IllegalArgumentException(\n                \"Invalid day-of-the-week code.\"\n            );\n        }\n\n        // find the date...\n        final int baseDOW = base.getDayOfWeek();\n        int adjust = -Math.abs(targetDOW - baseDOW);\n        if (adjust >= 4) {\n            adjust = 7 - adjust;\n        }\n        if (adjust <= -4) {\n            adjust = 7 + adjust;\n        }\n        return SerialDate.addDays(adjust, base);\n\n    }",
+      "prior": 0.25,
+      "ranks": {},
+      "scores": {
+        "bm25": 48.35150619040397
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/axis/MonthDateFormat.java::MonthDateFormat.MonthDateFormat(TimeZone zone, Locale locale, int chars, \n                           boolean[] showYear, DateFormat yearFormatter)",
+      "path": "source/org/jfree/chart/axis/MonthDateFormat.java",
+      "start_line": 163,
+      "end_line": 188,
+      "source": "public MonthDateFormat(TimeZone zone, Locale locale, int chars, \n                           boolean[] showYear, DateFormat yearFormatter) {\n        if (locale == null) {\n            throw new IllegalArgumentException(\"Null 'locale' argument.\");\n        }\n        DateFormatSymbols dfs = new DateFormatSymbols(locale);\n        String[] monthsFromLocale = dfs.getMonths();\n        this.months = new String[12];\n        for (int i = 0; i < 12; i++) {\n            if (chars > 0) {\n                this.months[i] = monthsFromLocale[i].substring(0, \n                        Math.min(chars, monthsFromLocale[i].length()));\n            }\n            else {\n                this.months[i] = monthsFromLocale[i];\n            }\n        }\n        this.calendar = new GregorianCalendar(zone);\n        this.showYear = showYear;\n        this.yearFormatter = yearFormatter; \n        \n        // the following is never used, but it seems that DateFormat requires\n        // it to be non-null.  It isn't well covered in the spec, refer to \n        // bug parade 5061189 for more info.\n        this.numberFormat = NumberFormat.getNumberInstance();\n    }",
+      "prior": 0.20833333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 48.121436623202335
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/axis/PeriodAxisLabelInfo.java::PeriodAxisLabelInfo.createInstance(Date millisecond, TimeZone zone)",
+      "path": "source/org/jfree/chart/axis/PeriodAxisLabelInfo.java",
+      "start_line": 270,
+      "end_line": 284,
+      "source": "public RegularTimePeriod createInstance(Date millisecond, TimeZone zone) {\n        RegularTimePeriod result = null;\n        try {\n            Constructor c = this.periodClass.getDeclaredConstructor(\n                new Class[] {Date.class, TimeZone.class}\n            );\n            result = (RegularTimePeriod) c.newInstance(\n                new Object[] {millisecond, zone}\n            );   \n        }\n        catch (Exception e) {\n            // do nothing            \n        }\n        return result;  \n    }",
+      "prior": 0.16666666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 47.90817975438128
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/chart/axis/PeriodAxis.java::PeriodAxis.createInstance(Class periodClass, \n                                             Date millisecond, TimeZone zone)",
+      "path": "source/org/jfree/chart/axis/PeriodAxis.java",
+      "start_line": 1139,
+      "end_line": 1152,
+      "source": "private RegularTimePeriod createInstance(Class periodClass, \n                                             Date millisecond, TimeZone zone) {\n        RegularTimePeriod result = null;\n        try {\n            Constructor c = periodClass.getDeclaredConstructor(new Class[] {\n                    Date.class, TimeZone.class});\n            result = (RegularTimePeriod) c.newInstance(new Object[] {\n                    millisecond, zone});   \n        }\n        catch (Exception e) {\n            // do nothing            \n        }\n        return result;\n    }",
+      "prior": 0.125,
+      "ranks": {},
+      "scores": {
+        "bm25": 47.6160159247955
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/Day.java::Day.Day(Date time, TimeZone zone)",
+      "path": "source/org/jfree/data/time/Day.java",
+      "start_line": 157,
+      "end_line": 171,
+      "source": "public Day(Date time, TimeZone zone) {\n        if (time == null) {\n            throw new IllegalArgumentException(\"Null 'time' argument.\");\n        }\n        if (zone == null) {\n            throw new IllegalArgumentException(\"Null 'zone' argument.\");\n        }\n        Calendar calendar = Calendar.getInstance(zone);\n        calendar.setTime(time);\n        int d = calendar.get(Calendar.DAY_OF_MONTH);\n        int m = calendar.get(Calendar.MONTH) + 1;\n        int y = calendar.get(Calendar.YEAR);\n        this.serialDate = SerialDate.createInstance(d, m, y);\n        peg(calendar);\n    }",
+      "prior": 0.08333333333333337,
+      "ranks": {},
+      "scores": {
+        "bm25": 46.27564804260798
+      },
+      "kind": "method"
+    },
+    {
+      "entity_id": "source/org/jfree/data/time/SerialDate.java::SerialDate.getFollowingDayOfWeek(final int targetDOW)",
+      "path": "source/org/jfree/data/time/SerialDate.java",
+      "start_line": 1017,
+      "end_line": 1019,
+      "source": "public SerialDate getFollowingDayOfWeek(final int targetDOW) {\n        return getFollowingDayOfWeek(targetDOW, this);\n    }",
+      "prior": 0.04166666666666663,
+      "ranks": {},
+      "scores": {
+        "bm25": 45.2387119404709
+      },
+      "kind": "method"
+    }
+  ],
+  "candidates": [
+    {
+      "function_id": "source/org/jfree/chart/axis/SegmentedTimeline.java::SegmentedTimeline.firstMondayAfter1900()",
+      "source": "public static long firstMondayAfter1900() {\n        int offset = TimeZone.getDefault().getRawOffset();\n        TimeZone z = new SimpleTimeZone(offset, \"UTC-\" + offset);        \n        \n        // calculate midnight of first monday after 1/1/1900 relative to \n        // current locale\n        Calendar cal = new GregorianCalendar(z);\n        cal.set(1900, 0, 1, 0, 0, 0);\n        cal.set(Calendar.MILLISECOND, 0);\n        while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {\n            cal.add(Calendar.DATE, 1);\n        }\n        //return cal.getTimeInMillis();\n        // preceding code won't work with JDK 1.3\n        return cal.getTime().getTime();  \n    }",
+      "prior": 1.0,
+      "rank": 1,
+      "levels": [
+        "METHOD: source/org/jfree/chart/axis/SegmentedTimeline.java::SegmentedTimeline.firstMondayAfter1900()\nSIGNATURE: public static long firstMondayAfter1900()",
+        "METHOD: source/org/jfree/chart/axis/SegmentedTimeline.java::SegmentedTimeline.firstMondayAfter1900()\nSIGNATURE: public static long firstMondayAfter1900()\nSTRUCTURE (lossy):\nint offset = TimeZone.getDefault().getRawOffset();\nCALL TimeZone.getDefault().getRawOffset()\nCALL TimeZone.getDefault()\nTimeZone z = new SimpleTimeZone(offset, \"UTC-\" + offset);\nCalendar cal = new GregorianCalendar(z);\nCALL cal.set(1900, 0, 1, 0, 0, 0)\nCALL cal.set(Calendar.MILLISECOND, 0)\nwhile (cal.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY)\nCALL cal.get(Calendar.DAY_OF_WEEK)\nCALL cal.add(Calendar.DATE, 1)\nreturn cal.getTime().getTime();\nCALL cal.getTime().getTime()\nCALL cal.getTime()",
+        "public static long firstMondayAfter1900() {\n        int offset = TimeZone.getDefault().getRawOffset();\n        TimeZone z = new SimpleTimeZone(offset, \"UTC-\" + offset);        \n        \n        // calculate midnight of first monday after 1/1/1900 relative to \n        // current locale\n        Calendar cal = new GregorianCalendar(z);\n        cal.set(1900, 0, 1, 0, 0, 0);\n        cal.set(Calendar.MILLISECOND, 0);\n        while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {\n            cal.add(Calendar.DATE, 1);\n        }\n        //return cal.getTimeInMillis();\n        // preceding code won't work with JDK 1.3\n        return cal.getTime().getTime();  \n    }"
+      ],
+      "features": {
+        "prior": 1.0,
+        "rank_fraction": 0.041666666666666664,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4791666666666667,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 8.0,
+        "literal_count": 9.0,
+        "source_tokens": 167.0,
+        "l0_tokens": 39.0,
+        "l1_tokens": 167.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 8,
+        "literal_count": 9
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/Week.java::Week.Week(Date time, TimeZone zone, Locale locale)",
+      "source": "public Week(Date time, TimeZone zone, Locale locale) {\n        if (time == null) {\n            throw new IllegalArgumentException(\"Null 'time' argument.\");\n        }\n        if (zone == null) {\n            throw new IllegalArgumentException(\"Null 'zone' argument.\");\n        }\n        if (locale == null) {\n            throw new IllegalArgumentException(\"Null 'locale' argument.\");\n        }\n        Calendar calendar = Calendar.getInstance(zone, locale);\n        calendar.setTime(time);\n\n        // sometimes the last few days of the year are considered to fall in\n        // the *first* week of the following year.  Refer to the Javadocs for\n        // GregorianCalendar.\n        int tempWeek = calendar.get(Calendar.WEEK_OF_YEAR);\n        if (tempWeek == 1\n                && calendar.get(Calendar.MONTH) == Calendar.DECEMBER) {\n            this.week = 1;\n            this.year = (short) (calendar.get(Calendar.YEAR) + 1);\n        }\n        else {\n            this.week = (byte) Math.min(tempWeek, LAST_WEEK_IN_YEAR);\n            int yyyy = calendar.get(Calendar.YEAR);\n            // alternatively, sometimes the first few days of the year are\n            // considered to fall in the *last* week of the previous year...\n            if (calendar.get(Calendar.MONTH) == Calendar.JANUARY\n                    && this.week >= 52) {\n                yyyy--;\n            }\n            this.year = (short) yyyy;\n        }\n        peg(calendar);\n    }",
+      "prior": 0.9583333333333334,
+      "rank": 2,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/Week.java::Week.Week(Date time, TimeZone zone, Locale locale)\nSIGNATURE: public Week(Date time, TimeZone zone, Locale locale)",
+        "METHOD: source/org/jfree/data/time/Week.java::Week.Week(Date time, TimeZone zone, Locale locale)\nSIGNATURE: public Week(Date time, TimeZone zone, Locale locale)\nSTRUCTURE (lossy):\nif (time == null)\nthrow new IllegalArgumentException(\"Null 'time' argument.\");\nif (zone == null)\nthrow new IllegalArgumentException(\"Null 'zone' argument.\");\nif (locale == null)\nthrow new IllegalArgumentException(\"Null 'locale' argument.\");\nCalendar calendar = Calendar.getInstance(zone, locale);\nCALL Calendar.getInstance(zone, locale)\nCALL calendar.setTime(time)\nint tempWeek = calendar.get(Calendar.WEEK_OF_YEAR);\nCALL calendar.get(Calendar.WEEK_OF_YEAR)\nif (tempWeek == 1 && calendar.get(Calendar.MONTH) == Calendar.DECEMBER)\nCALL calendar.get(Calendar.MONTH)\nthis.week = 1\nthis.year = (short) (calendar.get(Calendar.YEAR) + 1)\nCALL calendar.get(Calendar.YEAR)\nthis.week = (byte) Math.min(tempWeek, LAST_WEEK_IN_YEAR)\nCALL Math.min(tempWeek, LAST_WEEK_IN_YEAR)\nint yyyy = calendar.get(Calendar.YEAR);\nif (calendar.get(Calendar.MONTH) == Calendar.JANUARY && this.week >= 52)\nyyyy--\nthis.year = (short) yyyy\nCALL peg(calendar)",
+        "public Week(Date time, TimeZone zone, Locale locale) {\n        if (time == null) {\n            throw new IllegalArgumentException(\"Null 'time' argument.\");\n        }\n        if (zone == null) {\n            throw new IllegalArgumentException(\"Null 'zone' argument.\");\n        }\n        if (locale == null) {\n            throw new IllegalArgumentException(\"Null 'locale' argument.\");\n        }\n        Calendar calendar = Calendar.getInstance(zone, locale);\n        calendar.setTime(time);\n\n        // sometimes the last few days of the year are considered to fall in\n        // the *first* week of the following year.  Refer to the Javadocs for\n        // GregorianCalendar.\n        int tempWeek = calendar.get(Calendar.WEEK_OF_YEAR);\n        if (tempWeek == 1\n                && calendar.get(Calendar.MONTH) == Calendar.DECEMBER) {\n            this.week = 1;\n            this.year = (short) (calendar.get(Calendar.YEAR) + 1);\n        }\n        else {\n            this.week = (byte) Math.min(tempWeek, LAST_WEEK_IN_YEAR);\n            int yyyy = calendar.get(Calendar.YEAR);\n            // alternatively, sometimes the first few days of the year are\n            // considered to fall in the *last* week of the previous year...\n            if (calendar.get(Calendar.MONTH) == Calendar.JANUARY\n                    && this.week >= 52) {\n                yyyy--;\n            }\n            this.year = (short) yyyy;\n        }\n        peg(calendar);\n    }"
+      ],
+      "features": {
+        "prior": 0.9583333333333334,
+        "rank_fraction": 0.08333333333333333,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.35294117647058826,
+        "trace_match": 0.0,
+        "complexity": 6.0,
+        "call_count": 9.0,
+        "literal_count": 10.0,
+        "source_tokens": 362.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 277.0,
+        "compression_ratio": 0.7651933701657458,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 6,
+        "call_count": 9,
+        "literal_count": 10
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/Week.java::Week.getFirstMillisecond(Calendar calendar)",
+      "source": "public long getFirstMillisecond(Calendar calendar) {\n        Calendar c = (Calendar) calendar.clone();\n        c.clear();\n        c.set(Calendar.YEAR, this.year);\n        c.set(Calendar.WEEK_OF_YEAR, this.week);\n        c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());\n        c.set(Calendar.HOUR, 0);\n        c.set(Calendar.MINUTE, 0);\n        c.set(Calendar.SECOND, 0);\n        c.set(Calendar.MILLISECOND, 0);\n        //return c.getTimeInMillis();  // this won't work for JDK 1.3\n        return c.getTime().getTime();\n    }",
+      "prior": 0.9166666666666666,
+      "rank": 3,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/Week.java::Week.getFirstMillisecond(Calendar calendar)\nSIGNATURE: public long getFirstMillisecond(Calendar calendar)",
+        "METHOD: source/org/jfree/data/time/Week.java::Week.getFirstMillisecond(Calendar calendar)\nSIGNATURE: public long getFirstMillisecond(Calendar calendar)\nSTRUCTURE (lossy):\nCalendar c = (Calendar) calendar.clone();\nCALL calendar.clone()\nCALL c.clear()\nCALL c.set(Calendar.YEAR, this.year)\nCALL c.set(Calendar.WEEK_OF_YEAR, this.week)\nCALL c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek())\nCALL c.getFirstDayOfWeek()\nCALL c.set(Calendar.HOUR, 0)\nCALL c.set(Calendar.MINUTE, 0)\nCALL c.set(Calendar.SECOND, 0)\nCALL c.set(Calendar.MILLISECOND, 0)\nreturn c.getTime().getTime();\nCALL c.getTime().getTime()\nCALL c.getTime()",
+        "public long getFirstMillisecond(Calendar calendar) {\n        Calendar c = (Calendar) calendar.clone();\n        c.clear();\n        c.set(Calendar.YEAR, this.year);\n        c.set(Calendar.WEEK_OF_YEAR, this.week);\n        c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());\n        c.set(Calendar.HOUR, 0);\n        c.set(Calendar.MINUTE, 0);\n        c.set(Calendar.SECOND, 0);\n        c.set(Calendar.MILLISECOND, 0);\n        //return c.getTimeInMillis();  // this won't work for JDK 1.3\n        return c.getTime().getTime();\n    }"
+      ],
+      "features": {
+        "prior": 0.9166666666666666,
+        "rank_fraction": 0.125,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5357142857142857,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 12.0,
+        "literal_count": 4.0,
+        "source_tokens": 132.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 154.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 12,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/axis/DateTickUnit.java::DateTickUnit.addToDate(Date base, TimeZone zone)",
+      "source": "public Date addToDate(Date base, TimeZone zone) {\n        // as far as I know, the Locale for the calendar only affects week\n    \t// number calculations, and since DateTickUnit doesn't do week\n    \t// arithmetic, the default locale (whatever it is) should be fine\n    \t// here...\n        Calendar calendar = Calendar.getInstance(zone);\n        calendar.setTime(base);\n        calendar.add(getCalendarField(this.unit), this.count);\n        return calendar.getTime();\n    }",
+      "prior": 0.875,
+      "rank": 4,
+      "levels": [
+        "METHOD: source/org/jfree/chart/axis/DateTickUnit.java::DateTickUnit.addToDate(Date base, TimeZone zone)\nSIGNATURE: public Date addToDate(Date base, TimeZone zone)",
+        "METHOD: source/org/jfree/chart/axis/DateTickUnit.java::DateTickUnit.addToDate(Date base, TimeZone zone)\nSIGNATURE: public Date addToDate(Date base, TimeZone zone)\nSTRUCTURE (lossy):\nCalendar calendar = Calendar.getInstance(zone);\nCALL Calendar.getInstance(zone)\nCALL calendar.setTime(base)\nCALL calendar.add(getCalendarField(this.unit), this.count)\nCALL getCalendarField(this.unit)\nreturn calendar.getTime();\nCALL calendar.getTime()",
+        "public Date addToDate(Date base, TimeZone zone) {\n        // as far as I know, the Locale for the calendar only affects week\n    \t// number calculations, and since DateTickUnit doesn't do week\n    \t// arithmetic, the default locale (whatever it is) should be fine\n    \t// here...\n        Calendar calendar = Calendar.getInstance(zone);\n        calendar.setTime(base);\n        calendar.add(getCalendarField(this.unit), this.count);\n        return calendar.getTime();\n    }"
+      ],
+      "features": {
+        "prior": 0.875,
+        "rank_fraction": 0.16666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4146341463414634,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 5.0,
+        "literal_count": 0.0,
+        "source_tokens": 118.0,
+        "l0_tokens": 41.0,
+        "l1_tokens": 108.0,
+        "compression_ratio": 0.9152542372881356,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 5,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/axis/DateTickUnit.java::DateTickUnit.rollDate(Date base, TimeZone zone)",
+      "source": "public Date rollDate(Date base, TimeZone zone) {\n        // as far as I know, the Locale for the calendar only affects week\n    \t// number calculations, and since DateTickUnit doesn't do week\n    \t// arithmetic, the default locale (whatever it is) should be fine\n    \t// here...\n        Calendar calendar = Calendar.getInstance(zone);\n        calendar.setTime(base);\n        calendar.add(getCalendarField(this.rollUnit), this.rollCount);\n        return calendar.getTime();\n    }",
+      "prior": 0.8333333333333334,
+      "rank": 5,
+      "levels": [
+        "METHOD: source/org/jfree/chart/axis/DateTickUnit.java::DateTickUnit.rollDate(Date base, TimeZone zone)\nSIGNATURE: public Date rollDate(Date base, TimeZone zone)",
+        "METHOD: source/org/jfree/chart/axis/DateTickUnit.java::DateTickUnit.rollDate(Date base, TimeZone zone)\nSIGNATURE: public Date rollDate(Date base, TimeZone zone)\nSTRUCTURE (lossy):\nCalendar calendar = Calendar.getInstance(zone);\nCALL Calendar.getInstance(zone)\nCALL calendar.setTime(base)\nCALL calendar.add(getCalendarField(this.rollUnit), this.rollCount)\nCALL getCalendarField(this.rollUnit)\nreturn calendar.getTime();\nCALL calendar.getTime()",
+        "public Date rollDate(Date base, TimeZone zone) {\n        // as far as I know, the Locale for the calendar only affects week\n    \t// number calculations, and since DateTickUnit doesn't do week\n    \t// arithmetic, the default locale (whatever it is) should be fine\n    \t// here...\n        Calendar calendar = Calendar.getInstance(zone);\n        calendar.setTime(base);\n        calendar.add(getCalendarField(this.rollUnit), this.rollCount);\n        return calendar.getTime();\n    }"
+      ],
+      "features": {
+        "prior": 0.8333333333333334,
+        "rank_fraction": 0.20833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.40476190476190477,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 5.0,
+        "literal_count": 0.0,
+        "source_tokens": 120.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 111.0,
+        "compression_ratio": 0.925,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 5,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/Week.java::Week.getLastMillisecond(Calendar calendar)",
+      "source": "public long getLastMillisecond(Calendar calendar) {\n        Calendar c = (Calendar) calendar.clone();\n        c.clear();\n        c.set(Calendar.YEAR, this.year);\n        c.set(Calendar.WEEK_OF_YEAR, this.week + 1);\n        c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());\n        c.set(Calendar.HOUR, 0);\n        c.set(Calendar.MINUTE, 0);\n        c.set(Calendar.SECOND, 0);\n        c.set(Calendar.MILLISECOND, 0);\n        //return c.getTimeInMillis();  // this won't work for JDK 1.3\n        return c.getTime().getTime() - 1;\n    }",
+      "prior": 0.7916666666666666,
+      "rank": 6,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/Week.java::Week.getLastMillisecond(Calendar calendar)\nSIGNATURE: public long getLastMillisecond(Calendar calendar)",
+        "METHOD: source/org/jfree/data/time/Week.java::Week.getLastMillisecond(Calendar calendar)\nSIGNATURE: public long getLastMillisecond(Calendar calendar)\nSTRUCTURE (lossy):\nCalendar c = (Calendar) calendar.clone();\nCALL calendar.clone()\nCALL c.clear()\nCALL c.set(Calendar.YEAR, this.year)\nCALL c.set(Calendar.WEEK_OF_YEAR, this.week + 1)\nCALL c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek())\nCALL c.getFirstDayOfWeek()\nCALL c.set(Calendar.HOUR, 0)\nCALL c.set(Calendar.MINUTE, 0)\nCALL c.set(Calendar.SECOND, 0)\nCALL c.set(Calendar.MILLISECOND, 0)\nreturn c.getTime().getTime() - 1;\nCALL c.getTime().getTime()\nCALL c.getTime()",
+        "public long getLastMillisecond(Calendar calendar) {\n        Calendar c = (Calendar) calendar.clone();\n        c.clear();\n        c.set(Calendar.YEAR, this.year);\n        c.set(Calendar.WEEK_OF_YEAR, this.week + 1);\n        c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());\n        c.set(Calendar.HOUR, 0);\n        c.set(Calendar.MINUTE, 0);\n        c.set(Calendar.SECOND, 0);\n        c.set(Calendar.MILLISECOND, 0);\n        //return c.getTimeInMillis();  // this won't work for JDK 1.3\n        return c.getTime().getTime() - 1;\n    }"
+      ],
+      "features": {
+        "prior": 0.7916666666666666,
+        "rank_fraction": 0.25,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5172413793103449,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 12.0,
+        "literal_count": 6.0,
+        "source_tokens": 134.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 156.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 12,
+        "literal_count": 6
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/Day.java::Day.getFirstMillisecond(Calendar calendar)",
+      "source": "public long getFirstMillisecond(Calendar calendar) {\n        int year = this.serialDate.getYYYY();\n        int month = this.serialDate.getMonth();\n        int day = this.serialDate.getDayOfMonth();\n        calendar.clear();\n        calendar.set(year, month - 1, day, 0, 0, 0);\n        calendar.set(Calendar.MILLISECOND, 0);\n        //return calendar.getTimeInMillis();  // this won't work for JDK 1.3\n        return calendar.getTime().getTime();\n    }",
+      "prior": 0.75,
+      "rank": 7,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/Day.java::Day.getFirstMillisecond(Calendar calendar)\nSIGNATURE: public long getFirstMillisecond(Calendar calendar)",
+        "METHOD: source/org/jfree/data/time/Day.java::Day.getFirstMillisecond(Calendar calendar)\nSIGNATURE: public long getFirstMillisecond(Calendar calendar)\nSTRUCTURE (lossy):\nint year = this.serialDate.getYYYY();\nCALL this.serialDate.getYYYY()\nint month = this.serialDate.getMonth();\nCALL this.serialDate.getMonth()\nint day = this.serialDate.getDayOfMonth();\nCALL this.serialDate.getDayOfMonth()\nCALL calendar.clear()\nCALL calendar.set(year, month - 1, day, 0, 0, 0)\nCALL calendar.set(Calendar.MILLISECOND, 0)\nreturn calendar.getTime().getTime();\nCALL calendar.getTime().getTime()\nCALL calendar.getTime()",
+        "public long getFirstMillisecond(Calendar calendar) {\n        int year = this.serialDate.getYYYY();\n        int month = this.serialDate.getMonth();\n        int day = this.serialDate.getDayOfMonth();\n        calendar.clear();\n        calendar.set(year, month - 1, day, 0, 0, 0);\n        calendar.set(Calendar.MILLISECOND, 0);\n        //return calendar.getTimeInMillis();  // this won't work for JDK 1.3\n        return calendar.getTime().getTime();\n    }"
+      ],
+      "features": {
+        "prior": 0.75,
+        "rank_fraction": 0.2916666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5357142857142857,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 8.0,
+        "literal_count": 5.0,
+        "source_tokens": 113.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 150.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 8,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/RegularTimePeriod.java::RegularTimePeriod.createInstance(Class c, Date millisecond,\n                                                   TimeZone zone)",
+      "source": "public static RegularTimePeriod createInstance(Class c, Date millisecond,\n                                                   TimeZone zone) {\n        RegularTimePeriod result = null;\n        try {\n            Constructor constructor = c.getDeclaredConstructor(\n                    new Class[] {Date.class, TimeZone.class});\n            result = (RegularTimePeriod) constructor.newInstance(\n                    new Object[] {millisecond, zone});\n        }\n        catch (Exception e) {\n            // do nothing, so null is returned\n        }\n        return result;\n    }",
+      "prior": 0.7083333333333333,
+      "rank": 8,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/RegularTimePeriod.java::RegularTimePeriod.createInstance(Class c, Date millisecond,\n                                                   TimeZone zone)\nSIGNATURE: public static RegularTimePeriod createInstance(Class c, Date millisecond,\n                                                   TimeZone zone)",
+        "METHOD: source/org/jfree/data/time/RegularTimePeriod.java::RegularTimePeriod.createInstance(Class c, Date millisecond,\n                                                   TimeZone zone)\nSIGNATURE: public static RegularTimePeriod createInstance(Class c, Date millisecond,\n                                                   TimeZone zone)\nSTRUCTURE (lossy):\nRegularTimePeriod result = null;\nConstructor constructor = c.getDeclaredConstructor( new Class[] {Date.class, TimeZone.class});\nCALL c.getDeclaredConstructor( new Class[] {Date.class, TimeZone.class})\nresult = (RegularTimePeriod) constructor.newInstance( new Object[] {millisecond, zone})\nCALL constructor.newInstance( new Object[] {millisecond, zone})\ncatch (Exception e)\nreturn result;",
+        "public static RegularTimePeriod createInstance(Class c, Date millisecond,\n                                                   TimeZone zone) {\n        RegularTimePeriod result = null;\n        try {\n            Constructor constructor = c.getDeclaredConstructor(\n                    new Class[] {Date.class, TimeZone.class});\n            result = (RegularTimePeriod) constructor.newInstance(\n                    new Object[] {millisecond, zone});\n        }\n        catch (Exception e) {\n            // do nothing, so null is returned\n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.7083333333333333,
+        "rank_fraction": 0.3333333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5172413793103449,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 3.0,
+        "source_tokens": 143.0,
+        "l0_tokens": 84.0,
+        "l1_tokens": 186.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/axis/QuarterDateFormat.java::QuarterDateFormat.QuarterDateFormat(TimeZone zone, String[] quarterSymbols,\n            boolean quarterFirst)",
+      "source": "public QuarterDateFormat(TimeZone zone, String[] quarterSymbols,\n            boolean quarterFirst) {\n        if (zone == null) {\n            throw new IllegalArgumentException(\"Null 'zone' argument.\");   \n        }\n        this.calendar = new GregorianCalendar(zone);\n        this.quarters = quarterSymbols;\n        this.quarterFirst = quarterFirst;\n        \n        // the following is never used, but it seems that DateFormat requires\n        // it to be non-null.  It isn't well covered in the spec, refer to \n        // bug parade 5061189 for more info.\n        this.numberFormat = NumberFormat.getNumberInstance();\n        \n    }",
+      "prior": 0.6666666666666667,
+      "rank": 9,
+      "levels": [
+        "METHOD: source/org/jfree/chart/axis/QuarterDateFormat.java::QuarterDateFormat.QuarterDateFormat(TimeZone zone, String[] quarterSymbols,\n            boolean quarterFirst)\nSIGNATURE: public QuarterDateFormat(TimeZone zone, String[] quarterSymbols,\n            boolean quarterFirst)",
+        "METHOD: source/org/jfree/chart/axis/QuarterDateFormat.java::QuarterDateFormat.QuarterDateFormat(TimeZone zone, String[] quarterSymbols,\n            boolean quarterFirst)\nSIGNATURE: public QuarterDateFormat(TimeZone zone, String[] quarterSymbols,\n            boolean quarterFirst)\nSTRUCTURE (lossy):\nif (zone == null)\nthrow new IllegalArgumentException(\"Null 'zone' argument.\");\nthis.calendar = new GregorianCalendar(zone)\nthis.quarters = quarterSymbols\nthis.quarterFirst = quarterFirst\nthis.numberFormat = NumberFormat.getNumberInstance()\nCALL NumberFormat.getNumberInstance()",
+        "public QuarterDateFormat(TimeZone zone, String[] quarterSymbols,\n            boolean quarterFirst) {\n        if (zone == null) {\n            throw new IllegalArgumentException(\"Null 'zone' argument.\");   \n        }\n        this.calendar = new GregorianCalendar(zone);\n        this.quarters = quarterSymbols;\n        this.quarterFirst = quarterFirst;\n        \n        // the following is never used, but it seems that DateFormat requires\n        // it to be non-null.  It isn't well covered in the spec, refer to \n        // bug parade 5061189 for more info.\n        this.numberFormat = NumberFormat.getNumberInstance();\n        \n    }"
+      ],
+      "features": {
+        "prior": 0.6666666666666667,
+        "rank_fraction": 0.375,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3541666666666667,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 1.0,
+        "literal_count": 2.0,
+        "source_tokens": 159.0,
+        "l0_tokens": 70.0,
+        "l1_tokens": 144.0,
+        "compression_ratio": 0.9056603773584906,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 1,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/Millisecond.java::Millisecond.Millisecond(Date time, TimeZone zone)",
+      "source": "public Millisecond(Date time, TimeZone zone) {\n        Calendar calendar = Calendar.getInstance(zone);\n        calendar.setTime(time);\n        this.millisecond = calendar.get(Calendar.MILLISECOND);\n        this.second = (byte) calendar.get(Calendar.SECOND);\n        this.minute = (byte) calendar.get(Calendar.MINUTE);\n        this.hour = (byte) calendar.get(Calendar.HOUR_OF_DAY);\n        this.day = new Day(time, zone);\n        peg(calendar);\n    }",
+      "prior": 0.625,
+      "rank": 10,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/Millisecond.java::Millisecond.Millisecond(Date time, TimeZone zone)\nSIGNATURE: public Millisecond(Date time, TimeZone zone)",
+        "METHOD: source/org/jfree/data/time/Millisecond.java::Millisecond.Millisecond(Date time, TimeZone zone)\nSIGNATURE: public Millisecond(Date time, TimeZone zone)\nSTRUCTURE (lossy):\nCalendar calendar = Calendar.getInstance(zone);\nCALL Calendar.getInstance(zone)\nCALL calendar.setTime(time)\nthis.millisecond = calendar.get(Calendar.MILLISECOND)\nCALL calendar.get(Calendar.MILLISECOND)\nthis.second = (byte) calendar.get(Calendar.SECOND)\nCALL calendar.get(Calendar.SECOND)\nthis.minute = (byte) calendar.get(Calendar.MINUTE)\nCALL calendar.get(Calendar.MINUTE)\nthis.hour = (byte) calendar.get(Calendar.HOUR_OF_DAY)\nCALL calendar.get(Calendar.HOUR_OF_DAY)\nthis.day = new Day(time, zone)\nCALL peg(calendar)",
+        "public Millisecond(Date time, TimeZone zone) {\n        Calendar calendar = Calendar.getInstance(zone);\n        calendar.setTime(time);\n        this.millisecond = calendar.get(Calendar.MILLISECOND);\n        this.second = (byte) calendar.get(Calendar.SECOND);\n        this.minute = (byte) calendar.get(Calendar.MINUTE);\n        this.hour = (byte) calendar.get(Calendar.HOUR_OF_DAY);\n        this.day = new Day(time, zone);\n        peg(calendar);\n    }"
+      ],
+      "features": {
+        "prior": 0.625,
+        "rank_fraction": 0.4166666666666667,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.7272727272727273,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 7.0,
+        "literal_count": 0.0,
+        "source_tokens": 113.0,
+        "l0_tokens": 40.0,
+        "l1_tokens": 174.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 7,
+        "literal_count": 0
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/Millisecond.java::Millisecond.getFirstMillisecond(Calendar calendar)",
+      "source": "public long getFirstMillisecond(Calendar calendar) {\n        int year = this.day.getYear();\n        int month = this.day.getMonth() - 1;\n        int day = this.day.getDayOfMonth();\n        calendar.clear();\n        calendar.set(year, month, day, this.hour, this.minute, this.second);\n        calendar.set(Calendar.MILLISECOND, this.millisecond);\n        //return calendar.getTimeInMillis();  // this won't work for JDK 1.3\n        return calendar.getTime().getTime();\n    }",
+      "prior": 0.5833333333333333,
+      "rank": 11,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/Millisecond.java::Millisecond.getFirstMillisecond(Calendar calendar)\nSIGNATURE: public long getFirstMillisecond(Calendar calendar)",
+        "METHOD: source/org/jfree/data/time/Millisecond.java::Millisecond.getFirstMillisecond(Calendar calendar)\nSIGNATURE: public long getFirstMillisecond(Calendar calendar)\nSTRUCTURE (lossy):\nint year = this.day.getYear();\nCALL this.day.getYear()\nint month = this.day.getMonth() - 1;\nCALL this.day.getMonth()\nint day = this.day.getDayOfMonth();\nCALL this.day.getDayOfMonth()\nCALL calendar.clear()\nCALL calendar.set(year, month, day, this.hour, this.minute, this.second)\nCALL calendar.set(Calendar.MILLISECOND, this.millisecond)\nreturn calendar.getTime().getTime();\nCALL calendar.getTime().getTime()\nCALL calendar.getTime()",
+        "public long getFirstMillisecond(Calendar calendar) {\n        int year = this.day.getYear();\n        int month = this.day.getMonth() - 1;\n        int day = this.day.getDayOfMonth();\n        calendar.clear();\n        calendar.set(year, month, day, this.hour, this.minute, this.second);\n        calendar.set(Calendar.MILLISECOND, this.millisecond);\n        //return calendar.getTimeInMillis();  // this won't work for JDK 1.3\n        return calendar.getTime().getTime();\n    }"
+      ],
+      "features": {
+        "prior": 0.5833333333333333,
+        "rank_fraction": 0.4583333333333333,
+        "ranking_gap": 0.04166666666666652,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 8.0,
+        "literal_count": 1.0,
+        "source_tokens": 119.0,
+        "l0_tokens": 42.0,
+        "l1_tokens": 154.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 8,
+        "literal_count": 1
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/Minute.java::Minute.getFirstMillisecond(Calendar calendar)",
+      "source": "public long getFirstMillisecond(Calendar calendar) {\n\n        int year = this.day.getYear();\n        int month = this.day.getMonth() - 1;\n        int day = this.day.getDayOfMonth();\n\n        calendar.clear();\n        calendar.set(year, month, day, this.hour, this.minute, 0);\n        calendar.set(Calendar.MILLISECOND, 0);\n\n        //return calendar.getTimeInMillis();  // this won't work for JDK 1.3\n        return calendar.getTime().getTime();\n\n    }",
+      "prior": 0.5416666666666667,
+      "rank": 12,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/Minute.java::Minute.getFirstMillisecond(Calendar calendar)\nSIGNATURE: public long getFirstMillisecond(Calendar calendar)",
+        "METHOD: source/org/jfree/data/time/Minute.java::Minute.getFirstMillisecond(Calendar calendar)\nSIGNATURE: public long getFirstMillisecond(Calendar calendar)\nSTRUCTURE (lossy):\nint year = this.day.getYear();\nCALL this.day.getYear()\nint month = this.day.getMonth() - 1;\nCALL this.day.getMonth()\nint day = this.day.getDayOfMonth();\nCALL this.day.getDayOfMonth()\nCALL calendar.clear()\nCALL calendar.set(year, month, day, this.hour, this.minute, 0)\nCALL calendar.set(Calendar.MILLISECOND, 0)\nreturn calendar.getTime().getTime();\nCALL calendar.getTime().getTime()\nCALL calendar.getTime()",
+        "public long getFirstMillisecond(Calendar calendar) {\n\n        int year = this.day.getYear();\n        int month = this.day.getMonth() - 1;\n        int day = this.day.getDayOfMonth();\n\n        calendar.clear();\n        calendar.set(year, month, day, this.hour, this.minute, 0);\n        calendar.set(Calendar.MILLISECOND, 0);\n\n        //return calendar.getTimeInMillis();  // this won't work for JDK 1.3\n        return calendar.getTime().getTime();\n\n    }"
+      ],
+      "features": {
+        "prior": 0.5416666666666667,
+        "rank_fraction": 0.5,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5185185185185185,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 8.0,
+        "literal_count": 3.0,
+        "source_tokens": 113.0,
+        "l0_tokens": 39.0,
+        "l1_tokens": 145.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 8,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/Hour.java::Hour.getFirstMillisecond(Calendar calendar)",
+      "source": "public long getFirstMillisecond(Calendar calendar) {\n        int year = this.day.getYear();\n        int month = this.day.getMonth() - 1;\n        int dom = this.day.getDayOfMonth();\n        calendar.set(year, month, dom, this.hour, 0, 0);\n        calendar.set(Calendar.MILLISECOND, 0);\n        //return calendar.getTimeInMillis();  // this won't work for JDK 1.3\n        return calendar.getTime().getTime();\n    }",
+      "prior": 0.5,
+      "rank": 13,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/Hour.java::Hour.getFirstMillisecond(Calendar calendar)\nSIGNATURE: public long getFirstMillisecond(Calendar calendar)",
+        "METHOD: source/org/jfree/data/time/Hour.java::Hour.getFirstMillisecond(Calendar calendar)\nSIGNATURE: public long getFirstMillisecond(Calendar calendar)\nSTRUCTURE (lossy):\nint year = this.day.getYear();\nCALL this.day.getYear()\nint month = this.day.getMonth() - 1;\nCALL this.day.getMonth()\nint dom = this.day.getDayOfMonth();\nCALL this.day.getDayOfMonth()\nCALL calendar.set(year, month, dom, this.hour, 0, 0)\nCALL calendar.set(Calendar.MILLISECOND, 0)\nreturn calendar.getTime().getTime();\nCALL calendar.getTime().getTime()\nCALL calendar.getTime()",
+        "public long getFirstMillisecond(Calendar calendar) {\n        int year = this.day.getYear();\n        int month = this.day.getMonth() - 1;\n        int dom = this.day.getDayOfMonth();\n        calendar.set(year, month, dom, this.hour, 0, 0);\n        calendar.set(Calendar.MILLISECOND, 0);\n        //return calendar.getTimeInMillis();  // this won't work for JDK 1.3\n        return calendar.getTime().getTime();\n    }"
+      ],
+      "features": {
+        "prior": 0.5,
+        "rank_fraction": 0.5416666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5384615384615384,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 7.0,
+        "literal_count": 4.0,
+        "source_tokens": 103.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 136.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 7,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/Second.java::Second.getFirstMillisecond(Calendar calendar)",
+      "source": "public long getFirstMillisecond(Calendar calendar) {\n        int year = this.day.getYear();\n        int month = this.day.getMonth() - 1;\n        int day = this.day.getDayOfMonth();\n        calendar.clear();\n        calendar.set(year, month, day, this.hour, this.minute, this.second);\n        calendar.set(Calendar.MILLISECOND, 0);\n        //return calendar.getTimeInMillis();  // this won't work for JDK 1.3\n        return calendar.getTime().getTime();\n    }",
+      "prior": 0.45833333333333337,
+      "rank": 14,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/Second.java::Second.getFirstMillisecond(Calendar calendar)\nSIGNATURE: public long getFirstMillisecond(Calendar calendar)",
+        "METHOD: source/org/jfree/data/time/Second.java::Second.getFirstMillisecond(Calendar calendar)\nSIGNATURE: public long getFirstMillisecond(Calendar calendar)\nSTRUCTURE (lossy):\nint year = this.day.getYear();\nCALL this.day.getYear()\nint month = this.day.getMonth() - 1;\nCALL this.day.getMonth()\nint day = this.day.getDayOfMonth();\nCALL this.day.getDayOfMonth()\nCALL calendar.clear()\nCALL calendar.set(year, month, day, this.hour, this.minute, this.second)\nCALL calendar.set(Calendar.MILLISECOND, 0)\nreturn calendar.getTime().getTime();\nCALL calendar.getTime().getTime()\nCALL calendar.getTime()",
+        "public long getFirstMillisecond(Calendar calendar) {\n        int year = this.day.getYear();\n        int month = this.day.getMonth() - 1;\n        int day = this.day.getDayOfMonth();\n        calendar.clear();\n        calendar.set(year, month, day, this.hour, this.minute, this.second);\n        calendar.set(Calendar.MILLISECOND, 0);\n        //return calendar.getTimeInMillis();  // this won't work for JDK 1.3\n        return calendar.getTime().getTime();\n    }"
+      ],
+      "features": {
+        "prior": 0.45833333333333337,
+        "rank_fraction": 0.5833333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 8.0,
+        "literal_count": 2.0,
+        "source_tokens": 115.0,
+        "l0_tokens": 39.0,
+        "l1_tokens": 148.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 8,
+        "literal_count": 2
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/SerialDate.java::SerialDate.getFollowingDayOfWeek(final int targetWeekday,\n                                                   final SerialDate base)",
+      "source": "public static SerialDate getFollowingDayOfWeek(final int targetWeekday,\n                                                   final SerialDate base) {\n\n        // check arguments...\n        if (!SerialDate.isValidWeekdayCode(targetWeekday)) {\n            throw new IllegalArgumentException(\n                \"Invalid day-of-the-week code.\"\n            );\n        }\n\n        // find the date...\n        final int adjust;\n        final int baseDOW = base.getDayOfWeek();\n        if (baseDOW > targetWeekday) {\n            adjust = 7 + Math.min(0, targetWeekday - baseDOW);\n        }\n        else {\n            adjust = Math.max(0, targetWeekday - baseDOW);\n        }\n\n        return SerialDate.addDays(adjust, base);\n    }",
+      "prior": 0.41666666666666663,
+      "rank": 15,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/SerialDate.java::SerialDate.getFollowingDayOfWeek(final int targetWeekday,\n                                                   final SerialDate base)\nSIGNATURE: public static SerialDate getFollowingDayOfWeek(final int targetWeekday,\n                                                   final SerialDate base)",
+        "METHOD: source/org/jfree/data/time/SerialDate.java::SerialDate.getFollowingDayOfWeek(final int targetWeekday,\n                                                   final SerialDate base)\nSIGNATURE: public static SerialDate getFollowingDayOfWeek(final int targetWeekday,\n                                                   final SerialDate base)\nSTRUCTURE (lossy):\nif (!SerialDate.isValidWeekdayCode(targetWeekday))\nCALL SerialDate.isValidWeekdayCode(targetWeekday)\nthrow new IllegalArgumentException( \"Invalid day-of-the-week code.\" );\nfinal int adjust;\nfinal int baseDOW = base.getDayOfWeek();\nCALL base.getDayOfWeek()\nif (baseDOW > targetWeekday)\nadjust = 7 + Math.min(0, targetWeekday - baseDOW)\nCALL Math.min(0, targetWeekday - baseDOW)\nadjust = Math.max(0, targetWeekday - baseDOW)\nCALL Math.max(0, targetWeekday - baseDOW)\nreturn SerialDate.addDays(adjust, base);\nCALL SerialDate.addDays(adjust, base)",
+        "public static SerialDate getFollowingDayOfWeek(final int targetWeekday,\n                                                   final SerialDate base) {\n\n        // check arguments...\n        if (!SerialDate.isValidWeekdayCode(targetWeekday)) {\n            throw new IllegalArgumentException(\n                \"Invalid day-of-the-week code.\"\n            );\n        }\n\n        // find the date...\n        final int adjust;\n        final int baseDOW = base.getDayOfWeek();\n        if (baseDOW > targetWeekday) {\n            adjust = 7 + Math.min(0, targetWeekday - baseDOW);\n        }\n        else {\n            adjust = Math.max(0, targetWeekday - baseDOW);\n        }\n\n        return SerialDate.addDays(adjust, base);\n    }"
+      ],
+      "features": {
+        "prior": 0.41666666666666663,
+        "rank_fraction": 0.625,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.35,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 5.0,
+        "literal_count": 4.0,
+        "source_tokens": 179.0,
+        "l0_tokens": 85.0,
+        "l1_tokens": 226.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 5,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/SerialDate.java::SerialDate.getPreviousDayOfWeek(final int targetWeekday,\n                                                  final SerialDate base)",
+      "source": "public static SerialDate getPreviousDayOfWeek(final int targetWeekday,\n                                                  final SerialDate base) {\n\n        // check arguments...\n        if (!SerialDate.isValidWeekdayCode(targetWeekday)) {\n            throw new IllegalArgumentException(\n                \"Invalid day-of-the-week code.\"\n            );\n        }\n\n        // find the date...\n        final int adjust;\n        final int baseDOW = base.getDayOfWeek();\n        if (baseDOW > targetWeekday) {\n            adjust = Math.min(0, targetWeekday - baseDOW);\n        }\n        else {\n            adjust = -7 + Math.max(0, targetWeekday - baseDOW);\n        }\n\n        return SerialDate.addDays(adjust, base);\n\n    }",
+      "prior": 0.375,
+      "rank": 16,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/SerialDate.java::SerialDate.getPreviousDayOfWeek(final int targetWeekday,\n                                                  final SerialDate base)\nSIGNATURE: public static SerialDate getPreviousDayOfWeek(final int targetWeekday,\n                                                  final SerialDate base)",
+        "METHOD: source/org/jfree/data/time/SerialDate.java::SerialDate.getPreviousDayOfWeek(final int targetWeekday,\n                                                  final SerialDate base)\nSIGNATURE: public static SerialDate getPreviousDayOfWeek(final int targetWeekday,\n                                                  final SerialDate base)\nSTRUCTURE (lossy):\nif (!SerialDate.isValidWeekdayCode(targetWeekday))\nCALL SerialDate.isValidWeekdayCode(targetWeekday)\nthrow new IllegalArgumentException( \"Invalid day-of-the-week code.\" );\nfinal int adjust;\nfinal int baseDOW = base.getDayOfWeek();\nCALL base.getDayOfWeek()\nif (baseDOW > targetWeekday)\nadjust = Math.min(0, targetWeekday - baseDOW)\nCALL Math.min(0, targetWeekday - baseDOW)\nadjust = -7 + Math.max(0, targetWeekday - baseDOW)\nCALL Math.max(0, targetWeekday - baseDOW)\nreturn SerialDate.addDays(adjust, base);\nCALL SerialDate.addDays(adjust, base)",
+        "public static SerialDate getPreviousDayOfWeek(final int targetWeekday,\n                                                  final SerialDate base) {\n\n        // check arguments...\n        if (!SerialDate.isValidWeekdayCode(targetWeekday)) {\n            throw new IllegalArgumentException(\n                \"Invalid day-of-the-week code.\"\n            );\n        }\n\n        // find the date...\n        final int adjust;\n        final int baseDOW = base.getDayOfWeek();\n        if (baseDOW > targetWeekday) {\n            adjust = Math.min(0, targetWeekday - baseDOW);\n        }\n        else {\n            adjust = -7 + Math.max(0, targetWeekday - baseDOW);\n        }\n\n        return SerialDate.addDays(adjust, base);\n\n    }"
+      ],
+      "features": {
+        "prior": 0.375,
+        "rank_fraction": 0.6666666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.35,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 5.0,
+        "literal_count": 4.0,
+        "source_tokens": 179.0,
+        "l0_tokens": 84.0,
+        "l1_tokens": 225.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 5,
+        "literal_count": 4
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/Day.java::Day.getLastMillisecond(Calendar calendar)",
+      "source": "public long getLastMillisecond(Calendar calendar) {\n        int year = this.serialDate.getYYYY();\n        int month = this.serialDate.getMonth();\n        int day = this.serialDate.getDayOfMonth();\n        calendar.clear();\n        calendar.set(year, month - 1, day, 23, 59, 59);\n        calendar.set(Calendar.MILLISECOND, 999);\n        //return calendar.getTimeInMillis();  // this won't work for JDK 1.3\n        return calendar.getTime().getTime();\n    }",
+      "prior": 0.33333333333333337,
+      "rank": 17,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/Day.java::Day.getLastMillisecond(Calendar calendar)\nSIGNATURE: public long getLastMillisecond(Calendar calendar)",
+        "METHOD: source/org/jfree/data/time/Day.java::Day.getLastMillisecond(Calendar calendar)\nSIGNATURE: public long getLastMillisecond(Calendar calendar)\nSTRUCTURE (lossy):\nint year = this.serialDate.getYYYY();\nCALL this.serialDate.getYYYY()\nint month = this.serialDate.getMonth();\nCALL this.serialDate.getMonth()\nint day = this.serialDate.getDayOfMonth();\nCALL this.serialDate.getDayOfMonth()\nCALL calendar.clear()\nCALL calendar.set(year, month - 1, day, 23, 59, 59)\nCALL calendar.set(Calendar.MILLISECOND, 999)\nreturn calendar.getTime().getTime();\nCALL calendar.getTime().getTime()\nCALL calendar.getTime()",
+        "public long getLastMillisecond(Calendar calendar) {\n        int year = this.serialDate.getYYYY();\n        int month = this.serialDate.getMonth();\n        int day = this.serialDate.getDayOfMonth();\n        calendar.clear();\n        calendar.set(year, month - 1, day, 23, 59, 59);\n        calendar.set(Calendar.MILLISECOND, 999);\n        //return calendar.getTimeInMillis();  // this won't work for JDK 1.3\n        return calendar.getTime().getTime();\n    }"
+      ],
+      "features": {
+        "prior": 0.33333333333333337,
+        "rank_fraction": 0.7083333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 8.0,
+        "literal_count": 5.0,
+        "source_tokens": 114.0,
+        "l0_tokens": 37.0,
+        "l1_tokens": 151.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 8,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/util/RelativeDateFormat.java::RelativeDateFormat.main(String[] args)",
+      "source": "public static void main(String[] args) {\n        GregorianCalendar c0 = new GregorianCalendar(2006, 10, 1, 0, 0, 0);\n        GregorianCalendar c1 = new GregorianCalendar(2006, 10, 1, 11, 37, 43);\n        c1.set(Calendar.MILLISECOND, 123);\n        \n        System.out.println(\"Default: \");\n        RelativeDateFormat rdf = new RelativeDateFormat(c0.getTimeInMillis());\n        System.out.println(rdf.format(c1.getTime()));\n        System.out.println();\n        \n        System.out.println(\"Hide milliseconds: \");\n        rdf.setSecondFormatter(new DecimalFormat(\"0\"));\n        System.out.println(rdf.format(c1.getTime()));        \n        System.out.println();\n\n        System.out.println(\"Show zero day output: \");\n        rdf.setShowZeroDays(true);\n        System.out.println(rdf.format(c1.getTime()));\n        System.out.println();\n        \n        System.out.println(\"Alternative suffixes: \");\n        rdf.setShowZeroDays(false);\n        rdf.setDaySuffix(\":\");\n        rdf.setHourSuffix(\":\");\n        rdf.setMinuteSuffix(\":\");\n        rdf.setSecondSuffix(\"\");\n        System.out.println(rdf.format(c1.getTime()));\n        System.out.println();\n    }",
+      "prior": 0.29166666666666663,
+      "rank": 18,
+      "levels": [
+        "METHOD: source/org/jfree/chart/util/RelativeDateFormat.java::RelativeDateFormat.main(String[] args)\nSIGNATURE: public static void main(String[] args)",
+        "METHOD: source/org/jfree/chart/util/RelativeDateFormat.java::RelativeDateFormat.main(String[] args)\nSIGNATURE: public static void main(String[] args)\nSTRUCTURE (lossy):\nGregorianCalendar c0 = new GregorianCalendar(2006, 10, 1, 0, 0, 0);\nGregorianCalendar c1 = new GregorianCalendar(2006, 10, 1, 11, 37, 43);\nCALL c1.set(Calendar.MILLISECOND, 123)\nCALL System.out.println(\"Default: \")\nRelativeDateFormat rdf = new RelativeDateFormat(c0.getTimeInMillis());\nCALL c0.getTimeInMillis()\nCALL System.out.println(rdf.format(c1.getTime()))\nCALL rdf.format(c1.getTime())\nCALL c1.getTime()\nCALL System.out.println()\nCALL System.out.println(\"Hide milliseconds: \")\nCALL rdf.setSecondFormatter(new DecimalFormat(\"0\"))\nCALL System.out.println(\"Show zero day output: \")\nCALL rdf.setShowZeroDays(true)\nCALL System.out.println(\"Alternative suffixes: \")\nCALL rdf.setShowZeroDays(false)\nCALL rdf.setDaySuffix(\":\")\nCALL rdf.setHourSuffix(\":\")\nCALL rdf.setMinuteSuffix(\":\")\nCALL rdf.setSecondSuffix(\"\")",
+        "public static void main(String[] args) {\n        GregorianCalendar c0 = new GregorianCalendar(2006, 10, 1, 0, 0, 0);\n        GregorianCalendar c1 = new GregorianCalendar(2006, 10, 1, 11, 37, 43);\n        c1.set(Calendar.MILLISECOND, 123);\n        \n        System.out.println(\"Default: \");\n        RelativeDateFormat rdf = new RelativeDateFormat(c0.getTimeInMillis());\n        System.out.println(rdf.format(c1.getTime()));\n        System.out.println();\n        \n        System.out.println(\"Hide milliseconds: \");\n        rdf.setSecondFormatter(new DecimalFormat(\"0\"));\n        System.out.println(rdf.format(c1.getTime()));        \n        System.out.println();\n\n        System.out.println(\"Show zero day output: \");\n        rdf.setShowZeroDays(true);\n        System.out.println(rdf.format(c1.getTime()));\n        System.out.println();\n        \n        System.out.println(\"Alternative suffixes: \");\n        rdf.setShowZeroDays(false);\n        rdf.setDaySuffix(\":\");\n        rdf.setHourSuffix(\":\");\n        rdf.setMinuteSuffix(\":\");\n        rdf.setSecondSuffix(\"\");\n        System.out.println(rdf.format(c1.getTime()));\n        System.out.println();\n    }"
+      ],
+      "features": {
+        "prior": 0.29166666666666663,
+        "rank_fraction": 0.75,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4222222222222222,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 29.0,
+        "literal_count": 22.0,
+        "source_tokens": 288.0,
+        "l0_tokens": 38.0,
+        "l1_tokens": 245.0,
+        "compression_ratio": 0.8506944444444444,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 29,
+        "literal_count": 22
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/SerialDate.java::SerialDate.getNearestDayOfWeek(final int targetDOW,\n                                                 final SerialDate base)",
+      "source": "public static SerialDate getNearestDayOfWeek(final int targetDOW,\n                                                 final SerialDate base) {\n\n        // check arguments...\n        if (!SerialDate.isValidWeekdayCode(targetDOW)) {\n            throw new IllegalArgumentException(\n                \"Invalid day-of-the-week code.\"\n            );\n        }\n\n        // find the date...\n        final int baseDOW = base.getDayOfWeek();\n        int adjust = -Math.abs(targetDOW - baseDOW);\n        if (adjust >= 4) {\n            adjust = 7 - adjust;\n        }\n        if (adjust <= -4) {\n            adjust = 7 + adjust;\n        }\n        return SerialDate.addDays(adjust, base);\n\n    }",
+      "prior": 0.25,
+      "rank": 19,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/SerialDate.java::SerialDate.getNearestDayOfWeek(final int targetDOW,\n                                                 final SerialDate base)\nSIGNATURE: public static SerialDate getNearestDayOfWeek(final int targetDOW,\n                                                 final SerialDate base)",
+        "METHOD: source/org/jfree/data/time/SerialDate.java::SerialDate.getNearestDayOfWeek(final int targetDOW,\n                                                 final SerialDate base)\nSIGNATURE: public static SerialDate getNearestDayOfWeek(final int targetDOW,\n                                                 final SerialDate base)\nSTRUCTURE (lossy):\nif (!SerialDate.isValidWeekdayCode(targetDOW))\nCALL SerialDate.isValidWeekdayCode(targetDOW)\nthrow new IllegalArgumentException( \"Invalid day-of-the-week code.\" );\nfinal int baseDOW = base.getDayOfWeek();\nCALL base.getDayOfWeek()\nint adjust = -Math.abs(targetDOW - baseDOW);\nCALL Math.abs(targetDOW - baseDOW)\nif (adjust >= 4)\nadjust = 7 - adjust\nif (adjust <= -4)\nadjust = 7 + adjust\nreturn SerialDate.addDays(adjust, base);\nCALL SerialDate.addDays(adjust, base)",
+        "public static SerialDate getNearestDayOfWeek(final int targetDOW,\n                                                 final SerialDate base) {\n\n        // check arguments...\n        if (!SerialDate.isValidWeekdayCode(targetDOW)) {\n            throw new IllegalArgumentException(\n                \"Invalid day-of-the-week code.\"\n            );\n        }\n\n        // find the date...\n        final int baseDOW = base.getDayOfWeek();\n        int adjust = -Math.abs(targetDOW - baseDOW);\n        if (adjust >= 4) {\n            adjust = 7 - adjust;\n        }\n        if (adjust <= -4) {\n            adjust = 7 + adjust;\n        }\n        return SerialDate.addDays(adjust, base);\n\n    }"
+      ],
+      "features": {
+        "prior": 0.25,
+        "rank_fraction": 0.7916666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.3684210526315789,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 4.0,
+        "literal_count": 5.0,
+        "source_tokens": 169.0,
+        "l0_tokens": 81.0,
+        "l1_tokens": 202.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 4,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/axis/MonthDateFormat.java::MonthDateFormat.MonthDateFormat(TimeZone zone, Locale locale, int chars, \n                           boolean[] showYear, DateFormat yearFormatter)",
+      "source": "public MonthDateFormat(TimeZone zone, Locale locale, int chars, \n                           boolean[] showYear, DateFormat yearFormatter) {\n        if (locale == null) {\n            throw new IllegalArgumentException(\"Null 'locale' argument.\");\n        }\n        DateFormatSymbols dfs = new DateFormatSymbols(locale);\n        String[] monthsFromLocale = dfs.getMonths();\n        this.months = new String[12];\n        for (int i = 0; i < 12; i++) {\n            if (chars > 0) {\n                this.months[i] = monthsFromLocale[i].substring(0, \n                        Math.min(chars, monthsFromLocale[i].length()));\n            }\n            else {\n                this.months[i] = monthsFromLocale[i];\n            }\n        }\n        this.calendar = new GregorianCalendar(zone);\n        this.showYear = showYear;\n        this.yearFormatter = yearFormatter; \n        \n        // the following is never used, but it seems that DateFormat requires\n        // it to be non-null.  It isn't well covered in the spec, refer to \n        // bug parade 5061189 for more info.\n        this.numberFormat = NumberFormat.getNumberInstance();\n    }",
+      "prior": 0.20833333333333337,
+      "rank": 20,
+      "levels": [
+        "METHOD: source/org/jfree/chart/axis/MonthDateFormat.java::MonthDateFormat.MonthDateFormat(TimeZone zone, Locale locale, int chars, \n                           boolean[] showYear, DateFormat yearFormatter)\nSIGNATURE: public MonthDateFormat(TimeZone zone, Locale locale, int chars, \n                           boolean[] showYear, DateFormat yearFormatter)",
+        "METHOD: source/org/jfree/chart/axis/MonthDateFormat.java::MonthDateFormat.MonthDateFormat(TimeZone zone, Locale locale, int chars, \n                           boolean[] showYear, DateFormat yearFormatter)\nSIGNATURE: public MonthDateFormat(TimeZone zone, Locale locale, int chars, \n                           boolean[] showYear, DateFormat yearFormatter)\nSTRUCTURE (lossy):\nif (locale == null)\nthrow new IllegalArgumentException(\"Null 'locale' argument.\");\nDateFormatSymbols dfs = new DateFormatSymbols(locale);\nString[] monthsFromLocale = dfs.getMonths();\nCALL dfs.getMonths()\nthis.months = new String[12]\nfor (int i = 0; i < 12; i++)\nint i = 0;\ni++\nif (chars > 0)\nthis.months[i] = monthsFromLocale[i].substring(0, Math.min(chars, monthsFromLocale[i].length()))\nCALL monthsFromLocale[i].substring(0, Math.min(chars, monthsFromLocale[i].length()))\nCALL Math.min(chars, monthsFromLocale[i].length())\nCALL monthsFromLocale[i].length()\nthis.months[i] = monthsFromLocale[i]\nthis.calendar = new GregorianCalendar(zone)\nthis.showYear = showYear\nthis.yearFormatter = yearFormatter\nthis.numberFormat = NumberFormat.getNumberInstance()\nCALL NumberFormat.getNumberInstance()",
+        "public MonthDateFormat(TimeZone zone, Locale locale, int chars, \n                           boolean[] showYear, DateFormat yearFormatter) {\n        if (locale == null) {\n            throw new IllegalArgumentException(\"Null 'locale' argument.\");\n        }\n        DateFormatSymbols dfs = new DateFormatSymbols(locale);\n        String[] monthsFromLocale = dfs.getMonths();\n        this.months = new String[12];\n        for (int i = 0; i < 12; i++) {\n            if (chars > 0) {\n                this.months[i] = monthsFromLocale[i].substring(0, \n                        Math.min(chars, monthsFromLocale[i].length()));\n            }\n            else {\n                this.months[i] = monthsFromLocale[i];\n            }\n        }\n        this.calendar = new GregorianCalendar(zone);\n        this.showYear = showYear;\n        this.yearFormatter = yearFormatter; \n        \n        // the following is never used, but it seems that DateFormat requires\n        // it to be non-null.  It isn't well covered in the spec, refer to \n        // bug parade 5061189 for more info.\n        this.numberFormat = NumberFormat.getNumberInstance();\n    }"
+      ],
+      "features": {
+        "prior": 0.20833333333333337,
+        "rank_fraction": 0.8333333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.2833333333333333,
+        "trace_match": 0.0,
+        "complexity": 4.0,
+        "call_count": 5.0,
+        "literal_count": 7.0,
+        "source_tokens": 284.0,
+        "l0_tokens": 89.0,
+        "l1_tokens": 291.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 4,
+        "call_count": 5,
+        "literal_count": 7
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/axis/PeriodAxisLabelInfo.java::PeriodAxisLabelInfo.createInstance(Date millisecond, TimeZone zone)",
+      "source": "public RegularTimePeriod createInstance(Date millisecond, TimeZone zone) {\n        RegularTimePeriod result = null;\n        try {\n            Constructor c = this.periodClass.getDeclaredConstructor(\n                new Class[] {Date.class, TimeZone.class}\n            );\n            result = (RegularTimePeriod) c.newInstance(\n                new Object[] {millisecond, zone}\n            );   \n        }\n        catch (Exception e) {\n            // do nothing            \n        }\n        return result;  \n    }",
+      "prior": 0.16666666666666663,
+      "rank": 21,
+      "levels": [
+        "METHOD: source/org/jfree/chart/axis/PeriodAxisLabelInfo.java::PeriodAxisLabelInfo.createInstance(Date millisecond, TimeZone zone)\nSIGNATURE: public RegularTimePeriod createInstance(Date millisecond, TimeZone zone)",
+        "METHOD: source/org/jfree/chart/axis/PeriodAxisLabelInfo.java::PeriodAxisLabelInfo.createInstance(Date millisecond, TimeZone zone)\nSIGNATURE: public RegularTimePeriod createInstance(Date millisecond, TimeZone zone)\nSTRUCTURE (lossy):\nRegularTimePeriod result = null;\nConstructor c = this.periodClass.getDeclaredConstructor( new Class[] {Date.class, TimeZone.class} );\nCALL this.periodClass.getDeclaredConstructor( new Class[] {Date.class, TimeZone.class} )\nresult = (RegularTimePeriod) c.newInstance( new Object[] {millisecond, zone} )\nCALL c.newInstance( new Object[] {millisecond, zone} )\ncatch (Exception e)\nreturn result;",
+        "public RegularTimePeriod createInstance(Date millisecond, TimeZone zone) {\n        RegularTimePeriod result = null;\n        try {\n            Constructor c = this.periodClass.getDeclaredConstructor(\n                new Class[] {Date.class, TimeZone.class}\n            );\n            result = (RegularTimePeriod) c.newInstance(\n                new Object[] {millisecond, zone}\n            );   \n        }\n        catch (Exception e) {\n            // do nothing            \n        }\n        return result;  \n    }"
+      ],
+      "features": {
+        "prior": 0.16666666666666663,
+        "rank_fraction": 0.875,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.4838709677419355,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 3.0,
+        "source_tokens": 128.0,
+        "l0_tokens": 54.0,
+        "l1_tokens": 156.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "source/org/jfree/chart/axis/PeriodAxis.java::PeriodAxis.createInstance(Class periodClass, \n                                             Date millisecond, TimeZone zone)",
+      "source": "private RegularTimePeriod createInstance(Class periodClass, \n                                             Date millisecond, TimeZone zone) {\n        RegularTimePeriod result = null;\n        try {\n            Constructor c = periodClass.getDeclaredConstructor(new Class[] {\n                    Date.class, TimeZone.class});\n            result = (RegularTimePeriod) c.newInstance(new Object[] {\n                    millisecond, zone});   \n        }\n        catch (Exception e) {\n            // do nothing            \n        }\n        return result;\n    }",
+      "prior": 0.125,
+      "rank": 22,
+      "levels": [
+        "METHOD: source/org/jfree/chart/axis/PeriodAxis.java::PeriodAxis.createInstance(Class periodClass, \n                                             Date millisecond, TimeZone zone)\nSIGNATURE: private RegularTimePeriod createInstance(Class periodClass, \n                                             Date millisecond, TimeZone zone)",
+        "METHOD: source/org/jfree/chart/axis/PeriodAxis.java::PeriodAxis.createInstance(Class periodClass, \n                                             Date millisecond, TimeZone zone)\nSIGNATURE: private RegularTimePeriod createInstance(Class periodClass, \n                                             Date millisecond, TimeZone zone)\nSTRUCTURE (lossy):\nRegularTimePeriod result = null;\nConstructor c = periodClass.getDeclaredConstructor(new Class[] { Date.class, TimeZone.class});\nCALL periodClass.getDeclaredConstructor(new Class[] { Date.class, TimeZone.class})\nresult = (RegularTimePeriod) c.newInstance(new Object[] { millisecond, zone})\nCALL c.newInstance(new Object[] { millisecond, zone})\ncatch (Exception e)\nreturn result;",
+        "private RegularTimePeriod createInstance(Class periodClass, \n                                             Date millisecond, TimeZone zone) {\n        RegularTimePeriod result = null;\n        try {\n            Constructor c = periodClass.getDeclaredConstructor(new Class[] {\n                    Date.class, TimeZone.class});\n            result = (RegularTimePeriod) c.newInstance(new Object[] {\n                    millisecond, zone});   \n        }\n        catch (Exception e) {\n            // do nothing            \n        }\n        return result;\n    }"
+      ],
+      "features": {
+        "prior": 0.125,
+        "rank_fraction": 0.9166666666666666,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5,
+        "trace_match": 0.0,
+        "complexity": 2.0,
+        "call_count": 2.0,
+        "literal_count": 3.0,
+        "source_tokens": 139.0,
+        "l0_tokens": 82.0,
+        "l1_tokens": 181.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 2,
+        "call_count": 2,
+        "literal_count": 3
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/Day.java::Day.Day(Date time, TimeZone zone)",
+      "source": "public Day(Date time, TimeZone zone) {\n        if (time == null) {\n            throw new IllegalArgumentException(\"Null 'time' argument.\");\n        }\n        if (zone == null) {\n            throw new IllegalArgumentException(\"Null 'zone' argument.\");\n        }\n        Calendar calendar = Calendar.getInstance(zone);\n        calendar.setTime(time);\n        int d = calendar.get(Calendar.DAY_OF_MONTH);\n        int m = calendar.get(Calendar.MONTH) + 1;\n        int y = calendar.get(Calendar.YEAR);\n        this.serialDate = SerialDate.createInstance(d, m, y);\n        peg(calendar);\n    }",
+      "prior": 0.08333333333333337,
+      "rank": 23,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/Day.java::Day.Day(Date time, TimeZone zone)\nSIGNATURE: public Day(Date time, TimeZone zone)",
+        "METHOD: source/org/jfree/data/time/Day.java::Day.Day(Date time, TimeZone zone)\nSIGNATURE: public Day(Date time, TimeZone zone)\nSTRUCTURE (lossy):\nif (time == null)\nthrow new IllegalArgumentException(\"Null 'time' argument.\");\nif (zone == null)\nthrow new IllegalArgumentException(\"Null 'zone' argument.\");\nCalendar calendar = Calendar.getInstance(zone);\nCALL Calendar.getInstance(zone)\nCALL calendar.setTime(time)\nint d = calendar.get(Calendar.DAY_OF_MONTH);\nCALL calendar.get(Calendar.DAY_OF_MONTH)\nint m = calendar.get(Calendar.MONTH) + 1;\nCALL calendar.get(Calendar.MONTH)\nint y = calendar.get(Calendar.YEAR);\nCALL calendar.get(Calendar.YEAR)\nthis.serialDate = SerialDate.createInstance(d, m, y)\nCALL SerialDate.createInstance(d, m, y)\nCALL peg(calendar)",
+        "public Day(Date time, TimeZone zone) {\n        if (time == null) {\n            throw new IllegalArgumentException(\"Null 'time' argument.\");\n        }\n        if (zone == null) {\n            throw new IllegalArgumentException(\"Null 'zone' argument.\");\n        }\n        Calendar calendar = Calendar.getInstance(zone);\n        calendar.setTime(time);\n        int d = calendar.get(Calendar.DAY_OF_MONTH);\n        int m = calendar.get(Calendar.MONTH) + 1;\n        int y = calendar.get(Calendar.YEAR);\n        this.serialDate = SerialDate.createInstance(d, m, y);\n        peg(calendar);\n    }"
+      ],
+      "features": {
+        "prior": 0.08333333333333337,
+        "rank_fraction": 0.9583333333333334,
+        "ranking_gap": 0.04166666666666674,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.5555555555555556,
+        "trace_match": 0.0,
+        "complexity": 3.0,
+        "call_count": 7.0,
+        "literal_count": 5.0,
+        "source_tokens": 147.0,
+        "l0_tokens": 32.0,
+        "l1_tokens": 189.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 3,
+        "call_count": 7,
+        "literal_count": 5
+      }
+    },
+    {
+      "function_id": "source/org/jfree/data/time/SerialDate.java::SerialDate.getFollowingDayOfWeek(final int targetDOW)",
+      "source": "public SerialDate getFollowingDayOfWeek(final int targetDOW) {\n        return getFollowingDayOfWeek(targetDOW, this);\n    }",
+      "prior": 0.04166666666666663,
+      "rank": 24,
+      "levels": [
+        "METHOD: source/org/jfree/data/time/SerialDate.java::SerialDate.getFollowingDayOfWeek(final int targetDOW)\nSIGNATURE: public SerialDate getFollowingDayOfWeek(final int targetDOW)",
+        "METHOD: source/org/jfree/data/time/SerialDate.java::SerialDate.getFollowingDayOfWeek(final int targetDOW)\nSIGNATURE: public SerialDate getFollowingDayOfWeek(final int targetDOW)\nSTRUCTURE (lossy):\nreturn getFollowingDayOfWeek(targetDOW, this);\nCALL getFollowingDayOfWeek(targetDOW, this)",
+        "public SerialDate getFollowingDayOfWeek(final int targetDOW) {\n        return getFollowingDayOfWeek(targetDOW, this);\n    }"
+      ],
+      "features": {
+        "prior": 0.04166666666666663,
+        "rank_fraction": 1.0,
+        "ranking_gap": 0.04166666666666663,
+        "ranker_agreement": 0.0,
+        "ranker_disagreement": 1.0,
+        "failure_relevance": 0.631578947368421,
+        "trace_match": 0.0,
+        "complexity": 1.0,
+        "call_count": 1.0,
+        "literal_count": 0.0,
+        "source_tokens": 31.0,
+        "l0_tokens": 45.0,
+        "l1_tokens": 72.0,
+        "compression_ratio": 1,
+        "parse_error": 0.0,
+        "sketch_truncated": 0.0
+      },
+      "sketch_metadata": {
+        "parser": "tree-sitter-java",
+        "parse_error": false,
+        "truncated": false,
+        "complexity": 1,
+        "call_count": 1,
+        "literal_count": 0
+      }
+    }
+  ],
+  "rank_metadata": {
+    "source/org/jfree/chart/axis/SegmentedTimeline.java::SegmentedTimeline.firstMondayAfter1900()": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/Week.java::Week.Week(Date time, TimeZone zone, Locale locale)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/Week.java::Week.getFirstMillisecond(Calendar calendar)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/axis/DateTickUnit.java::DateTickUnit.addToDate(Date base, TimeZone zone)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/axis/DateTickUnit.java::DateTickUnit.rollDate(Date base, TimeZone zone)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/Week.java::Week.getLastMillisecond(Calendar calendar)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/Day.java::Day.getFirstMillisecond(Calendar calendar)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/RegularTimePeriod.java::RegularTimePeriod.createInstance(Class c, Date millisecond,\n                                                   TimeZone zone)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/axis/QuarterDateFormat.java::QuarterDateFormat.QuarterDateFormat(TimeZone zone, String[] quarterSymbols,\n            boolean quarterFirst)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/Millisecond.java::Millisecond.Millisecond(Date time, TimeZone zone)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/Millisecond.java::Millisecond.getFirstMillisecond(Calendar calendar)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/Minute.java::Minute.getFirstMillisecond(Calendar calendar)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/Hour.java::Hour.getFirstMillisecond(Calendar calendar)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/Second.java::Second.getFirstMillisecond(Calendar calendar)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/SerialDate.java::SerialDate.getFollowingDayOfWeek(final int targetWeekday,\n                                                   final SerialDate base)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/SerialDate.java::SerialDate.getPreviousDayOfWeek(final int targetWeekday,\n                                                  final SerialDate base)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/Day.java::Day.getLastMillisecond(Calendar calendar)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/util/RelativeDateFormat.java::RelativeDateFormat.main(String[] args)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/SerialDate.java::SerialDate.getNearestDayOfWeek(final int targetDOW,\n                                                 final SerialDate base)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/axis/MonthDateFormat.java::MonthDateFormat.MonthDateFormat(TimeZone zone, Locale locale, int chars, \n                           boolean[] showYear, DateFormat yearFormatter)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/axis/PeriodAxisLabelInfo.java::PeriodAxisLabelInfo.createInstance(Date millisecond, TimeZone zone)": {
+      "ranks": {}
+    },
+    "source/org/jfree/chart/axis/PeriodAxis.java::PeriodAxis.createInstance(Class periodClass, \n                                             Date millisecond, TimeZone zone)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/Day.java::Day.Day(Date time, TimeZone zone)": {
+      "ranks": {}
+    },
+    "source/org/jfree/data/time/SerialDate.java::SerialDate.getFollowingDayOfWeek(final int targetDOW)": {
+      "ranks": {}
+    }
+  },
+  "rank_depths": {
+    "SBIR": 10,
+    "Ochiai": 10,
+    "BoostN": 10
+  },
+  "candidate_provider": {
+    "provider": "bm25",
+    "indexed_entities": 7752,
+    "retrieved_unique_entities": 24,
+    "deduplication": "highest_bm25_or_lexical_score_per_entity_id",
+    "query": "issue plus allowed failure evidence",
+    "prior": "ordinal retrieval rank"
+  },
+  "pool_hash": "c8fa0f9ffd80f51e32c140d04b009292bdcb98fe7112dfb6c9d3b9e336adcfdd",
+  "evidence_sha256": "daaeafaea481f8e8c35d498d962c0decaaa64cd05cf26339d7a94bf53eccfe5d"
+}
