@@ -3,6 +3,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import research_method_agent as m
@@ -156,6 +157,108 @@ class TestIntegration(unittest.TestCase):
         calib = manifest['bugs'][:3]
         self.assertEqual(m.conformal_threshold(calib, labels['bugs'], alpha=0.10), 0.0)
         self.assertGreater(m.conformal_threshold(calib, labels['bugs'], alpha=0.4), 0.0)
+
+
+
+class TestMalformedModelRecovery(unittest.TestCase):
+    def test_truncated_json_preserves_provider_usage_and_requests_schema(self):
+        class Response:
+            def __enter__(self):
+                return self
+            def __exit__(self, *args):
+                pass
+            def read(self):
+                return json.dumps({
+                    'prompt_eval_count': 154, 'eval_count': 130,
+                    'done_reason': 'length',
+                    'message': {'content': '{"suspicion": 0.5, "uncertainty": 0.2, '
+                                           '"missing_dependency": false, "explanation": "unfinished'},
+                }).encode()
+        requests = []
+        def stub(req, timeout):
+            requests.append(json.loads(req.data))
+            return Response()
+        with patch.object(m.urllib.request, 'urlopen', side_effect=stub):
+            result = m.ollama_call('http://127.0.0.1:11434', 'qwen2.5:7b',
+                                   'AssertionError', 'X::f()', 'return 1;', 'l1')
+        self.assertEqual(result['status'], 'invalid_model_output')
+        self.assertEqual(result['input_tokens'] + result['output_tokens'], 284)
+        self.assertEqual(result['done_reason'], 'length')
+        self.assertEqual(requests[0]['options']['num_predict'], 384)
+        self.assertIsInstance(requests[0]['format'], dict)
+        self.assertTrue(requests[0]['format']['additionalProperties'] is False)
+
+    def test_invalid_response_is_logged_and_retried_once(self):
+        manifest, _, _ = fixture()
+        caps = []
+        def fake_call(url, model, evidence, candidate, source, kind, max_output=384):
+            caps.append(max_output)
+            if len(caps) == 1:
+                return {'status': 'invalid_model_output', 'error': 'truncated',
+                        'usage_known': True, 'input_tokens': 100, 'output_tokens': 130,
+                        'raw_response': '{"explanation":"unfinished'}
+            return {'status': 'ok', 'score': 0.72, 'uncertainty': 0.2,
+                    'missing_dependency': False, 'reason': 'ok',
+                    'usage_known': True, 'input_tokens': 105, 'output_tokens': 32,
+                    'raw_response': '{"suspicion":0.72}'}
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'observations.json'
+            with patch.object(m, 'ollama_call', side_effect=fake_call):
+                state = m.collect(manifest, path, 'http://localhost', 'qwen2.5:7b',
+                                  'qwen2.5:7b', 1, 1, 2)
+            data = m.load(path)
+            self.assertTrue(state['limit_reached'])
+            self.assertEqual(state['physical_tokens'], 367)
+            self.assertEqual([a['status'] for a in data['attempts']],
+                             ['invalid_model_output', 'ok'])
+            self.assertEqual(len(data['observations']), 1)
+            self.assertEqual(caps, [384, 768])
+            with patch.object(m, 'ollama_call', return_value={
+                'status': 'ok', 'score': 0.5, 'uncertainty': 0.5,
+                'missing_dependency': False, 'input_tokens': 10,
+                'output_tokens': 10, 'usage_known': True}) as run:
+                rest = m.collect(manifest, path, 'http://localhost', 'qwen2.5:7b',
+                                 'qwen2.5:7b', 1, 1, 1)
+                self.assertEqual(rest['physical_tokens'], 387)
+                self.assertEqual(len(m.load(path)['observations']), 2)
+                self.assertEqual(run.call_count, 1)
+
+    def test_repeated_invalid_responses_do_not_create_observation(self):
+        manifest, _, _ = fixture()
+        def invalid(*args, **kwargs):
+            return {'status': 'invalid_model_output', 'error': 'truncated',
+                    'usage_known': True, 'input_tokens': 10, 'output_tokens': 130}
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'observations.json'
+            with patch.object(m, 'ollama_call', side_effect=invalid):
+                with self.assertRaisesRegex(RuntimeError, 'Two invalid JSON'):
+                    m.collect(manifest, path, 'http://localhost', 'qwen2.5:7b',
+                              'qwen2.5:7b', 1, 1, 10)
+            data = m.load(path)
+            self.assertEqual(len(data['observations']), 0)
+            self.assertEqual(len(data['attempts']), 2)
+            self.assertEqual(sum(x['input_tokens'] + x['output_tokens']
+                                 for x in data['attempts']), 280)
+            with patch.object(m, 'ollama_call') as spy:
+                with self.assertRaisesRegex(RuntimeError, 'manual review required'):
+                    m.collect(manifest, path, 'http://localhost', 'qwen2.5:7b',
+                              'qwen2.5:7b', 1, 1, 10)
+                spy.assert_not_called()
+
+    def test_legacy_unmetered_failure_needs_new_output(self):
+        manifest, _, _ = fixture()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'observations.json'
+            m.save(path, {'schema': 'research-agent-observations-v1',
+                          'manifest_hash': m.sha(manifest),
+                          'models': {'l1': 'qwen2.5:7b', 'full': 'qwen2.5:7b'},
+                          'observations': [{'bug': 'Fixture-0', 'candidate': 'c0',
+                                            'kind': 'l1', 'status': 'error',
+                                            'error': 'Unterminated string'}]})
+            with self.assertRaisesRegex(ValueError, 'NEW output directory'):
+                m.collect(manifest, path, 'http://localhost', 'qwen2.5:7b',
+                          'qwen2.5:7b', 1, 1, 10)
+            self.assertEqual(len(m.load(path)['observations']), 1)
 
 if __name__ == "__main__":
     unittest.main()
