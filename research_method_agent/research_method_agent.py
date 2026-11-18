@@ -10,6 +10,7 @@ import csv
 import hashlib
 import json
 import math
+import os
 import random
 import re
 import statistics
@@ -35,7 +36,9 @@ def load(path):
 def save(path, obj):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(obj, indent=2, sort_keys=True, ensure_ascii=False) + '\n', encoding='utf-8')
+    temporary = path.with_name(path.name + '.tmp')
+    temporary.write_text(json.dumps(obj, indent=2, sort_keys=True, ensure_ascii=False) + '\n', encoding='utf-8')
+    os.replace(temporary, path)
 
 
 def validate(manifest):
@@ -116,19 +119,36 @@ def obs_index(data):
     return index
 
 
-def ollama_call(url, model, evidence, candidate, text, kind, max_output=130):
+def ollama_call(url, model, evidence, candidate, text, kind, max_output=384):
+    """One paid model call. Return even malformed replies with exact provider usage.
+
+    Only a validated response can become a fault-localization observation.
+    Every provider response is independently logged by collect() as an attempt.
+    """
     if len(evidence) > 12000 or len(text) > 24000:
         raise ValueError('Evidence exceeds declared prompt cap; refusing silent truncation')
     prompt = (
         'You are evaluating one candidate code location for a software failure. '
         'Use only the observed failure and code supplied. Do not invent source facts. '
-        'Return JSON with numeric suspicion between 0 and 1, numeric uncertainty between 0 and 1, '
-        'boolean missing_dependency, and a brief explanation.\n'
+        'Reply with ONLY the requested JSON fields. Use numbers between 0 and 1 for '
+        'suspicion and uncertainty, boolean missing_dependency, and an explanation '
+        'of 20 words or less.\n'
         'Failure evidence:\n' + evidence + '\n'
         'Candidate ID: ' + candidate + '\n'
         'Evidence form: ' + kind + '\nCode evidence:\n' + text
     )
-    data = {'model': model, 'stream': False, 'format': 'json',
+    schema = {
+        'type': 'object',
+        'properties': {
+            'suspicion': {'type': 'number', 'minimum': 0, 'maximum': 1},
+            'uncertainty': {'type': 'number', 'minimum': 0, 'maximum': 1},
+            'missing_dependency': {'type': 'boolean'},
+            'explanation': {'type': 'string', 'maxLength': 160},
+        },
+        'required': ['suspicion', 'uncertainty', 'missing_dependency', 'explanation'],
+        'additionalProperties': False,
+    }
+    data = {'model': model, 'stream': False, 'format': schema,
             'messages': [{'role': 'user', 'content': prompt}],
             'options': {'temperature': 0, 'seed': 42, 'num_ctx': 16384, 'num_predict': max_output}}
     payload = json.dumps(data).encode()
@@ -138,19 +158,36 @@ def ollama_call(url, model, evidence, candidate, text, kind, max_output=130):
     with urllib.request.urlopen(request, timeout=360) as response:
         raw = json.loads(response.read())
     elapsed = time.monotonic() - started
-    if type(raw.get('prompt_eval_count')) is not int or type(raw.get('eval_count')) is not int:
-        raise RuntimeError('Provider did not return exact input/output token counts')
-    answer = json.loads(raw['message']['content'])
-    score = float(answer['suspicion'])
-    uncertainty = float(answer['uncertainty'])
-    if not all(math.isfinite(x) and 0 <= x <= 1 for x in (score, uncertainty)):
-        raise RuntimeError('LLM output scores must be in [0,1]')
-    return {'status': 'ok', 'score': score, 'uncertainty': uncertainty,
-            'missing_dependency': answer.get('missing_dependency') is True,
-            'reason': str(answer.get('explanation', ''))[:700],
-            'input_tokens': raw['prompt_eval_count'], 'output_tokens': raw['eval_count'],
+    if (type(raw.get('prompt_eval_count')) is not int or
+            type(raw.get('eval_count')) is not int or
+            raw['prompt_eval_count'] < 0 or raw['eval_count'] < 0):
+        raise RuntimeError('Provider did not return exact nonnegative input/output token counts')
+    response_text = raw.get('message', {}).get('content', '')
+    base = {'input_tokens': raw['prompt_eval_count'], 'output_tokens': raw['eval_count'],
             'duration_seconds': elapsed, 'model': model, 'prompt_sha256': sha(data),
-            'prompt': prompt, 'raw_response': raw['message']['content'][:10000]}
+            'prompt': prompt, 'raw_response': response_text,
+            'done_reason': raw.get('done_reason', ''), 'num_predict': max_output,
+            'usage_known': True}
+    try:
+        answer = json.loads(response_text)
+        if not isinstance(answer, dict):
+            raise ValueError('JSON root is not an object')
+        if set(answer) != set(schema['required']):
+            raise ValueError('JSON fields are missing or unexpected')
+        if type(answer['missing_dependency']) is not bool or not isinstance(answer['explanation'], str):
+            raise ValueError('Invalid dependency flag or explanation type')
+        if len(answer['explanation']) > 160:
+            raise ValueError('Explanation exceeds structured response limit')
+        if (any(type(answer[field]) not in (float, int) for field in ('suspicion', 'uncertainty'))
+                or not all(math.isfinite(answer[field]) and 0 <= answer[field] <= 1
+                           for field in ('suspicion', 'uncertainty'))):
+            raise ValueError('Invalid numeric scores in JSON response')
+    except (ValueError, KeyError, TypeError) as exc:
+        return {'status': 'invalid_model_output', 'error': str(exc)[:400], **base}
+    return {'status': 'ok', 'score': float(answer['suspicion']),
+            'uncertainty': float(answer['uncertainty']),
+            'missing_dependency': answer['missing_dependency'],
+            'reason': answer['explanation'], **base}
 
 
 def compression_prompt(evidence, compressor):
@@ -164,7 +201,11 @@ def compression_prompt(evidence, compressor):
 
 def collect(manifest, output, url, l1_model, full_model, max_bugs, max_candidates,
             max_calls, use_llmlingua2=False, physical_token_cap=500000):
-    """Collect independent real LLM observations; no labels are loaded here."""
+    """Collect independent real LLM observations, logging every paid attempt.
+
+    A malformed response receives one bounded retry. It is never assigned a
+    synthetic score. Failed attempts count toward the physical token cap.
+    """
     validate(manifest)
     output = Path(output)
     if output.exists():
@@ -174,11 +215,17 @@ def collect(manifest, output, url, l1_model, full_model, max_bugs, max_candidate
         if saved.get('models') != {'l1': l1_model, 'full': full_model}:
             raise ValueError('Refusing to resume with different model identity')
         if any(o.get('status') != 'ok' for o in saved['observations']):
-            raise ValueError('Prior collection has failed calls; review before retrying')
+            raise ValueError('Legacy failed observation has unknown physical usage. '
+                             'Preserve this file and use a NEW output directory for a clean study.')
+        if 'attempts' not in saved:
+            saved['legacy_observation_tokens'] = sum(
+                o['input_tokens'] + o['output_tokens'] for o in saved['observations'])
+            saved['attempts'] = []
     else:
         saved = {'schema': 'research-agent-observations-v1',
                  'provenance': 'live_ollama', 'models': {'l1': l1_model, 'full': full_model},
-                 'manifest_hash': sha(manifest), 'observations': []}
+                 'manifest_hash': sha(manifest), 'observations': [], 'attempts': [],
+                 'legacy_observation_tokens': 0}
     done = obs_index(saved)
     compressor = None
     if use_llmlingua2:
@@ -186,8 +233,17 @@ def collect(manifest, output, url, l1_model, full_model, max_bugs, max_candidate
         compressor = PromptCompressor(model_name='microsoft/llmlingua-2-xlm-roberta-large-meetingbank',
                                       use_llmlingua2=True)
     calls = 0
-    total_tokens = sum(o.get('input_tokens', 0) + o.get('output_tokens', 0)
-                       for o in saved['observations'] if o.get('status') == 'ok')
+    total_tokens = (saved.get('legacy_observation_tokens', 0) +
+                    sum(a['input_tokens'] + a['output_tokens'] for a in saved['attempts']
+                        if a.get('usage_known')))
+
+    def outcome(paused):
+        return {'new_calls': calls, 'physical_tokens': total_tokens,
+                'logged_attempts': len(saved['attempts']),
+                'invalid_output_calls': sum(a.get('status') == 'invalid_model_output'
+                                            for a in saved['attempts']),
+                'limit_reached': paused, 'file': str(output)}
+
     for bug in manifest['bugs'][:max_bugs]:
         candidates = sorted_candidates(bug)[:max_candidates]
         lookup = {c['id']: c for c in bug['candidates']}
@@ -208,26 +264,41 @@ def collect(manifest, output, url, l1_model, full_model, max_bugs, max_candidate
                 key = observation_key(bug['id'], c['id'], kind)
                 if key in done:
                     continue
-                if calls >= max_calls or total_tokens >= physical_token_cap:
-                    save(output, saved)
-                    return {'new_calls': calls, 'physical_tokens': total_tokens,
-                            'limit_reached': True, 'file': str(output)}
-                try:
-                    result = ollama_call(url, model, evidence, c['id'], source, kind)
-                except Exception as exc:
-                    result = {'status': 'error', 'error': str(exc)[:1000]}
+                previous = [a for a in saved['attempts']
+                            if observation_key(a['bug'], a['candidate'], a['kind']) == key]
+                if any(a.get('status') not in ('ok', 'invalid_model_output') for a in previous):
+                    raise RuntimeError('Unknown provider usage for prior call: ' + key)
+                if len(previous) >= 2:
+                    raise RuntimeError('Two invalid responses recorded, manual review required: ' + key)
+                for try_index in range(len(previous), 2):
+                    if calls >= max_calls or total_tokens >= physical_token_cap:
+                        save(output, saved)
+                        return outcome(True)
+                    try:
+                        result = ollama_call(url, model, evidence, c['id'], source, kind,
+                                             max_output=384 if try_index == 0 else 768)
+                    except Exception as exc:
+                        item = {'bug': bug['id'], 'candidate': c['id'], 'kind': kind,
+                                'status': 'request_error_unknown_usage', 'usage_known': False,
+                                'error': str(exc)[:1000]}
+                        saved['attempts'].append(item)
+                        save(output, saved)
+                        raise RuntimeError('Provider call failed with unknown usage; '
+                                           'do not silently retry: ' + key) from exc
                     item = {'bug': bug['id'], 'candidate': c['id'], 'kind': kind, **result}
-                    saved['observations'].append(item)
+                    saved['attempts'].append(item)
+                    calls += 1
+                    total_tokens += result['input_tokens'] + result['output_tokens']
+                    if result['status'] == 'ok':
+                        saved['observations'].append(item)
+                        done[key] = item
                     save(output, saved)
-                    raise RuntimeError('Real collection failed; error saved, no fake result: ' + key) from exc
-                item = {'bug': bug['id'], 'candidate': c['id'], 'kind': kind, **result}
-                saved['observations'].append(item)
-                done[key] = item
-                calls += 1
-                total_tokens += result['input_tokens'] + result['output_tokens']
-                save(output, saved)
-    return {'new_calls': calls, 'physical_tokens': total_tokens,
-            'limit_reached': False, 'file': str(output)}
+                    if result['status'] == 'ok':
+                        break
+                    if try_index == 1:
+                        raise RuntimeError('Two invalid JSON replies, both attempts preserved with '
+                                           'physical token usage; no fabricated score: ' + key)
+    return outcome(False)
 
 
 def uncertainty_priority(c, seen, graph=False):
