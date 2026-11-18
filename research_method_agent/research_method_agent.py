@@ -632,6 +632,94 @@ def evaluate(manifest, observation, labels, output, budget, max_verify, buffer, 
             'total_arms': len(results), 'report': str(Path(output) / 'report.md')}
 
 
+def svg_tradeoff(entries, path):
+    """Portable SVG plot of exploratory MRR change vs measured logical token delta."""
+    from xml.sax.saxutils import escape
+    pts = [p for p in entries if p['arm'] != 'l1' and p['paired_n'] >= 2]
+    if not pts:
+        Path(path).write_text('<svg xmlns="http://www.w3.org/2000/svg" width="640" height="100"><text x="20" y="50">No paired evidence for plot</text></svg>')
+        return
+    w, h, left, right, top, bottom = 800, 470, 95, 45, 50, 70
+    xs = [x['mean_token_delta'] for x in pts] + [0]
+    ys = [x['delta_mrr_vs_l1'] for x in pts] + [0]
+    mnx, mxx = min(xs), max(xs)
+    mny, mxy = min(ys), max(ys)
+    if mnx == mxx: mnx, mxx = mnx - 1, mxx + 1
+    if mny == mxy: mny, mxy = mny - 0.02, mxy + 0.02
+    dx, dy = (mxx - mnx) * 0.08, (mxy - mny) * 0.08
+    mnx, mxx, mny, mxy = mnx - dx, mxx + dx, mny - dy, mxy + dy
+    def px(x): return left + (x - mnx) * (w - left - right) / (mxx - mnx)
+    def py(y): return h - bottom - (y - mny) * (h - bottom - top) / (mxy - mny)
+    items = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}">',
+             '<rect width="100%" height="100%" fill="white"/>',
+             '<text x="30" y="25" font-size="17">MRR change vs token cost, exploratory replay</text>',
+             f'<line x1="{left}" y1="{h-bottom}" x2="{w-right}" y2="{h-bottom}" stroke="#333"/>',
+             f'<line x1="{left}" y1="{top}" x2="{left}" y2="{h-bottom}" stroke="#333"/>',
+             f'<line x1="{px(0):.1f}" y1="{top}" x2="{px(0):.1f}" y2="{h-bottom}" stroke="#888" stroke-dasharray="5,5"/>',
+             f'<line x1="{left}" y1="{py(0):.1f}" x2="{w-right}" y2="{py(0):.1f}" stroke="#888" stroke-dasharray="5,5"/>',
+             f'<text x="{(left+w-right)/2:.1f}" y="{h-18}" text-anchor="middle" font-size="13">Mean logical token difference vs L1, negative = fewer tokens</text>',
+             f'<text x="22" y="{h/2}" transform="rotate(-90 22 {h/2})" text-anchor="middle" font-size="13">Mean MRR difference vs L1</text>']
+    for val in (mnx, 0, mxx):
+        items.append(f'<text x="{px(val):.1f}" y="{h-bottom+19}" font-size="11" text-anchor="middle">{val:.0f}</text>')
+    for val in (mny, 0, mxy):
+        items.append(f'<text x="{left-9}" y="{py(val)+4:.1f}" font-size="11" text-anchor="end">{val:+.3f}</text>')
+    for item in pts:
+        tip = escape(f"{item['arm']}, {item['config']}, paired={item['paired_n']}, deltaMRR={item['delta_mrr_vs_l1']:+.4f}, deltaTokens={item['mean_token_delta']:+.0f}")
+        items.append(f'<circle cx="{px(item["mean_token_delta"]):.1f}" cy="{py(item["delta_mrr_vs_l1"]):.1f}" r="5" fill="#3c699f" fill-opacity="0.45"><title>{tip}</title></circle>')
+    items.append('<text x="30" y="449" font-size="11" fill="#555">Each point is one arm/budget configuration on matched bugs, not an independent study.</text>')
+    items.append('</svg>')
+    Path(path).write_text('\n'.join(items), encoding='utf-8')
+
+
+def run_sweep(manifest, observation, labels, output, budgets, max_verifies, buffers, alpha=0.1):
+    """Offline grid search for *development only*, no new model calls.
+
+    Reports all configurations, avoids selecting a single flattering result.
+    """
+    root = Path(output)
+    root.mkdir(parents=True, exist_ok=True)
+    entries = []
+    for budget in sorted(set(budgets)):
+        for verify in sorted(set(max_verifies)):
+            for buffer in sorted(set(buffers)):
+                if budget < 100 or verify < 0 or buffer < 0:
+                    raise ValueError('Invalid sweep budget, verification count or buffer')
+                config = f'budget_{budget}_full_{verify}_buffer_{buffer}'
+                directory = root / config
+                evaluate(manifest, observation, labels, directory, budget, verify, buffer, alpha)
+                record = load(directory / 'results.json')
+                for s in record['summary']:
+                    if s['paired_n']:
+                        entries.append({'config': config, 'arm': s['arm'], 'budget': budget,
+                                        'verify': verify, 'buffer': buffer, **s})
+    # The comparisons below are a screening index only, not hypothesis tests.
+    # Requiring paired observations prevents incomplete arms from becoming wins.
+    promoted = [x for x in entries if x['arm'] != 'l1' and x['paired_n'] >= 5
+                and (x['delta_mrr_vs_l1'] > 0.001 or
+                     (x['delta_mrr_vs_l1'] >= -0.01 and x['mean_token_delta'] <= -200))]
+    promoted.sort(key=lambda x: (-x['delta_mrr_vs_l1'], x['mean_token_delta'], -x['paired_n']))
+    save(root / 'grid.json', {'schema':'method-discovery-sweep-v1',
+                             'provenance': observation.get('provenance', 'unspecified'),
+                             'configs': entries, 'exploratory_candidates': promoted})
+    lines = ['# Method-discovery sweep', '',
+             f"Provenance: {observation.get('provenance', 'unspecified')}. No new model calls.",
+             'All candidates below are exploratory and must be tested on untouched bugs.',
+             'Grid search over multiple budgets risks selection bias; it is not a statistical proof.', '',
+             '| Candidate arm | Budget | Full cap | Buffer | Paired n | Delta MRR | Delta tokens |',
+             '|---|---:|---:|---:|---:|---:|---:|']
+    for s in promoted[:30]:
+        lines.append(f"| {s['arm']} | {s['budget']} | {s['verify']} | {s['buffer']} | "
+                     f"{s['paired_n']} | {s['delta_mrr_vs_l1']:+.4f} | {s['mean_token_delta']:+.0f} |")
+    if not promoted:
+        lines.append('| No candidate met the exploratory screen | | | | | | |')
+    lines += ['', 'Run an independent held-out evaluation before claiming a promising result.',
+              'Inspect regressions, actual call counts and dependency coverage in each config results.json.']
+    (root / 'sweep_report.md').write_text('\n'.join(lines) + '\n', encoding='utf-8')
+    svg_tradeoff(entries, root / 'tradeoff.svg')
+    return {'configs': len(set(x['config'] for x in entries)),
+            'candidate_configs': len(promoted), 'report': str(root / 'sweep_report.md')}
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
     sub = p.add_subparsers(dest='command', required=True)
@@ -647,6 +735,15 @@ def main(argv=None):
     e.add_argument('--bugs', default='')
     e.add_argument('--candidate-limit', type=int, default=24)
     f.add_argument('--manifest', required=True)
+    sweep = sub.add_parser('sweep', help='Cost/accuracy grid from saved real observations, no new calls')
+    sweep.add_argument('--manifest', required=True)
+    sweep.add_argument('--observations', required=True)
+    sweep.add_argument('--gold', required=True)
+    sweep.add_argument('--output', required=True)
+    sweep.add_argument('--budgets', default='16000,24000,40000,60000')
+    sweep.add_argument('--max-verifies', default='1,2,3')
+    sweep.add_argument('--buffers', default='0,1')
+    sweep.add_argument('--alpha', type=float, default=0.10)
     study = sub.add_parser('study', help='One-command GRAFT sample preparation and optional real study')
     study.add_argument('--config', required=True)
     study.add_argument('--output-dir', required=True)
@@ -686,6 +783,14 @@ def main(argv=None):
     b.add_argument('--adaptive-buffer', type=int, default=1)
     b.add_argument('--alpha', type=float, default=0.10)
     args = p.parse_args(argv)
+    if args.command == 'sweep':
+        manifest = load(args.manifest)
+        def values(s):
+            return [int(x.strip()) for x in s.split(',') if x.strip()]
+        print(json.dumps(run_sweep(manifest, load(args.observations), load(args.gold),
+              args.output, values(args.budgets), values(args.max_verifies),
+              values(args.buffers), args.alpha), indent=2))
+        return
     if args.command == 'study':
         out = Path(args.output_dir)
         path = out / 'manifest.json'
