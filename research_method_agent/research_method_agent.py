@@ -21,7 +21,7 @@ from pathlib import Path
 
 ARMS = (
     'l1', 'adaptive_k', 'conformal_k', 'dependency_repair', 'risk_full', 'esr_proxy',
-    'cascade', 'code_cards', 'combined', 'llmlingua2',
+    'cascade', 'code_cards', 'code_cards_risk_full', 'combined', 'llmlingua2',
 )
 OBS_KINDS = ('l1', 'full', 'dependency', 'card', 'llmlingua2')
 
@@ -382,7 +382,7 @@ def evaluate_arm(bug, obs, arm, budget, buffer=1, max_verify=2, conformal_thresh
         base = [c for c in candidates if float(c['prior']) >= conformal_threshold]
     else:
         base = candidates
-    base_kind = 'card' if arm == 'code_cards' else 'llmlingua2' if arm == 'llmlingua2' else 'l1'
+    base_kind = 'card' if arm in ('code_cards', 'code_cards_risk_full') else 'llmlingua2' if arm == 'llmlingua2' else 'l1'
     for c in base:
         if not take(c, base_kind):
             break
@@ -392,7 +392,7 @@ def evaluate_arm(bug, obs, arm, budget, buffer=1, max_verify=2, conformal_thresh
         for c in dep_candidates[:max_verify]:
             if not take(c, 'dependency'):
                 break
-    if not stopped and arm in ('risk_full', 'cascade', 'esr_proxy', 'combined'):
+    if not stopped and arm in ('risk_full', 'code_cards_risk_full', 'cascade', 'esr_proxy', 'combined'):
         if arm == 'esr_proxy':
             # Influence heuristic inspired by ESR, not OECP's exact-verifier theorem.
             influences = {c['id']: 1 + sum(c['id'] in x.get('depends_on', [])
