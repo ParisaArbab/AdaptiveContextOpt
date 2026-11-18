@@ -206,21 +206,21 @@ postmortem review and is not included in this new run's physical accounting.
 ## Recovery after Unicode surrogate write failure
 
 Some real Qwen outputs contain an unpaired Unicode surrogate (for example, U+DC22).
-Older \`save()\` used \`ensure_ascii=False\`, so the JSON writer raised
-\`UnicodeEncodeError\` while writing \`observations.json.tmp\`. The previous
-\`observations.json\` checkpoint remains intact because replacement was atomic,
+Older `save()` used `ensure_ascii=False`, so the JSON writer raised
+`UnicodeEncodeError` while writing `observations.json.tmp`. The previous
+`observations.json` checkpoint remains intact because replacement was atomic,
 but **the paid call being saved at the instant of the crash may be missing**.
 Do not claim exact physical expenditure from this resumed study.
 
-The patched writer escapes the Unicode value as \`\\udc22\` and restores the same
-Python string on load. When a stale \`observations.json.tmp\` is found, the agent
-first copies it to \`observations.json.interrupted-write.bak\`, marks
-\`physical_accounting_complete=false\`, and adds a warning to the
+The patched writer escapes the Unicode value as `\\udc22` and restores the same
+Python string on load. When a stale `observations.json.tmp` is found, the agent
+first copies it to `observations.json.interrupted-write.bak`, marks
+`physical_accounting_complete=false`, and adds a warning to the
 evaluation report. Previously saved valid model replies are reused.
 
 Resume the existing sample without deleting or renaming the saved checkpoint:
 
-\`\`\`bash
+```bash
 cd ~/RAVE_FL_Research/MethodDiscovery
 git fetch origin research/method-discovery-agent-20261117
 git merge --ff-only FETCH_HEAD
@@ -230,7 +230,7 @@ export OLLAMA_URL=http://127.0.0.1:11434
 export L1_MODEL=qwen2.5:7b FULL_MODEL=qwen2.5:7b
 export MAX_CALLS=450 PHYSICAL_TOKEN_CAP=800000 POLICY_TOKEN_BUDGET=60000
 bash research_method_agent/run_aiscalar_sample.sh run 2>&1 | tee method_discovery_unicodefix.log
-\`\`\`
+```
 
 If **exact total physical token cost** is essential, start a brand-new output
 root instead. This repeats model calls but produces a complete new ledger.
