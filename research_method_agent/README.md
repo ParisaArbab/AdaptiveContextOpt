@@ -100,3 +100,57 @@ python -m unittest discover -s tests -v
 ```
 
 All example outputs shipped in the smoke-test folder are labeled **SYNTHETIC_TEST_ONLY**.
+
+## One command for the already prepared GRAFT batch 00
+
+This command uses the authentic **Chart-17, Closure-165, Lang-28, Math-95, Time-26** cohort from the frozen 100-bug study. It uses the existing original buggy source checkouts and GRAFT typed graph extraction, not sample source code invented by the agent. Run it from the AdaptiveContextOpt repository root with the `rave-fl` environment activated, where the original saved paths exist.
+
+First, perform a no-inference preparation and inspect `pilot/manifest.json`, especially `dependency_provenance`. No labels or patches are included.
+
+```bash
+python research_method_agent/research_method_agent.py study \
+  --config data/graft_100_cohort_20261115/batches/batch_00/experiment/config.json \
+  --output-dir results/method_discovery_batch00 \
+  --candidate-limit 24
+```
+
+For the full initial experiment, explicitly permit real model calls and set a bounded cap:
+
+```bash
+python research_method_agent/research_method_agent.py study \
+  --config data/graft_100_cohort_20261115/batches/batch_00/experiment/config.json \
+  --output-dir results/method_discovery_batch00 \
+  --candidate-limit 24 \
+  --ollama-url http://127.0.0.1:11434 \
+  --l1-model qwen2.5:7b --full-model qwen2.5:7b \
+  --max-calls 450 --physical-token-cap 800000 \
+  --budget 60000 --allow-inference
+```
+
+This collects a new set of candidate-level observations. Existing archived GRAFT L1 evidence alone is insufficient to evaluate the dependency and cascade arms, and the agent does not invent missing counterfactual outputs. The command may pause when the physical call or token limit is reached. Rerun with a higher cap only after inspecting usage, or restrict the bug/candidate sample. No model work occurs unless `--allow-inference` is supplied.
+
+**Known dataset limitation:** GRAFT batch 00 has file-level modified-class proxy labels, not curated method-level fault labels. The report therefore produces **file-level Top-1, Top-5, MRR**. The conformal method arm requires a separate set of cases with method-level gold and will be marked `not_calibrated` here.
+
+The independent L1 prompt and simple fusion in this agent differ from GRAFT's original batch-L1 prompt and fusion. This is a fair comparison **within this agent's paired arms**, not an exact reproduction of archived GRAFT MRR or an end-to-end runtime comparison.
+
+## Automatically search the budget/action settings (no additional model calls)
+
+Once independent observations have been collected, the agent can evaluate many small policy variations and shortlist those worth testing on new bugs:
+
+```bash
+python research_method_agent/research_method_agent.py sweep \
+  --manifest results/method_discovery_batch00/manifest.json \
+  --observations results/method_discovery_batch00/observations.json \
+  --gold results/method_discovery_batch00/gold_offline.json \
+  --budgets 16000,24000,40000,60000 \
+  --max-verifies 1,2,3 --buffers 0,1 \
+  --output results/method_discovery_batch00/sweep
+```
+
+This produces `sweep_report.md`, `grid.json`, one evaluation folder per configuration, and `tradeoff.svg` showing change in MRR against change in token cost. It identifies **exploratory follow-up candidates**, not statistically confirmed winners. Grid search can overfit development bugs. Lock the chosen settings before testing separate bugs. If the main study reached an inference cap, the corresponding arms may remain incomplete and will not be invented.
+
+**Run tests from the repository root:**
+
+```bash
+python -m unittest discover -s research_method_agent/tests -v
+```
