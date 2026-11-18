@@ -2,6 +2,8 @@
 # Run from root AdaptiveContextOpt. No Qwen calls in prepare/test modes.
 set -euo pipefail
 cd "$(dirname "$0")/.."
+# Make the parent repository importable when executing the agent by file path.
+export PYTHONPATH="$PWD${PYTHONPATH:+:$PYTHONPATH}"
 MODE="${1:-prepare}"
 CONFIG="${GRAFT_CONFIG:-data/graft_100_cohort_20261115/batches/batch_00/experiment/config.json}"
 OUT="${METHOD_AGENT_OUTPUT:-results/method_discovery_batch00}"
