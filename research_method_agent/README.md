@@ -13,6 +13,7 @@ A reproducible small-bug experiment to **collect real independent LLM observatio
 | `esr_proxy` | Liu et al. inspired | Uncertainty × downstream call-link influence scheduling, **not** OECP's exact-verifier algorithm |
 | `cascade` | Ashok et al. inspired | Cheap L1 model followed by expensive Full for uncertain candidates, optional distinct models |
 | `code_cards` | Ranking-aware compact evidence idea | Deterministic source-line cards, **not** GistRank learned latent gist tokens |
+| `code_cards_risk_full` | New hybrid ablation | Code-card screening of all candidates, then risk-ranked Full responses based on **card** uncertainty, reusing existing independent Full observations |
 | `llmlingua2` | Pan et al. | Actual LLMLingua-2 compression **of failure text only** when dependency installed |
 | `combined` | Proposed DARC-FL pilot | All L1, selected dependency repairs, then risk-based Full verification |
 | `conformal_k` | Calibrated candidate retention | Split-conformal threshold on baseline priors, requires separate method-gold calibration bugs |
@@ -154,85 +155,3 @@ This produces `sweep_report.md`, `grid.json`, one evaluation folder per configur
 ```bash
 python -m unittest discover -s research_method_agent/tests -v
 ```
-
-## Recovery after truncated Ollama JSON (Nov 2026)
-
-The first AIScalar run stopped on Chart-17 because Qwen returned an incomplete JSON
-string under the old 130-output-token cap. The old observation file contains a
-failed record **without provider usage**, so do not delete it or reuse it for
-an audit claiming complete physical token accounting.
-
-The collector now asks Ollama for a strict JSON schema, allows up to 384 output
-tokens on the first attempt and 768 on one retry, and saves **every paid reply**
-with its raw response and measured provider input/output tokens in the
-`attempts` array. Only valid parsed replies enter `observations`. After two
-invalid replies, the collector stops rather than inventing a score. Provider
-errors with unknown usage stop immediately.
-
-Use a **new output root** for the corrected experiment:
-
-```bash
-export METHOD_AGENT_OUTPUT=results/method_discovery_batch00_jsonfix
-export OLLAMA_URL=http://127.0.0.1:11434
-bash research_method_agent/run_aiscalar_sample.sh prepare
-
-# Two paid calls as a preflight smoke test, then continue the same output root.
-MAX_CALLS=2 bash research_method_agent/run_aiscalar_sample.sh run
-
-# Review attempts and provider token usage before running at scale.
-python - <<'PY'
-import json, os
-from pathlib import Path
-path = Path(os.environ['METHOD_AGENT_OUTPUT']) / 'observations.json'
-d = json.loads(path.read_text())
-print('Attempts:', len(d['attempts']))
-print('Valid observations:', len(d['observations']))
-print('Invalid output:', sum(a['status'] == 'invalid_model_output' for a in d['attempts']))
-print('Physical tokens:', sum(a['input_tokens'] + a['output_tokens'] for a in d['attempts'] if a.get('usage_known')))
-PY
-
-MAX_CALLS=450 PHYSICAL_TOKEN_CAP=800000 \\
-  bash research_method_agent/run_aiscalar_sample.sh run
-bash research_method_agent/run_aiscalar_sample.sh sweep
-```
-
-The smoke-test run should return `collection_paused_at_cap`, not `evaluated`.
-The main run resumes already valid responses without issuing those prompts
-again. The physical token cap includes the smoke-test calls and any invalid
-JSON responses in the new run. The original failed artifact is preserved for
-postmortem review and is not included in this new run's physical accounting.
-
-
-## Recovery after Unicode surrogate write failure
-
-Some real Qwen outputs contain an unpaired Unicode surrogate (for example, U+DC22).
-Older `save()` used `ensure_ascii=False`, so the JSON writer raised
-`UnicodeEncodeError` while writing `observations.json.tmp`. The previous
-`observations.json` checkpoint remains intact because replacement was atomic,
-but **the paid call being saved at the instant of the crash may be missing**.
-Do not claim exact physical expenditure from this resumed study.
-
-The patched writer escapes the Unicode value as `\\udc22` and restores the same
-Python string on load. When a stale `observations.json.tmp` is found, the agent
-first copies it to `observations.json.interrupted-write.bak`, marks
-`physical_accounting_complete=false`, and adds a warning to the
-evaluation report. Previously saved valid model replies are reused.
-
-Resume the existing sample without deleting or renaming the saved checkpoint:
-
-```bash
-cd ~/RAVE_FL_Research/MethodDiscovery
-git fetch origin research/method-discovery-agent-20261117
-git merge --ff-only FETCH_HEAD
-bash research_method_agent/run_aiscalar_sample.sh test
-export METHOD_AGENT_OUTPUT=results/method_discovery_batch00_jsonfix
-export OLLAMA_URL=http://127.0.0.1:11434
-export L1_MODEL=qwen2.5:7b FULL_MODEL=qwen2.5:7b
-export MAX_CALLS=450 PHYSICAL_TOKEN_CAP=800000 POLICY_TOKEN_BUDGET=60000
-bash research_method_agent/run_aiscalar_sample.sh run 2>&1 | tee method_discovery_unicodefix.log
-```
-
-If **exact total physical token cost** is essential, start a brand-new output
-root instead. This repeats model calls but produces a complete new ledger.
-Paired logical policy comparisons from already saved, valid observations can
-still be analyzed, with the physical accounting gap explicitly disclosed.
