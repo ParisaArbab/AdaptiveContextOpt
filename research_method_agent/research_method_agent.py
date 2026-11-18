@@ -13,6 +13,7 @@ import math
 import os
 import random
 import re
+import shutil
 import statistics
 import time
 import urllib.request
@@ -26,7 +27,7 @@ OBS_KINDS = ('l1', 'full', 'dependency', 'card', 'llmlingua2')
 
 
 def sha(value):
-    return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+    return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False).encode('utf-8', 'surrogatepass')).hexdigest()
 
 
 def load(path):
@@ -37,7 +38,9 @@ def save(path, obj):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(path.name + '.tmp')
-    temporary.write_text(json.dumps(obj, indent=2, sort_keys=True, ensure_ascii=False) + '\n', encoding='utf-8')
+    # Escape unpaired surrogates returned by some model JSON strings. The exact
+    # Python strings can be recovered on load, without writing invalid UTF-8.
+    temporary.write_text(json.dumps(obj, indent=2, sort_keys=True, ensure_ascii=True) + '\n', encoding='utf-8')
     os.replace(temporary, path)
 
 
@@ -221,6 +224,22 @@ def collect(manifest, output, url, l1_model, full_model, max_bugs, max_candidate
             saved['legacy_observation_tokens'] = sum(
                 o['input_tokens'] + o['output_tokens'] for o in saved['observations'])
             saved['attempts'] = []
+        # An interrupted atomic write leaves the previous valid checkpoint and
+        # a partial .tmp file. Preserve the latter for auditing, and disclose
+        # that the last paid model call may be missing from token accounting.
+        interrupted = output.with_name(output.name + '.tmp')
+        if interrupted.exists():
+            archive = output.with_name(output.name + '.interrupted-write.bak')
+            if not archive.exists():
+                shutil.copy2(interrupted, archive)
+            warning = ('Abandoned atomic checkpoint detected and preserved as ' + str(archive)
+                       + '. A paid model call may be missing from the saved ledger. '
+                       'Physical token totals are a lower bound; logged observations '
+                       'remain suitable for matched logical policy replay.')
+            saved['physical_accounting_complete'] = False
+            warnings = saved.setdefault('accounting_warnings', [])
+            if warning not in warnings:
+                warnings.append(warning)
     else:
         saved = {'schema': 'research-agent-observations-v1',
                  'provenance': 'live_ollama', 'models': {'l1': l1_model, 'full': full_model},
@@ -239,6 +258,8 @@ def collect(manifest, output, url, l1_model, full_model, max_bugs, max_candidate
 
     def outcome(paused):
         return {'new_calls': calls, 'physical_tokens': total_tokens,
+                'physical_accounting_complete': saved.get('physical_accounting_complete', True),
+                'accounting_warnings': saved.get('accounting_warnings', []),
                 'logged_attempts': len(saved['attempts']),
                 'invalid_output_calls': sum(a.get('status') == 'invalid_model_output'
                                             for a in saved['attempts']),
@@ -618,6 +639,8 @@ def write_report(output, results, summary, manifest, observation):
                                     'manifest_sha256': sha(manifest),
                                     'observation_sha256': sha(observation),
                                     'provenance': observation.get('provenance', 'unspecified'),
+                                    'physical_accounting_complete': observation.get('physical_accounting_complete', True),
+                                    'accounting_warnings': observation.get('accounting_warnings', []),
                                     'results': results, 'summary': summary})
     fields = ['arm', 'paired_n', 'mean_mrr', 'delta_mrr_vs_l1', 'mean_top1',
               'mean_top5', 'mean_tokens', 'mean_token_delta', 'win_tie_loss', 'status']
@@ -649,6 +672,10 @@ def write_report(output, results, summary, manifest, observation):
               'ESR proxy is a scheduling heuristic, not an OECP exact-containment verifier.',
               'Adaptive-k is based on local prior gaps, not guaranteed top-k recall.',
               'The optional LLMLingua-2 arm uses actual compressed failure text only if collected.']
+    if observation.get('physical_accounting_complete') is False:
+        lines.insert(5, '**PHYSICAL USAGE INCOMPLETE:** an interrupted save may have lost one paid model call. '
+                        'Collection token totals are only a lower bound, even though recorded '
+                        'logical policy costs use real measured tokens.')
     (output / 'report.md').write_text('\n'.join(lines) + '\n', encoding='utf-8')
 
 
