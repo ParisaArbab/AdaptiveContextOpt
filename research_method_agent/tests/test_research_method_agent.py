@@ -85,6 +85,35 @@ class TestResearchAgent(unittest.TestCase):
             self.assertTrue((Path(tmp) / 'report.md').exists())
             self.assertTrue((Path(tmp) / 'summary.csv').exists())
 
+    def test_code_cards_risk_full_uses_card_risk_and_measured_full(self):
+        manifest, observations, labels = fixture()
+        obs = m.obs_index(observations)
+        bug = manifest['bugs'][0]
+        card_only = m.evaluate_arm(bug, obs, 'code_cards', 20000)
+        hybrid = m.evaluate_arm(bug, obs, 'code_cards_risk_full', 20000)
+        self.assertEqual(hybrid['status'], 'complete')
+        self.assertEqual([a['kind'] for a in hybrid['actions'][:3]], ['card'] * 3)
+        self.assertEqual(len([a for a in hybrid['actions'] if a['kind'] == 'full']), 2)
+        self.assertEqual(hybrid['llm_calls'], 5)
+        self.assertGreater(hybrid['tokens'], card_only['tokens'])
+        self.assertEqual(hybrid['actions'][3]['candidate'], 'c2')
+        # A missing full response must invalidate the arm, never invent a score.
+        del obs[m.observation_key('Fixture-0', 'c2', 'full')]
+        incomplete = m.evaluate_arm(bug, obs, 'code_cards_risk_full', 20000)
+        self.assertTrue(incomplete['status'].startswith('missing_real_observation:full:'))
+
+    def test_card_gate_differs_from_l1_gate_with_different_observations(self):
+        manifest, observations, labels = fixture()
+        obs = m.obs_index(observations)
+        bug = manifest['bugs'][0]
+        obs[m.observation_key('Fixture-0', 'c2', 'card')]['uncertainty'] = 0.01
+        obs[m.observation_key('Fixture-0', 'c0', 'card')]['uncertainty'] = 0.99
+        l1_gate = m.evaluate_arm(bug, obs, 'risk_full', 20000, max_verify=1)
+        card_gate = m.evaluate_arm(bug, obs, 'code_cards_risk_full', 20000, max_verify=1)
+        self.assertEqual(l1_gate['actions'][-1]['kind'], 'full')
+        self.assertEqual(card_gate['actions'][-1]['kind'], 'full')
+        self.assertNotEqual(l1_gate['actions'][-1]['candidate'], card_gate['actions'][-1]['candidate'])
+
     def test_budget_enforcement_reports_overrun(self):
         manifest, observation, _ = fixture()
         data = m.obs_index(observation)
