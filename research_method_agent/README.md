@@ -154,3 +154,50 @@ This produces `sweep_report.md`, `grid.json`, one evaluation folder per configur
 ```bash
 python -m unittest discover -s research_method_agent/tests -v
 ```
+
+## Recovery after truncated Ollama JSON (Nov 2026)
+
+The first AIScalar run stopped on Chart-17 because Qwen returned an incomplete JSON
+string under the old 130-output-token cap. The old observation file contains a
+failed record **without provider usage**, so do not delete it or reuse it for
+an audit claiming complete physical token accounting.
+
+The collector now asks Ollama for a strict JSON schema, allows up to 384 output
+tokens on the first attempt and 768 on one retry, and saves **every paid reply**
+with its raw response and measured provider input/output tokens in the
+`attempts` array. Only valid parsed replies enter `observations`. After two
+invalid replies, the collector stops rather than inventing a score. Provider
+errors with unknown usage stop immediately.
+
+Use a **new output root** for the corrected experiment:
+
+```bash
+export METHOD_AGENT_OUTPUT=results/method_discovery_batch00_jsonfix
+export OLLAMA_URL=http://127.0.0.1:11434
+bash research_method_agent/run_aiscalar_sample.sh prepare
+
+# Two paid calls as a preflight smoke test, then continue the same output root.
+MAX_CALLS=2 bash research_method_agent/run_aiscalar_sample.sh run
+
+# Review attempts and provider token usage before running at scale.
+python - <<'PY'
+import json, os
+from pathlib import Path
+path = Path(os.environ['METHOD_AGENT_OUTPUT']) / 'observations.json'
+d = json.loads(path.read_text())
+print('Attempts:', len(d['attempts']))
+print('Valid observations:', len(d['observations']))
+print('Invalid output:', sum(a['status'] == 'invalid_model_output' for a in d['attempts']))
+print('Physical tokens:', sum(a['input_tokens'] + a['output_tokens'] for a in d['attempts'] if a.get('usage_known')))
+PY
+
+MAX_CALLS=450 PHYSICAL_TOKEN_CAP=800000 \\
+  bash research_method_agent/run_aiscalar_sample.sh run
+bash research_method_agent/run_aiscalar_sample.sh sweep
+```
+
+The smoke-test run should return `collection_paused_at_cap`, not `evaluated`.
+The main run resumes already valid responses without issuing those prompts
+again. The physical token cap includes the smoke-test calls and any invalid
+JSON responses in the new run. The original failed artifact is preserved for
+postmortem review and is not included in this new run's physical accounting.
