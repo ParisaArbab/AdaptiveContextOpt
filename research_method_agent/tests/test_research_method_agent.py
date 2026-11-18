@@ -161,6 +161,59 @@ class TestIntegration(unittest.TestCase):
 
 
 class TestMalformedModelRecovery(unittest.TestCase):
+    def test_unpaired_surrogate_saves_and_round_trips_without_invalid_utf8(self):
+        source = {'observations': [{'raw_response': 'model \udc22 output',
+                                    'reason': 'broken \udcff string'}]}
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'observations.json'
+            m.save(path, source)
+            data = path.read_bytes()
+            self.assertIn(b'\\udc22', data)
+            self.assertIn(b'\\udcff', data)
+            self.assertEqual(m.load(path), source)
+            self.assertEqual(m.sha(source), m.sha(m.load(path)))
+            self.assertFalse(path.with_name('observations.json.tmp').exists())
+
+    def test_interrupted_save_preserves_checkpoint_and_flags_usage_gap(self):
+        manifest, _, _ = fixture()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'observations.json'
+            saved = {'schema': 'research-agent-observations-v1',
+                     'provenance': 'live_ollama', 'manifest_hash': m.sha(manifest),
+                     'models': {'l1': 'qwen2.5:7b', 'full': 'qwen2.5:7b'},
+                     'observations': [], 'attempts': [], 'legacy_observation_tokens': 0}
+            m.save(path, saved)
+            temporary = path.with_name(path.name + '.tmp')
+            temporary.write_bytes(b'{"incomplete": "unterminated')
+            with patch.object(m, 'ollama_call') as spy:
+                result = m.collect(manifest, path, 'http://localhost',
+                                   'qwen2.5:7b', 'qwen2.5:7b', 1, 1, 0)
+                spy.assert_not_called()
+            self.assertTrue(result['limit_reached'])
+            self.assertFalse(result['physical_accounting_complete'])
+            self.assertIn('lower bound', result['accounting_warnings'][0])
+            self.assertEqual(path.with_name(path.name + '.interrupted-write.bak').read_bytes(),
+                             b'{"incomplete": "unterminated')
+            self.assertFalse(m.load(path)['physical_accounting_complete'])
+            self.assertFalse(temporary.exists())
+
+    def test_surrogate_response_collected_with_metered_usage(self):
+        manifest, _, _ = fixture()
+        response = {'status': 'ok', 'score': 0.75, 'uncertainty': 0.4,
+                    'missing_dependency': False, 'reason': 'model \udc22 response',
+                    'raw_response': 'model \udc22 response', 'usage_known': True,
+                    'input_tokens': 250, 'output_tokens': 100}
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'observations.json'
+            with patch.object(m, 'ollama_call', return_value=response):
+                outcome = m.collect(manifest, path, 'http://localhost',
+                                    'qwen2.5:7b', 'qwen2.5:7b', 1, 1, 1)
+            state = m.load(path)
+            self.assertEqual(outcome['physical_tokens'], 350)
+            self.assertEqual(len(state['attempts']), 1)
+            self.assertEqual(len(state['observations']), 1)
+            self.assertEqual(state['observations'][0]['raw_response'], 'model \udc22 response')
+
     def test_truncated_json_preserves_provider_usage_and_requests_schema(self):
         class Response:
             def __enter__(self):
