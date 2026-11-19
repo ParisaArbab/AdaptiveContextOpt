@@ -22,6 +22,7 @@ from pathlib import Path
 ARMS = (
     'l1', 'adaptive_k', 'conformal_k', 'dependency_repair', 'risk_full', 'esr_proxy',
     'cascade', 'code_cards', 'code_cards_risk_full', 'combined', 'llmlingua2',
+    'card_rank_full', 'card_failure_full', 'card_stop_full', 'card_egav',
 )
 OBS_KINDS = ('l1', 'full', 'dependency', 'card', 'llmlingua2')
 
@@ -345,6 +346,7 @@ def evaluate_arm(bug, obs, arm, budget, buffer=1, max_verify=2, conformal_thresh
     initial = {c['id']: float(c['prior']) for c in candidates}
     seen = {}
     actions, spent, stopped, nverify = [], 0, None, 0
+    policy_stop_reason = None
 
     def take(c, kind):
         nonlocal spent, stopped
@@ -382,7 +384,10 @@ def evaluate_arm(bug, obs, arm, budget, buffer=1, max_verify=2, conformal_thresh
         base = [c for c in candidates if float(c['prior']) >= conformal_threshold]
     else:
         base = candidates
-    base_kind = 'card' if arm in ('code_cards', 'code_cards_risk_full') else 'llmlingua2' if arm == 'llmlingua2' else 'l1'
+    base_kind = ('card' if arm in ('code_cards', 'code_cards_risk_full',
+                                    'card_rank_full', 'card_failure_full',
+                                    'card_stop_full', 'card_egav')
+                 else 'llmlingua2' if arm == 'llmlingua2' else 'l1')
     for c in base:
         if not take(c, base_kind):
             break
@@ -392,6 +397,26 @@ def evaluate_arm(bug, obs, arm, budget, buffer=1, max_verify=2, conformal_thresh
         for c in dep_candidates[:max_verify]:
             if not take(c, 'dependency'):
                 break
+    # New experimental policies read only the *current* card/full evidence.
+    # Recompute target order after each expensive response. The saved Full
+    # response cannot affect whether its candidate is selected.
+    if not stopped and arm in ('card_rank_full', 'card_failure_full',
+                               'card_stop_full', 'card_egav'):
+        from egav_policies import ranked_full_targets, evidence_sufficient, STOP_POLICIES
+        checked = set()
+        for _ in range(max_verify):
+            if arm in STOP_POLICIES and evidence_sufficient(candidates, state, seen):
+                policy_stop_reason = 'strong_file_lead_heuristic'
+                break
+            target = next((candidate for candidate in ranked_full_targets(
+                candidates, state, seen, bug['evidence'], arm, uncertainty_priority)
+                if candidate['id'] not in checked), None)
+            if target is None:
+                break
+            if not take(target, 'full'):
+                break
+            checked.add(target['id'])
+            nverify += 1
     if not stopped and arm in ('risk_full', 'code_cards_risk_full', 'cascade', 'esr_proxy', 'combined'):
         if arm == 'esr_proxy':
             # Influence heuristic inspired by ESR, not OECP's exact-verifier theorem.
@@ -410,7 +435,8 @@ def evaluate_arm(bug, obs, arm, budget, buffer=1, max_verify=2, conformal_thresh
     return {'bug': bug['id'], 'arm': arm, 'status': 'complete' if not stopped else stopped,
             'ranked': [c['id'] for c in ranked_final], 'tokens': spent, 'llm_calls': len(actions),
             'full_calls': nverify, 'selected_k': k if arm == 'adaptive_k' else len(candidates),
-            'actions': actions, 'budget': budget, 'overrun': spent > budget}
+            'actions': actions, 'budget': budget, 'overrun': spent > budget,
+            'policy_stop_reason': policy_stop_reason}
 
 
 def metric(ranking, gold):
