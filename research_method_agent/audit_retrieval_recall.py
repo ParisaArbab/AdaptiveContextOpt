@@ -1,4 +1,4 @@
-"""Audit BM25 candidate-pool recall at K=24,48,96 without ANY LLM calls.
+"""Audit BM25 candidate-pool recall at K=24,48,96,192,384 without ANY LLM calls.
 
 Uses the same immutable GRAFT checkouts and observed-failure query as the
 frozen EGAV study. Gold is read only after candidate retrieval, for the audit.
@@ -17,7 +17,7 @@ from rave_fl.eval.adapters import load_instances
 from rave_fl.eval.candidates import provide
 from rave_fl.eval.runner import validate_checkout
 
-SIZES = (24, 48, 96)
+SIZES = (24, 48, 96, 192, 384)
 RESULTS = ROOT / "results/egav_validation_10bugs"
 CONFIGS = ROOT / "data/graft_100_cohort_20261115/batches"
 
@@ -91,11 +91,11 @@ def main():
     if len(combined) != 10:
         raise ValueError("Expected 10 non-overlapping cases")
     print("BM25 CANDIDATE RECALL, NO MODEL CALLS")
-    print(f"{'Bug':15} {'First method':>12} {'Top24':>6} {'Top48':>6} {'Top96':>6}")
+    print(f"{'Bug':15} {'First method':>12} " + " ".join(f"Top{k:>3}" for k in SIZES))
     for bid, row in sorted(combined.items()):
         rank = row["first_method_position_for_gold_file"]
         bits = ["Y" if row["coverage_by_k"][str(k)] else "N" for k in SIZES]
-        print(f"{bid:15} {str(rank or 'MISS'):>12} {bits[0]:>6} {bits[1]:>6} {bits[2]:>6}")
+        print(f"{bid:15} {str(rank or 'MISS'):>12} " + " ".join(f"{bit:>6}" for bit in bits))
     rates = {str(k): sum(x["coverage_by_k"][str(k)] for x in combined.values())
              for k in SIZES}
     print("\nRecall counts (10 bugs):", rates)
