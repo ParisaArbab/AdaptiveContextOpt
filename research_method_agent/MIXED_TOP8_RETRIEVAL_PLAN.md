@@ -46,6 +46,8 @@ and invalidates exact physical-token accounting as needed.
 
 ### Run on AIScalar
 
+**AIScalar import fix:** Call the frozen study via `bash research_method_agent/run_mixed_top8_aiscalar.sh`. The wrapper sets `PYTHONPATH` to the repository root so Python can import the existing `rave_fl` package. The study source itself is deliberately unchanged, because the first (failed) preflight already saved its frozen SHA256 in `frozen_protocol.json`. The earlier `ModuleNotFoundError: No module named 'rave_fl'` occurred *before* model inference. You do not need to delete the protocol file or rerun the Qwen observations.
+
 ```bash
 conda activate rave-fl
 cd ~/RAVE_FL_Research/MethodDiscovery
@@ -55,17 +57,17 @@ git merge --ff-only FETCH_HEAD
 
 # No Ollama calls, check all tests and materialize original buggy source inputs.
 bash research_method_agent/run_aiscalar_sample.sh test
-python research_method_agent/mixed_top8_validation.py preflight
+bash research_method_agent/run_mixed_top8_aiscalar.sh preflight
 
 # Real, explicitly authorized Qwen calls. Each batch has a separate ledger.
 # No gold labels used during these calls.
 set -o pipefail
-python research_method_agent/mixed_top8_validation.py run-03 --allow-inference 2>&1 | tee mixed_top8_batch03.log
-python research_method_agent/mixed_top8_validation.py run-05 --allow-inference 2>&1 | tee mixed_top8_batch05.log
-python research_method_agent/mixed_top8_validation.py run-07 --allow-inference 2>&1 | tee mixed_top8_batch07.log
+bash research_method_agent/run_mixed_top8_aiscalar.sh run-03 --allow-inference 2>&1 | tee mixed_top8_batch03.log
+bash research_method_agent/run_mixed_top8_aiscalar.sh run-05 --allow-inference 2>&1 | tee mixed_top8_batch05.log
+bash research_method_agent/run_mixed_top8_aiscalar.sh run-07 --allow-inference 2>&1 | tee mixed_top8_batch07.log
 
 # Gold labels are used ONLY to evaluate the saved predictions.
-python research_method_agent/mixed_top8_validation.py report
+bash research_method_agent/run_mixed_top8_aiscalar.sh report
 ```
 
 Each batch defaults to no more than 300 new calls per run and 800,000
@@ -73,8 +75,8 @@ physical tokens total. If the collector pauses at a cap, review `status`
 and decide whether to increase a limit before resuming that same batch:
 
 ```bash
-python research_method_agent/mixed_top8_validation.py status
-python research_method_agent/mixed_top8_validation.py run-03 --allow-inference --max-calls 400 --physical-token-cap 1000000
+bash research_method_agent/run_mixed_top8_aiscalar.sh status
+bash research_method_agent/run_mixed_top8_aiscalar.sh run-03 --allow-inference --max-calls 400 --physical-token-cap 1000000
 ```
 
 Use the retry example **only** when the ledger shows `collection_paused_at_cap`.
