@@ -72,3 +72,42 @@ modified-class file proxy MRR is not method-level bug localization.
 After examining the 10-bug findings, select any future policy changes on
 development data only, then lock a new version for a separate held-out
 test group of at least 30 bugs.
+
+
+## Next diagnostic after the 10-bug result (no additional model calls)
+
+Observed on the fixed 10-bug development cohort: BM25 retrieved the gold
+file for **7/10 at K=24, 8/10 at K=48, 9/10 at K=96**. Closure-128 first
+appears at method rank 95; Time-14 first appears at 29; Closure-32 was
+not found in the top 96.
+
+The existing retrieval audit now extends **up to 384 methods**. It changes
+only the BM25 retrieval cap during its own in-memory audit, not the frozen
+manifests or LLM policy. If the file is still missing, we cannot distinguish
+low retrieval rank from indexing failure without a separate full-index audit.
+
+A second diagnostic tests keeping L1 evidence for the **first 5, 8, or 12
+BM25-prior-ranked methods**, and cards for the remaining candidates.
+It performs a complete mixed-evidence replay using previously recorded L1
+and Card responses. Selection is gold-blind, but the resulting MRR is
+computed after decisions from the saved file-level gold.
+
+\`\`\`bash
+conda activate rave-fl
+cd ~/RAVE_FL_Research/MethodDiscovery
+git fetch origin research/egav-validation-20261119
+git merge --ff-only FETCH_HEAD
+
+# Uses source index / BM25 only; NO Qwen calls:
+python research_method_agent/audit_retrieval_recall.py
+
+# Uses existing Qwen observation JSON only; NO Qwen calls:
+python research_method_agent/audit_mixed_l1_cards.py
+\`\`\`
+
+These are new **development explorations**, not evidence that a hybrid
+generalizes. The L1 and Code Card prompts differ, so their suspicion
+scores may not be calibrated to the same scale. A later controlled
+experiment must hold the prompt constant and vary only the representation.
+Do not claim a win until the new policy is frozen and checked on untouched
+bugs with measured tokens and latency.
