@@ -102,6 +102,46 @@ class TestResearchAgent(unittest.TestCase):
         incomplete = m.evaluate_arm(bug, obs, 'code_cards_risk_full', 20000)
         self.assertTrue(incomplete['status'].startswith('missing_real_observation:full:'))
 
+    def test_egav_replay_arms_use_logged_full_calls(self):
+        manifest, observations, _ = fixture()
+        bug = manifest['bugs'][0]
+        obs = m.obs_index(observations)
+        for arm in ('card_rank_full', 'card_failure_full',
+                    'card_stop_full', 'card_egav'):
+            result = m.evaluate_arm(bug, obs, arm, 20000, max_verify=2)
+            self.assertEqual(result['status'], 'complete', arm)
+            self.assertEqual([a['kind'] for a in result['actions'][:3]],
+                             ['card'] * 3)
+            self.assertLessEqual(result['full_calls'], 2)
+            self.assertEqual(result['llm_calls'], len(result['actions']))
+            self.assertEqual(result['tokens'], sum(a['tokens'] for a in result['actions']))
+
+    def test_egav_stop_prevents_unnecessary_full_calls(self):
+        manifest, observations, _ = fixture()
+        bug = manifest['bugs'][0]
+        obs = m.obs_index(observations)
+        for i, c in enumerate(bug['candidates']):
+            rec = obs[m.observation_key(bug['id'], c['id'], 'card')]
+            rec['score'] = .99 if i == 0 else .01
+            rec['uncertainty'] = .10
+            rec['missing_dependency'] = False
+        stopped = m.evaluate_arm(bug, obs, 'card_stop_full', 20000)
+        always = m.evaluate_arm(bug, obs, 'card_rank_full', 20000)
+        self.assertEqual(stopped['status'], 'complete')
+        self.assertEqual(stopped['full_calls'], 0)
+        self.assertEqual(stopped['policy_stop_reason'], 'strong_file_lead_heuristic')
+        self.assertEqual(always['full_calls'], 2)
+
+    def test_egav_missing_full_is_not_imputed(self):
+        manifest, observations, _ = fixture()
+        bug = manifest['bugs'][0]
+        obs = m.obs_index(observations)
+        for c in bug['candidates']:
+            del obs[m.observation_key(bug['id'], c['id'], 'full')]
+        for arm in ('card_rank_full', 'card_failure_full', 'card_egav'):
+            got = m.evaluate_arm(bug, obs, arm, 20000)
+            self.assertTrue(got['status'].startswith('missing_real_observation:full:'), arm)
+
     def test_card_gate_differs_from_l1_gate_with_different_observations(self):
         manifest, observations, labels = fixture()
         obs = m.obs_index(observations)
