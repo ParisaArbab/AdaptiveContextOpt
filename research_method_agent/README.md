@@ -237,3 +237,42 @@ If **exact total physical token cost** is essential, start a brand-new output
 root instead. This repeats model calls but produces a complete new ledger.
 Paired logical policy comparisons from already saved, valid observations can
 still be analyzed, with the physical accounting gap explicitly disclosed.
+
+
+## EGAV experimental ablations (offline replay, Nov 18 2026)
+
+Four new **pre-specified heuristic** Full-verification policies compare different
+ways to select the next method after the Code Card stage. They are research
+prototypes, not trained risk predictors or a claim of improved accuracy.
+
+| Arm | Rule |
+|---|---|
+| `card_rank_full` | Prioritize uncertain Code Cards close to the observed file Top-5 boundary |
+| `card_failure_full` | Prioritize uncertain Code Cards with an exact file/method mention in the observed failure evidence |
+| `card_stop_full` | Use risk priority, but skip Full if the leading file has a high score (>=0.80), a large lead (>=0.22), low uncertainty (<=0.25), and no missing dependency flag |
+| `card_egav` | Combine risk, Top-5 boundary, failure anchor, and the same conservative stopping rule |
+
+These weights and thresholds are **fixed exploratory settings**, not calibrated
+probabilities or a guarantee of improvement. No gold labels enter the online
+policy. A selected Full response must actually exist in the observations. If not,
+the arm is marked incomplete; it does not invent a result. The policy recomputes
+priorities after each Full check, up to two Full calls, subject to token budget.
+
+To compare on the existing **five development bugs with zero extra Qwen calls**:
+
+```bash
+conda activate rave-fl
+cd ~/RAVE_FL_Research/MethodDiscovery
+git fetch origin research/method-discovery-agent-20261117
+git merge --ff-only FETCH_HEAD
+bash research_method_agent/run_aiscalar_sample.sh test
+export METHOD_AGENT_OUTPUT=results/method_discovery_batch00_jsonfix
+bash research_method_agent/run_egav_replay.sh
+```
+
+This creates `evaluation_egav_pilot/report.md`, `results.json`, and
+`summary.csv`, and prints selected Full targets and paired MRR/cost deltas
+against Code Cards. The original evaluation is untouched. The five-bug replay
+is **development-only**, with file-level modified-class proxy gold, an
+incomplete physical token ledger, and no live-policy latency. Use independent
+development bugs to choose a method and untouched test bugs for the claim.
